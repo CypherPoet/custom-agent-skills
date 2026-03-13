@@ -13,5 +13,8 @@ Thumbs.db
 .env
 .env.local
 
+# Claude local settings
+.claude/settings.local.json
+
 # Node (if any skill uses scripts)
 node_modules/
