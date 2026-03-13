@@ -4,7 +4,7 @@ A curated collection of custom AI agent skills for extending coding assistant ca
 
 ## 📖 Overview
 
-This repository stores reusable, portable skills that can be installed into AI coding agents (such as [Antigravity](https://github.com/google-deepmind/antigravity)) to extend their capabilities for specialized tasks.
+This repository stores reusable, portable skills that can be installed into AI coding agents to extend their capabilities for specialized tasks.
 
 Each skill is a self-contained folder with a `SKILL.md` instruction file and any supporting scripts, templates, or resources the skill needs.
 
@@ -27,10 +27,13 @@ Each skill is a self-contained folder with a `SKILL.md` instruction file and any
 
 ### Installing a Skill
 
-To install a skill from this repo into your agent environment, copy the skill folder to your agent's skills directory:
+To install a skill from this repo into your agent environment, copy the skill folder to your agent's skills directory. For example:
 
 ```bash
-# Example: installing to Antigravity's skills directory
+# Claude Code
+cp -r skills/<skill-name> ~/.claude/skills/
+
+# Gemini CLI / Antigravity
 cp -r skills/<skill-name> ~/.gemini/antigravity/skills/
 ```
 

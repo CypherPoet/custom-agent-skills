@@ -4,7 +4,9 @@ This directory contains detailed documentation for each skill in the collection.
 
 ## 📖 Index
 
-> No skills have been added yet. As skills are added to the `skills/` directory, their documentation will be listed here.
+| Skill | Description |
+|-------|-------------|
+| [expo-snack-prototyper](expo-snack-prototyper.md) | Generate self-contained React Native prototypes that run in Expo Snack |
 
 ## 📝 Documentation Guidelines
 
