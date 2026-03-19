@@ -1,12 +1,38 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+## Project
 
-## What This Repo Is
+Public collection of reusable AI agent skills — self-contained instruction sets copied into agent environments (Claude, Gemini, etc.). The private sibling lives at `private-custom-agent-skills`.
 
-A collection of custom AI agent skills. Each skill is a self-contained folder under `skills/` with a `SKILL.md` entry point. No build system, tests, or package manager — this is a content/instructions repo.
+## Architecture
 
-## Key Rules
+- `skills/<skill-name>/SKILL.md` — Each skill is a folder with a required `SKILL.md` containing YAML frontmatter (`name`, `description`) and markdown instructions.
+- Skills may optionally include `assets/`, `references/`, and `scripts/` subdirectories.
+- `docs/` — Detailed documentation for each skill (mirrors `skills/` structure).
 
-- Read and follow `AGENTS.md` at repo root
-- Use `/writing-skills` when creating or editing skills
+## Skill Format
+
+Every `SKILL.md` must have this structure:
+
+```yaml
+---
+name: kebab-case-skill-name
+description: When to trigger this skill
+---
+```
+
+Followed by markdown instructions. Use `/writing-skills` for the canonical workflow.
+
+## Creating and Improving Skills
+
+Use `/writing-skills` when creating or editing skills. For iterative improvement and description optimization, use `/skill-creator`.
+
+## Conventions
+
+- Skill folder names use **kebab-case**.
+- No build system, tests, or linting — this is a pure documentation/prompt-engineering repo.
+- New skills go in `skills/` (not globally), unless specified otherwise.
+
+## Workflow
+
+- When adding a new skill, also create `docs/<skill-name>.md` and update `docs/README.md` with its entry.
