@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Claude Code — Changelog</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=JetBrains+Mono:wght@300;400;500;600&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;1,8..60,300;1,8..60,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0c0b0f;
+    --bg-card: #13121a;
+    --bg-card-hover: #1a1926;
+    --surface: #1e1d28;
+    --border: #2a2937;
+    --border-accent: #3d3b4f;
+    --text: #e8e6f0;
+    --text-dim: #9896a8;
+    --text-muted: #6b697d;
+    --accent: #e8944a;
+    --accent-glow: #e8944a33;
+    --accent-secondary: #c47a3a;
+    --security: #e85d5d;
+    --security-bg: #e85d5d11;
+    --fix: #5dace8;
+    --fix-bg: #5dace811;
+    --feature: #5de8a0;
+    --feature-bg: #5de8a011;
+    --perf: #c89dec;
+    --perf-bg: #c89dec11;
+    --platform: #e8d55d;
+    --platform-bg: #e8d55d11;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html {
+    font-size: 16px;
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Source Serif 4', Georgia, serif;
+    line-height: 1.7;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Grain overlay */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 9999;
+  }
+
+  /* Top gradient line */
+  .top-line {
+    height: 2px;
+    background: linear-gradient(90deg, transparent 0%, var(--accent) 30%, var(--accent-secondary) 70%, transparent 100%);
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+  }
+
+  /* Header */
+  header {
+    padding: 5rem 2rem 3rem;
+    max-width: 900px;
+    margin: 0 auto;
+    position: relative;
+  }
+
+  .header-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 1.2rem;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    opacity: 0;
+    animation: fadeUp 0.6s ease forwards;
+  }
+
+  .header-label::before {
+    content: '';
+    width: 20px;
+    height: 1px;
+    background: var(--accent);
+  }
+
+  h1 {
+    font-family: 'DM Serif Display', Georgia, serif;
+    font-size: clamp(2.8rem, 6vw, 4.2rem);
+    font-weight: 400;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    color: var(--text);
+    margin-bottom: 1.2rem;
+    opacity: 0;
+    animation: fadeUp 0.6s ease 0.1s forwards;
+  }
+
+  h1 em {
+    color: var(--accent);
+    font-style: italic;
+  }
+
+  .header-meta {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    display: flex;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+    opacity: 0;
+    animation: fadeUp 0.6s ease 0.2s forwards;
+  }
+
+  .header-meta span {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+
+  .header-meta .dot {
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: var(--text-muted);
+    display: inline-block;
+  }
+
+  /* Summary section */
+  .summary {
+    max-width: 900px;
+    margin: 0 auto 4rem;
+    padding: 0 2rem;
+    opacity: 0;
+    animation: fadeUp 0.6s ease 0.3s forwards;
+  }
+
+  .summary-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  .summary-card {
+    background: var(--bg-card);
+    padding: 1.5rem;
+    transition: background 0.3s ease;
+  }
+
+  .summary-card:hover {
+    background: var(--bg-card-hover);
+  }
+
+  .summary-card .card-number {
+    font-family: 'DM Serif Display', Georgia, serif;
+    font-size: 2rem;
+    line-height: 1;
+    margin-bottom: 0.3rem;
+  }
+
+  .summary-card .card-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.68rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+
+  .card-feature .card-number { color: var(--feature); }
+  .card-fix .card-number { color: var(--fix); }
+  .card-security .card-number { color: var(--security); }
+  .card-perf .card-number { color: var(--perf); }
+
+  /* Practical summary */
+  .practical {
+    max-width: 900px;
+    margin: 0 auto 4rem;
+    padding: 0 2rem;
+    opacity: 0;
+    animation: fadeUp 0.6s ease 0.35s forwards;
+  }
+
+  .practical h2 {
+    font-family: 'DM Serif Display', Georgia, serif;
+    font-size: 1.6rem;
+    font-weight: 400;
+    margin-bottom: 1.5rem;
+    color: var(--text);
+  }
+
+  .practical-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+  }
+
+  .practical-list li {
+    padding: 1rem 1.3rem;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    transition: border-color 0.3s ease, transform 0.2s ease;
+    display: flex;
+    gap: 0.8rem;
+    align-items: flex-start;
+  }
+
+  .practical-list li:hover {
+    border-color: var(--border-accent);
+    transform: translateX(4px);
+  }
+
+  .practical-list .tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.62rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 0.2rem 0.5rem;
+    border-radius: 3px;
+    white-space: nowrap;
+    flex-shrink: 0;
+    margin-top: 0.15rem;
+  }
+
+  .tag-action { background: var(--feature-bg); color: var(--feature); border: 1px solid #5de8a022; }
+  .tag-security { background: var(--security-bg); color: var(--security); border: 1px solid #e85d5d22; }
+  .tag-fix { background: var(--fix-bg); color: var(--fix); border: 1px solid #5dace822; }
+  .tag-perf { background: var(--perf-bg); color: var(--perf); border: 1px solid #c89dec22; }
+
+  /* Releases */
+  .releases {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 2rem 6rem;
+  }
+
+  .release {
+    margin-bottom: 4rem;
+    opacity: 0;
+    animation: fadeUp 0.6s ease forwards;
+  }
+
+  .release:nth-child(1) { animation-delay: 0.4s; }
+  .release:nth-child(2) { animation-delay: 0.5s; }
+  .release:nth-child(3) { animation-delay: 0.6s; }
+
+  .release-header {
+    display: flex;
+    align-items: baseline;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--border);
+    flex-wrap: wrap;
+  }
+
+  .release-version {
+    font-family: 'DM Serif Display', Georgia, serif;
+    font-size: 1.8rem;
+    font-weight: 400;
+    color: var(--text);
+  }
+
+  .release-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.68rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    color: var(--accent);
+    background: var(--accent-glow);
+    padding: 0.25rem 0.6rem;
+    border-radius: 3px;
+    border: 1px solid #e8944a22;
+  }
+
+  .release-date {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+  }
+
+  .release-changes {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+
+  .release-changes li {
+    padding: 0.65rem 0;
+    font-size: 0.92rem;
+    color: var(--text-dim);
+    border-bottom: 1px solid #1e1d2866;
+    display: flex;
+    gap: 0.7rem;
+    align-items: flex-start;
+    line-height: 1.6;
+    transition: color 0.2s ease;
+  }
+
+  .release-changes li:hover {
+    color: var(--text);
+  }
+
+  .release-changes li:last-child {
+    border-bottom: none;
+  }
+
+  .change-icon {
+    flex-shrink: 0;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    margin-top: 0.55rem;
+  }
+
+  .change-icon.feat { background: var(--feature); box-shadow: 0 0 6px var(--feature-bg); }
+  .change-icon.fix { background: var(--fix); box-shadow: 0 0 6px var(--fix-bg); }
+  .change-icon.security { background: var(--security); box-shadow: 0 0 6px var(--security-bg); }
+  .change-icon.perf { background: var(--perf); box-shadow: 0 0 6px var(--perf-bg); }
+  .change-icon.platform { background: var(--platform); box-shadow: 0 0 6px var(--platform-bg); }
+
+  .release-changes code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.82em;
+    background: var(--surface);
+    padding: 0.12rem 0.4rem;
+    border-radius: 3px;
+    color: var(--accent);
+  }
+
+  .release-changes strong {
+    color: var(--text);
+    font-weight: 600;
+  }
+
+  /* Collapsible raw notes */
+  .release details {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    margin-top: 1.5rem;
+    overflow: hidden;
+  }
+
+  .release details summary {
+    padding: 0.8rem 1rem;
+    cursor: pointer;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    user-select: none;
+    transition: color 0.2s ease;
+  }
+
+  .release details summary:hover {
+    color: var(--text-dim);
+  }
+
+  .release details[open] summary {
+    border-bottom: 1px solid var(--border);
+  }
+
+  .release details .raw-notes {
+    padding: 1rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.82rem;
+    line-height: 1.7;
+    color: var(--text-dim);
+    white-space: pre-wrap;
+    overflow-x: auto;
+  }
+
+  /* Footer */
+  footer {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 2rem;
+    border-top: 1px solid var(--border);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  footer a {
+    color: var(--accent);
+    text-decoration: none;
+    transition: opacity 0.2s;
+  }
+
+  footer a:hover { opacity: 0.7; }
+
+  /* Animations */
+  @keyframes fadeUp {
+    from {
+      opacity: 0;
+      transform: translateY(16px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--border-accent); }
+
+  @media (max-width: 600px) {
+    header { padding: 3.5rem 1.2rem 2rem; }
+    .summary, .practical, .releases { padding-left: 1.2rem; padding-right: 1.2rem; }
+    .summary-grid { grid-template-columns: 1fr 1fr; }
+    footer { padding: 2rem 1.2rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="top-line"></div>
+
+<header>
+  <div class="header-label">anthropics/claude-code</div>
+  <h1>Release <em>Notes</em></h1>
+  <div class="header-meta">
+    <!-- PLACEHOLDER: header-meta
+         Replace these spans with the actual release count, version range, and generation date.
+         Example:
+         <span>Latest 3 releases</span>
+         <span class="dot"></span>
+         <span>v2.1.76 – v2.1.78</span>
+         <span class="dot"></span>
+         <span>Generated Mar 18, 2026</span>
+    -->
+  </div>
+</header>
+
+<section class="summary">
+  <div class="summary-grid">
+    <!-- PLACEHOLDER: summary-cards
+         Count all changes across fetched releases and fill in 4 cards.
+         Example:
+         <div class="summary-card card-feature">
+           <div class="card-number">18</div>
+           <div class="card-label">Features</div>
+         </div>
+         <div class="summary-card card-fix">
+           <div class="card-number">62</div>
+           <div class="card-label">Bug Fixes</div>
+         </div>
+         <div class="summary-card card-security">
+           <div class="card-number">5</div>
+           <div class="card-label">Security Fixes</div>
+         </div>
+         <div class="summary-card card-perf">
+           <div class="card-number">12</div>
+           <div class="card-label">Performance</div>
+         </div>
+    -->
+  </div>
+</section>
+
+<section class="practical">
+  <h2>What matters to you</h2>
+  <ul class="practical-list">
+    <!-- PLACEHOLDER: practical-items
+         Curate 8-12 of the most impactful changes. Each item gets a tag class:
+         - tag-action (green): things the user should do or try
+         - tag-security (red): security-relevant changes
+         - tag-fix (blue): notable bug fixes
+         - tag-perf (purple): performance improvements
+
+         Example item:
+         <li>
+           <span class="tag tag-action">Action</span>
+           <span>If you use <strong>tmux</strong>, enable <code>set -g allow-passthrough on</code> to get terminal notifications inside tmux sessions.</span>
+         </li>
+    -->
+  </ul>
+</section>
+
+<section class="releases">
+
+  <!-- PLACEHOLDER: release-articles
+       One <article class="release"> per version, newest first.
+       The first release should include <span class="release-tag">Latest</span>.
+
+       Each change gets a color-coded dot:
+       - class="change-icon feat"     (green)  — new features
+       - class="change-icon fix"      (blue)   — bug fixes
+       - class="change-icon security" (red)    — security fixes
+       - class="change-icon perf"     (purple) — performance improvements
+       - class="change-icon platform" (yellow) — platform-specific (VSCode, tmux, WSL, etc.)
+
+       Example article:
+       <article class="release">
+         <div class="release-header">
+           <span class="release-version">v2.1.78</span>
+           <span class="release-tag">Latest</span>
+           <span class="release-date">March 17, 2026</span>
+         </div>
+         <ul class="release-changes">
+           <li><span class="change-icon feat"></span>Added <code>StopFailure</code> hook event that fires on API errors</li>
+           <li><span class="change-icon fix"></span>Fixed <code>git log HEAD</code> failing inside sandboxed Bash on Linux</li>
+           <li><span class="change-icon security"></span><strong>Security:</strong> Fixed silent sandbox disable when dependencies are missing</li>
+           <li><span class="change-icon perf"></span>Improved memory usage when resuming large sessions</li>
+           <li><span class="change-icon platform"></span>Fixed voice mode not working on WSL2 with WSLg</li>
+         </ul>
+         <details>
+           <summary>Raw release notes</summary>
+           <div class="raw-notes">- Added `StopFailure` hook event...
+- Fixed `git log HEAD` failing...</div>
+         </details>
+       </article>
+  -->
+
+</section>
+
+<footer>
+  <span>Fetched from <a href="https://github.com/anthropics/claude-code/releases" target="_blank">anthropics/claude-code</a></span>
+  <span>Built with Claude Code by <a href="https://buymeacoffee.com/cypherpoet" target="_blank">CypherPoet</a></span>
+</footer>
+
+</body>
+</html>
