@@ -39,39 +39,11 @@ cp -r skills/<skill-name> ~/.gemini/antigravity/skills/
 
 ### Creating a New Skill
 
-1. Create a new folder under `skills/` with a descriptive name (kebab-case).
-2. Add a `SKILL.md` file with YAML frontmatter:
-
-```yaml
----
-name: my-skill-name
-description: Brief description of when to use this skill
----
-
-# Skill Title
-
-## Instructions
-...
-```
-
-3. Add any supporting files (scripts, templates, etc.) to subfolders.
-4. Add a corresponding documentation page under `docs/`.
+Use the `/skill-creator` skill within your agent environment to create and iterate on skills.
 
 ## 📚 Documentation
 
 Full documentation for each skill lives in the [`docs/`](docs/) directory. See the [documentation index](docs/README.md) for a complete listing.
-
-## 🔧 Skill Anatomy
-
-Every skill requires a `SKILL.md` file with:
-
-| Component | Required | Description |
-|-----------|----------|-------------|
-| **YAML Frontmatter** | ✅ | `name` and `description` fields |
-| **Instructions** | ✅ | Step-by-step guidance for the agent |
-| **Scripts** | ❌ | Helper scripts that extend capabilities |
-| **Templates** | ❌ | Reference implementations or boilerplate |
-| **Resources** | ❌ | Additional files the skill references |
 
 ## 📝 License
 
