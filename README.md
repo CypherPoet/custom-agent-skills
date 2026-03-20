@@ -1,3 +1,5 @@
+[![Buy Me a Coffee](https://img.shields.io/badge/Buy%20Me%20a%20Coffee-FFDD00?logo=buymeacoffee&logoColor=000000)](https://buymeacoffee.com/cypherpoet)
+
 # 🛠️ Custom Agent Skills
 
 A curated collection of custom AI agent skills for extending coding assistant capabilities.
