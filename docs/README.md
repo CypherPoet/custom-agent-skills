@@ -6,6 +6,7 @@ This directory contains detailed documentation for each skill in the collection.
 
 | Skill | Description |
 |-------|-------------|
+| [claude-changelog](claude-changelog.md) | Fetch and summarize Claude Code release notes as HTML or Markdown |
 | [expo-snack-prototyper](expo-snack-prototyper.md) | Generate self-contained React Native prototypes that run in Expo Snack |
 
 ## 📝 Documentation Guidelines
