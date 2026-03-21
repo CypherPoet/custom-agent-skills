@@ -1,11 +1,15 @@
 # OS
 .DS_Store
+._*
 Thumbs.db
+Desktop.ini
 
 # Editor
 *.swp
 *.swo
 *~
+*.bak
+*.orig
 .idea/
 .vscode/
 
@@ -13,8 +17,15 @@ Thumbs.db
 .env
 .env.local
 
-# Claude local settings
-.claude/settings.local.json
+# Claude Code (ignore runtime artifacts, keep shared agent definitions)
+.claude/*
+!.claude/agents/
 
 # Node (if any skill uses scripts)
 node_modules/
+
+# Script artifacts
+*.log
+*.tmp
+__pycache__/
+*.pyc
