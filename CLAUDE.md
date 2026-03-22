@@ -8,7 +8,7 @@ Public collection of reusable AI agent skills — self-contained instruction set
 
 - `skills/<skill-name>/SKILL.md` — Each skill is a folder with a required `SKILL.md` containing YAML frontmatter (`name`, `description`) and markdown instructions.
 - Skills may optionally include `assets/`, `references/`, and `scripts/` subdirectories.
-- `docs/` — Detailed documentation for each skill (mirrors `skills/` structure).
+- `docs/CATALOG.md` — Index of all skills with descriptions.
 
 ## Skill Format
 
@@ -35,4 +35,4 @@ Use `/writing-skills` when creating or editing skills. For iterative improvement
 
 ## Workflow
 
-- When adding a new skill, also create `docs/<skill-name>.md` and update `docs/README.md` with its entry.
+- When adding a new skill, update `docs/CATALOG.md` with its entry.
