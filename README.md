@@ -24,14 +24,17 @@ Each skill is a self-contained folder with a `SKILL.md` instruction file and any
 
 ### Installing a Skill
 
-To install a skill from this repo into your agent environment, copy the skill folder to your agent's skills directory. For example:
+Use the [`skills`](https://github.com/vercel-labs/skills) CLI to install skills from this repo:
 
 ```bash
-# Claude Code
-cp -r skills/<skill-name> ~/.claude/skills/
+# Install a specific skill globally for Claude Code
+npx skills add CypherPoet/custom-agent-skills -g -a claude-code -s <skill-name>
 
-# Gemini CLI / Antigravity
-cp -r skills/<skill-name> ~/.gemini/antigravity/skills/
+# Install a specific skill globally for all detected agents
+npx skills add CypherPoet/custom-agent-skills -g -s <skill-name>
+
+# List available skills without installing
+npx skills add CypherPoet/custom-agent-skills -l
 ```
 
 ### Creating a New Skill
