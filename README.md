@@ -16,12 +16,7 @@ Each skill is a self-contained folder with a `SKILL.md` instruction file and any
 .
 ├── skills/              # Individual skill folders
 │   └── <skill-name>/
-│       ├── SKILL.md     # Main instruction file (required)
-│       ├── scripts/     # Helper scripts (optional)
-│       ├── templates/   # Reference templates (optional)
-│       └── resources/   # Additional assets (optional)
-├── docs/                # Detailed skill documentation
-│   └── README.md        # Documentation index
+├── docs/                # Skill catalog and documentation
 └── README.md
 ```
 

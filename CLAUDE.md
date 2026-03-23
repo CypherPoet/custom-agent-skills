@@ -10,19 +10,6 @@ Public collection of reusable AI agent skills — self-contained instruction set
 - Skills may optionally include `assets/`, `references/`, and `scripts/` subdirectories.
 - `docs/CATALOG.md` — Index of all skills with descriptions.
 
-## Skill Format
-
-Every `SKILL.md` must have this structure:
-
-```yaml
----
-name: kebab-case-skill-name
-description: When to trigger this skill
----
-```
-
-Followed by markdown instructions. Use `/writing-skills` for the canonical workflow.
-
 ## Creating and Improving Skills
 
 Use `/writing-skills` when creating or editing skills. For iterative improvement and description optimization, use `/skill-creator`.
