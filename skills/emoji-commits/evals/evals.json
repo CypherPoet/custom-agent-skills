@@ -1,0 +1,44 @@
+{
+  "skill_name": "emoji-commits",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "I just added a dark mode toggle to the settings page. Commit my changes.",
+      "expected_output": "A commit message starting with ✨ emoji, referencing dark mode or settings, concise and under 72 chars",
+      "files": [],
+      "expectations": [
+        "Message starts with a Unicode emoji character, not a :shortcode:",
+        "Message is a single line with no newlines",
+        "Message is under 72 characters",
+        "Uses the ✨ (sparkles) emoji for a new feature",
+        "Message references dark mode or settings"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "I refactored the database connection pool and also fixed a memory leak that was happening on reconnect. Please commit.",
+      "expected_output": "Either picks a primary intent emoji (🐛 or ♻️) or suggests splitting into two commits. Message is concise with Unicode emoji.",
+      "files": [],
+      "expectations": [
+        "Message starts with a Unicode emoji character, not a :shortcode:",
+        "Message is a single line with no newlines",
+        "Message is under 72 characters",
+        "Uses either 🐛 (bug fix) or ♻️ (refactor) emoji",
+        "Either suggests splitting into two commits OR explains the primary intent choice"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "I updated the README with the new API endpoints and added a getting started section. Commit this.",
+      "expected_output": "A commit message starting with 📝 emoji, referencing README/docs/API, concise and under 72 chars",
+      "files": [],
+      "expectations": [
+        "Message starts with a Unicode emoji character, not a :shortcode:",
+        "Message is a single line with no newlines",
+        "Message is under 72 characters",
+        "Uses the 📝 (memo) emoji for documentation",
+        "Message references README, docs, or API"
+      ]
+    }
+  ]
+}
