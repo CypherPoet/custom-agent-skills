@@ -12,7 +12,7 @@ Public collection of reusable AI agent skills — self-contained instruction set
 
 ## Creating and Improving Skills
 
-Use `/writing-skills` when creating or editing skills. For iterative improvement and description optimization, use `/skill-creator`.
+Use `/skill-creator` when creating, editing, or iterating on skills.
 
 ## Conventions
 
