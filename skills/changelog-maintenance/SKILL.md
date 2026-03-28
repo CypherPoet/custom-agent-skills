@@ -164,7 +164,7 @@ Generate a migration guide when a release includes breaking changes. The guide s
 
 Structure:
 
-```markdown
+````markdown
 # Migrating from vX to vY
 
 ## Overview
@@ -174,14 +174,14 @@ Brief summary of what changed and why.
 
 ### Change title
 **Before:**
-\```python
+```python
 old_api_call(arg1, arg2)
-\```
+```
 
 **After:**
-\```python
+```python
 new_api_call(config=Config(arg1, arg2))
-\```
+```
 
 **Why:** Explain the motivation — performance, consistency, security, etc.
 
@@ -195,7 +195,7 @@ List anything deprecated with its removal timeline.
 1. Numbered steps to migrate
 2. Each step is concrete and actionable
 3. Include commands to run where applicable
-```
+````
 
 Place migration guides in `docs/migration/` (e.g., `docs/migration/v1-to-v2.md`) unless the project has a different convention.
 
