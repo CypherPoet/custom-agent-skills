@@ -1,0 +1,47 @@
+{
+  "skill_name": "changelog-maintenance",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Update the changelog for the latest release",
+      "expected_output": "A CHANGELOG.md update that categorizes recent commits into Added/Changed/Fixed/etc sections, suggests a version number with reasoning, uses ISO 8601 date format, and includes comparison links.",
+      "files": [],
+      "expectations": [
+        "Contains standard Keep a Changelog header referencing keepachangelog.com and semver.org",
+        "Has an [Unreleased] section",
+        "Uses ISO 8601 date format (YYYY-MM-DD) for version entries",
+        "Entries are categorized into standard categories (Added/Changed/Deprecated/Removed/Fixed/Security) — not a raw git log",
+        "Each entry is specific and descriptive, not vague like 'Bug fixes'",
+        "Includes comparison links at the bottom of the file"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Prepare release notes for v2.0.0 — we renamed the config API and dropped Python 3.8 support",
+      "expected_output": "A user-facing release notes document with emoji sections, plus a migration guide with before/after code examples for the API rename and Python version change.",
+      "files": [],
+      "expectations": [
+        "Changelog contains a [2.0.0] version section",
+        "Separate release notes document uses user-friendly emoji sections",
+        "Migration guide includes before/after code examples for the API rename",
+        "Python 3.8 deprecation is documented as a breaking change",
+        "Migration guide includes concrete step-by-step upgrade instructions",
+        "Release notes language is user-oriented, not implementation-focused"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "We don't have a changelog yet — create one from the git history",
+      "expected_output": "A comprehensive CHANGELOG.md created from scratch, covering the full git history with curated and categorized entries.",
+      "files": [],
+      "expectations": [
+        "Creates a complete CHANGELOG.md from scratch",
+        "Contains standard Keep a Changelog header",
+        "Entries are curated and categorized, not raw commit message copies",
+        "Covers the meaningful changes from git history",
+        "Uses reverse chronological order",
+        "Only includes categories that have entries (no empty sections)"
+      ]
+    }
+  ]
+}
