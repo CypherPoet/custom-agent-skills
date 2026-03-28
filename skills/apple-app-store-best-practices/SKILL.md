@@ -1,22 +1,27 @@
 ---
-name: apple-appstore-reviewer
+name: apple-app-store-best-practices
 description: >
-  Audit an iOS, macOS, tvOS, watchOS, or visionOS app for App Store rejection risks
-  against the official Apple App Store Review Guidelines. Produces a prioritized risk
-  register with specific guideline citations (e.g., violates §3.1.1), evidence from the
-  codebase, and concrete remediation steps. Use this skill before submitting to App Review,
-  after receiving a rejection, when adding IAP/subscriptions/auth/UGC/data collection to an
-  app, or whenever someone asks about App Store compliance, review guidelines, or rejection
-  risks. Also use when the user mentions "App Store", "App Review", "rejection", "submission",
-  "guideline", or is working on an Apple platform app and wants a compliance check. Even for
-  quick questions like "do I need Sign in with Apple?" or "will this pass review?", consult
-  this skill.
+  Comprehensive best-practices guide for Apple App Store success — compliance auditing,
+  metadata optimization, and listing strategy. Audits iOS, macOS, tvOS, watchOS, and
+  visionOS apps against the official Apple App Store Review Guidelines, producing a
+  prioritized risk register with specific guideline citations (e.g., violates §3.1.1),
+  evidence from the codebase, and concrete remediation steps. Also covers metadata
+  optimization (character limits, keyword strategy), screenshot and app preview best
+  practices, review/rating management, and localization guidance. Use this skill before
+  submitting to App Review, after receiving a rejection, when adding IAP/subscriptions/
+  auth/UGC/data collection to an app, when optimizing an App Store listing, or whenever
+  someone asks about App Store compliance, review guidelines, rejection risks, or listing
+  optimization. Also use when the user mentions "App Store", "App Review", "rejection",
+  "submission", "guideline", "ASO", "keywords", "screenshots", or is working on an Apple
+  platform app and wants a compliance check or listing review. Even for quick questions
+  like "do I need Sign in with Apple?", "will this pass review?", or "how long can my
+  subtitle be?", consult this skill.
   Last synced with Apple guidelines: 2026-03-27
 ---
 
-# Apple App Store Reviewer
+# Apple App Store Best Practices
 
-Systematically audit an app against all 5 sections of the [Apple App Store Review Guidelines](https://developer.apple.com/app-store/review/guidelines/), producing findings with exact section citations and actionable remediation.
+Comprehensive guide for Apple App Store success: compliance auditing against all 5 sections of the [Apple App Store Review Guidelines](https://developer.apple.com/app-store/review/guidelines/) with exact section citations and actionable remediation, plus metadata optimization, screenshot strategy, review management, and localization best practices.
 
 ## Reference Files
 
@@ -152,6 +157,18 @@ Check against §4 (Design) and §2.3 (Metadata).
 - All backend services live and accessible
 
 **Metadata accuracy (§2.3):**
+
+Character limits (verify all fields are within bounds):
+
+| Field | Max Length |
+|-------|-----------|
+| App Name (Title) | 30 characters |
+| Subtitle | 30 characters |
+| Promotional Text | 170 characters |
+| Description | 4,000 characters |
+| Keywords | 100 characters (comma-separated) |
+| What's New | 4,000 characters |
+
 - App description matches actual functionality
 - Screenshots show the actual app in use (not marketing mockups)
 - Age rating answers are accurate
@@ -341,3 +358,95 @@ When an app has been rejected:
 5. **Produce a targeted remediation plan** with the same Risk Register format, focused on the rejection reason plus any related risks
 
 The goal is to fix the rejection AND prevent a follow-up rejection for something the reviewer will notice next.
+
+## Metadata Optimization Best Practices
+
+Beyond compliance, well-optimized metadata improves discoverability and conversion. Apply these when reviewing or drafting App Store listings.
+
+**App Name & Subtitle:**
+- Use the full 30 characters in both — every unused character is a missed keyword opportunity
+- Front-load the most important keyword into the title; use the subtitle for a secondary keyword or value proposition
+- Don't repeat words between title and subtitle — Apple indexes both together
+
+**Keywords field (100 characters):**
+- No spaces after commas — spaces count against the limit (use `photo,editor,filter` not `photo, editor, filter`)
+- Don't duplicate words already in the title or subtitle — Apple indexes those automatically
+- Use singular forms only — Apple indexes both singular and plural
+- Don't include the word "app" or your category name — already indexed
+- Don't include competitor names (also violates §2.3.7)
+- Use all 100 characters — fill remaining space with related terms, synonyms, and common misspellings
+
+**Description (4,000 characters):**
+- Lead with a one-line value proposition — this is what users see before tapping "more"
+- Follow with 3-5 bullet points highlighting key features
+- Include social proof if available (awards, press mentions, user count)
+- End with a call to action
+- Note: the Description is NOT indexed for search — keywords here don't affect discoverability. Focus on conversion, not keyword stuffing.
+
+**Promotional Text (170 characters):**
+- Updated anytime without a new app version — use for timely messaging (seasonal events, new features, limited offers)
+- Not indexed for search — purely a conversion tool
+
+## Screenshot & App Preview Strategy
+
+Screenshots and app preview videos are the primary conversion driver on the App Store listing page.
+
+**Screenshot best practices:**
+- Use all 10 available screenshot slots — more screenshots give users more reasons to download
+- The first 3 screenshots are visible before scrolling in search results — put the strongest features there
+- Show the app in actual use with real content, not empty states or placeholder data
+- Each screenshot should communicate a distinct feature or benefit
+- Add concise captions above or below the UI to explain what the user is seeing
+- Provide device-specific screenshots for each supported device class (iPhone 6.7", iPhone 6.1", iPad, etc.) — App Store shows the closest match to the user's device
+
+**App preview video:**
+- App previews auto-play in search results (muted) and significantly increase conversion
+- Keep it under 30 seconds — focus on the core user journey
+- Design for muted viewing — use text overlays to convey the narrative without audio
+- Show real app footage, not animated mockups (also required by §2.3.3)
+
+**Compliance note:** Screenshots and previews must accurately represent the current app experience (§2.3.3). Outdated or misleading visuals are a P2 rejection risk.
+
+## Review & Rating Management
+
+App Store ratings directly affect search ranking and conversion. Proactive management matters.
+
+**Strategic review prompts:**
+- Use `SKStoreReviewController.requestReview()` — Apple controls the display frequency (max 3 times per 365-day period per device)
+- Prompt after positive moments: completing onboarding, achieving a milestone, finishing a successful transaction — not on first launch or during frustrating moments
+- Never create custom review prompts that bypass `SKStoreReviewController` — this violates §3.2.2(x)
+- Never gate features behind reviews or incentivize ratings — this is a P2 rejection risk (§3.2.2(x))
+
+**Responding to reviews:**
+- Respond to negative reviews via App Store Connect — this signals active maintenance and can prompt users to update their rating
+- Address the specific issue raised, not a generic "thanks for your feedback"
+- Use the App Store Connect API to monitor and respond to reviews programmatically at scale
+
+**Feedback loop:**
+- Monitor review sentiment for recurring complaints — these often surface the same issues that trigger App Review rejections
+- Common review complaints about crashes, broken features, or permission requests map directly to §2.1, §2.3, and §5.1.1(ii)
+
+## Localization Guidance
+
+Localizing App Store metadata expands discoverability across markets. Each locale gets its own independent set of metadata fields.
+
+**What to localize:**
+- App Name, Subtitle, Keywords, Description, Promotional Text, What's New, and Screenshots
+- Each locale gets a separate 100-character keyword field — this multiplies your total keyword coverage
+- Keywords that don't fit in your primary market can go in secondary locale keyword fields
+
+**Localization vs. translation:**
+- Don't just translate keywords — research what users in each market actually search for
+- Search behavior varies by culture: a direct translation of "photo editor" may not be the top search term in Japanese or Korean
+- Use App Store Connect's App Analytics to see which search terms drive impressions in each locale
+
+**Priority markets** (largest App Store revenue, in order):
+- English (US, UK, Australia, Canada)
+- Simplified Chinese
+- Japanese
+- Korean
+- German
+- French
+- Spanish
+
+**Tip:** Even if the app UI is English-only, localizing just the metadata (title, subtitle, keywords, description) still improves discoverability in non-English markets. This requires no code changes — it's configured entirely in App Store Connect.
