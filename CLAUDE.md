@@ -22,4 +22,4 @@ Use `/skill-creator` when creating, editing, or iterating on skills.
 
 ## Workflow
 
-- When adding a new skill, update `docs/CATALOG.md` with its entry.
+- When adding a new skill, update `docs/CATALOG.md` with its entry. Keep rows sorted alphabetically by skill name.
