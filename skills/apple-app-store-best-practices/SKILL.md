@@ -16,7 +16,7 @@ description: >
   platform app and wants a compliance check or listing review. Even for quick questions
   like "do I need Sign in with Apple?", "will this pass review?", or "how long can my
   subtitle be?", consult this skill.
-  Last synced with Apple guidelines: 2026-03-30
+  Last synced with Apple guidelines: 2026-04-06
 ---
 
 # Apple App Store Best Practices

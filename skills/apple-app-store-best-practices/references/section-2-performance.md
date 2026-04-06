@@ -1,7 +1,7 @@
 # Section 2: Performance
 
 > Source: https://developer.apple.com/app-store/review/guidelines/
-> Last synced: 2026-03-27
+> Last synced: 2026-04-06
 
 ---
 
@@ -913,6 +913,7 @@
 - Ads cannot be dismissed or block core functionality
 - Ad frequency is excessive and degrades the user experience
 - Ads are deceptive or disguised as app content
+- App ads target users based on sensitive data categories: health or medical information, school or classroom data, or data about children
 
 **What to check:**
 - Search for ad SDK imports: `GoogleMobileAds`, `AdMob`, `FBAudienceNetwork`, `AdColony`, `AppLovin`, `UnityAds`, `IronSource`, `Vungle`, `Chartboost`, `InMobi`
@@ -927,3 +928,4 @@
 - Interstitial ads should appear at natural transition points, not immediately upon launch
 - Users must always be able to dismiss ads and return to the app's content
 - The App Tracking Transparency framework (`ATTrackingManager`) must be used before tracking for ad purposes
+- Sensitive data categories — health/medical, school/classroom, and children's data — must never be used for ad targeting regardless of consent

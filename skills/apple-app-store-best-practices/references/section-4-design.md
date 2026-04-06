@@ -1,7 +1,7 @@
 # Section 4: Design
 
 > Source: https://developer.apple.com/app-store/review/guidelines/
-> Last synced: 2026-03-27
+> Last synced: 2026-04-06
 
 ---
 
@@ -607,8 +607,9 @@
 
 **Exceptions (Sign in with Apple not required):**
 - The app uses only the company's own proprietary account system (no third-party social login)
-- The app is exclusively for an alternative app marketplace
+- The app is an alternative app marketplace, or is distributed through an alternative app marketplace and uses that marketplace's own login system
 - The app is an education, enterprise, or government app using institutional identity providers
+- The app uses a government or industry-backed citizen identification / electronic ID system
 - The app is a client for a specific third-party service where the account is with that service (e.g., a Gmail client requiring Google login)
 
 **Key details:**

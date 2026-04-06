@@ -1,7 +1,7 @@
 # Section 5: Legal
 
 > Source: https://developer.apple.com/app-store/review/guidelines/
-> Last synced: 2026-03-27
+> Last synced: 2026-04-06
 
 ---
 
@@ -107,7 +107,7 @@
 
 #### 5.1.1(v) Account Sign-In
 
-**Requirement:** Apps must not require account creation or sign-in unless the app's core features are account-based. If the app offers account creation, it must also offer account deletion. Apps must not collect unnecessary personal information during sign-up. Social network apps must provide a mechanism for credential revocation.
+**Requirement:** Apps must not require account creation or sign-in unless the app's core features are account-based. If the app offers account creation, it must also offer account deletion. Apps must not collect unnecessary personal information during sign-up. Social network apps must provide a mechanism for credential revocation. Apps may not store social network credentials or tokens off-device; connections to social networks must use direct real-time connections only while actively in use.
 
 **Triggers rejection if:**
 - App requires sign-in but core features do not need an account (e.g., a flashlight app requiring login)
@@ -116,6 +116,7 @@
 - Social network app provides no way to revoke credentials or disconnect the account
 - Account deletion flow is excessively difficult, buried, or non-functional
 - Sign in with Apple not offered when third-party sign-in is available (see guideline 4.8)
+- App persistently stores social network credentials or tokens off-device outside of active use
 
 **What to check:**
 - Whether the app requires sign-in before any functionality is accessible
@@ -129,6 +130,7 @@
 - Account deletion must actually delete server-side data, not just deactivate the account
 - Apple may require the account deletion URL to be submitted in App Store Connect
 - Apps in regulated industries (e.g., banking) may have legitimate reasons to require sign-in, but must still offer deletion
+- Social network tokens must not be persisted off-device; apps must use direct connections only during active use of social features
 
 ---
 
@@ -198,12 +200,13 @@
 
 #### 5.1.1(ix) Regulated Fields
 
-**Requirement:** Apps operating in regulated industries (health, finance, legal, etc.) must be submitted by the legal entity that provides the regulated service.
+**Requirement:** Apps operating in regulated industries must be submitted by the legal entity that provides the regulated service. Regulated industries include banking, financial services, healthcare, gambling, legal cannabis, air travel, crypto exchanges, legal services, and other government-regulated fields.
 
 **Triggers rejection if:**
-- Health, fintech, or legal app is submitted by an individual developer account rather than the regulated entity
+- App operating in a regulated industry (banking, financial services, healthcare, gambling, legal cannabis, air travel, crypto exchange, legal, or insurance) is submitted by an individual developer account rather than the licensed entity
 - App provides regulated services (insurance, banking, clinical diagnostics) without the submitting entity holding appropriate licenses
 - Developer account name does not match the entity providing the regulated service
+- Legal cannabis sale app is not geo-restricted to jurisdictions where sale is legal
 
 **What to check:**
 - Developer account type: Organization vs. Individual
@@ -211,11 +214,13 @@
 - HealthKit entitlements: if present, verify the submitting entity is a legitimate health organization
 - Financial transaction features: verify the submitting entity is a licensed financial institution
 - App Store Connect: organization name and D-U-N-S number
+- For gambling or cannabis apps: storefront/region restrictions in App Store Connect
 
 **Key details:**
 - This is about who submits the app, not the app's content alone
 - Third-party developers building apps for regulated entities must have the entity submit under their own account
-- Includes health, finance, insurance, legal, real estate, and other government-regulated fields
+- Explicitly includes: banking, financial services, healthcare, gambling, legal cannabis, air travel, crypto exchanges, legal, real estate, and other government-regulated fields
+- Cannabis-sale apps must be geo-restricted to jurisdictions where cannabis sale is legal
 
 ---
 
@@ -246,7 +251,7 @@
 
 **Triggers rejection if:**
 - App tracks users without presenting the ATT prompt
-- App shares user data with third-party ad networks, analytics, or data brokers without disclosure
+- App shares user data with third-party ad networks, analytics, data brokers, or third-party AI services without disclosure and explicit permission
 - App functionality is locked or degraded when the user declines ATT tracking
 - App uses fingerprinting as a substitute for tracking when ATT consent is denied
 - Third-party SDKs perform tracking without ATT consent
@@ -264,6 +269,7 @@
 
 **Key details:**
 - "Tracking" means linking user or device data with third-party data for advertising, or sharing user data with a data broker
+- Third-party AI services that receive user data must be disclosed and require explicit user permission before data is shared
 - Device fingerprinting (using device characteristics as a substitute for IDFA) is explicitly prohibited
 - ATT must be presented before any tracking occurs, not retroactively
 - Each third-party SDK must include its own privacy manifest; the app is responsible for all embedded SDKs
@@ -315,12 +321,13 @@
 
 #### 5.1.2(iv) No Contacts or Photos Database Building
 
-**Requirement:** Apps must not build private databases from users' Contacts or Photos data.
+**Requirement:** Apps must not build private databases from users' Contacts or Photos data. Apps must not collect information about which other apps are installed on the device for analytics, advertising, or marketing purposes.
 
 **Triggers rejection if:**
 - App uploads the user's entire contact list to external servers
 - App scrapes or indexes the user's photo library to build a facial recognition or image database
 - Contact or photo data is stored server-side beyond what is needed for the user-initiated feature
+- App collects installed-app information for analytics, advertising, or marketing
 
 **What to check:**
 - `CNContactStore` usage: is the full contact list fetched and transmitted?
@@ -331,6 +338,7 @@
 **Key details:**
 - Apps may access individual contacts or photos the user explicitly selects
 - The violation is bulk extraction and external storage of these data stores
+- Collecting the list of installed apps is treated the same as collecting personal data — prohibited for advertising/analytics/marketing
 
 ---
 
@@ -382,24 +390,28 @@
 
 ### 5.1.3 Health and Health Research
 
-#### 5.1.3(i) No Health Data for Advertising
+#### 5.1.3(i) No Health Data for Advertising (with Direct-Benefit Exception)
 
-**Requirement:** Health data collected through HealthKit, CareKit, or similar health frameworks must not be used for advertising or marketing purposes.
+**Requirement:** Health data collected through HealthKit, CareKit, or similar health frameworks must not be used for advertising, marketing, or use-based data mining. An exception applies for apps that use health or fitness data to directly benefit the user (for example, reducing insurance premiums), provided the app is submitted by the entity providing that benefit and the health data is not shared with any third party.
 
 **Triggers rejection if:**
 - Health data is sent to advertising SDKs or ad networks
 - Health metrics are used to target or personalize advertisements
 - Health data is included in analytics events sent to advertising platforms
+- Health data is shared with third parties for use-based mining (even if framed as non-advertising)
 
 **What to check:**
-- Data flow from `HKHealthStore` reads -- does any of this data reach ad SDKs?
+- Data flow from `HKHealthStore` reads -- does any of this data reach ad SDKs or third parties?
 - Ad SDK initialization: are health-related user properties being set?
 - Analytics events that include health metrics
 - Network requests that combine health data with advertising identifiers
+- For direct-benefit apps: verify the app is submitted by the benefit-providing entity (e.g., the insurer) and confirm no third-party data sharing
 
 **Key details:**
-- This is an absolute prohibition -- no amount of consent makes it acceptable
+- General prohibition on health data for advertising is extremely strict -- no amount of consent makes advertising use acceptable
+- Exception: health data may be used to directly benefit the user (e.g., insurance premium reduction) only when the app is submitted by the benefit-providing entity and data is not shared with third parties
 - Includes indirect use such as using health conditions to select ad categories
+- Third-party SDKs must not receive health data for any advertising or mining purpose
 
 ---
 
@@ -499,12 +511,13 @@
 
 #### 5.1.4(b) Limited Third-Party Services
 
-**Requirement:** Kids Category apps may use limited third-party services subject to the same restrictions as guideline 1.3 (kids category content). Apps in the Kids Category must include a privacy policy. The term "For Kids" is reserved exclusively for apps in the Kids Category.
+**Requirement:** Kids Category apps may use limited third-party services subject to the same restrictions as guideline 1.3 (kids category content). Apps in the Kids Category must include a privacy policy. The terms "For Kids" and "For Children" are reserved exclusively for apps in the Kids Category. Apps outside the Kids Category must not use child-audience-implying language or imagery in their name, subtitle, icon, screenshots, or description.
 
 **Triggers rejection if:**
 - Kids app uses third-party services that do not comply with kids privacy restrictions
 - Kids Category app lacks a privacy policy
-- App not in the Kids Category uses "For Kids" in its name, subtitle, or description
+- App not in the Kids Category uses "For Kids" or "For Children" in its name, subtitle, or description
+- App not in the Kids Category uses other child-audience-implying terms or imagery in its name, subtitle, icon, screenshots, or description
 - Third-party services in kids apps collect data independently or for their own purposes
 
 **What to check:**
@@ -514,7 +527,8 @@
 - Third-party SDK data flows: do any SDKs independently collect or transmit data?
 
 **Key details:**
-- "For Kids" is a regulated term in the App Store -- using it outside the Kids Category is a rejection
+- "For Kids" and "For Children" are regulated terms in the App Store -- using either outside the Kids Category is a rejection
+- The restriction extends beyond those exact phrases -- any child-audience-implying language or imagery in name, subtitle, icon, screenshots, or description is restricted for non-Kids-Category apps
 - Third-party services in kids apps must operate as data processors only, not independent controllers
 - Privacy policy must specifically address children's data practices
 
@@ -522,14 +536,14 @@
 
 ### 5.1.5 Location Services
 
-**Requirement:** Location data must only be used when directly relevant to the app's features and services. Apps must notify users and obtain consent before collecting location data. Location Services must not be used for emergency services dispatching or autonomous vehicle control.
+**Requirement:** Location data must only be used when directly relevant to the app's features and services. Apps must notify users and obtain consent before collecting location data. Location Services must not be used for emergency services dispatching or for controlling autonomous vehicles, aircraft, or devices — except lightweight drones, consumer toys, and remote alarm systems.
 
 **Triggers rejection if:**
 - App requests location access for features that do not require it
 - App uses location data without notifying the user of the purpose
 - Location access is requested without a clear, specific purpose string
 - App uses "Always" location when "When In Use" would suffice
-- App uses location for emergency services dispatch or autonomous vehicle control
+- App uses location for emergency services dispatch or autonomous vehicle/aircraft control (excluding lightweight drones, consumer toys, and remote alarm systems)
 - App collects location data in the background without justification
 
 **What to check:**
@@ -549,6 +563,7 @@
 - Background location usage requires a visible indicator and clear user benefit
 - Apple may reject apps that request precise location when approximate would suffice
 - Location data is considered sensitive and is subject to all data minimization requirements
+- The autonomous vehicle/aircraft prohibition has narrow exceptions: lightweight consumer drones, toys, and remote alarm systems are permitted to use location for device control
 
 ---
 
