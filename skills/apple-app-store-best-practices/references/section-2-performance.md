@@ -1,7 +1,7 @@
 # Section 2: Performance
 
 > Source: https://developer.apple.com/app-store/review/guidelines/
-> Last synced: 2026-03-27
+> Last synced: 2026-04-13
 
 ---
 
@@ -273,21 +273,24 @@
 
 ### §2.3.10 Apple Platform Focus
 
-**Requirement:** App metadata and experience should focus on the Apple platform. Apps should not primarily promote or direct users to other platforms.
+**Requirement:** App metadata and in-app experience must be focused on the Apple platform. Apps must not include names, icons, or imagery of other mobile platforms or alternative app marketplaces unless there is specific, approved interactive functionality.
 
 **Triggers rejection if:**
 - App description primarily promotes the Android, Windows, or web version
-- App UI prominently features non-Apple platform branding or directs users elsewhere
-- App feels like a wrapper or advertisement for a non-Apple experience
+- App UI prominently features non-Apple platform branding (Android, Google Play, alternative app marketplace logos/names)
+- App or metadata includes names, icons, or imagery referencing alternative app marketplaces (e.g., alternative iOS/iPadOS distribution channels)
+- App metadata includes irrelevant information unrelated to the app's own experience
 
 **What to check:**
-- Search App Store Connect description for mentions of "Android", "Google Play", "Windows", "download on our website"
-- Grep source code and UI strings for cross-platform promotional messaging
-- Check for deep links or CTAs directing users to non-Apple platforms
+- Search App Store Connect description for mentions of "Android", "Google Play", "Windows", alternative app marketplace names
+- Search app binary and UI strings for cross-platform promotional messaging
+- Check for alternative marketplace branding in screenshots, icons, or in-app UI
+- Check for deep links or CTAs directing users to non-Apple platforms or alternative marketplaces
 
 **Key details:**
-- Cross-platform apps are fine; the issue is when metadata or the app itself is primarily an advertisement for another platform
+- Cross-platform apps are fine; the issue is when metadata or the app itself promotes other platforms or alternative marketplaces
 - You can mention other platforms exist, but the focus should be on the Apple experience
+- Including names/icons/imagery of alternative app marketplaces is explicitly prohibited unless specific interactive functionality is approved
 
 ---
 
@@ -378,12 +381,13 @@
 
 ### §2.4.2 Power Efficiency
 
-**Requirement:** Apps must be designed to use energy efficiently. Apps that drain battery excessively or generate excessive heat will be rejected. *(ASR & NR)*
+**Requirement:** Apps must be designed to use energy efficiently. Apps that drain battery excessively or generate excessive heat will be rejected. Apps — including any third-party advertisements within them — must not run unrelated background processes such as cryptocurrency mining. *(ASR & NR)*
 
 **Triggers rejection if:**
 - App rapidly drains battery during normal use
 - App uses excessive CPU, GPU, or network resources when idle or in the background
 - App prevents the device from sleeping unnecessarily
+- App or any embedded ad SDK runs cryptocurrency mining or other unrelated background processes
 
 **What to check:**
 - Search for `UIApplication.shared.isIdleTimerDisabled = true` (prevents screen sleep)
@@ -392,10 +396,12 @@
 - Search for high-frequency timers (`Timer.scheduledTimer` or `DispatchSource.makeTimerSource` with very short intervals)
 - Check for unnecessary continuous animation loops or rendering when the view is not visible
 - Review `BGTaskScheduler` usage for background processing
+- Check ad SDK configurations for background processing capabilities
 
 **Key details:**
 - Background audio, location, VoIP, and fetch modes are closely scrutinized
 - Apps that declare background modes but do not use them appropriately will be rejected
+- Third-party ad SDKs embedded in the app are the developer's responsibility -- ensure they do not run unrelated background processes
 
 ---
 
@@ -905,14 +911,16 @@
 
 ### §2.5.18 Display Advertising Limits
 
-**Requirement:** Apps must limit display advertising to appropriate contexts and must not overwhelm the user experience with ads. *(ASR & NR)*
+**Requirement:** Display advertising must be limited to the main app binary and must not appear in extensions, App Clips, widgets, notifications, keyboards, watchOS apps, etc. Ads must be appropriate for the app's age rating, must allow users to see targeting information without leaving the app, and must not use behavioral advertising based on sensitive data (health, school, kids). Interstitial ads must clearly identify themselves as ads, must not be manipulative, and must provide visible close/skip buttons. Apps containing ads must include a user-facing mechanism to report inappropriate or age-inappropriate ads. *(ASR & NR)*
 
 **Triggers rejection if:**
-- Ads appear in contexts where they are prohibited (e.g., in widgets, App Clips, notification content extensions, lock screen experiences)
-- Full-screen interstitial ads appear immediately at launch or without user interaction
-- Ads cannot be dismissed or block core functionality
-- Ad frequency is excessive and degrades the user experience
-- Ads are deceptive or disguised as app content
+- Ads appear in extensions, App Clips, widgets, notification content extensions, keyboards, or watchOS apps
+- Interstitial ads do not clearly indicate they are advertisements
+- Interstitial ads use manipulative design to trick users into tapping (e.g., fake close buttons, misleading UI)
+- Close/skip buttons for interstitial ads are too small or not easily visible
+- Ads are targeted using sensitive user data: health/medical data (HealthKit), school/classroom data (ClassKit), or data from Kids Category apps
+- App lacks a mechanism for users to report inappropriate or age-inappropriate ads
+- Users cannot see the information used to target them for an ad without leaving the app
 
 **What to check:**
 - Search for ad SDK imports: `GoogleMobileAds`, `AdMob`, `FBAudienceNetwork`, `AdColony`, `AppLovin`, `UnityAds`, `IronSource`, `Vungle`, `Chartboost`, `InMobi`
@@ -920,10 +928,14 @@
 - Search for interstitial ad presentation in `viewDidAppear` of the initial view controller (immediate launch ads)
 - Look for ad presentation without user interaction triggers
 - Review ad placement frequency — timers or counters that show ads at very short intervals
+- Check close/skip button size and visibility in interstitial ad implementations
+- Verify app has a "Report Ad" or similar mechanism for inappropriate/age-inappropriate ads
+- Check if HealthKit, ClassKit, or Kids Category data flows to ad targeting logic
 - Check for `SKOverlay` or `SKStoreProductViewController` used aggressively for cross-promotion
 
 **Key details:**
-- Ads in extensions (widgets, App Clips, notification content extensions) are always prohibited
+- Ads in extensions (widgets, App Clips, notification content extensions, keyboards, watchOS) are always prohibited
 - Interstitial ads should appear at natural transition points, not immediately upon launch
 - Users must always be able to dismiss ads and return to the app's content
 - The App Tracking Transparency framework (`ATTrackingManager`) must be used before tracking for ad purposes
+- Behavioral advertising based on health data, school data, or kids data is prohibited regardless of consent

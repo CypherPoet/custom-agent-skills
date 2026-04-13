@@ -1,7 +1,7 @@
 # Section 4: Design
 
 > Source: https://developer.apple.com/app-store/review/guidelines/
-> Last synced: 2026-03-27
+> Last synced: 2026-04-13
 
 ---
 
@@ -587,33 +587,35 @@
 
 ## 4.8 Login Services (ASR & NR)
 
-**Requirement:** Apps that offer third-party or social login (e.g., Facebook Login, Google Sign-In) must also offer Sign in with Apple as an equivalent option. Sign in with Apple must be presented with equal prominence.
+**Requirement:** Apps that offer third-party or social login (e.g., Facebook Login, Google Sign-In, Sign in with Twitter, Sign In with LinkedIn, Login with Amazon, WeChat Login) must also offer as an equivalent option another login service that: (1) limits data collection to the user's name and email address; (2) allows users to keep their email address private; and (3) does not collect interactions with the app for advertising without consent. Sign in with Apple satisfies all three criteria and is the standard implementation.
 
 **Triggers rejection if:**
-- The app offers any third-party or social login option without also offering Sign in with Apple
-- Sign in with Apple is present but given less prominence (smaller button, hidden behind a menu, listed last)
-- The app collects more data through Sign in with Apple than name and email
-- The app does not respect the user's choice of private email relay
-- Sign in with Apple data is used to track users for advertising purposes
+- The app offers any third-party or social login option without also offering a qualifying privacy-respecting login alternative
+- The alternative login is present but given less prominence (smaller button, hidden behind a menu, listed last)
+- The login service collects more data than name and email address, does not support a private email option, or uses interaction data for advertising without consent
+- Sign in with Apple is used but private relay email addresses (`privaterelay.appleid.com`) are blocked or unsupported
+- Authentication data is used to track users for advertising purposes
 
 **What to check:**
-- Login/signup UI for all authentication options -- verify Sign in with Apple is present and equally prominent
-- `AuthenticationServices` framework import and `ASAuthorizationAppleIDProvider` usage
+- Login/signup UI for all authentication options -- verify a qualifying login alternative is present and equally prominent
+- `AuthenticationServices` framework import and `ASAuthorizationAppleIDProvider` usage (Sign in with Apple is the standard compliant implementation)
 - `ASAuthorizationAppleIDButton` placement, size, and style relative to other login buttons
-- Data collection scope after Apple ID authentication -- should be limited to `fullName` and `email`
+- Data collection scope after authentication -- should be limited to `fullName` and `email`
 - Handling of `privaterelay.appleid.com` email addresses -- must be supported, not blocked
-- Whether the app forces users to create a secondary account after Sign in with Apple
-- Network requests after Apple ID auth for any advertising/tracking payloads
+- Whether the app forces users to create a secondary account after signing in
+- Network requests after authentication for any advertising/tracking payloads
 
-**Exceptions (Sign in with Apple not required):**
-- The app uses only the company's own proprietary account system (no third-party social login)
-- The app is exclusively for an alternative app marketplace
-- The app is an education, enterprise, or government app using institutional identity providers
-- The app is a client for a specific third-party service where the account is with that service (e.g., a Gmail client requiring Google login)
+**Exceptions (alternative login not required):**
+- The app exclusively uses the company's own account setup and sign-in systems (no third-party social login)
+- The app is an alternative app marketplace, or an app distributed from an alternative app marketplace, using a marketplace-specific login for account, download, and commerce features
+- The app is an education, enterprise, or business app requiring the user to sign in with an existing institutional account
+- The app uses a government or industry-backed citizen identification system or electronic ID to authenticate users
+- The app is a client for a specific third-party service where users must sign in to their account for that service directly (e.g., a Gmail client requiring Google login)
 
 **Key details:**
 - Applies to both App Store Review (ASR) and Notarization Review (NR)
-- The rule is triggered by the presence of ANY third-party/social login -- once one exists, Sign in with Apple must also exist
+- The rule is triggered by the presence of ANY third-party/social login -- once one exists, a qualifying login alternative must also exist
+- Sign in with Apple remains the standard implementation as it satisfies all three privacy criteria by design
 - "Equivalent option" means same prominence, same ease of access, same number of taps to complete
 - Sign in with Apple button styling must follow Apple's Human Interface Guidelines (system-provided button styles preferred)
 

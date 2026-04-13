@@ -1,7 +1,7 @@
 # Common App Store Rejection Patterns
 
 > Source: https://developer.apple.com/app-store/review/guidelines/
-> Last synced: 2026-03-27
+> Last synced: 2026-04-13
 >
 > This checklist covers the most frequent rejection reasons. Load the corresponding
 > section reference file for full details on any flagged item.
@@ -17,7 +17,7 @@
 
 ## P1 — High Risk (Frequent Rejections)
 
-- [ ] **4.8 Sign in with Apple** — App offers third-party sign-in (Google, Facebook, etc.) but does not also offer Sign in with Apple
+- [ ] **4.8 Privacy-Compliant Login Alternative** — App offers third-party sign-in (Google, Facebook, etc.) but does not also offer a privacy-compliant login alternative (Sign in with Apple satisfies the requirement; the alternative must limit collection to name/email, support private email, and not use interactions for ads)
 - [ ] **1.2 User Generated Content** — UGC exists without ALL four requirements: content reporting, blocking, hidden from flagged content, published contact info
 - [ ] **3.1.2(c) Subscription Pricing/Terms** — Subscription price, duration, renewal terms, or cancellation instructions are unclear or missing from the purchase flow
 - [ ] **5.1.2(i) App Tracking Transparency** — App collects data used for tracking across apps/websites but does not present the ATT prompt before tracking begins
@@ -37,7 +37,7 @@
 - [ ] **4.5.4 Push Notification Misuse** — Push notifications used for advertising, promotions, or spam rather than meaningful user-relevant content
 - [ ] **3.1.1 Loot Box Odds** — App includes loot boxes or randomized virtual items for purchase but does not disclose the odds of receiving each item
 - [ ] **2.5.5 IPv6 Compatibility** — App does not work on IPv6-only networks; hard-coded IPv4 addresses or IPv4-only APIs cause connectivity failures
-- [ ] **2.3.10 Misleading Version Updates** — Repeatedly submitting updates with no meaningful changes to manipulate charts or search ranking
+- [ ] **2.3.10 Other Platform References** — App or metadata includes names, icons, or imagery of other mobile platforms (Android, Google Play) or alternative app marketplaces without approved interactive functionality
 
 ## P3 — Low Risk (Polish Issues / Soft Rejections)
 

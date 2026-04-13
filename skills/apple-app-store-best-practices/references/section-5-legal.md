@@ -1,7 +1,7 @@
 # Section 5: Legal
 
 > Source: https://developer.apple.com/app-store/review/guidelines/
-> Last synced: 2026-03-27
+> Last synced: 2026-04-13
 
 ---
 
@@ -242,14 +242,15 @@
 
 #### 5.1.2(i) Permission and Third-Party Sharing
 
-**Requirement:** Collected data must not be shared with third parties without user consent. Tracking requires App Tracking Transparency (ATT) authorization. System functionality (e.g., app features, content access) must not be gated on granting tracking permission.
+**Requirement:** Collected data must not be shared with third parties — including third-party AI services — without user consent and explicit disclosure. Tracking requires App Tracking Transparency (ATT) authorization. System functionality (e.g., app features, content access) must not be gated on granting tracking permission.
 
 **Triggers rejection if:**
 - App tracks users without presenting the ATT prompt
-- App shares user data with third-party ad networks, analytics, or data brokers without disclosure
+- App shares user data with third-party ad networks, analytics, data brokers, or AI services without disclosure
 - App functionality is locked or degraded when the user declines ATT tracking
 - App uses fingerprinting as a substitute for tracking when ATT consent is denied
-- Third-party SDKs perform tracking without ATT consent
+- Third-party SDKs (including AI SDKs) perform tracking without ATT consent
+- Personal data is sent to third-party AI without clear disclosure and explicit user permission
 
 **What to check:**
 - `PrivacyInfo.xcprivacy`: `NSPrivacyTracking` key (boolean -- is tracking declared?)
@@ -260,10 +261,12 @@
 - Whether app features are conditionally disabled based on `ATTrackingManager.AuthorizationStatus`
 - Data collection declarations in App Store Connect privacy nutrition labels
 - Network traffic to known ad/analytics domains (e.g., `graph.facebook.com`, `analytics.google.com`, `adjust.com`)
+- AI/LLM SDK integrations (e.g., OpenAI, Anthropic, Gemini, Cohere SDKs) -- verify disclosure of data sent to these services
 - `SKAdNetwork` usage (permitted alternative to user-level tracking)
 
 **Key details:**
 - "Tracking" means linking user or device data with third-party data for advertising, or sharing user data with a data broker
+- Third-party AI services are explicitly called out as third parties requiring disclosure and permission
 - Device fingerprinting (using device characteristics as a substitute for IDFA) is explicitly prohibited
 - ATT must be presented before any tracking occurs, not retroactively
 - Each third-party SDK must include its own privacy manifest; the app is responsible for all embedded SDKs
@@ -313,24 +316,28 @@
 
 ---
 
-#### 5.1.2(iv) No Contacts or Photos Database Building
+#### 5.1.2(iv) No Contacts or Photos Database Building; No Installed App Collection
 
-**Requirement:** Apps must not build private databases from users' Contacts or Photos data.
+**Requirement:** Apps must not build private databases from users' Contacts or Photos data. Apps must not collect information about which other apps are installed on a user's device for analytics or advertising.
 
 **Triggers rejection if:**
 - App uploads the user's entire contact list to external servers
 - App scrapes or indexes the user's photo library to build a facial recognition or image database
 - Contact or photo data is stored server-side beyond what is needed for the user-initiated feature
+- App enumerates or transmits the list of installed apps for analytics or advertising/marketing purposes
 
 **What to check:**
 - `CNContactStore` usage: is the full contact list fetched and transmitted?
 - `PHAsset` / `PHFetchResult` usage: is the full photo library enumerated and uploaded?
 - Server-side storage of contacts or photos data
 - Network requests containing bulk personal data from these frameworks
+- Any code that calls `UIApplication.shared.canOpenURL` in bulk or checks for many URL schemes to fingerprint installed apps
+- Analytics SDK configurations that may collect installed app data
 
 **Key details:**
 - Apps may access individual contacts or photos the user explicitly selects
 - The violation is bulk extraction and external storage of these data stores
+- Collecting which apps are installed (via URL scheme probing or other methods) for advertising/analytics is explicitly prohibited
 
 ---
 
@@ -354,15 +361,17 @@
 
 ---
 
-#### 5.1.2(vi) HomeKit, HealthKit, ClassKit, and Motion & Fitness Data Restrictions
+#### 5.1.2(vi) HomeKit, HealthKit, ClassKit, Depth/Facial Mapping, and Motion & Fitness Data Restrictions
 
-**Requirement:** Data from HomeKit, HealthKit, ClassKit, and CoreMotion must be used only for their intended health, home automation, or education purposes. This data must not be shared with third parties for advertising, sold, or used for purposes unrelated to improving the user's health, home, or education experience.
+**Requirement:** Data from HomeKit, HealthKit, Clinical Health Records API, MovementDisorder APIs, ClassKit, and depth/facial mapping tools (e.g. ARKit, Camera APIs, Photo APIs) must not be used for marketing, advertising, or use-based data mining — including by third parties.
 
 **Triggers rejection if:**
 - HealthKit data is shared with advertisers or data brokers
 - HomeKit data is used for purposes beyond home automation
 - ClassKit data is used for advertising or non-educational profiling
 - Motion and fitness data is sold or shared for advertising
+- Data from ARKit, Camera APIs, or Photo APIs used for depth/facial mapping is used for advertising or data mining
+- Any of these data sources flow to third-party ad or analytics SDKs
 
 **What to check:**
 - `HealthKit` entitlement in the app's entitlements file and capability configuration
@@ -370,13 +379,38 @@
 - `HomeKit` entitlement and `HMHomeManager` usage
 - `ClassKit` imports and `CLSContext` / `CLSDataStore` usage
 - `CoreMotion` framework imports: `CMMotionManager`, `CMPedometer`, `CMMotionActivityManager`
+- `ARKit` / `RealityKit` usage: is depth or facial mapping data captured?
+- `AVCaptureDevice` or `Vision` framework usage for depth/face data
 - Whether any of this data flows to analytics, advertising, or third-party SDKs
-- Privacy policy: does it specifically address health/home/education data handling?
+- Privacy policy: does it specifically address health/home/education/biometric data handling?
 
 **Key details:**
 - HealthKit data must not be stored in iCloud (see 5.1.3)
-- These restrictions are stricter than general data rules -- even with consent, certain uses are prohibited
+- These restrictions are stricter than general data rules -- even with consent, use for advertising is prohibited
 - Apps using HealthKit must have a clear health or fitness purpose
+- The ARKit/Camera/Photo APIs restriction specifically applies when these tools are used for depth or facial mapping
+
+---
+
+---
+
+#### 5.1.2(vii) Apple Pay Data Restrictions
+
+**Requirement:** Apps using Apple Pay may only share user data acquired via Apple Pay with third parties to facilitate or improve delivery of goods and services.
+
+**Triggers rejection if:**
+- Apple Pay transaction data (name, address, payment info) is shared with advertisers or data brokers
+- Apple Pay user data is used for purposes beyond completing or improving the transaction
+
+**What to check:**
+- `PassKit` / Apple Pay integration: what user data is captured during a transaction?
+- Network requests made after an Apple Pay transaction: who receives the data and for what purpose?
+- Third-party analytics SDKs that might receive Apple Pay purchase data
+- Privacy policy: does it disclose Apple Pay data handling?
+
+**Key details:**
+- Apple Pay data sharing is strictly limited to fulfillment and delivery improvement purposes
+- Sharing Apple Pay data with advertisers or for profiling purposes violates this guideline even with user consent
 
 ---
 
@@ -497,26 +531,28 @@
 
 ---
 
-#### 5.1.4(b) Limited Third-Party Services
+#### 5.1.4(b) Limited Third-Party Services and Metadata Restrictions
 
-**Requirement:** Kids Category apps may use limited third-party services subject to the same restrictions as guideline 1.3 (kids category content). Apps in the Kids Category must include a privacy policy. The term "For Kids" is reserved exclusively for apps in the Kids Category.
+**Requirement:** Kids Category apps may use limited third-party services subject to the same restrictions as guideline 1.3 (kids category content). Apps in the Kids Category must include a privacy policy. The terms "For Kids" and "For Children" in app metadata are reserved exclusively for apps in the Kids Category. Apps not in the Kids Category must not use any terms in their app name, subtitle, icon, screenshots, or description that imply the main audience is children.
 
 **Triggers rejection if:**
 - Kids app uses third-party services that do not comply with kids privacy restrictions
 - Kids Category app lacks a privacy policy
-- App not in the Kids Category uses "For Kids" in its name, subtitle, or description
+- App not in the Kids Category uses "For Kids" or "For Children" in metadata
+- App not in the Kids Category uses any terms in name, subtitle, icon, screenshots, or description that imply the main audience is children (broader than just "For Kids"/"For Children")
 - Third-party services in kids apps collect data independently or for their own purposes
 
 **What to check:**
 - App Store Connect: Kids Category designation and privacy policy URL
 - Third-party service integrations: do they have their own kids-compliant privacy policies?
-- App metadata (name, subtitle, description, keywords): unauthorized use of "For Kids"
+- App metadata (name, subtitle, description, keywords, screenshots, icon): unauthorized use of child-targeted language
 - Third-party SDK data flows: do any SDKs independently collect or transmit data?
 
 **Key details:**
-- "For Kids" is a regulated term in the App Store -- using it outside the Kids Category is a rejection
+- "For Kids" and "For Children" are regulated terms, but the restriction extends to ANY terms implying children are the main audience
 - Third-party services in kids apps must operate as data processors only, not independent controllers
 - Privacy policy must specifically address children's data practices
+- This restriction applies to screenshots and icons too, not just text fields
 
 ---
 
