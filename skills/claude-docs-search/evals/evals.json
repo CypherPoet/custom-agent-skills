@@ -1,0 +1,23 @@
+{
+  "skill_name": "claude-docs-search",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "How do I set up hooks in Claude Code to auto-format my code after every edit?",
+      "expected_output": "A clear explanation of how to configure a PostToolUse hook that runs a formatter after file edits, with correct config syntax from the official docs",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "claude code keeps asking me for permission every time it runs a bash command, how do i make it stop asking for things i've already approved",
+      "expected_output": "Explanation of permission modes (especially auto mode or allowlist rules) with correct syntax for configuring allowed tools in settings, sourced from official docs",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "Can Claude Code connect to my Jira and Slack? I want it to pull tickets and post updates. How does that work?",
+      "expected_output": "Explanation of MCP servers as the mechanism for connecting external tools, with practical guidance on how to add MCP servers, sourced from official docs",
+      "files": []
+    }
+  ]
+}
