@@ -8,3 +8,4 @@
 | [creating-effective-stitch-prompts](../skills/creating-effective-stitch-prompts/SKILL.md) | Write, generate, and refine text prompts for Stitch UI generation and editing |
 | [emoji-commits](../skills/emoji-commits/SKILL.md) | Use Gitmoji to make commits more expressive |
 | [expo-snack-prototyper](../skills/expo-snack-prototyper/SKILL.md) | Generate self-contained React Native prototypes that run in Expo Snack |
+| [session-harvest](../skills/session-harvest/SKILL.md) | Systematic pre-exit sweep for session learnings — surfaces corrections, project context, preferences, and references worth preserving in memory |
