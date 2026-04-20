@@ -1,7 +1,7 @@
 # Section 5: Legal
 
 > Source: https://developer.apple.com/app-store/review/guidelines/
-> Last synced: 2026-03-27
+> Last synced: 2026-04-20
 
 ---
 
@@ -242,11 +242,11 @@
 
 #### 5.1.2(i) Permission and Third-Party Sharing
 
-**Requirement:** Collected data must not be shared with third parties without user consent. Tracking requires App Tracking Transparency (ATT) authorization. System functionality (e.g., app features, content access) must not be gated on granting tracking permission.
+**Requirement:** Collected data must not be shared with third parties — including third-party AI services — without user consent. Sharing with third-party AI must be explicitly disclosed and require explicit permission. Tracking requires App Tracking Transparency (ATT) authorization. System functionality (e.g., app features, content access) must not be gated on granting tracking permission.
 
 **Triggers rejection if:**
 - App tracks users without presenting the ATT prompt
-- App shares user data with third-party ad networks, analytics, or data brokers without disclosure
+- App shares user data with third-party ad networks, analytics, data brokers, or AI services without disclosure and explicit permission
 - App functionality is locked or degraded when the user declines ATT tracking
 - App uses fingerprinting as a substitute for tracking when ATT consent is denied
 - Third-party SDKs perform tracking without ATT consent
@@ -522,14 +522,14 @@
 
 ### 5.1.5 Location Services
 
-**Requirement:** Location data must only be used when directly relevant to the app's features and services. Apps must notify users and obtain consent before collecting location data. Location Services must not be used for emergency services dispatching or autonomous vehicle control.
+**Requirement:** Location data must only be used when directly relevant to the app's features and services. Apps must notify users and obtain consent before collecting location data. Location APIs must not be used for emergency services dispatching or autonomous device control — except for small devices such as drones, toys, and remote car alarms where location is core to device operation.
 
 **Triggers rejection if:**
 - App requests location access for features that do not require it
 - App uses location data without notifying the user of the purpose
 - Location access is requested without a clear, specific purpose string
 - App uses "Always" location when "When In Use" would suffice
-- App uses location for emergency services dispatch or autonomous vehicle control
+- App uses location for emergency services dispatch or autonomous control of full-size vehicles (small devices like drones, toys, and remote car alarms are exempt)
 - App collects location data in the background without justification
 
 **What to check:**
@@ -688,3 +688,140 @@
 - Using "i" prefix alone is not necessarily a violation, but combined with Apple-like branding it can be
 - Apps that extend Apple functionality (e.g., widgets for Apple Health) are fine as long as they do not create identity confusion
 - This is both an App Store Review (ASR) and Notarization Requirement (NR)
+
+---
+
+## §5.3 Gaming, Gambling, and Lotteries
+
+Gaming and gambling are highly regulated industries. Verify legal obligations in every location where the app is available before including gambling features.
+
+### §5.3.1 Sweepstakes and Contests Sponsorship
+
+**Requirement:** Sweepstakes and contests must be sponsored by the app developer.
+
+**Triggers rejection if:**
+- Sweepstakes or contest is sponsored by an entity other than the app developer
+
+**What to check:**
+- Official rules for any sweepstakes or contest — sponsor identification must match the developer
+- Marketing copy and promotional materials for sponsor attribution
+
+**Key details:**
+- The developer submitting the app must be the sponsoring entity; third-party-sponsored promotions are not permitted
+
+---
+
+### §5.3.2 Official Rules Must Disclaim Apple
+
+**Requirement:** Official rules for sweepstakes, contests, and raffles must be presented in the app and must make clear that Apple is not a sponsor or involved in any way.
+
+**Triggers rejection if:**
+- Sweepstakes or contest rules are not displayed within the app
+- Rules do not explicitly state Apple has no involvement
+- Rules suggest Apple endorses or participates in the promotion
+
+**What to check:**
+- In-app display of official rules for any sweepstakes, contest, or raffle
+- Rules text for an explicit Apple disclaimer (e.g., "This promotion is in no way sponsored, endorsed, or administered by Apple Inc.")
+- App Store Connect metadata for accurate sweepstakes descriptions
+
+**Key details:**
+- Rules must be accessible within the app, not just on an external website
+- The disclaimer must be explicit — a generic "Apple is not responsible" notice is insufficient
+
+---
+
+### §5.3.3 No IAP for Real Money Gaming Credits
+
+**Requirement:** Apps may not use in-app purchase to purchase credits or currency for use in real money gaming.
+
+**Triggers rejection if:**
+- IAP is used to purchase chips, coins, or credits that fund real money gambling balances
+- The app mixes IAP purchase flows with real money wagering mechanics
+
+**What to check:**
+- IAP product definitions (`StoreKit` / `.storekit` config) for gambling-related credits or currencies
+- Code paths connecting IAP completion to real money gaming balances
+- Distinction between virtual-only gaming (no cash value, no cash out) and real money gambling
+
+**Key details:**
+- Virtual currency used exclusively within a free-to-play game (no real-money redemption) may use IAP
+- The prohibition is specifically on IAP as a funding mechanism for real money wagering
+
+---
+
+### §5.3.4 Real Money Gaming and Lottery Requirements
+
+**Requirement:** Apps offering real money gaming (sports betting, poker, casino games, horse racing) or lotteries must have the necessary licensing in all applicable locations, must be geo-restricted to legal jurisdictions, and must be free on the App Store. Lottery apps must involve consideration, chance, and a prize.
+
+**Triggers rejection if:**
+- App offers real money wagering without proper licensing in each jurisdiction where it operates
+- App is not geo-restricted to jurisdictions where it is licensed
+- Real money gaming or lottery app has a paid price on the App Store
+- Lottery app does not contain all three elements: consideration, chance, and prize
+
+**What to check:**
+- Licensing documentation for each jurisdiction — submit in App Review Notes
+- Geo-restriction implementation (`CoreLocation` or server-side IP/region detection blocking non-licensed regions)
+- App Store Connect availability settings vs. licensing coverage
+- App Store price — must be free (no upfront cost)
+- Lottery mechanics for all three required components: consideration (entry fee or required purchase), chance (random outcome), and prize
+
+**Key details:**
+- Licensing is per-jurisdiction; a license in one country does not authorize operation in others
+- Geo-restriction must actively block access in unlicensed regions, not just display a warning
+- The free-on-App-Store requirement applies even if the game involves real money wagers inside the app
+
+---
+
+## §5.4 VPN Apps (ASR & NR)
+
+**Requirement:** Apps offering VPN services must use the `NEVPNManager` API, must be offered only by developers enrolled as an organization, must clearly disclose user data collection and usage before any purchase or service activation, and must not sell, use, or disclose user data to third parties. VPN apps must not violate local laws; where licensing is required, license information must be provided in App Review Notes.
+
+**Triggers rejection if:**
+- VPN app does not use the `NEVPNManager` API
+- VPN app is submitted by an individual developer account (not an organization)
+- App does not clearly disclose what user data is collected and how it is used before purchase or sign-up
+- App sells, uses, or discloses user data to third parties for any purpose
+- Privacy policy does not explicitly commit to no third-party data sharing or data selling
+- App operates in a jurisdiction requiring a VPN license without disclosing that license in App Review Notes
+- Non-compliant VPN apps risk removal from the App Store and developer program expulsion
+
+**What to check:**
+- `NetworkExtension` framework import and `NEVPNManager` / `NETunnelProviderManager` usage
+- Developer account enrollment type — must be Organization, not Individual
+- Pre-purchase or pre-signup disclosure UI: clearly state what data is collected and how it is used
+- Privacy policy: explicit commitment to not selling, using, or disclosing user data to third parties
+- App Review Notes: licensing information if operating in jurisdictions with VPN licensing requirements
+- App entitlements file for `com.apple.developer.networking.networkextension` with VPN-related entitlement values
+- Whether the app also serves as a parental control, content blocker, or security tool (these may also use `NEVPNManager`)
+
+**Key details:**
+- Marked ASR and NR — applies to both distribution channels
+- Parental control apps, content blockers, and security apps from Apple-approved providers may also use `NEVPNManager`
+- Data disclosure must occur before any purchase or service use — not buried in settings post-signup
+- VPN apps that violate these terms face removal from the App Store and developer program expulsion
+
+---
+
+## §5.5 Mobile Device Management (ASR & NR)
+
+**Requirement:** Apps offering Mobile Device Management (MDM) services must request the MDM capability from Apple and may only be offered by commercial enterprises, educational institutions, or government agencies.
+
+**Triggers rejection if:**
+- MDM app does not have Apple-approved MDM capability
+- App is submitted by an individual developer rather than a qualifying organization
+- App is broadly available to general consumers (MDM must be restricted to enterprise, education, or government)
+
+**What to check:**
+- Apple MDM capability approval — confirm this has been requested and granted before submission
+- Developer account type and organizational identity in App Store Connect
+- App availability settings — MDM apps should not be distributed broadly via the general consumer App Store; Apple Business Manager or Apple School Manager is the expected distribution path
+- MDM enrollment configuration and device management profile handling
+- Entitlements for MDM-related capabilities (e.g., `com.apple.developer.device-information.user-assigned-device-name`)
+
+**Key details:**
+- Marked ASR and NR — applies to both distribution channels
+- MDM apps manage devices on behalf of organizations; individual consumer use is not a valid use case
+- The MDM capability must be requested from Apple and approved prior to App Review submission
+- Distribution is typically via Apple Business Manager (enterprises) or Apple School Manager (education), not the general App Store
