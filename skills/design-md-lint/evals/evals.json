@@ -1,0 +1,104 @@
+{
+  "skill_name": "design-md-lint",
+  "evals": [
+    {
+      "id": 1,
+      "name": "clean-fixture",
+      "prompt": "Audit the DESIGN.md at evals/fixtures/clean.md against the design.md spec and give me the report.",
+      "expected_output": "Report has zero errors and zero warnings. Summary states the file conforms. May include a few suggestions but should not over-flag.",
+      "files": ["evals/fixtures/clean.md"],
+      "assertions": [
+        {
+          "name": "no-false-error",
+          "description": "Report contains zero Errors. The fixture is fully spec-compliant."
+        },
+        {
+          "name": "no-false-warning",
+          "description": "Report contains zero Warnings. The fixture meets all SHOULD-level rules in the catalog."
+        },
+        {
+          "name": "states-compliant",
+          "description": "Report explicitly states the file is compliant (e.g., 'no errors or warnings', 'conforms', 'in good shape') rather than inventing problems."
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "name": "violations-fixture",
+      "prompt": "Lint the DESIGN.md at evals/fixtures/violations.md and tell me what's wrong.",
+      "expected_output": "Report identifies multiple errors with correct rule IDs: missing name, duplicate Colors section, sections out of order (Components first), invalid hex colors, broken token reference, malformed reference syntax, missing typography properties. Plus warnings for unknown version, dimension format, missing primary, etc.",
+      "files": ["evals/fixtures/violations.md"],
+      "assertions": [
+        {
+          "name": "flags-missing-name",
+          "description": "Report cites rule ID 'frontmatter/missing-name' (the frontmatter has no 'name' field)."
+        },
+        {
+          "name": "flags-duplicate-section",
+          "description": "Report cites rule ID 'structure/duplicate-section' for the two '## Colors' headings."
+        },
+        {
+          "name": "flags-section-order",
+          "description": "Report cites rule ID 'structure/section-order' (Components and Overview appear before Colors; required order is Overview → Colors → Typography → …)."
+        },
+        {
+          "name": "flags-invalid-hex",
+          "description": "Report cites rule ID 'frontmatter/invalid-hex' for at least one of: '#FF3B' (incomplete), 'rgb(120, 80, 200)' (not hex), or 'red' (named color)."
+        },
+        {
+          "name": "flags-broken-reference",
+          "description": "Report cites rule ID 'refs/broken-reference' for '{colors.primary}' (frontmatter has 'brandPrimary', not 'primary') or '{rounded.dramatic}' (no 'rounded' group exists)."
+        },
+        {
+          "name": "flags-malformed-syntax",
+          "description": "Report cites rule ID 'refs/malformed-syntax' for the '$colors.neutral.100' token reference."
+        },
+        {
+          "name": "flags-missing-typography-property",
+          "description": "Report cites rule ID 'frontmatter/typography-missing-property' (the 'display' typography token is missing lineHeight and letterSpacing; 'body' is missing fontWeight and letterSpacing)."
+        },
+        {
+          "name": "summary-counts-nonzero-errors",
+          "description": "Summary line shows at least 4 errors."
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "name": "borderline-fixture",
+      "prompt": "Review the DESIGN.md at evals/fixtures/borderline.md — what could be better?",
+      "expected_output": "Few or no errors. Several warnings/suggestions targeting content quality: shallow Overview, naming inconsistency in typography (text-* vs headline-large), orphaned token (unused-accent), spacing scale jump (md=16px to xl=64px with no lg), vague Do's and Don'ts, missing component states.",
+      "files": ["evals/fixtures/borderline.md"],
+      "assertions": [
+        {
+          "name": "flags-shallow-overview",
+          "description": "Report cites rule ID 'content/shallow-overview' or describes the Overview as shallow/generic ('We use modern design.' is the entire section)."
+        },
+        {
+          "name": "flags-naming-inconsistency",
+          "description": "Report cites rule ID 'content/naming-inconsistency' for the typography group mixing 'text-lg/md/sm' with 'headline-large'."
+        },
+        {
+          "name": "flags-orphaned-tokens",
+          "description": "Report cites rule ID 'completeness/orphaned-tokens' for 'unused-accent' or 'warning' (defined but never referenced)."
+        },
+        {
+          "name": "flags-empty-or-vague-sections",
+          "description": "Report cites either 'completeness/empty-section' (sections like Layout, Shapes have one-line prose) or 'content/missing-rationale' (no 'why' explained)."
+        },
+        {
+          "name": "flags-vague-dos-and-donts",
+          "description": "Report cites rule ID 'content/dos-and-donts-vague' for entries like 'Don't use too many colors' or 'Do keep things simple'."
+        },
+        {
+          "name": "flags-missing-component-states",
+          "description": "Report cites rule ID 'completeness/missing-component-states' (button-primary and input have no hover/focus/disabled variants)."
+        },
+        {
+          "name": "no-false-errors",
+          "description": "Report contains zero Errors. The fixture is structurally compliant."
+        }
+      ]
+    }
+  ]
+}

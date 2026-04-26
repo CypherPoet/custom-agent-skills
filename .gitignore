@@ -29,3 +29,6 @@ node_modules/
 *.tmp
 __pycache__/
 *.pyc
+
+# Skill development workspaces (created by /skill-creator for eval iterations)
+skills/*-workspace/
