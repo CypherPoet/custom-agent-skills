@@ -26,7 +26,7 @@
       "id": 2,
       "name": "violations-fixture",
       "prompt": "Lint the DESIGN.md at evals/fixtures/violations.md and tell me what's wrong.",
-      "expected_output": "Report identifies multiple errors with correct rule IDs: missing name, duplicate Colors section, sections out of order (Components first), invalid hex colors, broken token reference, malformed reference syntax. Plus warnings for missing typography props, unknown version, etc.",
+      "expected_output": "Report identifies multiple errors with correct rule IDs: missing name, duplicate Colors section, sections out of order (Components first), invalid hex colors, broken token reference, malformed reference syntax, missing typography properties. Plus warnings for unknown version, dimension format, missing primary, etc.",
       "files": ["evals/fixtures/violations.md"],
       "assertions": [
         {
