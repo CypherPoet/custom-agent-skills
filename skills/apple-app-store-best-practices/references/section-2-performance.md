@@ -1,7 +1,7 @@
 # Section 2: Performance
 
 > Source: https://developer.apple.com/app-store/review/guidelines/
-> Last synced: 2026-03-27
+> Last synced: 2026-04-27
 
 ---
 
@@ -421,20 +421,24 @@
 
 ---
 
-### §2.4.4 No System Restarts
+### §2.4.4 System Settings and Restarts
 
-**Requirement:** Apps must not require the user to restart their device as part of installation, usage, or troubleshooting. *(ASR & NR)*
+**Requirement:** Apps must never suggest or require a restart of the device or modifications to system settings unrelated to the core functionality of the app. *(ASR & NR)*
 
 **Triggers rejection if:**
 - App instructs users to restart their device at any point
 - App behavior depends on a device restart to function correctly
+- App encourages users to turn off Wi-Fi, disable security features, or alter unrelated system settings
+- App nudges users to change settings (e.g., disabling lockdown features, lowering security posture) that are not directly required for its core feature
 
 **What to check:**
-- Search UI strings, alerts, and documentation for "restart", "reboot", "power cycle" instructions
-- Verify the app does not depend on system-level changes that require a restart
+- Search UI strings, alerts, onboarding screens, and help documentation for "restart", "reboot", "power cycle" instructions
+- Search for guidance directing users to System Settings/Preferences for changes unrelated to the app's core function (e.g., disabling Wi-Fi, turning off security features, lowering tracking protections)
+- Verify the app does not depend on system-level changes that require a restart or unrelated settings adjustments
 
 **Key details:**
-- This is uncommon but sometimes appears in utility or system-configuration-adjacent apps
+- The guideline now covers BOTH device restarts AND modifications to unrelated system settings
+- Asking users to grant permissions the app legitimately needs (notifications, location, etc.) is allowed; nudging users to disable unrelated security or privacy features is not
 - Apps should handle all necessary initialization within their own lifecycle
 
 ---
@@ -762,26 +766,33 @@
 
 ---
 
-### §2.5.12 CallKit and SMS Blocking
+### §2.5.12 CallKit and SMS Filtering
 
-**Requirement:** Apps using CallKit or SMS/MMS message filtering must follow specific rules about functionality and data handling. *(ASR & NR)*
+**Requirement:** Apps using CallKit or including an SMS Fraud Extension may only block phone numbers that are confirmed spam. Apps offering call/SMS/MMS blocking or spam identification must clearly identify these features in their marketing text and explain the criteria used to populate their blocked and spam lists. Data accessed via CallKit or SMS filtering tools may be used only for purposes directly related to operating or improving the app/extension — not for tracking, profiling, sharing, or sale. *(ASR & NR)*
 
 **Triggers rejection if:**
-- Call blocking/identification app sends call data off-device without user consent
-- SMS filter extension sends message content to a remote server (only on-device filtering for SMS)
-- App misuses CallKit to block emergency numbers or legitimate callers without user knowledge
+- The app blocks numbers that are not confirmed spam, or applies overly broad blocking criteria
+- Marketing text does not clearly identify the call/SMS blocking or spam identification feature
+- Marketing text does not explain the criteria for entries in the blocked or spam list
+- Data obtained from CallKit or SMS filtering is used for tracking, building user profiles, advertising, or sold/shared with third parties for unrelated purposes
+- The app misuses CallKit to block emergency numbers or legitimate callers
+- SMS filter extension behavior is not transparent to users about what is filtered and why
 
 **What to check:**
-- Check for `CallKit` framework import and `CXCallDirectoryProvider` usage
-- Verify `CXCallDirectoryExtensionContext` entries are populated from local data, not remote-only sources
-- For SMS filtering: check `ILMessageFilterExtension` — verify filtering logic runs on-device
-- Look at the `ILMessageFilterQueryHandling` implementation — `ILNetworkResponse` usage means server-side filtering, which has restrictions
-- Check `Info.plist` for `com.apple.developer.networking.networkextension` entitlements
+- Marketing copy and App Store description: does it clearly mention the call/SMS blocking or spam identification feature?
+- Disclosure of blocked/spam list criteria in the app, App Store metadata, or support page
+- `CallKit` framework import and `CXCallDirectoryProvider` usage — verify the source of blocked numbers is a confirmed-spam dataset
+- For SMS filtering: check `ILMessageFilterExtension` and `ILMessageFilterQueryHandling` implementations
+- Network requests from CallKit/SMS filter code paths — ensure data is not sent to analytics, ad networks, or unrelated third parties
+- `Info.plist` for `com.apple.developer.networking.networkextension` entitlements
+- Server-side endpoints used by the extension — must be for operating/improving the feature, not tracking
 
 **Key details:**
-- On-device SMS filtering is preferred; network-based filtering requires additional review
-- Call identification data must not be used for tracking or advertising
+- The "confirmed spam" requirement is a meaningful bar — speculative or unverified blocking is not permitted
+- Marketing transparency is now an explicit requirement: users must understand WHAT the feature blocks and HOW the lists are built
+- Data minimization is strict: CallKit/SMS data cannot be repurposed for profiling, advertising, or any use unrelated to the feature
 - Emergency numbers must never be blocked
+- Data sharing or selling is explicitly prohibited
 
 ---
 
@@ -903,27 +914,35 @@
 
 ---
 
-### §2.5.18 Display Advertising Limits
+### §2.5.18 Display Advertising
 
-**Requirement:** Apps must limit display advertising to appropriate contexts and must not overwhelm the user experience with ads. *(ASR & NR)*
+**Requirement:** Display advertising is limited to the main app binary and may NOT be included in extensions, App Clips, widgets, notifications, keyboards, watchOS apps, or similar contexts. Ads must be appropriate for the app's age rating. Users must be able to see all information used to target them for an ad without leaving the app. Apps may not use sensitive data (HealthKit, ClassKit, kids data, etc.) for targeted or behavioral advertising. Interstitial or interrupting ads must clearly indicate they are an ad, must not trick users into tapping, and must provide easily accessible, visible close/skip buttons. Apps that contain ads must provide a way for users to report inappropriate or age-inappropriate ads. *(ASR & NR)*
 
 **Triggers rejection if:**
-- Ads appear in contexts where they are prohibited (e.g., in widgets, App Clips, notification content extensions, lock screen experiences)
-- Full-screen interstitial ads appear immediately at launch or without user interaction
-- Ads cannot be dismissed or block core functionality
-- Ad frequency is excessive and degrades the user experience
-- Ads are deceptive or disguised as app content
+- Ads appear in extensions, App Clips, widgets, notifications, keyboards, watchOS apps, or other non-main-binary contexts
+- Ads displayed are not appropriate for the app's declared age rating
+- Users cannot see (within the app) what data was used to target a given ad
+- Targeted/behavioral ads are served using sensitive data such as HealthKit/medical data, ClassKit/school data, or data from apps in the Kids Category
+- Interstitial or full-screen ads do not clearly identify themselves as ads
+- Interstitial ads use deceptive design, hidden close buttons, or close buttons too small to tap reliably
+- The app provides no mechanism for users to report inappropriate or age-inappropriate ads
+- Full-screen interstitial ads appear immediately at launch with no user interaction
+- Ads block or prevent the user from returning to the app's content
 
 **What to check:**
 - Search for ad SDK imports: `GoogleMobileAds`, `AdMob`, `FBAudienceNetwork`, `AdColony`, `AppLovin`, `UnityAds`, `IronSource`, `Vungle`, `Chartboost`, `InMobi`
-- Check if ad SDKs are included in extension targets (widgets, App Clips, notification extensions) where they are prohibited
+- Check whether ad SDKs are included in extension targets, widget targets, App Clip targets, keyboard extensions, or watchOS app targets — all are prohibited
+- Verify ad targeting/data inputs do NOT include `HealthKit`, `ClassKit`, or any data flagged for the Kids Category
+- Inspect interstitial ad presentation: is there a clear "Ad" label? Is the close/skip button visible, large enough, and reachable?
+- Check for an in-app "Why am I seeing this ad?" affordance or equivalent disclosure of targeting inputs
+- Look for an in-app "Report ad" / flag-inappropriate-ad mechanism alongside ad placements
 - Search for interstitial ad presentation in `viewDidAppear` of the initial view controller (immediate launch ads)
-- Look for ad presentation without user interaction triggers
 - Review ad placement frequency — timers or counters that show ads at very short intervals
-- Check for `SKOverlay` or `SKStoreProductViewController` used aggressively for cross-promotion
+- Confirm `ATTrackingManager` is used before any cross-app tracking for ad purposes
 
 **Key details:**
-- Ads in extensions (widgets, App Clips, notification content extensions) are always prohibited
-- Interstitial ads should appear at natural transition points, not immediately upon launch
-- Users must always be able to dismiss ads and return to the app's content
-- The App Tracking Transparency framework (`ATTrackingManager`) must be used before tracking for ad purposes
+- The list of prohibited contexts now explicitly includes keyboards and watchOS apps in addition to widgets, App Clips, and notifications
+- Targeting transparency is an explicit requirement: users must be able to see all info used to target an ad WITHOUT leaving the app
+- Sensitive-data targeting prohibition is broad: health/medical, school/classroom, and kids data are all off-limits for behavioral targeting
+- The reporting mechanism is required for ALL apps that contain ads, not just kids apps
+- Interstitial ad design must affirmatively help users dismiss the ad — small or hidden close buttons are a violation

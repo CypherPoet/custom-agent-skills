@@ -1,7 +1,7 @@
 # Section 1: Safety
 
 > Source: https://developer.apple.com/app-store/review/guidelines/
-> Last synced: 2026-03-27
+> Last synced: 2026-04-27
 
 ---
 
@@ -196,29 +196,50 @@ Apps should not include content that is offensive, insensitive, upsetting, inten
 
 ---
 
-### §1.2.1 Creator Content (ASR & NR)
+### §1.2.1 Creator Content
 
-**Requirement:** Apps featuring content from a community of "creators" must be properly moderated. Creator apps must provide a way for users to identify content that exceeds the app's age rating and must implement an age restriction mechanism based on verified or declared age to limit access by underage users.
+**Requirement:** Apps featuring content from a community of "creators" must present a singular, unified experience that does not change the core features or functionality of the native app — creator experiences add content to the app's structured experience, they are not independent apps. Creator content must be properly moderated, must follow all guidelines (including §1.2 UGC moderation and §3.1.1 IAP rules), and the app must communicate to users which content requires additional purchases.
 
 **Triggers rejection if:**
-- Creator content is unmoderated
+- Creator content is unmoderated or lacks the §1.2 UGC controls (filtering, reporting, blocking, contact info)
+- Creator experiences change or replace core native app features/functionality rather than adding content
+- Digital goods/services within creator content bypass IAP requirements
+- Users are not informed which creator content requires additional purchases
+
+**What to check:**
+- Moderation pipeline for creator submissions (manual review queue, automated screening, or hybrid)
+- All four §1.2 UGC requirements applied to creator content (filtering, reporting, blocking, contact info)
+- StoreKit/IAP integration for any paid creator content
+- UI clearly indicates which creator content is paid vs. free
+- Creator content boundaries -- verify creator experiences add content within the app's structure rather than altering core native functionality
+
+**Key details:**
+- "Creator content" includes video, articles, audio, and casual games
+- Creator experiences are treated as UGC by App Review, so all §1.2 requirements also apply
+- Creator experiences must not function as independent native apps -- they are content within the host app
+- §1.2.1(a) (age restrictions) carries the ASR & NR designation; §1.2.1 itself does not
+
+---
+
+### §1.2.1(a) Age Restrictions for Creator Content (ASR & NR)
+
+**Requirement:** Creator apps must provide a way for users to identify content that exceeds the app's age rating and must use an age restriction mechanism based on verified or declared age to limit access by underage users.
+
+**Triggers rejection if:**
 - No age identification system for content that exceeds the app's age rating
 - No age restriction mechanism (verified or declared) to gate underage access
-- Creator experiences change core app features/functionality rather than adding content
+- Age-gated creator content is accessible without age verification
 
 **What to check:**
 - Age gate or age verification UI: look for date-of-birth entry, age confirmation dialogs, or identity verification SDKs
 - Content rating/tagging system for creator-submitted content
-- Moderation pipeline for creator submissions (manual review queue, automated screening, or hybrid)
 - Age-gated content sections with access controls
-- `AppTrackingTransparency` framework usage and age-appropriate handling
-- Creator content boundaries -- verify creator experiences add content within the app's structure rather than altering core native functionality
+- Persistent storage of age verification state
 
 **Key details:**
 - Marked ASR and NR -- applies to both distribution channels
-- "Creator content" includes video, articles, audio, and casual games
-- Creator experiences are treated as UGC by App Review, so all §1.2 requirements also apply
-- Creator experiences must not function as independent native apps -- they are content within the host app
+- The age mechanism must be meaningful (verified or declared age), not a simple yes/no gate
+- This requirement is separate from but complements parental gates required for the Kids Category (§1.3)
 
 ---
 

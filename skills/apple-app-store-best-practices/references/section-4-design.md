@@ -1,7 +1,7 @@
 # Section 4: Design
 
 > Source: https://developer.apple.com/app-store/review/guidelines/
-> Last synced: 2026-03-27
+> Last synced: 2026-04-27
 
 ---
 
@@ -343,26 +343,34 @@
 
 ### 4.5.2 Apple Music
 
-**Requirement:** Apps integrating Apple Music must use MusicKit for native playback, follow Apple Music Identity Guidelines for branding, disclose what user data they access, and must not share Apple Music user data with third parties.
+**Requirement:** Apps integrating Apple Music must use MusicKit for native playback. Users must initiate playback and be able to navigate using standard media controls (play, pause, skip). Apps may NOT require payment for or indirectly monetize access to the Apple Music service (no IAP, no advertising, no requesting user info gated on Apple Music access). Apps may not download, upload, or enable sharing of music files sourced from MusicKit APIs except as explicitly permitted in MusicKit documentation. Branding must follow the Apple Music Identity Guidelines. Apps that access Apple Music user data (playlists, favorites) must clearly disclose this in the purpose string, must not share that data with third parties for any purpose other than supporting/improving the app, and must not use it to identify users/devices or to target advertising. *(ASR & NR)*
 
 **Triggers rejection if:**
 - The app plays Apple Music content without using MusicKit APIs
+- The app monetizes Apple Music access (charges for it, gates it behind ads, or requires user info to access it)
+- The app downloads, uploads, or shares music files obtained via MusicKit beyond what the documentation permits
+- Apple Music playback is auto-initiated without a user gesture, or standard media controls are missing
 - Apple Music branding is used incorrectly (wrong logo, colors, or attribution)
-- The app does not disclose to users what Apple Music data it accesses
-- Apple Music listening data, playlists, or library information is shared with third parties
+- The app does not disclose Apple Music data access in the `NSAppleMusicUsageDescription` purpose string
+- Apple Music user data (playlists, favorites, library) is shared with third parties for purposes beyond supporting/improving the app
+- Apple Music data is used to identify users/devices or to target advertising
 
 **What to check:**
 - Imports: `MusicKit`, `StoreKit` (for subscription status), `MediaPlayer` framework usage
 - `MusicAuthorization.request()` calls and handling of authorization status
-- Privacy policy and in-app disclosures for Apple Music data access
-- Network requests that transmit Apple Music user data to external servers
+- Playback start triggers — must be user-initiated, not automatic
+- Presence of standard media controls (play, pause, skip) in the playback UI
+- Any IAP, ad gating, or info-collection flow that conditions Apple Music access — all prohibited
+- Code paths that save MusicKit-sourced audio to disk, share via share sheets, or upload to servers
+- `NSAppleMusicUsageDescription` purpose string in `Info.plist` — must clearly explain what Apple Music data is accessed
+- Network requests that transmit Apple Music data to external servers
 - Apple Music logo and branding usage against the Apple Music Identity Guidelines
-- `NSAppleMusicUsageDescription` in `Info.plist`
 
 **Key details:**
-- Applies to sub-requirements: (i) MusicKit for playback, (ii) Identity Guidelines compliance, (iii) data access disclosure, (iii) no third-party data sharing
+- Sub-requirements: (i) MusicKit playback + user-initiated + standard controls + no monetization + no music-file sharing; (ii) MusicKit is not a substitute for separate music licenses (e.g., synchronization rights); (iii) Apple Music user data access must be disclosed and may not be shared, used for targeting, or used to identify users
 - Apple Music API access requires a MusicKit developer token
 - Streaming playback requires the user to have an active Apple Music subscription
+- Cover art and metadata may only be used in connection with playback or playlists, not in marketing without rights-holder authorization
 
 ---
 

@@ -1,7 +1,7 @@
 # Section 5: Legal
 
 > Source: https://developer.apple.com/app-store/review/guidelines/
-> Last synced: 2026-04-20
+> Last synced: 2026-04-27
 
 ---
 
@@ -132,24 +132,31 @@
 
 ---
 
-#### 5.1.1(vi) Surreptitious Password Discovery
+#### 5.1.1(vi) Surreptitious Discovery of Private Data
 
-**Requirement:** Apps must not attempt to discover or derive user passwords through any covert mechanism.
+**Requirement:** Developers must not use their apps to surreptitiously discover passwords or any other private user data. Egregious violation results in removal from the Apple Developer Program.
 
 **Triggers rejection if:**
-- App intercepts, logs, or keyloggs password fields
+- App intercepts, logs, or keyloggs password fields or other secure inputs
 - App attempts to access Keychain items belonging to other apps
-- App uses accessibility features or input monitoring to capture credentials
+- App uses accessibility features, input monitoring, or screen scraping to capture credentials or other private data
+- App covertly extracts private data (messages, financial info, health info, contacts) from device-level sources without user consent
+- App probes for private data outside the scope of its declared purpose strings and entitlements
 
 **What to check:**
 - Keychain access patterns: is the app reading items it did not create?
 - Custom keyboard extensions: do they log or transmit keystrokes from secure fields?
-- Any network requests that transmit password field contents to external servers
+- Any network requests that transmit password fields, message contents, or other private data to external servers
 - Use of `UITextField.isSecureTextEntry` -- is it respected or circumvented?
+- Accessibility API usage (UIAccessibility, AX protocols) used to read text from other apps' secure fields
+- Background-running processes scraping pasteboard, clipboard, or notification content for private data
+- Data collected vs. declared purpose strings — flag any extraction beyond the declared scope
 
 **Key details:**
-- This applies to any mechanism that covertly captures credentials, not just traditional keyloggers
-- Password autofill via the standard system mechanism (ASWebAuthenticationSession, etc.) is fine
+- The guideline now explicitly covers ALL private data, not just passwords — credentials, messages, health/financial data, etc.
+- Consequence is explicit: removal from the Apple Developer Program
+- Password autofill via standard system mechanisms (ASWebAuthenticationSession, AutoFill) is fine
+- The violation is the surreptitious nature — covert collection without user awareness, not all data collection
 
 ---
 
@@ -377,6 +384,29 @@
 - HealthKit data must not be stored in iCloud (see 5.1.3)
 - These restrictions are stricter than general data rules -- even with consent, certain uses are prohibited
 - Apps using HealthKit must have a clear health or fitness purpose
+
+---
+
+#### 5.1.2(vii) Apple Pay Data
+
+**Requirement:** Apps using Apple Pay may share user data acquired via Apple Pay with third parties only to facilitate or improve delivery of goods and services. No other use of Apple Pay data with third parties is permitted.
+
+**Triggers rejection if:**
+- Apple Pay transaction or user data is shared with analytics platforms, ad networks, or data brokers
+- Apple Pay data is used for advertising, marketing, profiling, or any purpose not tied to fulfilling/improving the actual goods or services purchased
+- Apple Pay data is sold or licensed to third parties
+
+**What to check:**
+- `PassKit` framework usage and `PKPaymentAuthorizationController` / `PKPaymentAuthorizationViewController` flows
+- Network calls following Apple Pay completion: where does payment data flow? Each downstream recipient must be a fulfillment/delivery counterparty (carrier, processor, vendor) — not an ad or analytics platform
+- Analytics SDK events that capture Apple Pay transaction details
+- Server-side storage and onward sharing of Apple Pay-derived data
+- Privacy policy: does it limit Apple Pay data use to delivery/fulfillment?
+
+**Key details:**
+- This is a narrow, purpose-bound permission: Apple Pay data may flow to third parties only to deliver or improve the purchased goods/services
+- Even with user consent, advertising or marketing uses of Apple Pay data are prohibited
+- Standard payment processor and carrier integrations are fine; downstream marketing pipelines are not
 
 ---
 
