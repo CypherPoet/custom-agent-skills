@@ -1,24 +1,17 @@
 ---
 name: session-handoff
-description: "Creates comprehensive handoff documents for seamless AI agent session transfers. Triggered when: (1) user requests handoff/memory/context save, (2) context window approaches capacity, (3) major task milestone completed, (4) work session ending, (5) user says 'save state', 'create handoff', 'I need to pause', 'context is getting full', (6) resuming work with 'load handoff', 'resume from', 'continue where we left off'. Proactively suggests handoffs after substantial work (multiple file edits, complex debugging, architecture decisions). Solves long-running agent context exhaustion by enabling fresh agents to continue with zero ambiguity."
+description: "Write a structured handoff document so a fresh agent can pick up long-running work without losing context. Use when the user says 'create handoff', 'save state', 'I need to pause', 'context is getting full', or when resuming with 'load handoff', 'resume from', 'continue where we left off'."
 ---
 
 # Handoff
 
-Creates comprehensive handoff documents that enable fresh AI agents to seamlessly continue work with zero ambiguity. Solves the long-running agent context exhaustion problem.
+Creates structured handoff documents so a fresh AI agent can continue long-running work with the original context, decisions, and next steps intact.
 
 ## Mode Selection
 
-Determine which mode applies:
+**Creating a handoff?** User wants to save current state or pause work — follow the CREATE workflow below.
 
-**Creating a handoff?** User wants to save current state, pause work, or context is getting full.
-- Follow: CREATE Workflow below
-
-**Resuming from a handoff?** User wants to continue previous work, load context, or mentions an existing handoff.
-- Follow: RESUME Workflow below
-
-**Proactive suggestion?** After substantial work (5+ file edits, complex debugging, major decisions), suggest:
-> "We've made significant progress. Consider creating a handoff document to preserve this context for future sessions. Say 'create handoff' when ready."
+**Resuming from a handoff?** User wants to continue previous work or mentions an existing handoff — follow the RESUME workflow below.
 
 ## CREATE Workflow
 
@@ -57,20 +50,13 @@ Use the template structure in [references/handoff-template.md](references/handof
 
 ### Step 3: Validate the Handoff
 
-Run the validation script to check completeness and security:
+Run the validation script and read its report:
 
 ```bash
 python scripts/validate_handoff.py <handoff-file>
 ```
 
-The validator checks:
-- [ ] No `[TODO: ...]` placeholders remaining
-- [ ] Required sections present and populated
-- [ ] No potential secrets detected (API keys, passwords, tokens)
-- [ ] Referenced files exist
-- [ ] Quality score (0-100)
-
-**Do not finalize a handoff with secrets detected or score below 70.**
+Detected secrets block the handoff — fix them before continuing. A score below 70 means required sections are still incomplete; close the gaps and re-run.
 
 ### Step 4: Confirm Handoff
 
@@ -94,24 +80,13 @@ This shows all handoffs with dates, titles, and completion status.
 
 ### Step 2: Check Staleness
 
-Before loading, check how current the handoff is:
+Before loading, run the staleness check and read its verdict:
 
 ```bash
 python scripts/check_staleness.py <handoff-file>
 ```
 
-Staleness levels:
-- **FRESH**: Safe to resume - minimal changes since handoff
-- **SLIGHTLY_STALE**: Review changes, then resume
-- **STALE**: Verify context carefully before resuming
-- **VERY_STALE**: Consider creating a fresh handoff
-
-The script checks:
-- Time since handoff was created
-- Git commits since handoff
-- Files changed since handoff
-- Branch divergence
-- Missing referenced files
+The script reports a level (FRESH / SLIGHTLY_STALE / STALE / VERY_STALE) and flags specific drift — commits, branch mismatch, missing files. Treat STALE/VERY_STALE as a signal to verify context carefully or start a fresh handoff.
 
 ### Step 3: Load the Handoff
 

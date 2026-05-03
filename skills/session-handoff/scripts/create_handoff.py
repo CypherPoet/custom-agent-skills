@@ -22,7 +22,7 @@ import os
 import re
 import subprocess
 import sys
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
 
 
@@ -166,9 +166,12 @@ def generate_handoff(
 ) -> str:
     """Generate a handoff document with pre-filled metadata."""
 
-    # Generate timestamp and filename
-    now = datetime.now()
-    timestamp = now.strftime("%Y-%m-%d %H:%M:%S")
+    # Generate timestamp and filename. The in-document timestamp uses
+    # ISO-8601 UTC with a Z suffix so it's unambiguous across machines and
+    # parses cleanly in check_staleness.py. The filename keeps a path-safe
+    # form without separators.
+    now = datetime.now(timezone.utc)
+    timestamp = now.strftime("%Y-%m-%dT%H:%M:%SZ")
     file_timestamp = now.strftime("%Y-%m-%d-%H%M%S")
 
     if not slug:

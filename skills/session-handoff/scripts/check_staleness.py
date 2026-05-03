@@ -18,7 +18,7 @@ import os
 import re
 import subprocess
 import sys
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
 
 
@@ -47,11 +47,13 @@ def parse_handoff_metadata(filepath: str) -> dict:
         "modified_files": [],
     }
 
-    # Parse Created timestamp
-    match = re.search(r'Created:\s*(\d{4}-\d{2}-\d{2}\s+\d{2}:\d{2}:\d{2})', content)
+    # Parse Created timestamp (ISO-8601 UTC, e.g. "2024-01-15T14:30:22Z").
+    match = re.search(r'Created:\s*(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z)', content)
     if match:
         try:
-            metadata["created"] = datetime.strptime(match.group(1), "%Y-%m-%d %H:%M:%S")
+            metadata["created"] = datetime.strptime(
+                match.group(1), "%Y-%m-%dT%H:%M:%SZ"
+            ).replace(tzinfo=timezone.utc)
         except ValueError:
             pass
 
@@ -81,7 +83,7 @@ def get_commits_since(timestamp: datetime, project_path: str) -> list[str]:
     if not timestamp:
         return []
 
-    iso_time = timestamp.strftime("%Y-%m-%dT%H:%M:%S")
+    iso_time = timestamp.strftime("%Y-%m-%dT%H:%M:%S%z")
     success, output = run_cmd(
         ["git", "log", f"--since={iso_time}", "--oneline", "--no-decorate"],
         cwd=project_path
@@ -106,7 +108,7 @@ def get_changed_files_since(timestamp: datetime, project_path: str) -> list[str]
     if not timestamp:
         return []
 
-    iso_time = timestamp.strftime("%Y-%m-%dT%H:%M:%S")
+    iso_time = timestamp.strftime("%Y-%m-%dT%H:%M:%S%z")
     success, output = run_cmd(
         ["git", "diff", "--name-only", f"--since={iso_time}", "HEAD"],
         cwd=project_path
@@ -249,7 +251,7 @@ def check_staleness(handoff_path: str) -> dict:
 
     # Calculate age
     if metadata["created"]:
-        age = datetime.now() - metadata["created"]
+        age = datetime.now(timezone.utc) - metadata["created"]
         result["days_old"] = age.total_seconds() / 86400
         result["hours_old"] = age.total_seconds() / 3600
     else:
@@ -310,7 +312,7 @@ def print_report(result: dict):
     print(f"Project: {result['project_path']}")
 
     if result["created"]:
-        print(f"Created: {result['created'].strftime('%Y-%m-%d %H:%M:%S')}")
+        print(f"Created: {result['created'].strftime('%Y-%m-%dT%H:%M:%SZ')}")
         if result["days_old"] is not None:
             if result["days_old"] < 1:
                 print(f"Age: {result['hours_old']:.1f} hours")

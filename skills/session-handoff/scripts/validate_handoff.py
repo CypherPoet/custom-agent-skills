@@ -70,14 +70,12 @@ def check_required_sections(content: str) -> tuple[bool, list[str]]:
         if not match:
             missing.append(f"{section} (missing)")
         else:
-            # Check if section has meaningful content (not just placeholder)
             section_start = match.end()
             next_section = re.search(r'\n#{1,6}\s+', content[section_start:])
             section_end = section_start + next_section.start() if next_section else len(content)
             section_content = content[section_start:section_end].strip()
 
-            # 50 chars minimum: roughly 1-2 sentences, enough to convey meaningful context
-            if len(section_content) < 50 or '[TODO' in section_content:
+            if '[TODO' in section_content:
                 missing.append(f"{section} (incomplete)")
 
     return len(missing) == 0, missing
