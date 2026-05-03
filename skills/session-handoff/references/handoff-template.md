@@ -4,42 +4,42 @@ Use this template structure when creating handoff documents. The smart scaffold 
 
 ## Table of Contents
 
-- [Session Metadata](#session-metadata)
-- [Current State Summary](#current-state-summary)
-- [Codebase Understanding](#codebase-understanding)
+- [🧾 Session Metadata](#session-metadata)
+- [📍 Current State Summary](#current-state-summary)
+- [🧠 Codebase Understanding](#codebase-understanding)
   - [Architecture Overview](#architecture-overview)
   - [Critical Files](#critical-files)
   - [Key Patterns Discovered](#key-patterns-discovered)
-- [Work Completed](#work-completed)
+- [🏁 Work Completed](#work-completed)
   - [Tasks Finished](#tasks-finished)
   - [Files Modified](#files-modified)
   - [Decisions Made](#decisions-made)
-- [Pending Work](#pending-work)
+- [🚧 Pending Work](#pending-work)
   - [Immediate Next Steps](#immediate-next-steps)
   - [Blockers/Open Questions](#blockersopen-questions)
   - [Deferred Items](#deferred-items)
-- [Context for Resuming Agent](#context-for-resuming-agent)
+- [💡 Context for Resuming Agent](#context-for-resuming-agent)
   - [Important Context](#important-context)
   - [Assumptions Made](#assumptions-made)
   - [Potential Gotchas](#potential-gotchas)
-- [Environment State](#environment-state)
-- [Related Resources](#related-resources)
-- [Template Usage Notes](#template-usage-notes)
+- [🌐 Environment State](#environment-state)
+- [📚 Related Resources](#related-resources)
+- [ℹ️ Template Usage Notes](#template-usage-notes)
 
 ---
 
-# Handoff: [TASK_TITLE]
+# 🤝 Handoff: [TASK_TITLE]
 
-## Session Metadata
+## 🧾 Session Metadata
 - Created: [TIMESTAMP]
 - Project: [PROJECT_PATH]
 - Branch: [GIT_BRANCH]
 
-## Current State Summary
+## 📍 Current State Summary
 
 [One paragraph: What was being worked on, current status, and where things left off]
 
-## Codebase Understanding
+## 🧠 Codebase Understanding
 
 ### Architecture Overview
 
@@ -55,7 +55,7 @@ Use this template structure when creating handoff documents. The smart scaffold 
 
 [Important patterns, conventions, or idioms found in this codebase that the next agent should follow]
 
-## Work Completed
+## 🏁 Work Completed
 
 ### Tasks Finished
 
@@ -74,7 +74,7 @@ Use this template structure when creating handoff documents. The smart scaffold 
 |----------|-------------------|-----------|
 | Chose X over Y | X, Y, Z | Why X was chosen |
 
-## Pending Work
+## 🚧 Pending Work
 
 ### Immediate Next Steps
 
@@ -91,7 +91,7 @@ Use this template structure when creating handoff documents. The smart scaffold 
 
 - Item 1 (deferred because: [reason, e.g., out of scope, needs user input])
 
-## Context for Resuming Agent
+## 💡 Context for Resuming Agent
 
 ### Important Context
 
@@ -106,7 +106,7 @@ Use this template structure when creating handoff documents. The smart scaffold 
 
 - [Things that might trip up a new agent - edge cases, quirks, non-obvious behavior]
 
-## Environment State
+## 🌐 Environment State
 
 ### Tools/Services Used
 
@@ -120,7 +120,7 @@ Use this template structure when creating handoff documents. The smart scaffold 
 
 - [Key env vars that matter for this work - DO NOT include secrets/values, just names]
 
-## Related Resources
+## 📚 Related Resources
 
 - [Link to relevant documentation]
 - [Related file paths]
@@ -128,7 +128,7 @@ Use this template structure when creating handoff documents. The smart scaffold 
 
 ---
 
-## Template Usage Notes
+## ℹ️ Template Usage Notes
 
 When filling this template:
 1. Be specific and concrete - vague descriptions don't help the next agent

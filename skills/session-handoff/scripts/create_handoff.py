@@ -101,7 +101,14 @@ def find_previous_handoffs(project_path: str) -> list[dict]:
         # Extract title from file
         try:
             content = filepath.read_text()
-            match = re.search(r'^#\s+(?:Handoff:\s*)?(.+)$', content, re.MULTILINE)
+            # Strip an optional emoji prefix (e.g. `# 🤝 Handoff: foo`) before
+            # the optional `Handoff:` literal so the captured title is just the
+            # slug ("foo"), not the redundant emoji + "Handoff:" preamble.
+            match = re.search(
+                r'^#\s+(?:[^\s\w]+\s+)?(?:Handoff:\s*)?(.+)$',
+                content,
+                re.MULTILINE,
+            )
             title = match.group(1).strip() if match else filepath.stem
         except Exception:
             title = filepath.stem
@@ -215,7 +222,7 @@ def generate_handoff(
 
     # Handoff chain section
     if prev_handoff.get("exists"):
-        chain_section = f"""## Handoff Chain
+        chain_section = f"""## 🔗 Handoff Chain
 
 - **Continues from**: [{prev_handoff['filename']}](./{prev_handoff['filename']})
   - Previous title: {prev_handoff.get('title', 'Unknown')}
@@ -223,7 +230,7 @@ def generate_handoff(
 
 > Review the previous handoff for full context before filling this one."""
     else:
-        chain_section = """## Handoff Chain
+        chain_section = """## 🔗 Handoff Chain
 
 - **Continues from**: None (fresh start)
 - **Supersedes**: None
@@ -231,9 +238,9 @@ def generate_handoff(
 > This is the first handoff for this task."""
 
     # Generate the document
-    content = f"""# Handoff: [TASK_TITLE - replace this]
+    content = f"""# 🤝 Handoff: [TASK_TITLE - replace this]
 
-## Session Metadata
+## 🧾 Session Metadata
 - Created: {timestamp}
 - Project: {project_path}
 - Branch: {branch_line}
@@ -243,11 +250,11 @@ def generate_handoff(
 
 {chain_section}
 
-## Current State Summary
+## 📍 Current State Summary
 
 [TODO: Write one paragraph describing what was being worked on, current status, and where things left off]
 
-## Codebase Understanding
+## 🧠 Codebase Understanding
 
 ### Architecture Overview
 
@@ -263,7 +270,7 @@ def generate_handoff(
 
 [TODO: Document important patterns, conventions, or idioms found in this codebase]
 
-## Work Completed
+## 🏁 Work Completed
 
 ### Tasks Finished
 
@@ -281,7 +288,7 @@ def generate_handoff(
 |----------|-------------------|-----------|
 | [TODO: Document key decisions] | | |
 
-## Pending Work
+## 🚧 Pending Work
 
 ### Immediate Next Steps
 
@@ -297,7 +304,7 @@ def generate_handoff(
 
 - [TODO: Items deferred and why]
 
-## Context for Resuming Agent
+## 💡 Context for Resuming Agent
 
 ### Important Context
 
@@ -311,7 +318,7 @@ def generate_handoff(
 
 - [TODO: Document things that might trip up a new agent]
 
-## Environment State
+## 🌐 Environment State
 
 ### Tools/Services Used
 
@@ -325,7 +332,7 @@ def generate_handoff(
 
 - [TODO: List relevant env var NAMES only - NEVER include actual values/secrets]
 
-## Related Resources
+## 📚 Related Resources
 
 - [TODO: Add links to relevant docs and files]
 

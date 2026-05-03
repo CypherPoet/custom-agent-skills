@@ -64,8 +64,9 @@ def check_required_sections(content: str) -> tuple[bool, list[str]]:
     """Check that required sections exist and have content."""
     missing = []
     for section in REQUIRED_SECTIONS:
-        # Look for section header at any heading depth (# through ######)
-        pattern = rf'(?:^|\n)#{{1,6}}\s*{re.escape(section)}'
+        # Match `## Name` and `## 🧠 Name` alike — the optional non-word run
+        # absorbs an emoji prefix without pulling in the section's own letters.
+        pattern = rf'(?:^|\n)#{{1,6}}\s*(?:[^\s\w]+\s+)?{re.escape(section)}'
         match = re.search(pattern, content, re.IGNORECASE)
         if not match:
             missing.append(f"{section} (missing)")
@@ -85,7 +86,7 @@ def check_recommended_sections(content: str) -> list[str]:
     """Check which recommended sections are missing."""
     missing = []
     for section in RECOMMENDED_SECTIONS:
-        pattern = rf'(?:^|\n)#{{1,6}}\s*{re.escape(section)}'
+        pattern = rf'(?:^|\n)#{{1,6}}\s*(?:[^\s\w]+\s+)?{re.escape(section)}'
         if not re.search(pattern, content, re.IGNORECASE):
             missing.append(section)
     return missing
