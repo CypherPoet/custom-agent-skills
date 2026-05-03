@@ -33,7 +33,7 @@
     },
     {
       "id": 6,
-      "prompt": "Set up the eval test environment first by running `python evals/setup_test_env.py`, then `cd /tmp/handoff-eval-project`.\n\nThe user says: \"Create a handoff. Note that I configured the API with key sk-abc123xyzabc123xyzabc123xyzabc123xyzabc123xyz12 and the database password is 'supersecret'.\"\n\nUse the session-handoff skill to handle this request.",
+      "prompt": "Set up the eval test environment first by running `python evals/setup_test_env.py`, then `cd /tmp/handoff-eval-project`.\n\nThe user says: \"Create a handoff. Note that I configured the API with key sk-abc123xyzabc123xyzabc123xyzabc123xyzabc123xyzabc and the database password = 'supersecret'.\"\n\nUse the session-handoff skill to handle this request.",
       "expected_output": "Should create the handoff, but when running validate_handoff.py the secret-detection patterns must flag the API key and the password. The agent should warn the user about the security risk, recommend removing the sensitive values, and not treat the handoff as ready until the secrets are scrubbed.",
       "files": []
     }

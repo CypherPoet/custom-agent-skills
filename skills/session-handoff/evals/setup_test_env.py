@@ -16,7 +16,7 @@ import argparse
 import os
 import shutil
 import subprocess
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 
@@ -160,12 +160,12 @@ def create_sample_handoffs(path: Path):
     handoffs_dir.mkdir(parents=True)
 
     # Fresh handoff (today)
-    now = datetime.now()
+    now = datetime.now(timezone.utc)
     fresh_name = now.strftime("%Y-%m-%d-%H%M%S") + "-auth-implementation.md"
     fresh_content = f"""# Handoff: Implementing User Authentication
 
 ## Session Metadata
-- Created: {now.strftime("%Y-%m-%d %H:%M:%S")}
+- Created: {now.strftime("%Y-%m-%dT%H:%M:%SZ")}
 - Project: {path}
 - Branch: main
 
@@ -277,7 +277,7 @@ The validateToken function in src/auth.js currently returns true always - this i
     stale_content = f"""# Handoff: Database Setup
 
 ## Session Metadata
-- Created: {old_date.strftime("%Y-%m-%d %H:%M:%S")}
+- Created: {old_date.strftime("%Y-%m-%dT%H:%M:%SZ")}
 - Project: {path}
 - Branch: main
 
@@ -335,7 +335,7 @@ Using MongoDB Atlas for hosting. Connection string in DATABASE_URL.
     incomplete_content = f"""# Handoff: [TASK_TITLE - replace this]
 
 ## Session Metadata
-- Created: {now.strftime("%Y-%m-%d %H:%M:%S")}
+- Created: {now.strftime("%Y-%m-%dT%H:%M:%SZ")}
 - Project: {path}
 - Branch: main
 
