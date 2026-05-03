@@ -1,0 +1,41 @@
+{
+  "skill_name": "session-handoff",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Set up the eval test environment first by running `python evals/setup_test_env.py`, then `cd /tmp/handoff-eval-project`.\n\nThe user says: \"I've been working on implementing user authentication. I modified src/auth.js to add JWT token validation and updated the middleware. Create a handoff so I can continue later.\"\n\nUse the session-handoff skill to handle this request.",
+      "expected_output": "Should trigger the CREATE workflow: run scripts/create_handoff.py with a meaningful slug, confirm the file was created in .claude/handoffs/, prompt the user to fill in the [TODO: ...] sections (especially Current State Summary, Important Context, Immediate Next Steps), and mention the next step is running validate_handoff.py.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "Set up the eval test environment first by running `python evals/setup_test_env.py`, then `cd /tmp/handoff-eval-project`. The setup script seeds at least one prior handoff in .claude/handoffs/.\n\nThe user says: \"I'm continuing the auth work from yesterday. Create a new handoff that links to the previous one.\"\n\nUse the session-handoff skill to handle this request.",
+      "expected_output": "Should locate the existing handoff (via list_handoffs.py or by inspecting .claude/handoffs/), then run create_handoff.py with --continues-from pointing at that file. The generated handoff should include a 'Handoff Chain' section with a link back to the predecessor.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "Set up the eval test environment first by running `python evals/setup_test_env.py`, then `cd /tmp/handoff-eval-project`. The setup script seeds a recent handoff in .claude/handoffs/.\n\nThe user says: \"I want to continue where I left off. Load my last handoff.\"\n\nUse the session-handoff skill to handle this request.",
+      "expected_output": "Should trigger the RESUME workflow: run list_handoffs.py to surface the candidate, run check_staleness.py and report the level, read the handoff file in full, summarize the 'Immediate Next Steps', and walk through the resume-checklist before doing any other work.",
+      "files": []
+    },
+    {
+      "id": 4,
+      "prompt": "Set up the eval test environment first by running `python evals/setup_test_env.py`, then `cd /tmp/handoff-eval-project`. The setup script seeds an incomplete handoff in .claude/handoffs/ that still has [TODO: ...] placeholders.\n\nThe user says: \"I created a handoff but I'm not sure if it's complete. Can you validate it?\"\n\nUse the session-handoff skill to handle this request.",
+      "expected_output": "Should run validate_handoff.py against the incomplete handoff, report the quality score, list missing or incomplete sections, flag any detected secrets, and give the user a concrete list of what to fix before the handoff is usable.",
+      "files": []
+    },
+    {
+      "id": 5,
+      "prompt": "Set up the eval test environment first by running `python evals/setup_test_env.py`, then `cd /tmp/handoff-eval-project`. The setup script seeds an older handoff with several commits made afterward.\n\nThe user says: \"I have a handoff from last week. Is it still relevant or should I create a new one?\"\n\nUse the session-handoff skill to handle this request.",
+      "expected_output": "Should run check_staleness.py against the older handoff, report the staleness level (FRESH / SLIGHTLY_STALE / STALE / VERY_STALE), surface the specific drift signals (days old, commits since, branch divergence, missing files), and give the user a concrete recommendation about whether to resume or create a fresh handoff.",
+      "files": []
+    },
+    {
+      "id": 6,
+      "prompt": "Set up the eval test environment first by running `python evals/setup_test_env.py`, then `cd /tmp/handoff-eval-project`.\n\nThe user says: \"Create a handoff. Note that I configured the API with key sk-abc123xyzabc123xyzabc123xyzabc123xyzabc123xyzabc and the database password = 'supersecret'.\"\n\nUse the session-handoff skill to handle this request.",
+      "expected_output": "Should create the handoff, but when running validate_handoff.py the secret-detection patterns must flag the API key and the password. The agent should warn the user about the security risk, recommend removing the sensitive values, and not treat the handoff as ready until the secrets are scrubbed.",
+      "files": []
+    }
+  ]
+}
