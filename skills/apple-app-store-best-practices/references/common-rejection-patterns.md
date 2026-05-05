@@ -1,7 +1,7 @@
 # Common App Store Rejection Patterns
 
 > Source: https://developer.apple.com/app-store/review/guidelines/
-> Last synced: 2026-03-27
+> Last synced: 2026-05-04
 >
 > This checklist covers the most frequent rejection reasons. Load the corresponding
 > section reference file for full details on any flagged item.

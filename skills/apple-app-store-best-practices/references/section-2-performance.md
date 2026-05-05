@@ -1,7 +1,7 @@
 # Section 2: Performance
 
 > Source: https://developer.apple.com/app-store/review/guidelines/
-> Last synced: 2026-03-27
+> Last synced: 2026-05-04
 
 ---
 
@@ -81,13 +81,16 @@
 
 ### §2.3.1 Hidden or Undocumented Features
 
-**Requirement:** Apps must not contain hidden, dormant, or undocumented features. All new features and functionality changes must be disclosed in the App Review Notes. Marketing text must accurately represent what the app does. *(ASR & NR)*
+#### §2.3.1(a) No Hidden Features or Misleading Marketing (ASR & NR)
+
+**Requirement:** Apps must not contain hidden, dormant, or undocumented features. All new features and functionality changes must be disclosed in the App Review Notes. Marketing text must accurately represent what the app does and not include false claims (e.g., promoting unavailable content, false pricing, fake malware scanners).
 
 **Triggers rejection if:**
 - Features exist in the binary that are not described in metadata or review notes
 - Remote config or feature flags enable functionality post-review that was not present during review
 - Marketing screenshots or descriptions promise features the app does not actually deliver
 - App behavior changes based on geographic region, date, or A/B test group in ways not disclosed
+- Marketing makes false claims (e.g., misleading pricing, "iOS malware scanner" features)
 
 **What to check:**
 - Search for remote config / feature flag SDKs (`FirebaseRemoteConfig`, `LaunchDarkly`, `Optimizely`, `Unleash`, custom feature flag implementations)
@@ -100,6 +103,24 @@
 - If using feature flags, clearly document all possible states in review notes
 - "Easter eggs" and hidden gestures that unlock features count as undocumented functionality
 - Server-driven UI that can change the app's behavior post-review is scrutinized heavily
+
+#### §2.3.1(b) Dishonest Behavior
+
+**Requirement:** Egregious or repeated dishonest behavior is grounds for removal from the Apple Developer Program.
+
+**Triggers rejection if:**
+- Repeated violations of §2.3.1(a) (hidden features, false marketing) across submissions
+- Pattern of misrepresentation in metadata, review notes, or marketing
+- Attempts to mislead App Review about app functionality, content, or business model
+
+**What to check:**
+- Account-level history of prior rejections related to honesty/transparency
+- Whether prior reviewer feedback about misleading content has been addressed
+- Consistency between what the app does, what metadata says, and what review notes claim
+
+**Key details:**
+- Consequences extend beyond app rejection to full Developer Program removal
+- "Egregious" includes attempts to actively deceive App Review (e.g., behavior that changes after approval)
 
 ---
 

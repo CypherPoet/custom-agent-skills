@@ -1,7 +1,7 @@
 # Section 1: Safety
 
 > Source: https://developer.apple.com/app-store/review/guidelines/
-> Last synced: 2026-03-27
+> Last synced: 2026-05-04
 
 ---
 
@@ -196,29 +196,49 @@ Apps should not include content that is offensive, insensitive, upsetting, inten
 
 ---
 
-### §1.2.1 Creator Content (ASR & NR)
+### §1.2.1 Creator Content
 
-**Requirement:** Apps featuring content from a community of "creators" must be properly moderated. Creator apps must provide a way for users to identify content that exceeds the app's age rating and must implement an age restriction mechanism based on verified or declared age to limit access by underage users.
+**Requirement:** Apps featuring content from a community of "creators" must be properly moderated. Creator content is treated as user-generated content and must follow Guideline 1.2 (filtering, reporting, blocking, contact info) and Guideline 3.1.1 (in-app purchase for digital goods).
 
 **Triggers rejection if:**
-- Creator content is unmoderated
+- Creator content is unmoderated or lacks the §1.2 mechanisms (filtering, reporting, blocking, published contact info)
+- Creator experiences change core app features/functionality rather than adding content
+- Digital goods/services within creator content bypass §3.1.1 in-app purchase requirements
+
+**What to check:**
+- Content moderation pipeline for creator submissions (manual review queue, automated screening, or hybrid)
+- Reporting and blocking mechanisms for creator content (per §1.2)
+- Published developer contact information accessible from within the app
+- IAP enforcement for any digital goods or services offered through creator content (per §3.1.1)
+- Creator content boundaries -- verify creator experiences add content within the app's structure rather than altering core native functionality
+
+**Key details:**
+- "Creator content" includes video, articles, audio, and casual games
+- Creator experiences are treated as UGC by App Review, so all §1.2 requirements also apply
+- Creator experiences must not function as independent native apps -- they are content within the host app
+
+---
+
+#### §1.2.1(a) Age Identification and Restriction (ASR & NR)
+
+**Requirement:** Creator apps must provide a way for users to identify content that exceeds the app's age rating and must use an age restriction mechanism based on verified or declared age to limit access by underage users.
+
+**Triggers rejection if:**
 - No age identification system for content that exceeds the app's age rating
 - No age restriction mechanism (verified or declared) to gate underage access
-- Creator experiences change core app features/functionality rather than adding content
+- Age restriction can be trivially bypassed (e.g., simple yes/no toggle with no enforcement)
 
 **What to check:**
 - Age gate or age verification UI: look for date-of-birth entry, age confirmation dialogs, or identity verification SDKs
 - Content rating/tagging system for creator-submitted content
-- Moderation pipeline for creator submissions (manual review queue, automated screening, or hybrid)
 - Age-gated content sections with access controls
+- Persistent storage of age verification state
 - `AppTrackingTransparency` framework usage and age-appropriate handling
-- Creator content boundaries -- verify creator experiences add content within the app's structure rather than altering core native functionality
 
 **Key details:**
 - Marked ASR and NR -- applies to both distribution channels
-- "Creator content" includes video, articles, audio, and casual games
-- Creator experiences are treated as UGC by App Review, so all §1.2 requirements also apply
-- Creator experiences must not function as independent native apps -- they are content within the host app
+- The age mechanism must be meaningful -- a simple unchecked toggle is insufficient
+- Content ratings for creator content should align with the host app's declared age rating in App Store Connect
 
 ---
 

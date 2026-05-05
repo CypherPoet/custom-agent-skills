@@ -1,7 +1,7 @@
 # Section 5: Legal
 
 > Source: https://developer.apple.com/app-store/review/guidelines/
-> Last synced: 2026-04-20
+> Last synced: 2026-05-04
 
 ---
 
@@ -354,29 +354,55 @@
 
 ---
 
-#### 5.1.2(vi) HomeKit, HealthKit, ClassKit, and Motion & Fitness Data Restrictions
+#### 5.1.2(vi) HomeKit, HealthKit, Clinical Records, MovementDisorder, ClassKit, and Depth/Facial Mapping Restrictions
 
-**Requirement:** Data from HomeKit, HealthKit, ClassKit, and CoreMotion must be used only for their intended health, home automation, or education purposes. This data must not be shared with third parties for advertising, sold, or used for purposes unrelated to improving the user's health, home, or education experience.
+**Requirement:** Data from HomeKit, HealthKit, Clinical Health Records, MovementDisorder APIs, ClassKit, and depth/facial mapping tools (e.g., ARKit `ARFaceAnchor`, TrueDepth) must be used only for their intended health, home automation, education, or AR purposes. This data must not be used for marketing, advertising, or use-based data mining (including sharing with third parties for those purposes).
 
 **Triggers rejection if:**
-- HealthKit data is shared with advertisers or data brokers
+- HealthKit, Clinical Records, or MovementDisorder data is shared with advertisers or data brokers
 - HomeKit data is used for purposes beyond home automation
 - ClassKit data is used for advertising or non-educational profiling
 - Motion and fitness data is sold or shared for advertising
+- Depth/facial mapping data (face geometry from TrueDepth/ARKit) is used for advertising, profiling, or sold to third parties
 
 **What to check:**
-- `HealthKit` entitlement in the app's entitlements file and capability configuration
-- `HKHealthStore` usage: what data types are read/written?
+- `HealthKit` entitlement and `HKHealthStore` usage -- what data types are read/written?
+- Clinical Health Records APIs (`HKClinicalRecord`, `HKClinicalType`)
+- MovementDisorder API usage (`HKMovementDisorderManager`)
 - `HomeKit` entitlement and `HMHomeManager` usage
 - `ClassKit` imports and `CLSContext` / `CLSDataStore` usage
 - `CoreMotion` framework imports: `CMMotionManager`, `CMPedometer`, `CMMotionActivityManager`
+- ARKit / TrueDepth: `ARFaceAnchor`, `ARFaceGeometry`, `AVDepthData`, `ARFaceTrackingConfiguration`
 - Whether any of this data flows to analytics, advertising, or third-party SDKs
-- Privacy policy: does it specifically address health/home/education data handling?
+- Privacy policy: does it specifically address health/home/education/biometric data handling?
 
 **Key details:**
 - HealthKit data must not be stored in iCloud (see 5.1.3)
 - These restrictions are stricter than general data rules -- even with consent, certain uses are prohibited
+- Depth/facial mapping data is treated as biometric-grade sensitive data
 - Apps using HealthKit must have a clear health or fitness purpose
+
+---
+
+#### 5.1.2(vii) Apple Pay Data
+
+**Requirement:** Data acquired through Apple Pay may only be shared to facilitate or improve the delivery of goods and services. It must not be used for advertising, marketing, or shared with third parties for purposes unrelated to fulfilling the underlying transaction.
+
+**Triggers rejection if:**
+- Apple Pay transaction data is shared with ad networks, analytics services, or data brokers for marketing
+- Apple Pay payment information is repurposed for behavioral profiling or advertising targeting
+- Apple Pay-acquired data is sold or used for purposes beyond delivery and improvement of the purchased goods/services
+
+**What to check:**
+- `PassKit` framework usage: `PKPaymentAuthorizationController`, `PKPaymentAuthorizationViewController`
+- Network requests after Apple Pay completion -- which destinations receive transaction details?
+- Analytics or advertising SDK calls in payment success handlers
+- Privacy policy: explicit limitation of Apple Pay data use to delivery/improvement of goods and services
+
+**Key details:**
+- Applies to all data acquired via the Apple Pay flow, including shipping/billing addresses, contact info, and transaction details
+- "Improve delivery of goods and services" is narrowly construed -- it does not include advertising or general analytics
+- Sharing Apple Pay data with ad partners is grounds for app removal
 
 ---
 
@@ -384,22 +410,29 @@
 
 #### 5.1.3(i) No Health Data for Advertising
 
-**Requirement:** Health data collected through HealthKit, CareKit, or similar health frameworks must not be used for advertising or marketing purposes.
+**Requirement:** Health, fitness, and medical data collected through HealthKit, Clinical Health Records, Motion & Fitness, MovementDisorder APIs, or similar health frameworks must not be used for advertising, marketing, or use-based data mining other than for improving health management or for health research with user permission. Apps may use health data to provide direct benefit to the user (such as a reduced insurance premium) when offered by the benefit provider and the data is not shared.
 
 **Triggers rejection if:**
 - Health data is sent to advertising SDKs or ad networks
 - Health metrics are used to target or personalize advertisements
 - Health data is included in analytics events sent to advertising platforms
+- Clinical Health Records or MovementDisorder data is shared with third parties for marketing
+- Direct-benefit features (e.g., insurance discounts) share health data beyond what is required to compute the benefit
 
 **What to check:**
 - Data flow from `HKHealthStore` reads -- does any of this data reach ad SDKs?
+- Clinical Health Records APIs (`HKClinicalRecord`, `HKClinicalType`)
+- MovementDisorder API usage (`HKMovementDisorderManager`)
+- `CoreMotion` data flows (`CMMotionManager`, `CMPedometer`, `CMMotionActivityManager`)
 - Ad SDK initialization: are health-related user properties being set?
 - Analytics events that include health metrics
 - Network requests that combine health data with advertising identifiers
+- Direct-benefit flows (insurance, wellness rewards): is the app offered by the benefit provider, and is data sharing strictly scoped?
 
 **Key details:**
-- This is an absolute prohibition -- no amount of consent makes it acceptable
+- This is a near-absolute prohibition -- the only carve-outs are health management, permitted research, and direct user benefit by the benefit provider
 - Includes indirect use such as using health conditions to select ad categories
+- Direct-benefit exception requires the app to be from the benefit provider itself; third-party intermediaries do not qualify
 
 ---
 

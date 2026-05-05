@@ -1,7 +1,7 @@
 # Section 4: Design
 
 > Source: https://developer.apple.com/app-store/review/guidelines/
-> Last synced: 2026-03-27
+> Last synced: 2026-05-04
 
 ---
 
@@ -360,7 +360,7 @@
 - `NSAppleMusicUsageDescription` in `Info.plist`
 
 **Key details:**
-- Applies to sub-requirements: (i) MusicKit for playback, (ii) Identity Guidelines compliance, (iii) data access disclosure, (iii) no third-party data sharing
+- Sub-requirements: (i) MusicKit for native playback (user-initiated), no payment required to monetize Apple Music; (ii) MusicKit is not a substitute for licensing deeper integration -- cover art and metadata may only accompany playback, not marketing/advertising; (iii) disclose data access, do not share Apple Music user data with third parties, and do not use it to identify users or target ads
 - Apple Music API access requires a MusicKit developer token
 - Streaming playback requires the user to have an active Apple Music subscription
 

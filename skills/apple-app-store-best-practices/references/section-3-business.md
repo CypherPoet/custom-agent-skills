@@ -1,7 +1,7 @@
 # Section 3: Business
 
 > Source: https://developer.apple.com/app-store/review/guidelines/
-> Last synced: 2026-03-27
+> Last synced: 2026-05-04
 
 If the business model is not obvious, it must be explained in metadata and App Review notes. Expensive apps with irrationally high prices will be rejected. Manipulation of reviews, chart rankings, or use of paid/incentivized/fake feedback may result in expulsion from the Apple Developer Program.
 
