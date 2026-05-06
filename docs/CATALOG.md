@@ -10,5 +10,6 @@
 | [design-md-lint](../skills/design-md-lint/SKILL.md) | Audit a project's DESIGN.md against the google-labs-code/design.md spec — flags issues by severity (errors, warnings, suggestions) with concrete fixes and improvement ideas |
 | [emoji-commits](../skills/emoji-commits/SKILL.md) | Use Gitmoji to make commits more expressive |
 | [expo-snack-prototyper](../skills/expo-snack-prototyper/SKILL.md) | Generate self-contained React Native prototypes that run in Expo Snack |
+| [frontend-slides](../skills/frontend-slides/SKILL.md) | Create animation-rich, zero-dependency HTML presentations from scratch or by converting PowerPoint files — helps non-designers discover their aesthetic through visual exploration |
 | [session-handoff](../skills/session-handoff/SKILL.md) | Create comprehensive handoff documents that let a fresh AI agent continue long-running work with zero ambiguity — preserves context, decisions, and progress across sessions |
 | [session-harvest](../skills/session-harvest/SKILL.md) | Systematic pre-exit sweep for session learnings — surfaces corrections, project context, preferences, and references worth preserving in memory |
