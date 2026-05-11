@@ -6,6 +6,7 @@
 | [changelog-maintenance](../skills/changelog-maintenance/SKILL.md) | Maintain changelogs, write release notes, and generate migration guides with Keep a Changelog and Semantic Versioning |
 | [claude-changelog](../skills/claude-changelog/SKILL.md) | Fetch and summarize Claude Code release notes as HTML or Markdown |
 | [claude-docs-search](../skills/claude-docs-search/SKILL.md) | Search and reference the official Claude Code documentation to answer questions accurately |
+| [consolidate-memory](../skills/consolidate-memory/SKILL.md) | Audit and consolidate Claude's per-project auto-memory — dedupe, verify references, repair the index, rewrite descriptions, and prune when near the truncation cap. Never modifies without approval |
 | [creating-effective-stitch-prompts](../skills/creating-effective-stitch-prompts/SKILL.md) | Write, generate, and refine text prompts for Stitch UI generation and editing |
 | [design-md-lint](../skills/design-md-lint/SKILL.md) | Audit a project's DESIGN.md against the google-labs-code/design.md spec — flags issues by severity (errors, warnings, suggestions) with concrete fixes and improvement ideas |
 | [emoji-commits](../skills/emoji-commits/SKILL.md) | Use Gitmoji to make commits more expressive |
