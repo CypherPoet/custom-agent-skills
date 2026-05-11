@@ -1,0 +1,61 @@
+{
+  "skill_name": "blender-mcp-playbook",
+  "evals": [
+    {
+      "id": 1,
+      "name": "modeling-and-materials",
+      "prompt": "I want a simple wooden table in my Blender scene — a rectangular top about 1.5m × 0.8m, four legs, ~75cm tall. Apply an oak material using PBR textures from PolyHaven (1k or 2k is fine).",
+      "expected_output": "A bpy script that creates the geometry (top + 4 legs as separate meshes or one combined), assigns a Principled BSDF material with PolyHaven oak PBR maps wired through Image Texture → Principled BSDF, with the right color spaces (sRGB for color, Non-Color for roughness/normal), and uses the PolyHaven MCP integration to fetch the textures. Should call screenshot to verify after.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "name": "scene-inspection-batch-rename",
+      "prompt": "Look at my current scene and rename every mesh whose name contains 'cube' (case-insensitive) to use the format box_<n>, numbered from 1.",
+      "expected_output": "A bpy script that reads scene state via get_scene_info or a small inspection script, identifies matching meshes, sorts them deterministically, and renames using bpy.data API (not bpy.ops). Should not depend on selection or active object. Should print a before/after summary.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "name": "studio-scene-setup",
+      "prompt": "Set up a studio-style scene for a hero shot of an existing object: an HDRI environment for ambient lighting, a camera at a 3/4 angle pointed at the origin, and a 3-point light setup (key, fill, rim).",
+      "expected_output": "A bpy script that loads an HDRI (via PolyHaven if available, or asks for a path), sets up the World shader correctly, creates a camera with appropriate lens/distance and a track-to constraint pointed at the origin, and places three Area lights with sensible energy/temperature differences. Should call screenshot to verify.",
+      "files": []
+    },
+    {
+      "id": 4,
+      "name": "ik-leg-rigging",
+      "prompt": "I have an armature in my scene with bones called 'thigh.L', 'shin.L', and 'foot.L'. Add an IK setup to the left leg: an IK target bone the animator can move, a pole target for knee direction, and an IK constraint on the shin. The thigh and shin should follow the IK target, but the rig should also support FK fallback (animators can keyframe FK rotations when IK influence is 0).",
+      "expected_output": "A bpy script that enters edit mode to add the IK target and pole bones (parented appropriately), exits to pose mode, adds an IK constraint on shin.L with chain_count=2, sets the pole target and angle, and explains the FK fallback path. Should handle mode transitions correctly.",
+      "files": []
+    },
+    {
+      "id": 5,
+      "name": "scatter-instances",
+      "prompt": "Build a geometry-nodes setup that scatters 200 instances of the selected object across the surface of a plane, with random rotation around the Z axis.",
+      "expected_output": "A bpy script that creates a target plane (or uses one if present), adds a NODES modifier with a freshly built GeometryNodeTree, wires Distribute Points on Faces → Instance on Points → Rotate Instances with a random Z rotation field, and joins the result with the original geometry. Should pass through the Geometry input/output sockets correctly.",
+      "files": []
+    },
+    {
+      "id": 6,
+      "name": "ao-bake",
+      "prompt": "Bake an ambient occlusion map for the active mesh at 1024×1024 and save it as a PNG next to the .blend file.",
+      "expected_output": "A bpy script that switches to Cycles, ensures UVs exist (smart-projects if missing), creates a target image, sets up an Image Texture node on the active material as the active node, runs bpy.ops.object.bake(type='AO'), and saves the image to disk. Long-running enough that it should escape to the headless CLI for real work, but for a 1024 AO bake the MCP can sometimes handle it inline.",
+      "files": []
+    },
+    {
+      "id": 7,
+      "name": "gltf-export-web",
+      "prompt": "Export my current scene to a GLB for web — apply visibility filtering (skip hidden objects), don't bake modifiers, target under 5MB final size after texture optimization.",
+      "expected_output": "A bpy script that runs the pre-export audit (UV coverage, scale, suspicious modifiers), then escapes to a headless `blender --background ... --python-expr` call with bpy.ops.export_scene.gltf using export_apply=False, use_visible=True, export_format='GLB'. After export, runs a gltf-transform pipeline (resize → webp → draco) and reports final size. Acknowledges the MCP timeout risk and uses headless throughout.",
+      "files": []
+    },
+    {
+      "id": 8,
+      "name": "data-api-pitfall",
+      "prompt": "Move the active object up by 2 units.",
+      "expected_output": "Should reach for `bpy.context.view_layer.objects.active.location.z += 2` (or equivalent direct property assignment) rather than `bpy.ops.transform.translate(value=(0,0,2))`. The operator path depends on context overrides that fail unpredictably under MCP. The correct pattern is the data API.",
+      "files": []
+    }
+  ]
+}

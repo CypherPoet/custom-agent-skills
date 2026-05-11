@@ -3,6 +3,7 @@
 | Skill | Description |
 |-------|-------------|
 | [apple-app-store-best-practices](../skills/apple-app-store-best-practices/SKILL.md) | Audit Apple platform apps for App Store compliance and optimize listings with metadata, screenshot, review, and localization best practices |
+| [blender-mcp-playbook](../skills/blender-mcp-playbook/SKILL.md) | Pro tips and `bpy` patterns for driving Blender through the official Blender MCP server — modeling, materials, rigging, geometry nodes, rendering, asset import, and export |
 | [changelog-maintenance](../skills/changelog-maintenance/SKILL.md) | Maintain changelogs, write release notes, and generate migration guides with Keep a Changelog and Semantic Versioning |
 | [claude-changelog](../skills/claude-changelog/SKILL.md) | Fetch and summarize Claude Code release notes as HTML or Markdown |
 | [claude-docs-search](../skills/claude-docs-search/SKILL.md) | Search and reference the official Claude Code documentation to answer questions accurately |
