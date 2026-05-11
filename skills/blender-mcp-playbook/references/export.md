@@ -41,7 +41,7 @@ bpy.ops.export_scene.gltf(
 |---|---|---|
 | `export_format` | `GLB` | `GLTF_SEPARATE` if you want JSON + textures as separate files |
 | `use_selection` | `False` | `True` to export only selected objects |
-| `export_visible_objects_only` | `False` | `True` to skip anything hidden (the canonical "skip hidden objects" flag — preferred over post-filtering selection) |
+| `use_visible` | `False` | `True` to skip anything hidden (the canonical "skip hidden objects" flag — preferred over post-filtering selection) |
 | `export_apply` | `False` | `True` only if you have to (Array/Mirror modifiers can balloon file size) |
 | `export_yup` | `True` | Leave on — most runtimes expect Y-up |
 | `export_animations` | `True` | `False` for static scenes |
@@ -51,7 +51,6 @@ bpy.ops.export_scene.gltf(
 | `export_lights` | `False` | `True` if lights are part of the asset (Filament etc.) |
 | `export_extras` | `False` | `True` if you've stored custom properties on objects you want preserved |
 | `export_image_format` | `AUTO` | `JPEG` if you can't tolerate PNG file size |
-| `export_yup` | `True` | Leave on |
 
 ### The modifier-apply trap
 

@@ -49,7 +49,6 @@ def bake_ao(obj, image_size=1024, samples=64, output_path=None):
     # 2. Engine must be Cycles for baking.
     bpy.context.scene.render.engine = 'CYCLES'
     bpy.context.scene.cycles.samples = samples
-    bpy.context.scene.cycles.bake_type = 'AO'
 
     # 3. The mesh must be UV-unwrapped. If not, unwrap first:
     if not obj.data.uv_layers:
