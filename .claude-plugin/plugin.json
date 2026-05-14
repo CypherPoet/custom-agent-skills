@@ -1,0 +1,6 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-plugin.json",
+  "name": "cypherpoet-skills",
+  "description": "CypherPoet's open-source collection of Claude Code skills.",
+  "author": { "name": "CypherPoet" }
+}
