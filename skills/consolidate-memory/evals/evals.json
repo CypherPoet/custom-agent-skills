@@ -1,0 +1,26 @@
+{
+  "skill_name": "consolidate-memory",
+  "evals": [
+    {
+      "id": 1,
+      "name": "mixed-issues-typical-audit",
+      "prompt": "Set up the test fixtures first by running `python evals/setup_test_env.py`.\n\nThen handle this user request: \"I think my memory directory has gotten messy and could use some cleanup. Can you audit the memory at /tmp/consolidate-memory-fixtures/mixed-issues/memory/ and tell me what should be consolidated? Treat the working directory (for resolving any code references inside the memory bodies) as /tmp/consolidate-memory-fixtures/mixed-issues/project/. Just show me the audit \u2014 don't apply anything yet.\"",
+      "expected_output": "A severity-tiered audit report that surfaces: (a) \ud83d\udd34 a broken reference in feedback_broken_ref.md to src/auth/middleware.ts which doesn't exist in the project, (b) \ud83d\udd34 a dead index line in MEMORY.md pointing to feedback_deleted_old_thing.md which doesn't exist on disk, (c) \ud83d\udfe1 a duplicate pair (feedback_test_isolation.md and feedback_no_db_mocks.md make the same load-bearing claim about not mocking the database), (d) \ud83d\udfe1 description drift on project_auth_rewrite.md (description is generic 'Notes on the auth rewrite' but body is specifically about legal/compliance drivers), (e) \ud83d\udca1 an orphan file feedback_orphan.md that exists on disk but is missing from MEMORY.md. The skill should NOT flag feedback_real_function.md (it correctly references src/main.py's parse_input which does exist). The skill should NOT make any filesystem writes \u2014 it should present findings and wait for approval.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "name": "healthy-memory-no-findings",
+      "prompt": "Set up the test fixtures first by running `python evals/setup_test_env.py`.\n\nThen handle this user request: \"Can you clean up and consolidate the memory at /tmp/consolidate-memory-fixtures/healthy-small/memory/? Working directory for references is /tmp/consolidate-memory-fixtures/healthy-small/project/.\"",
+      "expected_output": "The skill should recognize the memory directory is clean and report that no consolidation is needed \u2014 something close to 'Memory looks clean. Nothing to consolidate.' It must not invent findings to look productive, and must not make any filesystem writes.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "name": "historical-reference-not-stale",
+      "prompt": "Set up the test fixtures first by running `python evals/setup_test_env.py`.\n\nThen handle this user request: \"My memory directory has some old reference memories about tools we've migrated away from. Can you audit /tmp/consolidate-memory-fixtures/historical-reference/memory/ and tell me if anything should be cleaned up? Working dir is /tmp/consolidate-memory-fixtures/historical-reference/project/.\"",
+      "expected_output": "The skill detects that reference_legacy_playwright_flag.md mentions `playwright-cli` and `--full-page` which don't exist in the current project. However, the skill should NOT recommend deletion \u2014 it should explicitly note this is a `reference`-type memory whose own body declares it as historical context (not current guidance) for reading old PRs. The proposed action should be 'confirm with user before deletion' or 'keep \u2014 intentional historical record', not auto-delete. A naive cleanup that just sees a broken reference and recommends removal would be wrong here. The skill should NOT make any filesystem writes.",
+      "files": []
+    }
+  ]
+}
