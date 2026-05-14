@@ -10,7 +10,20 @@ A curated collection of reusable AI agent skills for extending coding assistant 
 
 ## Installation
 
-Use the [`skills`](https://github.com/vercel-labs/skills) CLI to install skills from this repo:
+### As a Claude Code Plugin
+
+This repo is published as the `cypherpoet-skills` plugin via the [`cypherpoet-skills-marketplace`](https://github.com/CypherPoet/cypherpoet-skills-marketplace) catalog. Inside Claude Code:
+
+```shell
+/plugin marketplace add CypherPoet/cypherpoet-skills-marketplace
+/plugin install cypherpoet-skills@cypherpoet-skills-marketplace
+```
+
+Skills are then invoked under the `cypherpoet-skills:` namespace (for example, `/cypherpoet-skills:emoji-commits`). Each commit to `main` becomes a new version that Claude Code pulls on the next `/plugin marketplace update` or background refresh.
+
+### Via the `skills` CLI
+
+Use the [`skills`](https://github.com/vercel-labs/skills) CLI to install skills into any supported agent environment:
 
 ```bash
 # Install a specific skill globally for Claude Code
@@ -27,6 +40,8 @@ npx skills add CypherPoet/custom-agent-skills -l
 
 ```
 .
+├── .claude-plugin/
+│   └── plugin.json      # Claude Code plugin manifest
 ├── skills/              # Individual skill folders
 │   └── <skill-name>/
 │       ├── SKILL.md     # Skill instructions (required)
