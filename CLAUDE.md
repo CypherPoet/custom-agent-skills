@@ -18,7 +18,6 @@ Use `/skill-creator` when creating, editing, or iterating on skills.
 ## Conventions
 
 - Skill folder names use **kebab-case**.
-- No build system, tests, or linting — this is a pure documentation/prompt-engineering repo.
 - New skills go in `skills/` (not globally), unless specified otherwise.
 - `skills/*-workspace/` are gitignored scratch directories created by `/skill-creator` during eval iteration — not real skills.
 
