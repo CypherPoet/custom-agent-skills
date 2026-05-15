@@ -32,7 +32,6 @@ Use this template structure when creating handoff documents. The smart scaffold 
 
 ## 🧾 Session Metadata
 - Created: [TIMESTAMP]
-- Project: [PROJECT_PATH]
 - Branch: [GIT_BRANCH]
 
 ## 📍 Current State Summary

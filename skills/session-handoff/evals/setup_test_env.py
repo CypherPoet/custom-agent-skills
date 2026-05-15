@@ -166,7 +166,6 @@ def create_sample_handoffs(path: Path):
 
 ## Session Metadata
 - Created: {now.strftime("%Y-%m-%dT%H:%M:%SZ")}
-- Project: {path}
 - Branch: main
 
 ## Handoff Chain
@@ -278,7 +277,6 @@ The validateToken function in src/auth.js currently returns true always - this i
 
 ## Session Metadata
 - Created: {old_date.strftime("%Y-%m-%dT%H:%M:%SZ")}
-- Project: {path}
 - Branch: main
 
 ## Handoff Chain
@@ -336,7 +334,6 @@ Using MongoDB Atlas for hosting. Connection string in DATABASE_URL.
 
 ## Session Metadata
 - Created: {now.strftime("%Y-%m-%dT%H:%M:%SZ")}
-- Project: {path}
 - Branch: main
 
 ## Current State Summary

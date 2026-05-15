@@ -33,7 +33,7 @@ python scripts/create_handoff.py "auth-part-2" --continues-from 2024-01-15-auth.
 The script will:
 - Create `.claude/handoffs/` directory if needed
 - Generate timestamped filename
-- Pre-fill: timestamp, project path, git branch, recent commits, modified files
+- Pre-fill: timestamp, git branch, recent commits, modified files
 - Add handoff chain links if continuing from previous
 - Output file path for editing
 

@@ -242,7 +242,6 @@ def generate_handoff(
 
 ## 🧾 Session Metadata
 - Created: {timestamp}
-- Project: {project_path}
 - Branch: {branch_line}
 
 ### Recent Commits (for context)
