@@ -169,7 +169,47 @@ After presenting, ask:
 > Item 2 would update your existing memory `feedback_no_bandaids.md` with additional context from this session.
 
 
-## Phase 5: Save Selected Items
+## Phase 5: Verify Accuracy Before Saving
+
+Selection is not verification. The summaries presented in Phase 4 are polished prose, and polished prose can paper over claims that were never actually checked — especially technical facts asserted with confidence. Memory writes are durable: a confidently wrong memory is worse than no memory, because future sessions will trust it.
+
+After the user picks which items to save, but **before writing any file**, audit the concrete factual claims in each selected candidate.
+
+### What to audit
+
+Walk each candidate and list its concrete claims, then categorize each:
+
+- **Session fact** ("X happened in this conversation", "the user said Y") — re-check the transcript.
+- **Code / repo fact** ("file X exports Y", "function Z does W") — read the file.
+- **External technical fact** ("library X behaves like Y", "browsers fire Z densely") — verify against the actual source: read the code in `node_modules/`, grep the implementation, or check the doc. Do not trust training intuition for claims about specific tool behavior, because that's exactly where polished prose tends to encode confident speculation.
+- **Numerical claim** ("rejects roughly 15° of the band") — redo the math, briefly. If it varies with a parameter, say so.
+- **Personal / user fact** ("user prefers X") — find the actual quote in the conversation.
+
+The audit should be quick. The point is to surface anything that doesn't hold up, not to belabor it.
+
+### What to do when a claim doesn't hold up
+
+- **Wrong** — correct the memory. Don't ship the false claim.
+- **Unverifiable in reasonable time** — soften or drop the unverifiable sentence. Memory writes don't need editorial flourish; they need to be correct. A memory with fewer, more accurate claims is more useful than one with confident-sounding but uncheckable ones.
+- **Right but imprecise** — tighten. E.g. "approximately 15°" is fine if the actual range is 14–16°; "exactly 15°" when it varies with input is not.
+
+### Report changes before saving
+
+If the audit produced corrections, briefly tell the user what changed before writing. They may want to see the diff between what they approved and what gets saved.
+
+> Verified all 4 candidates against the code. Two corrections:
+> - Item 1: the claim about `material.visible` varying across releases was unverified; replaced with the actual verified behavior (it's consistently ignored).
+> - Item 2: tightened "exactly 15°" to "roughly 15° — depends on camera distance".
+> Saving now.
+
+If every claim checks out, just save and say so.
+
+### Why this phase exists
+
+Phase 4 rewards confidence and concision — short bullets sell better than hedged paragraphs. But confident concise prose can encode unverified claims as if they were facts. A short pre-save audit catches false claims before they become trusted memories that future sessions will rely on without re-checking.
+
+
+## Phase 6: Save Selected Items
 
 For each item the user approves:
 
@@ -223,3 +263,4 @@ After all items are saved:
 - **Distill, don't transcribe.** Capture the actionable essence, not a transcript of the conversation. Keep memories concise.
 - **Respect user edits.** If the user modifies a proposed memory before saving, use their version exactly.
 - **Updates over duplicates.** If an existing memory covers similar ground, update it rather than creating a near-duplicate.
+- **Audit before save.** After the user selects items, verify each memory's factual claims (Phase 5) before writing. Confident prose is not evidence; check the source.
