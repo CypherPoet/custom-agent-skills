@@ -1,0 +1,50 @@
+{
+  "skill_name": "svgo",
+  "evals": [
+    {
+      "id": 0,
+      "name": "removeviewbox-debug",
+      "prompt": "I ran svgo on my company logo and now it doesn't scale anymore when I resize the browser window. The original SVG used to fill its container fine. What happened and how do I fix it?",
+      "expected_output": "Diagnoses removeViewBox as the cause (it strips the viewBox attribute and breaks responsive scaling). Explains that removeViewBox is not in preset-default in SVGO v3+, so the user (or an upstream build-tool config) must have explicitly enabled it. The fix is to locate and remove that enablement — not to add `overrides: { removeViewBox: false }` to preset-default, which is the v2 pattern that SVGO v3+ warns about and ignores.",
+      "files": [],
+      "assertions": [
+        "Names removeViewBox specifically as the cause",
+        "Explains that removing the viewBox attribute breaks responsive scaling",
+        "Mentions that removeViewBox is NOT in preset-default in SVGO v3+ (so the user must have enabled it via a custom plugins list, a CLI flag, or an upstream build-tool config)",
+        "Concrete fix points the user at locating where removeViewBox was enabled and removing it there, rather than adding an override inside preset-default",
+        "Does NOT recommend `overrides: { removeViewBox: false }` as the canonical fix, OR explicitly flags that pattern as a SVGO v2 artifact that produces a warning in v3+"
+      ]
+    },
+    {
+      "id": 1,
+      "name": "cleanupids-collision",
+      "prompt": "I'm inlining about 20 icon SVGs directly into my HTML (each as a separate <svg> block). After running svgo on all of them, several icons are showing as broken or in the wrong color. The pre-svgo originals all rendered fine. Help me figure out what's happening.",
+      "expected_output": "Identifies the root cause as cleanupIds minifying IDs to short tokens (a, b, c) that collide when multiple optimized SVGs share an HTML document, breaking internal references (gradients, masks, clipPaths, <use>). Recommends prefixIds (with a per-file prefix), or disabling cleanupIds, or both.",
+      "files": [],
+      "assertions": [
+        "Names cleanupIds specifically as the cause of the broken icons",
+        "Explains that cleanupIds minifies IDs to short tokens that collide when multiple SVGs are inlined in one HTML document",
+        "Recommends prefixIds as the primary fix (with per-file or filename-based prefix)",
+        "Mentions that disabling cleanupIds via preset-default override is also a valid mitigation",
+        "Includes a code snippet showing how to enable prefixIds and/or disable cleanupIds in svgo config"
+      ]
+    },
+    {
+      "id": 2,
+      "name": "node-build-script",
+      "prompt": "Write me a Node script that reads every SVG under src/icons/ and writes the optimized version to dist/icons/, preserving the same relative paths. I want viewBox kept (these icons need to stay responsive), I want prefixIds enabled with the icon's filename as the prefix so they're safe to inline together, and multipass on for max compression.",
+      "expected_output": "A working Node script that: imports optimize from 'svgo', recurses src/icons (or uses glob), creates dist/icons mirror dirs, calls optimize() with multipass: true, passes path to the optimize options, uses preset-default without trying to override removeViewBox (since removeViewBox is not in preset-default in SVGO v3+ — viewBox is preserved by simply not enabling that plugin), and enables prefixIds (filename-based prefix derived from the file's path).",
+      "files": [],
+      "assertions": [
+        "Script imports optimize from the 'svgo' package",
+        "Script recursively walks src/icons (using fs/readdir recursive, glob, or fs.promises.readdir with recursion)",
+        "Script writes outputs to dist/icons preserving relative path structure",
+        "Script creates output directories (mkdir recursive) before writing files",
+        "Script sets multipass: true in the optimize() config",
+        "Script uses preset-default and does NOT include `overrides: { removeViewBox: false }` (which is a v2 pattern SVGO v3+ warns about and ignores)",
+        "Script enables prefixIds and uses the filename (or full path) as the prefix",
+        "Script passes the path option to optimize() so prefixIds can generate stable prefixes"
+      ]
+    }
+  ]
+}

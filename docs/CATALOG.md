@@ -14,3 +14,4 @@
 | [expo-snack-prototyper](../skills/expo-snack-prototyper/SKILL.md) | Generate self-contained React Native prototypes that run in Expo Snack |
 | [session-handoff](../skills/session-handoff/SKILL.md) | Create comprehensive handoff documents that let a fresh AI agent continue long-running work with zero ambiguity — preserves context, decisions, and progress across sessions |
 | [session-harvest](../skills/session-harvest/SKILL.md) | Systematic pre-exit sweep for session learnings — surfaces corrections, project context, preferences, and references worth preserving in memory |
+| [svgo](../skills/svgo/SKILL.md) | Optimize SVGs with SVGO — CLI invocations, plugin tradeoffs (removeViewBox, cleanupIds, prefixIds), config file shape, and programmatic optimize()/loadConfig() usage |
