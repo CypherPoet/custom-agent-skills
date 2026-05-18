@@ -13,7 +13,6 @@ The Read Strategy section in `SKILL.md` tells the resuming agent which sections 
 | Placeholder | Source | Notes |
 |---|---|---|
 | `{{timestamp}}` | runtime UTC ISO-8601 | always populated |
-| `{{project_path}}` | working directory | always populated |
 | `{{branch_line}}` | `git branch --show-current` | falls back to a `[not a git repo or detached HEAD]` message |
 | `{{repo_line}}` | `git remote get-url origin` | full `\n- Repo: <url>` line (with leading newline), or empty |
 | `{{pr_line}}` | `gh pr view --json url --jq '.url'` | full `\n- Source PR: <url>` line, or empty |
@@ -32,7 +31,6 @@ Everything below the next `# 🤝 Handoff:` line is the template body.
 
 ## 🧾 Session Metadata
 - Created: {{timestamp}}
-- Project: {{project_path}}
 - Branch: {{branch_line}}{{repo_line}}{{pr_line}}
 
 ### Recent Commits (for context)

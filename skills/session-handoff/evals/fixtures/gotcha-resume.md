@@ -4,7 +4,6 @@
 
 ## 🧾 Session Metadata
 - Created: 2026-05-15T22:10:48Z
-- Project: /tmp/handoff-eval-project
 - Branch: cleanup/remove-legacy-adapter
 
 ### Recent Commits (for context)

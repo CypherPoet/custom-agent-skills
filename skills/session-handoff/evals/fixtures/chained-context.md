@@ -4,7 +4,6 @@
 
 ## 🧾 Session Metadata
 - Created: 2026-05-16T08:30:00Z
-- Project: /tmp/handoff-eval-project
 - Branch: main
 
 ### Recent Commits (for context)

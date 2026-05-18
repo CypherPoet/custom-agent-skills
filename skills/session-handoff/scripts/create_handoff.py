@@ -331,9 +331,12 @@ def generate_handoff(
     repo_line = f"\n- Repo: {git_info['repo_url']}" if git_info.get("repo_url") else ""
     pr_line = f"\n- Source PR: {git_info['pr_url']}" if git_info.get("pr_url") else ""
 
+    # The absolute project path is intentionally omitted from metadata — it
+    # leaks environment-specific info into a document meant to be portable,
+    # and is derivable from the handoff's own location at
+    # <project>/.claude/handoffs/. See commit 1b9be45 for the rationale.
     fields = {
         "timestamp": timestamp,
-        "project_path": project_path,
         "branch_line": branch_line,
         "repo_line": repo_line,
         "pr_line": pr_line,

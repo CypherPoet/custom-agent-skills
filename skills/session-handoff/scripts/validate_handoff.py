@@ -2,10 +2,12 @@
 """
 Validate a handoff document for completeness and security.
 
-Checks (in order of severity):
+Checks (in the order the verdict block evaluates them):
 - Potential secrets (BLOCKING — handoffs get committed; secrets must not ship)
+- 🎯 Next Action line populated (top-of-document load-bearing instruction —
+  evaluated before other required sections because an unfilled Next Action
+  defeats the document's primary purpose)
 - Required sections present and populated
-- 🎯 Next Action line populated (top-of-document load-bearing instruction)
 - Remaining [TODO: ...] placeholders
 - Referenced files exist on disk (advisory)
 - Recommended sections missing (advisory)

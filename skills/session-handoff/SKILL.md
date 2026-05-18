@@ -126,7 +126,7 @@ The 🎯 Next Action line at the top is the load-bearing instruction — everyth
 
 Before executing the next action, sanity-check that the handoff's assumptions still hold:
 
-1. You are in the correct project directory (`Project:` line in Session Metadata).
+1. You are in the correct project directory — the handoff lives at `<project>/.claude/handoffs/`, so check that the handoff's path matches your current working directory.
 2. Git branch matches the handoff's `Branch:` (or you understand the deliberate divergence).
 3. Listed blockers haven't already been resolved.
 4. Files referenced in Critical Files / Files Modified still exist.

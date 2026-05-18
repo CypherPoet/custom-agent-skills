@@ -67,12 +67,19 @@ module.exports = app;
 """)
 
     # Fixture A references this file with a specific line number and regex.
-    # Keep the regex at line 12 so the agent can navigate accurately.
+    # Keep the regex at line 12 so the agent can navigate accurately —
+    # the header comment + early return are sized to land it there.
     (path / "src" / "auth.js").write_text("""// Authentication module
+//  Validates bearer-prefixed Authorization headers.
+//  Uses HS256 + JWT_SECRET; line 12 is the bearer-prefix regex.
+
 const jwt = require('jsonwebtoken');
 
 function validateToken(token) {
-    if (typeof token !== 'string') return false;
+    if (typeof token !== 'string') {
+        return false;
+    }
+
     return /^bearer\\s/i.test(token);
 }
 
@@ -269,7 +276,6 @@ def create_sample_handoffs(path: Path):
 
 ## 🧾 Session Metadata
 - Created: {now.strftime("%Y-%m-%dT%H:%M:%SZ")}
-- Project: {path}
 - Branch: main
 
 ### Recent Commits (for context)
@@ -367,7 +373,6 @@ The `validateToken` function lives in `src/auth.js`. It expects the raw `Authori
 
 ## 🧾 Session Metadata
 - Created: {old_date.strftime("%Y-%m-%dT%H:%M:%SZ")}
-- Project: {path}
 - Branch: main
 
 ## 🔗 Handoff Chain
@@ -409,7 +414,6 @@ Using MongoDB Atlas (DATABASE_URL points there). Mongoose 7.x.
 
 ## 🧾 Session Metadata
 - Created: {now.strftime("%Y-%m-%dT%H:%M:%SZ")}
-- Project: {path}
 - Branch: main
 
 ## 📍 Current State Summary
