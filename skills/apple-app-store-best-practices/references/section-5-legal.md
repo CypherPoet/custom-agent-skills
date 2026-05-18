@@ -1,7 +1,7 @@
 # Section 5: Legal
 
 > Source: https://developer.apple.com/app-store/review/guidelines/
-> Last synced: 2026-05-04
+> Last synced: 2026-05-18
 
 ---
 
@@ -198,11 +198,12 @@
 
 #### 5.1.1(ix) Regulated Fields
 
-**Requirement:** Apps operating in regulated industries (health, finance, legal, etc.) must be submitted by the legal entity that provides the regulated service.
+**Requirement:** Apps operating in highly regulated industries — including banking, healthcare, gambling, cannabis, airlines, and cryptocurrency — must be submitted by the legal entity that provides the regulated service, not by an individual developer. Cannabis apps must be geo-restricted to jurisdictions where they are legal.
 
 **Triggers rejection if:**
-- Health, fintech, or legal app is submitted by an individual developer account rather than the regulated entity
-- App provides regulated services (insurance, banking, clinical diagnostics) without the submitting entity holding appropriate licenses
+- Banking, healthcare, gambling, cannabis, airline, or crypto app is submitted by an individual developer account rather than the regulated entity
+- App provides regulated services (banking transactions, clinical diagnostics, gambling, cannabis sales, flight operations, crypto trading) without the submitting entity holding appropriate licenses
+- Cannabis app is available in jurisdictions where cannabis sales/use is not legal
 - Developer account name does not match the entity providing the regulated service
 
 **What to check:**
@@ -210,12 +211,18 @@
 - Developer account name alignment with the entity providing regulated services
 - HealthKit entitlements: if present, verify the submitting entity is a legitimate health organization
 - Financial transaction features: verify the submitting entity is a licensed financial institution
+- Crypto exchange/wallet features: verify licensing per jurisdiction
+- Cannabis apps: verify geo-restriction implementation (`CoreLocation` or server-side region detection) limits availability to legal jurisdictions
+- Airline apps: verify the submitting entity is the airline or an authorized partner
+- Gambling apps: verify licensing for every served jurisdiction
 - App Store Connect: organization name and D-U-N-S number
 
 **Key details:**
 - This is about who submits the app, not the app's content alone
 - Third-party developers building apps for regulated entities must have the entity submit under their own account
-- Includes health, finance, insurance, legal, real estate, and other government-regulated fields
+- Apple's published list of highly regulated categories: banking, healthcare, gambling, cannabis, airlines, crypto
+- Cannabis is uniquely called out for geo-restriction requirements — the app cannot be globally available
+- Other government-regulated fields (insurance, real estate, legal services) also commonly require entity-level submission even if not in the explicit list
 
 ---
 
