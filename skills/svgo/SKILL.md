@@ -146,8 +146,6 @@ export default {
       name: 'preset-default',
       params: {
         overrides: {
-          // keep viewBox (already the default, shown for clarity)
-          removeViewBox: false,
           // disable a default-on plugin
           cleanupIds: false,
           // tune a plugin's params
@@ -161,6 +159,8 @@ export default {
   ],
 };
 ```
+
+`overrides` only accepts plugins that are *in* `preset-default`. Putting a non-member there (e.g. `removeViewBox: false`) makes SVGO print a warning and ignore the entry — that's a SVGO v2 pattern that no longer applies in v3+. To keep `viewBox` in v3+, just don't add `removeViewBox` to your `plugins` list — it's off by default.
 
 Custom pipeline (skip `preset-default` entirely — uncommon, but possible):
 
@@ -180,7 +180,7 @@ export default {
 
 ## Gotchas
 
-- **`removeViewBox` is the #1 footgun.** Off by default for good reason. If a user reports an SVG that "won't scale" after optimization, this is the first thing to check.
+- **`removeViewBox` is the #1 footgun.** Off by default in `preset-default` in SVGO v3+ — it can only run if explicitly added to a `plugins` list (often by an upstream build-tool config like a Vite plugin, an old Gulp/Webpack loader, or copy-pasted v2-era boilerplate). If a user reports an SVG that "won't scale" after optimization, find where `removeViewBox` was enabled and remove it there. Ignore advice to "add `overrides: { removeViewBox: false }` to `preset-default`" — that's the v2 fix; in v3+ SVGO warns and ignores it.
 - **`cleanupIds` collides across inlined SVGs.** Two SVGs both shrunk to use `id="a"` will overwrite each other when placed in the same HTML doc. Use `prefixIds`, or disable `cleanupIds`, or both.
 - **Missing config files fall back silently.** If a `--config` path is wrong or `svgo.config.mjs` isn't found, SVGO uses `preset-default` without warning. Confirm the config actually loaded by changing one observable thing (e.g., `--pretty` via config) and checking output.
 - **`--multipass` is meaningfully slower.** It re-runs the pipeline until output is stable, often 2–4 passes. Worth it for committed assets; usually overkill in dev loops.
@@ -199,13 +199,7 @@ import { optimize } from 'svgo';
 const result = optimize(svgString, {
   path: 'icons/foo.svg', // helps some plugins (e.g., prefixIds) generate stable prefixes
   multipass: true,
-  plugins: [
-    {
-      name: 'preset-default',
-      params: { overrides: { removeViewBox: false } },
-    },
-    'prefixIds',
-  ],
+  plugins: ['preset-default', 'prefixIds'],
 });
 
 const optimized = result.data;

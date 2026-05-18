@@ -14,13 +14,7 @@ import { optimize } from 'svgo';
 const result = optimize(svgString, {
   path: 'icons/foo.svg',
   multipass: true,
-  plugins: [
-    {
-      name: 'preset-default',
-      params: { overrides: { removeViewBox: false } },
-    },
-    'prefixIds',
-  ],
+  plugins: ['preset-default', 'prefixIds'],
 });
 
 const optimized = result.data;
@@ -109,18 +103,13 @@ await Promise.all(
 ```js
 const { data } = optimize(svgString, {
   datauri: 'enc',
-  plugins: [
-    {
-      name: 'preset-default',
-      params: { overrides: { removeXMLNS: false } },
-    },
-  ],
+  plugins: ['preset-default'],
 });
 
 // data === 'data:image/svg+xml,%3Csvg…'
 ```
 
-(`removeXMLNS` stays off — standalone data URIs need `xmlns`.)
+`removeXMLNS` is off by default and `preset-default` won't drop the `xmlns` attribute on its own — important here because data URIs and standalone SVGs need it. Only enable `removeXMLNS` when inlining into HTML.
 
 ### Per-file plugin choices
 
