@@ -2,15 +2,13 @@
 name: session-harvest
 description: >
   Systematic pre-exit sweep of the current conversation for learnings worth
-  preserving in memory. Use this skill whenever the user says "harvest learnings",
-  "anything worth remembering?", "save session learnings", "check for memories
-  before I exit", "what did we learn?", "what should I save?", or any variation
-  of asking whether there are takeaways from the session. Also trigger when the
-  user is wrapping up a long or complex session and asks if there's anything to
-  capture, or when they say "before I go..." followed by a question about
-  preserving context. This skill surfaces corrections, project context,
-  preferences, and references — deduplicates against existing memory — and
-  presents findings for the user to approve. It never auto-saves.
+  preserving in memory. Use this skill whenever the user says "harvest
+  learnings", "anything worth remembering?", "what should I save?", "before I
+  go...", or any variation of asking whether there are takeaways from the
+  session — including when they're wrapping up a long or complex session. The
+  skill surfaces corrections, project context, preferences, and references,
+  deduplicates against existing memory, and presents findings for the user to
+  approve. It never auto-saves.
 ---
 
 # Session Harvest
@@ -35,39 +33,29 @@ If no memory directory or `MEMORY.md` exists yet, note that everything found wil
 
 Review the full conversation looking for moments that carry information useful to future sessions. Focus on these categories:
 
-### Corrections and Feedback (`feedback`)
+### Feedback (`feedback`)
 
-These are the highest-value finds — they represent something Claude got wrong or something the user wants done differently, and they're easy to miss if they happened casually mid-task.
+The highest-value finds — corrections the user gave, approaches that worked unusually well, and mistakes whose root cause was identified. These are easy to miss when they happen casually mid-task, and they're exactly the kind of thing that makes the next session smoother.
 
 **What to look for:**
+
+*Corrections and preferences*
 - Direct corrections: "no, do X instead", "stop doing Y", "that's not right"
 - Preference statements: "I prefer...", "always use...", "never do..."
 - Frustration followed by explanation: the user pushed back and then explained the right approach
 - Positive confirmation of a non-obvious choice: "yes, exactly", "perfect — keep doing that", accepting an unusual approach without pushback
 
-**What to capture:** The rule itself, why it matters, and when to apply it.
-
-### Validated Approaches (`feedback`)
-
-When a debugging technique worked, a workflow impressed the user, or an approach solved a tricky problem after others failed — that's worth recording so it becomes the default next time.
-
-**What to look for:**
+*Validated approaches*
 - A technique that resolved a stubborn issue
 - The user praising a specific approach or workflow
 - An approach that succeeded after alternatives were tried and failed
 
-**What to capture:** What worked, in what context, and why it was better than alternatives.
-
-### Mistakes and Lessons (`feedback`)
-
-When Claude made an error that was caught and corrected, and the root cause was identified — the pattern and prevention rule are worth preserving.
-
-**What to look for:**
+*Mistakes and lessons*
 - An error that wasted time before being identified
 - A debugging dead-end that could have been avoided
 - A misunderstanding about the codebase or framework that was corrected
 
-**What to capture:** The mistake pattern, the root cause, and a concrete rule to prevent recurrence.
+**What to capture:** The rule or pattern, why it matters (the incident or reasoning behind it), and when to apply it next time.
 
 ### Project Context (`project`)
 
@@ -169,7 +157,43 @@ After presenting, ask:
 > Item 2 would update your existing memory `feedback_no_bandaids.md` with additional context from this session.
 
 
-## Phase 5: Save Selected Items
+## Phase 5: Verify Accuracy Before Saving
+
+Selection is not verification. The summaries presented in Phase 4 are polished prose, and polished prose can paper over claims that were never actually checked — especially technical facts asserted with confidence. Memory writes are durable: a confidently wrong memory is worse than no memory, because future sessions will trust it.
+
+After the user picks which items to save, but **before writing any file**, audit the concrete factual claims in each selected candidate.
+
+### What to audit
+
+Walk each candidate and list its concrete claims, then categorize each:
+
+- **Session fact** ("X happened in this conversation", "the user said Y") — re-check the transcript.
+- **Code / repo fact** ("file X exports Y", "function Z does W") — read the file.
+- **External technical fact** ("library X behaves like Y", "browsers fire Z densely") — verify against the actual source: read the code in `node_modules/`, grep the implementation, or check the doc. Do not trust training intuition for claims about specific tool behavior, because that's exactly where polished prose tends to encode confident speculation.
+- **Numerical claim** ("rejects roughly 15° of the band") — redo the math, briefly. If it varies with a parameter, say so.
+- **Personal / user fact** ("user prefers X") — find the actual quote in the conversation.
+
+The audit should be quick. The point is to surface anything that doesn't hold up, not to belabor it.
+
+### What to do when a claim doesn't hold up
+
+- **Wrong** — correct the memory. Don't ship the false claim.
+- **Unverifiable in reasonable time** — soften or drop the unverifiable sentence. Memory writes don't need editorial flourish; they need to be correct. A memory with fewer, more accurate claims is more useful than one with confident-sounding but uncheckable ones.
+- **Right but imprecise** — tighten. E.g. "approximately 15°" is fine if the actual range is 14–16°; "exactly 15°" when it varies with input is not.
+
+### Report changes before saving
+
+If the audit produced corrections, briefly tell the user what changed before writing. They may want to see the diff between what they approved and what gets saved.
+
+> Verified all 4 candidates against the code. Two corrections:
+> - Item 1: the claim about `material.visible` varying across releases was unverified; replaced with the actual verified behavior (it's consistently ignored).
+> - Item 2: tightened "exactly 15°" to "roughly 15° — depends on camera distance".
+> Saving now.
+
+If every claim checks out, just save and say so.
+
+
+## Phase 6: Save Selected Items
 
 For each item the user approves:
 
@@ -217,9 +241,7 @@ After all items are saved:
 
 ## Constraints
 
-- **Never auto-save.** Every memory requires the user's explicit approval.
 - **One concept per file.** If a learning spans multiple concerns, split it into separate memories.
 - **Write for amnesia.** Memory content should make sense to a future session with zero context about this conversation. No "as we discussed" or "the issue from earlier."
 - **Distill, don't transcribe.** Capture the actionable essence, not a transcript of the conversation. Keep memories concise.
 - **Respect user edits.** If the user modifies a proposed memory before saving, use their version exactly.
-- **Updates over duplicates.** If an existing memory covers similar ground, update it rather than creating a near-duplicate.
