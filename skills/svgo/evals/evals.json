@@ -1,0 +1,50 @@
+{
+  "skill_name": "svgo",
+  "evals": [
+    {
+      "id": 0,
+      "name": "removeviewbox-debug",
+      "prompt": "I ran svgo on my company logo and now it doesn't scale anymore when I resize the browser window. The original SVG used to fill its container fine. What happened and how do I fix it?",
+      "expected_output": "Diagnoses removeViewBox as the cause (it strips the viewBox attribute and breaks responsive scaling), and gives a concrete fix — either re-export the original SVG, or rerun SVGO with removeViewBox explicitly disabled (preset-default override).",
+      "files": [],
+      "assertions": [
+        "Names removeViewBox specifically as the cause",
+        "Explains the response references that removing the viewBox attribute breaks responsive scaling",
+        "Mentions that removeViewBox is NOT in preset-default by default (so the user must have enabled it via flag or config)",
+        "Provides a concrete fix: either re-export the original SVG or rerun SVGO with removeViewBox disabled via a preset-default override",
+        "Includes a code snippet showing the preset-default `overrides: { removeViewBox: false }` config syntax"
+      ]
+    },
+    {
+      "id": 1,
+      "name": "cleanupids-collision",
+      "prompt": "I'm inlining about 20 icon SVGs directly into my HTML (each as a separate <svg> block). After running svgo on all of them, several icons are showing as broken or in the wrong color. The pre-svgo originals all rendered fine. Help me figure out what's happening.",
+      "expected_output": "Identifies the root cause as cleanupIds minifying IDs to short tokens (a, b, c) that collide when multiple optimized SVGs share an HTML document, breaking internal references (gradients, masks, clipPaths, <use>). Recommends prefixIds (with a per-file prefix), or disabling cleanupIds, or both.",
+      "files": [],
+      "assertions": [
+        "Names cleanupIds specifically as the cause of the broken icons",
+        "Explains that cleanupIds minifies IDs to short tokens that collide when multiple SVGs are inlined in one HTML document",
+        "Recommends prefixIds as the primary fix (with per-file or filename-based prefix)",
+        "Mentions that disabling cleanupIds via preset-default override is also a valid mitigation",
+        "Includes a code snippet showing how to enable prefixIds and/or disable cleanupIds in svgo config"
+      ]
+    },
+    {
+      "id": 2,
+      "name": "node-build-script",
+      "prompt": "Write me a Node script that reads every SVG under src/icons/ and writes the optimized version to dist/icons/, preserving the same relative paths. I want viewBox kept (these icons need to stay responsive), I want prefixIds enabled with the icon's filename as the prefix so they're safe to inline together, and multipass on for max compression.",
+      "expected_output": "A working Node script that: imports optimize from 'svgo', recurses src/icons (or uses glob), creates dist/icons mirror dirs, calls optimize() with multipass: true, passes path to the optimize options, uses preset-default with overrides: { removeViewBox: false }, and enables prefixIds (filename-based prefix derived from the file's path).",
+      "files": [],
+      "assertions": [
+        "Script imports optimize from the 'svgo' package",
+        "Script recursively walks src/icons (using fs/readdir recursive, glob, or fs.promises.readdir with recursion)",
+        "Script writes outputs to dist/icons preserving relative path structure",
+        "Script creates output directories (mkdir recursive) before writing files",
+        "Script sets multipass: true in the optimize() config",
+        "Script uses preset-default with overrides containing removeViewBox: false",
+        "Script enables prefixIds and uses the filename (or full path) as the prefix",
+        "Script passes the path option to optimize() so prefixIds can generate stable prefixes"
+      ]
+    }
+  ]
+}
