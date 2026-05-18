@@ -4,16 +4,17 @@ Set up a test environment for evaluating the session-handoff skill.
 
 Creates a mock project with:
 - Git repository with commit history
-- Sample source files
-- Sample handoffs (fresh and stale)
+- Sample source files (including the runtime-string-import pattern that
+  fixture C depends on)
+- Sample handoffs (fresh / stale / incomplete) using the new template format
+- Hand-crafted fixture handoffs copied from evals/fixtures/
 
 Usage:
-    python setup_test_env.py [--path /tmp/handoff-test]
-    python setup_test_env.py --clean  # Remove test environment
+    python setup_test_env.py [--path /tmp/handoff-eval-project]
+    python setup_test_env.py --clean
 """
 
 import argparse
-import os
 import shutil
 import subprocess
 from datetime import datetime, timedelta, timezone
@@ -21,10 +22,10 @@ from pathlib import Path
 
 
 DEFAULT_TEST_PATH = "/tmp/handoff-eval-project"
+FIXTURES_DIR = Path(__file__).resolve().parent / "fixtures"
 
 
 def run_cmd(cmd: list[str], cwd: str = None) -> bool:
-    """Run a command and return success status."""
     try:
         subprocess.run(cmd, cwd=cwd, capture_output=True, check=True)
         return True
@@ -32,28 +33,26 @@ def run_cmd(cmd: list[str], cwd: str = None) -> bool:
         return False
 
 
-def create_test_project(base_path: str):
+def create_test_project(base_path: str) -> Path:
     """Create a mock project structure."""
     path = Path(base_path)
-
-    # Clean if exists
     if path.exists():
         shutil.rmtree(path)
 
-    # Create directories
     (path / "src").mkdir(parents=True)
     (path / "tests").mkdir()
     (path / "config").mkdir()
+    (path / "workers").mkdir()
+    (path / "migrations").mkdir()
 
-    # Create sample files
     (path / "README.md").write_text("""# Test Project
 
 A sample project for testing the session-handoff skill.
 
 ## Features
 - User authentication
-- API endpoints
-- Database integration
+- Queue-worker dispatch via runtime string imports
+- Phased schema migrations
 """)
 
     (path / "src" / "index.js").write_text("""// Main entry point
@@ -67,19 +66,30 @@ app.get('/', (req, res) => {
 module.exports = app;
 """)
 
+    # Fixture A references this file with a specific line number and regex.
+    # Keep the regex at line 12 so the agent can navigate accurately —
+    # the header comment + early return are sized to land it there.
     (path / "src" / "auth.js").write_text("""// Authentication module
+//  Validates bearer-prefixed Authorization headers.
+//  Uses HS256 + JWT_SECRET; line 12 is the bearer-prefix regex.
+
 const jwt = require('jsonwebtoken');
 
 function validateToken(token) {
-    // TODO: Implement token validation
-    return true;
+    if (typeof token !== 'string') {
+        return false;
+    }
+
+    return /^bearer\\s/i.test(token);
 }
 
 function generateToken(user) {
     return jwt.sign({ id: user.id }, process.env.JWT_SECRET);
 }
 
-module.exports = { validateToken, generateToken };
+const BEARER_PREFIX = /^bearer\\s/i;
+
+module.exports = { validateToken, generateToken, BEARER_PREFIX };
 """)
 
     (path / "src" / "database.js").write_text("""// Database connection
@@ -92,10 +102,110 @@ async function connect() {
 module.exports = { connect };
 """)
 
+    # Fixture C depends on this file existing AND containing the
+    # importlib.import_module pattern. Without that, the agent can't verify
+    # the gotcha via grep, weakening the test.
+    (path / "src" / "legacy_adapter.py").write_text("""\"\"\"Legacy queue adapter — looks unused per static analysis.
+
+This module is loaded by workers/queue.py via importlib.import_module()
+from a config-driven adapter name. Grep will not find that reference.
+Do not delete this file without checking workers/queue.py:104 and the
+queue config.
+\"\"\"
+
+
+def handle(message):
+    return {"handled_by": "legacy_adapter", "payload": message}
+""")
+
+    (path / "workers" / "__init__.py").write_text("")
+    (path / "workers" / "queue.py").write_text("""\"\"\"Queue worker that dispatches messages to adapters by runtime config.\"\"\"
+
+import importlib
+import yaml
+
+
+def load_config(path="config/queue.yml"):
+    with open(path) as f:
+        return yaml.safe_load(f)
+
+
+def dispatch(message, adapters):
+    adapter_name = adapters.get(message["type"], "default_adapter")
+    module = importlib.import_module(adapter_name)  # line 14 — see fixture
+    return module.handle(message)
+
+
+def run(message):
+    config = load_config()
+    return dispatch(message, config["adapters"])
+""")
+
+    # Note: fixture C references workers/queue.py:104, but the test project's
+    # version is much shorter. The line number is a fixture detail intended
+    # for verisimilitude; the agent should follow the gotcha guidance by name,
+    # not by line number. If they grep for `import_module` they'll find it.
+
+    (path / "config" / "queue.yml").write_text("""adapters:
+  default: src.default_adapter
+  legacy: src.legacy_adapter
+""")
+
+    (path / "migrations" / "plan.md").write_text("""# Migration plan
+
+See the predecessor handoff for the canonical three-phase rollout.
+
+Phases:
+1. Add nullable `display_name` column + backfill (DONE)
+2. Add NOT NULL constraint + index (NEXT)
+3. Swap application code from `username` to `display_name` (LATER)
+""")
+
+    (path / "migrations" / "run.py").write_text("""\"\"\"Phased migration driver.
+
+Usage: python migrations/run.py --phase=N [--dry-run]
+\"\"\"
+
+import argparse
+
+
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--phase", type=int, required=True)
+    parser.add_argument("--dry-run", action="store_true")
+    args = parser.parse_args()
+    print(f"[phase={args.phase}] dry_run={args.dry_run} — stub for tests")
+
+
+if __name__ == "__main__":
+    main()
+""")
+
     (path / "tests" / "auth.test.js").write_text("""// Auth tests
+const { validateToken } = require('../src/auth');
+
 describe('Authentication', () => {
-    test('validates tokens', () => {
-        expect(true).toBe(true);
+    test('accepts a well-formed bearer token', () => {
+        expect(validateToken('bearer abc.def.ghi')).toBe(true);
+    });
+
+    test('rejects null and non-string inputs', () => {
+        expect(validateToken(null)).toBe(false);
+        expect(validateToken(42)).toBe(false);
+    });
+
+    test('rejects \"bearer\" with no token after it', () => {
+        // Pinned by current failing test — fixture A's Next Action fixes this
+        expect(validateToken('bearer')).toBe(false);
+    });
+
+    test('case-insensitive prefix', () => {
+        expect(validateToken('Bearer abc')).toBe(true);
+        expect(validateToken('BEARER abc')).toBe(true);
+    });
+
+    test('rejects entirely missing prefix', () => {
+        expect(validateToken('abc.def.ghi')).toBe(false);
     });
 });
 """)
@@ -126,16 +236,13 @@ describe('Authentication', () => {
 
 def init_git_repo(path: Path):
     """Initialize git repo with commit history."""
-    # Initialize
     run_cmd(["git", "init"], cwd=str(path))
     run_cmd(["git", "config", "user.email", "test@example.com"], cwd=str(path))
     run_cmd(["git", "config", "user.name", "Test User"], cwd=str(path))
 
-    # Initial commit
     run_cmd(["git", "add", "."], cwd=str(path))
     run_cmd(["git", "commit", "-m", "Initial commit: project setup"], cwd=str(path))
 
-    # Add more commits to simulate history
     commits = [
         ("src/auth.js", "// Added validation logic\n", "Add token validation"),
         ("src/database.js", "// Added connection pooling\n", "Implement connection pooling"),
@@ -143,7 +250,6 @@ def init_git_repo(path: Path):
         ("src/index.js", "// Added middleware\n", "Add auth middleware"),
         ("README.md", "\n## API Docs\n", "Update documentation"),
     ]
-
     for file, content, message in commits:
         file_path = path / file
         with open(file_path, "a") as f:
@@ -155,220 +261,242 @@ def init_git_repo(path: Path):
 
 
 def create_sample_handoffs(path: Path):
-    """Create sample handoff documents for testing."""
+    """Create three inline-generated handoffs (fresh / stale / incomplete) in
+    the new template format. These cover the existing evals 1–6."""
     handoffs_dir = path / ".claude" / "handoffs"
     handoffs_dir.mkdir(parents=True)
 
-    # Fresh handoff (today)
     now = datetime.now(timezone.utc)
-    fresh_name = now.strftime("%Y-%m-%d-%H%M%S") + "-auth-implementation.md"
-    fresh_content = f"""# Handoff: Implementing User Authentication
 
-## Session Metadata
+    # Fresh handoff — new format, ready to resume
+    fresh_name = now.strftime("%Y-%m-%d-%H%M%S") + "-auth-implementation.md"
+    fresh_content = f"""# 🤝 Handoff: JWT auth middleware — integration partial
+
+> 🎯 **Next Action**: Wire `validateToken` into the Express middleware chain in `src/index.js` (insert before route handlers) and re-run `npm test`.
+
+## 🧾 Session Metadata
 - Created: {now.strftime("%Y-%m-%dT%H:%M:%SZ")}
 - Branch: main
 
-## Handoff Chain
+### Recent Commits (for context)
+  - Add auth middleware
+  - Add authentication tests
+  - Implement connection pooling
+  - Add token validation
+  - Initial commit: project setup
+
+## 🔗 Handoff Chain
 
 - **Continues from**: None (fresh start)
 - **Supersedes**: None
 
-## Current State Summary
+> This is the first handoff for this task.
 
-Working on implementing JWT-based authentication for the API. Successfully added token generation and basic validation. The middleware integration is partially complete.
+## 📍 Current State Summary
 
-## Codebase Understanding
+Working on JWT-based authentication for the API. Token generation and basic validation are committed and tested. Middleware integration is the remaining piece — needs to slot into the Express app before route handlers fire.
 
-### Architecture Overview
+## 💡 Important Context
 
-Express.js application with modular structure. Auth logic separated into src/auth.js, database connection in src/database.js.
+The `validateToken` function lives in `src/auth.js`. It expects the raw `Authorization` header value (with `bearer` prefix). The JWT_SECRET env var must be set; without it, `generateToken` will throw.
+
+## 🚧 Pending Work
+
+### Immediate Next Steps
+
+1. Wire middleware in `src/index.js`.
+2. Add a refresh-token flow.
+3. Write integration tests against the middleware.
+
+### Blockers / Open Questions
+
+- [ ] Token expiry: 1h vs 24h — needs product call.
+
+### Deferred Items
+
+- OAuth integration (future sprint).
+
+## ⚠️ Constraints for Resuming Agent
+
+### Potential Gotchas
+
+- Don't forget JWT_SECRET — middleware will fail closed without it.
+- Database connection must be established before middleware runs.
+
+### 🧰 Skills to Use
+
+| Skill | When to invoke | Why |
+|-------|---------------|-----|
+| (none specialized) | Standard Express middleware wiring | Direct edit suffices |
+
+## 🧠 Codebase Understanding
 
 ### Critical Files
 
 | File | Purpose | Relevance |
 |------|---------|-----------|
-| src/auth.js | Authentication logic | Main file being modified |
-| src/index.js | App entry point | Needs middleware integration |
+| `src/auth.js` | Auth logic | Source of `validateToken` |
+| `src/index.js` | App entry point | Where middleware gets wired |
 
-### Key Patterns Discovered
+## 🏁 Work Completed
 
-- Using environment variables for secrets (JWT_SECRET, DATABASE_URL)
-- Jest for testing
-
-## Work Completed
-
-### Tasks Finished
-
-- [x] Set up JWT token generation
-- [x] Create basic validation function
-- [ ] Integrate middleware (in progress)
+- [x] JWT token generation
+- [x] Basic validation function
 
 ### Files Modified
 
-| File | Changes | Rationale |
-|------|---------|-----------|
-| src/auth.js | Added validateToken, generateToken | Core auth functionality |
+- `src/auth.js` — Added `validateToken`, `generateToken`
 
 ### Decisions Made
 
-| Decision | Options Considered | Rationale |
-|----------|-------------------|-----------|
-| Use JWT over sessions | JWT, Sessions, OAuth | Stateless, scales better for API |
+- **JWT over server-side sessions** — Stateless, scales better for API-only deployments.
 
-## Pending Work
-
-### Immediate Next Steps
-
-1. Complete middleware integration in src/index.js
-2. Add refresh token logic
-3. Write comprehensive tests
-
-### Blockers/Open Questions
-
-- [ ] Need to decide on token expiry time (1h vs 24h)
-
-### Deferred Items
-
-- OAuth integration (future sprint)
-
-## Context for Resuming Agent
-
-### Important Context
-
-The validateToken function in src/auth.js currently returns true always - this is a placeholder that needs real implementation. The JWT_SECRET env var must be set.
-
-### Assumptions Made
-
-- Using HS256 algorithm for JWT
-- Tokens should be passed in Authorization header
-
-### Potential Gotchas
-
-- Don't forget to set JWT_SECRET environment variable
-- Database connection must be established before auth checks
-
-## Environment State
-
-### Tools/Services Used
-
-- Node.js with Express
-- JWT library (jsonwebtoken)
-
-### Active Processes
-
-- None currently running
+## 🌐 Environment State
 
 ### Environment Variables
 
 - JWT_SECRET
 - DATABASE_URL
 
-## Related Resources
+## 📚 Related Resources
 
-- JWT documentation: https://jwt.io
-- Express middleware guide
+- JWT spec: https://datatracker.ietf.org/doc/html/rfc7519
 """
     (handoffs_dir / fresh_name).write_text(fresh_content)
 
-    # Stale handoff (2 weeks ago)
+    # Stale handoff — older, intentionally older format-light for staleness checks
     old_date = now - timedelta(days=14)
     stale_name = old_date.strftime("%Y-%m-%d-%H%M%S") + "-database-setup.md"
-    stale_content = f"""# Handoff: Database Setup
+    stale_content = f"""# 🤝 Handoff: Database setup — schema scaffolding
 
-## Session Metadata
+> 🎯 **Next Action**: Define the User schema in `src/models/user.js` (file does not exist yet — create it).
+
+## 🧾 Session Metadata
 - Created: {old_date.strftime("%Y-%m-%dT%H:%M:%SZ")}
 - Branch: main
 
-## Handoff Chain
+## 🔗 Handoff Chain
 
 - **Continues from**: None (fresh start)
 - **Supersedes**: None
 
-## Current State Summary
+## 📍 Current State Summary
 
-Set up initial database connection with MongoDB. Basic schema defined but not fully implemented.
+Set up initial MongoDB connection in `src/database.js`. Schema not yet defined. Older session — significant codebase drift likely since this was written.
 
-## Codebase Understanding
+## 💡 Important Context
 
-### Architecture Overview
+Using MongoDB Atlas (DATABASE_URL points there). Mongoose 7.x.
 
-MongoDB database with Mongoose ODM.
-
-### Critical Files
-
-| File | Purpose | Relevance |
-|------|---------|-----------|
-| src/database.js | DB connection | Main database file |
-| src/old-file.js | Legacy code | Was being refactored |
-
-## Pending Work
+## 🚧 Pending Work
 
 ### Immediate Next Steps
 
-1. Define user schema
-2. Add connection pooling
-3. Implement error handling
+1. Define User schema.
+2. Add connection pooling.
+3. Implement error handling for connection drops.
 
-## Context for Resuming Agent
+## ⚠️ Constraints for Resuming Agent
 
-### Important Context
+### Potential Gotchas
 
-Using MongoDB Atlas for hosting. Connection string in DATABASE_URL.
-
-### Assumptions Made
-
-- MongoDB version 5.x
-- Mongoose 7.x
-
-## Environment State
-
-### Environment Variables
-
-- DATABASE_URL
+- Some files referenced may no longer exist (codebase has moved on since this handoff).
 """
     (handoffs_dir / stale_name).write_text(stale_content)
 
-    # Incomplete handoff (with TODOs)
-    incomplete_name = now.strftime("%Y-%m-%d-%H%M%S") + "-incomplete-test.md"
-    incomplete_content = f"""# Handoff: [TASK_TITLE - replace this]
+    # Incomplete handoff — new format, TODO-stuffed for the validator eval
+    incomplete_name = (
+        now.strftime("%Y-%m-%d-%H%M%S") + "-incomplete-test.md"
+    )
+    incomplete_content = f"""# 🤝 Handoff: [TASK_TITLE - replace this]
 
-## Session Metadata
+> 🎯 **Next Action**: [TODO: One sentence — the FIRST thing the resuming agent should do.]
+
+## 🧾 Session Metadata
 - Created: {now.strftime("%Y-%m-%dT%H:%M:%SZ")}
 - Branch: main
 
-## Current State Summary
+## 📍 Current State Summary
 
 [TODO: Write one paragraph describing what was being worked on]
 
-## Codebase Understanding
+## 💡 Important Context
 
-### Architecture Overview
+[TODO: The MOST important section]
 
-[TODO: Document key architectural insights]
-
-## Pending Work
+## 🚧 Pending Work
 
 ### Immediate Next Steps
 
 1. [TODO: Most critical next action]
 2. [TODO: Second priority]
-
-## Context for Resuming Agent
-
-### Important Context
-
-[TODO: This is the MOST IMPORTANT section]
 """
     (handoffs_dir / incomplete_name).write_text(incomplete_content)
 
-    print(f"Created 3 sample handoffs:")
-    print(f"  - {fresh_name} (fresh)")
+    print(f"Created 3 inline-generated handoffs:")
+    print(f"  - {fresh_name} (fresh, ready-to-resume)")
     print(f"  - {stale_name} (stale, 14 days old)")
     print(f"  - {incomplete_name} (incomplete, has TODOs)")
 
 
+def copy_fixture_handoffs(path: Path) -> dict[str, str]:
+    """Copy the hand-crafted fixture handoffs into the test project, with
+    date-prefixed filenames so list_handoffs / staleness scripts handle them
+    correctly. Returns a map of fixture_id -> seeded_filename so the eval
+    prompts can reference them by relative path."""
+    handoffs_dir = path / ".claude" / "handoffs"
+    handoffs_dir.mkdir(parents=True, exist_ok=True)
+
+    now = datetime.now(timezone.utc)
+    seeded: dict[str, str] = {}
+
+    # Fixture A — clean resume
+    fixture_a = FIXTURES_DIR / "clean-resume.md"
+    if fixture_a.exists():
+        dst_name = now.strftime("%Y-%m-%d-%H%M%S") + "-fixture-a-clean-resume.md"
+        (handoffs_dir / dst_name).write_text(fixture_a.read_text())
+        seeded["clean-resume"] = dst_name
+
+    # Fixture B — chain. Predecessor must land first so the current handoff's
+    # link resolves. We rewrite the PREDECESSOR_FILENAME placeholder in the
+    # current handoff so the link points at the seeded predecessor.
+    predecessor_src = FIXTURES_DIR / "chained-context-predecessor.md"
+    current_src = FIXTURES_DIR / "chained-context.md"
+    if predecessor_src.exists() and current_src.exists():
+        predecessor_date = now - timedelta(days=4)
+        predecessor_name = (
+            predecessor_date.strftime("%Y-%m-%d-%H%M%S")
+            + "-fixture-b-predecessor.md"
+        )
+        (handoffs_dir / predecessor_name).write_text(predecessor_src.read_text())
+
+        current_name = (
+            now.strftime("%Y-%m-%d-%H%M%S") + "-fixture-b-current.md"
+        )
+        current_content = current_src.read_text().replace(
+            "PREDECESSOR_FILENAME", predecessor_name
+        )
+        (handoffs_dir / current_name).write_text(current_content)
+
+        seeded["chained-predecessor"] = predecessor_name
+        seeded["chained-current"] = current_name
+
+    # Fixture C — gotcha
+    fixture_c = FIXTURES_DIR / "gotcha-resume.md"
+    if fixture_c.exists():
+        dst_name = now.strftime("%Y-%m-%d-%H%M%S") + "-fixture-c-gotcha.md"
+        (handoffs_dir / dst_name).write_text(fixture_c.read_text())
+        seeded["gotcha-resume"] = dst_name
+
+    if seeded:
+        print(f"Copied {len(seeded)} fixture handoff(s):")
+        for key, name in seeded.items():
+            print(f"  - {key}: {name}")
+
+    return seeded
+
+
 def clean_test_env(path: str):
-    """Remove test environment."""
     if Path(path).exists():
         shutil.rmtree(path)
         print(f"Cleaned up test environment at {path}")
@@ -395,14 +523,16 @@ def main():
 
     if args.clean:
         clean_test_env(args.path)
-    else:
-        path = create_test_project(args.path)
-        init_git_repo(path)
-        create_sample_handoffs(path)
-        print(f"\nTest environment ready at: {args.path}")
-        print(f"\nTo test, run:")
-        print(f"  cd {args.path}")
-        print(f"  # Then use Claude Code with the session-handoff skill")
+        return
+
+    path = create_test_project(args.path)
+    init_git_repo(path)
+    create_sample_handoffs(path)
+    copy_fixture_handoffs(path)
+    print(f"\nTest environment ready at: {args.path}")
+    print(f"\nTo test, run:")
+    print(f"  cd {args.path}")
+    print(f"  # Then use Claude Code with the session-handoff skill")
 
 
 if __name__ == "__main__":

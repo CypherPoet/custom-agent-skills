@@ -4,7 +4,7 @@
     {
       "id": 1,
       "prompt": "Set up the eval test environment first by running `python evals/setup_test_env.py`, then `cd /tmp/handoff-eval-project`.\n\nThe user says: \"I've been working on implementing user authentication. I modified src/auth.js to add JWT token validation and updated the middleware. Create a handoff so I can continue later.\"\n\nUse the session-handoff skill to handle this request.",
-      "expected_output": "Should trigger the CREATE workflow: run scripts/create_handoff.py with a meaningful slug, confirm the file was created in .claude/handoffs/, prompt the user to fill in the [TODO: ...] sections (especially Current State Summary, Important Context, Immediate Next Steps), and mention the next step is running validate_handoff.py.",
+      "expected_output": "Should trigger the CREATE workflow: run scripts/create_handoff.py with a meaningful slug, confirm the file was created in .claude/handoffs/, prompt the user to fill in the [TODO: ...] sections (especially the 🎯 Next Action line, Current State Summary, Important Context, Immediate Next Steps), and mention the next step is running validate_handoff.py.",
       "files": []
     },
     {
@@ -16,13 +16,13 @@
     {
       "id": 3,
       "prompt": "Set up the eval test environment first by running `python evals/setup_test_env.py`, then `cd /tmp/handoff-eval-project`. The setup script seeds a recent handoff in .claude/handoffs/.\n\nThe user says: \"I want to continue where I left off. Load my last handoff.\"\n\nUse the session-handoff skill to handle this request.",
-      "expected_output": "Should trigger the RESUME workflow: run list_handoffs.py to surface the candidate, run check_staleness.py and report the level, read the handoff file in full, summarize the 'Immediate Next Steps', and walk through the resume-checklist before doing any other work.",
+      "expected_output": "Should trigger the RESUME workflow: run list_handoffs.py to surface the candidate, run check_staleness.py and report the level, read the handoff using the Read Strategy (full read for Next Action, Important Context, Pending Work; skim Codebase Understanding and Work Completed), surface the 🎯 Next Action line, and run the Verify Context red-flags pass before doing any other work.",
       "files": []
     },
     {
       "id": 4,
       "prompt": "Set up the eval test environment first by running `python evals/setup_test_env.py`, then `cd /tmp/handoff-eval-project`. The setup script seeds an incomplete handoff in .claude/handoffs/ that still has [TODO: ...] placeholders.\n\nThe user says: \"I created a handoff but I'm not sure if it's complete. Can you validate it?\"\n\nUse the session-handoff skill to handle this request.",
-      "expected_output": "Should run validate_handoff.py against the incomplete handoff, report the quality score, list missing or incomplete sections, flag any detected secrets, and give the user a concrete list of what to fix before the handoff is usable.",
+      "expected_output": "Should run validate_handoff.py against the incomplete handoff, report the verdict (NEEDS_WORK), list missing or unfilled sections including the 🎯 Next Action line, and give the user a concrete list of what to fix before the handoff is ready.",
       "files": []
     },
     {
@@ -34,8 +34,47 @@
     {
       "id": 6,
       "prompt": "Set up the eval test environment first by running `python evals/setup_test_env.py`, then `cd /tmp/handoff-eval-project`.\n\nThe user says: \"Create a handoff. Note that I configured the API with key sk-abc123xyzabc123xyzabc123xyzabc123xyzabc123xyzabc and the database password = 'supersecret'.\"\n\nUse the session-handoff skill to handle this request.",
-      "expected_output": "Should create the handoff, but when running validate_handoff.py the secret-detection patterns must flag the API key and the password. The agent should warn the user about the security risk, recommend removing the sensitive values, and not treat the handoff as ready until the secrets are scrubbed.",
+      "expected_output": "Should create the handoff, but when running validate_handoff.py the secret-detection patterns must flag the API key and the password. Verdict must be BLOCKED. The agent should warn the user about the security risk, recommend removing the sensitive values, and not treat the handoff as ready until the secrets are scrubbed.",
       "files": []
+    },
+    {
+      "id": 7,
+      "prompt": "Set up the eval test environment first by running `python evals/setup_test_env.py`, then `cd /tmp/handoff-eval-project`. The setup script seeds a clean fixture handoff at `.claude/handoffs/<datestamp>-fixture-a-clean-resume.md` whose 🎯 Next Action describes a specific regex fix in `src/auth.js`.\n\nThe user says: \"Pick up where I left off — use the fixture-a-clean-resume handoff.\"\n\nUse the session-handoff skill to handle this request. Report what you would do as the FIRST concrete action. You do not need to actually apply the fix or run tests — describe the first action and why it follows from the handoff.",
+      "expected_output": "Should follow the RESUME workflow, locate fixture-a-clean-resume in .claude/handoffs/, read the 🎯 Next Action line, and state that the first concrete action is to edit src/auth.js to change the bearer-prefix regex (adding the missing `+`) so the failing test in tests/auth.test.js passes. The agent should mention reading the failing-test location and the regex change explicitly — these are both in the Next Action line.",
+      "files": [],
+      "assertions": [
+        "Identifies the handoff to resume from (clean-resume fixture)",
+        "Surfaces the 🎯 Next Action explicitly or quotes it",
+        "Names src/auth.js as the file to edit",
+        "References the regex change (adding `+` after `\\s`) or describes the fix in equivalent terms",
+        "Mentions running tests / verifying with npm test after the fix"
+      ]
+    },
+    {
+      "id": 8,
+      "prompt": "Set up the eval test environment first by running `python evals/setup_test_env.py`, then `cd /tmp/handoff-eval-project`. The setup script seeds a chained pair of fixture handoffs: a predecessor (`fixture-b-predecessor`) with the three-phase rollout plan, and a current handoff (`fixture-b-current`) that says backfill is done and Phase 2 is next.\n\nThe user says: \"Continue the migration work — load the most recent fixture-b handoff.\"\n\nUse the session-handoff skill to handle this request. Describe what you would do as the FIRST concrete action. You do not need to actually run any migration commands.",
+      "expected_output": "Should follow the RESUME workflow on fixture-b-current, recognize that it links to the predecessor via Handoff Chain, READ the predecessor to find the three-phase plan and the expected dry-run output appendix, and state the first concrete action: run `python migrations/run.py --phase=2 --dry-run` and compare the output against the predecessor's appendix. The agent should explicitly mention reading the predecessor handoff.",
+      "files": [],
+      "assertions": [
+        "Identifies fixture-b-current as the handoff to resume from",
+        "Reads or explicitly says it will read the predecessor handoff",
+        "Surfaces the Phase 1 → Phase 2 transition context (backfill drained)",
+        "Names `python migrations/run.py --phase=2 --dry-run` (or close equivalent) as the first action",
+        "Mentions comparing the dry-run output against the predecessor's expected diff/appendix"
+      ]
+    },
+    {
+      "id": 9,
+      "prompt": "Set up the eval test environment first by running `python evals/setup_test_env.py`, then `cd /tmp/handoff-eval-project`. The setup script seeds a fixture handoff (`fixture-c-gotcha`) that involves a legacy adapter cleanup. The handoff's deferred-items and surface story suggest deleting `src/legacy_adapter.py`, but the Potential Gotchas section explicitly says NOT to delete it because the queue worker imports it via a runtime string lookup.\n\nThe user says: \"Pick up where I left off on the legacy adapter cleanup.\"\n\nUse the session-handoff skill to handle this request. Describe what you would do as the FIRST concrete action. You do not need to apply any changes.",
+      "expected_output": "Should follow the RESUME workflow on fixture-c-gotcha, read the 🎯 Next Action line, surface the Potential Gotcha about the runtime string import in workers/queue.py, and state that the FIRST action is to confirm with the user whether the legacy adapter can be removed — NOT to delete the file. The agent should NOT propose deletion as the immediate next step, even though the deferred-items list mentions removal. The agent may also verify the runtime import pattern via grep before talking to the user.",
+      "files": [],
+      "assertions": [
+        "Identifies fixture-c-gotcha as the handoff to resume from",
+        "Surfaces the Potential Gotcha about the runtime string import / importlib.import_module",
+        "Does NOT propose deleting src/legacy_adapter.py as the first concrete action",
+        "First action is asking the user for confirmation (or verifying the runtime import dependency in workers/queue.py)",
+        "Names workers/queue.py or the importlib.import_module pattern explicitly"
+      ]
     }
   ]
 }
