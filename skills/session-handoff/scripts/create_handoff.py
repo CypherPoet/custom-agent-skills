@@ -2,13 +2,11 @@
 """
 Smart scaffold generator for handoff documents.
 
-Creates a new handoff document with auto-detected metadata:
-- Current timestamp
-- Project path
-- Git branch (if available)
-- Recent git log
-- Modified/staged files
-- Handoff chain linking
+Reads the canonical layout from references/handoff-template.md, gathers
+runtime context (git state, repo URL, open PR, session plan, prior handoff
+chain), and substitutes the {{placeholders}} declared in that template.
+There is no separate template body kept inside this script — the markdown
+file is the single source of truth.
 
 Usage:
     python create_handoff.py [task-slug] [--continues-from <previous-handoff>]
@@ -46,24 +44,37 @@ def get_git_info(project_path: str) -> dict:
     info = {
         "is_git_repo": False,
         "branch": None,
+        "repo_url": None,
+        "pr_url": None,
         "recent_commits": [],
         "modified_files": [],
         "staged_files": [],
     }
 
-    # Check if git repo
     success, _ = run_cmd(["git", "rev-parse", "--git-dir"], cwd=project_path)
     if not success:
         return info
 
     info["is_git_repo"] = True
 
-    # Get current branch
     success, branch = run_cmd(["git", "branch", "--show-current"], cwd=project_path)
     if success and branch:
         info["branch"] = branch
 
-    # Get recent commits (last 5)
+    # origin URL — best effort; missing remote is fine, just leaves the line empty.
+    success, repo_url = run_cmd(["git", "remote", "get-url", "origin"], cwd=project_path)
+    if success and repo_url:
+        info["repo_url"] = repo_url
+
+    # Open PR for current branch — best effort via `gh`. Skips silently when gh
+    # is unavailable, the user isn't authenticated, or no PR is open.
+    success, pr_url = run_cmd(
+        ["gh", "pr", "view", "--json", "url", "--jq", ".url"],
+        cwd=project_path
+    )
+    if success and pr_url:
+        info["pr_url"] = pr_url
+
     success, log = run_cmd(
         ["git", "log", "--oneline", "-5", "--no-decorate"],
         cwd=project_path
@@ -71,15 +82,10 @@ def get_git_info(project_path: str) -> dict:
     if success and log:
         info["recent_commits"] = log.split("\n")
 
-    # Get modified files (unstaged)
-    success, modified = run_cmd(
-        ["git", "diff", "--name-only"],
-        cwd=project_path
-    )
+    success, modified = run_cmd(["git", "diff", "--name-only"], cwd=project_path)
     if success and modified:
         info["modified_files"] = modified.split("\n")
 
-    # Get staged files
     success, staged = run_cmd(
         ["git", "diff", "--name-only", "--cached"],
         cwd=project_path
@@ -90,6 +96,46 @@ def get_git_info(project_path: str) -> dict:
     return info
 
 
+def find_session_plan(branch: str | None, project_path: str | None = None) -> Path | None:
+    """Look for a Claude Code session plan tied to the current session.
+
+    Plans live at ~/.claude/plans/<slug>.md. Claude Code derives the slug from
+    the session context — usually it matches the git branch, but inside a
+    worktree the slug typically matches the worktree directory basename and
+    the branch carries a "worktree-" prefix.
+
+    Check candidates in order, returning the first hit:
+      1. The branch name as-is.
+      2. The branch with a leading "worktree-" stripped.
+      3. The project directory's basename.
+
+    Returns None if nothing matches. We don't fuzzy-match further — a wrong
+    plan reference in a handoff is worse than no reference.
+    """
+    plans_dir = Path.home() / ".claude" / "plans"
+    if not plans_dir.exists():
+        return None
+
+    candidates: list[str] = []
+    if branch:
+        candidates.append(branch)
+        if branch.startswith("worktree-"):
+            candidates.append(branch[len("worktree-"):])
+    if project_path:
+        candidates.append(Path(project_path).name)
+
+    seen: set[str] = set()
+    for candidate in candidates:
+        if not candidate or candidate in seen:
+            continue
+        seen.add(candidate)
+        plan_path = plans_dir / f"{candidate}.md"
+        if plan_path.exists():
+            return plan_path
+
+    return None
+
+
 def find_previous_handoffs(project_path: str) -> list[dict]:
     """Find existing handoffs in the project."""
     handoffs_dir = Path(project_path) / ".claude" / "handoffs"
@@ -98,7 +144,6 @@ def find_previous_handoffs(project_path: str) -> list[dict]:
 
     handoffs = []
     for filepath in handoffs_dir.glob("*.md"):
-        # Extract title from file
         try:
             content = filepath.read_text()
             # Strip an optional emoji prefix (e.g. `# 🤝 Handoff: foo`) before
@@ -113,7 +158,6 @@ def find_previous_handoffs(project_path: str) -> list[dict]:
         except Exception:
             title = filepath.stem
 
-        # Parse date from filename
         date_match = re.match(r'(\d{4}-\d{2}-\d{2})-(\d{6})', filepath.name)
         if date_match:
             try:
@@ -133,7 +177,6 @@ def find_previous_handoffs(project_path: str) -> list[dict]:
             "date": date,
         })
 
-    # Sort by date, most recent first
     handoffs.sort(key=lambda x: x["date"] or datetime.min, reverse=True)
     return handoffs
 
@@ -143,7 +186,6 @@ def get_previous_handoff_info(project_path: str, continues_from: str = None) -> 
     handoffs = find_previous_handoffs(project_path)
 
     if continues_from:
-        # Find specific handoff
         for h in handoffs:
             if continues_from in h["filename"]:
                 return {
@@ -154,7 +196,6 @@ def get_previous_handoff_info(project_path: str, continues_from: str = None) -> 
         return {"exists": False, "filename": continues_from, "title": "Not found"}
 
     elif handoffs:
-        # Suggest most recent
         most_recent = handoffs[0]
         return {
             "exists": True,
@@ -166,6 +207,97 @@ def get_previous_handoff_info(project_path: str, continues_from: str = None) -> 
     return {"exists": False}
 
 
+# The template body lives in references/handoff-template.md. We slice at the
+# first H1 that starts a line ("# 🤝 Handoff:"), not the inline code reference
+# to that same string in the file's own documentation header — hence the
+# anchored regex with MULTILINE rather than a plain str.find().
+TEMPLATE_BODY_MARKER = re.compile(r'^# 🤝 Handoff:', re.MULTILINE)
+
+
+def load_template_body() -> str:
+    """Read the canonical template body from the references markdown file."""
+    template_path = Path(__file__).resolve().parent.parent / "references" / "handoff-template.md"
+    content = template_path.read_text()
+    match = TEMPLATE_BODY_MARKER.search(content)
+    if not match:
+        raise RuntimeError(
+            f"Template body marker '# 🤝 Handoff:' not found at line start in "
+            f"{template_path}. The reference template is malformed."
+        )
+    return content[match.start():]
+
+
+def render_template(template_body: str, fields: dict[str, str]) -> str:
+    """Substitute {{placeholder}} tokens. Simple replace loop — no escaping
+    needed because the template body is fully under our control."""
+    rendered = template_body
+    for key, value in fields.items():
+        rendered = rendered.replace("{{" + key + "}}", value)
+    return rendered
+
+
+def build_commits_section(commits: list[str]) -> str:
+    if not commits:
+        return "  - [no recent commits or not a git repo]"
+    return "\n".join(f"  - {c}" for c in commits)
+
+
+def build_modified_files_section(modified: list[str], staged: list[str]) -> str:
+    """Render modified files as bullets, not a table. The 3-column 'Files
+    Modified' table in the previous template was almost always dropped in
+    favor of prose during real handoff authoring; bullets match how the
+    section actually gets used."""
+    combined = list(dict.fromkeys(staged + modified))  # preserve order, dedupe
+    if not combined:
+        return "- [no modified files detected at scaffold time]"
+    lines = [f"- `{f}` — [describe what changed and why]" for f in combined[:10]]
+    if len(combined) > 10:
+        lines.append(f"- ... and {len(combined) - 10} more files")
+    return "\n".join(lines)
+
+
+def build_chain_section(prev_handoff: dict) -> str:
+    """Render the handoff-chain block. Always present (a 'None / fresh start'
+    block is still useful provenance), so this returns a populated block in
+    both cases. Includes a trailing blank line so the next placeholder lands
+    cleanly."""
+    if prev_handoff.get("exists"):
+        block = f"""## 🔗 Handoff Chain
+
+- **Continues from**: [{prev_handoff['filename']}](./{prev_handoff['filename']})
+  - Previous title: {prev_handoff.get('title', 'Unknown')}
+- **Supersedes**: [list any older handoffs this replaces, or "None"]
+
+> Review the previous handoff for full context before filling this one.
+"""
+    else:
+        block = """## 🔗 Handoff Chain
+
+- **Continues from**: None (fresh start)
+- **Supersedes**: None
+
+> This is the first handoff for this task.
+"""
+    return block + "\n"
+
+
+def build_plan_section(session_plan: Path | None) -> str:
+    """Render the active-session-plan block when a plan exists. Link-only —
+    the resuming agent reads the plan file directly, keeping the handoff
+    lean and avoiding drift between two copies of the same plan."""
+    if not session_plan:
+        return ""
+    plan_display = f"~/{session_plan.relative_to(Path.home())}"
+    return f"""## 📋 Active Session Plan
+
+- **File**: `{plan_display}`
+- **Status**: [TODO: still authoritative? superseded? partially executed?]
+
+> A live plan exists for this branch. The resuming agent should read it before starting work.
+
+"""
+
+
 def generate_handoff(
     project_path: str,
     slug: str = None,
@@ -173,176 +305,50 @@ def generate_handoff(
 ) -> str:
     """Generate a handoff document with pre-filled metadata."""
 
-    # Generate timestamp and filename. The in-document timestamp uses
-    # ISO-8601 UTC with a Z suffix so it's unambiguous across machines and
-    # parses cleanly in check_staleness.py. The filename keeps a path-safe
-    # form without separators.
+    # The in-document timestamp uses ISO-8601 UTC with a Z suffix so it's
+    # unambiguous across machines and parses cleanly in check_staleness.py.
+    # The filename keeps a path-safe form without separators.
     now = datetime.now(timezone.utc)
     timestamp = now.strftime("%Y-%m-%dT%H:%M:%SZ")
     file_timestamp = now.strftime("%Y-%m-%d-%H%M%S")
 
     if not slug:
         slug = "handoff"
-
-    # Sanitize slug
     slug = slug.lower().replace(" ", "-").replace("_", "-")
     slug = "".join(c for c in slug if c.isalnum() or c == "-")
 
     filename = f"{file_timestamp}-{slug}.md"
 
-    # Create handoffs directory
     handoffs_dir = Path(project_path) / ".claude" / "handoffs"
     handoffs_dir.mkdir(parents=True, exist_ok=True)
-
     filepath = handoffs_dir / filename
 
-    # Gather git info
     git_info = get_git_info(project_path)
-
-    # Get previous handoff info for chaining
     prev_handoff = get_previous_handoff_info(project_path, continues_from)
+    session_plan = find_session_plan(git_info.get("branch"), project_path)
 
-    # Build pre-filled sections
     branch_line = git_info["branch"] if git_info["branch"] else "[not a git repo or detached HEAD]"
+    repo_line = f"\n- Repo: {git_info['repo_url']}" if git_info.get("repo_url") else ""
+    pr_line = f"\n- Source PR: {git_info['pr_url']}" if git_info.get("pr_url") else ""
 
-    # Recent commits section
-    if git_info["recent_commits"]:
-        commits_section = "\n".join(f"  - {c}" for c in git_info["recent_commits"])
-    else:
-        commits_section = "  - [no recent commits or not a git repo]"
+    fields = {
+        "timestamp": timestamp,
+        "project_path": project_path,
+        "branch_line": branch_line,
+        "repo_line": repo_line,
+        "pr_line": pr_line,
+        "commits_section": build_commits_section(git_info["recent_commits"]),
+        "chain_section": build_chain_section(prev_handoff),
+        "plan_section": build_plan_section(session_plan),
+        "modified_files_section": build_modified_files_section(
+            git_info["modified_files"], git_info["staged_files"]
+        ),
+    }
 
-    # Modified files section
-    all_modified = list(set(git_info["modified_files"] + git_info["staged_files"]))
-    if all_modified:
-        modified_section = "\n".join(f"| {f} | [describe changes] | [why changed] |" for f in all_modified[:10])
-        if len(all_modified) > 10:
-            modified_section += f"\n| ... and {len(all_modified) - 10} more files | | |"
-    else:
-        modified_section = "| [no modified files detected] | | |"
+    template_body = load_template_body()
+    rendered = render_template(template_body, fields)
 
-    # Handoff chain section
-    if prev_handoff.get("exists"):
-        chain_section = f"""## 🔗 Handoff Chain
-
-- **Continues from**: [{prev_handoff['filename']}](./{prev_handoff['filename']})
-  - Previous title: {prev_handoff.get('title', 'Unknown')}
-- **Supersedes**: [list any older handoffs this replaces, or "None"]
-
-> Review the previous handoff for full context before filling this one."""
-    else:
-        chain_section = """## 🔗 Handoff Chain
-
-- **Continues from**: None (fresh start)
-- **Supersedes**: None
-
-> This is the first handoff for this task."""
-
-    # Generate the document
-    content = f"""# 🤝 Handoff: [TASK_TITLE - replace this]
-
-## 🧾 Session Metadata
-- Created: {timestamp}
-- Branch: {branch_line}
-
-### Recent Commits (for context)
-{commits_section}
-
-{chain_section}
-
-## 📍 Current State Summary
-
-[TODO: Write one paragraph describing what was being worked on, current status, and where things left off]
-
-## 🧠 Codebase Understanding
-
-### Architecture Overview
-
-[TODO: Document key architectural insights discovered during this session]
-
-### Critical Files
-
-| File | Purpose | Relevance |
-|------|---------|-----------|
-| [TODO: Add critical files] | | |
-
-### Key Patterns Discovered
-
-[TODO: Document important patterns, conventions, or idioms found in this codebase]
-
-## 🏁 Work Completed
-
-### Tasks Finished
-
-- [ ] [TODO: List completed tasks]
-
-### Files Modified
-
-| File | Changes | Rationale |
-|------|---------|-----------|
-{modified_section}
-
-### Decisions Made
-
-| Decision | Options Considered | Rationale |
-|----------|-------------------|-----------|
-| [TODO: Document key decisions] | | |
-
-## 🚧 Pending Work
-
-### Immediate Next Steps
-
-1. [TODO: Most critical next action]
-2. [TODO: Second priority]
-3. [TODO: Third priority]
-
-### Blockers/Open Questions
-
-- [ ] [TODO: List any blockers or open questions]
-
-### Deferred Items
-
-- [TODO: Items deferred and why]
-
-## 💡 Context for Resuming Agent
-
-### Important Context
-
-[TODO: This is the MOST IMPORTANT section - write critical information the next agent MUST know]
-
-### Assumptions Made
-
-- [TODO: List assumptions made during this session]
-
-### Potential Gotchas
-
-- [TODO: Document things that might trip up a new agent]
-
-## 🌐 Environment State
-
-### Tools/Services Used
-
-- [TODO: List relevant tools and their configuration]
-
-### Active Processes
-
-- [TODO: Note any running processes, servers, etc.]
-
-### Environment Variables
-
-- [TODO: List relevant env var NAMES only - NEVER include actual values/secrets]
-
-## 📚 Related Resources
-
-- [TODO: Add links to relevant docs and files]
-
----
-
-**Security Reminder**: Before finalizing, run `validate_handoff.py` to check for accidental secret exposure.
-"""
-
-    # Write the file
-    filepath.write_text(content)
-
+    filepath.write_text(rendered)
     return str(filepath)
 
 
@@ -363,11 +369,8 @@ def main():
     )
 
     args = parser.parse_args()
-
-    # Get project path (current working directory)
     project_path = os.getcwd()
 
-    # Check for existing handoffs to suggest chaining
     if not args.continues_from:
         prev_handoffs = find_previous_handoffs(project_path)
         if prev_handoffs:
@@ -375,16 +378,25 @@ def main():
             print(f"Most recent: {prev_handoffs[0]['filename']}")
             print(f"Use --continues-from <filename> to link handoffs.\n")
 
-    # Generate handoff
     filepath = generate_handoff(project_path, args.slug, args.continues_from)
 
     print(f"Created handoff document: {filepath}")
+
+    # Re-detect the plan to surface it in CLI output. Cheap — small set of
+    # Path.exists() checks.
+    git_info = get_git_info(project_path)
+    session_plan = find_session_plan(git_info.get("branch"), project_path)
+    if session_plan:
+        plan_display = f"~/{session_plan.relative_to(Path.home())}"
+        print(f"\nActive session plan detected: {plan_display}")
+        print(f"  -> The handoff links to it under '📋 Active Session Plan'.")
+        print(f"  -> Ask the user whether to keep that section before finalizing.")
+
     print(f"\nNext steps:")
     print(f"1. Open {filepath}")
-    print(f"2. Replace [TODO: ...] placeholders with actual content")
-    print(f"3. Focus especially on 'Important Context' and 'Immediate Next Steps'")
+    print(f"2. Fill in the 🎯 Next Action line at the top first — it's the most important field")
+    print(f"3. Replace remaining [TODO: ...] placeholders, especially Important Context")
     print(f"4. Run: python validate_handoff.py {filepath}")
-    print(f"   (Checks for completeness and accidental secrets)")
 
     return filepath
 
