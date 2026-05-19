@@ -9,6 +9,12 @@ Creates structured handoff documents so a fresh AI agent can continue long-runni
 
 The generated document is ordered for the **resuming agent**, not the author — the load-bearing instructions (🎯 Next Action, Important Context, Pending Work) sit near the top, and "what already shipped" is at the bottom because it's reference data once a session is over.
 
+## Reference, don't duplicate
+
+A handoff is connective tissue between sessions, not a re-write of every artifact the work touched. When something is already captured in a PRD, a session plan (`~/.claude/plans/`), an ADR, a design doc, a Linear/Jira/GitHub issue, a PR description, or a commit message — **link to it by path or URL** instead of restating it. Capture only what those artifacts don't already say: the in-flight state, the gotchas, the next concrete step.
+
+Restating ages badly (the canonical artifact updates, the handoff doesn't) and creates two sources of truth. The 📚 Source Artifacts section near the top of the document is where those links live; the rest of the body assumes the resuming agent has them open.
+
 ## Mode Selection
 
 **Creating a handoff?** User wants to save current state or pause work — follow the CREATE workflow below.
@@ -53,14 +59,19 @@ This is a quick confirmation, not a discussion — the section is link-only and 
 
 ### Step 2: Complete the Handoff Document
 
-Open the generated file and fill in all `[TODO: ...]` placeholders. Prioritize in this order:
+Open the generated file. Before filling the body, gather the canonical artifacts for this work — session plan, PRD/spec, ADRs, related issues, source PR, design docs — and list them in **📚 Source Artifacts** near the top. Write each section assuming the resuming agent has those open, so you only need to capture deltas and non-obvious context. See [Reference, don't duplicate](#reference-dont-duplicate).
+
+Then fill in the remaining `[TODO: ...]` placeholders, prioritizing in this order:
 
 1. **🎯 Next Action** (top of document) — Single sentence, the FIRST thing the resuming agent should do. This is the single most load-bearing field; a triaging agent may read only this line. Be concrete: include a file path, command, or specific step.
-2. **Current State Summary** — What's happening right now, in one paragraph.
-3. **Important Context** — Non-obvious constraints, decisions still under negotiation, things that would change the next action if missed.
-4. **Immediate Next Steps** — Numbered, ordered. Expands on the 🎯 Next Action line.
-5. **Constraints for Resuming Agent** (Potential Gotchas + Skills to Use) — "Do NOT do X" rules; skills the next agent should invoke.
-6. **Decisions Made** — Rationale-first. Don't dwell on alternatives unless they're load-bearing for the reasoning.
+2. **📚 Source Artifacts** — Paths/URLs to PRD, session plan, ADRs, issues, PR, design docs. Write `none` for any line that genuinely has no artifact.
+3. **Current State Summary** — What's happening right now, in one paragraph. Describe state, not intent — the linked artifacts cover *what* and *why*.
+4. **Important Context** — Non-obvious constraints, decisions still under negotiation, things that would change the next action if missed. Only what the linked artifacts don't already say.
+5. **Immediate Next Steps** — Numbered, ordered. Expands on the 🎯 Next Action line.
+6. **Constraints for Resuming Agent** (Potential Gotchas + Skills to Use) — "Do NOT do X" rules; skills the next agent should invoke. **For Skills to Use:** scan your currently-loaded skill list and pick ones whose trigger condition matches a step in *Immediate Next Steps*. Forward-looking only — not skills you used this session. If none fit, write `none`.
+7. **Decisions Made** — Rationale-first. If an ADR or PR comment already captures the rationale, link to it instead of restating. Inline only when there's no canonical record.
+
+`none` is a valid explicit answer in **Source Artifacts**, **Blockers / Open Questions**, **Deferred Items**, **Potential Gotchas**, and **Skills to Use** — it tells the resuming agent "we considered this and there's nothing" rather than leaving the section ambiguous. Deleting the section throws that signal away.
 
 The template structure (with explanations) lives at [references/handoff-template.md](references/handoff-template.md).
 
@@ -116,9 +127,10 @@ If the handoff is part of a chain (has a "Continues from" link), also read the l
 
 Read this way to keep triage cost low without losing context:
 
-- **Read in full**: 🎯 Next Action, Session Metadata, Current State Summary, Important Context, Pending Work, Constraints for Resuming Agent.
+- **Read in full**: 🎯 Next Action, Session Metadata, 📚 Source Artifacts, Current State Summary, Important Context, Pending Work, Constraints for Resuming Agent.
+- **Open the linked artifacts** in 📚 Source Artifacts before reading further — the handoff body assumes you have them. Skip ones marked `none`.
 - **Skim**: Codebase Understanding, Work Completed. These exist for spot-lookups, not linear reading.
-- **Consult on demand**: Environment State, Related Resources.
+- **Consult on demand**: Environment State.
 
 The 🎯 Next Action line at the top is the load-bearing instruction — everything else fills in the why and the how. Stop reading early once you have enough context to act.
 

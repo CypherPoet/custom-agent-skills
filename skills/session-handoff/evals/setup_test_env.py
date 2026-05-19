@@ -230,6 +230,46 @@ describe('Authentication', () => {
 }
 """)
 
+    # Seeded for eval 10 (reference-not-restate). These artifacts exist so the
+    # author has somewhere concrete to link instead of restating PRD/ADR content
+    # in the handoff body.
+    (path / "docs").mkdir(exist_ok=True)
+    (path / "docs" / "auth-prd.md").write_text("""# Auth middleware PRD
+
+## Requirements
+- JWT validation on every request to `/api/*`.
+- 1-hour access-token TTL.
+- Refresh-token rotation on each `/auth/refresh` call.
+- Role-based scopes: `user`, `admin`, `service`.
+
+## Out of scope
+- OAuth/SSO. Tracked separately.
+
+## Acceptance
+- `validateToken` returns true only for unexpired tokens signed with JWT_SECRET.
+- Rate-limit shim caps unauthenticated requests at 30/min/IP.
+""")
+
+    (path / "docs" / "adrs").mkdir(exist_ok=True)
+    (path / "docs" / "adrs" / "0042-jwt-over-sessions.md").write_text("""# ADR-0042: JWT over server-side sessions
+
+## Status
+Accepted
+
+## Context
+The API is stateless and scales horizontally behind a load balancer. Server-side
+sessions would require sticky routing or a shared session store; both add ops
+complexity.
+
+## Decision
+Use JWTs signed with HS256 + JWT_SECRET. Validate on every request.
+
+## Consequences
+- No session store needed.
+- Token revocation requires a deny-list or short TTLs (we picked short TTLs +
+  refresh tokens — see Auth PRD).
+""")
+
     print(f"Created project structure at {path}")
     return path
 
