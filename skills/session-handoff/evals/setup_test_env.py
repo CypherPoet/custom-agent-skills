@@ -102,6 +102,35 @@ async function connect() {
 module.exports = { connect };
 """)
 
+    # Seeded for eval 10 (reference-not-restate). The prompt says the rate-limit
+    # shim is "shipped this session"; an honest agent who lists this file in
+    # Files Modified should not get flagged by validate_handoff.py's
+    # file-existence advisory.
+    (path / "src" / "middleware").mkdir(exist_ok=True)
+    (path / "src" / "middleware" / "rate_limit.js").write_text("""// Rate-limit shim — caps unauthenticated requests at 30/min/IP per the PRD.
+const WINDOW_MS = 60 * 1000;
+const LIMIT = 30;
+const hits = new Map();
+
+function rateLimit(req, res, next) {
+    const key = req.ip;
+    const now = Date.now();
+    const entry = hits.get(key) || { count: 0, resetAt: now + WINDOW_MS };
+    if (now > entry.resetAt) {
+        entry.count = 0;
+        entry.resetAt = now + WINDOW_MS;
+    }
+    entry.count += 1;
+    hits.set(key, entry);
+    if (entry.count > LIMIT) {
+        return res.status(429).json({ error: 'rate_limited' });
+    }
+    next();
+}
+
+module.exports = { rateLimit };
+""")
+
     # Fixture C depends on this file existing AND containing the
     # importlib.import_module pattern. Without that, the agent can't verify
     # the gotcha via grep, weakening the test.

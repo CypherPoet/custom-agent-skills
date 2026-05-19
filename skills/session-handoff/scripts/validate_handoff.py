@@ -11,6 +11,7 @@ Checks (in the order the verdict block evaluates them):
 - Remaining [TODO: ...] placeholders
 - Referenced files exist on disk (advisory)
 - Recommended sections missing (advisory)
+- 📚 Source Artifacts has at least one real link, not all "none" (advisory)
 
 Verdict rules:
 - BLOCKED: secrets detected
