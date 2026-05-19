@@ -1,0 +1,6 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-plugin.json",
+  "name": "cypherpoet-blender-kit",
+  "description": "Blender 3D modeling and MCP integration.",
+  "author": { "name": "CypherPoet" }
+}
