@@ -75,6 +75,46 @@
         "First action is asking the user for confirmation (or verifying the runtime import dependency in workers/queue.py)",
         "Names workers/queue.py or the importlib.import_module pattern explicitly"
       ]
+    },
+    {
+      "id": 10,
+      "prompt": "Set up the eval test environment first by running `python evals/setup_test_env.py`, then `cd /tmp/handoff-eval-project`.\n\nThe user says: \"Create a handoff for the auth-middleware work. The PRD lives at docs/auth-prd.md and already spells out the full requirements: JWT validation, 1-hour token TTL, refresh-token rotation, and role-based scopes. The source PR is https://github.com/example/repo/pull/847 — its description already covers what shipped this session (validateToken + the rate-limit shim in src/middleware/rate_limit.js). The rationale for picking JWT over server-side sessions is recorded in ADR-0042 at docs/adrs/0042-jwt-over-sessions.md. Next session: wire the rate-limit shim into the Express middleware chain in src/index.js.\"\n\nUse the session-handoff skill to handle this request.",
+      "expected_output": "Should run create_handoff.py, then fill the 📚 Source Artifacts section with concrete links (docs/auth-prd.md, docs/adrs/0042-jwt-over-sessions.md, https://github.com/example/repo/pull/847), and write a TERSE Current State Summary / Decisions Made that REFERENCES rather than RESTATES the PRD requirements, the PR diff, or the ADR rationale. The 🎯 Next Action should name src/index.js and the rate-limit shim. Important Context should call out gaps the linked artifacts don't cover, not summarize them.",
+      "files": [],
+      "assertions": [
+        "📚 Source Artifacts section is populated with the PRD path (docs/auth-prd.md)",
+        "📚 Source Artifacts section is populated with the ADR reference (ADR-0042 or docs/adrs/0042-jwt-over-sessions.md)",
+        "📚 Source Artifacts section references the PR URL (github.com/example/repo/pull/847)",
+        "Current State Summary does NOT enumerate the full PRD requirements (JWT validation + 1h TTL + refresh rotation + RBAC scopes) as a list — it stays terse and points to the PRD instead",
+        "Decisions Made either links to ADR-0042 or omits the JWT-over-sessions rationale entirely (not restated inline)",
+        "🎯 Next Action names src/index.js and the rate-limit middleware step"
+      ]
+    },
+    {
+      "id": 11,
+      "prompt": "Set up the eval test environment first by running `python evals/setup_test_env.py`, then `cd /tmp/handoff-eval-project`.\n\nThe user says: \"Create a handoff. Next session needs to: (1) scrape the vendor's JavaScript-rendered API docs at https://docs.example-vendor.com/api to extract endpoint definitions, (2) produce a Mermaid sequence diagram showing the auth-then-fetch flow for our integration guide, and (3) draft the README's getting-started section once the diagram is in place.\"\n\nUse the session-handoff skill to handle this request.",
+      "expected_output": "Should run create_handoff.py, then fill the 🧰 Skills to Use section with FORWARD-LOOKING recommendations matched to the three upcoming steps. Expected matches from the available skill list: a Firecrawl skill (firecrawl-scrape or firecrawl-instruct) for the JS-rendered scrape, the mermaid-diagrams skill for the sequence diagram, and the crafting-effective-readmes skill for the README section. Each bullet should name a concrete trigger condition tied to the specific step. The skills are NOT used by the current session — they are recommendations for the resuming agent.",
+      "files": [],
+      "assertions": [
+        "🧰 Skills to Use section is filled with at least one real entry (not just `none` and not just TODO placeholders)",
+        "Recommends a web-scraping skill (firecrawl-scrape, firecrawl-instruct, or close equivalent) for the JS-rendered docs step",
+        "Recommends mermaid-diagrams (or close equivalent) for the sequence diagram step",
+        "Recommends crafting-effective-readmes (or close equivalent) for the README draft step",
+        "Each recommended skill includes a concrete `when:` trigger condition tied to a specific upcoming step, not a generic description"
+      ]
+    },
+    {
+      "id": 12,
+      "prompt": "Set up the eval test environment first by running `python evals/setup_test_env.py`, then `cd /tmp/handoff-eval-project`.\n\nThe user says: \"Create a handoff for continuing with our progress in a fresh session.\"\n\nUse the session-handoff skill to handle this request.",
+      "expected_output": "Should follow the CREATE workflow even with minimal user input. Should run create_handoff.py to scaffold and lean on auto-populated metadata (recent commits, branch, modified files). Recognize that the user has not supplied enough context to fill load-bearing sections substantively — 🎯 Next Action, Current State Summary, and Source Artifacts cannot be honestly filled from a bare 'continuing with our progress'. Either (a) ask clarifying questions to surface what 'progress' refers to before filling, or (b) fill what can be inferred from auto-populated git/repo state + use `none` for sections genuinely without input + clearly flag the remaining gaps. Must NOT fabricate context — no invented file paths, decisions, gotchas, or restated content from prior eval fixtures masquerading as the user's real work.",
+      "files": [],
+      "assertions": [
+        "Runs create_handoff.py to scaffold (does not hand-author the file from scratch)",
+        "Does NOT fabricate a specific 🎯 Next Action containing file paths, function names, or implementation details that the user never mentioned",
+        "Either asks the user clarifying questions to disambiguate 'our progress', or honestly marks sections without information as `none` / TODO / explicit gap-flagged rather than filling them with invented content",
+        "Where the agent does fill content, it grounds claims in auto-populated metadata (recent commits, modified files, branch) — not in fixture content from prior evals (e.g., does not claim the work is about JWT auth or legacy adapters without evidence in the actual repo state)",
+        "Final state is either (a) READY after honest minimal fills with `none` flags, (b) NEEDS_WORK with the 🎯 Next Action left explicitly TODO for the user, or (c) the agent surfaces the ambiguity to the user before completing — but NOT a falsely-confident READY with fabricated content"
+      ]
     }
   ]
 }

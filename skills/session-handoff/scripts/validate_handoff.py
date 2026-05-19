@@ -11,6 +11,7 @@ Checks (in the order the verdict block evaluates them):
 - Remaining [TODO: ...] placeholders
 - Referenced files exist on disk (advisory)
 - Recommended sections missing (advisory)
+- 📚 Source Artifacts has at least one real link, not all "none" (advisory)
 
 Verdict rules:
 - BLOCKED: secrets detected
@@ -60,6 +61,7 @@ REQUIRED_SECTIONS = [
 # "unchanged" filler), Files Modified (auto-prefilled, low rationale signal),
 # and Assumptions Made (folded into Important Context in the new template).
 RECOMMENDED_SECTIONS = [
+    "Source Artifacts",
     "Critical Files",
     "Decisions Made",
     "Potential Gotchas",
@@ -127,6 +129,57 @@ def check_recommended_sections(content: str) -> list[str]:
     return missing
 
 
+def check_source_artifacts_substance(content: str) -> str | None:
+    """Advisory check: if 📚 Source Artifacts has every labeled bullet set to
+    "none", surface a gentle prompt. Substantive work almost always has *some*
+    canonical artifact (PRD, plan, ADR, issue, PR) worth linking — all-none is
+    a smell, not a failure.
+
+    Returns an advisory message, or None if the section is missing, unparseable,
+    or has at least one real link. Missing-section is already covered by
+    `check_recommended_sections`; we don't double-flag it here.
+    """
+    section_match = re.search(
+        r'(?:^|\n)#{1,6}\s*(?:[^\s\w]+\s+)?Source Artifacts\b[^\n]*\n(.*?)(?=\n#{1,6}\s|\Z)',
+        content,
+        re.DOTALL | re.IGNORECASE,
+    )
+    if not section_match:
+        return None
+
+    section_body = section_match.group(1)
+    # Match `- **Label**: value` bullets. Parenthetical-only bullets (e.g. the
+    # auto-linked Source PR row) are intentionally skipped.
+    bullets = re.findall(r'-\s*\*\*[^*]+\*\*\s*:\s*([^\n]+)', section_body)
+    if not bullets:
+        return None
+
+    none_count = 0
+    real_count = 0
+    for value in bullets:
+        stripped = value.strip()
+        # Skip TODOs — they're already caught by check_todos as NEEDS_WORK.
+        if '[TODO' in stripped:
+            continue
+        # Skip purely-parenthetical structural rows (e.g. the Source PR row,
+        # which is a note about auto-population, not an artifact answer).
+        if stripped.startswith('(') and stripped.endswith(')'):
+            continue
+        # Normalize: strip surrounding quotes/emphasis/whitespace, lowercase.
+        normalized = re.sub(r'^[\s"\'`*_]+|[\s"\'`*_]+$', '', stripped).lower()
+        if normalized in ('none', 'n/a', 'na', ''):
+            none_count += 1
+        else:
+            real_count += 1
+
+    if real_count == 0 and none_count > 0:
+        return ("No canonical artifacts linked in 📚 Source Artifacts — every "
+                "labeled line is 'none'. Confirm this work genuinely has no "
+                "PRD, plan, ADR, issue, or PR worth referencing (uncommon for "
+                "substantive work).")
+    return None
+
+
 def scan_for_secrets(content: str) -> list[tuple[str, str]]:
     """Scan content for potential secrets."""
     findings = []
@@ -178,6 +231,7 @@ def validate_handoff(filepath: str) -> dict:
     next_action_filled, next_action_value = check_next_action(content)
     required_complete, missing_required = check_required_sections(content)
     missing_recommended = check_recommended_sections(content)
+    source_artifacts_advisory = check_source_artifacts_substance(content)
     secrets_found = scan_for_secrets(content)
     existing_files, missing_files = check_file_references(content, str(base_path))
 
@@ -212,6 +266,7 @@ def validate_handoff(filepath: str) -> dict:
         "required_complete": required_complete,
         "missing_required": missing_required,
         "missing_recommended": missing_recommended,
+        "source_artifacts_advisory": source_artifacts_advisory,
         "secrets_found": secrets_found,
         "files_verified": len(existing_files),
         "files_missing": missing_files[:5],
@@ -271,6 +326,9 @@ def print_report(result: dict) -> bool:
         print(f"[INFO]  Recommended sections missing (consider adding):")
         for section in result["missing_recommended"]:
             print(f"        - {section}")
+
+    if result.get("source_artifacts_advisory"):
+        print(f"[INFO]  {result['source_artifacts_advisory']}")
 
     print(f"\nVERDICT")
     print("-" * 7)

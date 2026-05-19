@@ -182,29 +182,27 @@ def find_previous_handoffs(project_path: str) -> list[dict]:
 
 
 def get_previous_handoff_info(project_path: str, continues_from: str = None) -> dict:
-    """Get information about the previous handoff for chaining."""
-    handoffs = find_previous_handoffs(project_path)
+    """Get information about the previous handoff for chaining.
 
-    if continues_from:
-        for h in handoffs:
-            if continues_from in h["filename"]:
-                return {
-                    "exists": True,
-                    "filename": h["filename"],
-                    "title": h["title"],
-                }
-        return {"exists": False, "filename": continues_from, "title": "Not found"}
+    Only returns a positive chain when `continues_from` is explicitly provided.
+    Without that flag, the chain block falls back to "fresh start" — silently
+    auto-chaining to the most-recent-by-mtime handoff would assert a
+    continuity that may not exist, and the resuming agent (or the author)
+    would then have to manually scrub the link. The CLI's "found N existing
+    handoffs" message remains as a gentle nudge to pass `--continues-from`
+    when chaining is actually intended.
+    """
+    if not continues_from:
+        return {"exists": False}
 
-    elif handoffs:
-        most_recent = handoffs[0]
-        return {
-            "exists": True,
-            "filename": most_recent["filename"],
-            "title": most_recent["title"],
-            "suggested": True,
-        }
-
-    return {"exists": False}
+    for h in find_previous_handoffs(project_path):
+        if continues_from in h["filename"]:
+            return {
+                "exists": True,
+                "filename": h["filename"],
+                "title": h["title"],
+            }
+    return {"exists": False, "filename": continues_from, "title": "Not found"}
 
 
 # The template body lives in references/handoff-template.md. We slice at the
