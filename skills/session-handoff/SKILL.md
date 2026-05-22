@@ -41,7 +41,7 @@ python scripts/create_handoff.py "auth-part-2" --continues-from 2024-01-15-auth.
 The script will:
 - Create `.claude/handoffs/` directory if needed
 - Generate timestamped filename
-- Pre-fill: timestamp, project path, git branch, repo URL, open-PR URL (when available), recent commits, modified files
+- Pre-fill: timestamp, git branch, repo URL, open-PR URL (when available), recent commits, modified files
 - Add handoff chain links if continuing from previous
 - Detect a Claude Code session plan at `~/.claude/plans/<slug>.md` and link to it if present
 - Output file path for editing
@@ -73,9 +73,7 @@ Then fill in the remaining `[TODO: ...]` placeholders, prioritizing in this orde
 
 `none` is a valid explicit answer in **Source Artifacts**, **Blockers / Open Questions**, **Deferred Items**, **Potential Gotchas**, and **Skills to Use** — it tells the resuming agent "we considered this and there's nothing" rather than leaving the section ambiguous. Deleting the section throws that signal away.
 
-**Deferred Items vs. Immediate Next Steps — disambiguation.** "Deferred Items" means work the *current* session considered and parked as *adjacent* to its main thread (a separate ticket, a side cleanup, an out-of-scope rewrite). If this handoff itself exists to track items deferred from a *previous* task — i.e., the items ARE the work the resuming agent is here to pick up, not adjacent to it — write `none` in Deferred Items and put the canonical list in Immediate Next Steps. Otherwise the same items end up in both sections under slightly different framing, and the resuming agent has to reconcile which is canonical.
-
-The template structure (with explanations) lives at [references/handoff-template.md](references/handoff-template.md).
+The template structure (with explanations) lives at [references/handoff-template.md](references/handoff-template.md). Author-time nudges (e.g. how to tell when **Deferred Items** should be `none` because the deferred items ARE the handoff's primary work) live in the template body next to their placeholders, so they fire at the moment of filling, not in this always-loaded skill body.
 
 ### Step 3: Validate the Handoff
 
