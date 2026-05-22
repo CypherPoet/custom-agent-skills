@@ -74,9 +74,9 @@ The canonical record for this work. Link by path or URL; do not restate their co
 
 ### Deferred Items
 
-- [TODO: Work *adjacent* to this session's primary effort that you considered and parked — separate tickets, side cleanups, things the resuming agent should know exist but shouldn't tackle as the main thread. Or "none".]
+- [TODO: Work *adjacent* to this session's primary effort that you considered and parked — separate tickets, side cleanups, things the resuming agent should know exist but shouldn't tackle as their primary effort. Or "none".]
 
-> If this handoff *exists to track* items that were deferred from a previous task — i.e., those items ARE the main thread, not adjacent to it — write `none` here and put the canonical list in **Immediate Next Steps**. Otherwise the two sections duplicate each other.
+> If this handoff *exists to track* items deferred from a previous task — i.e., those items are the primary effort, not adjacent to it — write `none` here and put the canonical list in **Immediate Next Steps**.
 
 ## ⚠️ Constraints for Resuming Agent
 

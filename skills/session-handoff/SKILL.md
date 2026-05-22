@@ -73,7 +73,7 @@ Then fill in the remaining `[TODO: ...]` placeholders, prioritizing in this orde
 
 `none` is a valid explicit answer in **Source Artifacts**, **Blockers / Open Questions**, **Deferred Items**, **Potential Gotchas**, and **Skills to Use** — it tells the resuming agent "we considered this and there's nothing" rather than leaving the section ambiguous. Deleting the section throws that signal away.
 
-**Deferred Items vs. Immediate Next Steps — disambiguation.** "Deferred Items" means work the *current* session considered and parked as *adjacent* to its main thread (a separate ticket, a side cleanup, an out-of-scope rewrite). If this handoff itself exists to track items deferred from a *previous* task — i.e., the items ARE the work the resuming agent is here to pick up, not adjacent to it — write `none` in Deferred Items and put the canonical list in Immediate Next Steps. Otherwise the same items end up in both sections under slightly different framing, and the resuming agent has to reconcile which is canonical.
+**Deferred Items vs. Immediate Next Steps — disambiguation.** "Deferred Items" means work the *current* session considered and parked as *adjacent* to its primary effort (a separate ticket, a side cleanup, an out-of-scope rewrite). If this handoff itself exists to track items deferred from a *previous* task — i.e., the items ARE the primary effort the resuming agent is here to pick up, not adjacent to it — write `none` in Deferred Items and put the canonical list in Immediate Next Steps.
 
 The template structure (with explanations) lives at [references/handoff-template.md](references/handoff-template.md).
 
