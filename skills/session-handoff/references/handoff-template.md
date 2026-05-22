@@ -74,7 +74,9 @@ The canonical record for this work. Link by path or URL; do not restate their co
 
 ### Deferred Items
 
-- [TODO: Items deferred and why. If more than 3, number them in priority order. Or write "none".]
+- [TODO: Work *adjacent* to this session's primary effort that you considered and parked — separate tickets, side cleanups, things the resuming agent should know exist but shouldn't tackle as the main thread. Or "none".]
+
+> If this handoff *exists to track* items that were deferred from a previous task — i.e., those items ARE the main thread, not adjacent to it — write `none` here and put the canonical list in **Immediate Next Steps**. Otherwise the two sections duplicate each other.
 
 ## ⚠️ Constraints for Resuming Agent
 
