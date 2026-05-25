@@ -1,7 +1,7 @@
 # Section 2: Performance
 
 > Source: https://developer.apple.com/app-store/review/guidelines/
-> Last synced: 2026-05-04
+> Last synced: 2026-05-25
 
 ---
 
@@ -926,25 +926,40 @@
 
 ### §2.5.18 Display Advertising Limits
 
-**Requirement:** Apps must limit display advertising to appropriate contexts and must not overwhelm the user experience with ads. *(ASR & NR)*
+**Requirement:** Display advertising must be limited to the main app binary and must not appear in extensions, App Clips, widgets, notifications, keyboards, watchOS apps, or similar surfaces. Ads must be appropriate for the app's age rating, must let users see all targeting information without leaving the app, and must not target based on sensitive data (health/medical, school/classroom, kids). Interstitial ads must be clearly marked as ads, must not trick users into tapping, and must offer easily accessible close/skip buttons. Apps with ads must also let users report inappropriate or age-inappropriate ads. *(ASR & NR)*
 
 **Triggers rejection if:**
-- Ads appear in contexts where they are prohibited (e.g., in widgets, App Clips, notification content extensions, lock screen experiences)
-- Full-screen interstitial ads appear immediately at launch or without user interaction
+- Ads appear in any surface other than the main app binary (extensions, App Clips, widgets, notifications, keyboards, watchOS apps)
+- Ads target users based on sensitive data: HealthKit / health/medical data, ClassKit / school and classroom data, or data from Kids Category apps
+- Ads are not appropriate for the app's declared age rating
+- Users cannot view the targeting information used for an ad without leaving the app
+- Interstitial or full-screen ads do not clearly indicate they are ads
+- Interstitial ads manipulate or trick users into tapping them (e.g., fake close buttons, deceptive UI)
+- Close/skip buttons on interstitial ads are too small, hidden, or otherwise not easily accessible
+- App does not provide a way for users to report inappropriate or age-inappropriate ads
+- Full-screen interstitial ads appear immediately at launch or without any user interaction
 - Ads cannot be dismissed or block core functionality
 - Ad frequency is excessive and degrades the user experience
 - Ads are deceptive or disguised as app content
 
 **What to check:**
 - Search for ad SDK imports: `GoogleMobileAds`, `AdMob`, `FBAudienceNetwork`, `AdColony`, `AppLovin`, `UnityAds`, `IronSource`, `Vungle`, `Chartboost`, `InMobi`
-- Check if ad SDKs are included in extension targets (widgets, App Clips, notification extensions) where they are prohibited
+- Check whether ad SDKs are linked into any extension, App Clip, widget, notification, keyboard, or watchOS target — all prohibited
+- Verify ad targeting pipelines do not consume HealthKit, ClassKit, or kids-app data
+- Confirm an in-app "Why this ad?" / targeting-info disclosure path exists without sending the user out of the app
+- Inspect interstitial ad UI for clear "Ad" labeling, large/visible close/skip controls, and absence of misleading tap targets
+- Verify a UI affordance exists for users to report inappropriate ads (often surfaced from a long-press, info button, or feedback link near the ad)
 - Search for interstitial ad presentation in `viewDidAppear` of the initial view controller (immediate launch ads)
 - Look for ad presentation without user interaction triggers
 - Review ad placement frequency — timers or counters that show ads at very short intervals
 - Check for `SKOverlay` or `SKStoreProductViewController` used aggressively for cross-promotion
 
 **Key details:**
-- Ads in extensions (widgets, App Clips, notification content extensions) are always prohibited
+- Marked ASR and NR — applies to both distribution channels
+- The list of ad-prohibited surfaces explicitly includes **keyboards and watchOS apps** in addition to widgets, App Clips, notifications, and extensions
+- Sensitive-data targeting prohibitions cover HealthKit-derived data, ClassKit-derived school/classroom data, and any data sourced from Kids Category apps — these cannot feed behavioral or targeted advertising
+- The "show all targeting info" requirement must be satisfied without making the user leave the app — an in-app disclosure surface is required
+- Ad-reporting must be reachable from the ad itself, not buried in app settings
 - Interstitial ads should appear at natural transition points, not immediately upon launch
 - Users must always be able to dismiss ads and return to the app's content
 - The App Tracking Transparency framework (`ATTrackingManager`) must be used before tracking for ad purposes
