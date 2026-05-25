@@ -2,7 +2,7 @@
 
 ## Project
 
-Public collection of reusable AI agent skills, packaged as Claude Code plugins distributed via the [`cypherpoet-toolchest`](https://github.com/CypherPoet/cypherpoet-toolchest) marketplace. The private sibling lives at `private-custom-agent-skills`.
+Public collection of reusable AI agent skills, packaged as Claude Code plugins that can be distributed through [plugin marketplaces](https://code.claude.com/docs/en/plugin-marketplaces).
 
 ## Architecture
 
@@ -27,4 +27,12 @@ Use `/skill-creator` when creating, editing, or iterating on skills. New skill f
 ## Workflow
 
 - When adding a new skill, update the host plugin's `plugins/<plugin>/CATALOG.md`. The top-level `docs/CATALOG.md` only needs an update if a *new plugin* is added.
-- When adding a new plugin, also add an entry to the top-level `docs/CATALOG.md`. The marketplace's auto-sync workflow will pick up the new plugin within a 6-hour cron cycle, or immediately on push if dispatch is wired.
+- When adding a new plugin, also add an entry to the top-level `docs/CATALOG.md`, then publish it with the `marketplace-publish` skill (it opens a PR on the marketplace). Nothing auto-syncs — the catalog changes only when you explicitly publish. Editing an *already-listed* plugin's content needs no republish (the catalog tracks `main` by commit SHA).
+
+## Maintainer skills
+
+Repo-local skills in `.claude/skills/` (maintainer tooling — not published plugins) for managing the marketplace, all on local `gh` creds (no tokens, no CI):
+
+- **`plugin-scaffold`** — create a new plugin's files locally; no commit, no publish.
+- **`marketplace-publish`** — publish one plugin to `cypherpoet-toolchest` by opening a PR.
+- **`marketplace-sync-check`** — read-only audit of which local plugins are / aren't in the catalog.
