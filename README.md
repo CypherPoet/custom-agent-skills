@@ -4,57 +4,60 @@
 
 ## About
 
-A curated collection of reusable AI agent skills for extending coding assistant capabilities. Each skill is a self-contained folder with a `SKILL.md` instruction file and any supporting resources it needs — portable across agent environments like Claude Code, Gemini, and others.
+A curated collection of reusable AI agent skills, packaged as Claude Code plugins. Each plugin holds a focused set of related skills — install only the themes you need.
 
-**[Browse the Skill Catalog &rarr;](docs/CATALOG.md)**
+**[Browse the Plugin Catalog &rarr;](docs/CATALOG.md)**
 
 ## Installation
 
-### As a Claude Code Plugin
-
-This repo is published as the `cypherpoet-skills` plugin via the [`cypherpoet-skills-marketplace`](https://github.com/CypherPoet/cypherpoet-skills-marketplace) catalog. Inside Claude Code:
+This repo publishes its plugins via the [`cypherpoet-toolchest`](https://github.com/CypherPoet/cypherpoet-toolchest) Claude Code marketplace.
 
 ```shell
-/plugin marketplace add CypherPoet/cypherpoet-skills-marketplace
-/plugin install cypherpoet-skills@cypherpoet-skills-marketplace
+# Subscribe to the marketplace once
+/plugin marketplace add CypherPoet/cypherpoet-toolchest
+
+# Install whichever plugins you want
+/plugin install cypherpoet-agent-tooling@cypherpoet-toolchest
+/plugin install cypherpoet-git-flow@cypherpoet-toolchest
+# ...etc
 ```
 
-Skills are then invoked under the `cypherpoet-skills:` namespace (for example, `/cypherpoet-skills:emoji-commits`). Each commit to `main` becomes a new version that Claude Code pulls on the next `/plugin marketplace update` or background refresh.
+Each commit to `main` becomes a new version — Claude Code picks up updates automatically on `/plugin marketplace update` or background refresh.
 
-### Via the `skills` CLI
+## Themed Plugins
 
-Use the [`skills`](https://github.com/vercel-labs/skills) CLI to install skills into any supported agent environment:
-
-```bash
-# Install a specific skill globally for Claude Code
-npx skills add CypherPoet/custom-agent-skills -g -a claude-code -s <skill-name>
-
-# Install a specific skill globally for all detected agents
-npx skills add CypherPoet/custom-agent-skills -g -s <skill-name>
-
-# List available skills without installing
-npx skills add CypherPoet/custom-agent-skills -l
-```
+| Plugin | Description |
+|---|---|
+| [cypherpoet-agent-tooling](plugins/cypherpoet-agent-tooling/CATALOG.md) | Agent tooling for Claude Code workflow, memory, and docs |
+| [cypherpoet-blender-kit](plugins/cypherpoet-blender-kit/CATALOG.md) | Blender 3D modeling and MCP integration |
+| [cypherpoet-expo-kit](plugins/cypherpoet-expo-kit/CATALOG.md) | Expo / React Native prototyping |
+| [cypherpoet-git-flow](plugins/cypherpoet-git-flow/CATALOG.md) | Git commit and changelog hygiene |
+| [cypherpoet-mobile-dev](plugins/cypherpoet-mobile-dev/CATALOG.md) | iOS App Store publishing best practices |
+| [cypherpoet-svg-tools](plugins/cypherpoet-svg-tools/CATALOG.md) | SVG optimization and cleanup |
+| [cypherpoet-threejs-kit](plugins/cypherpoet-threejs-kit/CATALOG.md) | Three.js / WebGPU / WebGL tooling |
 
 ## Repository Structure
 
 ```
 .
-├── .claude-plugin/
-│   └── plugin.json      # Claude Code plugin manifest
-├── skills/              # Individual skill folders
-│   └── <skill-name>/
-│       ├── SKILL.md     # Skill instructions (required)
-│       ├── assets/      # Output templates (optional)
-│       ├── references/  # Supporting documentation (optional)
-│       └── scripts/     # Helper scripts (optional)
-├── docs/                # Skill catalog and documentation
+├── plugins/                # Themed Claude Code plugins
+│   └── <plugin-name>/
+│       ├── .claude-plugin/
+│       │   └── plugin.json # Plugin manifest
+│       ├── CATALOG.md      # Per-plugin skill catalog
+│       └── skills/
+│           └── <skill-name>/
+│               ├── SKILL.md        # Skill instructions (required)
+│               ├── assets/         # Output templates (optional)
+│               ├── references/     # Supporting documentation (optional)
+│               └── scripts/        # Helper scripts (optional)
+├── docs/CATALOG.md         # Top-level cross-reference index
 └── README.md
 ```
 
 ## Creating a New Skill
 
-Use the `/skill-creator` skill within your agent environment to create and iterate on skills.
+Use the `/skill-creator` skill within Claude Code to draft a new skill. After it's ready, place the skill folder under the appropriate `plugins/<plugin-name>/skills/` directory (or open a discussion if a new plugin is warranted) and update the plugin's `CATALOG.md`.
 
 ## License
 

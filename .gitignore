@@ -17,9 +17,10 @@ Desktop.ini
 .env
 .env.local
 
-# Claude Code (ignore runtime artifacts, keep shared agent definitions)
-.claude/*
-!.claude/agents/
+# Claude Code (local-only files; everything else under .claude/ is tracked)
+CLAUDE.local.md
+.claude/settings.local.json
+.claude/worktrees/
 
 # Node (if any skill uses scripts)
 node_modules/

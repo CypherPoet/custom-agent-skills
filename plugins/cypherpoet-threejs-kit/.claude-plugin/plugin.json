@@ -1,0 +1,6 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-plugin.json",
+  "name": "cypherpoet-threejs-kit",
+  "description": "Three.js / WebGPU / WebGL tooling.",
+  "author": { "name": "CypherPoet" }
+}
