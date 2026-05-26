@@ -1,11 +1,20 @@
 ---
 name: plugin-scaffold
-description: Scaffold a brand-new Claude Code plugin inside this repo — its manifest, README, and the first item of any component type (skills, slash commands, subagents, hooks, MCP servers) — following this repo's conventions and the plugin-structure best practices. Use whenever the user wants to start, create, or add a new plugin here: "scaffold a plugin", "new plugin for X", "set up a plugin that …", "add a plugin called …", "scaffold a plugin with a slash command / agent / hook / MCP server". Creates files locally only; it does not commit and does not publish to any marketplace (that's the marketplace-publish skill's job, offered as the follow-up).
+description: >
+  Use whenever the user wants to start, create, or add a new plugin
+  in this repo: "scaffold a plugin", "new plugin for X", "set up a
+  plugin that …", "add a plugin called …", "scaffold a plugin with
+  a slash command / agent / hook / MCP server". Creates the manifest,
+  README, and the first item of any component type (skills, slash
+  commands, subagents, hooks, MCP servers) under `plugins/<name>/`,
+  following this repo's conventions and the [plugins-reference](https://code.claude.com/docs/en/plugins-reference)
+  best practices. Local only — no commits, no marketplace changes;
+  for publishing, hand off to the marketplace-publish skill.
 ---
 
 # plugin-scaffold
 
-Create the files for a new plugin under `plugins/<name>/`, matching this repo's conventions and Anthropic's [plugin-structure](https://github.com/anthropics/claude-plugins-official) best practices, so it's ready to fill in and later publish. **Local only**: no commits, no marketplace changes.
+Create the files for a new plugin under `plugins/<name>/`, matching this repo's conventions and the [Claude Code plugins reference](https://code.claude.com/docs/en/plugins-reference) best practices, so it's ready to fill in and later publish. **Local only**: no commits, no marketplace changes.
 
 ## Repo conventions (match these exactly)
 
@@ -44,22 +53,27 @@ Repo-specific rules the scaffold always honors:
    - One-sentence plugin description (8–12 words, no markdown, no emoji).
    - Whether to include a `version` field in the manifest. Default *no*. If yes, ask for the initial version string (default `0.1.0`).
    - Which component types the plugin ships — multi-select from: skills, slash commands, subagents, hooks, MCP servers. Default skills-only when the user is unsure.
-   - For each picked component, the first item's name + one-line description / trigger.
+   - For each picked component type, the first item's identifier + a one-line description. The shape of "identifier" varies:
+     - **Skills, slash commands, subagents** → a kebab-case name (file/folder name + `name:` frontmatter).
+     - **Hooks** → the event name (`PreToolUse`, `PostToolUse`, `UserPromptSubmit`, `Stop`, etc.) and what the hook should do; the hook isn't "named" — it's bound to an event.
+     - **MCP servers** → the server's logical name (used as the key in `mcpServers`), its transport (`stdio` / `http` / `sse`), and a brief description.
 
 2. **Propose the file plan.** Enumerate every file you'll create and every existing file you'll modify (the manifest, the README, each component stub, the top-level `docs/CATALOG.md` row). Wait for the user's go-ahead.
 
-3. **Create the manifest.** See [references/manifest.md](references/manifest.md) for the field reference, the minimal template, and when path overrides are needed. The default 4-field manifest (`$schema`, `name`, `description`, `author`) covers every component combination that uses auto-discovery; only add an `mcpServers` block (or `version`, if the user opted in) on top.
-
-4. **Create the chosen component dirs.** For each picked component, read the matching reference file and drop in a minimal starter that the user (or `/skill-creator`) can grow:
+3. **Create the chosen component dirs.** For each picked component, read the matching reference file and drop in a minimal starter that the user (or `/skill-creator`) can grow:
    - **Skills** → `skills/<name>/SKILL.md`. See [references/skills.md](references/skills.md) — frontmatter shape, triggers-first description style, optional subdirs.
    - **Slash commands** → `commands/<name>.md`. See [references/commands.md](references/commands.md) — frontmatter (`description`, optional `argument-hint`, `model`, `allowed-tools`) and the prompt body.
    - **Subagents** → `agents/<name>.md`. See [references/agents.md](references/agents.md) — frontmatter and a stub system prompt.
-   - **Hooks** → `hooks/hooks.json` plus a companion script under `scripts/<name>.sh`. See [references/hooks.md](references/hooks.md) — event names, matcher syntax, and the `${CLAUDE_PLUGIN_ROOT}` rule.
-   - **MCP servers** → an `mcpServers` block in the manifest (preferred for small counts) or a sibling config file. See [references/mcp.md](references/mcp.md) — transport types and the `${CLAUDE_PLUGIN_ROOT}` rule.
+   - **Hooks** → `hooks/hooks.json` plus a companion script under `scripts/<name>.sh`. See [references/hooks.md](references/hooks.md) — event names, matcher syntax, `${CLAUDE_PLUGIN_ROOT}` rule, and the current `hookSpecificOutput` decision schema.
+   - **MCP servers** — no separate file is created in this step; the server entries are written directly into the manifest's `mcpServers` block in step 4. See [references/mcp.md](references/mcp.md) — `type` field (not `transport`), transport-specific fields, and the `${CLAUDE_PLUGIN_ROOT}` rule.
+
+4. **Write the manifest.** See [references/manifest.md](references/manifest.md) for the field reference. The default 4-field manifest (`$schema`, `name`, `description`, `author`) covers every layout that relies on auto-discovery. On top of that, add:
+   - A `version` field if the user opted in (step 1).
+   - An `mcpServers` block if the user picked MCP servers (step 1). This must be written into the manifest in this same pass — MCP servers aren't auto-discovered. See [references/mcp.md](references/mcp.md).
 
 5. **Create the plugin's `README.md`.** See [references/readme.md](references/readme.md) for the template. Sections: H1 plugin name, one-sentence description, **Installation**, then one `## Skills` / `## Commands` / `## Agents` / `## Hooks` / `## MCP Servers` block per component type the plugin actually ships — each a small table linking into the relevant file.
 
-6. **Update [docs/CATALOG.md](../../../docs/CATALOG.md).** Add an alphabetically-placed row pointing at `plugins/<name>/README.md`, with the plugin description and the item count for whichever component type is most prominent (the existing table only tracks Skills — extend the row format if the plugin ships other component types, mirroring whatever pattern is already there if any have been added since).
+6. **Update [docs/CATALOG.md](../../../docs/CATALOG.md).** Add an alphabetically-placed row pointing at `plugins/<name>/README.md`. The `Components` column uses the text form `<N> <type>` — e.g., `3 skills`, `1 skill`, `2 commands, 1 hook`. List components in the order skills → commands → agents → hooks → MCP servers, dropping zeros.
 
 7. **Validate.** Run `claude plugin validate plugins/<name>`. A missing-`version` warning is expected when version was omitted — call this out so the user doesn't try to "fix" it.
 

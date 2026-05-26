@@ -2,7 +2,7 @@
 
 A skill lives at `plugins/<plugin>/skills/<skill-name>/SKILL.md`. The folder name, the YAML `name:` field, and the slug Claude sees must all match — kebab-case throughout.
 
-For anything beyond a stub, use [`/skill-creator`](https://github.com/anthropics/skills) — it handles drafts, evals, and description optimization properly. This reference is just for the initial scaffold.
+For anything beyond a stub, use [`/skill-creator`](https://github.com/anthropics/skills/tree/main/skill-creator) — it handles drafts, evals, and description optimization properly. This reference is just for the initial scaffold.
 
 ## Frontmatter shape
 

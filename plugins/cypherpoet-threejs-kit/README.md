@@ -7,10 +7,10 @@ Three.js / WebGPU / WebGL tooling.
 Install via the [`cypherpoet-toolchest`](https://github.com/CypherPoet/cypherpoet-toolchest) marketplace:
 
 ```shell
-# Subscribe to the marketplace once
+# Skip if you've already added this marketplace
 /plugin marketplace add CypherPoet/cypherpoet-toolchest
 
-# Then install this plugin
+# Install this plugin
 /plugin install cypherpoet-threejs-kit@cypherpoet-toolchest
 ```
 

@@ -20,7 +20,7 @@ Prefer **embedding in the manifest** for plugins shipping a small number of serv
 }
 ```
 
-For larger sets of servers, use a sibling `.mcp.json` file at the plugin root with the same `mcpServers` shape. Document the choice in the plugin's `README.md` so consumers know where to look.
+For larger sets of servers, use a sibling `.mcp.json` file at the plugin root with the same `mcpServers` shape. **A sibling `.mcp.json` is not auto-discovered** — the manifest must point at it with `"mcpServers": "./.mcp.json"` (relative paths can be omitted but matching the manifest field is mandatory). Document the choice in the plugin's `README.md` so consumers know where to look.
 
 ## `${CLAUDE_PLUGIN_ROOT}` is mandatory for local servers
 
@@ -56,7 +56,7 @@ Each server entry declares one transport. Pick based on how the server runs:
 {
   "mcpServers": {
     "issue-tracker": {
-      "transport": "http",
+      "type": "http",
       "url": "https://example.com/mcp",
       "headers": {
         "Authorization": "Bearer ${ISSUE_TRACKER_TOKEN}"
@@ -66,18 +66,22 @@ Each server entry declares one transport. Pick based on how the server runs:
 }
 ```
 
+Claude Code also accepts `"type": "streamable-http"` as an alias for `"http"`.
+
 ### `sse` — Server-Sent Events stream
 
 ```json
 {
   "mcpServers": {
     "live-feed": {
-      "transport": "sse",
+      "type": "sse",
       "url": "https://example.com/mcp/events"
     }
   }
 }
 ```
+
+The field is `type`, not `transport` — that's the manifest field name; `--transport` is only the CLI flag for `claude mcp add`. Getting this wrong is a silent failure: Claude Code parses the entry as a malformed stdio server with no `command` and warns at startup.
 
 ## Runtime dependencies
 

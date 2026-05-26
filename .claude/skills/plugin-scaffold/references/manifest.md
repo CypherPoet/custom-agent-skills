@@ -2,16 +2,16 @@
 
 Field reference and templates for this repo. The manifest sits at exactly `plugins/<plugin-name>/.claude-plugin/plugin.json`. The component directories (`skills/`, `commands/`, `agents/`, `hooks/`) live at the plugin root — **not** under `.claude-plugin/`.
 
-## Required fields
+## Fields
 
-Every plugin in this repo ships these four fields, in this order:
+Every plugin in this repo ships these four fields, in this order. Only `name` is *strictly* required by `claude plugin validate`; the others are conventions this repo enforces because they make the plugin self-describing.
 
-| Field | Value |
-|---|---|
-| `$schema` | Always `"https://json.schemastore.org/claude-code-plugin.json"`. Enables IDE validation. |
-| `name` | Kebab-case, equal to the plugin folder name. Conventionally `cypherpoet-<theme>`. |
-| `description` | One sentence, ~8–12 words, plain English. No markdown, no emoji. |
-| `author` | Always `{ "name": "CypherPoet" }`. |
+| Field | Value | Validator |
+|---|---|---|
+| `$schema` | Always `"https://json.schemastore.org/claude-code-plugin.json"`. Enables IDE validation; ignored at runtime. | Optional |
+| `name` | Kebab-case, equal to the plugin folder name. Conventionally `cypherpoet-<theme>`. | **Required** |
+| `description` | One sentence, ~8–12 words, plain English. No markdown, no emoji. | Optional (warn) |
+| `author` | Always `{ "name": "CypherPoet" }`. | Optional (warn) |
 
 ## Minimal template (skills-only, default)
 

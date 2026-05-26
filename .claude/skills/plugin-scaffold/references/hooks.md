@@ -54,7 +54,7 @@ Pair each hook entry with a script at `scripts/<hook-name>.sh`:
         "hooks": [
           {
             "type": "command",
-            "command": "${CLAUDE_PLUGIN_ROOT}/scripts/validate-bash.sh"
+            "command": "${CLAUDE_PLUGIN_ROOT}/scripts/log-bash.sh"
           }
         ]
       }
@@ -63,24 +63,44 @@ Pair each hook entry with a script at `scripts/<hook-name>.sh`:
 }
 ```
 
-`scripts/validate-bash.sh`:
+`scripts/log-bash.sh`:
 
 ```bash
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Read the event payload from stdin
+# Read the event payload from stdin. Use printf, not echo —
+# echo interprets backslash sequences and mangles JSON containing
+# \n, \t, or Windows paths like C:\Users\foo before jq sees it.
 event=$(cat)
 
-# Inspect the command being run; block patterns that don't belong
-command=$(echo "$event" | jq -r '.tool_input.command // empty')
-if [[ "$command" == *"rm -rf"* ]]; then
-  echo '{"decision":"block","reason":"rm -rf is not allowed by this plugin"}'
-  exit 0
+# Extract the bash command (if any) and append it to a per-plugin log.
+bash_command=$(printf '%s' "$event" | jq -r '.tool_input.command // empty')
+if [[ -n "$bash_command" ]]; then
+  log_dir="${HOME}/.cache/<plugin-name>"
+  mkdir -p "$log_dir"
+  printf '%s\t%s\n' "$(date -u +%FT%TZ)" "$bash_command" >> "$log_dir/bash.log"
 fi
 
-# Default: allow
-echo '{"decision":"allow"}'
+# Default-allow: exit 0 with no stdout. (Claude Code treats a clean
+# exit + empty output as "no decision, proceed normally".)
+exit 0
 ```
 
-The exact stdin schema, decision keys, and exit-code semantics depend on the event — consult the Claude Code hooks documentation for the version you're targeting before promising specific behavior to the user.
+### Returning a decision from a PreToolUse hook
+
+To deny a tool call (or ask the user), emit a JSON object on stdout with the current `hookSpecificOutput` shape:
+
+```json
+{
+  "hookSpecificOutput": {
+    "hookEventName": "PreToolUse",
+    "permissionDecision": "deny",
+    "permissionDecisionReason": "Plugin policy: that command isn't allowed here."
+  }
+}
+```
+
+`permissionDecision` is one of `allow`, `deny`, or `ask`. The older top-level `{"decision":"block"|"approve"}` form is deprecated — Claude Code may silently ignore it. Use `hookSpecificOutput` for any hook that wants to influence the decision.
+
+The exact stdin schema, decision keys, and exit-code semantics differ per event — consult the Claude Code hooks documentation for the version you're targeting before promising specific behavior to the user. As a rule of thumb: emit nothing and exit 0 to let Claude Code proceed; emit `hookSpecificOutput` JSON when the hook needs to deny, ask, or modify.

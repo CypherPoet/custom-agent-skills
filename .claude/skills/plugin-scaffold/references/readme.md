@@ -17,7 +17,9 @@ Keep the README dense and scannable. Don't restate the manifest description, don
 
 ## Template
 
-```markdown
+The outer fence below is 4 backticks so the inner 3-backtick code fences pass through cleanly. Drop the outer fence when copying.
+
+````markdown
 # <plugin-name>
 
 <one-sentence description from plugin.json>
@@ -26,19 +28,19 @@ Keep the README dense and scannable. Don't restate the manifest description, don
 
 Install via the [`cypherpoet-toolchest`](https://github.com/CypherPoet/cypherpoet-toolchest) marketplace:
 
-\`\`\`shell
-# Subscribe to the marketplace once
+```shell
+# Skip if you've already added this marketplace
 /plugin marketplace add CypherPoet/cypherpoet-toolchest
 
-# Then install this plugin
+# Install this plugin
 /plugin install <plugin-name>@cypherpoet-toolchest
-\`\`\`
+```
 
 ## Skills
 
 | Skill | Description |
 |---|---|
-| [<skill-name>](skills/<skill-name>/SKILL.md) | <one-sentence description, ~15 words>. |
+| [<skill-name>](skills/<skill-name>/SKILL.md) | <one-sentence description>. |
 
 ## Commands
 
@@ -63,13 +65,13 @@ Install via the [`cypherpoet-toolchest`](https://github.com/CypherPoet/cypherpoe
 | Server | Description |
 |---|---|
 | `<server-name>` | <what the server provides>. |
-```
+````
 
 Only include the component-type sections the plugin actually ships — drop the rest. A skills-only plugin's README has just `## Skills`.
 
 ## Style notes
 
-- Per-row descriptions in the tables are sentence-case, ~15 words, ending in a period.
+- Per-row descriptions in the tables are sentence-case, ending in a period. Match the brevity of the existing per-plugin READMEs — typically one short clause, not a sentence with subordinate clauses.
 - Skill descriptions in the README table are abridged for scannability; the full trigger blurb lives in the skill's frontmatter `description` field.
-- The Installation snippet's marketplace-add command may be a no-op for users already subscribed — comment it accordingly so they understand it's safe to skip.
+- The Installation block's `marketplace add` line is safe to re-run; the `# Skip if you've already added this marketplace` comment makes that explicit so consumers don't think it's mandatory.
 - The README is what travels with the plugin during a sparse-clone install — assume the reader sees only this file and the rest of the plugin's directory, not the rest of the repo.
