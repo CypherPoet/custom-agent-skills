@@ -2,5 +2,9 @@
   "$schema": "https://json.schemastore.org/claude-code-plugin.json",
   "name": "cypherpoet-agent-tooling",
   "description": "Agent tooling for Claude Code workflow, memory, and docs.",
-  "author": { "name": "CypherPoet" }
+  "author": { "name": "CypherPoet" },
+  "homepage": "https://github.com/CypherPoet/custom-agent-skills/tree/main/plugins/cypherpoet-agent-tooling",
+  "repository": "https://github.com/CypherPoet/custom-agent-skills.git",
+  "license": "MIT",
+  "keywords": ["claude-code", "agent-tooling", "workflow", "memory", "documentation"]
 }

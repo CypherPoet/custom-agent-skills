@@ -7,7 +7,7 @@ Public collection of reusable AI agent skills, packaged as Claude Code plugins t
 ## Architecture
 
 - `plugins/<plugin-name>/` — Each themed Claude Code plugin. Self-contained — a `git-subdir` sparse-clone fetches only this directory when a consumer installs the plugin.
-  - `.claude-plugin/plugin.json` — Plugin manifest (name, description, author). `version` is optional — when omitted, the commit SHA serves as the version so updates flow automatically (current convention across all plugins). Plugins that prefer explicit releases may set a semver string instead.
+  - `.claude-plugin/plugin.json` — Plugin manifest. Core fields: `$schema`, `name`, `description`, `author`. Recommended consumer-facing metadata (every plugin ships these): `homepage` and `repository` pointing at the plugin's directory on GitHub, `license: "MIT"`, and a `keywords` array (4–6 tags, always including `"claude-code"`). `version` is optional — when omitted, the commit SHA serves as the version so updates flow automatically (current convention across all plugins). Plugins that prefer explicit releases may set a semver string instead.
   - `skills/<skill-name>/SKILL.md` — Each skill is a folder with required YAML frontmatter (`name`, `description`) and markdown instructions.
   - The `description:` field is the trigger blurb Claude reads to decide when to invoke the skill — write it for matching, not for humans.
   - Skills may optionally include `assets/`, `references/`, `scripts/`, and `evals/` (used by `/skill-creator` for iteration) subdirectories.

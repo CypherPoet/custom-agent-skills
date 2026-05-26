@@ -2,5 +2,9 @@
   "$schema": "https://json.schemastore.org/claude-code-plugin.json",
   "name": "cypherpoet-git-flow",
   "description": "Git commit and changelog hygiene.",
-  "author": { "name": "CypherPoet" }
+  "author": { "name": "CypherPoet" },
+  "homepage": "https://github.com/CypherPoet/custom-agent-skills/tree/main/plugins/cypherpoet-git-flow",
+  "repository": "https://github.com/CypherPoet/custom-agent-skills.git",
+  "license": "MIT",
+  "keywords": ["claude-code", "git", "commits", "changelog", "gitmoji"]
 }

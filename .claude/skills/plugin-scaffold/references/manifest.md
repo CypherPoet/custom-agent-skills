@@ -4,7 +4,9 @@ Field reference and templates for this repo. The manifest sits at exactly `plugi
 
 ## Fields
 
-Every plugin in this repo ships these four fields, in this order. Only `name` is *strictly* required by `claude plugin validate`; the others are conventions this repo enforces because they make the plugin self-describing.
+Two groups: the four core fields every plugin in this repo ships, and the four metadata fields that make the plugin self-describing for consumers.
+
+### Core
 
 | Field | Value | Validator |
 |---|---|---|
@@ -13,16 +15,29 @@ Every plugin in this repo ships these four fields, in this order. Only `name` is
 | `description` | One sentence, ~8–12 words, plain English. No markdown, no emoji. | Optional (warn) |
 | `author` | Always `{ "name": "CypherPoet" }`. | Optional (warn) |
 
-## Minimal template (skills-only, default)
+### Recommended metadata
 
-This is the exact shape used across every existing plugin in this repo:
+| Field | Value | Why |
+|---|---|---|
+| `homepage` | `"https://github.com/CypherPoet/custom-agent-skills/tree/main/plugins/<plugin-name>"` | Where consumers land for docs — the plugin's directory on GitHub. Carries the per-plugin URL since `repository` can't. |
+| `repository` | Plain URL string: `"https://github.com/CypherPoet/custom-agent-skills.git"`. The schema rejects the npm-style `{type, url, directory}` object form — `claude plugin validate` errors with `"expected string, received object"`. | Where source lives + where to file issues. |
+| `license` | `"MIT"` (SPDX identifier) | Echoes the repo's top-level `LICENSE` so the plugin is self-contained on terms. |
+| `keywords` | Array of 4–6 lowercase kebab-case tags, e.g. `["claude-code", "git", "changelog", "gitmoji"]` | Marketplace discoverability. Always include `"claude-code"` plus the plugin's domain (`git`, `blender`, `svg`, …) and any standout features. |
+
+## Canonical template
+
+The shape every new plugin starts from — core + metadata, skills-only, auto-discovery for components:
 
 ```json
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin.json",
   "name": "cypherpoet-<theme>",
   "description": "<one-sentence description>.",
-  "author": { "name": "CypherPoet" }
+  "author": { "name": "CypherPoet" },
+  "homepage": "https://github.com/CypherPoet/custom-agent-skills/tree/main/plugins/cypherpoet-<theme>",
+  "repository": "https://github.com/CypherPoet/custom-agent-skills.git",
+  "license": "MIT",
+  "keywords": ["claude-code", "<theme>", "<more-tags>"]
 }
 ```
 
@@ -32,21 +47,7 @@ When the plugin's layout matches the auto-discovery defaults (`skills/`, `comman
 
 Default: omit. The commit SHA serves as the version, so updates flow automatically every time `main` advances. `claude plugin validate` will warn about the missing field — that warning is expected.
 
-When the user wants explicit, gated releases for this plugin, include a `version` field with a semver string (typical starting value `0.1.0`). Updates then reach consumers only when the maintainer bumps the field.
-
-```json
-{
-  "$schema": "https://json.schemastore.org/claude-code-plugin.json",
-  "name": "cypherpoet-<theme>",
-  "version": "0.1.0",
-  "description": "<one-sentence description>.",
-  "author": { "name": "CypherPoet" }
-}
-```
-
-## Optional fields (not used in this repo today)
-
-`homepage`, `repository`, `license`, `keywords` are valid manifest fields. None of the existing plugins use them — the marketplace catalog covers discovery and the repo's top-level `LICENSE` covers licensing. Only add when the user specifically asks.
+When the user wants explicit, gated releases for this plugin, include a `version` field with a semver string (typical starting value `0.1.0`) inserted after `name`. Updates then reach consumers only when the maintainer bumps the field.
 
 ## When path overrides *are* needed
 
@@ -64,6 +65,10 @@ Auto-discovery covers the defaults. Add explicit entries only when the layout de
   "name": "cypherpoet-<theme>",
   "description": "<one-sentence description>.",
   "author": { "name": "CypherPoet" },
+  "homepage": "https://github.com/CypherPoet/custom-agent-skills/tree/main/plugins/cypherpoet-<theme>",
+  "repository": "https://github.com/CypherPoet/custom-agent-skills.git",
+  "license": "MIT",
+  "keywords": ["claude-code", "<theme>"],
   "mcpServers": {
     "<server-name>": {
       "command": "${CLAUDE_PLUGIN_ROOT}/scripts/server.py"
