@@ -7,12 +7,12 @@ Public collection of reusable AI agent skills, packaged as Claude Code plugins t
 ## Architecture
 
 - `plugins/<plugin-name>/` — Each themed Claude Code plugin. Self-contained — a `git-subdir` sparse-clone fetches only this directory when a consumer installs the plugin.
-  - `.claude-plugin/plugin.json` — Plugin manifest (name, description, author). No `version` field; commit SHA serves as the version so updates flow automatically.
+  - `.claude-plugin/plugin.json` — Plugin manifest (name, description, author). `version` is optional — when omitted, the commit SHA serves as the version so updates flow automatically (current convention across all plugins). Plugins that prefer explicit releases may set a semver string instead.
   - `skills/<skill-name>/SKILL.md` — Each skill is a folder with required YAML frontmatter (`name`, `description`) and markdown instructions.
   - The `description:` field is the trigger blurb Claude reads to decide when to invoke the skill — write it for matching, not for humans.
   - Skills may optionally include `assets/`, `references/`, `scripts/`, and `evals/` (used by `/skill-creator` for iteration) subdirectories.
-  - `CATALOG.md` — Per-plugin index of skills, with one-line descriptions and links to each `SKILL.md`. Travels with the plugin during sparse-clone.
-- `docs/CATALOG.md` — Top-level cross-reference index. Single table listing each plugin and linking into its own `CATALOG.md`.
+  - `README.md` — Per-plugin overview: purpose, install instructions, and an index of the plugin's skills (and any other components it ships). Travels with the plugin during sparse-clone.
+- `docs/CATALOG.md` — Top-level cross-reference index. Single table listing each plugin and linking into its own `README.md`.
 
 ## Creating and Improving Skills
 
@@ -26,7 +26,7 @@ Use `/skill-creator` when creating, editing, or iterating on skills. New skill f
 
 ## Workflow
 
-- When adding a new skill, update the host plugin's `plugins/<plugin>/CATALOG.md`. The top-level `docs/CATALOG.md` only needs an update if a *new plugin* is added.
+- When adding a new skill, update the host plugin's `plugins/<plugin>/README.md`. The top-level `docs/CATALOG.md` only needs an update if a *new plugin* is added.
 - When adding a new plugin, also add an entry to the top-level `docs/CATALOG.md`, then publish it with the `marketplace-publish` skill (it opens a PR on the marketplace). Nothing auto-syncs — the catalog changes only when you explicitly publish. Editing an *already-listed* plugin's content needs no republish (the catalog tracks `main` by commit SHA).
 
 ## Maintainer skills

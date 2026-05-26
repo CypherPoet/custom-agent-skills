@@ -2,6 +2,18 @@
 
 Agent tooling for Claude Code workflow, memory, and docs.
 
+## Installation
+
+Install via the [`cypherpoet-toolchest`](https://github.com/CypherPoet/cypherpoet-toolchest) marketplace:
+
+```shell
+# Subscribe to the marketplace once
+/plugin marketplace add CypherPoet/cypherpoet-toolchest
+
+# Then install this plugin
+/plugin install cypherpoet-agent-tooling@cypherpoet-toolchest
+```
+
 ## Skills
 
 | Skill | Description |
