@@ -1,12 +1,12 @@
 ---
 name: blender-mcp-playbook
 description: >
-  Pro tips and `bpy` patterns for driving Blender through the official
-  Blender MCP server — modeling, materials, rigging, geometry nodes,
-  rendering, asset import, and export. Use whenever the user mentions
-  Blender, `bpy`, a `.blend` file, or asks to model / sculpt / rig /
-  animate / texture / bake / render / export anything in Blender — even
-  if they don't name the skill.
+  Use whenever the user mentions Blender, `bpy`, a `.blend` file, or asks
+  to model / sculpt / rig / animate / texture / bake / render / export
+  anything in Blender — even if they don't name the skill. Pro tips and
+  `bpy` patterns for driving Blender through the official Blender MCP
+  server, covering modeling, materials, rigging, geometry nodes,
+  rendering, asset import, and export.
 ---
 
 # Blender MCP Playbook

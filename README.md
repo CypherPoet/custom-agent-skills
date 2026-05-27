@@ -28,36 +28,30 @@ Each commit to `main` becomes a new version — Claude Code picks up updates aut
 
 | Plugin | Description |
 |---|---|
-| [cypherpoet-agent-tooling](plugins/cypherpoet-agent-tooling/CATALOG.md) | Agent tooling for Claude Code workflow, memory, and docs |
-| [cypherpoet-blender-kit](plugins/cypherpoet-blender-kit/CATALOG.md) | Blender 3D modeling and MCP integration |
-| [cypherpoet-expo-kit](plugins/cypherpoet-expo-kit/CATALOG.md) | Expo / React Native prototyping |
-| [cypherpoet-git-flow](plugins/cypherpoet-git-flow/CATALOG.md) | Git commit and changelog hygiene |
-| [cypherpoet-mobile-dev](plugins/cypherpoet-mobile-dev/CATALOG.md) | iOS App Store publishing best practices |
-| [cypherpoet-svg-tools](plugins/cypherpoet-svg-tools/CATALOG.md) | SVG optimization and cleanup |
-| [cypherpoet-threejs-kit](plugins/cypherpoet-threejs-kit/CATALOG.md) | Three.js / WebGPU / WebGL tooling |
+| [cypherpoet-agent-tooling](plugins/cypherpoet-agent-tooling/README.md) | Agent tooling for Claude Code workflow, memory, and docs. |
+| [cypherpoet-blender-kit](plugins/cypherpoet-blender-kit/README.md) | Blender 3D modeling and MCP integration. |
+| [cypherpoet-expo-kit](plugins/cypherpoet-expo-kit/README.md) | Expo / React Native prototyping. |
+| [cypherpoet-git-flow](plugins/cypherpoet-git-flow/README.md) | Git commit and changelog hygiene. |
+| [cypherpoet-mobile-dev](plugins/cypherpoet-mobile-dev/README.md) | iOS App Store publishing best practices. |
+| [cypherpoet-svg-tools](plugins/cypherpoet-svg-tools/README.md) | SVG optimization and cleanup. |
+| [cypherpoet-threejs-kit](plugins/cypherpoet-threejs-kit/README.md) | Three.js / WebGPU / WebGL tooling. |
 
 ## Repository Structure
 
 ```
 .
-├── plugins/                # Themed Claude Code plugins
-│   └── <plugin-name>/
-│       ├── .claude-plugin/
-│       │   └── plugin.json # Plugin manifest
-│       ├── CATALOG.md      # Per-plugin skill catalog
-│       └── skills/
-│           └── <skill-name>/
-│               ├── SKILL.md        # Skill instructions (required)
-│               ├── assets/         # Output templates (optional)
-│               ├── references/     # Supporting documentation (optional)
-│               └── scripts/        # Helper scripts (optional)
-├── docs/CATALOG.md         # Top-level cross-reference index
-└── README.md
+├── plugins/                  # Themed Claude Code plugins — one per theme
+├── docs/
+│   ├── CATALOG.md            # Cross-plugin index
+│   └── PLUGIN-CONVENTIONS.md # Per-plugin conventions this repo applies
+└── .claude/skills/           # Maintainer-only skills (marketplace publish + sync check)
 ```
 
-## Creating a New Skill
+Plugin anatomy (component dirs, manifest fields, auto-discovery) follows the [Claude Code plugins reference](https://code.claude.com/docs/en/plugins-reference). This repo's specific conventions live in [`docs/PLUGIN-CONVENTIONS.md`](docs/PLUGIN-CONVENTIONS.md).
 
-Use the `/skill-creator` skill within Claude Code to draft a new skill. After it's ready, place the skill folder under the appropriate `plugins/<plugin-name>/skills/` directory (or open a discussion if a new plugin is warranted) and update the plugin's `CATALOG.md`.
+## Contributing
+
+See [`docs/PLUGIN-CONVENTIONS.md`](docs/PLUGIN-CONVENTIONS.md) for plugin conventions, the canonical scaffold workflow, and the skill creation flow.
 
 ## License
 

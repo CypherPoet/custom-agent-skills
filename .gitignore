@@ -32,4 +32,4 @@ __pycache__/
 *.pyc
 
 # Skill development workspaces (created by /skill-creator for eval iterations)
-skills/*-workspace/
+**/skills/*-workspace/

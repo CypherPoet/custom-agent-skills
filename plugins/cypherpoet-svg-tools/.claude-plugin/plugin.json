@@ -2,5 +2,9 @@
   "$schema": "https://json.schemastore.org/claude-code-plugin.json",
   "name": "cypherpoet-svg-tools",
   "description": "SVG optimization and cleanup.",
-  "author": { "name": "CypherPoet" }
+  "author": { "name": "CypherPoet" },
+  "homepage": "https://github.com/CypherPoet/custom-agent-skills/tree/main/plugins/cypherpoet-svg-tools",
+  "repository": "https://github.com/CypherPoet/custom-agent-skills.git",
+  "license": "MIT",
+  "keywords": ["claude-code", "svg", "svgo", "optimization"]
 }

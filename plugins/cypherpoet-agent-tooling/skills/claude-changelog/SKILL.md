@@ -1,6 +1,17 @@
 ---
 name: claude-changelog
-description: Use when the user asks about the Claude Code changelog, release notes, or version history for Claude Code (the CLI tool) itself. Triggers for queries like "claude changelog", "what changed in claude code", "latest claude code release", "claude code release notes", "what's new in claude code", "any recent updates to claude code", "has anything changed in claude", or "what version of claude code am I on". Fetches releases from GitHub and renders a readable HTML or Markdown summary. Use this even if the user just casually asks about recent Claude Code changes or wants to know if a specific feature was added. Not for general project changelogs, codebase diffs, or "what's new" questions about the user's own code.
+description: >
+  Use when the user asks about the Claude Code changelog, release notes,
+  or version history for Claude Code (the CLI tool) itself — including
+  casual questions about recent changes, what's new, or whether a
+  specific feature shipped. Triggers for queries like "claude changelog",
+  "what changed in claude code", "latest claude code release", "claude
+  code release notes", "what's new in claude code", "any recent updates
+  to claude code", "has anything changed in claude", or "what version of
+  claude code am I on". The skill fetches releases from GitHub and
+  renders a readable HTML or Markdown summary. Not for general project
+  changelogs, codebase diffs, or "what's new" questions about the user's
+  own code.
 ---
 
 # Claude Changelog

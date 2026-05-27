@@ -1,0 +1,113 @@
+# Plugin Conventions
+
+This repo applies a handful of conventions on top of Claude Code's standard plugin shape. Use [`/plugin-dev:create-plugin`](https://github.com/anthropics/claude-plugins-official/blob/main/plugins/plugin-dev/commands/create-plugin.md) as the canonical scaffold workflow, then apply the deltas below. Don't commit until the staged files have been reviewed.
+
+For plugin anatomy (component types, auto-discovery, `${CLAUDE_PLUGIN_ROOT}` usage, `hooks.json` shape, MCP transport fields, etc.), defer to the canonical sources:
+
+- [Claude Code plugins reference](https://code.claude.com/docs/en/plugins-reference)
+- [`plugin-dev:plugin-structure`](https://github.com/anthropics/claude-plugins-official/tree/main/plugins/plugin-dev/skills/plugin-structure) — manifest fields, component patterns, examples
+- [`plugin-dev:skill-development`](https://github.com/anthropics/claude-plugins-official/tree/main/plugins/plugin-dev/skills/skill-development) — skill creation methodology
+- [`plugin-dev:hook-development`](https://github.com/anthropics/claude-plugins-official/tree/main/plugins/plugin-dev/skills/hook-development) — hook patterns and validators
+- [`plugin-dev:mcp-integration`](https://github.com/anthropics/claude-plugins-official/tree/main/plugins/plugin-dev/skills/mcp-integration) — MCP server integration
+
+## Plugin Folder
+
+- Folder name, conventionally `cypherpoet-<theme>` (kebab-case). Use a `-kit` suffix for single-topic kits (e.g., `cypherpoet-blender-kit`).
+- The folder name must equal the manifest `name` field (this is a Claude Code platform requirement; restated here so the repo convention is unambiguous).
+
+## Manifest
+
+Use [`/plugin-dev:create-plugin`](https://github.com/anthropics/claude-plugins-official/blob/main/plugins/plugin-dev/commands/create-plugin.md) to scaffold a working `plugin.json`. Recommended defaults this repo applies on top:
+
+- Set `"author": { "name": "CypherPoet" }` (no email field).
+- Remove the `"version"` field — the commit SHA serves as the version so updates flow automatically. `claude plugin validate` will warn about the missing field; the warning is expected.
+- Add `"license": "MIT"`.
+- Add `"keywords"`: 4–6 lowercase kebab-case tags, leading with `"claude-code"` and the plugin's domain (`git`, `blender`, `svg`, …).
+
+See any existing manifest under `plugins/*/.claude-plugin/plugin.json` for canonical shape and the standard fields (`$schema`, `homepage`, `repository`) worth including for catalog and IDE support.
+
+## Validate
+
+After scaffolding and applying the deltas, run:
+
+```shell
+claude plugin validate plugins/<plugin-name>
+```
+
+A single `version: No version specified` warning is expected (the SHA-as-version convention). Anything else means something needs a closer look — fix it before opening the PR **on this repo** (a separate publish PR happens later on the marketplace repo via `marketplace-publish`).
+
+## Per-Plugin README
+
+Each plugin ships a `README.md` at its root, **not** `CATALOG.md` — that name is reserved for the top-level cross-plugin catalog. `/plugin-dev:create-plugin` generates a README template; this repo's specific additions are the Installation snippet and the per-component-type table format:
+
+````markdown
+# <plugin-name>
+
+<one-sentence description, identical to the manifest description, ending in a period>
+
+## Installation
+
+Install via the marketplace this plugin is published to:
+
+```shell
+# Skip if you've already added this marketplace
+/plugin marketplace add <marketplace-owner>/<marketplace-repo>
+
+# Install this plugin
+/plugin install <plugin-name>@<marketplace-name>
+```
+
+## Skills
+
+| Skill | Description |
+|---|---|
+| [<skill-name>](skills/<skill-name>/SKILL.md) | <one-sentence summary>. |
+
+## Commands
+
+| Command | Description |
+|---|---|
+| [/<plugin-name>:<command>](commands/<command>.md) | <one-sentence summary>. |
+
+## Agents
+
+| Agent | Description |
+|---|---|
+| [<agent-name>](agents/<agent-name>.md) | <one-sentence summary>. |
+
+## Hooks
+
+Configured in [hooks/hooks.json](hooks/hooks.json):
+
+| Event | Description |
+|---|---|
+| `<EventName>` | <what the hook does>. |
+
+## MCP Servers
+
+| Server | Description |
+|---|---|
+| `<server-name>` | <what the server provides>. |
+````
+
+Only include the section per component type the plugin actually ships — drop the rest. A skills-only plugin's README has just `## Skills`. Append a row to the matching table whenever a component is added — the per-plugin README is its primary index, and PR review treats a missing row as a defect.
+
+When copying the install command, replace **all** placeholders: `<plugin-name>` with the plugin's slug, `<marketplace-owner>/<marketplace-repo>` with the GitHub path of the marketplace repo, and `<marketplace-name>` with the marketplace's `name` field from its `marketplace.json` (often the same as the repo name). For plugins published to this repo's marketplace (the default for everything currently in `plugins/`), those resolve to a fixed pair: `CypherPoet/cypherpoet-toolchest` and `cypherpoet-toolchest`. The shipped READMEs already use those values verbatim — the placeholder form only matters when scaffolding for a *different* marketplace.
+
+## Top-Level Catalog
+
+After creating a new plugin, add a row to [CATALOG.md](CATALOG.md). The `Components` column uses text form: `5 skills`, `1 skill`, `2 commands, 1 hook` — singular for one, plural otherwise. List components in the order skills → commands → agents → hooks → MCP servers, dropping zeros.
+
+Refresh the catalog row whenever a plugin's component counts change (adding a skill bumps `5 skills` → `6 skills`) or a new plugin lands. In-place edits that don't shift the counts (typo fixes, prose tweaks, internal refactors) need no catalog change.
+
+## Publishing
+
+After the plugin is ready, use the `marketplace-publish` skill to open a PR on the marketplace this repo publishes to. Scaffolding alone never publishes — the catalog only changes when you explicitly publish.
+
+The catalog tracks `main` by commit SHA, so edits to a plugin's **content** (skills, commands, agents, scripts) reach consumers automatically on the next install or update. But the catalog stores its own copy of each plugin's `name`, `description`, and `homepage` — editing any of those manifest fields requires running `marketplace-publish` again to refresh the entry. Content auto-syncs; catalog metadata does not.
+
+## Skill Conventions
+
+For skills inside a plugin, use [`/skill-creator`](https://github.com/anthropics/skills/tree/main/skills/skill-creator) — it handles drafts, evals, description optimization, and the general skill structure conventions.
+
+`*-workspace/` directories under any `skills/` folder are gitignored: they're transient eval-iteration scratch, not real skills.

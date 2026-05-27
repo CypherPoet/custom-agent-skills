@@ -1,6 +1,10 @@
 ---
 name: emoji-commits
-description: Use Gitmoji to make commits more expressive. Use this skill whenever the user wants to commit changes, write a commit message, uses /commit, or asks for help with git commits — even if they don't mention emoji. Also use when reviewing commit message style or setting up commit conventions for a project.
+description: >
+  Use this skill whenever the user wants to commit changes, write a commit
+  message, uses /commit, or asks for help with git commits — even if they don't
+  mention emoji. Also use when reviewing commit message style or setting up
+  commit conventions for a project. Uses Gitmoji to make commits more expressive.
 ---
 
 # Emoji Commits

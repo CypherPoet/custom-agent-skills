@@ -6,33 +6,17 @@ Public collection of reusable AI agent skills, packaged as Claude Code plugins t
 
 ## Architecture
 
-- `plugins/<plugin-name>/` — Each themed Claude Code plugin. Self-contained — a `git-subdir` sparse-clone fetches only this directory when a consumer installs the plugin.
-  - `.claude-plugin/plugin.json` — Plugin manifest (name, description, author). No `version` field; commit SHA serves as the version so updates flow automatically.
-  - `skills/<skill-name>/SKILL.md` — Each skill is a folder with required YAML frontmatter (`name`, `description`) and markdown instructions.
-  - The `description:` field is the trigger blurb Claude reads to decide when to invoke the skill — write it for matching, not for humans.
-  - Skills may optionally include `assets/`, `references/`, `scripts/`, and `evals/` (used by `/skill-creator` for iteration) subdirectories.
-  - `CATALOG.md` — Per-plugin index of skills, with one-line descriptions and links to each `SKILL.md`. Travels with the plugin during sparse-clone.
-- `docs/CATALOG.md` — Top-level cross-reference index. Single table listing each plugin and linking into its own `CATALOG.md`.
+- `plugins/<plugin-name>/` — Each themed Claude Code plugin. Self-contained — a `git-subdir` sparse-clone fetches only this directory when a consumer installs the plugin. Plugin shape follows the [Claude Code plugins reference](https://code.claude.com/docs/en/plugins-reference); this repo's deltas live in [`docs/PLUGIN-CONVENTIONS.md`](docs/PLUGIN-CONVENTIONS.md).
+- `docs/CATALOG.md` — Top-level cross-reference index. One row per plugin, linking to its `README.md` and listing its components. Refresh rule lives in [`docs/PLUGIN-CONVENTIONS.md`](docs/PLUGIN-CONVENTIONS.md) (new plugin → add row; component counts shift → bump the count; pure prose edits → no change).
+- `.claude/skills/` — Repo-local maintainer skills (see below).
 
-## Creating and Improving Skills
+## Creating Plugins Or Skills
 
-Use `/skill-creator` when creating, editing, or iterating on skills. New skill folders go under the appropriate `plugins/<plugin-name>/skills/` directory.
+See [`docs/PLUGIN-CONVENTIONS.md`](docs/PLUGIN-CONVENTIONS.md) — it covers the canonical scaffold workflow (via `/plugin-dev:create-plugin`), the repo's manifest deltas, the validate step, the catalog update, and the skill conventions (including `/skill-creator` for drafts/evals/iteration).
 
-## Conventions
+## Maintainer Skills
 
-- Plugin folder names: `cypherpoet-<theme>` (kebab-case). Use `-kit` suffix for single-topic plugins (e.g., `cypherpoet-blender-kit`).
-- Skill folder names: kebab-case, matching the `name:` field in `SKILL.md`'s frontmatter.
-- `skills/*-workspace/` (under any plugin) are gitignored scratch directories created by `/skill-creator` during eval iteration — not real skills.
+Repo-local skills in `.claude/skills/` for managing the marketplace, all on local `gh` creds (no tokens, no CI):
 
-## Workflow
-
-- When adding a new skill, update the host plugin's `plugins/<plugin>/CATALOG.md`. The top-level `docs/CATALOG.md` only needs an update if a *new plugin* is added.
-- When adding a new plugin, also add an entry to the top-level `docs/CATALOG.md`, then publish it with the `marketplace-publish` skill (it opens a PR on the marketplace). Nothing auto-syncs — the catalog changes only when you explicitly publish. Editing an *already-listed* plugin's content needs no republish (the catalog tracks `main` by commit SHA).
-
-## Maintainer skills
-
-Repo-local skills in `.claude/skills/` (maintainer tooling — not published plugins) for managing the marketplace, all on local `gh` creds (no tokens, no CI):
-
-- **`plugin-scaffold`** — create a new plugin's files locally; no commit, no publish.
 - **`marketplace-publish`** — publish one plugin to `cypherpoet-toolchest` by opening a PR.
 - **`marketplace-sync-check`** — read-only audit of which local plugins are / aren't in the catalog.

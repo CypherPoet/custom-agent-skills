@@ -2,5 +2,9 @@
   "$schema": "https://json.schemastore.org/claude-code-plugin.json",
   "name": "cypherpoet-expo-kit",
   "description": "Expo / React Native prototyping.",
-  "author": { "name": "CypherPoet" }
+  "author": { "name": "CypherPoet" },
+  "homepage": "https://github.com/CypherPoet/custom-agent-skills/tree/main/plugins/cypherpoet-expo-kit",
+  "repository": "https://github.com/CypherPoet/custom-agent-skills.git",
+  "license": "MIT",
+  "keywords": ["claude-code", "expo", "react-native", "prototyping"]
 }
