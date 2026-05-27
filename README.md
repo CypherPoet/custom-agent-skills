@@ -22,36 +22,30 @@ This repo publishes its plugins via the [`cypherpoet-toolchest`](https://github.
 # ...etc
 ```
 
-Each commit to `main` becomes a new version — Claude Code picks up updates automatically on `/plugin marketplace update` or background refresh.
+## Available Plugins
 
-## Themed Plugins
-
-| Plugin | Description |
-|---|---|
+| Plugin                                                                 | Description                                               |
+| ---------------------------------------------------------------------- | --------------------------------------------------------- |
 | [cypherpoet-agent-tooling](plugins/cypherpoet-agent-tooling/README.md) | Agent tooling for Claude Code workflow, memory, and docs. |
-| [cypherpoet-blender-kit](plugins/cypherpoet-blender-kit/README.md) | Blender 3D modeling and MCP integration. |
-| [cypherpoet-expo-kit](plugins/cypherpoet-expo-kit/README.md) | Expo / React Native prototyping. |
-| [cypherpoet-git-flow](plugins/cypherpoet-git-flow/README.md) | Git commit and changelog hygiene. |
-| [cypherpoet-mobile-dev](plugins/cypherpoet-mobile-dev/README.md) | iOS App Store publishing best practices. |
-| [cypherpoet-svg-tools](plugins/cypherpoet-svg-tools/README.md) | SVG optimization and cleanup. |
-| [cypherpoet-threejs-kit](plugins/cypherpoet-threejs-kit/README.md) | Three.js / WebGPU / WebGL tooling. |
+| [cypherpoet-blender-kit](plugins/cypherpoet-blender-kit/README.md)     | Blender 3D modeling and MCP integration.                  |
+| [cypherpoet-expo-kit](plugins/cypherpoet-expo-kit/README.md)           | Expo / React Native prototyping.                          |
+| [cypherpoet-git-flow](plugins/cypherpoet-git-flow/README.md)           | Git commit and changelog hygiene.                         |
+| [cypherpoet-mobile-dev](plugins/cypherpoet-mobile-dev/README.md)       | iOS App Store publishing best practices.                  |
+| [cypherpoet-svg-tools](plugins/cypherpoet-svg-tools/README.md)         | SVG optimization and cleanup.                             |
+| [cypherpoet-threejs-kit](plugins/cypherpoet-threejs-kit/README.md)     | Three.js / WebGPU / WebGL tooling.                        |
 
 ## Repository Structure
 
 ```
 .
-├── plugins/                  # Themed Claude Code plugins — one per theme
+├── plugins/                  # Published agentic plugins
 ├── docs/
 │   ├── CATALOG.md            # Cross-plugin index
 │   └── PLUGIN-CONVENTIONS.md # Per-plugin conventions this repo applies
 └── .claude/skills/           # Maintainer-only skills (marketplace publish + sync check)
 ```
 
-Plugin anatomy (component dirs, manifest fields, auto-discovery) follows the [Claude Code plugins reference](https://code.claude.com/docs/en/plugins-reference). This repo's specific conventions live in [`docs/PLUGIN-CONVENTIONS.md`](docs/PLUGIN-CONVENTIONS.md).
-
-## Contributing
-
-See [`docs/PLUGIN-CONVENTIONS.md`](docs/PLUGIN-CONVENTIONS.md) for plugin conventions, the canonical scaffold workflow, and the skill creation flow.
+Claude plugin anatomy (component dirs, manifest fields, auto-discovery) follows the [Claude Code plugins reference](https://code.claude.com/docs/en/plugins-reference). This repo's specific conventions live in [`docs/PLUGIN-CONVENTIONS.md`](docs/PLUGIN-CONVENTIONS.md).
 
 ## License
 
