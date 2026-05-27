@@ -20,7 +20,7 @@ For plugin anatomy (component types, auto-discovery, `${CLAUDE_PLUGIN_ROOT}` usa
 `/plugin-dev:create-plugin` produces a working `plugin.json`. This repo additionally requires:
 
 - **`author`** — always `{ "name": "CypherPoet" }`.
-- **`version`** — **omit it.** The commit SHA serves as the version, so updates flow automatically every time `main` advances. `claude plugin validate` warns about the missing field — that warning is expected and intentional. Only set `version` if you specifically want gated releases for a plugin.
+- **`version`** — **delete it from the scaffolded manifest.** `/plugin-dev:create-plugin` writes `"version": "0.1.0"` into the generated `plugin.json`; remove that line before committing. The commit SHA then serves as the version, and updates flow automatically every time `main` advances. `claude plugin validate` warns about the missing field — that warning is expected and intentional. Only keep the field if you specifically want gated releases for a plugin (none of the current plugins do).
 - **`homepage`** — `"https://github.com/CypherPoet/custom-agent-skills/tree/main/plugins/<name>"`.
 - **`repository`** — `"https://github.com/CypherPoet/custom-agent-skills.git"` (plain URL string; the schema rejects the npm-style `{type, url, directory}` object form).
 - **`license`** — `"MIT"`.
@@ -36,7 +36,7 @@ After scaffolding and applying the deltas, run:
 claude plugin validate plugins/<plugin-name>
 ```
 
-A single `version: No version specified` warning is expected (the SHA-as-version convention). Anything else means something needs a closer look — fix it before opening a PR.
+A single `version: No version specified` warning is expected (the SHA-as-version convention). Anything else means something needs a closer look — fix it before opening the PR **on this repo** (a separate publish PR happens later on the marketplace repo via `marketplace-publish`).
 
 ## Per-Plugin README
 
@@ -79,9 +79,11 @@ Install via the marketplace this plugin is published to:
 
 ## Hooks
 
-| Hook | Description |
+Configured in [hooks/hooks.json](hooks/hooks.json):
+
+| Event | Description |
 |---|---|
-| `<EventName>` | <what the hook does>. See [hooks/hooks.json](hooks/hooks.json). |
+| `<EventName>` | <what the hook does>. |
 
 ## MCP Servers
 
@@ -108,6 +110,8 @@ The catalog tracks `main` by commit SHA, so edits to a plugin's **content** (ski
 
 ## Skill Conventions
 
-For skills inside a plugin, use [`/skill-creator`](https://github.com/anthropics/skills/tree/main/skills/skill-creator) — it handles drafts, evals, description optimization, and the general skill structure conventions.
+For skills inside a plugin, use [`/skill-creator`](https://github.com/anthropics/skills/tree/main/skills/skill-creator) — it handles drafts, evals, description optimization, and the general skill structure conventions. This repo's specific rules on top:
 
-`*-workspace/` directories under any `skills/` folder are gitignored: they're transient eval-iteration scratch, not real skills.
+- **Folder name == frontmatter `name`**, both kebab-case. A skill at `skills/foo-bar/SKILL.md` must have `name: foo-bar` in its frontmatter. Mismatches confuse README links and the loader's invocation key.
+- **`description` is a trigger blurb, not human prose.** Claude reads it to decide when to auto-invoke the skill, so write it for matching: lead with "Use when…", list the phrasings and intents that should trigger it, and only then mention what the skill does. Optimizing it for human readability at the expense of trigger coverage is a regression — preserve the trigger list when editing.
+- `*-workspace/` directories under any `skills/` folder are gitignored: they're transient eval-iteration scratch, not real skills.

@@ -40,10 +40,11 @@ Each commit to `main` becomes a new version — Claude Code picks up updates aut
 
 ```
 .
-├── plugins/         # Themed Claude Code plugins — one per theme
-└── docs/
-    ├── CATALOG.md            # Cross-plugin index
-    └── PLUGIN-CONVENTIONS.md # Per-plugin conventions this repo applies
+├── plugins/                  # Themed Claude Code plugins — one per theme
+├── docs/
+│   ├── CATALOG.md            # Cross-plugin index
+│   └── PLUGIN-CONVENTIONS.md # Per-plugin conventions this repo applies
+└── .claude/skills/           # Maintainer-only skills (marketplace publish + sync check)
 ```
 
 Plugin anatomy (component dirs, manifest fields, auto-discovery) follows the [Claude Code plugins reference](https://code.claude.com/docs/en/plugins-reference). This repo's specific conventions live in [`docs/PLUGIN-CONVENTIONS.md`](docs/PLUGIN-CONVENTIONS.md).

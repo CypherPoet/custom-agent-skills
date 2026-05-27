@@ -23,7 +23,13 @@ If the user is only editing an already-listed plugin's instructions, tell them n
 ## Before you start
 
 - `gh` is authenticated (`gh auth status`) with write access to the marketplace repo.
-- Each plugin to publish exists at `plugins/<name>/.claude-plugin/plugin.json` with non-empty `name` and `description` (these are copied verbatim into the catalog entry). If a plugin doesn't exist yet, scaffold it with [`/plugin-dev:create-plugin`](https://github.com/anthropics/claude-plugins-official/blob/main/plugins/plugin-dev/commands/create-plugin.md) and run `claude plugin validate plugins/<name>` to confirm it's well-formed.
+- Each plugin to publish exists at `plugins/<name>/.claude-plugin/plugin.json`. If a plugin doesn't exist yet, scaffold it with [`/plugin-dev:create-plugin`](https://github.com/anthropics/claude-plugins-official/blob/main/plugins/plugin-dev/commands/create-plugin.md). Run `claude plugin validate plugins/<name>` to confirm it's well-formed — a single `version: No version specified` warning is the expected SHA-as-version convention and means the manifest is fine; any other warning or error needs fixing first.
+- **Pre-flight check** — before building any catalog entry, verify that each manifest has non-empty values for the three fields the catalog copies from it:
+  ```bash
+  jq -e '.name != null and .name != "" and .description != null and .description != "" and .homepage != null and .homepage != ""' \
+    plugins/<name>/.claude-plugin/plugin.json
+  ```
+  Run this for every plugin being published. If `homepage` is missing, the right fix is to add it to the manifest (per `docs/PLUGIN-CONVENTIONS.md`), not to derive a fallback silently — surface the gap to the user and let them decide whether to populate the field or accept the fallback explicitly.
 
 ## Which marketplace
 
@@ -42,9 +48,9 @@ The goal: **one PR on the marketplace repo** that adds or updates the chosen plu
      "homepage": "<from plugin.json>"
    }
    ```
-   The manifest is the source of truth for `description` and `homepage`. Precedence:
-   - **`description`** — always present (the pre-flight check enforced it); copy verbatim.
-   - **`homepage`** — if the field is present in the manifest, copy verbatim. Only when it's absent, derive the fallback `https://github.com/<owner>/<this-repo>/tree/main/plugins/<plugin>`.
+   The manifest is the source of truth for `description` and `homepage`. Precedence (the "Before you start" pre-flight check has already verified both fields are present and non-empty for the normal path; the fallback below covers an explicit opt-in):
+   - **`description`** — copy verbatim.
+   - **`homepage`** — if the field is present in the manifest, copy verbatim. Only when the user has explicitly waived the pre-flight requirement, derive the fallback `https://github.com/<owner>/<this-repo>/tree/main/plugins/<plugin>`.
 
    To resolve `<owner>/<this-repo>` for the fallback, prefer `gh repo view --json nameWithOwner -q .nameWithOwner` on the source repo — it returns the canonical `owner/repo` regardless of remote protocol. If you fall back to `git remote get-url origin`, normalize the output: HTTPS form `https://github.com/<owner>/<repo>.git` and SSH form `git@github.com:<owner>/<repo>.git` both reduce to `<owner>/<repo>` after stripping the prefix and trailing `.git`. Never interpolate the raw remote string into the URL — an SSH origin produces a broken link like `https://github.com/git@github.com:CypherPoet/custom-agent-skills.git/tree/main/...`.
 
