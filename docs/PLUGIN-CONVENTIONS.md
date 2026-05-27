@@ -20,7 +20,7 @@ For plugin anatomy (component types, auto-discovery, `${CLAUDE_PLUGIN_ROOT}` usa
 Use [`/plugin-dev:create-plugin`](https://github.com/anthropics/claude-plugins-official/blob/main/plugins/plugin-dev/commands/create-plugin.md) to scaffold a working `plugin.json`. Recommended defaults this repo applies on top:
 
 - Set `"author": { "name": "CypherPoet" }` (no email field).
-- Remove the `"version"` field — the commit SHA serves as the version so updates flow automatically. `claude plugin validate` will warn about the missing field; the warning is expected.
+- Set `"version": "0.1.0"` for new plugins. Bump per semver as the plugin evolves: PATCH for fixes, MINOR for additive changes, MAJOR for breaking changes (pre-1.0, treat MINOR as the default bump for anything user-visible). The marketplace tracks `main` via `git-subdir`, so the version doesn't gate installs — it's informational metadata for tooling, manifest readers, and changelog discipline.
 - Add `"license": "MIT"`.
 - Add `"keywords"`: 4–6 lowercase kebab-case tags, leading with `"claude-code"` and the plugin's domain (`git`, `blender`, `svg`, …).
 
@@ -34,7 +34,7 @@ After scaffolding and applying the deltas, run:
 claude plugin validate plugins/<plugin-name>
 ```
 
-A single `version: No version specified` warning is expected (the SHA-as-version convention). Anything else means something needs a closer look — fix it before opening the PR **on this repo** (a separate publish PR happens later on the marketplace repo via `marketplace-publish`).
+No warnings or errors expected. Anything else means something needs a closer look — fix it before opening the PR **on this repo** (a separate publish PR happens later on the marketplace repo via `marketplace-publish`).
 
 ## Per-Plugin README
 
