@@ -110,8 +110,6 @@ The catalog tracks `main` by commit SHA, so edits to a plugin's **content** (ski
 
 ## Skill Conventions
 
-For skills inside a plugin, use [`/skill-creator`](https://github.com/anthropics/skills/tree/main/skills/skill-creator) — it handles drafts, evals, description optimization, and the general skill structure conventions. This repo's specific rules on top:
+For skills inside a plugin, use [`/skill-creator`](https://github.com/anthropics/skills/tree/main/skills/skill-creator) — it handles drafts, evals, description optimization, and the general skill structure conventions.
 
-- **Folder name == frontmatter `name`**, both kebab-case. A skill at `skills/foo-bar/SKILL.md` must have `name: foo-bar` in its frontmatter. Mismatches confuse README links and the loader's invocation key.
-- **`description` is a trigger blurb, not human prose.** Claude reads it to decide when to auto-invoke the skill, so write it for matching: lead with "Use when…", list the phrasings and intents that should trigger it, and only then mention what the skill does. Optimizing it for human readability at the expense of trigger coverage is a regression — preserve the trigger list when editing.
-- `*-workspace/` directories under any `skills/` folder are gitignored: they're transient eval-iteration scratch, not real skills.
+`*-workspace/` directories under any `skills/` folder are gitignored: they're transient eval-iteration scratch, not real skills.
