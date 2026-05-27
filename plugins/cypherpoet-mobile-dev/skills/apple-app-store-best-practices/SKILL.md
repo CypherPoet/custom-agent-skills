@@ -17,10 +17,11 @@ description: >
   from the codebase, and concrete remediation steps. Also covers metadata
   optimization (character limits, keyword strategy), screenshot and app preview
   best practices, review/rating management, and localization guidance.
-  Last synced with Apple guidelines: 2026-05-25
 ---
 
 # Apple App Store Best Practices
+
+*Last synced with Apple guidelines: 2026-05-25*
 
 Comprehensive guide for Apple App Store success: compliance auditing against all 5 sections of the [Apple App Store Review Guidelines](https://developer.apple.com/app-store/review/guidelines/) with exact section citations and actionable remediation, plus metadata optimization, screenshot strategy, review management, and localization best practices.
 

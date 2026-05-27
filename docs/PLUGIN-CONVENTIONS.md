@@ -15,18 +15,16 @@ For plugin anatomy (component types, auto-discovery, `${CLAUDE_PLUGIN_ROOT}` usa
 - Folder name, conventionally `cypherpoet-<theme>` (kebab-case). Use a `-kit` suffix for single-topic kits (e.g., `cypherpoet-blender-kit`).
 - The folder name must equal the manifest `name` field (this is a Claude Code platform requirement; restated here so the repo convention is unambiguous).
 
-## Manifest Deltas
+## Manifest
 
-`/plugin-dev:create-plugin` produces a working `plugin.json`. This repo additionally requires:
+Use [`/plugin-dev:create-plugin`](https://github.com/anthropics/claude-plugins-official/blob/main/plugins/plugin-dev/commands/create-plugin.md) to scaffold a working `plugin.json`. Recommended defaults this repo applies on top:
 
-- **`author`** — always `{ "name": "CypherPoet" }`.
-- **`version`** — **delete it from the scaffolded manifest.** `/plugin-dev:create-plugin` writes `"version": "0.1.0"` into the generated `plugin.json`; remove that line before committing. The commit SHA then serves as the version, and updates flow automatically every time `main` advances. `claude plugin validate` warns about the missing field — that warning is expected and intentional. Only keep the field if you specifically want gated releases for a plugin (none of the current plugins do).
-- **`homepage`** — `"https://github.com/CypherPoet/custom-agent-skills/tree/main/plugins/<name>"`.
-- **`repository`** — `"https://github.com/CypherPoet/custom-agent-skills.git"` (plain URL string; the schema rejects the npm-style `{type, url, directory}` object form).
-- **`license`** — `"MIT"`.
-- **`keywords`** — 4–6 lowercase kebab-case tags. Always start with `"claude-code"`, then the plugin's domain (`git`, `blender`, `svg`, …), then standout features.
+- Set `"author": { "name": "CypherPoet" }` (no email field).
+- Remove the `"version"` field — the commit SHA serves as the version so updates flow automatically. `claude plugin validate` will warn about the missing field; the warning is expected.
+- Add `"license": "MIT"`.
+- Add `"keywords"`: 4–6 lowercase kebab-case tags, leading with `"claude-code"` and the plugin's domain (`git`, `blender`, `svg`, …).
 
-See any existing manifest under `plugins/*/.claude-plugin/plugin.json` for the exact shape and field ordering.
+See any existing manifest under `plugins/*/.claude-plugin/plugin.json` for canonical shape and the standard fields (`$schema`, `homepage`, `repository`) worth including for catalog and IDE support.
 
 ## Validate
 

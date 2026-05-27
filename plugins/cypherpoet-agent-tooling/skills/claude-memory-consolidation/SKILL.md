@@ -8,7 +8,7 @@ description: >
   stale or duplicated memories, when recent sessions surfaced memory
   references that no longer resolve, or when MEMORY.md is approaching the
   200-line truncation cap. Audits and consolidates Claude's per-project
-  auto-memory directory (~/.claude/projects/<encoded-cwd>/memory/),
+  auto-memory directory (~/.claude/projects/{encoded-cwd}/memory/),
   producing a severity-tiered audit (broken references, likely duplicates,
   index repair, description drift, brevity pressure), waits for
   per-cluster approval, then applies edits. Never modifies memory without
