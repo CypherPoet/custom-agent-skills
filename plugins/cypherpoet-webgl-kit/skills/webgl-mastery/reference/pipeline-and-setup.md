@@ -66,10 +66,11 @@ function render() {
 }
 ```
 
-Two gotchas:
+Three gotchas:
 
 - **Viewport doesn't auto-track canvas size.** A resized canvas with a stale `gl.viewport` renders into a sub-rectangle of the new buffer (or off-screen entirely). Always update both together.
 - **Don't put `gl.viewport` calls inside other state changes.** Issue once per resize, not per draw.
+- **A "600x600 canvas" prompt is always the CSS size, not the drawing buffer.** When a user names a fixed pixel size, they're describing what they want to see on screen. Drive the *displayed* size with CSS (or matching HTML `width`/`height` attributes used as a CSS fallback), then let the resize helper above multiply by `devicePixelRatio` for the drawing buffer. Setting `canvas.width = 600` directly skips the DPR step and produces a blurry retina image — and it's a frequent misread of the prompt, because the named number looks like a drawing-buffer dimension. It isn't.
 
 ## State Machine Hygiene
 

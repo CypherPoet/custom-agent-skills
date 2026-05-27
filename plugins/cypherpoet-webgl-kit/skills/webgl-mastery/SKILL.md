@@ -104,6 +104,19 @@ On mobile, on GPU resets, when another tab steals the GPU, on driver crashes. Th
 
 Clip space `+Y` is up, but the canvas's CSS coordinate space (and mouse events) has `+Y` going down. Texture coordinates `+V` is up by default, but image pixels are stored top-down. Either flip on the JS side (`gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true)` for textures; `y = canvas.height - mouseY` for mouse uniforms) or flip in the shader — pick one and be consistent.
 
+### Canvas Pixel Size Is Two Sizes
+
+A canvas has a **CSS size** (`canvas.clientWidth`/`clientHeight` — what the user sees) and a **drawing-buffer size** (`canvas.width`/`canvas.height` — what the GPU writes into). They are not coupled. On a retina display where `devicePixelRatio = 2`, a 600 CSS-pixel canvas needs a 1200-pixel drawing buffer to look crisp:
+
+```javascript
+const dpr = window.devicePixelRatio || 1;
+canvas.width  = Math.round(canvas.clientWidth  * dpr);
+canvas.height = Math.round(canvas.clientHeight * dpr);
+gl.viewport(0, 0, canvas.width, canvas.height);
+```
+
+**A user saying "600x600 canvas" is always describing the CSS size** — what they want to see — never the drawing buffer. Set the displayed size via CSS (or the matching HTML `width`/`height` attribute as a CSS hint), then size the drawing buffer to `cssSize * devicePixelRatio`. Writing `canvas.width = 600` directly skips the DPR multiply and produces a blurry image on every retina display — the canonical "looks fine on my Linux desktop, looks like garbage on a MacBook" bug. Apply this even when the prompt names fixed pixel dimensions.
+
 ## Topics
 
 | Topic | Reference | What it covers |

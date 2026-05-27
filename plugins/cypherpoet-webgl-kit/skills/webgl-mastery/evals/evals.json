@@ -15,7 +15,10 @@
         "Mentions depth test as a possible suspect",
         "Mentions face culling as a possible suspect",
         "Mentions uniform-set-on-wrong-program as a possible suspect",
-        "Answers as an ordered diagnostic checklist rather than dumping rewritten code"
+        "Answers as an ordered diagnostic checklist rather than dumping rewritten code",
+        "First 3 diagnostic steps focus on highest-yield checks (link status, viewport, bound program/VAO) rather than rare causes",
+        "Each diagnostic step includes a concrete API call or inspection command, not vague 'check your X' advice",
+        "Honors the 'no more code' framing — recommends inspection/diagnosis over rewriting"
       ]
     },
     {
@@ -32,7 +35,9 @@
         "Flips mouse Y coordinate to match `gl_FragCoord` (bottom-origin)",
         "Sets the canvas backing-store size with `devicePixelRatio` for HiDPI sharpness",
         "Checks shader compile and program link errors (throws or logs on failure)",
-        "HTML is runnable from `file://` with no build step"
+        "HTML is runnable from `file://` with no build step",
+        "Initial mouse state is seeded (e.g., to canvas center) so the circle is visible on first frame before mouse movement",
+        "Mouse-to-canvas math uses `getBoundingClientRect()` so it works if the canvas has CSS margins/padding"
       ]
     },
     {
@@ -49,7 +54,9 @@
         "Notes that divisor state is part of the VAO (or otherwise warns about VAO state)",
         "Mentions either WebGL1 fallback (`ANGLE_instanced_arrays`) or `gl_InstanceID`",
         "Mentions caching attribute/uniform locations (not querying per frame)",
-        "Provides a verification or diagnostic section for instancing-specific symptoms"
+        "Provides a verification or diagnostic section for instancing-specific symptoms",
+        "Mentions `STREAM_DRAW` / `bufferSubData` (or equivalent) for per-frame-updated instance data",
+        "If `gl_InstanceID` is mentioned, notes that it is an `int` (cast to `float` before arithmetic, or use it in integer contexts only)"
       ]
     },
     {
@@ -68,7 +75,10 @@
         "Checks shader compile and program link errors",
         "Explanation walks through buffers, shaders, matrices, texture loading, and the draw loop",
         "Passes `false` to the `transpose` flag of `uniformMatrix4fv` (the only legal value in WebGL)",
-        "Composes model × view × projection from a working 4x4 matrix helper or library"
+        "Composes model × view × projection from a working 4x4 matrix helper or library",
+        "Sets `gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true)` before `texImage2D` (or flips V in shader) so the texture isn't upside down",
+        "Enables `CULL_FACE` and sets `cullFace(BACK)` + `frontFace(CCW)` consistent with the cube's vertex winding",
+        "Caches uniform locations once after link rather than re-querying per frame"
       ]
     }
   ]
