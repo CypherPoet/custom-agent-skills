@@ -1,5 +1,5 @@
 {
-  "$schema": "https://json.schemastore.org/claude-code-plugin.json",
+  "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "cypherpoet-mobile-dev",
   "description": "iOS App Store publishing best practices.",
   "author": { "name": "CypherPoet" },
