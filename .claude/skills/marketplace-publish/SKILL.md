@@ -23,7 +23,7 @@ If the user is only editing an already-listed plugin's instructions, tell them n
 ## Before you start
 
 - `gh` is authenticated (`gh auth status`) with write access to the marketplace repo.
-- Each plugin to publish exists at `plugins/<name>/.claude-plugin/plugin.json`. If a plugin doesn't exist yet, scaffold it with [`/plugin-dev:create-plugin`](https://github.com/anthropics/claude-plugins-official/blob/main/plugins/plugin-dev/commands/create-plugin.md) and run `claude plugin validate plugins/<name>` to confirm it's well-formed.
+- Each plugin to publish exists at `plugins/<name>/.claude-plugin/plugin.json` with non-empty `name` and `description` (these are copied verbatim into the catalog entry). If a plugin doesn't exist yet, scaffold it with [`/plugin-dev:create-plugin`](https://github.com/anthropics/claude-plugins-official/blob/main/plugins/plugin-dev/commands/create-plugin.md) and run `claude plugin validate plugins/<name>` to confirm it's well-formed.
 
 ## Which marketplace
 
@@ -42,7 +42,7 @@ The goal: **one PR on the marketplace repo** that adds or updates the chosen plu
      "homepage": "<from plugin.json>"
    }
    ```
-   The manifest is the source of truth for `description` and `homepage` — copy each value verbatim. If the manifest omits `homepage`, fall back to `https://github.com/<owner>/<this-repo>/tree/main/plugins/<plugin>`.
+   The manifest is the source of truth for `description` and `homepage` — copy each value verbatim. If the manifest omits `homepage`, fall back to `https://github.com/<owner>/<this-repo>/tree/main/plugins/<plugin>`, deriving `<owner>/<this-repo>` from `git remote get-url origin` on this source repo.
 
 2. **Clone the marketplace** shallowly to a temp dir, e.g. `gh repo clone <marketplace> /tmp/mkt-publish -- --depth 1`.
 

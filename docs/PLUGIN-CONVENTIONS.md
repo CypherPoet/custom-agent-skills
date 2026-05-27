@@ -90,7 +90,7 @@ Install via the marketplace this plugin is published to:
 | `<server-name>` | <what the server provides>. |
 ````
 
-Only include the section per component type the plugin actually ships — drop the rest. A skills-only plugin's README has just `## Skills`. Replace `<plugin-name>` placeholder with the actual slug when copying the install command.
+Only include the section per component type the plugin actually ships — drop the rest. A skills-only plugin's README has just `## Skills`. When copying the install command, replace **all** placeholders: `<plugin-name>` with the plugin's slug, `<marketplace-owner>/<marketplace-repo>` with the GitHub path of the marketplace repo, and `<marketplace-name>` with the marketplace's `name` field from its `marketplace.json` (often the same as the repo name).
 
 ## Top-Level Catalog
 

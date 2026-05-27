@@ -1,21 +1,22 @@
 ---
 name: apple-app-store-best-practices
 description: >
-  Comprehensive best-practices guide for Apple App Store success — compliance auditing,
-  metadata optimization, and listing strategy. Audits iOS, macOS, tvOS, watchOS, and
-  visionOS apps against the official Apple App Store Review Guidelines, producing a
-  prioritized risk register with specific guideline citations (e.g., violates §3.1.1),
-  evidence from the codebase, and concrete remediation steps. Also covers metadata
-  optimization (character limits, keyword strategy), screenshot and app preview best
-  practices, review/rating management, and localization guidance. Use this skill before
-  submitting to App Review, after receiving a rejection, when adding IAP/subscriptions/
-  auth/UGC/data collection to an app, when optimizing an App Store listing, or whenever
-  someone asks about App Store compliance, review guidelines, rejection risks, or listing
-  optimization. Also use when the user mentions "App Store", "App Review", "rejection",
-  "submission", "guideline", "ASO", "keywords", "screenshots", or is working on an Apple
-  platform app and wants a compliance check or listing review. Even for quick questions
-  like "do I need Sign in with Apple?", "will this pass review?", or "how long can my
-  subtitle be?", consult this skill.
+  Use this skill before submitting to App Review, after receiving a rejection, when
+  adding IAP/subscriptions/auth/UGC/data collection to an app, when optimizing an
+  App Store listing, or whenever someone asks about App Store compliance, review
+  guidelines, rejection risks, or listing optimization. Also use when the user
+  mentions "App Store", "App Review", "rejection", "submission", "guideline",
+  "ASO", "keywords", "screenshots", or is working on an Apple platform app and
+  wants a compliance check or listing review. Even for quick questions like "do I
+  need Sign in with Apple?", "will this pass review?", or "how long can my
+  subtitle be?", consult this skill. Comprehensive best-practices guide for Apple
+  App Store success — compliance auditing, metadata optimization, and listing
+  strategy. Audits iOS, macOS, tvOS, watchOS, and visionOS apps against the
+  official Apple App Store Review Guidelines, producing a prioritized risk
+  register with specific guideline citations (e.g., violates §3.1.1), evidence
+  from the codebase, and concrete remediation steps. Also covers metadata
+  optimization (character limits, keyword strategy), screenshot and app preview
+  best practices, review/rating management, and localization guidance.
   Last synced with Apple guidelines: 2026-05-25
 ---
 
