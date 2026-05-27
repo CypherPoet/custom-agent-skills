@@ -49,14 +49,14 @@ Each plugin ships a `README.md` at its root, **not** `CATALOG.md` — that name 
 
 ## Installation
 
-Install via the [`cypherpoet-toolchest`](https://github.com/CypherPoet/cypherpoet-toolchest) marketplace:
+Install via the marketplace this plugin is published to:
 
 ```shell
 # Skip if you've already added this marketplace
-/plugin marketplace add CypherPoet/cypherpoet-toolchest
+/plugin marketplace add <marketplace-owner>/<marketplace-repo>
 
 # Install this plugin
-/plugin install <plugin-name>@cypherpoet-toolchest
+/plugin install <plugin-name>@<marketplace-name>
 ```
 
 ## Skills
@@ -100,13 +100,10 @@ Editing an *existing* plugin's content (adding a skill, fixing a typo) needs no 
 
 ## Publishing
 
-After the plugin is ready, use the `marketplace-publish` skill to open a PR on the `cypherpoet-toolchest` marketplace. Scaffolding alone never publishes — the catalog only changes when you explicitly publish.
+After the plugin is ready, use the `marketplace-publish` skill to open a PR on the marketplace this repo publishes to. Scaffolding alone never publishes — the catalog only changes when you explicitly publish.
 
 ## Skill Conventions
 
-For new or revised skills inside a plugin, use [`/skill-creator`](https://github.com/anthropics/skills/tree/main/skills/skill-creator). It handles drafts, evals, and description optimization.
+For skills inside a plugin, use [`/skill-creator`](https://github.com/anthropics/skills/tree/main/skills/skill-creator) — it handles drafts, evals, description optimization, and the general skill structure conventions.
 
-- **Folder name** — kebab-case, matching the `name:` field in `SKILL.md`'s frontmatter. The two must agree.
-- **`description:` field** — this is the trigger blurb Claude reads to decide whether to invoke the skill. Write it for matching (likely user phrasings, edge cases, related intents), not for humans. Long descriptions should use the YAML `>` block scalar so the file stays readable.
-- **Optional subdirs** — a skill folder may also include `assets/` (output templates), `references/` (supporting docs loaded on demand), `scripts/` (helper executables), and `evals/` (eval test cases). Only create them when the skill actually needs them.
-- **Workspace scratch** — `*-workspace/` directories under any `skills/` folder (including the repo-local `.claude/skills/`) are gitignored. These are transient directories created during eval iteration; they are not real skills.
+`*-workspace/` directories under any `skills/` folder are gitignored: they're transient eval-iteration scratch, not real skills.

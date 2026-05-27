@@ -12,8 +12,6 @@ This repo publishes the following plugins via the [`cypherpoet-toolchest`](https
 | [cypherpoet-svg-tools](../plugins/cypherpoet-svg-tools/README.md) | SVG optimization and cleanup. | 1 skill |
 | [cypherpoet-threejs-kit](../plugins/cypherpoet-threejs-kit/README.md) | Three.js / WebGPU / WebGL tooling. | 1 skill |
 
-Click any plugin name above to see its README — the `Components` column summarizes what each one ships.
-
 ## Installing
 
 ```shell

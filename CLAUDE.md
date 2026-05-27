@@ -10,7 +10,7 @@ Public collection of reusable AI agent skills, packaged as Claude Code plugins t
 - `docs/CATALOG.md` — Top-level cross-reference index. One row per plugin, linking to its `README.md` and listing its components. Updated only when adding a *new* plugin.
 - `.claude/skills/` — Repo-local maintainer skills (see below).
 
-## Creating Plugins or Skills
+## Creating Plugins Or Skills
 
 See [`docs/PLUGIN-CONVENTIONS.md`](docs/PLUGIN-CONVENTIONS.md) — it covers the canonical scaffold workflow (via `/plugin-dev:create-plugin`), the repo's manifest deltas, the validate step, the catalog update, and the skill conventions (including `/skill-creator` for drafts/evals/iteration).
 

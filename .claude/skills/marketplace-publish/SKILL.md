@@ -23,7 +23,7 @@ If the user is only editing an already-listed plugin's instructions, tell them n
 ## Before you start
 
 - `gh` is authenticated (`gh auth status`) with write access to the marketplace repo.
-- Each plugin to publish exists at `plugins/<name>/.claude-plugin/plugin.json` with a valid `name` and `description`. If a plugin doesn't exist yet, scaffold it first with [`/plugin-dev:create-plugin`](https://github.com/anthropics/claude-plugins-official/blob/main/plugins/plugin-dev/commands/create-plugin.md), then apply [`docs/PLUGIN-CONVENTIONS.md`](../../../docs/PLUGIN-CONVENTIONS.md).
+- Each plugin to publish exists at `plugins/<name>/.claude-plugin/plugin.json`. If a plugin doesn't exist yet, scaffold it with [`/plugin-dev:create-plugin`](https://github.com/anthropics/claude-plugins-official/blob/main/plugins/plugin-dev/commands/create-plugin.md) and run `claude plugin validate plugins/<name>` to confirm it's well-formed.
 
 ## Which marketplace
 
