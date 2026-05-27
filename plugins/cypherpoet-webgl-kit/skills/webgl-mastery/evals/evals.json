@@ -1,0 +1,75 @@
+{
+  "skill_name": "webgl-mastery",
+  "evals": [
+    {
+      "id": 1,
+      "name": "black-canvas-debug",
+      "prompt": "My WebGL2 fragment shader compiles fine — `getShaderInfoLog` returns nothing — but the canvas is just black. Walk me through the most likely causes and how to diagnose each one without throwing more code at it.",
+      "expected_output": "A diagnosis checklist that covers the canonical black-canvas causes (forgot clear, viewport not set after resize, wrong VAO bound, attribute not enabled, uniform set on wrong program, depth test culling, bound program ≠ used program) with a way to narrow down each.",
+      "files": [],
+      "expectations": [
+        "Distinguishes shader compile from program link (recommends checking `getProgramInfoLog`, not just shader log)",
+        "Identifies viewport-after-resize as a likely culprit",
+        "Recommends checking the bound program and VAO at draw time",
+        "Recommends Spector.js (or equivalent capture tool)",
+        "Mentions depth test as a possible suspect",
+        "Mentions face culling as a possible suspect",
+        "Mentions uniform-set-on-wrong-program as a possible suspect",
+        "Answers as an ordered diagnostic checklist rather than dumping rewritten code"
+      ]
+    },
+    {
+      "id": 2,
+      "name": "mouse-circle-shader",
+      "prompt": "Write me a minimal raw WebGL2 fragment shader (no framework) that fills a 600x600 canvas with a soft white-on-black circle that follows the mouse position. Include the host HTML/JS to pipe in `u_resolution` and `u_mouse` uniforms.",
+      "expected_output": "A single HTML file with a vertex shader (fullscreen quad), fragment shader using `smoothstep` for the soft edge, uniform setup for resolution + mouse, mouse event listener that updates the uniform (with y-flip if needed), and a render loop.",
+      "files": [],
+      "expectations": [
+        "Output is a single self-contained HTML file with no external assets",
+        "Uses WebGL2 (`#version 300 es` shader directive)",
+        "Uses `smoothstep` to create the soft edge",
+        "Declares uniforms named exactly `u_resolution` and `u_mouse`",
+        "Flips mouse Y coordinate to match `gl_FragCoord` (bottom-origin)",
+        "Sets the canvas backing-store size with `devicePixelRatio` for HiDPI sharpness",
+        "Checks shader compile and program link errors (throws or logs on failure)",
+        "HTML is runnable from `file://` with no build step"
+      ]
+    },
+    {
+      "id": 3,
+      "name": "instanced-rendering",
+      "prompt": "I want to render 10,000 instances of the same small mesh in raw WebGL2 — no Three.js, no other framework. What's the right approach and what are the pitfalls? Show me the key API calls.",
+      "expected_output": "Recommends `drawArraysInstanced` / `drawElementsInstanced` + per-instance attributes via `vertexAttribDivisor`. Mentions VAO setup, per-instance data layout (model matrix or position+color), and pitfalls like divisor staying set across VAOs or forgetting to enable per-instance attributes.",
+      "files": [],
+      "expectations": [
+        "Recommends `drawArraysInstanced` or `drawElementsInstanced` (single draw call)",
+        "Mentions `vertexAttribDivisor(loc, 1)` for per-instance attributes",
+        "Provides concrete code for the per-instance attribute setup",
+        "Mentions the `mat4`-attribute-takes-4-slots pitfall",
+        "Notes that divisor state is part of the VAO (or otherwise warns about VAO state)",
+        "Mentions either WebGL1 fallback (`ANGLE_instanced_arrays`) or `gl_InstanceID`",
+        "Mentions caching attribute/uniform locations (not querying per frame)",
+        "Provides a verification or diagnostic section for instancing-specific symptoms"
+      ]
+    },
+    {
+      "id": 4,
+      "name": "rotating-textured-cube",
+      "prompt": "Set up a minimal WebGL2 page that renders a rotating textured cube with no framework. I want to actually understand each step — buffers, shaders, matrices, texture loading, draw loop. Make it one self-contained HTML file.",
+      "expected_output": "Single HTML file with: cube vertex+UV+index data in VBOs, vertex shader applying model-view-projection, fragment shader sampling a texture, texture loaded from an image or DataURL, perspective projection matrix, animation loop rotating the model matrix each frame, proper resize handling, and a clear render.",
+      "files": [],
+      "expectations": [
+        "Single self-contained HTML file with no external assets (procedural or inline texture)",
+        "Cube uses 24 vertices (4 per face) so each face has its own UVs",
+        "Uses indexed drawing (`drawElements`)",
+        "Enables `DEPTH_TEST` and clears `DEPTH_BUFFER_BIT` each frame",
+        "Uses WebGL2 (`#version 300 es`)",
+        "Updates `gl.viewport` whenever the canvas is resized",
+        "Checks shader compile and program link errors",
+        "Explanation walks through buffers, shaders, matrices, texture loading, and the draw loop",
+        "Passes `false` to the `transpose` flag of `uniformMatrix4fv` (the only legal value in WebGL)",
+        "Composes model × view × projection from a working 4x4 matrix helper or library"
+      ]
+    }
+  ]
+}
