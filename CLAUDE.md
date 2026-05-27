@@ -10,12 +10,12 @@ Public collection of reusable AI agent skills, packaged as Claude Code plugins t
 - `docs/CATALOG.md` — Top-level cross-reference index. One row per plugin, linking to its `README.md` and listing its components. Updated only when adding a *new* plugin.
 - `.claude/skills/` — Repo-local maintainer skills (see below).
 
-## Creating plugins or skills
+## Creating Plugins or Skills
 
 - **New plugin** — run [`/plugin-dev:create-plugin`](https://github.com/anthropics/claude-plugins-official/blob/main/plugins/plugin-dev/commands/create-plugin.md), then apply the deltas in [`docs/PLUGIN-CONVENTIONS.md`](docs/PLUGIN-CONVENTIONS.md) and add a row to `docs/CATALOG.md`.
-- **New or revised skill** — run [`/skill-creator`](https://github.com/anthropics/skills/tree/main/skill-creator). It handles drafts, evals, and description optimization.
+- **New or revised skill** — run [`/skill-creator`](https://github.com/anthropics/skills/tree/main/skills/skill-creator). It handles drafts, evals, and description optimization.
 
-## Maintainer skills
+## Maintainer Skills
 
 Repo-local skills in `.claude/skills/` for managing the marketplace, all on local `gh` creds (no tokens, no CI):
 

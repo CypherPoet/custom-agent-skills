@@ -33,15 +33,16 @@ Infer the target from this repo's `origin` remote (`custom-agent-skills` → `Cy
 
 The goal: **one PR on the marketplace repo** that adds or updates the chosen plugins' entries in `.claude-plugin/marketplace.json`.
 
-1. **Build each entry.** For every plugin being published, read its `plugins/<name>/.claude-plugin/plugin.json` for `name` + `description`, and form the catalog entry (the source `url` is *this* repo, paths point into `plugins/`):
+1. **Build each entry.** For every plugin being published, read its `plugins/<name>/.claude-plugin/plugin.json` for `name`, `description`, and `homepage`, and form the catalog entry (the source `url` is *this* repo, paths point into `plugins/`):
    ```json
    {
      "name": "<plugin>",
      "source": { "source": "git-subdir", "url": "https://github.com/<owner>/<this-repo>.git", "path": "plugins/<plugin>" },
      "description": "<from plugin.json>",
-     "homepage": "https://github.com/<owner>/<this-repo>/tree/main/plugins/<plugin>"
+     "homepage": "<from plugin.json — falls back to https://github.com/<owner>/<this-repo>/tree/main/plugins/<plugin> if absent>"
    }
    ```
+   The manifest's `homepage` is the source of truth — copy it verbatim. If the manifest omits it, use the `tree/main/plugins/<plugin>` URL as a fallback.
 
 2. **Clone the marketplace** shallowly to a temp dir, e.g. `gh repo clone <marketplace> /tmp/mkt-publish -- --depth 1`.
 

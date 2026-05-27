@@ -12,7 +12,7 @@ This repo publishes the following plugins via the [`cypherpoet-toolchest`](https
 | [cypherpoet-svg-tools](../plugins/cypherpoet-svg-tools/README.md) | SVG optimization and cleanup. | 1 skill |
 | [cypherpoet-threejs-kit](../plugins/cypherpoet-threejs-kit/README.md) | Three.js / WebGPU / WebGL tooling. | 1 skill |
 
-Click any plugin name above to see its full component listing — skills, slash commands, subagents, hooks, and MCP servers — with per-item summaries and links to each source file.
+Click any plugin name above to see what it ships and links to each source file. Today every plugin is skills-only; other component types (commands, agents, hooks, MCP servers) are supported and will appear here as plugins evolve.
 
 ## Installing
 
