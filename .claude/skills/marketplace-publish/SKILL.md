@@ -42,7 +42,11 @@ The goal: **one PR on the marketplace repo** that adds or updates the chosen plu
      "homepage": "<from plugin.json>"
    }
    ```
-   The manifest is the source of truth for `description` and `homepage` — copy each value verbatim. If the manifest omits `homepage`, fall back to `https://github.com/<owner>/<this-repo>/tree/main/plugins/<plugin>`, deriving `<owner>/<this-repo>` from `git remote get-url origin` on this source repo.
+   The manifest is the source of truth for `description` and `homepage`. Precedence:
+   - **`description`** — always present (the pre-flight check enforced it); copy verbatim.
+   - **`homepage`** — if the field is present in the manifest, copy verbatim. Only when it's absent, derive the fallback `https://github.com/<owner>/<this-repo>/tree/main/plugins/<plugin>`.
+
+   To resolve `<owner>/<this-repo>` for the fallback, prefer `gh repo view --json nameWithOwner -q .nameWithOwner` on the source repo — it returns the canonical `owner/repo` regardless of remote protocol. If you fall back to `git remote get-url origin`, normalize the output: HTTPS form `https://github.com/<owner>/<repo>.git` and SSH form `git@github.com:<owner>/<repo>.git` both reduce to `<owner>/<repo>` after stripping the prefix and trailing `.git`. Never interpolate the raw remote string into the URL — an SSH origin produces a broken link like `https://github.com/git@github.com:CypherPoet/custom-agent-skills.git/tree/main/...`.
 
 2. **Clone the marketplace** shallowly to a temp dir, e.g. `gh repo clone <marketplace> /tmp/mkt-publish -- --depth 1`.
 

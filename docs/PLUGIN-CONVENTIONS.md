@@ -90,17 +90,21 @@ Install via the marketplace this plugin is published to:
 | `<server-name>` | <what the server provides>. |
 ````
 
-Only include the section per component type the plugin actually ships — drop the rest. A skills-only plugin's README has just `## Skills`. When copying the install command, replace **all** placeholders: `<plugin-name>` with the plugin's slug, `<marketplace-owner>/<marketplace-repo>` with the GitHub path of the marketplace repo, and `<marketplace-name>` with the marketplace's `name` field from its `marketplace.json` (often the same as the repo name).
+Only include the section per component type the plugin actually ships — drop the rest. A skills-only plugin's README has just `## Skills`. Append a row to the matching table whenever a component is added — the per-plugin README is its primary index, and PR review treats a missing row as a defect.
+
+When copying the install command, replace **all** placeholders: `<plugin-name>` with the plugin's slug, `<marketplace-owner>/<marketplace-repo>` with the GitHub path of the marketplace repo, and `<marketplace-name>` with the marketplace's `name` field from its `marketplace.json` (often the same as the repo name). For plugins published to this repo's marketplace (the default for everything currently in `plugins/`), those resolve to a fixed pair: `CypherPoet/cypherpoet-toolchest` and `cypherpoet-toolchest`. The shipped READMEs already use those values verbatim — the placeholder form only matters when scaffolding for a *different* marketplace.
 
 ## Top-Level Catalog
 
 After creating a new plugin, add a row to [CATALOG.md](CATALOG.md). The `Components` column uses text form: `5 skills`, `1 skill`, `2 commands, 1 hook` — singular for one, plural otherwise. List components in the order skills → commands → agents → hooks → MCP servers, dropping zeros.
 
-Editing an *existing* plugin's content (adding a skill, fixing a typo) needs no catalog change. Only *adding a new plugin* warrants a catalog update.
+Refresh the catalog row whenever a plugin's component counts change (adding a skill bumps `5 skills` → `6 skills`) or a new plugin lands. In-place edits that don't shift the counts (typo fixes, prose tweaks, internal refactors) need no catalog change.
 
 ## Publishing
 
 After the plugin is ready, use the `marketplace-publish` skill to open a PR on the marketplace this repo publishes to. Scaffolding alone never publishes — the catalog only changes when you explicitly publish.
+
+The catalog tracks `main` by commit SHA, so edits to a plugin's **content** (skills, commands, agents, scripts) reach consumers automatically on the next install or update. But the catalog stores its own copy of each plugin's `name`, `description`, and `homepage` — editing any of those manifest fields requires running `marketplace-publish` again to refresh the entry. Content auto-syncs; catalog metadata does not.
 
 ## Skill Conventions
 
