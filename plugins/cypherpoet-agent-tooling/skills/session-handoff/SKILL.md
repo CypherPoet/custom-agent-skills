@@ -1,6 +1,11 @@
 ---
 name: session-handoff
-description: "Write a structured handoff document so a fresh agent can pick up long-running work without losing context. Use when the user says 'create handoff', 'save state', 'I need to pause', 'context is getting full', or when resuming with 'load handoff', 'resume from', 'continue where we left off'."
+description: >
+  Use when the user says "create handoff", "save state", "I need to
+  pause", "context is getting full", or when resuming with "load handoff",
+  "resume from", "continue where we left off". Writes a structured handoff
+  document so a fresh agent can pick up long-running work without losing
+  context.
 ---
 
 # Handoff

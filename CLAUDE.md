@@ -12,8 +12,7 @@ Public collection of reusable AI agent skills, packaged as Claude Code plugins t
 
 ## Creating Plugins or Skills
 
-- **New plugin** — run [`/plugin-dev:create-plugin`](https://github.com/anthropics/claude-plugins-official/blob/main/plugins/plugin-dev/commands/create-plugin.md), then apply the deltas in [`docs/PLUGIN-CONVENTIONS.md`](docs/PLUGIN-CONVENTIONS.md) and add a row to `docs/CATALOG.md`.
-- **New or revised skill** — run [`/skill-creator`](https://github.com/anthropics/skills/tree/main/skills/skill-creator). It handles drafts, evals, and description optimization.
+See [`docs/PLUGIN-CONVENTIONS.md`](docs/PLUGIN-CONVENTIONS.md) — it covers the canonical scaffold workflow (via `/plugin-dev:create-plugin`), the repo's manifest deltas, the validate step, the catalog update, and the skill conventions (including `/skill-creator` for drafts/evals/iteration).
 
 ## Maintainer Skills
 

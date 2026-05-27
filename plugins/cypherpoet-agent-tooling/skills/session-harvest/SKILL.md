@@ -1,14 +1,14 @@
 ---
 name: session-harvest
 description: >
-  Systematic pre-exit sweep of the current conversation for learnings worth
-  preserving in memory. Use this skill whenever the user says "harvest
-  learnings", "anything worth remembering?", "what should I save?", "before I
-  go...", or any variation of asking whether there are takeaways from the
-  session — including when they're wrapping up a long or complex session. The
-  skill surfaces corrections, project context, preferences, and references,
-  deduplicates against existing memory, and presents findings for the user to
-  approve. It never auto-saves.
+  Use this skill whenever the user says "harvest learnings", "anything
+  worth remembering?", "what should I save?", "before I go...", or any
+  variation of asking whether there are takeaways from the session —
+  including when they're wrapping up a long or complex session. Runs a
+  systematic pre-exit sweep of the current conversation for learnings
+  worth preserving in memory: surfaces corrections, project context,
+  preferences, and references, deduplicates against existing memory, and
+  presents findings for the user to approve. Never auto-saves.
 ---
 
 # Session Harvest

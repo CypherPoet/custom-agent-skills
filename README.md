@@ -40,31 +40,17 @@ Each commit to `main` becomes a new version — Claude Code picks up updates aut
 
 ```
 .
-├── plugins/                  # Themed Claude Code plugins
-│   └── <plugin-name>/
-│       ├── .claude-plugin/
-│       │   └── plugin.json   # Plugin manifest
-│       ├── README.md         # Per-plugin overview, install instructions, component index
-│       ├── skills/           # Skills (optional)
-│       │   └── <skill-name>/
-│       │       ├── SKILL.md      # Skill instructions (required)
-│       │       ├── assets/       # Output templates (optional)
-│       │       ├── references/   # Supporting documentation (optional)
-│       │       ├── scripts/      # Helper scripts (optional)
-│       │       └── evals/        # Eval test cases (optional)
-│       ├── commands/         # Slash commands (optional)
-│       ├── agents/           # Subagents (optional)
-│       └── hooks/            # Hook configuration (optional)
-├── docs/
-│   ├── CATALOG.md            # Cross-plugin index
-│   └── PLUGIN-CONVENTIONS.md # Conventions this repo applies on top of plugin-dev defaults
-└── README.md
+├── plugins/         # Themed Claude Code plugins — one per theme
+└── docs/
+    ├── CATALOG.md            # Cross-plugin index
+    └── PLUGIN-CONVENTIONS.md # Per-plugin conventions this repo applies
 ```
 
-## Creating a New Plugin or Skill
+Plugin anatomy (component dirs, manifest fields, auto-discovery) follows the [Claude Code plugins reference](https://code.claude.com/docs/en/plugins-reference). This repo's specific conventions live in [`docs/PLUGIN-CONVENTIONS.md`](docs/PLUGIN-CONVENTIONS.md).
 
-- **New plugin** — run [`/plugin-dev:create-plugin`](https://github.com/anthropics/claude-plugins-official/blob/main/plugins/plugin-dev/commands/create-plugin.md), apply the deltas in [`docs/PLUGIN-CONVENTIONS.md`](docs/PLUGIN-CONVENTIONS.md), and add a row to [`docs/CATALOG.md`](docs/CATALOG.md).
-- **New or revised skill** — run [`/skill-creator`](https://github.com/anthropics/skills/tree/main/skills/skill-creator). After it's ready, place the skill folder under `plugins/<plugin-name>/skills/` (or open a discussion if a new plugin is warranted) and update the plugin's `README.md`.
+## Contributing
+
+See [`docs/PLUGIN-CONVENTIONS.md`](docs/PLUGIN-CONVENTIONS.md) for plugin conventions, the canonical scaffold workflow, and the skill creation flow.
 
 ## License
 

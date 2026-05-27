@@ -20,9 +20,9 @@ This is a plain procedure to run with your normal tools (`gh`, `jq`) — adapt a
 
 3. **Scope to this repo's entries.** A marketplace may aggregate several sources, so only compare catalog entries whose `source.url` points at *this* repo.
 
-4. **Compare** those against local `plugins/*/.claude-plugin/plugin.json` (by `name` and `description`) and report four buckets:
+4. **Compare** those against local `plugins/*/.claude-plugin/plugin.json` (by `name`, `description`, and `homepage` — the fields `marketplace-publish` propagates) and report four buckets:
    - **NEW** — exists in `plugins/`, not in the catalog.
-   - **CHANGED** — listed, but the catalog `description` differs from the local one.
+   - **CHANGED** — listed, but the catalog `description` or `homepage` differs from the local manifest.
    - **REMOVED** — listed (sourced from this repo) but no longer in `plugins/`.
    - **invalid** — a local `plugin.json` that doesn't parse.
 

@@ -1,6 +1,6 @@
 # Plugin Conventions
 
-This repo applies a handful of conventions on top of Claude Code's standard plugin shape. Use [`/plugin-dev:create-plugin`](https://github.com/anthropics/claude-plugins-official/blob/main/plugins/plugin-dev/commands/create-plugin.md) as the canonical scaffold workflow, then apply the deltas below. Scaffolding never commits on its own — the maintainer reviews the staged files first.
+This repo applies a handful of conventions on top of Claude Code's standard plugin shape. Use [`/plugin-dev:create-plugin`](https://github.com/anthropics/claude-plugins-official/blob/main/plugins/plugin-dev/commands/create-plugin.md) as the canonical scaffold workflow, then apply the deltas below. Don't commit until the staged files have been reviewed.
 
 For plugin anatomy (component types, auto-discovery, `${CLAUDE_PLUGIN_ROOT}` usage, `hooks.json` shape, MCP transport fields, etc.), defer to the canonical sources:
 
@@ -12,8 +12,8 @@ For plugin anatomy (component types, auto-discovery, `${CLAUDE_PLUGIN_ROOT}` usa
 
 ## Plugin Folder
 
-- Folder name is the manifest `name` field, kebab-case, conventionally `cypherpoet-<theme>`. Use a `-kit` suffix for single-topic kits (e.g., `cypherpoet-blender-kit`).
-- Folder name and manifest `name` must match exactly. Claude Code's tooling treats them as the same identifier.
+- Folder name, conventionally `cypherpoet-<theme>` (kebab-case). Use a `-kit` suffix for single-topic kits (e.g., `cypherpoet-blender-kit`).
+- The folder name must equal the manifest `name` field (this is a Claude Code platform requirement; restated here so the repo convention is unambiguous).
 
 ## Manifest Deltas
 
@@ -79,7 +79,7 @@ Install via the [`cypherpoet-toolchest`](https://github.com/CypherPoet/cypherpoe
 
 ## Hooks
 
-| Event | Action |
+| Hook | Description |
 |---|---|
 | `<EventName>` | <what the hook does>. See [hooks/hooks.json](hooks/hooks.json). |
 
@@ -90,7 +90,7 @@ Install via the [`cypherpoet-toolchest`](https://github.com/CypherPoet/cypherpoe
 | `<server-name>` | <what the server provides>. |
 ````
 
-Only include the section per component type the plugin actually ships — drop the rest. A skills-only plugin's README has just `## Skills`. Replace `<plugin-name>` placeholder with the actual slug when copying the install command. Match the existing `plugins/cypherpoet-git-flow/README.md` (or any sibling) for tone.
+Only include the section per component type the plugin actually ships — drop the rest. A skills-only plugin's README has just `## Skills`. Replace `<plugin-name>` placeholder with the actual slug when copying the install command.
 
 ## Top-Level Catalog
 
@@ -108,5 +108,5 @@ For new or revised skills inside a plugin, use [`/skill-creator`](https://github
 
 - **Folder name** — kebab-case, matching the `name:` field in `SKILL.md`'s frontmatter. The two must agree.
 - **`description:` field** — this is the trigger blurb Claude reads to decide whether to invoke the skill. Write it for matching (likely user phrasings, edge cases, related intents), not for humans. Long descriptions should use the YAML `>` block scalar so the file stays readable.
-- **Optional subdirs** — a skill folder may also include `assets/` (output templates), `references/` (supporting docs loaded on demand), `scripts/` (helper executables), and `evals/` (eval test cases for `/skill-creator`). Only create them when the skill actually needs them.
-- **Workspace scratch** — `skills/*-workspace/` (under any plugin) is gitignored. These are transient directories `/skill-creator` creates during eval iteration; they are not real skills.
+- **Optional subdirs** — a skill folder may also include `assets/` (output templates), `references/` (supporting docs loaded on demand), `scripts/` (helper executables), and `evals/` (eval test cases). Only create them when the skill actually needs them.
+- **Workspace scratch** — `*-workspace/` directories under any `skills/` folder (including the repo-local `.claude/skills/`) are gitignored. These are transient directories created during eval iteration; they are not real skills.
