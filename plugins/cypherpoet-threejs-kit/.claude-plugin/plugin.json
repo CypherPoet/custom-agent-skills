@@ -8,5 +8,5 @@
   "repository": "https://github.com/CypherPoet/custom-agent-skills.git",
   "license": "MIT",
   "keywords": ["claude-code", "threejs", "webgl", "webgl2", "webgpu", "graphics"],
-  "dependencies": ["cypherpoet-webgl-kit"]
+  "dependencies": [{ "name": "cypherpoet-webgl-kit", "version": "~0.1.0" }]
 }
