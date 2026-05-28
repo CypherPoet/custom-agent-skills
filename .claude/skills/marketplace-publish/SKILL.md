@@ -57,9 +57,11 @@ The goal: **one PR on the marketplace repo** that adds or updates the chosen plu
    ```
    Apply once per plugin (or fold several into one jq pass). Confirm the result still parses (`jq empty`).
 
-4. **Show the diff and confirm.** Run `git -C /tmp/mkt-publish diff` and show the user before anything is pushed. If there's no change, say so and stop.
+4. **Validate the marketplace manifest.** Run `claude plugin validate /tmp/mkt-publish` to confirm the updated manifest still passes schema checks. If it errors, fix and re-run before continuing.
 
-5. **Open the PR** on the marketplace repo using local creds:
+5. **Show the diff and confirm.** Run `git -C /tmp/mkt-publish diff` and show the user before anything is pushed. If there's no change, say so and stop.
+
+6. **Open the PR** on the marketplace repo using local creds:
    ```bash
    git -C /tmp/mkt-publish switch -c publish/<slug>-$(date +%Y%m%d%H%M%S)
    git -C /tmp/mkt-publish commit -am "➕ Publish <plugins> to the marketplace catalog"
@@ -68,7 +70,7 @@ The goal: **one PR on the marketplace repo** that adds or updates the chosen plu
      --body "Adds/updates the listed plugin entries in marketplace.json, sourced from this repo via git-subdir."
    ```
 
-6. **Report the PR URL** and clean up the temp clone.
+7. **Report the PR URL** and clean up the temp clone.
 
 Re-running for an already-listed plugin just updates its entry — the operation is idempotent.
 
