@@ -20,7 +20,7 @@ For plugin anatomy (component types, auto-discovery, `${CLAUDE_PLUGIN_ROOT}` usa
 Use [`/plugin-dev:create-plugin`](https://github.com/anthropics/claude-plugins-official/blob/main/plugins/plugin-dev/commands/create-plugin.md) to scaffold a working `plugin.json`. Recommended defaults this repo applies on top:
 
 - Set `"author": { "name": "CypherPoet" }` (no email field).
-- Set `"version": "0.1.0"` for new plugins. Bump per semver as the plugin evolves: PATCH for fixes, MINOR for additive changes, MAJOR for breaking changes (pre-1.0, treat MINOR as the default bump for anything user-visible). The marketplace tracks `main` via `git-subdir`, so the version doesn't gate installs — it's informational metadata for tooling, manifest readers, and changelog discipline.
+- Set `"version": "0.1.0"` for new plugins. Bump per semver as the plugin evolves: PATCH for fixes, MINOR for additive changes, MAJOR for breaking changes (pre-1.0, treat MINOR as the default bump for anything user-visible). This is Claude Code's update cache key — resolved from `plugin.json` first, with the `git-subdir` commit SHA only as the fallback when no version is set — so existing installs update *only* when you bump it; pushing new commits to `main` alone won't reach them.
 - Add `"license": "MIT"`.
 - Add `"keywords"`: 4–6 lowercase kebab-case tags, leading with `"claude-code"` and the plugin's domain (`git`, `blender`, `svg`, …).
 
@@ -104,7 +104,7 @@ Refresh the catalog row whenever a plugin's component counts change (adding a sk
 
 After the plugin is ready, use the `marketplace-publish` skill to open a PR on the marketplace this repo publishes to. Scaffolding alone never publishes — the catalog only changes when you explicitly publish.
 
-The catalog tracks `main` by commit SHA, so edits to a plugin's **content** (skills, commands, agents, scripts) reach consumers automatically on the next install or update. But the catalog stores its own copy of each plugin's `name`, `description`, and `homepage` — editing any of those manifest fields requires running `marketplace-publish` again to refresh the entry. Content auto-syncs; catalog metadata does not.
+A plugin's `version` (in `plugin.json`) is Claude Code's update cache key, so edits to a plugin's **content** (skills, commands, agents, scripts) reach existing installs only when you **bump that version** — pushing commits to `main` alone won't update them (a *fresh* install always pulls `main`'s latest). Separately, the catalog stores its own copy of each plugin's `name`, `description`, and `homepage` — editing any of those manifest fields requires running `marketplace-publish` again to refresh the entry. Content ships on a version bump; catalog metadata ships on a re-publish.
 
 ## Skill Conventions
 

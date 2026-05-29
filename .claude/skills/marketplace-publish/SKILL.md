@@ -11,7 +11,7 @@ Follow the procedure below with your normal tools (`gh`, `git`, `jq`); it's deli
 
 ## When this is needed (and when it isn't)
 
-A marketplace `marketplace.json` lists each plugin with a `git-subdir` source and **no pinned version**, so Claude Code resolves every install to the latest commit on this repo's default branch. That means **editing a plugin's skills/content reaches consumers automatically** — you do *not* republish for content changes.
+This skill changes only the marketplace **catalog** (`marketplace.json`) — it does **not** ship plugin content. Content updates are gated by each plugin's `version` in `plugin.json` (Claude Code's update cache key; the `git-subdir` commit SHA is only the fallback when no version is set), so reaching existing installs with edited content means **bumping that plugin's `version`**, not republishing the catalog.
 
 A marketplace's **catalog** only needs a change when you:
 - **add** a new plugin to it,
