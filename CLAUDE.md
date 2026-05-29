@@ -14,6 +14,8 @@ Public collection of reusable AI agent skills, packaged as Claude Code plugins t
 
 See [`docs/PLUGIN-CONVENTIONS.md`](docs/PLUGIN-CONVENTIONS.md) — it covers the canonical scaffold workflow (via `/plugin-dev:create-plugin`), the repo's manifest deltas, the validate step, the catalog update, and the skill conventions (including `/skill-creator` for drafts/evals/iteration).
 
+**Updating a plugin:** bump its `version` in `plugin.json` whenever a content change should reach already-installed users — pushing to `main` alone won't (`version` is Claude Code's update cache key).
+
 ## Maintainer Skills
 
 Repo-local skills in `.claude/skills/` for managing the marketplace, all on local `gh` creds (no tokens, no CI):
