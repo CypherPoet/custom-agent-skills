@@ -1,0 +1,57 @@
+{
+  "skill_name": "apple-app-store-screenshots",
+  "evals": [
+    {
+      "id": 0,
+      "prompt": "I'm shipping a universal iPhone + iPad app and need to prep the App Store screenshots. I'm automating with fastlane. What sizes do I actually have to produce, and roughly how should I set it up?",
+      "expected_output": "Identifies 6.9\" iPhone and 13\" iPad as the two canonical sizes to produce, explains App Store Connect auto-scales the smaller classes, gives correct dimensions, and points to fastlane snapshot/frameit/deliver. States the 1-10 count and PNG/JPEG formats.",
+      "files": [],
+      "expectations": [
+        "Identifies 6.9\" (iPhone) and 13\" (iPad) as the two canonical sizes to produce",
+        "Gives a correct 6.9\" iPhone size (1290x2796, 1320x2868, or 1260x2736) and a correct 13\" iPad size (2064x2752 or 2048x2732)",
+        "States App Store Connect auto-scales the smaller device classes from the largest uploaded set, so you don't produce every size",
+        "Recommends fastlane snapshot for capture (ideally also frameit and/or deliver)",
+        "States the 1-10 screenshots-per-class limit and PNG/JPEG formats"
+      ]
+    },
+    {
+      "id": 1,
+      "prompt": "App Store Connect just rejected my screenshot upload — it says the dimensions are wrong for my iPhone 16 Pro Max screenshots. What size are they supposed to be?",
+      "expected_output": "Identifies the iPhone 16 Pro Max as the 6.9\" display class and gives the correct accepted sizes (1290x2796 standard, also 1320x2868 / 1260x2736). Does not claim 1290x2796 would be rejected. Notes formats and that the 6.9\" set covers smaller classes via auto-scaling.",
+      "files": [],
+      "expectations": [
+        "Identifies the iPhone 16 Pro Max as the 6.9\" display class",
+        "States 1290x2796 is an accepted size for the 16 Pro Max and does NOT claim it would be rejected",
+        "Mentions the alternate accepted 6.9\" sizes (1320x2868 and/or 1260x2736)",
+        "Notes the 6.9\" set auto-covers smaller iPhone classes, and/or states PNG/JPEG and the 1-10 count"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Help me plan and create the screenshots for my new App Store listing. It's a habit-tracking iOS app, going out in English, Spanish, and Japanese.",
+      "expected_output": "Covers the full workflow: 6.9\" iPhone canonical size with auto-scaling, capturing a 3-locale set with fastlane snapshot, design/ordering guidance, and localization. Stays at the right altitude without dumping every device dimension.",
+      "files": [],
+      "expectations": [
+        "Identifies 6.9\" iPhone as the canonical size to produce, with auto-scaling to smaller classes",
+        "Addresses localization across the three languages (per-locale screenshot sets and/or localized captions)",
+        "Recommends automation suited to a multi-locale set (fastlane snapshot across the language matrix)",
+        "Includes screenshot design/ordering guidance (first 2-3 strongest, one idea per shot, legible captions)",
+        "Stays at the right altitude — does not paste the full per-device dimension table into the answer"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Can I add a preview video to my Mac app's App Store page? What are the constraints — length, format, that kind of thing?",
+      "expected_output": "Confirms app previews are supported, up to 3 per class, 15-30s, <=500 MB, H.264 or ProRes 422 (HQ), macOS landscape-only at 1920x1080, autoplay muted.",
+      "files": [],
+      "expectations": [
+        "Confirms Mac apps support app previews",
+        "States the length is 15-30 seconds",
+        "States the maximum file size is 500 MB",
+        "States the format is H.264 or ProRes 422 (HQ)",
+        "States macOS previews are landscape-only at 1920x1080, and does NOT list 2560x1600 or 2880x1800 as preview sizes",
+        "Notes previews autoplay muted / advises designing for sound-off"
+      ]
+    }
+  ]
+}
