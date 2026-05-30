@@ -36,7 +36,7 @@ platform** and the requirement is met:
 
 | Platform | Canonical size to produce | Covers |
 |---|---|---|
-| iPhone | **6.9"** — 1290×2796 (also accepts 1320×2868) | every smaller iPhone class, auto-scaled |
+| iPhone | **6.9"** — 1290×2796 (also accepts 1320×2868 or 1260×2736) | every smaller iPhone class, auto-scaled |
 | iPad | **13"** — 2064×2752 (also accepts 2048×2732) | every smaller iPad class, auto-scaled |
 | Mac | 2880×1800 (any 16:10 size) | Mac |
 | Apple TV | 3840×2160 | Apple TV |

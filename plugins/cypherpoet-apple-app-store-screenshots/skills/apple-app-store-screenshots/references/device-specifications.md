@@ -37,7 +37,7 @@ or 6.5"**, and 6.9" is the better choice because everything cascades from it.
 
 | Display class | Accepted portrait sizes (px) | Example devices | If omitted |
 |---|---|---|---|
-| **6.9"** (required\*) | 1290×2796 · 1320×2868 · 1260×2736 | iPhone 17 Pro Max, 16 Pro Max, Air, 15 Pro Max, 16/15 Plus, 14 Pro Max | — (canonical) |
+| **6.9"** (required\*) | 1290×2796 · 1320×2868 · 1260×2736 | iPhone 17 Pro Max, 16 Pro Max, iPhone Air, 15 Pro Max, 16/15 Plus, 14 Pro Max | — (canonical) |
 | **6.5"** (required\*) | 1284×2778 · 1242×2688 | iPhone 14 Plus, 13/12/11 Pro Max, 11, XS Max, XR | scaled from 6.9" |
 | 6.3" | 1179×2556 · 1206×2622 | iPhone 17, 17 Pro, 16, 16 Pro, 15, 15 Pro, 14 Pro | scaled from 6.5" |
 | 6.1" | 1170×2532 · 1125×2436 · 1080×2340 | iPhone 17e, 16e, 14, 13/13 Pro, 13 mini, 12/12 Pro, 12 mini, 11 Pro, XS, X | scaled from 6.5" |
