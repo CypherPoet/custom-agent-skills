@@ -26,6 +26,24 @@ Use [`/plugin-dev:create-plugin`](https://github.com/anthropics/claude-plugins-o
 
 See any existing manifest under `plugins/*/.claude-plugin/plugin.json` for canonical shape and the standard fields (`$schema`, `homepage`, `repository`) worth including for catalog and IDE support.
 
+## Dependencies
+
+A plugin can require another via the manifest `dependencies` array; Claude Code auto-installs them. **Default to the bare-string form:**
+
+```jsonc
+"dependencies": ["cypherpoet-webgl-kit"]
+```
+
+Every plugin here lives in one repo, and a consumer always installs from `main` — so a bare-string dependency hands them the *current, coherent set*: the dependent and its dependency at the versions that ship together. No tags, nothing to maintain. Each plugin still carries its own `version`, and bumping it ships updates exactly as described under [Manifest](#manifest); bare-string only means you don't *constrain* which version of the dependency is pulled.
+
+**Only pin a version range — `{ "name": "...", "version": "~0.1.0" }` — when the dependency lives in a *different repo* or releases on a cadence you can't bump in the same commit**, so "latest" is no longer guaranteed to be the version you built against. That's the only case the constraint earns its cost. A version constraint on a `git-subdir` dependency resolves against **git tags** on the source repo (the one the `git-subdir` source fetches from, *not* the marketplace repo); with no satisfying tag the install hard-fails with `no-matching-tag` — there is no soft "check only" mode for git sources. So if you pin, you must tag every release of the depended-on plugin. Once its version is on `main`, run from its directory:
+
+```shell
+claude plugin tag --push   # creates <plugin-name>--v<version> on the source repo, then pushes it
+```
+
+Re-tag on every bump — an untagged bump is invisible to the range, which silently keeps resolving to the older tag. Mind the pre-1.0 interaction with the "MINOR is the default bump" rule above: a `~0.1.0` range only matches `0.1.x`, so a MINOR bump of the depended-on plugin (to `0.2.0`) won't be picked up until the dependent ships a widened constraint. See [Constrain plugin dependency versions](https://code.claude.com/docs/en/plugin-dependencies) for the full mechanics.
+
 ## Validate
 
 After scaffolding and applying the deltas, run:
