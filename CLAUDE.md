@@ -22,3 +22,4 @@ Repo-local skills in `.claude/skills/` for managing the marketplace, all on loca
 
 - **`marketplace-publish`** — publish one plugin to `cypherpoet-toolchest` by opening a PR.
 - **`marketplace-sync-check`** — read-only audit of which local plugins are / aren't in the catalog.
+- **`dependency-tag-check`** — read-only audit of git-tag coverage for version-constrained plugin dependencies. Manual-only (`disable-model-invocation`); run it after pinning/bumping a constrained dependency.
