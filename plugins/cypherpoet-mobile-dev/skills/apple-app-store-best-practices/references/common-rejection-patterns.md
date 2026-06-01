@@ -1,7 +1,7 @@
 # Common App Store Rejection Patterns
 
 > Source: https://developer.apple.com/app-store/review/guidelines/
-> Last synced: 2026-05-04
+> Last synced: 2026-06-01
 >
 > This checklist covers the most frequent rejection reasons. Load the corresponding
 > section reference file for full details on any flagged item.
@@ -26,6 +26,7 @@
 - [ ] **5.1.1(ii) Privacy Usage Descriptions** — Missing or vague NSUsageDescription strings for camera, microphone, location, photos, contacts, or other protected resources
 - [ ] **2.5.2 Deprecated APIs/SDKs** — App built with deprecated or outdated SDK version that Apple has flagged for removal
 - [ ] **3.1.1 External Purchase Links** — App links to external websites for purchasing digital content or subscriptions outside IAP without an approved entitlement
+- [ ] **5.1.1(v) Social Credential Off-Device Storage** — App stores OAuth tokens or social network credentials on external servers or uses them outside active app sessions
 
 ## P2 — Medium Risk (Common Delays)
 
@@ -38,6 +39,7 @@
 - [ ] **3.1.1 Loot Box Odds** — App includes loot boxes or randomized virtual items for purchase but does not disclose the odds of receiving each item
 - [ ] **2.5.5 IPv6 Compatibility** — App does not work on IPv6-only networks; hard-coded IPv4 addresses or IPv4-only APIs cause connectivity failures
 - [ ] **2.3.10 Misleading Version Updates** — Repeatedly submitting updates with no meaningful changes to manipulate charts or search ranking
+- [ ] **5.1.2(iv) Installed Apps Enumeration** — App queries or transmits the list of installed apps (via `canOpenURL` or similar) for analytics or advertising purposes
 
 ## P3 — Low Risk (Polish Issues / Soft Rejections)
 

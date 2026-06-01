@@ -1,7 +1,7 @@
 # Section 2: Performance
 
 > Source: https://developer.apple.com/app-store/review/guidelines/
-> Last synced: 2026-05-25
+> Last synced: 2026-06-01
 
 ---
 
@@ -302,13 +302,14 @@
 - App feels like a wrapper or advertisement for a non-Apple experience
 
 **What to check:**
-- Search App Store Connect description for mentions of "Android", "Google Play", "Windows", "download on our website"
+- Search App Store Connect description for mentions of "Android", "Google Play", "Windows", "download on our website", or alternative app marketplace names
 - Grep source code and UI strings for cross-platform promotional messaging
-- Check for deep links or CTAs directing users to non-Apple platforms
+- Check for deep links or CTAs directing users to non-Apple platforms or alternative marketplaces
 
 **Key details:**
 - Cross-platform apps are fine; the issue is when metadata or the app itself is primarily an advertisement for another platform
 - You can mention other platforms exist, but the focus should be on the Apple experience
+- Names, icons, or imagery of alternative app marketplaces must not appear unless the feature specifically and with Apple approval enables interactive functionality there
 
 ---
 
@@ -405,6 +406,9 @@
 - App rapidly drains battery during normal use
 - App uses excessive CPU, GPU, or network resources when idle or in the background
 - App prevents the device from sleeping unnecessarily
+- App encourages placing the device under a mattress or pillow while charging
+- App performs excessive write cycles to the device's solid-state drive
+- Third-party advertisements within the app run unrelated background processes
 
 **What to check:**
 - Search for `UIApplication.shared.isIdleTimerDisabled = true` (prevents screen sleep)
@@ -413,10 +417,13 @@
 - Search for high-frequency timers (`Timer.scheduledTimer` or `DispatchSource.makeTimerSource` with very short intervals)
 - Check for unnecessary continuous animation loops or rendering when the view is not visible
 - Review `BGTaskScheduler` usage for background processing
+- Search for UI text or instructional content suggesting charging with device covered or placed under objects
+- Audit third-party ad SDK initialization to confirm SDKs do not spin up unrelated background processes
 
 **Key details:**
 - Background audio, location, VoIP, and fetch modes are closely scrutinized
 - Apps that declare background modes but do not use them appropriately will be rejected
+- The prohibition on third-party ads running background processes applies even if the app itself is not responsible for initiating them
 
 ---
 
@@ -442,21 +449,25 @@
 
 ---
 
-### §2.4.4 No System Restarts
+### §2.4.4 Device Restart and Settings (ASR & NR)
 
-**Requirement:** Apps must not require the user to restart their device as part of installation, usage, or troubleshooting. *(ASR & NR)*
+**Requirement:** Apps must not require the user to restart their device. Apps must not require modifications to system settings unrelated to core app functionality.
 
 **Triggers rejection if:**
 - App instructs users to restart their device at any point
 - App behavior depends on a device restart to function correctly
+- App requires users to disable Wi-Fi, turn off security features, or change unrelated system settings to function
+- App actively encourages disabling security or privacy features of the OS
 
 **What to check:**
 - Search UI strings, alerts, and documentation for "restart", "reboot", "power cycle" instructions
 - Verify the app does not depend on system-level changes that require a restart
+- Search for instructions to disable Wi-Fi, VPN, firewall, or security settings
+- Check onboarding or setup flows for any steps requiring unrelated system configuration changes
 
 **Key details:**
-- This is uncommon but sometimes appears in utility or system-configuration-adjacent apps
-- Apps should handle all necessary initialization within their own lifecycle
+- This applies to both setup flows and ongoing usage instructions
+- Apps should handle all necessary initialization within their own lifecycle without relying on user-facing system modifications
 
 ---
 
@@ -679,12 +690,12 @@
 
 ---
 
-### §2.5.6 WebKit for Web Browsing
+### §2.5.6 WebKit for Web Browsing (ASR & NR)
 
-**Requirement:** Apps that browse the web must use the WebKit framework (`WKWebView` or `SFSafariViewController`). *(ASR & NR)*
+**Requirement:** Apps that browse the web must use the WebKit framework (`WKWebView` or `SFSafariViewController`). Developers may apply for an entitlement to use an alternative web browser engine.
 
 **Triggers rejection if:**
-- App uses a non-WebKit rendering engine for web browsing (e.g., bundled Chromium, Gecko, or custom browser engine)
+- App uses a non-WebKit rendering engine for web browsing without an Apple-approved entitlement
 - App uses deprecated `UIWebView` instead of `WKWebView`
 
 **What to check:**
@@ -693,11 +704,12 @@
 - Check third-party dependencies for bundled browser engines
 - Search for `Chromium`, `GeckoView`, `CEF` (Chromium Embedded Framework) imports or embedded frameworks
 - Check `Podfile` / `Package.swift` for known custom browser engine dependencies
+- If using an alternative browser engine, verify the corresponding entitlement is present in the `.entitlements` file
 
 **Key details:**
 - This applies only to web browsing functionality; apps can use other engines for non-browsing purposes (e.g., game engines rendering HTML for UI)
 - `UIWebView` references anywhere in the binary (including third-party SDKs) cause rejection — check all dependencies
-- In the EU, alternative browser engines are permitted under the Digital Markets Act (DMA) provisions starting iOS 17.4
+- Apple now offers an entitlement process for alternative browser engines (not limited to the EU); see https://developer.apple.com/support/alternative-browser-engines/ for eligibility and requirements
 
 ---
 
@@ -721,23 +733,29 @@
 
 ---
 
-### §2.5.9 Standard UI Switches
+### §2.5.9 Standard UI Switches and Native UI (ASR & NR)
 
-**Requirement:** Apps must not alter the behavior or appearance of standard system switches and controls in misleading ways. *(ASR & NR)*
+**Requirement:** Apps must not alter or disable standard system hardware switches (Volume Up/Down, Ring/Silent) or alter other native UI elements and behaviors in misleading ways. Apps must not block links to other apps or features users expect to work in a standard way.
 
 **Triggers rejection if:**
+- App alters or disables the function of Volume Up, Volume Down, or Ring/Silent hardware switches
 - Standard iOS toggle switches are used but behave opposite to convention (e.g., "on" position means "off")
 - System-standard controls are visually altered to confuse users
 - Standard gestures are overridden in misleading ways
+- App blocks tappable links (universal links, deep links, system links) that users expect to open normally
 
 **What to check:**
 - Search for `UISwitch` customization that inverts behavior (`.setOn(!isEnabled)` patterns, `.isOn` with inverted logic)
+- Check for overriding `AVAudioSession` volume or remapping hardware button behavior
 - Check for custom controls mimicking system controls with different behavior
 - Review gesture recognizer usage that overrides standard system gestures
+- Search for `UIApplication.shared.open` interception patterns or blocked link schemes
+- Verify tappable links in `WKWebView` and `SFSafariViewController` behave as users expect
 
 **Key details:**
 - Custom-designed controls are fine as long as their behavior is intuitive and not misleading
 - Do not override system swipe-to-go-back or other standard navigation gestures
+- Blocking universal links or preventing users from navigating to expected destinations is a rejection trigger
 
 ---
 
@@ -904,23 +922,25 @@
 
 ---
 
-### §2.5.17 Matter Support
+### §2.5.17 Matter Support (ASR & NR)
 
-**Requirement:** Apps providing smart home device control via Matter must use Apple's Matter framework (the `MatterSupport` and `Matter` frameworks). *(ASR & NR)*
+**Requirement:** Apps supporting Matter must use Apple's Matter SDK for device pairing/commissioning. If the app uses any Matter software component other than Apple's Matter SDK, that component must be certified by the Connectivity Standards Alliance (CSA) for the platform.
 
 **Triggers rejection if:**
-- App implements Matter protocol support using a third-party or custom Matter stack instead of Apple's framework
-- App claims Matter support but does not use the Apple-provided APIs
+- App uses a custom or uncertified Matter stack for pairing/commissioning instead of Apple's SDK
+- Third-party Matter SDK used by the app lacks valid CSA certification for the target platform
+- App claims Matter support but does not use Apple-provided or CSA-certified APIs
 
 **What to check:**
 - Search for `import MatterSupport` or `import Matter` framework usage
-- Check for third-party Matter SDKs (e.g., `connectedhomeip`, `chip-tool`, custom CHIP implementations)
+- Check for third-party Matter SDKs (e.g., `connectedhomeip`, `chip-tool`, custom CHIP implementations) and verify CSA certification status
 - Verify `com.apple.developer.matter.allow-setup-payload` entitlement if the app does Matter device setup
 - Check `Info.plist` for `MatterSupport` usage descriptions
 
 **Key details:**
-- Apple's Matter framework handles commissioning, device control, and ecosystem integration
-- Third-party Matter stacks bypass HomeKit integration and are not permitted for App Store apps
+- Apple's Matter framework handles commissioning, device control, and ecosystem integration and is always acceptable
+- Third-party CSA-certified Matter components are now permitted as an alternative to Apple's SDK — obtain CSA certification documentation before submission
+- Non-certified third-party Matter stacks remain prohibited
 
 ---
 

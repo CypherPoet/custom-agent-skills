@@ -1,7 +1,7 @@
 # Section 1: Safety
 
 > Source: https://developer.apple.com/app-store/review/guidelines/
-> Last synced: 2026-05-04
+> Last synced: 2026-06-01
 
 ---
 
@@ -196,7 +196,7 @@ Apps should not include content that is offensive, insensitive, upsetting, inten
 
 ---
 
-### §1.2.1 Creator Content
+### §1.2.1 Creator Content (ASR & NR)
 
 **Requirement:** Apps featuring content from a community of "creators" must be properly moderated. Creator content is treated as user-generated content and must follow Guideline 1.2 (filtering, reporting, blocking, contact info) and Guideline 3.1.1 (in-app purchase for digital goods).
 

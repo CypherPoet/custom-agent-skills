@@ -1,7 +1,7 @@
 # Section 3: Business
 
 > Source: https://developer.apple.com/app-store/review/guidelines/
-> Last synced: 2026-05-04
+> Last synced: 2026-06-01
 
 If the business model is not obvious, it must be explained in metadata and App Review notes. Expensive apps with irrationally high prices will be rejected. Manipulation of reviews, chart rankings, or use of paid/incentivized/fake feedback may result in expulsion from the Apple Developer Program.
 
@@ -101,7 +101,9 @@ If the business model is not obvious, it must be explained in metadata and App R
 - Users must not be required to perform additional tasks (posting on social media, uploading contacts, checking in) to access what they paid for
 - When transitioning to subscription model, existing paid users must keep their previously-purchased functionality
 - Free trial periods are allowed via App Store Connect subscription offers
-- Cellular carrier apps may include auto-renewable subscriptions in bundles with cellular data plans, with prior Apple approval
+- Cellular carrier apps may include auto-renewable music/video subscriptions in bundles with cellular data plans, with prior Apple approval; other auto-renewable subscriptions may also be included if the carrier app supports in-app purchase
+- Carrier bundle subscriptions must not include access to or discounts on consumable items
+- Carrier bundle subscriptions must terminate when the associated cellular data plan terminates
 
 #### 3.1.2(b) Upgrades and Downgrades
 
