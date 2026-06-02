@@ -24,9 +24,11 @@ useful handoff from a complete one. Pass/fail/warn lines + a clear verdict
 carry the same actionable information without the false precision.
 
 Usage:
-    python validate_handoff.py <handoff-file>
-    python validate_handoff.py .claude/handoffs/2024-01-15-143022-auth.md
+    python3 validate_handoff.py <handoff-file>
+    python3 validate_handoff.py .claude/handoffs/2024-01-15-143022-auth.md
 """
+
+from __future__ import annotations
 
 import re
 import sys
@@ -340,8 +342,8 @@ def print_report(result: dict) -> bool:
 
 def main():
     if len(sys.argv) < 2:
-        print("Usage: python validate_handoff.py <handoff-file>")
-        print("Example: python validate_handoff.py .claude/handoffs/2024-01-15-auth.md")
+        print("Usage: python3 validate_handoff.py <handoff-file>")
+        print("Example: python3 validate_handoff.py .claude/handoffs/2024-01-15-auth.md")
         sys.exit(1)
 
     filepath = sys.argv[1]

@@ -9,11 +9,13 @@ There is no separate template body kept inside this script — the markdown
 file is the single source of truth.
 
 Usage:
-    python create_handoff.py [task-slug] [--continues-from <previous-handoff>]
-    python create_handoff.py "implementing-auth"
-    python create_handoff.py "auth-part-2" --continues-from 2024-01-15-auth.md
-    python create_handoff.py  # auto-generates slug from timestamp
+    python3 create_handoff.py [task-slug] [--continues-from <previous-handoff>]
+    python3 create_handoff.py "implementing-auth"
+    python3 create_handoff.py "auth-part-2" --continues-from 2024-01-15-auth.md
+    python3 create_handoff.py  # auto-generates slug from timestamp
 """
+
+from __future__ import annotations
 
 import argparse
 import os
@@ -397,7 +399,7 @@ def main():
     print(f"1. Open {filepath}")
     print(f"2. Fill in the 🎯 Next Action line at the top first — it's the most important field")
     print(f"3. Replace remaining [TODO: ...] placeholders, especially Important Context")
-    print(f"4. Run: python validate_handoff.py {filepath}")
+    print(f"4. Run: python3 validate_handoff.py {filepath}")
 
     return filepath
 

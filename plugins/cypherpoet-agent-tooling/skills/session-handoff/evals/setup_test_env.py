@@ -10,8 +10,8 @@ Creates a mock project with:
 - Hand-crafted fixture handoffs copied from evals/fixtures/
 
 Usage:
-    python setup_test_env.py [--path /tmp/handoff-eval-project]
-    python setup_test_env.py --clean
+    python3 setup_test_env.py [--path /tmp/handoff-eval-project]
+    python3 setup_test_env.py --clean
 """
 
 import argparse

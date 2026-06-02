@@ -10,9 +10,11 @@ Analyzes:
 - Modified files status
 
 Usage:
-    python check_staleness.py <handoff-file>
-    python check_staleness.py .claude/handoffs/2024-01-15-143022-auth.md
+    python3 check_staleness.py <handoff-file>
+    python3 check_staleness.py .claude/handoffs/2024-01-15-143022-auth.md
 """
+
+from __future__ import annotations
 
 import os
 import re
@@ -365,8 +367,8 @@ def print_report(result: dict):
 
 def main():
     if len(sys.argv) < 2:
-        print("Usage: python check_staleness.py <handoff-file>")
-        print("Example: python check_staleness.py .claude/handoffs/2024-01-15-auth.md")
+        print("Usage: python3 check_staleness.py <handoff-file>")
+        print("Example: python3 check_staleness.py .claude/handoffs/2024-01-15-auth.md")
         sys.exit(1)
 
     handoff_path = sys.argv[1]
