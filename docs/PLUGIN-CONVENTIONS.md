@@ -75,6 +75,14 @@ Install via the marketplace this plugin is published to:
 /plugin install <plugin-name>@<marketplace-name>
 ```
 
+## Dependencies
+
+Installed automatically with this plugin:
+
+| Plugin | Version | Description |
+|---|---|---|
+| [<dep-name>](../<dep-name>) | `latest` | <one-sentence description, from the dependency's manifest>. |
+
 ## Skills
 
 | Skill | Description |
@@ -109,6 +117,8 @@ Configured in [hooks/hooks.json](hooks/hooks.json):
 ````
 
 Only include the section per component type the plugin actually ships — drop the rest. A skills-only plugin's README has just `## Skills`. Append a row to the matching table whenever a component is added — the per-plugin README is its primary index, and PR review treats a missing row as a defect.
+
+The optional `## Dependencies` section (right after Installation) lists the plugins this one pulls in. Include it only when the manifest declares `dependencies`, mirror that array — `plugin.json` is the source of truth — and refresh the table when the array changes. The `Version` column shows `latest` for a bare-string dependency or the semver range for a pinned one; see [Dependencies](#dependencies) for when each applies.
 
 When copying the install command, replace **all** placeholders: `<plugin-name>` with the plugin's slug, `<marketplace-owner>/<marketplace-repo>` with the GitHub path of the marketplace repo, and `<marketplace-name>` with the marketplace's `name` field from its `marketplace.json` (often the same as the repo name). For plugins published to this repo's marketplace (the default for everything currently in `plugins/`), those resolve to a fixed pair: `CypherPoet/cypherpoet-toolchest` and `cypherpoet-toolchest`. The shipped READMEs already use those values verbatim — the placeholder form only matters when scaffolding for a *different* marketplace.
 

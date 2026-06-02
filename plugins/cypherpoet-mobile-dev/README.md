@@ -14,6 +14,14 @@ Install via the [`cypherpoet-toolchest`](https://github.com/CypherPoet/cypherpoe
 /plugin install cypherpoet-mobile-dev@cypherpoet-toolchest
 ```
 
+## Dependencies
+
+Installed automatically with this plugin:
+
+| Plugin | Version | Description |
+|---|---|---|
+| [cypherpoet-apple-app-store-screenshots](../cypherpoet-apple-app-store-screenshots) | `latest` | Apple App Store screenshot and app preview specifications. |
+
 ## Skills
 
 | Skill | Description |
