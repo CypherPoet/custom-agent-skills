@@ -10,7 +10,7 @@ Report whether every **version-constrained** plugin dependency in this repo has 
 
 **Read-only** — never create or push a tag, never edit a `plugin.json`, never commit or open a PR. Just report coverage and hand off to `claude plugin tag` for anything the user wants to fix.
 
-This is a plain procedure to run with your normal tools (`git`, `jq`, and `npx semver` for range math) — adapt as needed.
+The audit logic is a bundled script — Python 3 standard library only (no `node`/`npx`, no installs, and no network beyond `git ls-remote` to this repo's own origin). Run it and relay what it prints; don't reimplement it inline.
 
 ## When this matters (and when it's a clean no-op)
 
@@ -18,57 +18,28 @@ This repo's default is **bare-string** dependencies (`"dependencies": ["other-pl
 
 So if the audit finds zero constrained dependencies, "nothing to check — all clean" is the **expected, correct** result, not a sign something is wrong. Say so plainly and stop.
 
-## Procedure
+## Run the audit
 
-1. **Collect every constrained dependency.** Walk all manifests at once; keep object-form entries that carry a `version`, drop bare strings. Record the declaring plugin, the dependency name, and the range:
-   ```bash
-   jq -r '
-     (input_filename | split("/")[1]) as $declarer
-     | .dependencies[]?
-     | select(type == "object" and has("version"))
-     | "\($declarer)\t\(.name)\t\(.version)"
-   ' plugins/*/.claude-plugin/plugin.json
-   ```
-   No rows → no constrained deps. Report the clean no-op (see above) and stop.
+From anywhere in the repo:
 
-   An entry whose `name` is **not** a local plugin under `plugins/`, or that carries a `marketplace` field pointing at a different marketplace, resolves against *that* source repo's tags — out of scope here. Note it as "external — audit in its own source repo" and move on.
+```shell
+python3 .claude/skills/dependency-tag-check/scripts/audit_dependency_tags.py
+```
 
-2. **For each constrained dependency `<dep>` with range `<range>`, gather three facts:**
-   - **Current version** of the depended-on plugin, from its own manifest:
-     ```bash
-     jq -r '.version' plugins/<dep>/.claude-plugin/plugin.json
-     ```
-   - **Tags on origin** (what consumers actually resolve against — pushed tags, not local-only ones):
-     ```bash
-     git ls-remote --tags origin "refs/tags/<dep>--v*" \
-       | sed -E 's#.*refs/tags/##; s#\^\{\}$##' | sort -u
-     ```
-     Strip the `<dep>--v` prefix from each to get the bare versions.
-   - **Local-only tags** (created but never pushed — they resolve for nobody):
-     ```bash
-     git tag --list '<dep>--v*'
-     ```
-     A `<dep>--v*` tag present locally but absent from the `ls-remote` output is local-only.
+It locates the repo root via git, walks every `plugins/*/.claude-plugin/plugin.json`, keeps only the dependency entries that carry a `version` (bare strings are skipped — they need no tags), queries `origin`'s tags, and prints each constrained dependency in exactly one bucket. Exit status is non-zero when anything is actionable.
 
-3. **Decide which version the range resolves to.** Use `semver` for the range math — don't eyeball it (`~0.1.0` excludes `0.2.0`, prerelease boundaries are subtle):
-   ```bash
-   # Highest origin tag-version that satisfies the range (empty = none satisfy):
-   npx --yes semver -r "<range>" <origin-tag-version> <origin-tag-version> ...
-   # Does the dep's CURRENT version satisfy the range?
-   npx --yes semver -r "<range>" "<current-version>"
-   ```
-   `semver -r` prints the satisfying inputs in ascending order (highest last) and nothing if none qualify.
+**Relay the script's report to the user and stop — change nothing.** If it prints "No version-constrained dependencies found," that's the expected clean result here; say so and stop.
 
-4. **Classify into one bucket per constrained dependency:**
+### What the buckets mean
 
-   | Bucket | Condition | What it means |
-   |---|---|---|
-   | **OK** | An origin tag satisfies the range | Resolves cleanly to the highest satisfying tag. |
-   | **MISSING** | No origin tag satisfies, **but the current version does** | The fix is a tag. If a satisfying tag exists *local-only*, the fix is just to push it; otherwise tag the current version. |
-   | **UNSATISFIABLE** | No tag satisfies **and the current version is outside the range** | Tagging can't help — e.g. dep bumped to `0.2.0` but the dependent pins `~0.1.0`. The dependent needs a widened constraint, or you must maintain and tag an older line. |
-   | **DRIFT** *(best-effort)* | A satisfying tag exists, but its committed manifest version ≠ the tag's version | A force-moved or stale tag. Verify with: `git show <dep>--v<ver>:plugins/<dep>/.claude-plugin/plugin.json` and compare `.version` to `<ver>` (needs the tag fetched locally; skip if unavailable). |
-
-5. **Report plainly and stop.** Group by bucket; lead with anything actionable (MISSING, UNSATISFIABLE, DRIFT) and list OK / external entries briefly. For each non-OK row, name the declaring plugin, the dependency, the range, the current version, and the tags that exist. **Change nothing.** Hand off remediation per below.
+| Bucket | Meaning | Fix (hand off — see below) |
+|---|---|---|
+| **OK** | A pushed tag on `origin` satisfies the range. | none |
+| **MISSING** | No satisfying tag on `origin` — either the current version satisfies the range but is untagged, or a satisfying tag exists only locally (unpushed). | tag it / push it |
+| **UNSATISFIABLE** | No tag satisfies *and* the dependency's current version is outside the range (e.g. dep at `0.2.0`, dependent pins `~0.1.0`). | widen the constraint, or maintain an older tagged line |
+| **DRIFT** | A satisfying tag exists but points at a commit whose manifest version ≠ the tag's version — a force-moved or stale tag. | decide whether the tag should move |
+| **UNKNOWN** | The range uses an expression the script doesn't recognize (e.g. `\|\|` or hyphen ranges). It refuses to guess. | verify that one by hand |
+| **EXTERNAL** | The dependency isn't a local plugin, or names another `marketplace` — its tags live in a different source repo. | audit it in that repo |
 
 ## Remediation (handoff only — never run it yourself)
 
