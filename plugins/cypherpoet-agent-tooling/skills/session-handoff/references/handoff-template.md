@@ -29,7 +29,7 @@ Everything below the next `# 🤝 Handoff:` line is the template body.
 
 # 🤝 Handoff: [TASK_TITLE - replace this]
 
-> 🎯 **Next Action**: [TODO: One sentence — the FIRST thing the resuming agent should do. Be concrete: include a file path, a command, or a step.]
+> 🎯 **Next Action**: [TODO: One sentence — the FIRST thing the resuming agent should do, serving the next-session focus. Be concrete: include a file path, a command, or a step.]
 
 ## 🧾 Session Metadata
 - Created: {{timestamp}}

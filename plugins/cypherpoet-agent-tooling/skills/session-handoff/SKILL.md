@@ -28,19 +28,25 @@ Restating ages badly (the canonical artifact updates, the handoff doesn't) and c
 
 ## CREATE Workflow
 
+### Step 0: Establish the next-session focus
+
+Before scaffolding, pin down what the *resuming* session is for — the single outcome the next agent should drive toward. If the user passed an argument when invoking the skill (e.g. `/session-handoff wire up the rate-limit middleware`), treat it as that focus. Otherwise infer the most likely focus from the session and state it in one line for the user to confirm or correct.
+
+This focus is the lens for the whole document: it sets the 🎯 Next Action and decides which pending work, context, and gotchas are relevant enough to include. A handoff with no clear next-session focus drifts into cataloguing the past instead of enabling the future.
+
 ### Step 1: Generate Scaffold
 
 Run the smart scaffold script to create a pre-filled handoff document:
 
 ```bash
-python scripts/create_handoff.py [task-slug]
+python3 scripts/create_handoff.py [task-slug]
 ```
 
-Example: `python scripts/create_handoff.py implementing-user-auth`
+Example: `python3 scripts/create_handoff.py implementing-user-auth`
 
 **For continuation handoffs** (linking to previous work):
 ```bash
-python scripts/create_handoff.py "auth-part-2" --continues-from 2024-01-15-auth.md
+python3 scripts/create_handoff.py "auth-part-2" --continues-from 2024-01-15-auth.md
 ```
 
 The script will:
@@ -68,7 +74,7 @@ Open the generated file. Before filling the body, gather the canonical artifacts
 
 Then fill in the remaining `[TODO: ...]` placeholders, prioritizing in this order:
 
-1. **🎯 Next Action** (top of document) — Single sentence, the FIRST thing the resuming agent should do. This is the single most load-bearing field; a triaging agent may read only this line. Be concrete: include a file path, command, or specific step.
+1. **🎯 Next Action** (top of document) — Single sentence, the FIRST thing the resuming agent should do, in service of the next-session focus from Step 0. This is the single most load-bearing field; a triaging agent may read only this line. Be concrete: include a file path, command, or specific step.
 2. **📚 Source Artifacts** — Paths/URLs to PRD, session plan, ADRs, issues, PR, design docs. Write `none` for any line that genuinely has no artifact.
 3. **Current State Summary** — What's happening right now, in one paragraph. Describe state, not intent — the linked artifacts cover *what* and *why*.
 4. **Important Context** — Non-obvious constraints, decisions still under negotiation, things that would change the next action if missed. Only what the linked artifacts don't already say.
@@ -85,7 +91,7 @@ The template structure (with explanations) lives at [references/handoff-template
 Run the validation script:
 
 ```bash
-python scripts/validate_handoff.py <handoff-file>
+python3 scripts/validate_handoff.py <handoff-file>
 ```
 
 The verdict is one of:
@@ -104,12 +110,22 @@ Report to user:
 - Summary of captured context
 - The 🎯 Next Action line as the first thing the next session will do
 
+### Step 5: Commit the Handoff
+
+Once validation passes (Step 3), commit the handoff — by default it belongs in version control as a durable, shareable record:
+
+```bash
+git add .claude/handoffs/<file> && git commit -m "docs: add session handoff"
+```
+
+Commit *after* validation so the secret scan runs first. Skip only if the user explicitly wants an ephemeral/local-only handoff. In a git worktree, commit on the working branch and let it reach the default branch through the normal PR flow rather than committing to the main checkout directly.
+
 ## RESUME Workflow
 
 ### Step 1: Find Available Handoffs
 
 ```bash
-python scripts/list_handoffs.py
+python3 scripts/list_handoffs.py
 ```
 
 Shows all handoffs with dates, titles, and completion status.
@@ -117,7 +133,7 @@ Shows all handoffs with dates, titles, and completion status.
 ### Step 2: Check Staleness
 
 ```bash
-python scripts/check_staleness.py <handoff-file>
+python3 scripts/check_staleness.py <handoff-file>
 ```
 
 The script reports a level (FRESH / SLIGHTLY_STALE / STALE / VERY_STALE) and flags specific drift — commits, branch mismatch, missing files. Treat STALE/VERY_STALE as a signal to verify context carefully or start a fresh handoff.
@@ -203,6 +219,8 @@ When resuming from a chain, read the most recent handoff first, then reference p
 ## Storage Location
 
 Handoffs are stored in: `.claude/handoffs/`
+
+**Handoffs are committed by default.** They're durable, shareable session records — version-controlling them is what makes chaining, staleness checks, and team pickups work, and the `validate_handoff.py` secret scan exists precisely because they ship in git. Committing is the last step of the CREATE workflow. Only gitignore `.claude/handoffs/` if you specifically want ephemeral, local-only handoffs.
 
 Naming convention: `YYYY-MM-DD-HHMMSS-[slug].md`
 
