@@ -1,6 +1,7 @@
 ---
 name: marketplace-publish
 description: Publish one or more plugins from this source repo to a Claude Code marketplace by opening a pull request on the marketplace repo. Use whenever the user wants to add a new plugin to the marketplace, register/publish a plugin, push a plugin (or several) to the catalog, or update an already-listed plugin's catalog entry (its name, description, or homepage) — phrasings like "publish the X plugin", "add X to the marketplace", "register these plugins", "list X in the toolchest", or "the marketplace entry for X is stale". Plugins live separately from the marketplace, so publishing means opening a PR on the marketplace repo. NOT needed for ordinary content edits to an already-listed plugin — those reach consumers automatically.
+disable-model-invocation: true
 ---
 
 # marketplace-publish
