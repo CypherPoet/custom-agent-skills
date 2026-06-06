@@ -1,7 +1,7 @@
 # Section 5: Legal
 
 > Source: https://developer.apple.com/app-store/review/guidelines/
-> Last synced: 2026-05-18
+> Last synced: 2026-06-01
 
 ---
 
@@ -116,19 +116,26 @@
 - Social network app provides no way to revoke credentials or disconnect the account
 - Account deletion flow is excessively difficult, buried, or non-functional
 - Sign in with Apple not offered when third-party sign-in is available (see guideline 4.8)
+- App stores social network credentials or tokens off-device
+- App uses social credentials or tokens when the app is not actively in use
+- App's core functionality requires social network login when it is not related to a specific social network
 
 **What to check:**
 - Whether the app requires sign-in before any functionality is accessible
 - Account creation flow: what personal data fields are required vs. optional?
 - In-app account deletion: is there a working path from Settings/Profile to delete the account and associated data?
-- For social networks: credential revocation mechanism (e.g., revoke OAuth tokens, disconnect account)
+- For social networks: credential revocation mechanism (e.g., revoke OAuth tokens, disconnect account) — must be accessible within the app
 - App Store Connect: is account deletion URL provided where required?
 - If third-party sign-in (Google, Facebook, etc.) is offered, Sign in with Apple must also be offered
+- Token storage: OAuth tokens and social credentials must be stored on-device only (Keychain), never synced to external servers
+- Background usage: verify the app does not call social network APIs when not in active use
 
 **Key details:**
 - Account deletion must actually delete server-side data, not just deactivate the account
 - Apple may require the account deletion URL to be submitted in App Store Connect
 - Apps in regulated industries (e.g., banking) may have legitimate reasons to require sign-in, but must still offer deletion
+- If core functionality is not tied to a specific social network (e.g., Facebook, WeChat, Weibo, X), the app must provide access without requiring social login or offer an equivalent non-social alternative
+- Profile info fetching, social sharing, and friend invitations do not constitute "core functionality" requiring social login
 
 ---
 
@@ -301,63 +308,76 @@
 
 #### 5.1.2(iii) No Surreptitious User Profiling
 
-**Requirement:** Apps must not secretly build user profiles based on collected data.
+**Requirement:** Apps must not secretly build user profiles based on collected data. Apps must not attempt to identify anonymous users or reconstruct user profiles by combining "anonymized," "aggregated," or otherwise non-identifiable data — including from Apple APIs.
 
 **Triggers rejection if:**
 - App collects behavioral data (usage patterns, preferences, browsing) to build advertising or behavioral profiles without disclosure
 - Hidden analytics that profile users beyond what is disclosed in the privacy policy
 - Shadow profiles built from data the user did not knowingly provide
+- App attempts to re-identify users from anonymized or aggregated datasets
+- App combines Apple API data (e.g., device signals, usage patterns from Apple frameworks) with other data to reconstruct user identity or profile
 
 **What to check:**
 - Analytics SDK integrations: what user properties and events are being tracked?
 - Custom user profiling or segmentation code
 - Data sent to external analytics or advertising services
 - Whether profiling activities are disclosed in the privacy policy
+- Any code that correlates Apple API outputs (e.g., `DeviceCheck`, `AppAttestation`, sensor data) with third-party data to identify or profile users
+- Anonymization techniques — verify they cannot be reversed to re-identify individuals
 
 **Key details:**
 - Profiling for personalization within the app may be acceptable if disclosed
 - The violation is secrecy -- profiling the user without their knowledge
+- Re-identification from "anonymized" data is explicitly prohibited regardless of whether the original data was collected with consent
 
 ---
 
-#### 5.1.2(iv) No Contacts or Photos Database Building
+#### 5.1.2(iv) No Contacts, Photos, or Installed Apps Data Harvesting
 
-**Requirement:** Apps must not build private databases from users' Contacts or Photos data.
+**Requirement:** Apps must not build private databases from users' Contacts or Photos data. Apps must not collect information about which apps are installed on a user's device for analytics, advertising, or marketing purposes.
 
 **Triggers rejection if:**
 - App uploads the user's entire contact list to external servers
 - App scrapes or indexes the user's photo library to build a facial recognition or image database
 - Contact or photo data is stored server-side beyond what is needed for the user-initiated feature
+- App queries, enumerates, or transmits the list of apps installed on the user's device for analytics or advertising
 
 **What to check:**
 - `CNContactStore` usage: is the full contact list fetched and transmitted?
 - `PHAsset` / `PHFetchResult` usage: is the full photo library enumerated and uploaded?
 - Server-side storage of contacts or photos data
 - Network requests containing bulk personal data from these frameworks
+- Any calls to `UIApplication.canOpenURL`, `LSApplicationQueriesSchemes`, or similar APIs used to enumerate installed apps and report results to an analytics or advertising backend
 
 **Key details:**
 - Apps may access individual contacts or photos the user explicitly selects
 - The violation is bulk extraction and external storage of these data stores
+- Installed-app enumeration for analytics or advertising is prohibited even if each individual URL check appears innocuous
 
 ---
 
 #### 5.1.2(v) Contact Users at Their Initiative
 
-**Requirement:** Apps must only contact users (via email, push, SMS, etc.) when the user has explicitly initiated or opted into communication.
+**Requirement:** Apps must only contact users (via email, push, SMS, etc.) when the user has explicitly initiated or opted into communication. When accessing contacts for message sending, apps must not include a "Select All" option or pre-select all contacts, and must clearly describe the message's appearance before sending.
 
 **Triggers rejection if:**
 - App sends unsolicited marketing emails or push notifications without opt-in
 - App shares user contact info with third parties who then contact the user
 - Push notifications are used for advertising without user consent
+- App contact-sharing UI includes a "Select All" control or defaults to all contacts selected
+- App sends messages to contacts without first showing the user what the message will look like and who will appear as the sender
 
 **What to check:**
 - Push notification registration flow: is there an opt-in before requesting push permission?
 - Email collection: is there a separate marketing opt-in checkbox (not pre-checked)?
 - Third-party communication services that might contact users independently
+- Contact-picker UI: is there a "Select All" button or all contacts pre-checked? (Must not be present)
+- Message preview: does the app show the user the exact message text and apparent sender before sending to contacts?
 
 **Key details:**
 - Transactional communications (order confirmations, security alerts) are generally permitted
 - Marketing communications always require explicit opt-in
+- The absence of a "Select All" option and the message-preview requirement protect users from accidentally spamming their contact list
 
 ---
 
@@ -519,6 +539,7 @@
 - App collects birthdate or parental contact information beyond what is required for regulatory compliance
 - App fails to provide useful functionality if the user declines to share age or personal information
 - Kids app does not comply with COPPA or GDPR-K requirements
+- App outside the Kids Category implies in its name, subtitle, icon, screenshots, or description that its primary audience is children (even without using the phrase "For Kids" or "For Children")
 
 **What to check:**
 - App Store Connect: age rating and Kids Category designation
@@ -534,6 +555,7 @@
 - "No third-party analytics" is strict -- even analytics SDKs that claim to be privacy-safe are generally prohibited
 - Apple-provided analytics (App Analytics in App Store Connect) is acceptable
 - The app must still be useful and functional even if minimal data is collected
+- The restriction on implying a children audience is broader than the "For Kids" term prohibition: any metadata framing (character design targeted at children, child-focused screenshots, child-centric descriptions) in an app outside the Kids Category risks rejection
 
 ---
 

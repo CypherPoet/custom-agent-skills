@@ -1,7 +1,7 @@
 # Section 4: Design
 
 > Source: https://developer.apple.com/app-store/review/guidelines/
-> Last synced: 2026-05-04
+> Last synced: 2026-06-01
 
 ---
 
@@ -268,7 +268,7 @@
 
 ### 4.4.1 Keyboard Extensions (ASR & NR)
 
-**Requirement:** Keyboard extensions must provide keyboard input functionality. If they include images or emoji, they must also follow Sticker guidelines. They must provide a method to advance to the next keyboard, function without full network access, and cannot launch other apps (besides Settings) or repurpose keyboard UI buttons for unrelated actions.
+**Requirement:** Keyboard extensions must provide keyboard input functionality. If they include images or emoji, they must also follow Sticker guidelines. They must provide a method to advance to the next keyboard, function without full network access, and cannot launch other apps (besides Settings) or repurpose keyboard UI buttons for unrelated actions. User activity collected by the keyboard extension may only be used to enhance its functionality on the iOS device.
 
 **Triggers rejection if:**
 - The keyboard extension does not provide actual keyboard text input
@@ -277,6 +277,7 @@
 - The extension launches apps other than Settings
 - Standard keyboard buttons (e.g., return, space) are repurposed for non-keyboard actions
 - Image/emoji keyboards do not follow Sticker guidelines from Section 10
+- User activity (keystrokes, input data) is transmitted off-device or used for purposes other than improving the keyboard's functionality
 
 **What to check:**
 - `NSExtensionPointIdentifier` set to `com.apple.keyboard-service` in extension's `Info.plist`
@@ -285,11 +286,13 @@
 - Code for `UIApplication.shared.open()` calls -- should only target Settings URLs
 - UI layout for standard keyboard key behaviors (return key triggers return, not a custom action)
 - If the keyboard provides stickers/images, cross-reference with Section 10 Sticker guidelines
+- Network requests from the keyboard extension — audit for any keystroke logging, autocorrect-data uploading, or analytics calls transmitting user input
 
 **Key details:**
 - Applies to both App Store Review (ASR) and Notarization Review (NR)
 - "Full Access" (network) can be requested but must not be required for core keyboard functionality
 - Emoji/sticker keyboards are acceptable but must still provide a path to text input or next keyboard
+- Any off-device use of user input data — even anonymized — for advertising, profiling, or analytics beyond keyboard improvement is prohibited
 
 ---
 
