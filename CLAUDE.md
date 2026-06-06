@@ -8,7 +8,7 @@ Public collection of reusable AI agent skills, packaged as Claude Code plugins t
 
 - `plugins/<plugin-name>/` — Each themed Claude Code plugin. Self-contained — a `git-subdir` sparse-clone fetches only this directory when a consumer installs the plugin. Plugin shape follows the [Claude Code plugins reference](https://code.claude.com/docs/en/plugins-reference); this repo's deltas live in [`docs/PLUGIN-CONVENTIONS.md`](docs/PLUGIN-CONVENTIONS.md).
 - `docs/CATALOG.md` — Top-level cross-reference index. One row per plugin, linking to its `README.md` and listing its components. Refresh rule lives in [`docs/PLUGIN-CONVENTIONS.md`](docs/PLUGIN-CONVENTIONS.md) (new plugin → add row; component counts shift → bump the count; pure prose edits → no change).
-- `.claude/skills/` — Repo-local maintainer skills (see below).
+- Maintainer skills (marketplace + catalog tooling) — provided by the **`cypherpoet-marketplace-kit`** plugin, enabled in `.claude/settings.json` (not repo-local; see [Maintainer Skills](#maintainer-skills)).
 
 ## Creating Plugins Or Skills
 
@@ -18,7 +18,7 @@ See [`docs/PLUGIN-CONVENTIONS.md`](docs/PLUGIN-CONVENTIONS.md) — it covers the
 
 ## Maintainer Skills
 
-Repo-local skills in `.claude/skills/` for managing the marketplace and catalog docs, all running locally (no tokens, no CI):
+These come from the **`cypherpoet-marketplace-kit`** plugin (enabled in `.claude/settings.json`), not repo-local copies — this repo and the private sibling install the same published source. All run locally (no tokens, no CI):
 
 - **`marketplace-publish`** — publish one plugin to `cypherpoet-toolchest` by opening a PR. Manual-only (`disable-model-invocation`); it has an outward-facing side effect, so Claude shouldn't auto-run it.
 - **`marketplace-sync-check`** — read-only audit of local plugins against both the published marketplace catalog (`marketplace.json`) and the local [`docs/CATALOG.md`](docs/CATALOG.md).

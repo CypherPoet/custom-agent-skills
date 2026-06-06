@@ -128,7 +128,7 @@ After creating a new plugin, add a row to [CATALOG.md](CATALOG.md). The `Compone
 
 Refresh the catalog row whenever a plugin's component counts change (adding a skill bumps `5 skills` → `6 skills`) or a new plugin lands. In-place edits that don't shift the counts (typo fixes, prose tweaks, internal refactors) need no catalog change.
 
-Rather than hand-editing, regenerate the whole table from the manifests with the [`catalog-refresh`](../.claude/skills/catalog-refresh/SKILL.md) skill (`python3 .claude/skills/catalog-refresh/scripts/refresh_catalog.py`); `marketplace-sync-check` reports when a refresh is due.
+Rather than hand-editing, regenerate the whole table from the manifests by invoking the [`catalog-refresh`](../plugins/cypherpoet-marketplace-kit/skills/catalog-refresh/SKILL.md) skill (from the `cypherpoet-marketplace-kit` plugin); `marketplace-sync-check` reports when a refresh is due.
 
 ## Publishing
 
