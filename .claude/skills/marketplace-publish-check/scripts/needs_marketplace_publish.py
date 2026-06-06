@@ -8,9 +8,8 @@ edited. A version-only bump does NOT count: that's content, gated by the
 version key, and reaches installs without a catalog re-publish.
 
 Use it when opening a PR to decide whether to apply the `marketplace-publish`
-label. Stdlib only — no jq, no network. Following the repo's other audit
-script, exit status is 1 when there's something actionable (a publish is
-needed), else 0; 2 on error.
+label. Stdlib only — no jq, no network. Exit status is 1 when a publish is
+needed (something actionable), else 0; 2 on error.
 
 Usage: python3 .../needs_marketplace_publish.py [base-ref]   # base-ref defaults to "main"
 """
