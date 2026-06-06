@@ -6,6 +6,7 @@ This repo publishes the following plugins via the [`cypherpoet-toolchest`](https
 |---|---|---|
 | [cypherpoet-agent-tooling](../plugins/cypherpoet-agent-tooling/README.md) | Agent tooling for Claude Code workflow, memory, and docs. | 5 skills |
 | [cypherpoet-app-store-connect-kit](../plugins/cypherpoet-app-store-connect-kit/README.md) | Hands-on App Store Connect submission workflow and console navigation. | 1 skill |
+| [cypherpoet-apple-app-icons](../plugins/cypherpoet-apple-app-icons/README.md) | Apple app icons end to end: design one that converts in the App Store (tap-through, audit, A/B testing) and ship it correctly — Icon Composer Liquid Glass .icon plus an appiconset fallback for older OS versions. | 1 skill |
 | [cypherpoet-apple-app-store-screenshots](../plugins/cypherpoet-apple-app-store-screenshots/README.md) | Apple App Store screenshot and app preview specifications. | 1 skill |
 | [cypherpoet-blender-kit](../plugins/cypherpoet-blender-kit/README.md) | Blender 3D modeling and MCP integration. | 1 skill |
 | [cypherpoet-expo-kit](../plugins/cypherpoet-expo-kit/README.md) | Expo / React Native prototyping. | 1 skill |
