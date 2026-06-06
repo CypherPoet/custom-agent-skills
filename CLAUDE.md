@@ -24,3 +24,8 @@ Repo-local skills in `.claude/skills/` for managing the marketplace and catalog 
 - **`marketplace-sync-check`** — read-only audit of local plugins against both the published marketplace catalog (`marketplace.json`) and the local [`docs/CATALOG.md`](docs/CATALOG.md).
 - **`catalog-refresh`** — regenerate `docs/CATALOG.md`'s plugin table from the manifests; the write-capable counterpart to `marketplace-sync-check`. Manual-only (`disable-model-invocation`); run it after a plugin's `name`/`description`/component counts change. Local-catalog only — never the marketplace.
 - **`dependency-tag-check`** — read-only audit of git-tag coverage for version-constrained plugin dependencies. Manual-only (`disable-model-invocation`); run it after pinning/bumping a constrained dependency.
+- **`marketplace-publish-check`** — read-only check of whether the current branch's diff needs a `marketplace-publish` (plugin added/removed, or `name`/`description`/`homepage` edited). **Model-invokable** — unlike the manual-only skills above, it's read-only and meant to auto-run at PR-creation to drive the `marketplace-publish` label.
+
+## Marketplace Label
+
+A PR touches the **marketplace catalog surface** when it adds/removes a `plugins/<name>/` directory or edits `name`/`description`/`homepage` in a `plugins/*/.claude-plugin/plugin.json` — a version-only bump does **not** count (that's content, gated by the version key). When opening such a PR, run `marketplace-publish-check` and apply the `marketplace-publish` label if it reports a needed publish, so the post-merge `marketplace-publish` isn't missed. (The `docs/CATALOG.md` refresh is a separate surface — see `catalog-refresh`.)
