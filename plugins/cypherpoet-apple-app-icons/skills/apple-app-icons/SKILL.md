@@ -1,19 +1,27 @@
 ---
 name: apple-app-icons
 description: >
-  Use when creating or updating an Apple app icon — authoring a Liquid Glass
-  Icon Composer `.icon`, wiring it into an Xcode target, or adding an
-  `.appiconset` fallback for OS versions below 26. Also use when debugging icon
+  Use when creating, updating, designing, auditing, or A/B-testing an Apple app
+  icon. Two jobs: making the icon *convert* in the App Store (tap-through rate —
+  design principles, an audit rubric, Product Page Optimization A/B tests, a
+  designer brief) and shipping it *correctly* across OS versions (authoring a
+  Liquid Glass Icon Composer `.icon`, wiring it into an Xcode target, adding an
+  `.appiconset` fallback for OS versions below 26). Also use when debugging icon
   problems: off-center artwork, a thin white/bright edge border, alpha-channel
-  rejections on the 1024 marketing icon, wrong sizes, or an icon that renders on
-  iOS 26 but not on older versions (or vice versa). Triggers on "app icon",
-  "Icon Composer", ".icon file", "Liquid Glass icon", "appiconset", "AppIcon",
-  "actool", or icon work on iOS / iPadOS / macOS / watchOS.
+  rejections on the 1024 marketing icon, wrong sizes, an icon that renders on iOS
+  26 but not on older versions, or one that's technically fine but reads poorly at
+  small size or vanishes against a light or dark App Store background. Triggers on
+  "app icon", "icon design", "icon audit", "icon A/B test", "tap-through rate",
+  "icon conversion", "Icon Composer", ".icon file", "Liquid Glass icon",
+  "appiconset", "AppIcon", "actool", or icon work on iOS / iPadOS / macOS /
+  watchOS.
 ---
 
 # Apple App Icons (Icon Composer + appiconset)
 
 ## Overview
+
+An app icon has two jobs: **earn the tap** in the App Store (a design / conversion problem) and **ship correctly** across every OS version and appearance (an engineering problem). This skill covers both — settle the design first, then build and wire the assets.
 
 Modern Apple app icons come in two formats that coexist:
 
@@ -24,10 +32,24 @@ You usually ship **both**, named the same (`AppIcon`), and let the build system 
 
 ## When to Use
 
+- Designing or auditing an icon so it stands out and converts in the App Store
 - Creating or refreshing an app icon from source artwork
 - Wiring an Icon Composer `.icon` into an Xcode project
 - Adding a flat fallback for pre-26 OS versions
+- Planning an icon A/B test, or briefing a designer
 - Debugging: off-center art, white edge border, alpha/size rejections, icon missing on some OS versions
+
+## Design so it earns the tap
+
+A technically perfect icon that nobody taps is still a failure. The icon is the **first thing** a user sees in search and browse — before the title, rating, or screenshots — so a stronger one can lift tap-through meaningfully with no other change. Pressure-test the design *before* you generate assets:
+
+- **It reads at 60×60 pt.** That's the size in iPhone search results; fine detail disappears there. Aim for one recognizable mark, ~2 elements max, and no text. If you can't name it in three words ("bold orange flame"), keep simplifying until you can.
+- **It survives light *and* dark.** The App Store shows your icon on a light background and a dark one, and so does the Home Screen. A near-white or near-black full-bleed fill dissolves into one of them. This is exactly why the `.icon`'s **Dark** appearance variant is worth authoring deliberately rather than letting it default — design for both contexts.
+- **It differs from its category.** Pull up your top ~20 competitors' icons and design to be the one that stands out, not the one that blends in.
+
+Settle the design first, then hand the chosen artwork to the [generation script](#generation-script) below — it bakes that one mark into both the `.icon` and the appiconset so they stay identical.
+
+For the full audit rubric, an iOS A/B-test workflow (App Store Connect → Product Page Optimization), and a designer brief template, see [`references/icon-design-and-aso.md`](references/icon-design-and-aso.md).
 
 ## Quick Reference
 
