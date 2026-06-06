@@ -22,18 +22,6 @@ This repo publishes its plugins via the [`cypherpoet-toolchest`](https://github.
 # ...etc
 ```
 
-## Available Plugins
-
-| Plugin                                                                 | Description                                               |
-| ---------------------------------------------------------------------- | --------------------------------------------------------- |
-| [cypherpoet-agent-tooling](plugins/cypherpoet-agent-tooling/README.md) | Agent tooling for Claude Code workflow, memory, and docs. |
-| [cypherpoet-blender-kit](plugins/cypherpoet-blender-kit/README.md)     | Blender 3D modeling and MCP integration.                  |
-| [cypherpoet-expo-kit](plugins/cypherpoet-expo-kit/README.md)           | Expo / React Native prototyping.                          |
-| [cypherpoet-git-flow](plugins/cypherpoet-git-flow/README.md)           | Git commit and changelog hygiene.                         |
-| [cypherpoet-mobile-dev](plugins/cypherpoet-mobile-dev/README.md)       | iOS App Store publishing best practices.                  |
-| [cypherpoet-svg-tools](plugins/cypherpoet-svg-tools/README.md)         | SVG optimization and cleanup.                             |
-| [cypherpoet-threejs-kit](plugins/cypherpoet-threejs-kit/README.md)     | Three.js / WebGPU / WebGL tooling.                        |
-
 ## Repository Structure
 
 ```
