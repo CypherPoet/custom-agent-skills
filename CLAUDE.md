@@ -18,8 +18,9 @@ See [`docs/PLUGIN-CONVENTIONS.md`](docs/PLUGIN-CONVENTIONS.md) — it covers the
 
 ## Maintainer Skills
 
-Repo-local skills in `.claude/skills/` for managing the marketplace, all on local `gh` creds (no tokens, no CI):
+Repo-local skills in `.claude/skills/` for managing the marketplace and catalog docs, all running locally (no tokens, no CI):
 
 - **`marketplace-publish`** — publish one plugin to `cypherpoet-toolchest` by opening a PR. Manual-only (`disable-model-invocation`); it has an outward-facing side effect, so Claude shouldn't auto-run it.
-- **`marketplace-sync-check`** — read-only audit of which local plugins are / aren't in the catalog.
+- **`marketplace-sync-check`** — read-only audit of local plugins against both the published marketplace catalog (`marketplace.json`) and the local [`docs/CATALOG.md`](docs/CATALOG.md).
+- **`catalog-refresh`** — regenerate `docs/CATALOG.md`'s plugin table from the manifests; the write-capable counterpart to `marketplace-sync-check`. Manual-only (`disable-model-invocation`); run it after a plugin's `name`/`description`/component counts change. Local-catalog only — never the marketplace.
 - **`dependency-tag-check`** — read-only audit of git-tag coverage for version-constrained plugin dependencies. Manual-only (`disable-model-invocation`); run it after pinning/bumping a constrained dependency.

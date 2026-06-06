@@ -128,6 +128,8 @@ After creating a new plugin, add a row to [CATALOG.md](CATALOG.md). The `Compone
 
 Refresh the catalog row whenever a plugin's component counts change (adding a skill bumps `5 skills` → `6 skills`) or a new plugin lands. In-place edits that don't shift the counts (typo fixes, prose tweaks, internal refactors) need no catalog change.
 
+Rather than hand-editing, regenerate the whole table from the manifests with the [`catalog-refresh`](../.claude/skills/catalog-refresh/SKILL.md) skill (`python3 .claude/skills/catalog-refresh/scripts/refresh_catalog.py`); `marketplace-sync-check` reports when a refresh is due.
+
 ## Publishing
 
 After the plugin is ready, use the `marketplace-publish` skill to open a PR on the marketplace this repo publishes to. Scaffolding alone never publishes — the catalog only changes when you explicitly publish.
