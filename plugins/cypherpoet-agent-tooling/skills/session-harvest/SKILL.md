@@ -17,6 +17,8 @@ Claude already saves memories during a conversation when something obviously wor
 
 The goal is to present candidates, not to auto-save. The user decides what's worth keeping.
 
+Most sessions yield little worth keeping — often nothing, and that's the normal, healthy outcome of a sweep, not a failure of it. A low-value memory has a real cost: it dilutes the index and future sessions *trust* it. So bias toward precision over recall — when a candidate doesn't clearly clear the bar, leave it out. A near-constant four or five findings every session is the tell that you're matching categories instead of judging value. Calibrate to the conversation, not to the list of categories below.
+
 
 ## Phase 1: Load Existing Memory
 
@@ -31,7 +33,7 @@ If no memory directory or `MEMORY.md` exists yet, note that everything found wil
 
 ## Phase 2: Scan the Conversation
 
-Review the full conversation looking for moments that carry information useful to future sessions. Focus on these categories:
+Review the full conversation for moments that clear the bar — information specific and durable enough that a future session would genuinely benefit from it. The four categories below are a checklist of *where* to look, not a quota to fill: a session might surface several items in one category and nothing in the others, or nothing at all. Match the conversation, not the list.
 
 ### Feedback (`feedback`)
 
@@ -43,7 +45,7 @@ The highest-value finds — corrections the user gave, approaches that worked un
 - Direct corrections: "no, do X instead", "stop doing Y", "that's not right"
 - Preference statements: "I prefer...", "always use...", "never do..."
 - Frustration followed by explanation: the user pushed back and then explained the right approach
-- Positive confirmation of a non-obvious choice: "yes, exactly", "perfect — keep doing that", accepting an unusual approach without pushback
+- Explicit endorsement of a non-obvious, reusable choice the user would want repeated — ideally with a reason ("yes — always lift the query out of the component like that"). Routine sign-off ("perfect", "looks good", "ship it") is *not* an endorsement, and neither is the mere absence of pushback. Skip both.
 
 *Validated approaches*
 - A technique that resolved a stubborn issue
@@ -84,15 +86,16 @@ Stable traits about the user that calibrate how Claude should work with them acr
 
 ### External References (`reference`)
 
-URLs, tools, documentation, or services that were useful during the session and would be useful again.
+Durable, reusable infrastructure the user returns to across tasks — not every link that happened to help once.
 
 **What to look for:**
-- Documentation pages that solved a problem
-- Tools or services the user relies on
-- Tutorials, articles, or repositories mentioned as useful
-- API endpoints or dashboards referenced
+- A team wiki, dashboard, or canonical doc the user points to as the place for a recurring class of work
+- A tool or service the user relies on regularly
+- An API endpoint or internal resource referenced as a standing fixture
 
-**What to capture:** The reference and why it's useful — what kind of task it helps with.
+A page, article, or StackOverflow answer that solved one specific problem this session is usually ephemeral — it belongs in the Borderline tier at most (see Phase 3), not as a recommended save.
+
+**What to capture:** The reference and why it's useful — what recurring kind of task it helps with.
 
 
 ## Phase 3: Filter and Deduplicate
@@ -109,48 +112,54 @@ For each candidate, apply these filters:
 
 5. **Durable?** Will this matter in a week? A month? Corrections and preferences tend to be durable. A specific bug's details usually aren't, unless the pattern recurs.
 
+6. **Worth saving, or just borderline?** The filters above remove what doesn't belong; this step decides what's worth surfacing *as a recommendation*. Rate each survivor on three axes — **durability** (will it matter next month?), **specificity** (a concrete, reusable rule, or something vague?), and **non-derivability** (absent from code and git?). A candidate strong on all three is **Worth saving**. One that's plausible but weak on any axis — a marginal reference, a mild preference, a lesson that may not recur — is **Borderline**: surface it as optional, not recommended. When you can't decide which tier, it's Borderline.
+
+Most sessions produce a small Worth-saving tier — often empty or a single item. Resist the pull to populate all four categories; a sweep that surfaces one strong memory and nothing else has done its job well.
+
 
 ## Phase 4: Present Findings
 
-Group surviving candidates by memory type. Each type that has findings gets its own heading — don't mix types under the same heading. A `user` type item goes under `### User`, not under `### Feedback`, even if it was discovered alongside feedback items.
+Present findings under two value tiers — **Worth saving** first, then **Borderline — optional**. Within each tier, group by memory type under its own subheading; don't mix types under one subheading. A `user` item goes under `### User`, not `### Feedback`, even if it surfaced alongside feedback. Number items sequentially across both tiers so the user can reference them as "1, 3, 5". Skip any tier or type subheading that has no items — including the entire Borderline tier when nothing is marginal.
 
 For each finding, show:
-- A proposed title (what you'd use as the memory's `name` field)
-- A proposed filename (must match the type in the heading — a finding under `### User` gets a `user_` prefix)
-- A content preview — 2-3 sentences summarizing what would be saved
+- A proposed title (the memory's `name` field)
+- A proposed filename (must match the type of its subheading — a finding under `### User` gets a `user_` prefix)
+- A content preview — 2-3 sentences. For Borderline items, add one phrase on *why* it's marginal.
 
 Format like this:
 
 ```
+## Worth saving
+
 ### Feedback (N items)
 
 1. **Title of the learning**
    `feedback_slug.md`
-   > Content preview summarizing what would be saved — the rule,
-   > why it matters, and when to apply it.
-
-### User (N items)
-
-2. **A user trait or preference**
-   `user_slug.md`
-   > Content preview here.
+   > Content preview — the rule, why it matters, when to apply it.
 
 ### Project (N items)
 
-3. **A project decision**
+2. **A project decision**
    `project_slug.md`
    > Content preview here.
-```
 
-Number items sequentially across all groups so the user can reference them easily. Only include headings for types that have findings — skip empty categories.
+## Borderline — optional (low confidence)
+
+### Reference (N items)
+
+3. **A link that helped once**
+   `reference_slug.md`
+   > Content preview — plus why it's marginal (e.g. "solved one
+   > specific bug; may not recur").
+```
 
 After presenting, ask:
 
-> Which of these should I save? You can say "all", list numbers (e.g. "1, 3, 5"), "none", or ask me to edit any item before saving.
+> Which should I save? Say "all", list numbers (e.g. "1, 3, 5"), "none", or ask me to edit any item first. The Worth-saving items are genuine recommendations; the Borderline ones are surfaced for completeness — skipping them is a fine default.
 
-**If no findings survive filtering**, say so directly:
+**When nothing clears the bar** — which is common, not exceptional — say so directly and stop:
 
-> I reviewed the session and didn't find learnings that aren't already captured or worth persisting. Your existing memories cover the key points.
+> I reviewed the session and didn't find learnings worth persisting that aren't already captured. Your existing memories cover the key points.
 
 **If an existing memory should be updated** rather than a new one created, call that out:
 
@@ -244,4 +253,5 @@ After all items are saved:
 - **One concept per file.** If a learning spans multiple concerns, split it into separate memories.
 - **Write for amnesia.** Memory content should make sense to a future session with zero context about this conversation. No "as we discussed" or "the issue from earlier."
 - **Distill, don't transcribe.** Capture the actionable essence, not a transcript of the conversation. Keep memories concise.
+- **Precision over recall.** A low-value memory has a real cost — it dilutes the index and future sessions trust it. When unsure whether something clears the bar, leave it out or mark it Borderline. The sweep's success is the *value* of what it surfaces, not the count.
 - **Respect user edits.** If the user modifies a proposed memory before saving, use their version exactly.
