@@ -1,17 +1,22 @@
 #!/usr/bin/env python3
-"""Generate Apple app icon assets from a single source image.
+"""Generate an Apple `.appiconset` from a single source image.
 
 Cleans one source (trim a baked-in edge frame, recenter the dominant content,
-flatten to RGB) and emits a Liquid Glass `.icon` bundle and/or a classic
-`.appiconset`, so the `.icon` layer and every appiconset size stay identical.
+flatten to RGB) and emits a classic `.appiconset` — the asset-catalog fallback
+for OS versions below 26. Author the Liquid Glass `.icon` itself in Icon
+Composer; its material and Default / Dark / Clear appearance variants can't be
+produced by a script.
+
+iOS and watchOS need only the single 1024 (Xcode's "Single Size" generates the
+rest at build); the macOS size ladder is what this script is really for.
 
 Examples
 --------
-    # Both formats, cleaned and recentered:
+    # Clean, recenter, and emit the appiconset:
     generate-app-icons.py source.png --clean --recenter \
-        --icon AppIcon.icon --appiconset AppIcon.appiconset
+        --appiconset AppIcon.appiconset
 
-    # Just the appiconset, trimming a known 5px frame:
+    # Trim a known 5px frame, no recenter:
     generate-app-icons.py source.png --trim 5 --appiconset AppIcon.appiconset
 
 Requires Pillow (`pip install pillow`).
@@ -27,7 +32,8 @@ try:
 except ImportError:
     sys.exit("This script needs Pillow:  pip install pillow")
 
-# (size, name, [(scale, point_size), ...]) — iOS uses one universal 1024.
+# (size, name, [(scale, point_size), ...]). iOS/watchOS need only the single
+# 1024 (Xcode "Single Size" generates the rest); the macOS ladder is the rest.
 APPICONSET = [
     ("AppIcon-1024.png", 1024, [("universal-ios", 1024)]),
     ("AppIcon-mac-16.png", 16, [("mac-1x", 16)]),
@@ -96,28 +102,6 @@ def prepare(path, trim, clean, recenter):
     return canvas
 
 
-def write_icon(canvas, icon_path, scale):
-    name = "app-icon.png"
-    assets = os.path.join(icon_path, "Assets")
-    os.makedirs(assets, exist_ok=True)
-    canvas.save(os.path.join(assets, name), "PNG")
-    manifest = {
-        "fill": {"automatic-gradient": "extended-srgb:0.0,0.53,1.0,1.0"},
-        "groups": [{
-            "name": "App Icon",
-            "layers": [{
-                "image-name": name,
-                "name": "app-icon",
-                "position": {"scale": scale, "translation-in-points": [0, 0]},
-            }],
-        }],
-        "supported-platforms": {"circles": ["watchOS"], "squares": "shared"},
-    }
-    with open(os.path.join(icon_path, "icon.json"), "w") as f:
-        json.dump(manifest, f, indent=2)
-    print(f"wrote {icon_path}")
-
-
 def write_appiconset(canvas, set_path):
     os.makedirs(set_path, exist_ok=True)
     for filename, size, _ in APPICONSET:
@@ -143,22 +127,15 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__,
                                  formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("source", help="source image (ideally >= 2048x2048, square)")
-    ap.add_argument("--icon", metavar="PATH.icon", help="write a single-layer .icon bundle")
-    ap.add_argument("--appiconset", metavar="PATH.appiconset", help="write an .appiconset")
+    ap.add_argument("--appiconset", metavar="PATH.appiconset", required=True,
+                    help="write an .appiconset (single-size iOS 1024 + macOS ladder)")
     ap.add_argument("--clean", action="store_true", help="auto-detect and trim a bright edge frame")
     ap.add_argument("--trim", type=int, metavar="N", help="trim exactly N px from each edge (overrides --clean)")
     ap.add_argument("--recenter", action="store_true", help="center the dominant content in the tile")
-    ap.add_argument("--scale", type=float, default=0.52, help="icon.json layer scale (default: 0.52)")
     args = ap.parse_args()
 
-    if not args.icon and not args.appiconset:
-        ap.error("nothing to do: pass --icon and/or --appiconset")
-
     canvas = prepare(args.source, args.trim, args.clean, args.recenter)
-    if args.icon:
-        write_icon(canvas, args.icon, args.scale)
-    if args.appiconset:
-        write_appiconset(canvas, args.appiconset)
+    write_appiconset(canvas, args.appiconset)
 
 
 if __name__ == "__main__":

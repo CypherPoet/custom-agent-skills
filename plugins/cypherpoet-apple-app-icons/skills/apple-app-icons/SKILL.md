@@ -47,7 +47,7 @@ A technically perfect icon that nobody taps is still a failure. The icon is the 
 - **It survives light *and* dark.** The App Store shows your icon on a light background and a dark one, and so does the Home Screen. A near-white or near-black full-bleed fill dissolves into one of them. This is exactly why the `.icon`'s **Dark** appearance variant is worth authoring deliberately rather than letting it default — design for both contexts.
 - **It differs from its category.** Pull up your top ~20 competitors' icons and design to be the one that stands out, not the one that blends in.
 
-Settle the design first, then hand the chosen artwork to the [generation script](#generation-script) below — it bakes that one mark into both the `.icon` and the appiconset so they stay identical.
+Settle the design first, then build the assets from that one mark — author the `.icon` in Icon Composer, and run the [generation script](#generation-script) below for the appiconset fallback.
 
 For the full audit rubric, an iOS A/B-test workflow (App Store Connect → Product Page Optimization), and a designer brief template, see [`references/icon-design-and-aso.md`](references/icon-design-and-aso.md).
 
@@ -61,7 +61,7 @@ For the full audit rubric, an iOS A/B-test workflow (App Store Connect → Produ
 | Tell Xcode which icon | `ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon` (resolves to the `.icon` by base name) |
 | iOS 1024 marketing PNG | **no alpha channel** (App Store rejects alpha); full-bleed, system masks corners |
 | Verify | `xcodebuild … build`, then inspect the compiled `Assets.car` |
-| Generate cleaned assets | `${CLAUDE_PLUGIN_ROOT}/skills/apple-app-icons/scripts/generate-app-icons.py` |
+| Generate the appiconset fallback | `${CLAUDE_PLUGIN_ROOT}/skills/apple-app-icons/scripts/generate-app-icons.py` (cleans the source, writes the macOS ladder; author the `.icon` in Icon Composer) |
 
 ## The `.icon` bundle
 
@@ -97,8 +97,8 @@ A minimal single-layer `icon.json`:
 
 Key points:
 
-- **`position.scale` / `translation-in-points` are the layer transform**, not the pixels. Icon Composer stores centering/sizing as numbers in `icon.json` — the embedded PNG keeps its original framing. So a PNG that looks off-center on disk can still render centered, and vice versa. When generating outside the GUI, prefer **baking the final framing into the PNG** and leaving `translation-in-points: [0, 0]` — what you see in the file is then what ships.
-- `scale` maps the source onto the ~1024 pt tile (a 2048 px source at `0.52` ≈ fills it with slight bleed); the exact value is artwork-dependent — fit it in Icon Composer's canvas or with the script's `--scale`.
+- **`position.scale` / `translation-in-points` are the layer transform**, not the pixels. Icon Composer stores centering/sizing as numbers in `icon.json` — the embedded PNG keeps its original framing. So a PNG that looks off-center on disk can still render centered, and vice versa. Prefer **baking the final framing into the PNG you import** and leaving `translation-in-points: [0, 0]` — what you see in the file is then what ships.
+- `scale` maps the source onto the ~1024 pt tile (a 2048 px source at `0.52` ≈ fills it with slight bleed); the exact value is artwork-dependent — fit it in Icon Composer's canvas.
 - `fill` is the backdrop shown through transparent areas; irrelevant for a full-bleed opaque layer.
 
 ## Source-art requirements
@@ -134,16 +134,17 @@ Expect Liquid Glass layer renditions plus `AppIcon … UIAppearanceAny` / `…Da
 
 ## Generation script
 
-`scripts/generate-app-icons.py` (Pillow) cleans one source and emits both formats from it — so the `.icon` layer and every appiconset size stay identical:
+`scripts/generate-app-icons.py` (Pillow) cleans one source and emits the **`.appiconset`** fallback. Author the Liquid Glass `.icon` itself in **Icon Composer** — its material and Default / Dark / Clear appearance variants can't be produced by a script.
 
 ```shell
 python3 "${CLAUDE_PLUGIN_ROOT}/skills/apple-app-icons/scripts/generate-app-icons.py" \
   source.png --clean --recenter \
-  --icon path/to/AppIcon.icon \
   --appiconset path/to/AppIcon.appiconset
 ```
 
-`--clean` trims a uniform edge frame, `--recenter` centers the dominant content, both formats are written flattened to RGB (no alpha). Run `--help` for options.
+`--clean` trims a uniform edge frame, `--recenter` centers the dominant content, every PNG is flattened to RGB (no alpha). Run `--help` for options.
+
+**You rarely need to generate the iOS sizes.** Xcode 14+ has a **"Single Size"** app-icon slot — drop one 1024 and the build generates every iOS and watchOS size for you. macOS has no equivalent, so the size ladder the script writes earns its keep on **macOS**; the iOS entry it emits is just that single 1024.
 
 ## Common Mistakes
 
