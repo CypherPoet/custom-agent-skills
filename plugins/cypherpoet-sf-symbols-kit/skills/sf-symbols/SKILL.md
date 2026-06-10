@@ -8,7 +8,11 @@ description: >-
   Symbol as a clean SVG at any weight, build an SF Symbol icon set for a
   web/THREE.js/design project, or create CUSTOM SF Symbols — converting their
   own SVG art into an importable symbol template, exporting an editable
-  template of a system symbol, or validating a template file. Triggers include
+  template of a system symbol, or validating a template file. Also use for SF
+  Symbols design questions: naming conventions, rendering modes
+  (monochrome/hierarchical/palette/multicolor), gradients, variable color,
+  weights/scales, outline-vs-fill variant choice, and symbol animations —
+  bundled references cover Apple's HIG guidance. Triggers include
   "SF Symbol(s)", "Apple icons", "system symbol", "symbol image set",
   "convert this SVG to an SF Symbol", and "custom symbol".
 ---
@@ -58,7 +62,9 @@ but expand the user's phrasing into synonyms yourself before giving up:
 
 Name conventions help searching: style suffixes like `.fill`, `.circle`,
 `.slash` are separate catalog entries; localized (`.ar`, `.hi`, …) and `.rtl`
-mirror variants are excluded by default (include with `--all-variants`).
+mirror variants are excluded by default (include with `--all-variants`). The
+full name grammar (modifier ordering, badges, enclosures) is in
+[references/naming-conventions.md](references/naming-conventions.md).
 
 ## Exporting SVGs
 
@@ -95,10 +101,26 @@ The conversion pipeline targets Apple's documented template format
 it to the app via `open -a "SF Symbols"` — the app registers as an SVG viewer
 and treats an opened SVG as a custom-symbol import, no dialogs. The **filename
 stem becomes the symbol's display name** (`--out my.bolt.svg` → `my.bolt`), so
-name the output file what the symbol should be called. For Xcode, drop the
+choose the symbol's final name first — follow the system grammar in
+[references/naming-conventions.md](references/naming-conventions.md)
+(lowercase dotted, base first, `.fill`-style modifiers after). For Xcode, drop the
 file into a **Symbol Image Set** in an asset catalog instead. Color annotations
 (multicolor/hierarchical/variable color) are applied afterwards in the SF
 Symbols app GUI — the emitted template is monochrome v3.0 (iOS 15+).
+
+## Reference Docs (Load on Demand)
+
+Distilled SF Symbols domain knowledge — Apple's HIG and template-format
+article plus empirical catalog analysis. Read the matching one before
+answering design questions; don't guess from general knowledge:
+
+| Reference | Read when… |
+|---|---|
+| [naming-conventions.md](references/naming-conventions.md) | predicting/explaining a symbol name, or naming a custom symbol and its output file |
+| [rendering-modes.md](references/rendering-modes.md) | choosing monochrome/hierarchical/palette/multicolor, gradients, or variable color; pre-annotation advice |
+| [weights-scales-variants.md](references/weights-scales-variants.md) | picking a weight/scale, or outline vs fill vs slash vs enclosed for a UI context |
+| [custom-symbol-design.md](references/custom-symbol-design.md) | any custom-symbol work beyond mechanically running `custom` — design rules, template anatomy, version targeting, import/validation failures |
+| [animations.md](references/animations.md) | recommending how a symbol should animate (status, feedback, progress) |
 
 ## Licensing Note
 
