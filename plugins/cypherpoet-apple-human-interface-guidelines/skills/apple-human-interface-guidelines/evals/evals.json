@@ -1,0 +1,80 @@
+{
+  "skill_name": "apple-human-interface-guidelines",
+  "evals": [
+    {
+      "id": 1,
+      "eval_name": "ipad-tab-bar-vs-sidebar",
+      "prompt": "I'm building an iPad reading app with a library, a storefront, and a settings area. Should I use a tab bar or a sidebar for the top-level navigation? It also runs on iPhone.",
+      "expected_output": "A platform-aware recommendation: on iPadOS consider the convertible tab bar (sidebarAdaptable) that switches between sidebar and tab bar; on iPhone (compact width) a tab bar with 3 top-level destinations. Reasoning grounded in HIG guidance (tab bars for 2-5 peer sections, sidebars for larger screens/hierarchies, collapse behavior at compact width).",
+      "files": [],
+      "assertions": [
+        "Recommends a sidebar (or the convertible sidebarAdaptable tab bar) for iPad regular-width layouts",
+        "Recommends a tab bar for iPhone compact width",
+        "Grounds the recommendation in HIG guidance (peer top-level sections / larger-screen hierarchy) rather than personal taste"
+      ]
+    },
+    {
+      "id": 2,
+      "eval_name": "watchos-button-specs",
+      "prompt": "What's the minimum tap target size for buttons in my watchOS app, and how should I style/arrange two side-by-side buttons at the bottom of the screen?",
+      "expected_output": "Cites watchOS hit-target values (44x44 pt default, 28x28 pt minimum control size), capsule-shaped buttons, and the side-by-side rule: equal heights with images or short titles; full-width buttons preferred for primary actions; toolbar placement for corner buttons.",
+      "files": [],
+      "assertions": [
+        "States the watchOS hit target of 44x44 pt (28x28 pt minimum control size)",
+        "Describes watchOS buttons as capsule-shaped",
+        "States the side-by-side rule: two buttons need equal heights and images or short titles"
+      ]
+    },
+    {
+      "id": 3,
+      "eval_name": "sheet-vs-popover-filters",
+      "prompt": "On iPhone my filter options open in a popover like on iPad but it looks weird. Should this be a sheet? What does Apple recommend for a quick filter UI on iPhone vs Mac?",
+      "expected_output": "Explains that popovers are for iPad/Mac and that on iPhone the same content should present as a sheet (or menu for simple option lists); platform-specific recommendation for iPhone vs Mac. NOTE: components-presentation.md is outside pilot scope \u2014 this eval also probes graceful behavior when the routing table points at a not-yet-built reference.",
+      "files": [],
+      "assertions": [
+        "Recommends a sheet (or menu) instead of a popover on iPhone",
+        "States that popovers are appropriate on iPad and Mac",
+        "Does not fabricate HIG citations for content the skill's references don't cover"
+      ]
+    },
+    {
+      "id": 4,
+      "eval_name": "dark-mode-color-audit",
+      "prompt": "My app hard-codes #FFFFFF backgrounds and a custom blue (#1E6EF4) for buttons. What do I need to change to support Dark Mode properly per Apple's guidelines?",
+      "expected_output": "Replace hard-coded hex with semantic/system colors (systemBackground sets, label colors); define custom brand colors as asset-catalog Color Sets with light/dark (and increased-contrast) variants; minimum 4.5:1 contrast (7:1 ideal); don't add an app-specific appearance toggle; mention base vs elevated dark backgrounds on iOS.",
+      "files": [],
+      "assertions": [
+        "Recommends semantic/system background and label colors instead of hard-coded hex",
+        "Recommends asset-catalog Color Sets with light/dark variants for the custom blue",
+        "Cites the 4.5:1 minimum contrast ratio",
+        "Advises against adding an app-specific light/dark appearance toggle"
+      ]
+    },
+    {
+      "id": 5,
+      "eval_name": "menu-component-selection",
+      "prompt": "When should I use a pull-down button vs a pop-up button vs a context menu in an iOS app? I have a 'Sort' control and a per-item actions affordance in a list view.",
+      "expected_output": "Correct component mapping: pull-down = menu of actions related to the button's purpose; pop-up = mutually exclusive options with selection state (right for Sort); context menu = touch-and-hold on an item for its most-used commands (right for per-item actions), destructive items last/red, items duplicated in main UI.",
+      "files": [],
+      "assertions": [
+        "Maps the Sort control to a pop-up button (mutually exclusive options with selection state)",
+        "Maps per-item actions to a context menu (touch and hold)",
+        "States the pull-down vs pop-up distinction: actions vs mutually exclusive options",
+        "Notes that context-menu items must also be available in the main interface"
+      ]
+    },
+    {
+      "id": 6,
+      "eval_name": "liquid-glass-materials",
+      "prompt": "Designing a new iOS app in 2026 \u2014 how should I handle the tab bar and toolbar materials? I keep hearing about Liquid Glass. What are the rules?",
+      "expected_output": "Current-era guidance: system tab bars/toolbars adopt Liquid Glass automatically \u2014 don't recreate or fight it; Liquid Glass belongs to the floating control layer, never the content layer; regular vs clear variants (clear only over rich media, with 35% dimming layer rule); tint one prominent button rather than many; monochromatic bars over colorful content; scroll edge effect rather than backgrounds.",
+      "files": [],
+      "assertions": [
+        "States that system tab bars/toolbars adopt Liquid Glass automatically and shouldn't be recreated",
+        "Places Liquid Glass in the floating control layer, never the content layer",
+        "Distinguishes the regular vs clear variants (clear only over rich media)",
+        "Advises tinting at most one prominent control rather than many"
+      ]
+    }
+  ]
+}
