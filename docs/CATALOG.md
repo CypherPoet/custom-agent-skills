@@ -13,6 +13,7 @@ This repo publishes the following plugins via the [`cypherpoet-toolchest`](https
 | [cypherpoet-git-flow](../plugins/cypherpoet-git-flow/README.md) | Git commit and changelog hygiene. | 2 skills |
 | [cypherpoet-marketplace-kit](../plugins/cypherpoet-marketplace-kit/README.md) | Maintainer toolkit for running a Claude Code plugin marketplace — publish plugins, audit marketplace and catalog sync, regenerate the local catalog, and verify dependency-version tags. | 5 skills |
 | [cypherpoet-mobile-dev](../plugins/cypherpoet-mobile-dev/README.md) | iOS App Store publishing best practices. | 1 skill |
+| [cypherpoet-sf-symbols-kit](../plugins/cypherpoet-sf-symbols-kit/README.md) | Apple SF Symbols end to end: find the right symbol with natural language, export clean recolorable SVGs at any of the 9 weights, browse an HTML gallery, build full icon sets, and convert your own SVG art into importable custom SF Symbol templates. | 1 skill |
 | [cypherpoet-svg-tools](../plugins/cypherpoet-svg-tools/README.md) | SVG optimization and cleanup. | 1 skill |
 | [cypherpoet-threejs-kit](../plugins/cypherpoet-threejs-kit/README.md) | Three.js / WebGPU / WebGL tooling. | 1 skill |
 | [cypherpoet-webgl-kit](../plugins/cypherpoet-webgl-kit/README.md) | Raw WebGL2 + GLSL shader tooling. | 1 skill |
