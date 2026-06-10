@@ -1,0 +1,22 @@
+[
+  {"query": "is there an apple symbol for like a wifi router?? building a settings screen in swiftui and the SF Symbols app search gives me nothing useful", "should_trigger": true},
+  {"query": "can you export the sf symbol chevron.right at semibold weight as an svg into src/assets/icons/ in my dashboard repo — it needs to inherit the css color of the parent button", "should_trigger": true},
+  {"query": "i have our brand mark at ~/Design/marks/acme-spark.svg and want to use it as a custom SF Symbol so it sits next to system icons in our iOS tab bar. convert it into that template format the SF Symbols app wants", "should_trigger": true},
+  {"query": "designer wants our weather glyphs to render the sun yellow and the cloud gray — is that palette mode or multicolor in SF Symbols, and how do we annotate a custom symbol for it?", "should_trigger": true},
+  {"query": "our app still targets iOS 15. can we use the sos.circle symbol there, and if not what's the closest fallback that does work on 15?", "should_trigger": true},
+  {"query": "I want to browse every SF Symbol in the weather category side by side to pick icons for a forecast widget — can you put together some kind of visual gallery for me", "should_trigger": true},
+  {"query": "naming question for our custom symbol: should it be acme.cart.badge.plus or acme.plus.badge.cart? whats apples ordering rule for modifiers", "should_trigger": true},
+  {"query": "building a THREE.js scene that extrudes svg icons into 3d — get me apple's play/pause/stop glyphs as svgs at bold so I can feed them to SVGLoader", "should_trigger": true},
+  {"query": "when the wifi connection comes back, which sf symbol animation preset fits — bounce? pulse? variable color? not sure what each one is supposed to communicate", "should_trigger": true},
+  {"query": "quick one: tab bar icons in our iOS app — outline or filled versions? the labels are SF Pro medium and the designer thinks the current ones look off", "should_trigger": true},
+  {"query": "find me a font awesome icon for 'sync' and tell me its unicode codepoint so I can use it in our legacy css pipeline", "should_trigger": false},
+  {"query": "what's the right SF Pro text style for a navigation bar title on iOS, and do I need to tweak tracking at larger sizes?", "should_trigger": false},
+  {"query": "this svg logo from our designer has a stroke that renders wrong in safari — can you look at the path data and fix it? file is at assets/logo.svg", "should_trigger": false},
+  {"query": "design an app icon for our iOS app — apple-style rounded square, subtle gradient, a lightning bolt motif", "should_trigger": false},
+  {"query": "what's the shortcode for the gear emoji in slack and will it render the same on android?", "should_trigger": false},
+  {"query": "my Image(systemName: \"bell.fill\") is getting clipped inside an HStack when dynamic type is XXL — why is the frame collapsing?", "should_trigger": false},
+  {"query": "add material ui icons to our react admin panel — we want the Rounded variant and tree-shaking set up properly", "should_trigger": false},
+  {"query": "model a low-poly 3d gear icon in blender for our game's settings menu, maybe 500 tris max", "should_trigger": false},
+  {"query": "our widget pulls weatherkit conditions — write the mapping from the API condition codes to the image assets we already ship in the asset catalog", "should_trigger": false},
+  {"query": "I need a plain unicode character for a refresh arrow to drop directly into a button label string — not an image, just text", "should_trigger": false}
+]
