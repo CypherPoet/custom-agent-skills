@@ -1,0 +1,207 @@
+{
+  "schema_version": 1,
+  "source_root": "https://developer.apple.com/design/human-interface-guidelines",
+  "last_full_sync": "2026-06-10",
+  "hash_algorithm": "sha256",
+  "hash_canonicalization": "v1",
+  "pages": [
+    {
+      "url": "https://developer.apple.com/design/human-interface-guidelines/accessibility",
+      "title": "Accessibility",
+      "section": "foundations",
+      "reference_file": "foundations-ux.md",
+      "content_hash": "sha256:d5beec630295c834f142783b58b6357635df651f4ca6cd95e0a6cb10e326e17e",
+      "last_synced": "2026-06-10",
+      "status": "active"
+    },
+    {
+      "url": "https://developer.apple.com/design/human-interface-guidelines/action-sheets",
+      "title": "Action sheets",
+      "section": "components",
+      "reference_file": "components-menus-actions.md",
+      "content_hash": "sha256:75e93d572d3bb256036825499084bd3f1dd36ab66d985dede764ea38a0629f37",
+      "last_synced": "2026-06-10",
+      "status": "active"
+    },
+    {
+      "url": "https://developer.apple.com/design/human-interface-guidelines/activity-views",
+      "title": "Activity views",
+      "section": "components",
+      "reference_file": "components-menus-actions.md",
+      "content_hash": "sha256:6f4def23f8f4e9758d7659d84381a7f5286ec6b93eda8ff2297ac30fa98b8c98",
+      "last_synced": "2026-06-10",
+      "status": "active"
+    },
+    {
+      "url": "https://developer.apple.com/design/human-interface-guidelines/branding",
+      "title": "Branding",
+      "section": "foundations",
+      "reference_file": "foundations-visual.md",
+      "content_hash": "sha256:f1b33941561da40cd4bb3dc507aed3652d1e52b58403e3a0f71f5275c8bb0034",
+      "last_synced": "2026-06-10",
+      "status": "active"
+    },
+    {
+      "url": "https://developer.apple.com/design/human-interface-guidelines/buttons",
+      "title": "Buttons",
+      "section": "components",
+      "reference_file": "components-menus-actions.md",
+      "content_hash": "sha256:6e3544f6c37e9d5c959b3afeff3d9fe37e5dd000fd535b2be251a9d3f1c7e3ed",
+      "last_synced": "2026-06-10",
+      "status": "active"
+    },
+    {
+      "url": "https://developer.apple.com/design/human-interface-guidelines/color",
+      "title": "Color",
+      "section": "foundations",
+      "reference_file": "foundations-visual.md",
+      "content_hash": "sha256:508c492d08c5a3445157564aaa7b348b8dfbf97ed8dc969fbeaa1177a8b79a9e",
+      "last_synced": "2026-06-10",
+      "status": "active"
+    },
+    {
+      "url": "https://developer.apple.com/design/human-interface-guidelines/context-menus",
+      "title": "Context menus",
+      "section": "components",
+      "reference_file": "components-menus-actions.md",
+      "content_hash": "sha256:e54e723a9ecb0d9a4457c4bdc9e69d93419233d8c0e9e2e9211010edbfb253b2",
+      "last_synced": "2026-06-10",
+      "status": "active"
+    },
+    {
+      "url": "https://developer.apple.com/design/human-interface-guidelines/dark-mode",
+      "title": "Dark Mode",
+      "section": "foundations",
+      "reference_file": "foundations-visual.md",
+      "content_hash": "sha256:dd8c8eba7fdaf625c380a817d869b5f6d35a2c934050aef907fa94018e73a84e",
+      "last_synced": "2026-06-10",
+      "status": "active"
+    },
+    {
+      "url": "https://developer.apple.com/design/human-interface-guidelines/edit-menus",
+      "title": "Edit menus",
+      "section": "components",
+      "reference_file": "components-menus-actions.md",
+      "content_hash": "sha256:ef9b0618350533619a952f63fa49d89a44b3a0e914373fb06658bbe630de38b7",
+      "last_synced": "2026-06-10",
+      "status": "active"
+    },
+    {
+      "url": "https://developer.apple.com/design/human-interface-guidelines/icons",
+      "title": "Icons",
+      "section": "foundations",
+      "reference_file": "foundations-visual.md",
+      "content_hash": "sha256:15d2312ac09e9f0cee57ed112576a332bbd29a269912f32fbae1b230639d5e29",
+      "last_synced": "2026-06-10",
+      "status": "active"
+    },
+    {
+      "url": "https://developer.apple.com/design/human-interface-guidelines/images",
+      "title": "Images",
+      "section": "foundations",
+      "reference_file": "foundations-visual.md",
+      "content_hash": "sha256:f8dd53c5b096ca75faf0c0138e5f8609876a7ebe7bfc959655396616e9347e92",
+      "last_synced": "2026-06-10",
+      "status": "active"
+    },
+    {
+      "url": "https://developer.apple.com/design/human-interface-guidelines/inclusion",
+      "title": "Inclusion",
+      "section": "foundations",
+      "reference_file": "foundations-ux.md",
+      "content_hash": "sha256:0190a426343669f0fe81fe947cce392d9060d319465946f7b4f866691ef5d138",
+      "last_synced": "2026-06-10",
+      "status": "active"
+    },
+    {
+      "url": "https://developer.apple.com/design/human-interface-guidelines/layout",
+      "title": "Layout",
+      "section": "foundations",
+      "reference_file": "foundations-ux.md",
+      "content_hash": "sha256:1ecc01a49e45426a518cdf1c142d1585c19f77095be7717f3f08840c5ab25832",
+      "last_synced": "2026-06-10",
+      "status": "active"
+    },
+    {
+      "url": "https://developer.apple.com/design/human-interface-guidelines/materials",
+      "title": "Materials",
+      "section": "foundations",
+      "reference_file": "foundations-visual.md",
+      "content_hash": "sha256:f4392d5dd8518922f12f1d3261ee061d6bb1678de6e709f4356258a004d08fb7",
+      "last_synced": "2026-06-10",
+      "status": "active"
+    },
+    {
+      "url": "https://developer.apple.com/design/human-interface-guidelines/menus",
+      "title": "Menus",
+      "section": "components",
+      "reference_file": "components-menus-actions.md",
+      "content_hash": "sha256:90bbdba664bd0354345e60d51b1b3a320cf1b3902418f76701117e3faa522142",
+      "last_synced": "2026-06-10",
+      "status": "active"
+    },
+    {
+      "url": "https://developer.apple.com/design/human-interface-guidelines/motion",
+      "title": "Motion",
+      "section": "foundations",
+      "reference_file": "foundations-ux.md",
+      "content_hash": "sha256:974bf2280e47c931daa5aeb91a79650257365e85109c7a6b2bd92b142c00f030",
+      "last_synced": "2026-06-10",
+      "status": "active"
+    },
+    {
+      "url": "https://developer.apple.com/design/human-interface-guidelines/pointing-devices",
+      "title": "Pointing devices",
+      "section": "foundations",
+      "reference_file": "foundations-ux.md",
+      "content_hash": "sha256:86a6503dc88beb1d9c681a156d6d763ef1249231469d8883e07ea65ebd8806e0",
+      "last_synced": "2026-06-10",
+      "status": "active"
+    },
+    {
+      "url": "https://developer.apple.com/design/human-interface-guidelines/pop-up-buttons",
+      "title": "Pop-up buttons",
+      "section": "components",
+      "reference_file": "components-menus-actions.md",
+      "content_hash": "sha256:ba9c89ce017263148e62b4ff94db903889a9ec40856548c2672d96451e574067",
+      "last_synced": "2026-06-10",
+      "status": "active"
+    },
+    {
+      "url": "https://developer.apple.com/design/human-interface-guidelines/pull-down-buttons",
+      "title": "Pull-down buttons",
+      "section": "components",
+      "reference_file": "components-menus-actions.md",
+      "content_hash": "sha256:2269c2ecab9286a6f021e8b35e876dd4c77a7c7a0ee3f71001a2f5a26d1642cf",
+      "last_synced": "2026-06-10",
+      "status": "active"
+    },
+    {
+      "url": "https://developer.apple.com/design/human-interface-guidelines/sf-symbols",
+      "title": "SF Symbols",
+      "section": "foundations",
+      "reference_file": "foundations-visual.md",
+      "content_hash": "sha256:e3f2a91423d13a1e18d587e4fd444f1f99f0d6928b03e95f3a56695e049f970f",
+      "last_synced": "2026-06-10",
+      "status": "active"
+    },
+    {
+      "url": "https://developer.apple.com/design/human-interface-guidelines/typography",
+      "title": "Typography",
+      "section": "foundations",
+      "reference_file": "foundations-visual.md",
+      "content_hash": "sha256:c3ef2c88a9547524be412fe95e0109fd706f98745ef2548c9adbf133aebfce89",
+      "last_synced": "2026-06-10",
+      "status": "active"
+    },
+    {
+      "url": "https://developer.apple.com/design/human-interface-guidelines/writing",
+      "title": "Writing",
+      "section": "foundations",
+      "reference_file": "foundations-ux.md",
+      "content_hash": "sha256:3142f1003bda43b5b27b2fa73e5b69fbc5304f67a9507b8c9d45a4980a355fea",
+      "last_synced": "2026-06-10",
+      "status": "active"
+    }
+  ]
+}
