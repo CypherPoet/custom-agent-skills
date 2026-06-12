@@ -1,11 +1,17 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "cypherpoet-agent-tooling",
-  "version": "0.1.2",
-  "description": "Agent tooling for Claude Code workflow, memory, and docs.",
+  "version": "0.2.0",
+  "description": "Bundle of Claude Code agent-tooling plugins for docs search, memory consolidation, and session handoff/harvest.",
   "author": { "name": "CypherPoet" },
   "homepage": "https://github.com/CypherPoet/custom-agent-skills/tree/main/plugins/cypherpoet-agent-tooling",
   "repository": "https://github.com/CypherPoet/custom-agent-skills.git",
   "license": "MIT",
-  "keywords": ["claude-code", "agent-tooling", "workflow", "memory", "documentation"]
+  "keywords": ["claude-code", "agent-tooling", "bundle", "memory", "workflow"],
+  "dependencies": [
+    "cypherpoet-claude-docs-search",
+    "cypherpoet-claude-memory-consolidation",
+    "cypherpoet-session-handoff",
+    "cypherpoet-session-harvest"
+  ]
 }

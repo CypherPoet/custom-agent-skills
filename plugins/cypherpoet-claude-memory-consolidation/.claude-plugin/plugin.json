@@ -1,0 +1,11 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
+  "name": "cypherpoet-claude-memory-consolidation",
+  "version": "0.1.0",
+  "description": "Audit and consolidate Claude's per-project auto-memory directory, deduping, repairing, and pruning with per-cluster approval.",
+  "author": { "name": "CypherPoet" },
+  "homepage": "https://github.com/CypherPoet/custom-agent-skills/tree/main/plugins/cypherpoet-claude-memory-consolidation",
+  "repository": "https://github.com/CypherPoet/custom-agent-skills.git",
+  "license": "MIT",
+  "keywords": ["claude-code", "memory", "consolidation", "audit", "housekeeping"]
+}
