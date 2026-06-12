@@ -27,7 +27,7 @@
         "The template passes structural validation against Apple's documented template format (checked with an independent run of the skill's validate-template linter)",
         "The original art's two shapes (bolt polygon + badge circle) survive as path geometry in the template (converted to <path> elements, not dropped or rasterized)",
         "Symbol/file name follows the SF Symbols grammar: lowercase dotted segments, base-first with modifiers after (e.g. voltlight.bolt.badge.svg) — no spaces, hyphens-as-separators, or uppercase",
-        "Instructions cover BOTH (a) importing into the SF Symbols app and (b) Xcode usage via a Symbol Image Set in an asset catalog",
+        "Instructions cover BOTH (a) importing into the SF Symbols app and (b) using it from Xcode — adding the SVG to an asset-catalog Symbol Image Set AND referencing it in code by asset name with the named initializer (e.g. Image(\"…\") / UIImage(named:)), explicitly not systemName",
         "No GUI application was opened and no import into the SF Symbols app was performed (deliverable is the file plus written steps)"
       ]
     },
