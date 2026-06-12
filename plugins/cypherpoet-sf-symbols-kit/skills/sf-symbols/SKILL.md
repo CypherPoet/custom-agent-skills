@@ -2,19 +2,16 @@
 name: sf-symbols
 description: >-
   Work with Apple SF Symbols end to end. Use whenever the user wants to find or
-  look up an SF Symbol ("what symbol/icon fits X?", "is there an SF Symbol for
-  a coffee mug?"), list or browse SF Symbols (including an HTML gallery),
-  inspect a symbol's availability/keywords/categories, generate or export an SF
-  Symbol as a clean SVG at any weight, build an SF Symbol icon set for a
-  web/THREE.js/design project, or create CUSTOM SF Symbols — converting their
-  own SVG art into an importable symbol template, exporting an editable
-  template of a system symbol, or validating a template file. Also use for SF
-  Symbols design questions: naming conventions, rendering modes
-  (monochrome/hierarchical/palette/multicolor), gradients, variable color,
-  weights/scales, outline-vs-fill variant choice, and symbol animations —
-  bundled references cover Apple's HIG guidance. Triggers include
-  "SF Symbol(s)", "Apple icons", "system symbol", "symbol image set",
-  "convert this SVG to an SF Symbol", and "custom symbol".
+  look up a symbol ("is there an SF Symbol for a coffee mug?"), browse them in
+  an HTML gallery, check a symbol's availability/keywords/categories, export one
+  as a clean SVG at any weight (for web, THREE.js, or an icon set), or create a
+  CUSTOM SF Symbol from their own SVG art — converting it to an importable
+  template, exporting a system symbol's template, or validating one. Also use
+  for SF Symbols design questions: naming conventions, rendering modes
+  (monochrome/hierarchical/palette/multicolor), variable color, weights/scales,
+  outline-vs-fill choice, and animations — bundled references cover Apple's HIG.
+  Triggers include "SF Symbol(s)", "Apple/system icons", "convert this SVG to an
+  SF Symbol", and "custom symbol".
 ---
 
 # SF Symbols
@@ -103,10 +100,18 @@ and treats an opened SVG as a custom-symbol import, no dialogs. The **filename
 stem becomes the symbol's display name** (`--out my.bolt.svg` → `my.bolt`), so
 choose the symbol's final name first — follow the system grammar in
 [references/naming-conventions.md](references/naming-conventions.md)
-(lowercase dotted, base first, `.fill`-style modifiers after). For Xcode, drop the
-file into a **Symbol Image Set** in an asset catalog instead. Color annotations
+(lowercase dotted, base first, `.fill`-style modifiers after). Color annotations
 (multicolor/hierarchical/variable color) are applied afterwards in the SF
 Symbols app GUI — the emitted template is monochrome v3.0 (iOS 15+).
+
+**Using it in an app.** In Xcode, select the asset catalog → Editor ▸ Add New
+Asset ▸ Symbol Image Set, and drag the SVG into the Symbol SVG well (Xcode
+re-validates it). Reference it in code by its **asset name** with the *named*
+initializer, **not** `systemName` — `Image("voltlight.bolt")` (SwiftUI),
+`UIImage(named: "voltlight.bolt")` (UIKit), `NSImage(named:)` (AppKit).
+`systemName` / `Image(systemName:)` resolve only Apple's system symbols, so a
+custom symbol loaded that way comes back nil. Full per-framework snippets are in
+[references/custom-symbol-design.md](references/custom-symbol-design.md).
 
 ## Reference Docs (Load on Demand)
 

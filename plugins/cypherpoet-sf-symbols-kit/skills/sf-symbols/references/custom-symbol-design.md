@@ -71,3 +71,28 @@ on OS version; iOS 15+ needs only v3+.
 | Import into the app | `import name.svg` or `custom … --import` |
 | Annotate layers/colors, add variants via components | SF Symbols app GUI |
 | Distribute | app File > Export Symbol (choose version per deployment target) |
+| Use it in your app | add to an asset-catalog Symbol Image Set; load by asset name with the *named* initializer (not `systemName`) |
+
+## Using a Custom Symbol in Your App
+
+Once the template is ready, a custom symbol ships inside your Xcode **asset
+catalog** as a Symbol Image Set — select the catalog, then Editor ▸ Add New
+Asset ▸ Symbol Image Set and drag the SVG into the Symbol SVG well (Xcode
+re-validates and shows errors if the file doesn't conform). You then load it
+much like a system symbol, with one catch: custom and system symbols live in
+**separate namespaces**, so the initializer differs by image type.
+
+| Framework | System symbol | Custom symbol (asset catalog) |
+|---|---|---|
+| SwiftUI | `Image(systemName: "multiply.circle.fill")` | `Image("custom.multiply.circle")` |
+| UIKit | `UIImage(systemName: "multiply.circle.fill")` | `UIImage(named: "custom.multiply.circle")` |
+| AppKit | `NSImage(systemSymbolName:accessibilityDescription:)` | `NSImage(named: "custom.multiply.circle")` |
+
+Each loader resolves only its own image type — Apple's docs note this "avoids
+namespace collisions between your custom images and the system images." So
+passing a custom symbol's name to `systemName:` returns nil; use the plain
+`named:` / `Image(_:)` form and pass the **asset name** (what you called the
+Symbol Image Set), which need not equal the original filename. After loading,
+configure weight, scale, and rendering mode exactly as for a system symbol — see
+Apple's [Configuring and displaying symbol images in your UI](https://developer.apple.com/documentation/uikit/configuring-and-displaying-symbol-images-in-your-ui)
+and [Use your custom symbol images](https://developer.apple.com/documentation/uikit/creating-custom-symbol-images-for-your-app#Use-your-custom-symbol-images).
