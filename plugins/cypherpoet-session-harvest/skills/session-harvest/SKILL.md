@@ -6,16 +6,18 @@ description: >
   variation of asking whether there are takeaways from the session —
   including when they're wrapping up a long or complex session. Runs a
   systematic pre-exit sweep of the current conversation for learnings
-  worth preserving in memory: surfaces corrections, project context,
-  preferences, and references, deduplicates against existing memory, and
-  presents findings for the user to approve. Never auto-saves.
+  worth preserving: surfaces corrections, project context, preferences,
+  and references, routes each to its right home — a memory, or (when it's
+  really a project convention) a suggested CLAUDE.md/AGENTS.md, docs, or
+  hook edit — deduplicates against existing memory, and presents findings
+  for the user to approve. Never auto-saves or auto-edits.
 ---
 
 # Session Harvest
 
 Claude already saves memories during a conversation when something obviously worth keeping comes up. But ad-hoc saving has blind spots — small corrections accumulate without being captured, validated approaches go unrecorded, and project context that felt obvious in the moment evaporates when the session ends. This skill does a deliberate, structured sweep at the end of a session to catch what slipped through.
 
-The goal is to present candidates, not to auto-save. The user decides what's worth keeping.
+The goal is to present candidates, not to auto-save. The user decides what's worth keeping — and *where* it belongs. Not everything worth remembering belongs in memory: a project convention, decision, or rule is usually better committed to the repo (a `CLAUDE.md`/`AGENTS.md` line, project docs, or a hook), where it's versioned, reviewed, and visible to teammates and other agents instead of locked inside one assistant's private notes. Routing each finding to its right home is part of the sweep's job, not an afterthought.
 
 Most sessions yield little worth keeping — often nothing, and that's the normal, healthy outcome of a sweep, not a failure of it. A low-value memory has a real cost: it dilutes the index and future sessions *trust* it. So bias toward precision over recall — when a candidate doesn't clearly clear the bar, leave it out. A near-constant four or five findings every session is the tell that you're matching categories instead of judging value. Calibrate to the conversation, not to the list of categories below.
 
@@ -108,18 +110,31 @@ For each candidate, apply these filters:
 
 3. **Derivable from code or git?** The codebase records what was built. Git history records what changed and when. Memory is for things that live outside those records — the *why* behind decisions, preferences that shaped choices, context that motivated the work.
 
-4. **Universal or obvious?** "Test before committing" or "read the error message" aren't memory-worthy — they're general practice, not session-specific insights.
+4. **Better off committed than remembered?** Filter #3 asks whether the fact is *already* in the repo. This asks the forward-looking question it misses: should it *be* in the repo? Memory is private to one assistant, unversioned, unreviewed, and invisible to teammates and other agents — the wrong home for anything that is really a *project artifact*. If a candidate is a convention, an architecture decision, a build/test/run command, a where-things-go rule, or a codebase-tied gotcha — anything a new contributor or a different agent would need to work on the project correctly — its home is a committed file, not memory. Route it by kind:
+   - An enforceable "always X / never Y" rule a check could verify → a **hook** (it runs automatically, so it can't be forgotten).
+   - A convention, decision, command, or gotcha that fits in a line or two → **`CLAUDE.md` / `AGENTS.md`**.
+   - Anything longer — reference material, schemas, runbooks, design rationale → a **`docs/`** page, linked from `CLAUDE.md` rather than inlined.
 
-5. **Durable?** Will this matter in a week? A month? Corrections and preferences tend to be durable. A specific bug's details usually aren't, unless the pattern recurs.
+   The discriminator to lean on: *would a brand-new contributor, or a different agent with no memory of you, need this to work on the project correctly?* If yes, it's a project artifact — route it to a committed home. If it's really about how Claude should behave with *this* user, or cross-session context that isn't a project fact (user identity and preferences, a recurring false-positive finding, the user's machine quirks), it stays a memory candidate.
 
-6. **Worth saving, or just borderline?** The filters above remove what doesn't belong; this step decides what's worth surfacing *as a recommendation*. Rate each survivor on three axes — **durability** (will it matter next month?), **specificity** (a concrete, reusable rule, or something vague?), and **non-derivability** (absent from code and git?). A candidate strong on all three is **Worth saving**. One that's plausible but weak on any axis — a marginal reference, a mild preference, a lesson that may not recur — is **Borderline**: surface it as optional, not recommended. When you can't decide which tier, it's Borderline.
+   When a candidate routes to a committed home, stop treating it as a memory and carry it into Phase 4 as a **suggested edit to the named file** instead. Suggest it; don't silently make it — committed files are shared and usually go through review, so the user (or a PR) owns that change, whereas a memory you can still write directly on approval. Occasionally a convention earns both a one-line `CLAUDE.md` rule *and* a deeper `docs/` page it links to; say so when that's the case.
+
+5. **Universal or obvious?** "Test before committing" or "read the error message" aren't memory-worthy — they're general practice, not session-specific insights.
+
+6. **Durable?** Will this matter in a week? A month? Corrections and preferences tend to be durable. A specific bug's details usually aren't, unless the pattern recurs.
+
+7. **Worth saving, or just borderline?** The filters above remove what doesn't belong (and route project artifacts to the repo); this step decides which *memory* candidates are worth surfacing *as a recommendation*. Rate each survivor on three axes — **durability** (will it matter next month?), **specificity** (a concrete, reusable rule, or something vague?), and **non-derivability** (absent from code and git?). A candidate strong on all three is **Worth saving**. One that's plausible but weak on any axis — a marginal reference, a mild preference, a lesson that may not recur — is **Borderline**: surface it as optional, not recommended. When you can't decide which tier, it's Borderline.
 
 Most sessions produce a small Worth-saving tier — often empty or a single item. Resist the pull to populate all four categories; a sweep that surfaces one strong memory and nothing else has done its job well.
 
 
 ## Phase 4: Present Findings
 
-Present findings under two value tiers — **Worth saving** first, then **Borderline — optional**. Within each tier, group by memory type under its own subheading; don't mix types under one subheading. A `user` item goes under `### User`, not `### Feedback`, even if it surfaced alongside feedback. Number items sequentially across both tiers so the user can reference them as "1, 3, 5". Skip any tier or type subheading that has no items — including the entire Borderline tier when nothing is marginal.
+Findings have two destinations: **committed artifacts** (the repo) and **memory**. Lead with the committed-artifact suggestions — they're the higher-leverage correction, since misfiling a project convention into private memory is the exact trap this guards against — then the memory tiers.
+
+For **committed artifacts**, present each routed candidate under a `## Belongs in the repo (not memory)` section: name the target file, show the line or section you'd add, and say in a phrase why it's a project artifact rather than a memory.
+
+For **memory**, present findings under two value tiers — **Worth saving** first, then **Borderline — optional**. Within each tier, group by memory type under its own subheading; don't mix types under one subheading. A `user` item goes under `### User`, not `### Feedback`, even if it surfaced alongside feedback. Number items sequentially across *all* sections (committed and memory) so the user can reference them as "1, 3, 5". Skip any section, tier, or type subheading that has no items — the committed-artifacts section when nothing routes there, and the entire Borderline tier when nothing is marginal.
 
 For each finding, show:
 - A proposed title (the memory's `name` field)
@@ -129,17 +144,24 @@ For each finding, show:
 Format like this:
 
 ```
+## Belongs in the repo (not memory)
+
+1. **A project convention better committed than remembered**
+   → suggest adding to `AGENTS.md` (or `docs/<topic>.md` if it's more than a line)
+   > The convention, and the exact line or section you'd add. One phrase on why
+   > it's a project artifact, not a memory.
+
 ## Worth saving
 
 ### Feedback (N items)
 
-1. **Title of the learning**
+2. **Title of the learning**
    `feedback_slug.md`
    > Content preview — the rule, why it matters, when to apply it.
 
 ### Project (N items)
 
-2. **A project decision**
+3. **A project decision**
    `project_slug.md`
    > Content preview here.
 
@@ -147,7 +169,7 @@ Format like this:
 
 ### Reference (N items)
 
-3. **A link that helped once**
+4. **A link that helped once**
    `reference_slug.md`
    > Content preview — plus why it's marginal (e.g. "solved one
    > specific bug; may not recur").
@@ -155,7 +177,7 @@ Format like this:
 
 After presenting, ask:
 
-> Which should I save? Say "all", list numbers (e.g. "1, 3, 5"), "none", or ask me to edit any item first. The Worth-saving items are genuine recommendations; the Borderline ones are surfaced for completeness — skipping them is a fine default.
+> Which should I act on? Say "all", list numbers (e.g. "1, 3, 5"), "none", or ask me to edit any item first. For repo items I'll make the suggested edit (or open a PR where that's the norm) rather than write a memory; for memory items I'll save the file. The repo and Worth-saving items are genuine recommendations; the Borderline ones are surfaced for completeness — skipping them is a fine default.
 
 **When nothing clears the bar** — which is common, not exceptional — say so directly and stop:
 
@@ -202,13 +224,17 @@ If the audit produced corrections, briefly tell the user what changed before wri
 If every claim checks out, just save and say so.
 
 
-## Phase 6: Save Selected Items
+## Phase 6: Apply Selected Items
 
-For each item the user approves:
+Apply each approved item to the home it was routed to.
+
+### Repo items (committed artifacts)
+
+Make the suggested change in the named file: add the `CLAUDE.md`/`AGENTS.md` line, edit the `docs/` page, or set up the hook. Two cautions, mirroring the never-auto-save rule: never edit a committed file without the user's approval of *that specific edit*, and where the repo's norm is review, propose the change on a branch or PR rather than committing to the default branch. Keep `CLAUDE.md`/`AGENTS.md` lean — a one-line imperative that links to deeper `docs/`, not a transplanted essay.
 
 ### Write the memory file
 
-Use this format:
+For each approved memory item, use this format:
 
 ```markdown
 ---
@@ -255,3 +281,4 @@ After all items are saved:
 - **Distill, don't transcribe.** Capture the actionable essence, not a transcript of the conversation. Keep memories concise.
 - **Precision over recall.** A low-value memory has a real cost — it dilutes the index and future sessions trust it. When unsure whether something clears the bar, leave it out or mark it Borderline. The sweep's success is the *value* of what it surfaces, not the count.
 - **Respect user edits.** If the user modifies a proposed memory before saving, use their version exactly.
+- **Right home before memory.** A project convention, decision, command, or rule usually belongs in a committed artifact (a hook, `CLAUDE.md`/`AGENTS.md`, or `docs/`), not memory — memory is for how Claude should work with *this* user and for cross-session context that isn't a project fact. Suggest the committed edit; never make it without approval.
