@@ -51,6 +51,15 @@
       "status": "active"
     },
     {
+      "url": "https://developer.apple.com/design/human-interface-guidelines/airplay",
+      "title": "AirPlay",
+      "section": "technologies",
+      "reference_file": "technologies-health-media.md",
+      "content_hash": "sha256:5ce0e906d51ec8f7925ffdd9415ac295d5a1c9d7b1877e3ca5da852b2cc42257",
+      "last_synced": "2026-06-16",
+      "status": "active"
+    },
+    {
       "url": "https://developer.apple.com/design/human-interface-guidelines/alerts",
       "title": "Alerts",
       "section": "components",
@@ -87,11 +96,38 @@
       "status": "active"
     },
     {
+      "url": "https://developer.apple.com/design/human-interface-guidelines/app-shortcuts",
+      "title": "App Shortcuts",
+      "section": "technologies",
+      "reference_file": "technologies-system-services.md",
+      "content_hash": "sha256:f38582680eeec8694adb15ecaadf5538eb453b95b6719f2f5af8c2cf081d4210",
+      "last_synced": "2026-06-16",
+      "status": "active"
+    },
+    {
+      "url": "https://developer.apple.com/design/human-interface-guidelines/apple-pay",
+      "title": "Apple Pay",
+      "section": "technologies",
+      "reference_file": "technologies-commerce-id.md",
+      "content_hash": "sha256:24ee7755a8b6ba4762b1861619cbef686c4673070f5bead9f9c18473ab2775d9",
+      "last_synced": "2026-06-16",
+      "status": "active"
+    },
+    {
       "url": "https://developer.apple.com/design/human-interface-guidelines/apple-pencil-and-scribble",
       "title": "Apple Pencil and Scribble",
       "section": "inputs",
       "reference_file": "inputs.md",
       "content_hash": "sha256:c0b59d2f2be842d6022f0f4039b61c612fdd29c6d66eeec7dcfda7f151acf76a",
+      "last_synced": "2026-06-16",
+      "status": "active"
+    },
+    {
+      "url": "https://developer.apple.com/design/human-interface-guidelines/augmented-reality",
+      "title": "Augmented reality",
+      "section": "technologies",
+      "reference_file": "technologies-health-media.md",
+      "content_hash": "sha256:3558b2772eeb1935da195ec0388f63725979645f4b1a6e8fe344cbe8e97e7783",
       "last_synced": "2026-06-16",
       "status": "active"
     },
@@ -128,6 +164,24 @@
       "section": "inputs",
       "reference_file": "inputs.md",
       "content_hash": "sha256:05ddde900aa3317a8530e46bb3695d60b3825251beb74a161d2a60deac0f2800",
+      "last_synced": "2026-06-16",
+      "status": "active"
+    },
+    {
+      "url": "https://developer.apple.com/design/human-interface-guidelines/carekit",
+      "title": "CareKit",
+      "section": "technologies",
+      "reference_file": "technologies-health-media.md",
+      "content_hash": "sha256:8265d0e04d1c4b59a487370a4e146e088949766c042b1eb3d4e7b12aec460c64",
+      "last_synced": "2026-06-16",
+      "status": "active"
+    },
+    {
+      "url": "https://developer.apple.com/design/human-interface-guidelines/carplay",
+      "title": "CarPlay",
+      "section": "technologies",
+      "reference_file": "technologies-system-services.md",
+      "content_hash": "sha256:07f4fa80442910f22045dcfd7990f3328024befd799b1ed99c69fcd56d799672",
       "last_synced": "2026-06-16",
       "status": "active"
     },
@@ -245,6 +299,15 @@
       "section": "foundations",
       "reference_file": "foundations-ux.md",
       "content_hash": "sha256:127fef2d4371d845612d722f0fe2003d0b7063cf20f889cfceca3267f244350f",
+      "last_synced": "2026-06-16",
+      "status": "active"
+    },
+    {
+      "url": "https://developer.apple.com/design/human-interface-guidelines/designing-for-games",
+      "title": "Designing for games",
+      "section": "technologies",
+      "reference_file": "technologies-system-services.md",
+      "content_hash": "sha256:f29a61264e71882f7d7b8e54ccb1fd512c7624fd01fd7c1b77c8b1ffbb3de244",
       "last_synced": "2026-06-16",
       "status": "active"
     },
@@ -402,6 +465,15 @@
       "status": "active"
     },
     {
+      "url": "https://developer.apple.com/design/human-interface-guidelines/game-center",
+      "title": "Game Center",
+      "section": "technologies",
+      "reference_file": "technologies-system-services.md",
+      "content_hash": "sha256:2d4029dbe3781d3d86b4689f8e24700b22738c85c88846ddbf400944ef1c5cfd",
+      "last_synced": "2026-06-16",
+      "status": "active"
+    },
+    {
       "url": "https://developer.apple.com/design/human-interface-guidelines/game-controls",
       "title": "Game controls",
       "section": "inputs",
@@ -416,6 +488,15 @@
       "section": "components",
       "reference_file": "components-status-indicators.md",
       "content_hash": "sha256:9ae91bca3d0d9427a8410f6a3fc6e2dedcf1ec227518417644fbc161d63c415b",
+      "last_synced": "2026-06-16",
+      "status": "active"
+    },
+    {
+      "url": "https://developer.apple.com/design/human-interface-guidelines/generative-ai",
+      "title": "Generative AI",
+      "section": "technologies",
+      "reference_file": "technologies-system-services.md",
+      "content_hash": "sha256:a0894ba57a91c28edf60f380ca10e63ee841de6418b1dd72621f4e57e4f433a7",
       "last_synced": "2026-06-16",
       "status": "active"
     },
@@ -442,7 +523,16 @@
       "title": "Gyroscope and accelerometer",
       "section": "inputs",
       "reference_file": "inputs.md",
-      "content_hash": "sha256:416a573f12b3dc5cf2658566d7250ee5d830ddf7d74300cd7c00e9305c692606",
+      "content_hash": "sha256:f31820662efdc9a96f49fea84fe14cac093c54970e995d51dc214fabdbd49bb4",
+      "last_synced": "2026-06-16",
+      "status": "active"
+    },
+    {
+      "url": "https://developer.apple.com/design/human-interface-guidelines/healthkit",
+      "title": "HealthKit",
+      "section": "technologies",
+      "reference_file": "technologies-health-media.md",
+      "content_hash": "sha256:6f597c1bc535d212a3019280e9163f78a724598640f61a3617f059dc222bc979",
       "last_synced": "2026-06-16",
       "status": "active"
     },
@@ -456,12 +546,39 @@
       "status": "active"
     },
     {
+      "url": "https://developer.apple.com/design/human-interface-guidelines/homekit",
+      "title": "HomeKit",
+      "section": "technologies",
+      "reference_file": "technologies-health-media.md",
+      "content_hash": "sha256:61e6a647b1ed10aa92ec314c2780766d2adae4569dd157e6acd32b38aa0659db",
+      "last_synced": "2026-06-16",
+      "status": "active"
+    },
+    {
+      "url": "https://developer.apple.com/design/human-interface-guidelines/icloud",
+      "title": "iCloud",
+      "section": "technologies",
+      "reference_file": "technologies-system-services.md",
+      "content_hash": "sha256:aeee5954b05b10bb49c3bd5f66ebd6ff1eef324e6ddc065617d8cdd5e60eeba2",
+      "last_synced": "2026-06-16",
+      "status": "active"
+    },
+    {
       "url": "https://developer.apple.com/design/human-interface-guidelines/icons",
       "title": "Icons",
       "section": "foundations",
       "reference_file": "foundations-visual.md",
       "content_hash": "sha256:15d2312ac09e9f0cee57ed112576a332bbd29a269912f32fbae1b230639d5e29",
       "last_synced": "2026-06-10",
+      "status": "active"
+    },
+    {
+      "url": "https://developer.apple.com/design/human-interface-guidelines/id-verifier",
+      "title": "ID Verifier",
+      "section": "technologies",
+      "reference_file": "technologies-commerce-id.md",
+      "content_hash": "sha256:e75b076b365d2c562b05cd787bbd824e92327cfbe2f42dea633f69b3d19ebac9",
+      "last_synced": "2026-06-16",
       "status": "active"
     },
     {
@@ -506,6 +623,15 @@
       "section": "platform",
       "reference_file": "platform-visionos.md",
       "content_hash": "sha256:1cc8dacd6ffa9846127176619840bffadd7b7079f5b0e3dbacf93c244d3889d6",
+      "last_synced": "2026-06-16",
+      "status": "active"
+    },
+    {
+      "url": "https://developer.apple.com/design/human-interface-guidelines/in-app-purchase",
+      "title": "In-app purchase",
+      "section": "technologies",
+      "reference_file": "technologies-commerce-id.md",
+      "content_hash": "sha256:d5127f7653c0ebd1d2edfd781a4952b9542932bb9973bc5797d43cb4ce53df4a",
       "last_synced": "2026-06-16",
       "status": "active"
     },
@@ -573,6 +699,15 @@
       "status": "active"
     },
     {
+      "url": "https://developer.apple.com/design/human-interface-guidelines/live-photos",
+      "title": "Live Photos",
+      "section": "technologies",
+      "reference_file": "technologies-health-media.md",
+      "content_hash": "sha256:f6215aff2fa7c8b2f2780fb57664f7287f876e7c2659eb659707446db15c9f98",
+      "last_synced": "2026-06-16",
+      "status": "active"
+    },
+    {
       "url": "https://developer.apple.com/design/human-interface-guidelines/live-viewing-apps",
       "title": "Live-viewing apps",
       "section": "platform",
@@ -609,11 +744,20 @@
       "status": "active"
     },
     {
+      "url": "https://developer.apple.com/design/human-interface-guidelines/machine-learning",
+      "title": "Machine learning",
+      "section": "technologies",
+      "reference_file": "technologies-system-services.md",
+      "content_hash": "sha256:73ad3b5aa4397d4a6354f31f50c9d3f1bc59e6679ee23ceebb6de862e28edcff",
+      "last_synced": "2026-06-16",
+      "status": "active"
+    },
+    {
       "url": "https://developer.apple.com/design/human-interface-guidelines/managing-accounts",
       "title": "Managing accounts",
       "section": "patterns",
       "reference_file": "patterns-search.md",
-      "content_hash": "sha256:f22b3985cfa3896bf357c384ea4b7922722f9ca329cf1840350db4bda079110a",
+      "content_hash": "sha256:c0f74134a54231fd0c85c9173f31730cbf0b61bc701ec9abf0c8af58bb2454c5",
       "last_synced": "2026-06-16",
       "status": "active"
     },
@@ -623,6 +767,15 @@
       "section": "patterns",
       "reference_file": "patterns-status-feedback.md",
       "content_hash": "sha256:80d6f0ef7959f4b1feca34e4031ad58317302e557952a81fb1b590d868aab949",
+      "last_synced": "2026-06-16",
+      "status": "active"
+    },
+    {
+      "url": "https://developer.apple.com/design/human-interface-guidelines/maps",
+      "title": "Maps",
+      "section": "technologies",
+      "reference_file": "technologies-system-services.md",
+      "content_hash": "sha256:dc817c5765c32b20c369c40cb953a3d28eabc4c1699132ece5f0885ff1bb065a",
       "last_synced": "2026-06-16",
       "status": "active"
     },
@@ -668,6 +821,24 @@
       "section": "patterns",
       "reference_file": "patterns-navigation.md",
       "content_hash": "sha256:5b29bda8c3b08c9dfd9e480239f3961d3101085e64f513d5d193e70f69b91bcd",
+      "last_synced": "2026-06-16",
+      "status": "active"
+    },
+    {
+      "url": "https://developer.apple.com/design/human-interface-guidelines/nearby-interactions",
+      "title": "Nearby interactions",
+      "section": "technologies",
+      "reference_file": "technologies-system-services.md",
+      "content_hash": "sha256:998ffbfcd1033bd9e3b3dfc9271843ff0210c0064316a5989a2022d6ea71f918",
+      "last_synced": "2026-06-16",
+      "status": "active"
+    },
+    {
+      "url": "https://developer.apple.com/design/human-interface-guidelines/nfc",
+      "title": "NFC",
+      "section": "technologies",
+      "reference_file": "technologies-system-services.md",
+      "content_hash": "sha256:953311d677162990ec69d60cc15051c8883515697175b9944d782a420ba0aa70",
       "last_synced": "2026-06-16",
       "status": "active"
     },
@@ -744,6 +915,15 @@
       "status": "active"
     },
     {
+      "url": "https://developer.apple.com/design/human-interface-guidelines/photo-editing",
+      "title": "Photo editing",
+      "section": "technologies",
+      "reference_file": "technologies-health-media.md",
+      "content_hash": "sha256:1e1d0712c590ed3b099dd835537bc14fc914a85d354e3c2e57b8f23d38155ff0",
+      "last_synced": "2026-06-16",
+      "status": "active"
+    },
+    {
       "url": "https://developer.apple.com/design/human-interface-guidelines/pickers",
       "title": "Pickers",
       "section": "components",
@@ -753,11 +933,29 @@
       "status": "active"
     },
     {
+      "url": "https://developer.apple.com/design/human-interface-guidelines/playing-audio",
+      "title": "Playing audio",
+      "section": "technologies",
+      "reference_file": "technologies-health-media.md",
+      "content_hash": "sha256:b85a895dbf4296421311c5271282bfd46ec04329a2089ec3e5286c79f27ea478",
+      "last_synced": "2026-06-16",
+      "status": "active"
+    },
+    {
       "url": "https://developer.apple.com/design/human-interface-guidelines/playing-haptics",
       "title": "Playing haptics",
       "section": "inputs",
       "reference_file": "inputs.md",
       "content_hash": "sha256:b169016268f82372fe9a299d6dc6b233b44e8af6f32ccec87a99960008b60ffd",
+      "last_synced": "2026-06-16",
+      "status": "active"
+    },
+    {
+      "url": "https://developer.apple.com/design/human-interface-guidelines/playing-video",
+      "title": "Playing video",
+      "section": "technologies",
+      "reference_file": "technologies-health-media.md",
+      "content_hash": "sha256:adbc047912051e076aba26ad43fd06af8df9bec298c10487f52a64450f7f195f",
       "last_synced": "2026-06-16",
       "status": "active"
     },
@@ -785,6 +983,15 @@
       "section": "components",
       "reference_file": "components-presentation.md",
       "content_hash": "sha256:9fe9ad04554a735c0c8649ba25f40f87aad506c67208b523b8b0ef04db54e099",
+      "last_synced": "2026-06-16",
+      "status": "active"
+    },
+    {
+      "url": "https://developer.apple.com/design/human-interface-guidelines/printing",
+      "title": "Printing",
+      "section": "technologies",
+      "reference_file": "technologies-system-services.md",
+      "content_hash": "sha256:3110157fc1eb8298da5f83373fa4cc8f26d25989c7483734d2a6336dac25f3f2",
       "last_synced": "2026-06-16",
       "status": "active"
     },
@@ -839,6 +1046,15 @@
       "section": "inputs",
       "reference_file": "inputs.md",
       "content_hash": "sha256:77357756d7c01f7fa30378bc47c21c7fbd93cd527edda2ad6d2394aac121a919",
+      "last_synced": "2026-06-16",
+      "status": "active"
+    },
+    {
+      "url": "https://developer.apple.com/design/human-interface-guidelines/researchkit",
+      "title": "ResearchKit",
+      "section": "technologies",
+      "reference_file": "technologies-health-media.md",
+      "content_hash": "sha256:9d08d958ab534c7bbe9588d97bcf4d80c02bb54a76da9ae4350c888f60b881fe",
       "last_synced": "2026-06-16",
       "status": "active"
     },
@@ -906,6 +1122,24 @@
       "status": "active"
     },
     {
+      "url": "https://developer.apple.com/design/human-interface-guidelines/shareplay",
+      "title": "SharePlay",
+      "section": "technologies",
+      "reference_file": "technologies-health-media.md",
+      "content_hash": "sha256:0a3b6a0a63f72d521560eec9ddc9c34388c03e6e093888c51822e936d5b45967",
+      "last_synced": "2026-06-16",
+      "status": "active"
+    },
+    {
+      "url": "https://developer.apple.com/design/human-interface-guidelines/shazamkit",
+      "title": "ShazamKit",
+      "section": "technologies",
+      "reference_file": "technologies-health-media.md",
+      "content_hash": "sha256:205cbbb867b22c8153cb62b94d0600d52a78966f228cd119fb786cd566692269",
+      "last_synced": "2026-06-16",
+      "status": "active"
+    },
+    {
       "url": "https://developer.apple.com/design/human-interface-guidelines/sheets",
       "title": "Sheets",
       "section": "components",
@@ -924,11 +1158,38 @@
       "status": "active"
     },
     {
+      "url": "https://developer.apple.com/design/human-interface-guidelines/sign-in-with-apple",
+      "title": "Sign in with Apple",
+      "section": "technologies",
+      "reference_file": "technologies-commerce-id.md",
+      "content_hash": "sha256:1bf21601ad06d7c1ecdcf923f90e82563ea56204a5f591146c9c729c2e760f4d",
+      "last_synced": "2026-06-16",
+      "status": "active"
+    },
+    {
+      "url": "https://developer.apple.com/design/human-interface-guidelines/siri",
+      "title": "Siri",
+      "section": "technologies",
+      "reference_file": "technologies-system-services.md",
+      "content_hash": "sha256:6a8417cfb57ca1003a5a1dd5d3cd2dada400a82c57719c8c352aedd840c25313",
+      "last_synced": "2026-06-16",
+      "status": "active"
+    },
+    {
       "url": "https://developer.apple.com/design/human-interface-guidelines/sliders",
       "title": "Sliders",
       "section": "components",
       "reference_file": "components-selection-input.md",
       "content_hash": "sha256:73392d5032a73bfa281dd104b6f4a473197f612308a6a46d485ddc51b3bc976e",
+      "last_synced": "2026-06-16",
+      "status": "active"
+    },
+    {
+      "url": "https://developer.apple.com/design/human-interface-guidelines/snippets",
+      "title": "Snippets",
+      "section": "technologies",
+      "reference_file": "technologies-system-services.md",
+      "content_hash": "sha256:b572c9d4c7ca67f950a7f33854d6a23bd2401229bbf367f8fc52dc3a1d253f8c",
       "last_synced": "2026-06-16",
       "status": "active"
     },
@@ -983,6 +1244,15 @@
       "section": "components",
       "reference_file": "components-navigation-bars.md",
       "content_hash": "sha256:804d72df4b61f06d23c30cb4b32e2a4689c56a578e54e8d11a73c3dbc629378c",
+      "last_synced": "2026-06-16",
+      "status": "active"
+    },
+    {
+      "url": "https://developer.apple.com/design/human-interface-guidelines/tap-to-pay-on-iphone",
+      "title": "Tap to Pay on iPhone",
+      "section": "technologies",
+      "reference_file": "technologies-commerce-id.md",
+      "content_hash": "sha256:f7b0b2626d198aeb8a0483c03103044d7ea2d7c291e758bd9c213fbb6f43effd",
       "last_synced": "2026-06-16",
       "status": "active"
     },
@@ -1045,7 +1315,7 @@
       "title": "Top Shelf",
       "section": "platform",
       "reference_file": "platform-tvos.md",
-      "content_hash": "sha256:7ea6f4a1daca193a1aa9c0b1f5e45d7a0d0b1425439a5a9dd5be9db24f7e35f4",
+      "content_hash": "sha256:535503a0679a13161fe36523e2f168b1e96c1be67bf0eeef83cf04ae904ca4e6",
       "last_synced": "2026-06-16",
       "status": "active"
     },
@@ -1073,6 +1343,24 @@
       "section": "inputs",
       "reference_file": "inputs.md",
       "content_hash": "sha256:332937d19345b74efb9d7c4df0c778ed41119fb030e6c7f03121ceff52be2b0b",
+      "last_synced": "2026-06-16",
+      "status": "active"
+    },
+    {
+      "url": "https://developer.apple.com/design/human-interface-guidelines/voiceover",
+      "title": "VoiceOver",
+      "section": "technologies",
+      "reference_file": "technologies-system-services.md",
+      "content_hash": "sha256:684fe5859663533ba99b239136210d22e2f3918fd306eecc3cf7ac6b3b9e2be1",
+      "last_synced": "2026-06-16",
+      "status": "active"
+    },
+    {
+      "url": "https://developer.apple.com/design/human-interface-guidelines/wallet",
+      "title": "Wallet",
+      "section": "technologies",
+      "reference_file": "technologies-commerce-id.md",
+      "content_hash": "sha256:cf46c977faf3fda2d80807606ee0636083bb9ab607d4383339a3cb5c03db7726",
       "last_synced": "2026-06-16",
       "status": "active"
     },
@@ -1109,6 +1397,15 @@
       "section": "components",
       "reference_file": "components-presentation.md",
       "content_hash": "sha256:4d5c8aad08bb08434d3639cb78db4bffa6c25660f13d06f4c035e9ca06d44675",
+      "last_synced": "2026-06-16",
+      "status": "active"
+    },
+    {
+      "url": "https://developer.apple.com/design/human-interface-guidelines/workouts",
+      "title": "Workouts",
+      "section": "technologies",
+      "reference_file": "technologies-health-media.md",
+      "content_hash": "sha256:89fb880f22fdd1a9e4fb1bb7776cbcf0bb95127a9c7cba69bcc19a06c20ef646",
       "last_synced": "2026-06-16",
       "status": "active"
     },

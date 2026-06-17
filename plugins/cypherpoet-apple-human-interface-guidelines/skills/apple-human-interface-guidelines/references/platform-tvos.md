@@ -25,7 +25,6 @@ Distilled from Apple's HIG platform pages: Designing for tvOS, Top Shelf, Live-v
 - **System integration.** Integrate with the TV app, SharePlay, Top Shelf, and TV provider accounts.
 
 ### Top Shelf
-*Last changed: 2022-09*
 
 **Purpose:** Showcase new, featured, or recommended content in a rich area above the Apple TV Dock that links straight into your app.
 

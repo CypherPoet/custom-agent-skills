@@ -354,7 +354,6 @@ Canonical implementations: visionOS `Adopting best practices for privacy and use
 - iOS/iPadOS/macOS/tvOS/watchOS: *Not supported.*
 
 ### Gyroscope and accelerometer
-*Last changed: 2021*
 
 **Purpose:** On-device gyroscopes and accelerometers supply real-time data about a device's physical movement for motion-based app and game experiences.
 

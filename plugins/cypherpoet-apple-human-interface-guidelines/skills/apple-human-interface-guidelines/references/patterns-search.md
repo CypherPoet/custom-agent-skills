@@ -83,7 +83,6 @@ Canonical implementations: SwiftUI `Settings`; Foundation `UserDefaults`; Prefer
 - watchOS: Apps and games don't add custom settings to the system-provided Settings app. Instead, make a small number of essential options available at the bottom of the main view, or let people use a More menu to reconfigure objects.
 
 ### Managing accounts
-*Last changed: 2025-06*
 
 **Purpose:** Guidance for offering accounts as a convenient way to access content and personal details without creating an unnecessary barrier to the experience.
 
