@@ -75,6 +75,62 @@
         "Distinguishes the regular vs clear variants (clear only over rich media)",
         "Advises tinting at most one prominent control rather than many"
       ]
+    },
+    {
+      "id": 7,
+      "eval_name": "current-design-principles",
+      "prompt": "What are Apple's core design principles according to the current Human Interface Guidelines? I want to use Apple's current framework, not an outdated one.",
+      "expected_output": "Apple's reintroduced (2026) eight principles: Purpose, Agency, Responsibility, Familiarity, Flexibility, Simplicity, Craft, Delight. NOT the older Clarity/Deference/Depth themes, which Apple no longer lists as its design principles. TRAP FACT: the reintroduction postdates the base model's training cutoff, so an unaided answer typically names Clarity/Deference/Depth (or the iOS 6-era six) — the skill should supply the current eight.",
+      "files": [],
+      "assertions": [
+        "Names Apple's current eight principles (Purpose, Agency, Responsibility, Familiarity, Flexibility, Simplicity, Craft, Delight)",
+        "Does NOT present Clarity / Deference / Depth as the current core principles",
+        "Frames them as Apple's current/reintroduced framework rather than legacy themes"
+      ]
+    },
+    {
+      "id": 8,
+      "eval_name": "visionos-button-spacing",
+      "prompt": "I'm laying out buttons in a visionOS app. What's the minimum hit target size, and how far apart should button centers be?",
+      "expected_output": "visionOS hit target is 60x60 pt (vs 44x44 pt on touch platforms); place button centers at least 60 pt apart with 16 pt or more of space between them; add 4 pt padding around buttons 60 pt or larger so hover effects don't overlap.",
+      "files": [],
+      "assertions": [
+        "States the visionOS 60x60 pt hit target (or 60 pt minimum), distinct from 44x44 pt elsewhere",
+        "States button centers should be at least 60 pt apart (with ~16 pt of spacing between them)"
+      ]
+    },
+    {
+      "id": 9,
+      "eval_name": "live-activity-duration-and-radius",
+      "prompt": "How long can a Live Activity stay active, and what corner radius should content match inside the Dynamic Island?",
+      "expected_output": "A Live Activity shouldn't exceed about 8 hours of active duration (the system can keep it on the Lock Screen up to ~4 hours after it ends); the Dynamic Island uses a 44 pt corner radius to match. TRAP FACT: the manifest records these exact numbers — an unaided answer often hedges or guesses.",
+      "files": [],
+      "assertions": [
+        "States the ~8-hour maximum active duration for a Live Activity",
+        "States the Dynamic Island corner radius of 44 pt"
+      ]
+    },
+    {
+      "id": 10,
+      "eval_name": "always-on-platform-availability",
+      "prompt": "Can I rely on an Always On display for my app on iPad and on Apple Watch?",
+      "expected_output": "Always On is a watchOS feature (and the iPhone 14 Pro / Pro Max Lock Screen) — it is NOT supported on iPadOS (nor macOS/tvOS/visionOS). On watchOS, design a dimmed Always On state that stays glanceable and redacts sensitive content. TRAP: 'iPad' is the wrong-availability lure; the correct answer is no for iPad.",
+      "files": [],
+      "assertions": [
+        "States that Always On is NOT supported on iPadOS",
+        "Identifies Always On as a watchOS feature (and notes designing a dimmed, glanceable state)"
+      ]
+    },
+    {
+      "id": 11,
+      "eval_name": "apple-pay-button-required",
+      "prompt": "Can I design my own custom 'Pay' button for Apple Pay to match my brand, or do I have to use Apple's?",
+      "expected_output": "Use the system-provided Apple Pay button (don't design a custom one); choose among the approved types (Buy, Check Out, Set Up, Subscribe, etc.) and styles (black / white / white-outline), and respect the minimum size (about 100 pt wide / 30 pt tall, 140 pt for longer labels) and surrounding clear space.",
+      "files": [],
+      "assertions": [
+        "Says to use the system-provided Apple Pay button rather than a custom one",
+        "Mentions choosing among approved button types/styles and/or the minimum size / clear-space requirement"
+      ]
     }
   ]
 }
