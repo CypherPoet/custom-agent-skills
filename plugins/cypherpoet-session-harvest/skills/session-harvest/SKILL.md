@@ -190,9 +190,9 @@ After presenting, ask:
 
 ## Phase 5: Verify Accuracy Before Saving
 
-Selection is not verification. The summaries presented in Phase 4 are polished prose, and polished prose can paper over claims that were never actually checked — especially technical facts asserted with confidence. Memory writes are durable: a confidently wrong memory is worse than no memory, because future sessions will trust it.
+Selection is not verification. The summaries presented in Phase 4 are polished prose, and polished prose can paper over claims that were never actually checked — especially technical facts asserted with confidence. Memory writes are durable: a confidently wrong memory is worse than no memory, because future sessions will trust it. A routed repo edit deserves the same audit, with even more at stake: a wrong claim committed to `CLAUDE.md` or `docs/` misleads every contributor and is harder to retract than a private memory.
 
-After the user picks which items to save, but **before writing any file**, audit the concrete factual claims in each selected candidate.
+After the user picks which items to act on, but **before writing or editing any file**, audit the concrete factual claims in each selected candidate, whether it is headed for memory or the repo.
 
 ### What to audit
 
@@ -208,7 +208,7 @@ The audit should be quick. The point is to surface anything that doesn't hold up
 
 ### What to do when a claim doesn't hold up
 
-- **Wrong** — correct the memory. Don't ship the false claim.
+- **Wrong** — correct the memory or repo edit. Don't ship the false claim.
 - **Unverifiable in reasonable time** — soften or drop the unverifiable sentence. Memory writes don't need editorial flourish; they need to be correct. A memory with fewer, more accurate claims is more useful than one with confident-sounding but uncheckable ones.
 - **Right but imprecise** — tighten. E.g. "approximately 15°" is fine if the actual range is 14–16°; "exactly 15°" when it varies with input is not.
 
@@ -269,9 +269,10 @@ If the memory directory or `MEMORY.md` doesn't exist yet, create them.
 
 ### Confirm
 
-After all items are saved:
+After applying all approved items, report what changed in each home you touched. Skip a line for a home nothing went to, so a memory-only run still reads cleanly.
 
-> Saved N memories: `filename_1.md`, `filename_2.md`. MEMORY.md has been updated.
+> **Repo:** added a `CLAUDE.md` line; created `docs/foo.md`.
+> **Memory:** saved `feedback_x.md`, `project_y.md`; updated MEMORY.md.
 
 
 ## Constraints
