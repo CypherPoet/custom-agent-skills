@@ -21,26 +21,26 @@ description: >
 
 # Apple Human Interface Guidelines
 
-*Last synced with Apple HIG: 2026-06-10*
+*Last synced with Apple HIG: 2026-06-16*
 
 Distillation of the complete [Apple Human Interface Guidelines](https://developer.apple.com/design/human-interface-guidelines) — every Foundations, Patterns, Components, Inputs, and Technologies page, across all six platforms — compressed to the load-bearing guidance: what each element is for, when to use it over its alternatives, Apple's best practices as imperatives, the hard numbers, and how behavior differs per platform.
 
 ## Core Design Principles
 
-These apply to every Apple-platform design decision, so they live here rather than in a reference file.
+Apple reintroduced a unified set of **eight design principles** (June 2026) that guide every Apple-platform decision. They live in full in [`references/foundations-ux.md`](references/foundations-ux.md) (Design principles); the essence:
 
-- **Clarity** — content comes first. Text is legible at every size, icons are precise, adornments are subtle. If a decoration competes with content, remove it.
-- **Deference** — the interface helps people understand and interact with content, but never competes with it. Chrome stays out of the way; fluid motion and translucency hint at depth without stealing attention.
-- **Depth** — distinct visual layers and realistic motion convey hierarchy and orientation. Transitions signal where things came from and where they go.
+- **Purpose** — make something meaningful; identify what matters most to the people you're designing for and make that great.
+- **Agency** — let people do things their own way; stay out of the way, and make mistakes easy to recover from.
+- **Responsibility** — act in people's best interest; be transparent about what the product does, and keep their data safe.
+- **Familiarity** — build on what people already know; keep visuals, interactions, and feedback consistent.
+- **Flexibility** — adapt to diverse contexts, abilities, and inputs; treat accessibility as a priority from the start.
+- **Simplicity** — be clear and direct; include just what's necessary and establish a clear hierarchy.
+- **Craft** — care about every detail; sweat quality, iterate, and keep the work current with the platform.
+- **Delight** — make it human; create defining moments without letting decoration crowd out the core purpose.
+
+(These supersede the older Clarity / Deference / Depth themes, which Apple no longer lists as its design principles.)
 
 **The Liquid Glass era.** Apple's current system material is Liquid Glass: a dynamic, translucent material that reflects and refracts surrounding content while adapting to context. Let system components adopt it rather than recreating it; pair it with semantic colors and SF Symbols so the system can adapt appearance automatically. Don't apply heavy custom backgrounds to controls that the system already renders with Liquid Glass — that fights the material and dates the app instantly.
-
-Supporting principles, one line each:
-
-- **Hierarchy** — establish a clear visual order; people should know what matters most at a glance.
-- **Consistency** — use system components and conventions; familiarity is a feature, not a constraint.
-- **Feedback** — every action gets a perceivable response (visual, haptic, or audible).
-- **User control** — people initiate actions and can always cancel or undo; never take destructive action without consent.
 
 ## Identify the Platform First
 
@@ -53,7 +53,7 @@ Load only the rows the question touches — usually a single file. Each referenc
 | Asking about… | Read |
 |---|---|
 | Color, Dark Mode, materials / Liquid Glass, typography, icons, images, SF Symbols, branding | `references/foundations-visual.md` |
-| Accessibility, inclusion, layout / margins / safe areas, motion, writing style, pointing devices | `references/foundations-ux.md` |
+| Design principles, accessibility, inclusion, layout / margins / safe areas, motion, writing style, pointing devices | `references/foundations-ux.md` |
 | iOS or iPadOS platform-wide conventions (multitasking, pointer, idioms) | `references/platform-ios-ipados.md` |
 | macOS platform-wide conventions (menu bar, windows, panels) | `references/platform-macos.md` |
 | tvOS platform-wide conventions (focus engine, remote) | `references/platform-tvos.md` |
@@ -72,7 +72,8 @@ Load only the rows the question touches — usually a single file. Each referenc
 | Widgets, controls (Control Center), complications, watch faces, App Clips, app icons, Home Screen quick actions | `references/components-system-experiences.md` |
 | Gestures, keyboards, Digital Crown, Apple Pencil, game controllers, remotes, eyes / spatial input, haptics, focus and selection | `references/inputs.md` |
 | Apple Pay, In-App Purchase design, Sign in with Apple, Wallet, Tap to Pay | `references/technologies-commerce-id.md` |
-| Siri, App Shortcuts, CarPlay, HomeKit, Maps, SharePlay, Live Photos, machine-learning / generative-AI surfaces | `references/technologies-system-services.md` |
+| Siri, App Shortcuts, Snippets, Maps, CarPlay, Game Center, designing for games, iCloud, NFC, Nearby Interactions, printing, VoiceOver, machine-learning / generative-AI surfaces | `references/technologies-system-services.md` |
+| HealthKit, CareKit, ResearchKit, Workouts, HomeKit, audio / video playback, AirPlay, SharePlay, Live Photos, photo editing, ShazamKit, augmented reality | `references/technologies-health-media.md` |
 | "Which component should I use?" — comparing confusable components | `references/decision-helpers.md` |
 | "Is X available on platform Y?" — capability coverage across the six platforms | `references/cross-platform-matrix.md` |
 

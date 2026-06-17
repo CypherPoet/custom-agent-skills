@@ -29,7 +29,7 @@
       "id": 3,
       "eval_name": "sheet-vs-popover-filters",
       "prompt": "On iPhone my filter options open in a popover like on iPad but it looks weird. Should this be a sheet? What does Apple recommend for a quick filter UI on iPhone vs Mac?",
-      "expected_output": "Explains that popovers are for iPad/Mac and that on iPhone the same content should present as a sheet (or menu for simple option lists); platform-specific recommendation for iPhone vs Mac. NOTE: components-presentation.md is outside pilot scope \u2014 this eval also probes graceful behavior when the routing table points at a not-yet-built reference.",
+      "expected_output": "Explains that popovers are for iPad/Mac and that on iPhone the same content should present as a sheet (or menu for simple option lists); platform-specific recommendation for iPhone vs Mac. Grounded in components-presentation.md (now part of the full corpus), which records the popover-adapts-to-sheet-in-compact behavior.",
       "files": [],
       "assertions": [
         "Recommends a sheet (or menu) instead of a popover on iPhone",

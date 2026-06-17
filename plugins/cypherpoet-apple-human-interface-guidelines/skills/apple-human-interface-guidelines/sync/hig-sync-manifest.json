@@ -1,9 +1,25 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "source_root": "https://developer.apple.com/design/human-interface-guidelines",
   "last_full_sync": "2026-06-16",
   "hash_algorithm": "sha256",
   "hash_canonicalization": "v1",
+  "skipped_index_pages": [
+    "components",
+    "content",
+    "foundations",
+    "getting-started",
+    "inputs",
+    "layout-and-organization",
+    "menus-and-actions",
+    "navigation-and-search",
+    "patterns",
+    "presentation",
+    "selection-and-input",
+    "status",
+    "system-experiences",
+    "technologies"
+  ],
   "pages": [
     {
       "url": "https://developer.apple.com/design/human-interface-guidelines/accessibility",
@@ -11,6 +27,7 @@
       "section": "foundations",
       "reference_file": "foundations-ux.md",
       "content_hash": "sha256:d5beec630295c834f142783b58b6357635df651f4ca6cd95e0a6cb10e326e17e",
+      "raw_hash": "sha256:7d1e917a96b130199ba567ab7db1923e47c68f4d8c793b49cfa6683d25a623d7",
       "last_synced": "2026-06-10",
       "status": "active"
     },
@@ -20,6 +37,7 @@
       "section": "inputs",
       "reference_file": "inputs.md",
       "content_hash": "sha256:186262c2b29816b9d6859099c26650a384ee7e66a74fcf7c4dd2f9dc1b3a0b70",
+      "raw_hash": "sha256:af375722d5020eaf645ef9a6dba8e7493b0e1dc2a711a876412328142a3c3f3f",
       "last_synced": "2026-06-16",
       "status": "active"
     },
@@ -29,6 +47,7 @@
       "section": "components",
       "reference_file": "components-menus-actions.md",
       "content_hash": "sha256:75e93d572d3bb256036825499084bd3f1dd36ab66d985dede764ea38a0629f37",
+      "raw_hash": "sha256:d28e54590b902dbd4fc1345bff2462b126ef99d368d2cf387a438c2d4569b85d",
       "last_synced": "2026-06-10",
       "status": "active"
     },
@@ -38,6 +57,7 @@
       "section": "components",
       "reference_file": "components-status-indicators.md",
       "content_hash": "sha256:79f2949790a586ec043f79c4489a8effebdca8bb87047b708ac668383f5dbd70",
+      "raw_hash": "sha256:9a9c2f7b549b0161ace11fb479ba51ce8146050c3ae8586092e438aa5eeb6022",
       "last_synced": "2026-06-16",
       "status": "active"
     },
@@ -47,6 +67,7 @@
       "section": "components",
       "reference_file": "components-menus-actions.md",
       "content_hash": "sha256:6f4def23f8f4e9758d7659d84381a7f5286ec6b93eda8ff2297ac30fa98b8c98",
+      "raw_hash": "sha256:350b74225cdaa9413b9aa5cbadb266e47bbab56a20a8c85a3403cd49d3a6dd0f",
       "last_synced": "2026-06-10",
       "status": "active"
     },
@@ -56,6 +77,7 @@
       "section": "technologies",
       "reference_file": "technologies-health-media.md",
       "content_hash": "sha256:5ce0e906d51ec8f7925ffdd9415ac295d5a1c9d7b1877e3ca5da852b2cc42257",
+      "raw_hash": "sha256:4e5411f72d2b004e53ccea67ae40f66d265c4e51df8f1e8c68d3ef62d3dba75d",
       "last_synced": "2026-06-16",
       "status": "active"
     },
@@ -65,6 +87,7 @@
       "section": "components",
       "reference_file": "components-presentation.md",
       "content_hash": "sha256:461c66d72fd27fa34a57fb04caf20db99ffc6667d2914f41de7ec1c3db8e159f",
+      "raw_hash": "sha256:6dddc0fe893e90067f23f83c23a9770720185bdeedea03b36623b57864ad24df",
       "last_synced": "2026-06-16",
       "status": "active"
     },
@@ -74,6 +97,7 @@
       "section": "platform",
       "reference_file": "platform-watchos.md",
       "content_hash": "sha256:18a11f87c21208f866a0be24ee0b491dcd0858f54a53c32bba4021f8ff381ea9",
+      "raw_hash": "sha256:e1d4d22c5d48418509c9ed2e327bc84b7e58aa80a34c14d69a905089d0e779ff",
       "last_synced": "2026-06-16",
       "status": "active"
     },
@@ -83,6 +107,7 @@
       "section": "components",
       "reference_file": "components-system-experiences.md",
       "content_hash": "sha256:c377c9412f173fbea352a959228d35a43a7908492c4aed41c81fb267a4faae7c",
+      "raw_hash": "sha256:13e8a2d21990d1e9180ed9147af1882e1ecc737726e86944c51d2a9ecfb473cb",
       "last_synced": "2026-06-16",
       "status": "active"
     },
@@ -92,6 +117,7 @@
       "section": "components",
       "reference_file": "components-system-experiences.md",
       "content_hash": "sha256:d339f5f9aff6073b07fc14f95baa1fec0190f4ae654ad0b3bbc466947c6f60d3",
+      "raw_hash": "sha256:23e5f02d30ef84f3c683cb6316e761e1f53e6fb8614c9d3d8c6ad2328f2af65b",
       "last_synced": "2026-06-16",
       "status": "active"
     },
@@ -101,6 +127,7 @@
       "section": "technologies",
       "reference_file": "technologies-system-services.md",
       "content_hash": "sha256:f38582680eeec8694adb15ecaadf5538eb453b95b6719f2f5af8c2cf081d4210",
+      "raw_hash": "sha256:19e56a5f87da8dfd5ca9e9a5af1172e342f1db4ccedefee378ee28d98ce5d77b",
       "last_synced": "2026-06-16",
       "status": "active"
     },
@@ -110,6 +137,7 @@
       "section": "technologies",
       "reference_file": "technologies-commerce-id.md",
       "content_hash": "sha256:24ee7755a8b6ba4762b1861619cbef686c4673070f5bead9f9c18473ab2775d9",
+      "raw_hash": "sha256:140e48dc132d5c95f147137361e79a8115c6e12986385feba842deea8075dd3d",
       "last_synced": "2026-06-16",
       "status": "active"
     },
@@ -119,6 +147,7 @@
       "section": "inputs",
       "reference_file": "inputs.md",
       "content_hash": "sha256:c0b59d2f2be842d6022f0f4039b61c612fdd29c6d66eeec7dcfda7f151acf76a",
+      "raw_hash": "sha256:68a840f1ac1bcb0ba2a03b9973c8a98588a5b79fcf857ecd4d5d9724939491eb",
       "last_synced": "2026-06-16",
       "status": "active"
     },
@@ -128,6 +157,7 @@
       "section": "technologies",
       "reference_file": "technologies-health-media.md",
       "content_hash": "sha256:3558b2772eeb1935da195ec0388f63725979645f4b1a6e8fe344cbe8e97e7783",
+      "raw_hash": "sha256:b30470e2c7f921b6e3c86506b7c3062d66ab51c1bb3c72e5e37aee7ba79c6076",
       "last_synced": "2026-06-16",
       "status": "active"
     },
@@ -137,6 +167,7 @@
       "section": "components",
       "reference_file": "components-content-views.md",
       "content_hash": "sha256:553f2d0eb0f7c17ce7f2617d14b9baa4994b2dc8185c1b6d5e04c6186133e671",
+      "raw_hash": "sha256:04a85948d2edf65c69e61bf8c471f9eb89a2303529b94e4ec8023708fcd67a3b",
       "last_synced": "2026-06-16",
       "status": "active"
     },
@@ -146,6 +177,7 @@
       "section": "foundations",
       "reference_file": "foundations-visual.md",
       "content_hash": "sha256:f1b33941561da40cd4bb3dc507aed3652d1e52b58403e3a0f71f5275c8bb0034",
+      "raw_hash": "sha256:b78e91fdf901e86f171d338bdf88a819ef8fdfdf77375017a7a9e734f93d5650",
       "last_synced": "2026-06-10",
       "status": "active"
     },
@@ -155,6 +187,7 @@
       "section": "components",
       "reference_file": "components-menus-actions.md",
       "content_hash": "sha256:6e3544f6c37e9d5c959b3afeff3d9fe37e5dd000fd535b2be251a9d3f1c7e3ed",
+      "raw_hash": "sha256:5fc50251132708741992d76e347bb261f9d1cc007640090e03cd3cdc1d70e8d0",
       "last_synced": "2026-06-10",
       "status": "active"
     },
@@ -164,6 +197,7 @@
       "section": "inputs",
       "reference_file": "inputs.md",
       "content_hash": "sha256:05ddde900aa3317a8530e46bb3695d60b3825251beb74a161d2a60deac0f2800",
+      "raw_hash": "sha256:17f9f27db6a3d1d5cff0e32b55b9198f5efb511e5dd6f0006302676d050cad99",
       "last_synced": "2026-06-16",
       "status": "active"
     },
@@ -173,6 +207,7 @@
       "section": "technologies",
       "reference_file": "technologies-health-media.md",
       "content_hash": "sha256:8265d0e04d1c4b59a487370a4e146e088949766c042b1eb3d4e7b12aec460c64",
+      "raw_hash": "sha256:fbbe77421c9204830eeff939eece29339fdb280ce502182e11d9ff8a95466f29",
       "last_synced": "2026-06-16",
       "status": "active"
     },
@@ -182,6 +217,7 @@
       "section": "technologies",
       "reference_file": "technologies-system-services.md",
       "content_hash": "sha256:07f4fa80442910f22045dcfd7990f3328024befd799b1ed99c69fcd56d799672",
+      "raw_hash": "sha256:6b5c6b93dcb0bb04e375df2aa0b2f9eb54b6c2a00d18244ebd9ee4cac0269a3c",
       "last_synced": "2026-06-16",
       "status": "active"
     },
@@ -191,6 +227,7 @@
       "section": "components",
       "reference_file": "components-content-views.md",
       "content_hash": "sha256:5d2f89f390c217259bba4332eb899109b78c76909537ab0ced4c161976dc91ee",
+      "raw_hash": "sha256:0596e0109f409e29dde3e5b4c73069eab91c31c6063a946c71331e111b38db38",
       "last_synced": "2026-06-16",
       "status": "active"
     },
@@ -200,6 +237,7 @@
       "section": "components",
       "reference_file": "components-content-views.md",
       "content_hash": "sha256:49bd3ab22fa5c8657c8b37ef5bca9b407f9c62ad3cdce2479e0273bf213df025",
+      "raw_hash": "sha256:ecb6358a5b0ca39cb09a89a61902149bd98b63ded0e4f8a08f738d7d11f82468",
       "last_synced": "2026-06-16",
       "status": "active"
     },
@@ -209,6 +247,7 @@
       "section": "patterns",
       "reference_file": "patterns-layout-presentation.md",
       "content_hash": "sha256:66d9dffbe35a47af8c015330dc06926a9610856d7a415e0bf7826e271b79b566",
+      "raw_hash": "sha256:574f0e7d66992eacfe26931e9c541328f2e0dbe05b3fe77a33c2ed9229aaf477",
       "last_synced": "2026-06-16",
       "status": "active"
     },
@@ -218,6 +257,7 @@
       "section": "components",
       "reference_file": "components-content-views.md",
       "content_hash": "sha256:01aa0eec2aea6406e44f973968d67dfa6dc62f15b178bc5d851e5d62e4bfebf1",
+      "raw_hash": "sha256:8282e6ded8c72f2c1bc416f92937ccc1abd8621816148a68fa072bffe318717d",
       "last_synced": "2026-06-16",
       "status": "active"
     },
@@ -227,6 +267,7 @@
       "section": "foundations",
       "reference_file": "foundations-visual.md",
       "content_hash": "sha256:508c492d08c5a3445157564aaa7b348b8dfbf97ed8dc969fbeaa1177a8b79a9e",
+      "raw_hash": "sha256:cfb69da45ed9932a96233e92c4afbd35deb445bb0ca2f34eedecec12659db72c",
       "last_synced": "2026-06-10",
       "status": "active"
     },
@@ -236,6 +277,7 @@
       "section": "components",
       "reference_file": "components-selection-input.md",
       "content_hash": "sha256:19623fbcbbe31f930f505f773c1546d7a28d46d04f8dd8a0a2efaed0353f3775",
+      "raw_hash": "sha256:451b2ef748a5b1d8d31f6f288145f2ccac7a9f447e78031119f8739a52a40d43",
       "last_synced": "2026-06-16",
       "status": "active"
     },
@@ -245,6 +287,7 @@
       "section": "components",
       "reference_file": "components-content-views.md",
       "content_hash": "sha256:d09ec4a2746b440f9dedd18955f0334066f72af033332346780c1847d0279cc4",
+      "raw_hash": "sha256:10fc17aec4dddbad54c40f2b358ac294007a4d4ebcef5a9a35d49e69660c2f17",
       "last_synced": "2026-06-16",
       "status": "active"
     },
@@ -254,6 +297,7 @@
       "section": "components",
       "reference_file": "components-selection-input.md",
       "content_hash": "sha256:d350b2a0166aa4857d3d0bab5c947b4d3adba28ada245f4c776d9604550aa48a",
+      "raw_hash": "sha256:0343349e96d5bbe6349c50ba3959a17be725bffd45b7663941e85255fde17002",
       "last_synced": "2026-06-16",
       "status": "active"
     },
@@ -263,6 +307,7 @@
       "section": "components",
       "reference_file": "components-system-experiences.md",
       "content_hash": "sha256:3098aa738bb7dfc190d213458043bd90de0cb05814dc7ee6a1ecc9cfb75ec8eb",
+      "raw_hash": "sha256:82b59ca8ad8e77de81d2b54a5a235dfde88a1168088213604adc5a72be091b5f",
       "last_synced": "2026-06-16",
       "status": "active"
     },
@@ -272,6 +317,7 @@
       "section": "components",
       "reference_file": "components-menus-actions.md",
       "content_hash": "sha256:e54e723a9ecb0d9a4457c4bdc9e69d93419233d8c0e9e2e9211010edbfb253b2",
+      "raw_hash": "sha256:4cec0a8984ab433d5b4ce57c6c379fff803463205d720438de7bed4317cfc9b1",
       "last_synced": "2026-06-10",
       "status": "active"
     },
@@ -281,6 +327,7 @@
       "section": "components",
       "reference_file": "components-system-experiences.md",
       "content_hash": "sha256:baf00d87707644096809e272a0d96b9e9ec7eb1c78309b7503ded4317c3e1881",
+      "raw_hash": "sha256:002598d26591ac8d9e5d6646762674862447844488935c8036a8b3b7c96a6e54",
       "last_synced": "2026-06-16",
       "status": "active"
     },
@@ -290,6 +337,7 @@
       "section": "foundations",
       "reference_file": "foundations-visual.md",
       "content_hash": "sha256:dd8c8eba7fdaf625c380a817d869b5f6d35a2c934050aef907fa94018e73a84e",
+      "raw_hash": "sha256:27714661393c51338ec3f4c0c766829efadc5ed987923d2c07c616a45269eeb9",
       "last_synced": "2026-06-10",
       "status": "active"
     },
@@ -299,6 +347,7 @@
       "section": "foundations",
       "reference_file": "foundations-ux.md",
       "content_hash": "sha256:127fef2d4371d845612d722f0fe2003d0b7063cf20f889cfceca3267f244350f",
+      "raw_hash": "sha256:bede73857d232758e5157b64d824b7f9ad203559b81ab3bca4a91edbdae44306",
       "last_synced": "2026-06-16",
       "status": "active"
     },
@@ -308,6 +357,7 @@
       "section": "technologies",
       "reference_file": "technologies-system-services.md",
       "content_hash": "sha256:f29a61264e71882f7d7b8e54ccb1fd512c7624fd01fd7c1b77c8b1ffbb3de244",
+      "raw_hash": "sha256:08b1f9159c86212bd1909725541fdc7f1da0fa5c1647611a0c027888bc758787",
       "last_synced": "2026-06-16",
       "status": "active"
     },
@@ -317,6 +367,7 @@
       "section": "platform",
       "reference_file": "platform-ios-ipados.md",
       "content_hash": "sha256:e18cc1bd152b9ce501b0092ff968fede271721b442218dec565cc7b2f6bd97ba",
+      "raw_hash": "sha256:d9f8bde1eb2e10ca76edcb1c0312a35e748a4d25c30d477bce185affb88cde7d",
       "last_synced": "2026-06-16",
       "status": "active"
     },
@@ -326,6 +377,7 @@
       "section": "platform",
       "reference_file": "platform-ios-ipados.md",
       "content_hash": "sha256:9e3cee9e4b483391a96532e27604ac1ab6e5a083853a29e9a1b3255418fb4ab3",
+      "raw_hash": "sha256:74619f7c7f27cd66caab787368d6fbc5c25aa6b98097be236fb9bedb5fcb8a4e",
       "last_synced": "2026-06-16",
       "status": "active"
     },
@@ -335,6 +387,7 @@
       "section": "platform",
       "reference_file": "platform-macos.md",
       "content_hash": "sha256:36360a2fe03233e075b67e16bb6beed9c815d7b71680d7ccd8836fc1084acc83",
+      "raw_hash": "sha256:424b080df86bcaad539dd02f5c8dd2e44372678a85a9a182e9f9a0a3a42eadfa",
       "last_synced": "2026-06-16",
       "status": "active"
     },
@@ -344,6 +397,7 @@
       "section": "platform",
       "reference_file": "platform-tvos.md",
       "content_hash": "sha256:bf8a50721afb71d31694d06cd37d92bf207d4512fa19612823778a62cbf1c426",
+      "raw_hash": "sha256:9c4c756f15ec3d863eda7677b410b4bdd4b93d6686ad152b11ae3869cd1a5484",
       "last_synced": "2026-06-16",
       "status": "active"
     },
@@ -353,6 +407,7 @@
       "section": "platform",
       "reference_file": "platform-visionos.md",
       "content_hash": "sha256:357263958417552cce1d9e192c4316588f80116a533cae34866b84cc7588a2b4",
+      "raw_hash": "sha256:519ddb4f757a1b118517c8fc0964925a120c5601cfb1ed31ee9b0a258250b465",
       "last_synced": "2026-06-16",
       "status": "active"
     },
@@ -362,6 +417,7 @@
       "section": "platform",
       "reference_file": "platform-watchos.md",
       "content_hash": "sha256:db4c6a1570c328ef743c2f7dd1bec165695e36b5c3648eae45675d6e6163f162",
+      "raw_hash": "sha256:66fb67ed04f8aa6fc6ec5ddb81d0477c97bbcc3d074196e49894f0cf3aee0d67",
       "last_synced": "2026-06-16",
       "status": "active"
     },
@@ -371,6 +427,7 @@
       "section": "components",
       "reference_file": "components-selection-input.md",
       "content_hash": "sha256:38b2b25c4f15215bd7b4a31e1b3bb01d6a72e88b1739299082dbd16178cb0a17",
+      "raw_hash": "sha256:dbc7d9f3f39d9ae550fec5737fbcd7fa34be49e85039a388c4d8ad74fe178c88",
       "last_synced": "2026-06-16",
       "status": "active"
     },
@@ -380,6 +437,7 @@
       "section": "inputs",
       "reference_file": "inputs.md",
       "content_hash": "sha256:df380b863303925fd0958e31f39653b07a9889b13ac96ae55b9413c2425360f6",
+      "raw_hash": "sha256:e2e09307bfe687a7db6964f76151a455c5a9698a1c6372ed96fcb9a96febab04",
       "last_synced": "2026-06-16",
       "status": "active"
     },
@@ -389,6 +447,7 @@
       "section": "components",
       "reference_file": "components-selection-input.md",
       "content_hash": "sha256:3257d1390105a32c8e4acaa2395d59e46ab95d7146017f9382ea1b2ead016f3b",
+      "raw_hash": "sha256:edec8230a3273ba9feee8c42411c5098d2459d084966bcf321e6c44b57692ebf",
       "last_synced": "2026-06-16",
       "status": "active"
     },
@@ -398,6 +457,7 @@
       "section": "platform",
       "reference_file": "platform-macos.md",
       "content_hash": "sha256:cb4646685bdb7ab6041d61650fd621ae37e5d7f1c02d4215ec21ccdd9e0643e9",
+      "raw_hash": "sha256:324c08a74a7fd1b2f915cc451f59faf58ded58a78996977c888786a839136b40",
       "last_synced": "2026-06-16",
       "status": "active"
     },
@@ -407,6 +467,7 @@
       "section": "patterns",
       "reference_file": "patterns-layout-presentation.md",
       "content_hash": "sha256:66f3cd6360b1d8a1977fa798f2e37a75788f55bde7f49027923c3c531bcd5557",
+      "raw_hash": "sha256:5a70b872a67ac77c2e4faec09a83b7c4d4d660d447cb4a41b060539cfc012e56",
       "last_synced": "2026-06-16",
       "status": "active"
     },
@@ -416,6 +477,7 @@
       "section": "components",
       "reference_file": "components-menus-actions.md",
       "content_hash": "sha256:ef9b0618350533619a952f63fa49d89a44b3a0e914373fb06658bbe630de38b7",
+      "raw_hash": "sha256:a5e841d7c7a1230582bd3c46a69434ab9488df82dac896a8f4ffbb7e2659401b",
       "last_synced": "2026-06-10",
       "status": "active"
     },
@@ -425,6 +487,7 @@
       "section": "components",
       "reference_file": "components-selection-input.md",
       "content_hash": "sha256:cc4033ca2413a056eee1e3ef66786c15a6ef804fb12b2380bee8a1df0d6a5b8c",
+      "raw_hash": "sha256:f0d73e5b39cc6ba936b0fb98b0de5da3879e8c9a2d520b1688fd76679072bf3c",
       "last_synced": "2026-06-16",
       "status": "active"
     },
@@ -434,6 +497,7 @@
       "section": "inputs",
       "reference_file": "inputs.md",
       "content_hash": "sha256:7181f941f0acacb01c910968824af84b0ca4ad883761df17611fc85347f49151",
+      "raw_hash": "sha256:61e97994751858644062e7c52784047522afd5dcab00f12ec42110c7116aeb21",
       "last_synced": "2026-06-16",
       "status": "active"
     },
@@ -443,6 +507,7 @@
       "section": "patterns",
       "reference_file": "patterns-status-feedback.md",
       "content_hash": "sha256:0f73784958ff661e58ae86f15d62a8734c1f40e808bad26b3d52911b8f18210f",
+      "raw_hash": "sha256:0e285b44bad4a7aabb2ac229de95ec3791acd18ef589a3287e8175e0d762c755",
       "last_synced": "2026-06-16",
       "status": "active"
     },
@@ -452,6 +517,7 @@
       "section": "patterns",
       "reference_file": "patterns-layout-presentation.md",
       "content_hash": "sha256:f79af87395e1867e1ac0ba1fee9e00e3618ba6d13d12c58cdd50ad11fe9d02bb",
+      "raw_hash": "sha256:df318ba013864e221350b38d7fb1e77d23ff108286f726cffb3859b40a1dc842",
       "last_synced": "2026-06-16",
       "status": "active"
     },
@@ -461,6 +527,7 @@
       "section": "inputs",
       "reference_file": "inputs.md",
       "content_hash": "sha256:e744827d7bbba1fa84ed97ebef1dd86c81bbaefbc138619f582a40de86c5f3e5",
+      "raw_hash": "sha256:a5cd521bed0d508670033fecfeba6af161ae31fc792af94573abeecf30e7318f",
       "last_synced": "2026-06-16",
       "status": "active"
     },
@@ -470,6 +537,7 @@
       "section": "technologies",
       "reference_file": "technologies-system-services.md",
       "content_hash": "sha256:2d4029dbe3781d3d86b4689f8e24700b22738c85c88846ddbf400944ef1c5cfd",
+      "raw_hash": "sha256:9128d59fe88d07a02d64afe4e559043d9714e767b0faaec6192c2ba9672da3fd",
       "last_synced": "2026-06-16",
       "status": "active"
     },
@@ -479,6 +547,7 @@
       "section": "inputs",
       "reference_file": "inputs.md",
       "content_hash": "sha256:3758d3b5b4ae359be9e6762123d200158d12ec78b358a01af4a24e293f88c950",
+      "raw_hash": "sha256:1fc244b087f6c44374f496e2121761e2ebab9ea8a0ceeb1012d2a5faa2086cc1",
       "last_synced": "2026-06-16",
       "status": "active"
     },
@@ -488,6 +557,7 @@
       "section": "components",
       "reference_file": "components-status-indicators.md",
       "content_hash": "sha256:9ae91bca3d0d9427a8410f6a3fc6e2dedcf1ec227518417644fbc161d63c415b",
+      "raw_hash": "sha256:c6eb4c18ae58e46f6a885e9fadf126bcddc32ae022078fee29497bccb97094eb",
       "last_synced": "2026-06-16",
       "status": "active"
     },
@@ -497,6 +567,7 @@
       "section": "technologies",
       "reference_file": "technologies-system-services.md",
       "content_hash": "sha256:a0894ba57a91c28edf60f380ca10e63ee841de6418b1dd72621f4e57e4f433a7",
+      "raw_hash": "sha256:0b51af3b553414edef8c71ad71019b3c4539cdaf317f2c29f5e2beb83f5ece09",
       "last_synced": "2026-06-16",
       "status": "active"
     },
@@ -506,6 +577,7 @@
       "section": "inputs",
       "reference_file": "inputs.md",
       "content_hash": "sha256:2fa56b0363970fd1e7bfdd9f4c6bc270770129e3819f8f77bbb3437af68c0486",
+      "raw_hash": "sha256:5b0ac81e2e346310d8bce2ce7415df70e81c42dc6fdf7a5ccadb00aa62df80a2",
       "last_synced": "2026-06-16",
       "status": "active"
     },
@@ -515,6 +587,7 @@
       "section": "patterns",
       "reference_file": "patterns-navigation.md",
       "content_hash": "sha256:97760c6f27ad4e8596b569557e437a5acec8e57514803fd52ef781fc6a8f7c0a",
+      "raw_hash": "sha256:0338fbf03f55791d01438ede99564b44a811f69392761455a8b402785a0cac0a",
       "last_synced": "2026-06-16",
       "status": "active"
     },
@@ -524,6 +597,7 @@
       "section": "inputs",
       "reference_file": "inputs.md",
       "content_hash": "sha256:f31820662efdc9a96f49fea84fe14cac093c54970e995d51dc214fabdbd49bb4",
+      "raw_hash": "sha256:58313ee96fcb96c34b19ad523e74e4d45dd236eee7973fc54393f2ad27915ef9",
       "last_synced": "2026-06-16",
       "status": "active"
     },
@@ -533,6 +607,7 @@
       "section": "technologies",
       "reference_file": "technologies-health-media.md",
       "content_hash": "sha256:6f597c1bc535d212a3019280e9163f78a724598640f61a3617f059dc222bc979",
+      "raw_hash": "sha256:6482abfce139c4208ea21cb7040207bf589dc39b88db7df373b3dba05c302d61",
       "last_synced": "2026-06-16",
       "status": "active"
     },
@@ -542,6 +617,7 @@
       "section": "components",
       "reference_file": "components-system-experiences.md",
       "content_hash": "sha256:ac0c74a20654eeadd9f3a7b21546824f291bd34e324374f2ecdcde65bbc8b333",
+      "raw_hash": "sha256:9ba262e3d79b1993ed5ef422b969443c589addbf038137447c31be28475cbb70",
       "last_synced": "2026-06-16",
       "status": "active"
     },
@@ -551,6 +627,7 @@
       "section": "technologies",
       "reference_file": "technologies-health-media.md",
       "content_hash": "sha256:61e6a647b1ed10aa92ec314c2780766d2adae4569dd157e6acd32b38aa0659db",
+      "raw_hash": "sha256:f506f65b6e105e7e5ba750bd3f2ba81c14ba49ea480fc50cf49611f6cb1f863f",
       "last_synced": "2026-06-16",
       "status": "active"
     },
@@ -560,6 +637,7 @@
       "section": "technologies",
       "reference_file": "technologies-system-services.md",
       "content_hash": "sha256:aeee5954b05b10bb49c3bd5f66ebd6ff1eef324e6ddc065617d8cdd5e60eeba2",
+      "raw_hash": "sha256:354476be20ab928e6dd9f248e17f261ba9b1e236e3333a3a5e8c57c93d73e9a4",
       "last_synced": "2026-06-16",
       "status": "active"
     },
@@ -569,6 +647,7 @@
       "section": "foundations",
       "reference_file": "foundations-visual.md",
       "content_hash": "sha256:15d2312ac09e9f0cee57ed112576a332bbd29a269912f32fbae1b230639d5e29",
+      "raw_hash": "sha256:78620adb6e70408083e496a8f71ec56166470a02e32b4889182ba91af6a27050",
       "last_synced": "2026-06-10",
       "status": "active"
     },
@@ -578,6 +657,7 @@
       "section": "technologies",
       "reference_file": "technologies-commerce-id.md",
       "content_hash": "sha256:e75b076b365d2c562b05cd787bbd824e92327cfbe2f42dea633f69b3d19ebac9",
+      "raw_hash": "sha256:2782b940bf9d984b2409e10ce159e8ff2fbdfb0cc4b545d485fcf68d3f11b6f9",
       "last_synced": "2026-06-16",
       "status": "active"
     },
@@ -587,6 +667,7 @@
       "section": "components",
       "reference_file": "components-content-views.md",
       "content_hash": "sha256:c7011c6978cc73060f4a12dc24970bc35bc3e5b2b9a4235b70a785380a91fe08",
+      "raw_hash": "sha256:0a906318f7fe351752f9b497e9e3192ecf3388c41dfdbb2bd87f59016c0e379e",
       "last_synced": "2026-06-16",
       "status": "active"
     },
@@ -596,6 +677,7 @@
       "section": "components",
       "reference_file": "components-selection-input.md",
       "content_hash": "sha256:5b2ddb2497c4594556a5eec246ac145ec5f72483513ae356dc0b4895d3aa7718",
+      "raw_hash": "sha256:a79496977a0e3e08c06f865084f2e9f2f72a313f7f047b974dcf88222dbff6ca",
       "last_synced": "2026-06-16",
       "status": "active"
     },
@@ -605,6 +687,7 @@
       "section": "foundations",
       "reference_file": "foundations-visual.md",
       "content_hash": "sha256:f8dd53c5b096ca75faf0c0138e5f8609876a7ebe7bfc959655396616e9347e92",
+      "raw_hash": "sha256:a93eb3bd8047d5e959a4e49925b2c0a9ca19474367c7f45ec376ce6ac2731243",
       "last_synced": "2026-06-10",
       "status": "active"
     },
@@ -614,6 +697,7 @@
       "section": "components",
       "reference_file": "components-system-experiences.md",
       "content_hash": "sha256:b8b863c2445e6664e360bb379f5b8f6bbf4d66f45ca2bbaf4815391bfc819566",
+      "raw_hash": "sha256:46616edfc07024bf115f178b69db84e3dec776b3793cfb3764d19b8662ab0af5",
       "last_synced": "2026-06-16",
       "status": "active"
     },
@@ -623,6 +707,7 @@
       "section": "platform",
       "reference_file": "platform-visionos.md",
       "content_hash": "sha256:1cc8dacd6ffa9846127176619840bffadd7b7079f5b0e3dbacf93c244d3889d6",
+      "raw_hash": "sha256:831486b4eef0df34e930dc78fa8a9605ab87a4fd148e6731b5708a4716fb89a6",
       "last_synced": "2026-06-16",
       "status": "active"
     },
@@ -632,6 +717,7 @@
       "section": "technologies",
       "reference_file": "technologies-commerce-id.md",
       "content_hash": "sha256:d5127f7653c0ebd1d2edfd781a4952b9542932bb9973bc5797d43cb4ce53df4a",
+      "raw_hash": "sha256:c16ff87f1a8bdaf124e8a6bd3a69a7e2a29361b981bb6dcd2c2198f1b3ed1794",
       "last_synced": "2026-06-16",
       "status": "active"
     },
@@ -641,6 +727,7 @@
       "section": "foundations",
       "reference_file": "foundations-ux.md",
       "content_hash": "sha256:0190a426343669f0fe81fe947cce392d9060d319465946f7b4f866691ef5d138",
+      "raw_hash": "sha256:e75307b450e09157640e30c1b181b40f787a167070e7e27c30702b026a84d5a2",
       "last_synced": "2026-06-10",
       "status": "active"
     },
@@ -650,6 +737,7 @@
       "section": "inputs",
       "reference_file": "inputs.md",
       "content_hash": "sha256:e46445e436d845328e535609170e37065209bfd0451c0dfbbed789c5da12874c",
+      "raw_hash": "sha256:85713c64c51f3cccf2210c74541decd2afa8d7232e61cbac1a3863dc7a2f6c23",
       "last_synced": "2026-06-16",
       "status": "active"
     },
@@ -659,6 +747,7 @@
       "section": "components",
       "reference_file": "components-status-indicators.md",
       "content_hash": "sha256:b594ac5478856419aaf96f1a41eb03142ec8681c20e19a75997d19d7d16ed256",
+      "raw_hash": "sha256:2acbba20edd552c3426ff1f78d61b03644296394450cd4b70fb730d5bb74844a",
       "last_synced": "2026-06-16",
       "status": "active"
     },
@@ -668,6 +757,7 @@
       "section": "patterns",
       "reference_file": "patterns-navigation.md",
       "content_hash": "sha256:8699933ce73ed4d91fdb95964fd61f2047fb8e71a5ce4c5c3df4bf71a9c8aebb",
+      "raw_hash": "sha256:fef67cc243c7d46c013cfb5f781829d8e636c1cfa5a6f3d399dd46820068c79e",
       "last_synced": "2026-06-16",
       "status": "active"
     },
@@ -677,6 +767,7 @@
       "section": "foundations",
       "reference_file": "foundations-ux.md",
       "content_hash": "sha256:1ecc01a49e45426a518cdf1c142d1585c19f77095be7717f3f08840c5ab25832",
+      "raw_hash": "sha256:f79815aa8a1c57be13c6fa0c939776438708c8dacb612a292fa19860e2a0827c",
       "last_synced": "2026-06-10",
       "status": "active"
     },
@@ -686,6 +777,7 @@
       "section": "components",
       "reference_file": "components-content-views.md",
       "content_hash": "sha256:13a450ebda5c4db86c0e13eed883d1f9028500a43a72082b84c4515296945710",
+      "raw_hash": "sha256:e36d870dce29ea271d386e6b656c78e1740a4a6fa306e5d3cb9f1f258b4c4d95",
       "last_synced": "2026-06-16",
       "status": "active"
     },
@@ -695,6 +787,7 @@
       "section": "patterns",
       "reference_file": "patterns-status-feedback.md",
       "content_hash": "sha256:0824430e48690a67ebab4506305c142f305116740e54eaba67d4dce7dc92e75e",
+      "raw_hash": "sha256:58c9c5f0bc13517a47a7e31a9bb0bb96bee7187cd4e6e04169febce3eeac140c",
       "last_synced": "2026-06-16",
       "status": "active"
     },
@@ -704,6 +797,7 @@
       "section": "technologies",
       "reference_file": "technologies-health-media.md",
       "content_hash": "sha256:f6215aff2fa7c8b2f2780fb57664f7287f876e7c2659eb659707446db15c9f98",
+      "raw_hash": "sha256:f6e282c62e814345f053380ac3749694d0625fa43a501593eaf147e972b2cbd5",
       "last_synced": "2026-06-16",
       "status": "active"
     },
@@ -713,6 +807,7 @@
       "section": "platform",
       "reference_file": "platform-tvos.md",
       "content_hash": "sha256:df49bc14f92f1d3400a584eef3252bcaa91c99737d7ffbf7492b6d771a114994",
+      "raw_hash": "sha256:8088822ac6b6e88b57037168cf35a56eda4cab7c30c710039c4780a1601bfff1",
       "last_synced": "2026-06-16",
       "status": "active"
     },
@@ -722,6 +817,7 @@
       "section": "patterns",
       "reference_file": "patterns-layout-presentation.md",
       "content_hash": "sha256:9e32a2110d8b604e8c50ef13c1711c79a6bd5feebcb5672081bb1195d0579fb3",
+      "raw_hash": "sha256:661eaa3c5a2f82195659b07d7cbea37a7389fab8d2adf853cdca0ec2346e3c30",
       "last_synced": "2026-06-16",
       "status": "active"
     },
@@ -731,6 +827,7 @@
       "section": "components",
       "reference_file": "components-content-views.md",
       "content_hash": "sha256:c9bdebcf14a73fe7215e4bdeba2e18f42e7eccb94735a65e6a912886d89a8693",
+      "raw_hash": "sha256:dab3722aa51a459ad0ae1cbee1764738d9902ac07b1869df059fc47a1e5e7c5a",
       "last_synced": "2026-06-16",
       "status": "active"
     },
@@ -740,6 +837,7 @@
       "section": "platform",
       "reference_file": "platform-macos.md",
       "content_hash": "sha256:57e4b3c3caaeb5c44afb03e99a25e66b98ee75acf9c23133b6858cb4af5afbc1",
+      "raw_hash": "sha256:e0b5239c2501ef8da1679d97eec67af7d8891798081d8e314e52c15996cb669e",
       "last_synced": "2026-06-16",
       "status": "active"
     },
@@ -749,6 +847,7 @@
       "section": "technologies",
       "reference_file": "technologies-system-services.md",
       "content_hash": "sha256:73ad3b5aa4397d4a6354f31f50c9d3f1bc59e6679ee23ceebb6de862e28edcff",
+      "raw_hash": "sha256:c25fdcdca2a56aeab5572b43186dd2903617e0d60e92b44da04644704805fac4",
       "last_synced": "2026-06-16",
       "status": "active"
     },
@@ -758,6 +857,7 @@
       "section": "patterns",
       "reference_file": "patterns-search.md",
       "content_hash": "sha256:c0f74134a54231fd0c85c9173f31730cbf0b61bc701ec9abf0c8af58bb2454c5",
+      "raw_hash": "sha256:9d8b96371ceade63131757a8d9fcdcedbf48da871763509cf1e5adffb3afb99c",
       "last_synced": "2026-06-16",
       "status": "active"
     },
@@ -767,6 +867,7 @@
       "section": "patterns",
       "reference_file": "patterns-status-feedback.md",
       "content_hash": "sha256:80d6f0ef7959f4b1feca34e4031ad58317302e557952a81fb1b590d868aab949",
+      "raw_hash": "sha256:2d622ae5a6850625a66ebc1719caa720daa27f41cdd7130455614bb750050ce1",
       "last_synced": "2026-06-16",
       "status": "active"
     },
@@ -776,6 +877,7 @@
       "section": "technologies",
       "reference_file": "technologies-system-services.md",
       "content_hash": "sha256:dc817c5765c32b20c369c40cb953a3d28eabc4c1699132ece5f0885ff1bb065a",
+      "raw_hash": "sha256:02fa30e491b079d0f03569ee0773f178185c892f4d6ff5d577a85dfed448e0fc",
       "last_synced": "2026-06-16",
       "status": "active"
     },
@@ -785,6 +887,7 @@
       "section": "foundations",
       "reference_file": "foundations-visual.md",
       "content_hash": "sha256:f4392d5dd8518922f12f1d3261ee061d6bb1678de6e709f4356258a004d08fb7",
+      "raw_hash": "sha256:ef77fd86e6fa3bc3e465b266308c9ca13aa45266415203e7bbbbcb8469c6e411",
       "last_synced": "2026-06-10",
       "status": "active"
     },
@@ -794,6 +897,7 @@
       "section": "components",
       "reference_file": "components-menus-actions.md",
       "content_hash": "sha256:90bbdba664bd0354345e60d51b1b3a320cf1b3902418f76701117e3faa522142",
+      "raw_hash": "sha256:adfadb2d4e8d6469de6730de60603473eaa340aa9661fff2d7a76898309841d5",
       "last_synced": "2026-06-10",
       "status": "active"
     },
@@ -803,6 +907,7 @@
       "section": "patterns",
       "reference_file": "patterns-navigation.md",
       "content_hash": "sha256:5116b84bad6e3874bdb14264efc479acc7bcfc43cffc38e05a9513853d9d0271",
+      "raw_hash": "sha256:b4869b98f8aaef847336deb12192d2c43ec8709c2c4a69926b3b9d1401a6f554",
       "last_synced": "2026-06-16",
       "status": "active"
     },
@@ -812,6 +917,7 @@
       "section": "foundations",
       "reference_file": "foundations-ux.md",
       "content_hash": "sha256:974bf2280e47c931daa5aeb91a79650257365e85109c7a6b2bd92b142c00f030",
+      "raw_hash": "sha256:e9c2dfcf5eb044ebbb8c4f4be8d104b16f53f64d06da318778f433137a9bfa8b",
       "last_synced": "2026-06-10",
       "status": "active"
     },
@@ -821,6 +927,7 @@
       "section": "patterns",
       "reference_file": "patterns-navigation.md",
       "content_hash": "sha256:5b29bda8c3b08c9dfd9e480239f3961d3101085e64f513d5d193e70f69b91bcd",
+      "raw_hash": "sha256:8164eaed499718776d28b871130964938ef8443cf366af27b645ca4ede91788a",
       "last_synced": "2026-06-16",
       "status": "active"
     },
@@ -830,6 +937,7 @@
       "section": "technologies",
       "reference_file": "technologies-system-services.md",
       "content_hash": "sha256:998ffbfcd1033bd9e3b3dfc9271843ff0210c0064316a5989a2022d6ea71f918",
+      "raw_hash": "sha256:08f26f9ee7ff35aad39fef9669eb08383efa69f41da1a8bc40352ba8c6cde8b8",
       "last_synced": "2026-06-16",
       "status": "active"
     },
@@ -839,6 +947,7 @@
       "section": "technologies",
       "reference_file": "technologies-system-services.md",
       "content_hash": "sha256:953311d677162990ec69d60cc15051c8883515697175b9944d782a420ba0aa70",
+      "raw_hash": "sha256:04f2e2f6629e055bc6954f5b06e5a0ebccd41cbda69f3c8d236db3e712962ddc",
       "last_synced": "2026-06-16",
       "status": "active"
     },
@@ -848,6 +957,7 @@
       "section": "patterns",
       "reference_file": "patterns-status-feedback.md",
       "content_hash": "sha256:69d8167cf1bc256aa4ac98fd0ee7e6dfe3f3357a830a66e8cf6ae49f77ef489d",
+      "raw_hash": "sha256:f24abb55c43c9f795fec79987ce1b82d98ec5e934b8941bce8f04d956c226148",
       "last_synced": "2026-06-16",
       "status": "active"
     },
@@ -857,6 +967,7 @@
       "section": "patterns",
       "reference_file": "patterns-layout-presentation.md",
       "content_hash": "sha256:b5398393500c3abf69c55f0a8773bf96c1018d73156cfccb5b8310837bfab75e",
+      "raw_hash": "sha256:58729258b94e9eda22d8317f6de2202f080817e834787cd9af90be58bf127756",
       "last_synced": "2026-06-16",
       "status": "active"
     },
@@ -866,6 +977,7 @@
       "section": "patterns",
       "reference_file": "patterns-navigation.md",
       "content_hash": "sha256:b677bf900b3df6c318f44136ef2d13614ff972a9b793d524e267d4859764d198",
+      "raw_hash": "sha256:797fff5a799962e0bcefe61867045a2bebc281fd598cc2892477b4dd9f167ae6",
       "last_synced": "2026-06-16",
       "status": "active"
     },
@@ -875,6 +987,7 @@
       "section": "platform",
       "reference_file": "platform-visionos.md",
       "content_hash": "sha256:bd7f2aa7e094539d74d563256f6387e91cfaf641aa2198094eb612faa7c16f91",
+      "raw_hash": "sha256:d03f5dcc67be0f083249ef5dd4de8dad1257cc3c1ba9a7baacac67dc680a4edf",
       "last_synced": "2026-06-16",
       "status": "active"
     },
@@ -884,6 +997,7 @@
       "section": "components",
       "reference_file": "components-content-views.md",
       "content_hash": "sha256:b145fda24938ed0c93f558dc23261e8658469f2f53de934e5f117087edb5a48d",
+      "raw_hash": "sha256:ce97bae9d1b20c463c7f9f963f37c5c84e5fba192e31f017893eea6292aee01e",
       "last_synced": "2026-06-16",
       "status": "active"
     },
@@ -893,6 +1007,7 @@
       "section": "components",
       "reference_file": "components-navigation-bars.md",
       "content_hash": "sha256:a968c47a33da896e93aa8f2e307b88227bce878b30f70f226789201616512ed9",
+      "raw_hash": "sha256:1883f92aaaf1f516a7c5277713bfb9791456987ac8a1fd40a0c1ca11ba2fd143",
       "last_synced": "2026-06-16",
       "status": "active"
     },
@@ -902,6 +1017,7 @@
       "section": "components",
       "reference_file": "components-presentation.md",
       "content_hash": "sha256:3060adeb88e2e6eeb7f76d1a6505da7ddcc28fbcf7555a65d22b06d5e0c7c907",
+      "raw_hash": "sha256:5bc0cd011eb398f57832bf0854a9259e8992d569330741d48e46403dd05325f2",
       "last_synced": "2026-06-16",
       "status": "active"
     },
@@ -911,6 +1027,7 @@
       "section": "components",
       "reference_file": "components-navigation-bars.md",
       "content_hash": "sha256:c353b4cf04b7a161af13a2c7e820571f0c6d316b482e120fabee43a30a284a95",
+      "raw_hash": "sha256:ea98d4adfff84fec49b2087a2245d9bdcd5153b3771e2b0f0d0a31e8507f937b",
       "last_synced": "2026-06-16",
       "status": "active"
     },
@@ -920,6 +1037,7 @@
       "section": "technologies",
       "reference_file": "technologies-health-media.md",
       "content_hash": "sha256:1e1d0712c590ed3b099dd835537bc14fc914a85d354e3c2e57b8f23d38155ff0",
+      "raw_hash": "sha256:194670564a2dee0f5d707aec5ddcad656c03f81de670e488495d48791f81c9b1",
       "last_synced": "2026-06-16",
       "status": "active"
     },
@@ -929,6 +1047,7 @@
       "section": "components",
       "reference_file": "components-selection-input.md",
       "content_hash": "sha256:fc50307da0f56718b6ce31ae2dbddf0acf1fa498ef403b9dbb0532d30d4448fc",
+      "raw_hash": "sha256:064521fa06b559df43e289199a4aff1ad661e97764ea43e3f04ab8f35803d38c",
       "last_synced": "2026-06-16",
       "status": "active"
     },
@@ -938,6 +1057,7 @@
       "section": "technologies",
       "reference_file": "technologies-health-media.md",
       "content_hash": "sha256:b85a895dbf4296421311c5271282bfd46ec04329a2089ec3e5286c79f27ea478",
+      "raw_hash": "sha256:99bee06290d74b9fba5d44174088b552135652d123979e537ffded6445418775",
       "last_synced": "2026-06-16",
       "status": "active"
     },
@@ -947,6 +1067,7 @@
       "section": "inputs",
       "reference_file": "inputs.md",
       "content_hash": "sha256:b169016268f82372fe9a299d6dc6b233b44e8af6f32ccec87a99960008b60ffd",
+      "raw_hash": "sha256:39b8d5e0408514392840a8d930bdcf948bb0bce5832d783c3a490d6be33a71da",
       "last_synced": "2026-06-16",
       "status": "active"
     },
@@ -956,6 +1077,7 @@
       "section": "technologies",
       "reference_file": "technologies-health-media.md",
       "content_hash": "sha256:adbc047912051e076aba26ad43fd06af8df9bec298c10487f52a64450f7f195f",
+      "raw_hash": "sha256:78ebdf25478a74b514169e36f4b452cd360d58b6efe003dcea0ba9b387276d7a",
       "last_synced": "2026-06-16",
       "status": "active"
     },
@@ -965,6 +1087,7 @@
       "section": "foundations",
       "reference_file": "foundations-ux.md",
       "content_hash": "sha256:86a6503dc88beb1d9c681a156d6d763ef1249231469d8883e07ea65ebd8806e0",
+      "raw_hash": "sha256:fa2f34cbd0e15b98b11ff5ebb7e4e471de15e0b27d4c43fed5020eae73d4fe89",
       "last_synced": "2026-06-10",
       "status": "active"
     },
@@ -974,6 +1097,7 @@
       "section": "components",
       "reference_file": "components-menus-actions.md",
       "content_hash": "sha256:ba9c89ce017263148e62b4ff94db903889a9ec40856548c2672d96451e574067",
+      "raw_hash": "sha256:363a195aa5c022850aad4617d1126f050e73ac544e58f2e085cfee08f24da5dc",
       "last_synced": "2026-06-10",
       "status": "active"
     },
@@ -983,6 +1107,7 @@
       "section": "components",
       "reference_file": "components-presentation.md",
       "content_hash": "sha256:9fe9ad04554a735c0c8649ba25f40f87aad506c67208b523b8b0ef04db54e099",
+      "raw_hash": "sha256:a12ddf08612f6c47e53f643b0dd700ebd65a8e57a523d092e4b7cbdcb10e2442",
       "last_synced": "2026-06-16",
       "status": "active"
     },
@@ -992,6 +1117,7 @@
       "section": "technologies",
       "reference_file": "technologies-system-services.md",
       "content_hash": "sha256:3110157fc1eb8298da5f83373fa4cc8f26d25989c7483734d2a6336dac25f3f2",
+      "raw_hash": "sha256:c1b5e3cba90d30cc6fd8aaaf0b6fdc73186776bd9c0ab47f901ad84af7c46166",
       "last_synced": "2026-06-16",
       "status": "active"
     },
@@ -1001,6 +1127,7 @@
       "section": "patterns",
       "reference_file": "patterns-status-feedback.md",
       "content_hash": "sha256:3208d5fc4da5975620d9916803760859497cc10247536dd8ba5402fdd5fafe14",
+      "raw_hash": "sha256:d2d27561683b584526c9979d2f4cf5ceefc8368fa69dbc5f6447e9e5d41a9de5",
       "last_synced": "2026-06-16",
       "status": "active"
     },
@@ -1010,6 +1137,7 @@
       "section": "components",
       "reference_file": "components-status-indicators.md",
       "content_hash": "sha256:aeb753f8b8e3f5c4090a09ebb154a9ef61925e43fb8b21e9c351a457e41844ba",
+      "raw_hash": "sha256:1f1485b575e5f504a03bf89fb6803ea5e86f4d5a6efbd9d3d22c517bc6162562",
       "last_synced": "2026-06-16",
       "status": "active"
     },
@@ -1019,6 +1147,7 @@
       "section": "components",
       "reference_file": "components-menus-actions.md",
       "content_hash": "sha256:2269c2ecab9286a6f021e8b35e876dd4c77a7c7a0ee3f71001a2f5a26d1642cf",
+      "raw_hash": "sha256:5a53e19cdd55f1c0f57b94b1adabd492a8fea6ab1b38f6153bea8d1e336c7614",
       "last_synced": "2026-06-10",
       "status": "active"
     },
@@ -1028,6 +1157,7 @@
       "section": "components",
       "reference_file": "components-status-indicators.md",
       "content_hash": "sha256:0420e861155e4733309e25af01aebf3b62d5f820650d6aee87a0ceaa721fdcff",
+      "raw_hash": "sha256:f266ac4a2616aa8961830a5dbc6bf411deb2c6107e9a6326c5ed71c0856b5a4b",
       "last_synced": "2026-06-16",
       "status": "active"
     },
@@ -1037,6 +1167,7 @@
       "section": "patterns",
       "reference_file": "patterns-status-feedback.md",
       "content_hash": "sha256:267083a2f740bc5e754a98c2a3d5bf528d773dfa4a93d9ebf0bc03ca19b13f05",
+      "raw_hash": "sha256:a18845fdce96665e19652673f7489a67b2f300d81bcd6bf5c54ce289b6a49d14",
       "last_synced": "2026-06-16",
       "status": "active"
     },
@@ -1046,6 +1177,7 @@
       "section": "inputs",
       "reference_file": "inputs.md",
       "content_hash": "sha256:77357756d7c01f7fa30378bc47c21c7fbd93cd527edda2ad6d2394aac121a919",
+      "raw_hash": "sha256:db8d25bc685b36a735f5066320d29c57c814ea310d402cf21ad2a0ec9dba81b4",
       "last_synced": "2026-06-16",
       "status": "active"
     },
@@ -1055,6 +1187,7 @@
       "section": "technologies",
       "reference_file": "technologies-health-media.md",
       "content_hash": "sha256:9d08d958ab534c7bbe9588d97bcf4d80c02bb54a76da9ae4350c888f60b881fe",
+      "raw_hash": "sha256:40ac8bf69b566a57743bd056e657404bae30624a9aa8906a97ab488a4b227c22",
       "last_synced": "2026-06-16",
       "status": "active"
     },
@@ -1064,6 +1197,7 @@
       "section": "patterns",
       "reference_file": "patterns-layout-presentation.md",
       "content_hash": "sha256:57f122e995085a4e35b5304e100a880c0be3017d1f282da2fe7404bcee106859",
+      "raw_hash": "sha256:9ccca0d1a4f2910a0f7cbd4e78f9c8216dcbf2c989310cfd550a2ebfe46c3609",
       "last_synced": "2026-06-16",
       "status": "active"
     },
@@ -1073,6 +1207,7 @@
       "section": "components",
       "reference_file": "components-content-views.md",
       "content_hash": "sha256:57c34c36ec2d12d1553897d49618e1bdd119b533c4035b8fd61732bae2f3ff16",
+      "raw_hash": "sha256:cf155a66a1ef7ca35b721423cb904f14756d742010758b768a9c7813413b17aa",
       "last_synced": "2026-06-16",
       "status": "active"
     },
@@ -1082,6 +1217,7 @@
       "section": "patterns",
       "reference_file": "patterns-search.md",
       "content_hash": "sha256:50299c612cd472496aca700e659dbbb846b4648858eb7139136e301cd7e848a4",
+      "raw_hash": "sha256:0aab4bf42be688012690cfcce8f61849a53b8a7b6b07e29f56270947617e6c60",
       "last_synced": "2026-06-16",
       "status": "active"
     },
@@ -1091,6 +1227,7 @@
       "section": "patterns",
       "reference_file": "patterns-search.md",
       "content_hash": "sha256:4a040d1c24d4a1e2eed3016c459f68190b780ba4d3c37a06607cb8da282b2f23",
+      "raw_hash": "sha256:d4b5d9a97a66a64df3d8acdd7b758fdfc26b49027dc7d3f14025aef3182ec07e",
       "last_synced": "2026-06-16",
       "status": "active"
     },
@@ -1100,6 +1237,7 @@
       "section": "components",
       "reference_file": "components-navigation-bars.md",
       "content_hash": "sha256:4a6c659d7514a8d1cef8cc6258e22e20c18bc3716ed4024d3c759ea91eea259f",
+      "raw_hash": "sha256:55ee84ace876d1c266dff56db4cd98e454cf47154d3c19e10a64c72cd4274830",
       "last_synced": "2026-06-16",
       "status": "active"
     },
@@ -1109,6 +1247,7 @@
       "section": "patterns",
       "reference_file": "patterns-search.md",
       "content_hash": "sha256:66e98d4aca6c98e7408387579e2d77b3196cb7082450ee45fd2281b7d69a9bf3",
+      "raw_hash": "sha256:093c58169159048a4d6e8737c75e5c23b2c12081895882c130365ed0a1e17242",
       "last_synced": "2026-06-16",
       "status": "active"
     },
@@ -1118,6 +1257,7 @@
       "section": "foundations",
       "reference_file": "foundations-visual.md",
       "content_hash": "sha256:e3f2a91423d13a1e18d587e4fd444f1f99f0d6928b03e95f3a56695e049f970f",
+      "raw_hash": "sha256:409f5567d6c00ba3fde11a86c7fa4acbdcf467edd4e7a8927e21ef489bf65371",
       "last_synced": "2026-06-10",
       "status": "active"
     },
@@ -1127,6 +1267,7 @@
       "section": "technologies",
       "reference_file": "technologies-health-media.md",
       "content_hash": "sha256:0a3b6a0a63f72d521560eec9ddc9c34388c03e6e093888c51822e936d5b45967",
+      "raw_hash": "sha256:8225bb9d3df5bb27d4aa25b931e4c9acd2bcaed9ce9a647cdbfc64b901ca58a6",
       "last_synced": "2026-06-16",
       "status": "active"
     },
@@ -1136,6 +1277,7 @@
       "section": "technologies",
       "reference_file": "technologies-health-media.md",
       "content_hash": "sha256:205cbbb867b22c8153cb62b94d0600d52a78966f228cd119fb786cd566692269",
+      "raw_hash": "sha256:6f4cfc5470d85ff2b38c15a172aedf986f93a27568dd49b56163a06464abbf34",
       "last_synced": "2026-06-16",
       "status": "active"
     },
@@ -1145,6 +1287,7 @@
       "section": "components",
       "reference_file": "components-presentation.md",
       "content_hash": "sha256:daa46509bbb68010c2384038cb980d545a29c637303d5d69c938b0056be56c33",
+      "raw_hash": "sha256:036c487d01d5c94364f206157c92ed26c14191ab46a41e47dbc72416b408e154",
       "last_synced": "2026-06-16",
       "status": "active"
     },
@@ -1154,6 +1297,7 @@
       "section": "components",
       "reference_file": "components-navigation-bars.md",
       "content_hash": "sha256:85a460da130f621ee6d01ad10a5bad0f5c460bc8b8c346e837ccc109fb357200",
+      "raw_hash": "sha256:1b9630ee65f58abaa20aa97a0eb5cfb34fdc77db89eb7e02e6bde0b2982330cc",
       "last_synced": "2026-06-16",
       "status": "active"
     },
@@ -1163,6 +1307,7 @@
       "section": "technologies",
       "reference_file": "technologies-commerce-id.md",
       "content_hash": "sha256:1bf21601ad06d7c1ecdcf923f90e82563ea56204a5f591146c9c729c2e760f4d",
+      "raw_hash": "sha256:2d7a4d5f16ec6c57c63b1c723716a1c68e641fdbcda2746b6ef9acb346f9dc72",
       "last_synced": "2026-06-16",
       "status": "active"
     },
@@ -1172,6 +1317,7 @@
       "section": "technologies",
       "reference_file": "technologies-system-services.md",
       "content_hash": "sha256:6a8417cfb57ca1003a5a1dd5d3cd2dada400a82c57719c8c352aedd840c25313",
+      "raw_hash": "sha256:d7850daec721e42b16ebd59cb4fb564efdf605b7fbd63f549eb1e80adeec8974",
       "last_synced": "2026-06-16",
       "status": "active"
     },
@@ -1181,6 +1327,7 @@
       "section": "components",
       "reference_file": "components-selection-input.md",
       "content_hash": "sha256:73392d5032a73bfa281dd104b6f4a473197f612308a6a46d485ddc51b3bc976e",
+      "raw_hash": "sha256:9791e7829c9a4d2da6fe9616bb1cfbbb6c62672efe47c5d688904bbe66aa623f",
       "last_synced": "2026-06-16",
       "status": "active"
     },
@@ -1190,6 +1337,7 @@
       "section": "technologies",
       "reference_file": "technologies-system-services.md",
       "content_hash": "sha256:b572c9d4c7ca67f950a7f33854d6a23bd2401229bbf367f8fc52dc3a1d253f8c",
+      "raw_hash": "sha256:30cc522b94e04118467114118262fec23a5e00630c8de4b9d45531bb3a4cc6b8",
       "last_synced": "2026-06-16",
       "status": "active"
     },
@@ -1199,6 +1347,7 @@
       "section": "platform",
       "reference_file": "platform-visionos.md",
       "content_hash": "sha256:359428b71283390625bbc71e41fa4f51295bfa9931021f9fa26401dd23f2efe6",
+      "raw_hash": "sha256:ba4661f26aca756c9f3e3c5c3483948bf6c4dc527266ef82b7d4dd7a01dc4317",
       "last_synced": "2026-06-16",
       "status": "active"
     },
@@ -1208,6 +1357,7 @@
       "section": "components",
       "reference_file": "components-content-views.md",
       "content_hash": "sha256:2f65044ee4fe202f3206ecf675cdf3c6a0cb0c4601589ca5dfae2f82bef61aab",
+      "raw_hash": "sha256:5fb52373d7b67f81739f660e9c3ed580696a8f65537d50b8f445e82f48a01954",
       "last_synced": "2026-06-16",
       "status": "active"
     },
@@ -1217,6 +1367,7 @@
       "section": "platform",
       "reference_file": "platform-ios-ipados.md",
       "content_hash": "sha256:72c0af549d9855eb05f6c4ec22af4087e4be3179ddf9827392d74dcdbfdf99bc",
+      "raw_hash": "sha256:c3187bdcaf8e1ccc8cf0dbf98e8a6129b11ad88528ea80b90b13e75dfae7015c",
       "last_synced": "2026-06-16",
       "status": "active"
     },
@@ -1226,6 +1377,7 @@
       "section": "components",
       "reference_file": "components-selection-input.md",
       "content_hash": "sha256:5bcb748fb3e940460565e6f1fa5f59da03c20cfc8b5499ee2b6195bf21600788",
+      "raw_hash": "sha256:c84353d4fd2cd169069f5d63012dade60b3861bdf5636cbd82ce5484f83aafa6",
       "last_synced": "2026-06-16",
       "status": "active"
     },
@@ -1235,6 +1387,7 @@
       "section": "components",
       "reference_file": "components-navigation-bars.md",
       "content_hash": "sha256:7ee462e5843d8f7932b337532c6d09ea3112c6016036d5c87416f50e46f76c66",
+      "raw_hash": "sha256:538429b60568eeb6c9db6f3c713d2570f901f9115d061e8b961dff013b5899b2",
       "last_synced": "2026-06-16",
       "status": "active"
     },
@@ -1244,6 +1397,7 @@
       "section": "components",
       "reference_file": "components-navigation-bars.md",
       "content_hash": "sha256:804d72df4b61f06d23c30cb4b32e2a4689c56a578e54e8d11a73c3dbc629378c",
+      "raw_hash": "sha256:0f2f25451a4b4acde2efaec0f2879e1f084650f5966eba78b911e6fa11237c3e",
       "last_synced": "2026-06-16",
       "status": "active"
     },
@@ -1253,6 +1407,7 @@
       "section": "technologies",
       "reference_file": "technologies-commerce-id.md",
       "content_hash": "sha256:f7b0b2626d198aeb8a0483c03103044d7ea2d7c291e758bd9c213fbb6f43effd",
+      "raw_hash": "sha256:b91106da6bca15fd36714135341f2ccb5985227bcfce55a5fa1541b40c2e184d",
       "last_synced": "2026-06-16",
       "status": "active"
     },
@@ -1262,6 +1417,7 @@
       "section": "components",
       "reference_file": "components-selection-input.md",
       "content_hash": "sha256:5602b8ebe1933d6f10e2183d1b07f9f5032102de72d00aa6fb6e0db79cde76d9",
+      "raw_hash": "sha256:9b66ed26cfabed70c2b2f7f77e33cc826c756d0c90b1fe462f0f13cc9f401d83",
       "last_synced": "2026-06-16",
       "status": "active"
     },
@@ -1271,6 +1427,7 @@
       "section": "components",
       "reference_file": "components-selection-input.md",
       "content_hash": "sha256:5e8c96e3b5e80a68feba7e9faed72f77bed2553f39ae04a37298178f83651574",
+      "raw_hash": "sha256:e12ac553b2c8efbbba481e060d1e8c16e22d25738720d7d5591da6d7977f89b1",
       "last_synced": "2026-06-16",
       "status": "active"
     },
@@ -1280,6 +1437,7 @@
       "section": "platform",
       "reference_file": "platform-macos.md",
       "content_hash": "sha256:928180280884f01dc15d27cbe8eb24badb6bc20efff9a04eea88ab861394b21a",
+      "raw_hash": "sha256:56be2307b4d2ab58d7e484c905b81dea248eccbfe45b15f1f1d610a31f00804a",
       "last_synced": "2026-06-16",
       "status": "active"
     },
@@ -1289,6 +1447,7 @@
       "section": "components",
       "reference_file": "components-selection-input.md",
       "content_hash": "sha256:be9387047fa172b6f7d1a3b64d10c333eef58b215fd70451f4199447296bc37a",
+      "raw_hash": "sha256:93752f4a990ed38da8a99d7361dca3d90a7b3e35790ffb2ae85a32ad7c676a13",
       "last_synced": "2026-06-16",
       "status": "active"
     },
@@ -1298,6 +1457,7 @@
       "section": "components",
       "reference_file": "components-selection-input.md",
       "content_hash": "sha256:70416deca4cc3365f709c3dde15fcfa0b38afd866feccb4f633143d79812d05f",
+      "raw_hash": "sha256:2f338dbc793401ee0437d91a802955514fad602c0a37e0f7cbe00fd4545b9acf",
       "last_synced": "2026-06-16",
       "status": "active"
     },
@@ -1307,6 +1467,7 @@
       "section": "components",
       "reference_file": "components-navigation-bars.md",
       "content_hash": "sha256:ba5f68517e61d43bbf16af96d270dd2adfdfa53434588715ffab89945627e42c",
+      "raw_hash": "sha256:38e2b2e83be3682931f8864c18236b497df09fe1014a86f2748afd6fb5e77a7d",
       "last_synced": "2026-06-16",
       "status": "active"
     },
@@ -1316,6 +1477,7 @@
       "section": "platform",
       "reference_file": "platform-tvos.md",
       "content_hash": "sha256:535503a0679a13161fe36523e2f168b1e96c1be67bf0eeef83cf04ae904ca4e6",
+      "raw_hash": "sha256:2f50fd810fe3728c40022651ff4dd73d6159264b9088f9f6acfc7fe9138cabd4",
       "last_synced": "2026-06-16",
       "status": "active"
     },
@@ -1325,6 +1487,7 @@
       "section": "foundations",
       "reference_file": "foundations-visual.md",
       "content_hash": "sha256:c3ef2c88a9547524be412fe95e0109fd706f98745ef2548c9adbf133aebfce89",
+      "raw_hash": "sha256:4375980cfe550b779907cc06704f554f59fcb4f9d05a0bd60eda8b26966b6d8c",
       "last_synced": "2026-06-10",
       "status": "active"
     },
@@ -1334,6 +1497,7 @@
       "section": "patterns",
       "reference_file": "patterns-layout-presentation.md",
       "content_hash": "sha256:d7f21eafc1822b0ffe96926738b66f84e05f80c9790ad881d12ff76e9aba9943",
+      "raw_hash": "sha256:e36619e9ff60922ae99012040cb34b8a8d9cd8b83730e370149bc68f9b471515",
       "last_synced": "2026-06-16",
       "status": "active"
     },
@@ -1343,6 +1507,7 @@
       "section": "inputs",
       "reference_file": "inputs.md",
       "content_hash": "sha256:332937d19345b74efb9d7c4df0c778ed41119fb030e6c7f03121ceff52be2b0b",
+      "raw_hash": "sha256:4fd75cee9c37d707d42a694b068533d9fa3c78bc57989b22fed6121db7546bb9",
       "last_synced": "2026-06-16",
       "status": "active"
     },
@@ -1352,6 +1517,7 @@
       "section": "technologies",
       "reference_file": "technologies-system-services.md",
       "content_hash": "sha256:684fe5859663533ba99b239136210d22e2f3918fd306eecc3cf7ac6b3b9e2be1",
+      "raw_hash": "sha256:e9ab2c35479e3f5f4f994c62cd14173bb2ca67fe0cebed0cb57fb5072dd0f38f",
       "last_synced": "2026-06-16",
       "status": "active"
     },
@@ -1361,6 +1527,7 @@
       "section": "technologies",
       "reference_file": "technologies-commerce-id.md",
       "content_hash": "sha256:cf46c977faf3fda2d80807606ee0636083bb9ab607d4383339a3cb5c03db7726",
+      "raw_hash": "sha256:8db414526839b3af60b653d8b29b038e8556c53168b027d266aad4989219f7c6",
       "last_synced": "2026-06-16",
       "status": "active"
     },
@@ -1370,6 +1537,7 @@
       "section": "components",
       "reference_file": "components-system-experiences.md",
       "content_hash": "sha256:03f4bcf4659720783d5817d4fa456829e8ecf61d0ccb275dc1d0cae988327ad8",
+      "raw_hash": "sha256:0db881365f6750fec264e7645b4bf9e7a05c5e219faaa3315cd97775ef8483ab",
       "last_synced": "2026-06-16",
       "status": "active"
     },
@@ -1379,6 +1547,7 @@
       "section": "components",
       "reference_file": "components-content-views.md",
       "content_hash": "sha256:28fe9c8973b906b516528d62cd03bc9cc61a168db5f54aeb2e3db343f2c0a033",
+      "raw_hash": "sha256:10243251bfa68e0f1631dd5be1f401a52e6d737702d97d9d3d2ec92034f21f20",
       "last_synced": "2026-06-16",
       "status": "active"
     },
@@ -1388,6 +1557,7 @@
       "section": "components",
       "reference_file": "components-system-experiences.md",
       "content_hash": "sha256:e5f81d34df81d52aea21a8feb9694dd0b41a37bbfea16ee31bb7b3ea0ffceea7",
+      "raw_hash": "sha256:fbbbe828000a6c79dd85b59fbb1373a295abb419c34e0cfb6052a3145f7fe360",
       "last_synced": "2026-06-16",
       "status": "active"
     },
@@ -1397,6 +1567,7 @@
       "section": "components",
       "reference_file": "components-presentation.md",
       "content_hash": "sha256:4d5c8aad08bb08434d3639cb78db4bffa6c25660f13d06f4c035e9ca06d44675",
+      "raw_hash": "sha256:73881bd824255310b7cb3fa30be60532802135843fa979ea26ca980bfbeee018",
       "last_synced": "2026-06-16",
       "status": "active"
     },
@@ -1406,6 +1577,7 @@
       "section": "technologies",
       "reference_file": "technologies-health-media.md",
       "content_hash": "sha256:89fb880f22fdd1a9e4fb1bb7776cbcf0bb95127a9c7cba69bcc19a06c20ef646",
+      "raw_hash": "sha256:fbc7b4231ac51c69d2e5dc83795adce744387b22e9ccc79ff68ba27b8cee9e4d",
       "last_synced": "2026-06-16",
       "status": "active"
     },
@@ -1415,6 +1587,7 @@
       "section": "foundations",
       "reference_file": "foundations-ux.md",
       "content_hash": "sha256:3142f1003bda43b5b27b2fa73e5b69fbc5304f67a9507b8c9d45a4980a355fea",
+      "raw_hash": "sha256:45b6e9513e0ff0597a763ae903708ff2ef519c6e7b11243e675d77cc84dc5140",
       "last_synced": "2026-06-10",
       "status": "active"
     }
