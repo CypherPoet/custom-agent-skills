@@ -15,6 +15,15 @@
       "status": "active"
     },
     {
+      "url": "https://developer.apple.com/design/human-interface-guidelines/action-button",
+      "title": "Action button",
+      "section": "inputs",
+      "reference_file": "inputs.md",
+      "content_hash": "sha256:186262c2b29816b9d6859099c26650a384ee7e66a74fcf7c4dd2f9dc1b3a0b70",
+      "last_synced": "2026-06-16",
+      "status": "active"
+    },
+    {
       "url": "https://developer.apple.com/design/human-interface-guidelines/action-sheets",
       "title": "Action sheets",
       "section": "components",
@@ -78,6 +87,15 @@
       "status": "active"
     },
     {
+      "url": "https://developer.apple.com/design/human-interface-guidelines/apple-pencil-and-scribble",
+      "title": "Apple Pencil and Scribble",
+      "section": "inputs",
+      "reference_file": "inputs.md",
+      "content_hash": "sha256:c0b59d2f2be842d6022f0f4039b61c612fdd29c6d66eeec7dcfda7f151acf76a",
+      "last_synced": "2026-06-16",
+      "status": "active"
+    },
+    {
       "url": "https://developer.apple.com/design/human-interface-guidelines/boxes",
       "title": "Boxes",
       "section": "components",
@@ -105,6 +123,15 @@
       "status": "active"
     },
     {
+      "url": "https://developer.apple.com/design/human-interface-guidelines/camera-control",
+      "title": "Camera Control",
+      "section": "inputs",
+      "reference_file": "inputs.md",
+      "content_hash": "sha256:05ddde900aa3317a8530e46bb3695d60b3825251beb74a161d2a60deac0f2800",
+      "last_synced": "2026-06-16",
+      "status": "active"
+    },
+    {
       "url": "https://developer.apple.com/design/human-interface-guidelines/charting-data",
       "title": "Charting data",
       "section": "components",
@@ -119,6 +146,15 @@
       "section": "components",
       "reference_file": "components-content-views.md",
       "content_hash": "sha256:49bd3ab22fa5c8657c8b37ef5bca9b407f9c62ad3cdce2479e0273bf213df025",
+      "last_synced": "2026-06-16",
+      "status": "active"
+    },
+    {
+      "url": "https://developer.apple.com/design/human-interface-guidelines/collaboration-and-sharing",
+      "title": "Collaboration and sharing",
+      "section": "patterns",
+      "reference_file": "patterns-layout-presentation.md",
+      "content_hash": "sha256:66d9dffbe35a47af8c015330dc06926a9610856d7a415e0bf7826e271b79b566",
       "last_synced": "2026-06-16",
       "status": "active"
     },
@@ -276,6 +312,15 @@
       "status": "active"
     },
     {
+      "url": "https://developer.apple.com/design/human-interface-guidelines/digital-crown",
+      "title": "Digital Crown",
+      "section": "inputs",
+      "reference_file": "inputs.md",
+      "content_hash": "sha256:df380b863303925fd0958e31f39653b07a9889b13ac96ae55b9413c2425360f6",
+      "last_synced": "2026-06-16",
+      "status": "active"
+    },
+    {
       "url": "https://developer.apple.com/design/human-interface-guidelines/disclosure-controls",
       "title": "Disclosure controls",
       "section": "components",
@@ -290,6 +335,15 @@
       "section": "platform",
       "reference_file": "platform-macos.md",
       "content_hash": "sha256:cb4646685bdb7ab6041d61650fd621ae37e5d7f1c02d4215ec21ccdd9e0643e9",
+      "last_synced": "2026-06-16",
+      "status": "active"
+    },
+    {
+      "url": "https://developer.apple.com/design/human-interface-guidelines/drag-and-drop",
+      "title": "Drag and drop",
+      "section": "patterns",
+      "reference_file": "patterns-layout-presentation.md",
+      "content_hash": "sha256:66f3cd6360b1d8a1977fa798f2e37a75788f55bde7f49027923c3c531bcd5557",
       "last_synced": "2026-06-16",
       "status": "active"
     },
@@ -312,11 +366,83 @@
       "status": "active"
     },
     {
+      "url": "https://developer.apple.com/design/human-interface-guidelines/eyes",
+      "title": "Eyes",
+      "section": "inputs",
+      "reference_file": "inputs.md",
+      "content_hash": "sha256:7181f941f0acacb01c910968824af84b0ca4ad883761df17611fc85347f49151",
+      "last_synced": "2026-06-16",
+      "status": "active"
+    },
+    {
+      "url": "https://developer.apple.com/design/human-interface-guidelines/feedback",
+      "title": "Feedback",
+      "section": "patterns",
+      "reference_file": "patterns-status-feedback.md",
+      "content_hash": "sha256:0f73784958ff661e58ae86f15d62a8734c1f40e808bad26b3d52911b8f18210f",
+      "last_synced": "2026-06-16",
+      "status": "active"
+    },
+    {
+      "url": "https://developer.apple.com/design/human-interface-guidelines/file-management",
+      "title": "File management",
+      "section": "patterns",
+      "reference_file": "patterns-layout-presentation.md",
+      "content_hash": "sha256:f79af87395e1867e1ac0ba1fee9e00e3618ba6d13d12c58cdd50ad11fe9d02bb",
+      "last_synced": "2026-06-16",
+      "status": "active"
+    },
+    {
+      "url": "https://developer.apple.com/design/human-interface-guidelines/focus-and-selection",
+      "title": "Focus and selection",
+      "section": "inputs",
+      "reference_file": "inputs.md",
+      "content_hash": "sha256:e744827d7bbba1fa84ed97ebef1dd86c81bbaefbc138619f582a40de86c5f3e5",
+      "last_synced": "2026-06-16",
+      "status": "active"
+    },
+    {
+      "url": "https://developer.apple.com/design/human-interface-guidelines/game-controls",
+      "title": "Game controls",
+      "section": "inputs",
+      "reference_file": "inputs.md",
+      "content_hash": "sha256:3758d3b5b4ae359be9e6762123d200158d12ec78b358a01af4a24e293f88c950",
+      "last_synced": "2026-06-16",
+      "status": "active"
+    },
+    {
       "url": "https://developer.apple.com/design/human-interface-guidelines/gauges",
       "title": "Gauges",
       "section": "components",
       "reference_file": "components-status-indicators.md",
       "content_hash": "sha256:9ae91bca3d0d9427a8410f6a3fc6e2dedcf1ec227518417644fbc161d63c415b",
+      "last_synced": "2026-06-16",
+      "status": "active"
+    },
+    {
+      "url": "https://developer.apple.com/design/human-interface-guidelines/gestures",
+      "title": "Gestures",
+      "section": "inputs",
+      "reference_file": "inputs.md",
+      "content_hash": "sha256:2fa56b0363970fd1e7bfdd9f4c6bc270770129e3819f8f77bbb3437af68c0486",
+      "last_synced": "2026-06-16",
+      "status": "active"
+    },
+    {
+      "url": "https://developer.apple.com/design/human-interface-guidelines/going-full-screen",
+      "title": "Going full screen",
+      "section": "patterns",
+      "reference_file": "patterns-navigation.md",
+      "content_hash": "sha256:97760c6f27ad4e8596b569557e437a5acec8e57514803fd52ef781fc6a8f7c0a",
+      "last_synced": "2026-06-16",
+      "status": "active"
+    },
+    {
+      "url": "https://developer.apple.com/design/human-interface-guidelines/gyro-and-accelerometer",
+      "title": "Gyroscope and accelerometer",
+      "section": "inputs",
+      "reference_file": "inputs.md",
+      "content_hash": "sha256:416a573f12b3dc5cf2658566d7250ee5d830ddf7d74300cd7c00e9305c692606",
       "last_synced": "2026-06-16",
       "status": "active"
     },
@@ -393,11 +519,29 @@
       "status": "active"
     },
     {
+      "url": "https://developer.apple.com/design/human-interface-guidelines/keyboards",
+      "title": "Keyboards",
+      "section": "inputs",
+      "reference_file": "inputs.md",
+      "content_hash": "sha256:e46445e436d845328e535609170e37065209bfd0451c0dfbbed789c5da12874c",
+      "last_synced": "2026-06-16",
+      "status": "active"
+    },
+    {
       "url": "https://developer.apple.com/design/human-interface-guidelines/labels",
       "title": "Labels",
       "section": "components",
       "reference_file": "components-status-indicators.md",
       "content_hash": "sha256:b594ac5478856419aaf96f1a41eb03142ec8681c20e19a75997d19d7d16ed256",
+      "last_synced": "2026-06-16",
+      "status": "active"
+    },
+    {
+      "url": "https://developer.apple.com/design/human-interface-guidelines/launching",
+      "title": "Launching",
+      "section": "patterns",
+      "reference_file": "patterns-navigation.md",
+      "content_hash": "sha256:8699933ce73ed4d91fdb95964fd61f2047fb8e71a5ce4c5c3df4bf71a9c8aebb",
       "last_synced": "2026-06-16",
       "status": "active"
     },
@@ -420,11 +564,29 @@
       "status": "active"
     },
     {
+      "url": "https://developer.apple.com/design/human-interface-guidelines/live-activities",
+      "title": "Live Activities",
+      "section": "patterns",
+      "reference_file": "patterns-status-feedback.md",
+      "content_hash": "sha256:0824430e48690a67ebab4506305c142f305116740e54eaba67d4dce7dc92e75e",
+      "last_synced": "2026-06-16",
+      "status": "active"
+    },
+    {
       "url": "https://developer.apple.com/design/human-interface-guidelines/live-viewing-apps",
       "title": "Live-viewing apps",
       "section": "platform",
       "reference_file": "platform-tvos.md",
       "content_hash": "sha256:df49bc14f92f1d3400a584eef3252bcaa91c99737d7ffbf7492b6d771a114994",
+      "last_synced": "2026-06-16",
+      "status": "active"
+    },
+    {
+      "url": "https://developer.apple.com/design/human-interface-guidelines/loading",
+      "title": "Loading",
+      "section": "patterns",
+      "reference_file": "patterns-layout-presentation.md",
+      "content_hash": "sha256:9e32a2110d8b604e8c50ef13c1711c79a6bd5feebcb5672081bb1195d0579fb3",
       "last_synced": "2026-06-16",
       "status": "active"
     },
@@ -447,6 +609,24 @@
       "status": "active"
     },
     {
+      "url": "https://developer.apple.com/design/human-interface-guidelines/managing-accounts",
+      "title": "Managing accounts",
+      "section": "patterns",
+      "reference_file": "patterns-search.md",
+      "content_hash": "sha256:f22b3985cfa3896bf357c384ea4b7922722f9ca329cf1840350db4bda079110a",
+      "last_synced": "2026-06-16",
+      "status": "active"
+    },
+    {
+      "url": "https://developer.apple.com/design/human-interface-guidelines/managing-notifications",
+      "title": "Managing notifications",
+      "section": "patterns",
+      "reference_file": "patterns-status-feedback.md",
+      "content_hash": "sha256:80d6f0ef7959f4b1feca34e4031ad58317302e557952a81fb1b590d868aab949",
+      "last_synced": "2026-06-16",
+      "status": "active"
+    },
+    {
       "url": "https://developer.apple.com/design/human-interface-guidelines/materials",
       "title": "Materials",
       "section": "foundations",
@@ -465,12 +645,57 @@
       "status": "active"
     },
     {
+      "url": "https://developer.apple.com/design/human-interface-guidelines/modality",
+      "title": "Modality",
+      "section": "patterns",
+      "reference_file": "patterns-navigation.md",
+      "content_hash": "sha256:5116b84bad6e3874bdb14264efc479acc7bcfc43cffc38e05a9513853d9d0271",
+      "last_synced": "2026-06-16",
+      "status": "active"
+    },
+    {
       "url": "https://developer.apple.com/design/human-interface-guidelines/motion",
       "title": "Motion",
       "section": "foundations",
       "reference_file": "foundations-ux.md",
       "content_hash": "sha256:974bf2280e47c931daa5aeb91a79650257365e85109c7a6b2bd92b142c00f030",
       "last_synced": "2026-06-10",
+      "status": "active"
+    },
+    {
+      "url": "https://developer.apple.com/design/human-interface-guidelines/multitasking",
+      "title": "Multitasking",
+      "section": "patterns",
+      "reference_file": "patterns-navigation.md",
+      "content_hash": "sha256:5b29bda8c3b08c9dfd9e480239f3961d3101085e64f513d5d193e70f69b91bcd",
+      "last_synced": "2026-06-16",
+      "status": "active"
+    },
+    {
+      "url": "https://developer.apple.com/design/human-interface-guidelines/notifications",
+      "title": "Notifications",
+      "section": "patterns",
+      "reference_file": "patterns-status-feedback.md",
+      "content_hash": "sha256:69d8167cf1bc256aa4ac98fd0ee7e6dfe3f3357a830a66e8cf6ae49f77ef489d",
+      "last_synced": "2026-06-16",
+      "status": "active"
+    },
+    {
+      "url": "https://developer.apple.com/design/human-interface-guidelines/offering-help",
+      "title": "Offering help",
+      "section": "patterns",
+      "reference_file": "patterns-layout-presentation.md",
+      "content_hash": "sha256:b5398393500c3abf69c55f0a8773bf96c1018d73156cfccb5b8310837bfab75e",
+      "last_synced": "2026-06-16",
+      "status": "active"
+    },
+    {
+      "url": "https://developer.apple.com/design/human-interface-guidelines/onboarding",
+      "title": "Onboarding",
+      "section": "patterns",
+      "reference_file": "patterns-navigation.md",
+      "content_hash": "sha256:b677bf900b3df6c318f44136ef2d13614ff972a9b793d524e267d4859764d198",
+      "last_synced": "2026-06-16",
       "status": "active"
     },
     {
@@ -528,6 +753,15 @@
       "status": "active"
     },
     {
+      "url": "https://developer.apple.com/design/human-interface-guidelines/playing-haptics",
+      "title": "Playing haptics",
+      "section": "inputs",
+      "reference_file": "inputs.md",
+      "content_hash": "sha256:b169016268f82372fe9a299d6dc6b233b44e8af6f32ccec87a99960008b60ffd",
+      "last_synced": "2026-06-16",
+      "status": "active"
+    },
+    {
       "url": "https://developer.apple.com/design/human-interface-guidelines/pointing-devices",
       "title": "Pointing devices",
       "section": "foundations",
@@ -551,6 +785,15 @@
       "section": "components",
       "reference_file": "components-presentation.md",
       "content_hash": "sha256:9fe9ad04554a735c0c8649ba25f40f87aad506c67208b523b8b0ef04db54e099",
+      "last_synced": "2026-06-16",
+      "status": "active"
+    },
+    {
+      "url": "https://developer.apple.com/design/human-interface-guidelines/privacy",
+      "title": "Privacy",
+      "section": "patterns",
+      "reference_file": "patterns-status-feedback.md",
+      "content_hash": "sha256:3208d5fc4da5975620d9916803760859497cc10247536dd8ba5402fdd5fafe14",
       "last_synced": "2026-06-16",
       "status": "active"
     },
@@ -582,6 +825,33 @@
       "status": "active"
     },
     {
+      "url": "https://developer.apple.com/design/human-interface-guidelines/ratings-and-reviews",
+      "title": "Ratings and reviews",
+      "section": "patterns",
+      "reference_file": "patterns-status-feedback.md",
+      "content_hash": "sha256:267083a2f740bc5e754a98c2a3d5bf528d773dfa4a93d9ebf0bc03ca19b13f05",
+      "last_synced": "2026-06-16",
+      "status": "active"
+    },
+    {
+      "url": "https://developer.apple.com/design/human-interface-guidelines/remotes",
+      "title": "Remotes",
+      "section": "inputs",
+      "reference_file": "inputs.md",
+      "content_hash": "sha256:77357756d7c01f7fa30378bc47c21c7fbd93cd527edda2ad6d2394aac121a919",
+      "last_synced": "2026-06-16",
+      "status": "active"
+    },
+    {
+      "url": "https://developer.apple.com/design/human-interface-guidelines/right-to-left",
+      "title": "Right to left",
+      "section": "patterns",
+      "reference_file": "patterns-layout-presentation.md",
+      "content_hash": "sha256:57f122e995085a4e35b5304e100a880c0be3017d1f282da2fe7404bcee106859",
+      "last_synced": "2026-06-16",
+      "status": "active"
+    },
+    {
       "url": "https://developer.apple.com/design/human-interface-guidelines/scroll-views",
       "title": "Scroll views",
       "section": "components",
@@ -591,11 +861,38 @@
       "status": "active"
     },
     {
+      "url": "https://developer.apple.com/design/human-interface-guidelines/search-fields",
+      "title": "Search fields",
+      "section": "patterns",
+      "reference_file": "patterns-search.md",
+      "content_hash": "sha256:50299c612cd472496aca700e659dbbb846b4648858eb7139136e301cd7e848a4",
+      "last_synced": "2026-06-16",
+      "status": "active"
+    },
+    {
+      "url": "https://developer.apple.com/design/human-interface-guidelines/searching",
+      "title": "Searching",
+      "section": "patterns",
+      "reference_file": "patterns-search.md",
+      "content_hash": "sha256:4a040d1c24d4a1e2eed3016c459f68190b780ba4d3c37a06607cb8da282b2f23",
+      "last_synced": "2026-06-16",
+      "status": "active"
+    },
+    {
       "url": "https://developer.apple.com/design/human-interface-guidelines/segmented-controls",
       "title": "Segmented controls",
       "section": "components",
       "reference_file": "components-navigation-bars.md",
       "content_hash": "sha256:4a6c659d7514a8d1cef8cc6258e22e20c18bc3716ed4024d3c759ea91eea259f",
+      "last_synced": "2026-06-16",
+      "status": "active"
+    },
+    {
+      "url": "https://developer.apple.com/design/human-interface-guidelines/settings",
+      "title": "Settings",
+      "section": "patterns",
+      "reference_file": "patterns-search.md",
+      "content_hash": "sha256:66e98d4aca6c98e7408387579e2d77b3196cb7082450ee45fd2281b7d69a9bf3",
       "last_synced": "2026-06-16",
       "status": "active"
     },
@@ -759,6 +1056,24 @@
       "reference_file": "foundations-visual.md",
       "content_hash": "sha256:c3ef2c88a9547524be412fe95e0109fd706f98745ef2548c9adbf133aebfce89",
       "last_synced": "2026-06-10",
+      "status": "active"
+    },
+    {
+      "url": "https://developer.apple.com/design/human-interface-guidelines/undo-and-redo",
+      "title": "Undo and redo",
+      "section": "patterns",
+      "reference_file": "patterns-layout-presentation.md",
+      "content_hash": "sha256:d7f21eafc1822b0ffe96926738b66f84e05f80c9790ad881d12ff76e9aba9943",
+      "last_synced": "2026-06-16",
+      "status": "active"
+    },
+    {
+      "url": "https://developer.apple.com/design/human-interface-guidelines/virtual-keyboards",
+      "title": "Virtual keyboards",
+      "section": "inputs",
+      "reference_file": "inputs.md",
+      "content_hash": "sha256:332937d19345b74efb9d7c4df0c778ed41119fb030e6c7f03121ceff52be2b0b",
+      "last_synced": "2026-06-16",
       "status": "active"
     },
     {
