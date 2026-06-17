@@ -1,17 +1,36 @@
 # Foundations — UX
 
 > Source: https://developer.apple.com/design/human-interface-guidelines
-> Last synced: 2026-06-10
+> Last synced: 2026-06-16
 
-Distilled from Apple's HIG Foundations pages: Accessibility, Inclusion, Layout, Motion, Pointing devices, Writing.
+Distilled from Apple's HIG Foundations pages: Design principles, Accessibility, Inclusion, Layout, Motion, Pointing devices, Writing.
 
 ## Contents
+- [Design principles](#design-principles)
 - [Accessibility](#accessibility)
 - [Inclusion](#inclusion)
 - [Layout](#layout)
 - [Motion](#motion)
 - [Pointing devices](#pointing-devices)
 - [Writing](#writing)
+
+### Design principles
+*Last changed: 2026-06*
+
+**Purpose:** Eight foundational principles that guide design across every Apple platform — tools for weighing competing priorities and making key decisions, not rigid rules. Apple reintroduced this page in June 2026; there's no single right way to apply the principles.
+
+**The eight principles:**
+- **Purpose — make something meaningful.** *Create value:* keep a constant orientation toward what makes the product genuinely useful; ask what it's for and whether the design serves that. *Keep focused:* prioritize the most important features and make those truly great. *Find new ways to solve the problem:* investigate existing solutions instead of re-creating them; define what sets the product apart.
+- **Agency — let people do things their own way.** *Stay out of the way:* get people directly to the task or content; the best designs are unobtrusive and present when needed. *Give freedom to explore:* don't lock people into specific flows or modes; make guided flows easy to skip or escape. *Help people recover from mistakes:* build in forgiveness so reversing an action or returning to a previous state is easy.
+- **Responsibility — act in people's best interest.** *Be transparent about what the product does and why:* give a clear rationale when requesting permission; be clear about what data you collect and how you use it. *Keep information safe:* collect only what the product needs, anticipate misuse, and put protections in place.
+- **Familiarity — build on what people know.** *Use concepts people know:* draw on the real world and other software. *Keep visuals and interactions consistent:* apply an established behavior or appearance throughout. *Provide clear feedback:* signal what's happening, show when controls are available, and use system patterns for alerts and choices.
+- **Flexibility — adapt to diverse contexts and needs.** *Design for everyone:* treat accessibility as a priority from the start; design inclusively. *Preserve a person's context:* keep content and controls in consistent, predictable positions; use natural animations to ease transitions. *Consider a variety of input methods:* support voice, touch, keyboard, and more. *Approach every platform with intention:* give each supported platform the same level of care.
+- **Simplicity — be clear and direct.** *Include just what's necessary:* simplicity isn't minimalism — keep important things close and let others fall away. *Be concise:* choose exactly the words needed for a concept or control. *Establish hierarchy:* prioritize recognizable controls and consistent structure so people know where they are and what comes next.
+- **Craft — care about every detail.** *Quality sets the tone:* be deliberate with each decision; strive for stunning visuals, smooth animations, precise wording, thoughtful audio. *Experiment and iterate:* prototype early, discard what doesn't work, test in real-world settings. *Maintain your craft:* shipping isn't the finish line — keep the interface current with the latest platform capabilities and patterns.
+- **Delight — make it human.** *Identify the emotion to inspire:* know the feeling you want to evoke and let it shape the design. *Create defining moments:* treat each interaction (even an error message) as a chance to add character. *Don't mistake delight for decoration:* never let delight for its own sake get in the way of the product's core purpose. *Consider the whole:* delight is the sum of intent, focus, and care across the entire experience.
+
+**Platform deltas:**
+- All platforms: the principles apply universally; they're decision-making tools rather than platform-specific rules.
 
 ### Accessibility
 *Last changed: 2025-06*
