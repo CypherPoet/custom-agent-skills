@@ -51,6 +51,15 @@
       "status": "active"
     },
     {
+      "url": "https://developer.apple.com/design/human-interface-guidelines/always-on",
+      "title": "Always On",
+      "section": "platform",
+      "reference_file": "platform-watchos.md",
+      "content_hash": "sha256:18a11f87c21208f866a0be24ee0b491dcd0858f54a53c32bba4021f8ff381ea9",
+      "last_synced": "2026-06-16",
+      "status": "active"
+    },
+    {
       "url": "https://developer.apple.com/design/human-interface-guidelines/app-clips",
       "title": "App Clips",
       "section": "components",
@@ -204,6 +213,60 @@
       "status": "active"
     },
     {
+      "url": "https://developer.apple.com/design/human-interface-guidelines/designing-for-ios",
+      "title": "Designing for iOS",
+      "section": "platform",
+      "reference_file": "platform-ios-ipados.md",
+      "content_hash": "sha256:e18cc1bd152b9ce501b0092ff968fede271721b442218dec565cc7b2f6bd97ba",
+      "last_synced": "2026-06-16",
+      "status": "active"
+    },
+    {
+      "url": "https://developer.apple.com/design/human-interface-guidelines/designing-for-ipados",
+      "title": "Designing for iPadOS",
+      "section": "platform",
+      "reference_file": "platform-ios-ipados.md",
+      "content_hash": "sha256:9e3cee9e4b483391a96532e27604ac1ab6e5a083853a29e9a1b3255418fb4ab3",
+      "last_synced": "2026-06-16",
+      "status": "active"
+    },
+    {
+      "url": "https://developer.apple.com/design/human-interface-guidelines/designing-for-macos",
+      "title": "Designing for macOS",
+      "section": "platform",
+      "reference_file": "platform-macos.md",
+      "content_hash": "sha256:36360a2fe03233e075b67e16bb6beed9c815d7b71680d7ccd8836fc1084acc83",
+      "last_synced": "2026-06-16",
+      "status": "active"
+    },
+    {
+      "url": "https://developer.apple.com/design/human-interface-guidelines/designing-for-tvos",
+      "title": "Designing for tvOS",
+      "section": "platform",
+      "reference_file": "platform-tvos.md",
+      "content_hash": "sha256:bf8a50721afb71d31694d06cd37d92bf207d4512fa19612823778a62cbf1c426",
+      "last_synced": "2026-06-16",
+      "status": "active"
+    },
+    {
+      "url": "https://developer.apple.com/design/human-interface-guidelines/designing-for-visionos",
+      "title": "Designing for visionOS",
+      "section": "platform",
+      "reference_file": "platform-visionos.md",
+      "content_hash": "sha256:357263958417552cce1d9e192c4316588f80116a533cae34866b84cc7588a2b4",
+      "last_synced": "2026-06-16",
+      "status": "active"
+    },
+    {
+      "url": "https://developer.apple.com/design/human-interface-guidelines/designing-for-watchos",
+      "title": "Designing for watchOS",
+      "section": "platform",
+      "reference_file": "platform-watchos.md",
+      "content_hash": "sha256:db4c6a1570c328ef743c2f7dd1bec165695e36b5c3648eae45675d6e6163f162",
+      "last_synced": "2026-06-16",
+      "status": "active"
+    },
+    {
       "url": "https://developer.apple.com/design/human-interface-guidelines/digit-entry-views",
       "title": "Digit entry views",
       "section": "components",
@@ -218,6 +281,15 @@
       "section": "components",
       "reference_file": "components-selection-input.md",
       "content_hash": "sha256:3257d1390105a32c8e4acaa2395d59e46ab95d7146017f9382ea1b2ead016f3b",
+      "last_synced": "2026-06-16",
+      "status": "active"
+    },
+    {
+      "url": "https://developer.apple.com/design/human-interface-guidelines/dock-menus",
+      "title": "Dock menus",
+      "section": "platform",
+      "reference_file": "platform-macos.md",
+      "content_hash": "sha256:cb4646685bdb7ab6041d61650fd621ae37e5d7f1c02d4215ec21ccdd9e0643e9",
       "last_synced": "2026-06-16",
       "status": "active"
     },
@@ -303,6 +375,15 @@
       "status": "active"
     },
     {
+      "url": "https://developer.apple.com/design/human-interface-guidelines/immersive-experiences",
+      "title": "Immersive experiences",
+      "section": "platform",
+      "reference_file": "platform-visionos.md",
+      "content_hash": "sha256:1cc8dacd6ffa9846127176619840bffadd7b7079f5b0e3dbacf93c244d3889d6",
+      "last_synced": "2026-06-16",
+      "status": "active"
+    },
+    {
       "url": "https://developer.apple.com/design/human-interface-guidelines/inclusion",
       "title": "Inclusion",
       "section": "foundations",
@@ -339,11 +420,29 @@
       "status": "active"
     },
     {
+      "url": "https://developer.apple.com/design/human-interface-guidelines/live-viewing-apps",
+      "title": "Live-viewing apps",
+      "section": "platform",
+      "reference_file": "platform-tvos.md",
+      "content_hash": "sha256:df49bc14f92f1d3400a584eef3252bcaa91c99737d7ffbf7492b6d771a114994",
+      "last_synced": "2026-06-16",
+      "status": "active"
+    },
+    {
       "url": "https://developer.apple.com/design/human-interface-guidelines/lockups",
       "title": "Lockups",
       "section": "components",
       "reference_file": "components-content-views.md",
       "content_hash": "sha256:c9bdebcf14a73fe7215e4bdeba2e18f42e7eccb94735a65e6a912886d89a8693",
+      "last_synced": "2026-06-16",
+      "status": "active"
+    },
+    {
+      "url": "https://developer.apple.com/design/human-interface-guidelines/mac-catalyst",
+      "title": "Mac Catalyst",
+      "section": "platform",
+      "reference_file": "platform-macos.md",
+      "content_hash": "sha256:57e4b3c3caaeb5c44afb03e99a25e66b98ee75acf9c23133b6858cb4af5afbc1",
       "last_synced": "2026-06-16",
       "status": "active"
     },
@@ -372,6 +471,15 @@
       "reference_file": "foundations-ux.md",
       "content_hash": "sha256:974bf2280e47c931daa5aeb91a79650257365e85109c7a6b2bd92b142c00f030",
       "last_synced": "2026-06-10",
+      "status": "active"
+    },
+    {
+      "url": "https://developer.apple.com/design/human-interface-guidelines/ornaments",
+      "title": "Ornaments",
+      "section": "platform",
+      "reference_file": "platform-visionos.md",
+      "content_hash": "sha256:bd7f2aa7e094539d74d563256f6387e91cfaf641aa2198094eb612faa7c16f91",
+      "last_synced": "2026-06-16",
       "status": "active"
     },
     {
@@ -528,11 +636,29 @@
       "status": "active"
     },
     {
+      "url": "https://developer.apple.com/design/human-interface-guidelines/spatial-layout",
+      "title": "Spatial layout",
+      "section": "platform",
+      "reference_file": "platform-visionos.md",
+      "content_hash": "sha256:359428b71283390625bbc71e41fa4f51295bfa9931021f9fa26401dd23f2efe6",
+      "last_synced": "2026-06-16",
+      "status": "active"
+    },
+    {
       "url": "https://developer.apple.com/design/human-interface-guidelines/split-views",
       "title": "Split views",
       "section": "components",
       "reference_file": "components-content-views.md",
       "content_hash": "sha256:2f65044ee4fe202f3206ecf675cdf3c6a0cb0c4601589ca5dfae2f82bef61aab",
+      "last_synced": "2026-06-16",
+      "status": "active"
+    },
+    {
+      "url": "https://developer.apple.com/design/human-interface-guidelines/status-bars",
+      "title": "Status bars",
+      "section": "platform",
+      "reference_file": "platform-ios-ipados.md",
+      "content_hash": "sha256:72c0af549d9855eb05f6c4ec22af4087e4be3179ddf9827392d74dcdbfdf99bc",
       "last_synced": "2026-06-16",
       "status": "active"
     },
@@ -582,6 +708,15 @@
       "status": "active"
     },
     {
+      "url": "https://developer.apple.com/design/human-interface-guidelines/the-menu-bar",
+      "title": "The menu bar",
+      "section": "platform",
+      "reference_file": "platform-macos.md",
+      "content_hash": "sha256:928180280884f01dc15d27cbe8eb24badb6bc20efff9a04eea88ab861394b21a",
+      "last_synced": "2026-06-16",
+      "status": "active"
+    },
+    {
       "url": "https://developer.apple.com/design/human-interface-guidelines/toggles",
       "title": "Toggles",
       "section": "components",
@@ -605,6 +740,15 @@
       "section": "components",
       "reference_file": "components-navigation-bars.md",
       "content_hash": "sha256:ba5f68517e61d43bbf16af96d270dd2adfdfa53434588715ffab89945627e42c",
+      "last_synced": "2026-06-16",
+      "status": "active"
+    },
+    {
+      "url": "https://developer.apple.com/design/human-interface-guidelines/top-shelf",
+      "title": "Top Shelf",
+      "section": "platform",
+      "reference_file": "platform-tvos.md",
+      "content_hash": "sha256:7ea6f4a1daca193a1aa9c0b1f5e45d7a0d0b1425439a5a9dd5be9db24f7e35f4",
       "last_synced": "2026-06-16",
       "status": "active"
     },
