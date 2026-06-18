@@ -66,7 +66,9 @@ Work top to bottom. Each step has detail in a reference file (see the table at t
    Register an **explicit App ID** (not a wildcard) under **Identifiers** — *not* Certificates.
 2. **Create the app record** (ASC → Apps → ＋ → New App). SKU and Bundle ID choices here are
    permanent; the bundle ID locks after the first build.
-3. **App Information** (app-level / "General"): name, subtitle, category, content rights, age rating.
+3. **App Information** (app-level / "General"): name, subtitle, category, content rights, age rating, and the
+   **EU Digital Services Act trader status** — any app earning money in the EU (paid app or paid IAP) must
+   verify trader details or it's pulled from the EU App Store.
 4. **App Privacy** (left sidebar → Trust & Safety): answer the data-collection question, set the
    **Privacy Policy URL** (Apple moved this field here from App Information), then **Publish** —
    it stays a draft until you do.
@@ -156,6 +158,7 @@ Symptom → cause → fix. Section refs point at the fuller explanation.
 | Local archive **won't sign** | `DEVELOPMENT_TEAM` not pinned on the targets | Select your **Team** per target in Signing & Capabilities; for Xcode Cloud, commit + **push** the team to the build branch. → build-and-delivery |
 | Can't find the **Description / Keywords / Screenshots** box | They're *version-level*, not on App Information | Open **"1.0 Prepare for Submission"** in the left sidebar. → walkthrough |
 | **Privacy Policy URL** field missing on App Information | Apple moved it | Set it under **Trust & Safety → App Privacy**, then **Publish**. → walkthrough |
+| App **not available in the EU** after release | EU **DSA trader status** not declared/verified | App Information → complete **trader status** (Get Started); EU storefronts hide the app until verification clears. → walkthrough |
 | IAP stuck at **"Missing Metadata"** | Price, availability, localization, or review screenshot not all set | Fill every field; availability defaults to all territories — just confirm it. → walkthrough |
 | **"Add for Review" greyed out** on the version | A required field is still empty | Scroll the version page — ASC flags every incomplete field inline; usual culprits are screenshots, support URL, or the build not yet selected. → walkthrough |
 
