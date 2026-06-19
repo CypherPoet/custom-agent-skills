@@ -75,7 +75,7 @@ Sign it with one import — Node `jsonwebtoken`, Python `PyJWT[crypto]`, or Swif
 poll for "is my latest build processed?":
 
 ```js
-// node check-build.mjs   (env loaded from .env)
+// node --env-file=.env check-build.mjs   (Node 20.6+ reads .env from the flag; or add: import "dotenv/config")
 import { readFileSync } from "node:fs";
 import jwt from "jsonwebtoken";        // npm i jsonwebtoken
 const { ASC_KEY_ID, ASC_ISSUER_ID, API_PRIVATE_KEYS_DIR, ASC_APP_ID } = process.env;
@@ -85,7 +85,7 @@ const token = jwt.sign({ aud: "appstoreconnect-v1" }, key, {
 });
 const r = await fetch(
   `https://api.appstoreconnect.apple.com/v1/builds?filter[app]=${ASC_APP_ID}` +
-  `&sort=-version&limit=1&fields[builds]=version,processingState,uploadedDate`,
+  `&sort=-uploadedDate&limit=1&fields[builds]=version,processingState,uploadedDate`,
   { headers: { Authorization: `Bearer ${token}` } });
 const b = (await r.json()).data?.[0]?.attributes;
 console.log(b ? `build ${b.version}: ${b.processingState}` : "no builds");
@@ -126,8 +126,8 @@ listing isn't possible either without making the dark art the build's default ap
 
 | Goal | Endpoint |
 |------|----------|
-| Latest build + processing state | `GET /v1/builds?filter[app]=<id>&sort=-version&limit=1` |
-| The version being prepared | `GET /v1/apps/<id>/appStoreVersions?filter[appStoreState]=PREPARE_FOR_SUBMISSION` |
+| Latest build + processing state | `GET /v1/builds?filter[app]=<id>&sort=-uploadedDate&limit=1` (build `version` is a string — sort by date, not `-version`) |
+| The version being prepared | `GET /v1/apps/<id>/appStoreVersions?filter[appVersionState]=PREPARE_FOR_SUBMISSION` (`appStoreState` is deprecated) |
 | Read / write listing copy | `GET` / `PATCH /v1/appStoreVersionLocalizations/<id>` (description, keywords, promo, URLs) |
 | Attach the selected build | `PATCH /v1/appStoreVersions/<id>/relationships/build` |
 | Upload screenshots / previews | `appScreenshotSets`/`appPreviewSets` + `appScreenshots`/`appPreviews` (reserve → `PUT` → commit; see above) |

@@ -119,9 +119,10 @@ Monetization → **Pricing and Availability**.
   its own price (step 5); don't price the app itself (a common mix-up). Let Apple **auto-generate** other
   storefronts from the base region; manual regional prices opt out of Apple's FX adjustments.
 - **Tax Category** — a **separate taxonomy from the App Store discovery category**, not a mirror of it. Most
-  apps take the default **App Store software** (it covers games, utilities, productivity… — there is **no**
-  "Games" or "Utilities" tax category); only specific content types differ (e.g. *News publications*, *Books*,
-  *Audio-visual streaming*). The IAP inherits it via "Match to parent app".
+  apps keep the default **App Store software** — Apple's catch-all, assigned unless you change it. The list
+  *does* include a **Games** category (it's just not the default, and most apps don't need it); there is **no**
+  "Utilities" category. Only specific content types have their own (e.g. *News publications*, *Books*, *Video*).
+  The IAP inherits it via "Match to parent app".
 - **Availability** — all territories is the default; restrict only with reason.
 - ⚠️ **iPhone & iPad Apps on Apple-Silicon Macs** — defaults **on**, so a universal iOS build is also
   offered on M-series Macs via the iOS-on-Mac layer. If the app's controls/haptics/purchases are untested
@@ -142,7 +143,7 @@ discipline applies to Consumables and Subscriptions, though subscriptions add a 
 | **Product ID** | ≤100 chars, **permanent and never reusable** — type it *exactly*; it must match the string in your StoreKit code. |
 | **Price** | Pick the **base** tier; Apple auto-generates **comparable** prices for the other ~175 storefronts (they vary with local currency, price points, and tax — leave the set, don't normalize per country). |
 | **Availability** | Click **Set Up Availability** — defaults to all territories → Done. Keep it aligned with the app's availability, or buyers in some regions literally can't purchase. |
-| **Family Sharing** | Optional. On lets **one purchase cover the buyer's Family Sharing group** — reasonable goodwill for a one-time unlock, but effectively **one-way** (hard to revoke once buyers rely on it), so decide deliberately. |
+| **Family Sharing** | Optional. On lets **one purchase cover the buyer's Family Sharing group** — reasonable goodwill for a one-time unlock, but **permanent**: once you enable it in App Store Connect you **can't turn it back off**, so decide deliberately. |
 | **Display Name / Description** (localized) | Shown to customers. They live under **App Store Localization → Add Localization** (a subsection, *not* top-level fields — a common "where is this?" trap). Description ≤45 chars. |
 | **Review Screenshot** | **One** capture of the in-app paywall as the user sees it (name, price, benefits, buy button). Required to review; any normal resolution. (This is *not* the marketing product-page screenshots, nor the optional 1024×1024 IAP promotional image.) |
 | **Review Notes** | How to reach the paywall. |
@@ -168,7 +169,7 @@ Open **"1.0 Prepare for Submission"** (left sidebar, under the app) — the *ver
 | **Support URL** | Required — a contact/support page. |
 | **Marketing URL** | Optional. |
 | **Copyright** | Format `YYYY Owner` — **no © symbol** (Apple adds it). A handle/studio name is fine. |
-| **Screenshots** | Upload the **largest** size per platform; Apple auto-scales down (one set covers all sizes + localizations; **only the first 3** appear on the install sheets). Required: **6.9″ iPhone (1320×2868)** + **13″ iPad (2064×2752)** for a universal app. ⚠️ The *Previews and Screenshots* block has iPhone / iPad / Watch tabs and may default to showing a smaller **6.5″** slot (1242×2688 / 1284×2778) — use **View All Sizes in Media Manager** to reach the 6.9″ slot. Must show real usage. (Exact specs for other device classes → `apple-app-store-screenshots`.) |
+| **Screenshots** | Upload the **largest** size per platform; Apple auto-scales down (one set covers all sizes + localizations). The product page shows up to **10**, but **search results** surface only the first **1–3** (and only when there's no app preview) — front-load the strongest. Required: **6.9″ iPhone (1320×2868)** + **13″ iPad (2064×2752)** for a universal app. ⚠️ The *Previews and Screenshots* block has iPhone / iPad / Watch tabs and may default to showing a smaller **6.5″** slot (1242×2688 / 1284×2778) — use **View All Sizes in Media Manager** to reach the 6.9″ slot. Must show real usage. (Exact specs for other device classes → `apple-app-store-screenshots`.) |
 | **Build** | **Select** the processed build (see `build-and-delivery.md`). It won't be selectable until processing finishes. |
 
 > ⚠️ If **"Add for Review" is greyed out**, a required field is still empty — scroll the page; ASC flags
