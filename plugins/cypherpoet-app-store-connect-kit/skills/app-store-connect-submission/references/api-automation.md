@@ -95,8 +95,9 @@ console.log(b ? `build ${b.version}: ${b.processingState}` : "no builds");
 
 ## Uploading screenshots & previews (reserve → upload → commit)
 
-Media uploads are a 3-phase flow, same shape for both (only the asset endpoint differs). First create the
-set: `POST /v1/appScreenshotSets` / `appPreviewSets` with the display type, related to an
+Media uploads are a 3-phase flow (plus an ordering step), same shape for both (only the asset endpoint
+differs). First create the set: `POST /v1/appScreenshotSets` (attribute `screenshotDisplayType`, e.g.
+`APP_IPHONE_67`) / `appPreviewSets` (attribute `previewType`, e.g. `IPHONE_67`), related to an
 `appStoreVersionLocalization`. Then per asset:
 
 1. **Reserve** — `POST /v1/appScreenshots` (or `/v1/appPreviews`) with `{fileName, fileSize}` + a
@@ -105,6 +106,9 @@ set: `POST /v1/appScreenshotSets` / `appPreviewSets` with the display type, rela
    pre-signed `url`, applying every `requestHeaders` entry.
 3. **Commit** — `PATCH …/<id>` with `{uploaded: true, sourceFileChecksum: <md5-hex-of-the-whole-file>}`,
    then poll `assetDeliveryState` (→ `COMPLETE`, or `FAILED` with a `code`).
+4. **Order** — assets display in insertion order; to set it explicitly (or reorder later), `PATCH
+   /v1/appScreenshotSets/<id>/relationships/appScreenshots` (or `appPreviewSets/<id>/relationships/appPreviews`)
+   with the ordered id list as the `data` array. Returns `204 No Content` (no JSON body).
 
 **Gotchas that fail validation:**
 
@@ -131,6 +135,7 @@ listing isn't possible either without making the dark art the build's default ap
 | Read / write listing copy | `GET` / `PATCH /v1/appStoreVersionLocalizations/<id>` (description, keywords, promo, URLs) |
 | Attach the selected build | `PATCH /v1/appStoreVersions/<id>/relationships/build` |
 | Upload screenshots / previews | `appScreenshotSets`/`appPreviewSets` + `appScreenshots`/`appPreviews` (reserve → `PUT` → commit; see above) |
+| Order a media set | `PATCH /v1/appScreenshotSets/<id>/relationships/appScreenshots` (or `appPreviewSets/.../appPreviews`) with the ordered id list |
 | Submit for review | `POST /v1/reviewSubmissions` + `reviewSubmissionItems` (a new app's first IAP rides along as its own item), then mark it submitted |
 
 Full schema: Apple's [App Store Connect API reference](https://developer.apple.com/documentation/appstoreconnectapi).
