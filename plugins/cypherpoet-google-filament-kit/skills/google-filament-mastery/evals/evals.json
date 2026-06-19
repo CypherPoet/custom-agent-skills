@@ -1,0 +1,258 @@
+{
+  "skill_name": "google-filament-mastery",
+  "evals": [
+    {
+      "id": 1,
+      "eval_name": "sun-intensity-physical-units",
+      "prompt": "I'm using Google Filament (C++). I added a directional light with intensity 1.0 and a standard lit material on my mesh, set up the camera, and the mesh is in the scene \u2014 but the render is almost completely black. The hello-triangle sample works fine. What's wrong?",
+      "expected_output": "The directional/sun light intensity in Filament is a PHYSICAL photometric value in lux, not a 0..1 factor. 1.0 lux is essentially darkness; real daylight/sun is on the order of tens of thousands to ~100,000+ lux. Combined with the camera's default photographic exposure (~f/16, 1/125s, ISO 100), an intensity of 1.0 renders black. Fix: set the directional light intensity to a realistic lux value (e.g. ~100000 for midday sun), or adjust camera exposure. Should NOT suggest 1.0 is a reasonable bright value.",
+      "files": [],
+      "assertions": [
+        "States that Filament directional/sun light intensity is in lux (physical/photometric units), not a normalized 0..1 value",
+        "Gives a realistic daylight/sun magnitude on the order of tens of thousands of lux (e.g. ~100000)",
+        "Connects brightness to the camera's photographic exposure (aperture/shutter/ISO)",
+        "Does NOT treat intensity 1.0 as a valid bright sun value"
+      ]
+    },
+    {
+      "id": 2,
+      "eval_name": "ibl-requires-cmgen-preprocess",
+      "prompt": "I have an environment.hdr equirectangular image. How do I use it for image-based lighting and as a skybox background in Filament?",
+      "expected_output": "You cannot feed a raw .hdr directly to IndirectLight. First pre-process it with the cmgen command-line tool (or the iblprefilter runtime library) to produce a prefiltered reflections cubemap (KTX) plus spherical-harmonics coefficients for the diffuse irradiance, and a separate skybox cubemap. Then build an IndirectLight (reflections + irradiance/SH + intensity) and set it on the Scene, and build a Skybox from the skybox KTX. cmgen example: cmgen --deploy=output environment.hdr.",
+      "files": [],
+      "assertions": [
+        "States that a raw .hdr/.exr cannot be used directly and must be pre-processed first",
+        "Names cmgen (or iblprefilter) as the pre-processing step",
+        "Mentions spherical harmonics for the diffuse/irradiance part and a prefiltered cubemap for specular reflections",
+        "Uses IndirectLight for the lighting and a separate Skybox for the background"
+      ]
+    },
+    {
+      "id": 3,
+      "eval_name": "material-compile-pipeline",
+      "prompt": "I wrote a material file foo.mat for my Filament app. How does the engine actually use it at runtime \u2014 do I load the .mat file directly?",
+      "expected_output": "No \u2014 the .mat is a source file compiled ahead of time by the matc tool into a .filamat binary material package (matc -o foo.filamat foo.mat). At runtime the engine loads the .filamat package via Material::Builder().package(data, size).build(engine), then you create a MaterialInstance from the Material to set parameters per renderable. The engine never parses .mat directly.",
+      "files": [],
+      "assertions": [
+        "States that .mat is compiled by matc into a .filamat package (not loaded directly)",
+        "Shows the runtime loads the .filamat via Material::Builder().package(...)",
+        "Distinguishes Material (from the package) from MaterialInstance (per-use parameters)"
+      ]
+    },
+    {
+      "id": 4,
+      "eval_name": "glass-refractive-material",
+      "prompt": "Write a Filament material (.mat) for clear, refractive glass \u2014 something light passes through and bends, not just alpha-blended transparency.",
+      "expected_output": "A .mat with shadingModel: lit, refractionMode set (e.g. cubemap or screenspace), refractionType (solid or thin), and the fragment setting material.transmission high (\u22481.0), material.ior to a glass value (~1.5), low roughness, and baseColor. Real refraction comes from refractionMode/transmission/ior, NOT from blending alpha alone.",
+      "files": [],
+      "assertions": [
+        "Sets refractionMode in the material block (real refraction, not just alpha blending)",
+        "Sets transmission and ior in the fragment shader (ior around 1.5 for glass)",
+        "Uses shadingModel : lit and otherwise valid .mat block/fragment syntax",
+        "Does not claim plain alpha blending produces refraction"
+      ]
+    },
+    {
+      "id": 5,
+      "eval_name": "cpp-render-loop",
+      "prompt": "Show me the minimal per-frame render loop for a Google Filament C++ app that already has an Engine, Renderer, View, and SwapChain created.",
+      "expected_output": "Per frame: if (renderer->beginFrame(swapChain)) { renderer->render(view); renderer->endFrame(); } \u2014 beginFrame returns a bool; skip render/endFrame when it returns false (frame dropped). render() takes the View. Engine/objects are destroyed on shutdown via engine->destroy(...).",
+      "files": [],
+      "assertions": [
+        "Uses renderer->beginFrame(swapChain) / render(view) / endFrame() in that order",
+        "Guards rendering on the boolean returned by beginFrame (skips the frame when false)",
+        "Passes the View (not the Scene) to render()"
+      ]
+    },
+    {
+      "id": 6,
+      "eval_name": "metallic-vs-dielectric",
+      "prompt": "In Filament's standard PBR material, how do I author a red glossy plastic versus red polished metal? What do I set metallic, roughness, and reflectance to?",
+      "expected_output": "metallic is effectively binary: plastic (dielectric) uses metallic = 0, metal uses metallic = 1. For the plastic, baseColor is the red diffuse albedo and you tune reflectance (default ~0.5 \u2248 4% F0) for the specular strength; metallic stays 0. For the metal, metallic = 1 makes baseColor the specular/F0 tint (red metal) and there is no diffuse; reflectance is ignored for metals. roughness (0 = mirror, 1 = rough) controls the finish for both \u2014 low for 'polished/glossy'. Intermediate metallic values are only for transitions, not 'semi-metallic plastic'.",
+      "files": [],
+      "assertions": [
+        "Sets metallic = 0 for plastic and metallic = 1 for metal",
+        "States metallic is effectively binary (not a 0.5-style dial), intermediate values only for transitions",
+        "Uses reflectance for the dielectric/plastic specular (and notes baseColor is the metal's specular color when metallic=1)",
+        "Uses roughness for the polished/glossy finish (low roughness)"
+      ]
+    },
+    {
+      "id": 7,
+      "eval_name": "light-type-enum",
+      "prompt": "What light types does Filament's LightManager support, and which one renders a sun with a visible disc in the sky?",
+      "expected_output": "LightManager::Type values: SUN, DIRECTIONAL, POINT, FOCUSED_SPOT, SPOT. SUN is the directional light that also draws a sun disc (with sunAngularRadius / sunHaloSize / sunHaloFalloff); DIRECTIONAL is the same minus the disc. POINT, FOCUSED_SPOT, and SPOT are positional. No 'AREA' or 'AMBIENT' type exists.",
+      "files": [],
+      "assertions": [
+        "Lists the real enum values SUN, DIRECTIONAL, POINT, FOCUSED_SPOT, SPOT",
+        "Identifies SUN as the one that draws a visible sun disc",
+        "Does not invent non-existent types such as AREA or AMBIENT"
+      ]
+    },
+    {
+      "id": 8,
+      "eval_name": "web-minimal-setup",
+      "prompt": "Set up a minimal Filament scene in the browser with filament.js \u2014 bootstrapping, creating the engine from a canvas, and the render loop. Just the skeleton.",
+      "expected_output": "Use Filament.init([ ...asset urls... ], onReady) to fetch assets and wait for the wasm; in onReady create the engine with Filament.Engine.create(canvas), then a Scene, a View (with camera + viewport), a Renderer, and a SwapChain (engine.createSwapChain). Drive frames with requestAnimationFrame, calling renderer.render(swapChain, view) each frame. Requires WebGL2.",
+      "files": [],
+      "assertions": [
+        "Bootstraps with Filament.init([...assets], onReady) and only uses the engine inside the ready callback",
+        "Creates the engine via Filament.Engine.create(canvas)",
+        "Drives the loop with requestAnimationFrame and calls renderer.render(swapChain, view)",
+        "Uses real filament.js JS API names (not the C++ API or an invented JS API)"
+      ]
+    },
+    {
+      "id": 9,
+      "eval_name": "android-render-setup",
+      "prompt": "What's the canonical way to drive Filament rendering on Android in Kotlin, and how do I load a KTX environment as image-based lighting? Mention the dependency too.",
+      "expected_output": "Add the Maven deps (com.google.android.filament:filament-android, filament-utils-android, and gltfio-android as needed), call Filament.init(). Use a SurfaceView (or TextureView) with UiHelper + a RendererCallback to manage the SwapChain across surface changes, create Engine/Renderer/View/Scene/Camera, and drive frames from a Choreographer.FrameCallback calling renderer.beginFrame/render/endFrame. Load the IBL via KTX1Loader.createIndirectLight(engine, buffer) (and createSkybox) from filament-utils. Destroy every Filament object explicitly through the engine on teardown (no GC for native objects).",
+      "files": [],
+      "assertions": [
+        "Uses UiHelper with a SurfaceView/TextureView to manage the SwapChain",
+        "Drives frames from a Choreographer frame callback (beginFrame/render/endFrame)",
+        "Loads the IBL via KTX1Loader (e.g. createIndirectLight / createSkybox) from filament-utils-android",
+        "Gives correct Maven coordinates (com.google.android.filament:...) and notes explicit destruction of Filament objects"
+      ]
+    },
+    {
+      "id": 10,
+      "eval_name": "gltf-load-cpp",
+      "prompt": "How do I load a .glb model into a Filament scene in C++? Outline the calls.",
+      "expected_output": "Use the gltfio library (a separate dependency). Create a MaterialProvider (createUbershaderProvider) and a gltfio AssetLoader, then assetLoader->createAsset(bytes, size) to get a FilamentAsset. Use a ResourceLoader (with createStbProvider/createKtx2Provider texture providers) to load buffers/textures: resourceLoader->loadResources(asset) (or asyncBeginLoad for streaming). Add asset->getEntities()/getEntityCount() to the scene, optionally call asset->releaseSourceData(), and drive asset->getInstance()->getAnimator() per frame for animation. Destroy via assetLoader->destroyAsset(asset).",
+      "files": [],
+      "assertions": [
+        "Uses gltfio with AssetLoader (createAsset) and ResourceLoader (loadResources or asyncBeginLoad)",
+        "Adds the asset's entities (getEntities) to the Scene",
+        "Notes gltfio is a separate library/dependency from core Filament",
+        "Does not fabricate a non-existent core-Filament glTF loader"
+      ]
+    },
+    {
+      "id": 11,
+      "eval_name": "black-screen-debug",
+      "prompt": "Help me debug my Filament C++ app. The hello-triangle sample renders fine. In my app I load a model, add a directional light at intensity 1.0, set up the camera looking at the model, add everything to the scene \u2014 and I get a black window. Walk me through what to check.",
+      "expected_output": "Top suspect: the directional light intensity of 1.0 is far too dim \u2014 Filament uses physical lux units and the default camera exposure (~f/16, 1/125s, ISO 100), so a sun needs ~100,000 lux; 1.0 renders black. Also check: the model's entities were actually added to the scene; the renderable has a valid bounding box (a bad/zero box gets frustum-culled); the camera near/far and direction actually frame the model; the material/IBL loaded; and that you only call render when beginFrame returns true.",
+      "files": [],
+      "assertions": [
+        "Identifies the light intensity (1.0 lux) being far too low for the default exposure as the most likely cause",
+        "References Filament's physical light units and/or the default camera exposure",
+        "Lists at least one other concrete cause (entities not added to scene, bad bounding box / culling, camera framing, or beginFrame guard)"
+      ]
+    },
+    {
+      "id": 12,
+      "eval_name": "coordinate-and-exposure-conventions",
+      "prompt": "Quick reference question: what coordinate system and world units does Google Filament use, and what is the camera's default exposure?",
+      "expected_output": "Filament uses a right-handed coordinate system with +Y up; the camera looks down the -Z axis; world units are meters. The camera's default exposure is f/16 aperture, 1/125s shutter speed, ISO 100 sensitivity.",
+      "files": [],
+      "assertions": [
+        "States the coordinate system is right-handed with +Y up (camera looks down -Z)",
+        "States world units are meters",
+        "States the default camera exposure is f/16, 1/125s, ISO 100"
+      ]
+    },
+    {
+      "id": 13,
+      "eval_name": "gltfio-provider-factories",
+      "prompt": "In C++ with Filament's gltfio, how do I set up the MaterialProvider and TextureProvider needed to load a .glb? I keep writing code that won't compile \u2014 do I subclass them or new them up?",
+      "expected_output": "Providers are obtained from free factory functions, not by instantiating provider classes: createUbershaderProvider(engine, materials, size) (or createJitShaderProvider) for the MaterialProvider, and createStbProvider(engine) / createKtx2Provider(engine) for the TextureProvider. You pass these to AssetLoader::create({engine, materialProvider, ...}) and ResourceLoader (then add the TextureProvider). You don't subclass them.",
+      "assertions": [
+        "Obtains the MaterialProvider via the free function createUbershaderProvider (or createJitShaderProvider), NOT by instantiating/subclassing a provider class",
+        "Obtains the TextureProvider via createStbProvider and/or createKtx2Provider (free functions)",
+        "Passes the providers into AssetLoader/ResourceLoader rather than subclassing the provider interfaces"
+      ],
+      "ground_truth": "Verified from gltfio headers (MaterialProvider.h, TextureProvider.h) at v1.72.0: providers come from FREE FUNCTIONS returning MaterialProvider*/TextureProvider* \u2014 createUbershaderProvider(Engine*, const void* archive, size_t), createJitShaderProvider(Engine*, ...), createStbProvider(Engine*), createKtx2Provider(Engine*). They are NOT classes you instantiate/subclass.",
+      "files": []
+    },
+    {
+      "id": 14,
+      "eval_name": "android-ktx1loader-bundle-return",
+      "prompt": "On Android (Kotlin) I call KTX1Loader.createIndirectLight(engine, buffer) but assigning the result to an IndirectLight won't compile. What does it actually return, and how do I get the IndirectLight and the Skybox out?",
+      "expected_output": "KTX1Loader.createIndirectLight returns an IndirectLightBundle (not an IndirectLight) \u2014 read its .indirectLight property (and .cubemap). KTX1Loader.createSkybox returns a SkyboxBundle \u2014 read its .skybox (and .cubemap).",
+      "assertions": [
+        "States createIndirectLight returns an IndirectLightBundle (not an IndirectLight directly), accessed via .indirectLight",
+        "States createSkybox returns a SkyboxBundle, accessed via .skybox",
+        "Does not claim the methods return the IndirectLight/Skybox object directly"
+      ],
+      "ground_truth": "Verified from KTX1Loader.kt (filament-utils-android) at v1.72.0: createIndirectLight(engine, buffer, options) -> IndirectLightBundle(indirectLight, cubemap); createSkybox(...) -> SkyboxBundle(skybox, cubemap); createTexture(...) -> Texture; getSphericalHarmonics(buffer) -> FloatArray?.",
+      "files": []
+    },
+    {
+      "id": 15,
+      "eval_name": "boundingbox-center-halfextent",
+      "prompt": "My Filament renderable never appears. The mesh spans roughly -1..1 on each axis and I called RenderableManager::Builder().boundingBox({{-1,-1,-1},{1,1,1}}). Camera, light, and material are all fine and it's added to the scene. Why is it getting culled?",
+      "expected_output": "boundingBox takes a Box, which is {center, halfExtent} \u2014 NOT {min, max} corners. {{-1,-1,-1},{1,1,1}} means center (-1,-1,-1) with half-extent (1,1,1), i.e. a box spanning (-2,-2,-2)..(0,0,0), which doesn't enclose a mesh centered at the origin, so it's frustum-culled. For a -1..1 mesh use center {0,0,0}, half-extent {1,1,1}: boundingBox({{0,0,0},{1,1,1}}). Alternatively build the Box from corners with Box{}.set(min, max), or let the engine compute it.",
+      "assertions": [
+        "Explains boundingBox takes a Box of {center, halfExtent}, NOT {min, max} corners",
+        "Gives the correct value for a -1..1 mesh: center {0,0,0}, half-extent {1,1,1}",
+        "Mentions Box::set(min, max) (or computeAABB / an engine-computed AABB) as the way to specify by corners"
+      ],
+      "ground_truth": "Verified from Box.h at v1.72.0: 'An axis aligned 3D box represented by its center and half-extent.' float3 center; float3 halfExtent; getMin()=center-halfExtent; getMax()=center+halfExtent; Box& set(min, max) computes center=(max+min)/2, halfExtent=(max-min)/2. So brace-init {{...},{...}} is {center, halfExtent}, not corners.",
+      "files": []
+    },
+    {
+      "id": 16,
+      "eval_name": "web-no-engine-execute-per-frame",
+      "prompt": "In my filament.js (web) render loop, do I need to call engine.execute() and renderer.beginFrame()/endFrame() every frame like the C++ API, or is renderer.render() enough? Show the minimal requestAnimationFrame loop.",
+      "expected_output": "On the web you just call renderer.render(swapChain, view) inside a requestAnimationFrame callback; you do not call engine.execute() or beginFrame()/endFrame() yourself each frame \u2014 that begin/execute/end cycle is the native C++ pattern. The JS render() drives the engine internally.",
+      "assertions": [
+        "The web render loop calls renderer.render(swapChain, view) inside requestAnimationFrame",
+        "Does NOT require explicit engine.execute() or beginFrame()/endFrame() each frame in the JS binding",
+        "Correctly attributes the begin/execute/end cycle to the native C++ API, not the web binding"
+      ],
+      "ground_truth": "Verified from the official filament.js triangle tutorial (web/examples/triangle.md) at v1.72.0: the render method is `this.renderer.render(this.swapChain, this.view); window.requestAnimationFrame(this.render);` \u2014 no engine.execute()/beginFrame()/endFrame() in the JS loop.",
+      "files": []
+    },
+    {
+      "id": 17,
+      "eval_name": "current-version-currency",
+      "prompt": "What's the current stable release of Google Filament right now, and will the API guidance you give me match that release?",
+      "expected_output": "The current stable Filament release is 1.72.0 (released 2026-06-17). Guidance should be framed as current to that release. (A stale answer naming a pre-2026 version like 1.5x is the failure mode.)",
+      "assertions": [
+        "Identifies the current Filament release as 1.72.0 (the 1.72.x line), not a pre-2026 version such as 1.5x or 1.4x",
+        "Frames its API guidance as current to that release rather than to an unspecified/older version"
+      ],
+      "ground_truth": "Verified from GitHub releases: google/filament latest stable is v1.72.0, published 2026-06-17. (A model without this skill, training cutoff Jan 2026, cannot know 1.72.0 and will name an older release.)",
+      "files": []
+    },
+    {
+      "id": 18,
+      "eval_name": "bufferdescriptor-free-callback",
+      "prompt": "After I hand vertex/texture data to Filament via a BufferDescriptor / PixelBufferDescriptor, when is it safe to free the CPU-side buffer? I want to avoid both leaking and freeing too early while the GPU still needs it.",
+      "expected_output": "Don't free immediately after the upload call. The BufferDescriptor/PixelBufferDescriptor takes a callback (and optional handler) that Filament invokes once it has consumed the data; free the CPU buffer in that callback. The callback can be a plain function \u2014 e.g. pass stbi_image_free as the PixelBufferDescriptor::Callback so stb's image buffer is freed when Filament is done.",
+      "assertions": [
+        "States you provide a Callback to the BufferDescriptor/PixelBufferDescriptor that fires when Filament has consumed the data",
+        "Says to free the CPU buffer inside that callback, not immediately after the upload call",
+        "Notes the callback can be a free function (e.g. stbi_image_free)"
+      ],
+      "ground_truth": "Verified from VertexBuffer.h/backend BufferDescriptor and suzanne.cpp at v1.72.0: data is uploaded via a (Pixel)BufferDescriptor carrying a Callback invoked when the data has been consumed; suzanne.cpp passes `(Texture::PixelBufferDescriptor::Callback) &stbi_image_free`. Freeing right after the call is unsafe.",
+      "files": []
+    },
+    {
+      "id": 19,
+      "eval_name": "ibl-skybox-default-intensity",
+      "prompt": "If I build a Filament IndirectLight and a Skybox but never call intensity(), what intensity do they default to, and in what units?",
+      "expected_output": "Both default to 30000, expressed in lux (lumen/m^2). For the Skybox the intensity applies only when no IndirectLight is set on the scene.",
+      "assertions": [
+        "States the default IndirectLight intensity is 30000",
+        "States the default Skybox intensity is also 30000 (applies when no IndirectLight is set)",
+        "States the unit is lux (lumen/m^2)"
+      ],
+      "ground_truth": "Verified from IndirectLight.h (default = 30000, result in lux / lumen/m^2) and Skybox.h (envIntensity default = 30000 lux, ignored when an IndirectLight is set) at v1.72.0.",
+      "files": []
+    },
+    {
+      "id": 20,
+      "eval_name": "sun-angular-radius-default-range",
+      "prompt": "For a Filament SUN light I want a realistic sun disc. What's the default sun angular radius, and what's the valid range I can set?",
+      "expected_output": "Default sunAngularRadius is 0.545 degrees (the real sun is ~0.526\u00b0\u20130.545\u00b0 from Earth); the valid range is 0.25\u00b0 to 20.0\u00b0.",
+      "assertions": [
+        "States the default sunAngularRadius is 0.545 degrees",
+        "States the valid range is 0.25 to 20.0 degrees"
+      ],
+      "ground_truth": "Verified from LightManager.h at v1.72.0: 'Defines the angular radius of the sun, in degrees, between 0.25\u00b0 and 20.0\u00b0'; 'Default is 0.545\u00b0'; real sun angular size 0.526\u00b0\u20130.545\u00b0.",
+      "files": []
+    }
+  ]
+}
