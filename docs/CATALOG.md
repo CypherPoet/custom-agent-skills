@@ -14,6 +14,7 @@ This repo publishes the following plugins via the [`cypherpoet-toolchest`](https
 | [cypherpoet-claude-memory-consolidation](../plugins/cypherpoet-claude-memory-consolidation/README.md) | Audit and consolidate Claude's per-project auto-memory directory, deduping, repairing, and pruning with per-cluster approval. | 1 skill |
 | [cypherpoet-expo-kit](../plugins/cypherpoet-expo-kit/README.md) | Expo / React Native prototyping. | 1 skill |
 | [cypherpoet-git-flow](../plugins/cypherpoet-git-flow/README.md) | Git commit and changelog hygiene. | 2 skills |
+| [cypherpoet-google-filament-kit](../plugins/cypherpoet-google-filament-kit/README.md) | Working knowledge of Google Filament, the real-time physically-based rendering engine — the material model, lighting/IBL, the material language and matc, the engine API, glTF, and per-binding setup for C++, Web, and Android, distilled from the official v1.72.0 docs. | 1 skill |
 | [cypherpoet-marketplace-kit](../plugins/cypherpoet-marketplace-kit/README.md) | Maintainer toolkit for running a Claude Code plugin marketplace — publish plugins, audit marketplace and catalog sync, regenerate the local catalog, and verify dependency-version tags. | 5 skills |
 | [cypherpoet-mobile-dev](../plugins/cypherpoet-mobile-dev/README.md) | iOS App Store publishing best practices. | 1 skill |
 | [cypherpoet-session-handoff](../plugins/cypherpoet-session-handoff/README.md) | Write a structured handoff document so a fresh agent can resume long-running work without losing context. | 1 skill |
