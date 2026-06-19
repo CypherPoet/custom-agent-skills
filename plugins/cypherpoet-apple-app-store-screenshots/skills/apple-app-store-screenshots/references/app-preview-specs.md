@@ -4,7 +4,7 @@ App previews are the optional autoplay videos on a product page — up to 3 per 
 durable rules live in [SKILL.md](../SKILL.md); this is the exhaustive reference.
 
 **Source:** <https://developer.apple.com/help/app-store-connect/reference/app-information/app-preview-specifications>
-**Verified:** 2026-05-30. Re-check after major hardware releases and re-stamp.
+**Verified:** 2026-06-19 (resolutions reconciled against the live App Store Connect Media Manager). Re-check after major hardware releases and re-stamp.
 
 ## Requirements
 
@@ -36,21 +36,28 @@ with 2-channel stereo (channel 1 = L, channel 2 = R) **or** two tracks of 1-chan
 ## Upload resolutions per device class
 
 "Device resolution" is the screen; the **accepted (upload) resolution** is what you hand App Store
-Connect. Provide the largest class and the smaller ones auto-scale, exactly like screenshots.
-Landscape values are the portrait values transposed (e.g. `1920×886`).
+Connect. The modern App Store Connect Media Manager uses ONE combined iPhone drop zone for both
+screenshots and app previews ("Drag up to 3 app previews and 10 screenshots here for iPhone 6.5", 6.7"
+or 6.9" Displays"), and it validates app previews at the **same device-native resolution as
+screenshots** — not the old 886×1920 standalone-preview size. Provide the largest class and the smaller
+ones auto-scale, exactly like screenshots. Landscape values are the portrait values transposed (e.g.
+`2868×1320`).
+
+> **Apple's published spec lags its own UI.** The app-preview-specifications reference page still lists
+> 886×1920 for iPhone — the legacy App Preview size from when previews had their own uploader, separate
+> from screenshots. Today's Media Manager rejects 886×1920 for these classes. **Trust the live App Store
+> Connect drop zone; it is ground truth.** Confirmed against a live 6.9"/6.5" Media Manager on 2026-06-19.
 
 ### iPhone
 
 | Display class | Accepted upload resolution (portrait) | If omitted |
 |---|---|---|
-| 6.9" | 886×1920 | — (canonical) |
-| 6.5" | 886×1920 | scaled from 6.9" |
-| 6.3" | 886×1920 | scaled from 6.5" |
-| 6.1" | 886×1920 | scaled from 6.5" |
-| 5.5" | 1080×1920 | scaled from 6.1" |
-| 4.7" | 750×1334 | scaled from 5.5" |
-| 4" | 1080×1920 | scaled from 4.7" |
-| 3.5" | **App previews not supported** | — |
+| 6.9" | 1320×2868 · 1290×2796 · 1260×2736 | — (canonical; record/upload 1320×2868) |
+| 6.5" | 1284×2778 · 1242×2688 | scaled from 6.9" |
+
+The current Media Manager exposes only the 6.9" and 6.5" iPhone slots; every smaller class is generated
+from the 6.9" upload, exactly as with screenshots. Record a 6.9" simulator at its native 1320×2868 and
+upload as-is — no rescaling, and **not** the legacy 886×1920.
 
 ### iPad
 
