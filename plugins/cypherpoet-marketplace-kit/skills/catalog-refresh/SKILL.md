@@ -1,14 +1,13 @@
 ---
 name: catalog-refresh
-description: Manually-triggered regenerator for this repo's docs/CATALOG.md. Rebuilds the plugin table straight from the plugin manifests — name, description, and component counts (skills/commands/agents/hooks/MCP servers) — so a missing, stale, or mis-counted row is fixed deterministically. The write-capable counterpart to marketplace-sync-check, which only reports the same local-catalog drift. Touches only the local catalog table (the surrounding prose is preserved); never the published marketplace, never commits, never opens a PR.
-disable-model-invocation: true
+description: Regenerate this repo's docs/CATALOG.md plugin table from the plugin manifests — rebuilding every row's name, description, and component counts (skills/commands/agents/hooks/MCP servers) deterministically from plugins/, so a missing, stale, or mis-counted row is fixed without hand-editing. Use when the user asks to refresh, regenerate, or rebuild the local catalog, or right after a plugin's name, description, or component count changes and docs/CATALOG.md needs to match. The write-capable counterpart to marketplace-sync-check, which only reports the same local-catalog drift. Touches only the local catalog table (the surrounding prose is preserved); never the published marketplace, never commits, never opens a PR.
 ---
 
 # catalog-refresh
 
 Regenerate the plugin table in `docs/CATALOG.md` from the plugin manifests. The local catalog is *deterministically derivable* from `plugins/` — every row's `name`, `description`, and `Components` count comes straight from a `plugin.json` and the plugin's directory — so it can be rebuilt mechanically instead of hand-edited.
 
-This is the **actuator** half of the local-catalog pair: [`marketplace-sync-check`](../marketplace-sync-check/SKILL.md) *reports* `docs/CATALOG.md` drift (missing / stale / orphan rows), and this skill *fixes* it. That split is deliberate — the audit stays read-only and safe to run anytime; regenerating is a separate, explicit step you invoke, which is why this skill is manual-only.
+This is the **actuator** half of the local-catalog pair: [`marketplace-sync-check`](../marketplace-sync-check/SKILL.md) *reports* `docs/CATALOG.md` drift (missing / stale / orphan rows), and this skill *fixes* it. The audit stays read-only and safe to run anytime; this writer regenerates the table deterministically from the manifests, so it's safe to run on request or right after a manifest change — the output is a reviewable diff, and it still never commits or touches the published marketplace.
 
 **Scope — local catalog only.** This rewrites `docs/CATALOG.md` and nothing else. It does **not** touch the published marketplace (`marketplace.json` on the marketplace repo), commit, or open a PR. The marketplace is a deliberate, per-plugin publish — for that, use `marketplace-publish`.
 
