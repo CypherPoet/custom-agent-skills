@@ -203,48 +203,15 @@ As you work:
 
 ## CLEANUP Workflow
 
-Handoffs are committed by default, so they accumulate. Once work has moved on, completed and superseded handoffs clutter the active list. This workflow retires them safely — git history is the undo, so removal is low-stakes, but the bar for *what* to retire is deliberately high.
-
-### Step 1: Find Candidates
+Handoffs are committed by default, so they accumulate. When work has moved on, retire the completed and superseded ones. Start with the read-only detector:
 
 ```bash
 python3 scripts/find_cleanup_candidates.py
 ```
 
-Read-only. It scans the neutral `.agents/handoffs/` and the legacy `.claude/handoffs/`, then groups handoffs into tiers:
+It groups handoffs into 🔴 superseded + complete (strong), 🟡 very-stale + complete + standalone (advisory), and ⚠️ superseded-but-incomplete (keep + review). **Staleness alone never qualifies a handoff** — an old but unsuperseded record can be the only trace of a decision's rationale; when in doubt, keep. Present candidates and remove only with explicit per-item approval (`git rm` for tracked, `trash` for untracked); never auto-run this workflow.
 
-- 🔴 **Retire — superseded + complete**: a later handoff `--continues-from` it, and it has no remaining `[TODO:` placeholders. The chain moved past finished work. Strong candidate.
-- 🟡 **Retire candidate — very stale + complete**: rated `VERY_STALE`, complete, and standalone (not a chain tip). Old, done, unlikely to resume. Advisory.
-- ⚠️ **Keep + review**: superseded but still has unfinished TODOs — never auto-retired. The successor may have moved on before this one's pending work was captured; check before removing.
-
-Each candidate line reports its title, reason, location (neutral/legacy), and whether it's git-tracked (→ `git rm`) or untracked (→ `trash`). Pass `--verbose` to also list what's being kept and why.
-
-The script exits `1` when it finds candidates and `0` when there are none — a found/not-found signal, not an error. Read its output and continue the workflow regardless of the exit code.
-
-### Step 2: Present for Approval
-
-Show the numbered candidates grouped by tier. State the bias plainly: **staleness alone never qualifies a handoff** — an old but unsuperseded record can be the only trace of why a decision was made, and is legitimate to keep. Superseded + complete is the only strong signal; very-stale is advisory. When in doubt, keep.
-
-Ask which to retire — "all / specific numbers (e.g. 1, 3) / skip the very-stale ones / none". **Never delete without explicit per-item approval, and never auto-run this workflow.**
-
-### Step 3: Apply
-
-For each approved candidate, use the removal the detector reported (a handoff may live in `.agents/handoffs/` or the legacy `.claude/handoffs/` — use the path it printed):
-
-- **Tracked** → `git rm <path>`
-- **Untracked** → `trash <path>`
-
-Then commit the `git rm`'d set:
-
-```bash
-git commit -m "docs: retire superseded/obsolete handoffs"
-```
-
-In a git worktree, commit on the working branch and let it reach the default branch through the normal PR flow rather than committing to the main checkout directly. Git history preserves every removed handoff, so a mistaken retire is recoverable with `git restore`.
-
-### Step 4: Report
-
-Tell the user what was retired and what was kept, and note that removed handoffs remain in git history.
+The full procedure — candidate tiers, the approval gate, and the removal mechanics — lives in [references/cleanup-workflow.md](references/cleanup-workflow.md). Read it before running a cleanup.
 
 ## Handoff Chaining
 
@@ -292,3 +259,4 @@ Example: `2024-01-15-143022-implementing-auth.md`
 ### references/
 
 - [handoff-template.md](references/handoff-template.md) — Canonical template structure with placeholder documentation. The `create_handoff.py` script renders from this file; it is the single source of truth.
+- [cleanup-workflow.md](references/cleanup-workflow.md) — Full CLEANUP procedure: candidate tiers, the approval gate, and the `git rm` / `trash` removal mechanics. The in-body CLEANUP section summarizes; this is the step-by-step.
