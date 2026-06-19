@@ -11,17 +11,19 @@ Analyzes:
 
 Usage:
     python3 check_staleness.py <handoff-file>
-    python3 check_staleness.py .claude/handoffs/2024-01-15-143022-auth.md
+    python3 check_staleness.py .agents/handoffs/2024-01-15-143022-auth.md
 """
 
 from __future__ import annotations
 
-import os
 import re
 import subprocess
 import sys
 from datetime import datetime, timezone
 from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from handoff_paths import project_root_for  # noqa: E402
 
 
 def run_cmd(cmd: list[str], cwd: str = None) -> tuple[bool, str]:
@@ -236,8 +238,10 @@ def check_staleness(handoff_path: str) -> dict:
     # Determine project path
     project_path = metadata.get("project_path")
     if not project_path or not Path(project_path).exists():
-        # Fallback: assume handoff is in .claude/handoffs/ within project
-        project_path = str(path.parent.parent.parent)
+        # Derive the project root from the handoff's own location (git toplevel,
+        # else by stripping the known handoffs subdir). Works for both the
+        # neutral .agents/handoffs/ and the legacy .claude/handoffs/ layouts.
+        project_path = project_root_for(handoff_path)
 
     # Check if git repo
     success, _ = run_cmd(["git", "rev-parse", "--git-dir"], cwd=project_path)
@@ -368,7 +372,7 @@ def print_report(result: dict):
 def main():
     if len(sys.argv) < 2:
         print("Usage: python3 check_staleness.py <handoff-file>")
-        print("Example: python3 check_staleness.py .claude/handoffs/2024-01-15-auth.md")
+        print("Example: python3 check_staleness.py .agents/handoffs/2024-01-15-auth.md")
         sys.exit(1)
 
     handoff_path = sys.argv[1]

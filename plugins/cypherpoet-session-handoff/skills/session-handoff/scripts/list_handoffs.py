@@ -2,7 +2,8 @@
 """
 List available handoff documents in the current project.
 
-Searches for handoff documents in .claude/handoffs/ and displays:
+Searches the neutral .agents/handoffs/ directory (plus the legacy
+.claude/handoffs/, for back-compat) and displays:
 - Filename with date
 - Title extracted from document
 - Status (if marked complete)
@@ -19,6 +20,9 @@ import re
 import sys
 from datetime import datetime
 from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from handoff_paths import iter_handoff_files  # noqa: E402
 
 
 def extract_title(filepath: Path) -> str:
@@ -67,14 +71,14 @@ def parse_date_from_filename(filename: str) -> datetime | None:
 
 
 def list_handoffs(project_path: str) -> list[dict]:
-    """List all handoff documents in a project."""
-    handoffs_dir = Path(project_path) / ".claude" / "handoffs"
+    """List all handoff documents in a project.
 
-    if not handoffs_dir.exists():
-        return []
-
+    Unions every candidate directory (neutral `.agents/handoffs/` plus the
+    legacy `.claude/handoffs/`), deduped by filename so a handoff that exists in
+    both locations is reported once.
+    """
     handoffs = []
-    for filepath in handoffs_dir.glob("*.md"):
+    for filepath in iter_handoff_files(project_path):
         parsed_date = parse_date_from_filename(filepath.name)
         handoffs.append({
             "path": str(filepath),
@@ -105,11 +109,11 @@ def main():
     handoffs = list_handoffs(project_path)
 
     if not handoffs:
-        print(f"No handoffs found in {project_path}/.claude/handoffs/")
+        print(f"No handoffs found in {project_path} (.agents/handoffs/ or .claude/handoffs/)")
         print("\nTo create a handoff, run: python3 create_handoff.py [task-slug]")
         return
 
-    print(f"Found {len(handoffs)} handoff(s) in {project_path}/.claude/handoffs/\n")
+    print(f"Found {len(handoffs)} handoff(s) in {project_path}\n")
     print("-" * 80)
 
     for h in handoffs:

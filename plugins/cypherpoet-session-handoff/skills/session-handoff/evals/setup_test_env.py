@@ -6,8 +6,9 @@ Creates a mock project with:
 - Git repository with commit history
 - Sample source files (including the runtime-string-import pattern that
   fixture C depends on)
-- Sample handoffs (fresh / stale / incomplete) using the new template format
-- Hand-crafted fixture handoffs copied from evals/fixtures/
+- Sample handoffs (fresh / stale / incomplete) in the neutral .agents/handoffs/
+- Hand-crafted fixture handoffs copied from evals/fixtures/ into .agents/handoffs/
+- One legacy handoff in .claude/handoffs/ to exercise the back-compat read path
 
 Usage:
     python3 setup_test_env.py [--path /tmp/handoff-eval-project]
@@ -17,8 +18,14 @@ Usage:
 import argparse
 import shutil
 import subprocess
+import sys
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
+
+# Seed fixtures into the same directories the scripts read/write, sourced from
+# the resolver's constants so the test setup can't drift from production paths.
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
+from handoff_paths import LEGACY_HANDOFFS_SUBDIR, NEUTRAL_HANDOFFS_SUBDIR  # noqa: E402
 
 
 DEFAULT_TEST_PATH = "/tmp/handoff-eval-project"
@@ -332,7 +339,7 @@ def init_git_repo(path: Path):
 def create_sample_handoffs(path: Path):
     """Create three inline-generated handoffs (fresh / stale / incomplete) in
     the new template format. These cover the existing evals 1–6."""
-    handoffs_dir = path / ".claude" / "handoffs"
+    handoffs_dir = path.joinpath(*NEUTRAL_HANDOFFS_SUBDIR)
     handoffs_dir.mkdir(parents=True)
 
     now = datetime.now(timezone.utc)
@@ -513,7 +520,7 @@ def copy_fixture_handoffs(path: Path) -> dict[str, str]:
     date-prefixed filenames so list_handoffs / staleness scripts handle them
     correctly. Returns a map of fixture_id -> seeded_filename so the eval
     prompts can reference them by relative path."""
-    handoffs_dir = path / ".claude" / "handoffs"
+    handoffs_dir = path.joinpath(*NEUTRAL_HANDOFFS_SUBDIR)
     handoffs_dir.mkdir(parents=True, exist_ok=True)
 
     now = datetime.now(timezone.utc)
@@ -565,6 +572,55 @@ def copy_fixture_handoffs(path: Path) -> dict[str, str]:
     return seeded
 
 
+def seed_legacy_handoff(path: Path) -> str:
+    """Seed one handoff in the LEGACY `.claude/handoffs/` location.
+
+    Simulates a handoff written before the neutral-dir migration. The read-side
+    scripts must still surface and chain it (eval 13), even though new handoffs
+    are now written to `.agents/handoffs/`. Returns the seeded filename."""
+    legacy_dir = path.joinpath(*LEGACY_HANDOFFS_SUBDIR)
+    legacy_dir.mkdir(parents=True, exist_ok=True)
+
+    old_date = datetime.now(timezone.utc) - timedelta(days=2)
+    name = old_date.strftime("%Y-%m-%d-%H%M%S") + "-legacy-location-resume.md"
+    content = f"""# 🤝 Handoff: Legacy-location handoff (pre-migration)
+
+> 🎯 **Next Action**: Add a `health` route to `src/index.js` returning `{{ status: 'ok' }}` and re-run `npm test`.
+
+## 🧾 Session Metadata
+- Created: {old_date.strftime("%Y-%m-%dT%H:%M:%SZ")}
+- Branch: main
+
+### Recent Commits (for context)
+  - Add auth middleware
+  - Initial commit: project setup
+
+## 🔗 Handoff Chain
+
+- **Continues from**: None (fresh start)
+- **Supersedes**: None
+
+## 📍 Current State Summary
+
+This handoff was written into `.claude/handoffs/` before the skill moved to the neutral `.agents/handoffs/` location. It exists to prove the read-side scripts still find legacy handoffs.
+
+## 💡 Important Context
+
+Nothing unusual — this is a back-compat fixture. The route should slot in before `module.exports`.
+
+## 🚧 Pending Work
+
+### Immediate Next Steps
+
+1. Add the `/health` route in `src/index.js`.
+2. Re-run `npm test`.
+"""
+    (legacy_dir / name).write_text(content)
+    print(f"Seeded 1 legacy-location handoff in .claude/handoffs/:")
+    print(f"  - {name}")
+    return name
+
+
 def clean_test_env(path: str):
     if Path(path).exists():
         shutil.rmtree(path)
@@ -598,10 +654,11 @@ def main():
     init_git_repo(path)
     create_sample_handoffs(path)
     copy_fixture_handoffs(path)
+    seed_legacy_handoff(path)
     print(f"\nTest environment ready at: {args.path}")
     print(f"\nTo test, run:")
     print(f"  cd {args.path}")
-    print(f"  # Then use Claude Code with the session-handoff skill")
+    print(f"  # Then drive the session-handoff skill from your agent of choice")
 
 
 if __name__ == "__main__":

@@ -25,7 +25,7 @@ carry the same actionable information without the false precision.
 
 Usage:
     python3 validate_handoff.py <handoff-file>
-    python3 validate_handoff.py .claude/handoffs/2024-01-15-143022-auth.md
+    python3 validate_handoff.py .agents/handoffs/2024-01-15-143022-auth.md
 """
 
 from __future__ import annotations
@@ -33,6 +33,9 @@ from __future__ import annotations
 import re
 import sys
 from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from handoff_paths import project_root_for  # noqa: E402
 
 # Secret detection patterns
 SECRET_PATTERNS = [
@@ -227,7 +230,11 @@ def validate_handoff(filepath: str) -> dict:
         return {"error": f"File not found: {filepath}"}
 
     content = path.read_text()
-    base_path = path.parent.parent.parent  # Up from .claude/handoffs/
+    # Project root for resolving file references in the handoff body. Derived
+    # from the handoff's own location (git toplevel, else by stripping the known
+    # handoffs subdir) so it holds for both .agents/handoffs/ and the legacy
+    # .claude/handoffs/ layouts.
+    base_path = Path(project_root_for(filepath))
 
     todos_clear, remaining_todos = check_todos(content)
     next_action_filled, next_action_value = check_next_action(content)
@@ -343,7 +350,7 @@ def print_report(result: dict) -> bool:
 def main():
     if len(sys.argv) < 2:
         print("Usage: python3 validate_handoff.py <handoff-file>")
-        print("Example: python3 validate_handoff.py .claude/handoffs/2024-01-15-auth.md")
+        print("Example: python3 validate_handoff.py .agents/handoffs/2024-01-15-auth.md")
         sys.exit(1)
 
     filepath = sys.argv[1]
