@@ -168,7 +168,7 @@ Open **"1.0 Prepare for Submission"** (left sidebar, under the app) — the *ver
 | **Support URL** | Required — a contact/support page. |
 | **Marketing URL** | Optional. |
 | **Copyright** | Format `YYYY Owner` — **no © symbol** (Apple adds it). A handle/studio name is fine. |
-| **Screenshots** | Upload the **largest** size per platform; Apple auto-scales down. Required: **6.9″ iPhone (1320×2868)** + **13″ iPad (2064×2752)** for a universal app. Must show real gameplay/usage. (Exact specs for other device classes → `apple-app-store-screenshots`.) |
+| **Screenshots** | Upload the **largest** size per platform; Apple auto-scales down (one set covers all sizes + localizations; **only the first 3** appear on the install sheets). Required: **6.9″ iPhone (1320×2868)** + **13″ iPad (2064×2752)** for a universal app. ⚠️ The *Previews and Screenshots* block has iPhone / iPad / Watch tabs and may default to showing a smaller **6.5″** slot (1242×2688 / 1284×2778) — use **View All Sizes in Media Manager** to reach the 6.9″ slot. Must show real usage. (Exact specs for other device classes → `apple-app-store-screenshots`.) |
 | **Build** | **Select** the processed build (see `build-and-delivery.md`). It won't be selectable until processing finishes. |
 
 > ⚠️ If **"Add for Review" is greyed out**, a required field is still empty — scroll the page; ASC flags
@@ -178,7 +178,7 @@ Open **"1.0 Prepare for Submission"** (left sidebar, under the app) — the *ver
 
 ## 7. App Review Information
 
-- **Sign-in required:** Off if there's no login; otherwise provide a working demo account.
+- **Sign-in required:** ⚠️ ASC **defaults this checked** — for a no-login app you must actively **uncheck** it, or it demands a demo username/password the app doesn't have. Otherwise provide a working demo account.
 - **Contact:** a real, reachable person — name, phone with country code, **monitored** email. This is
   private (reviewer-only), so it does not need to match any public-facing name.
 - **Notes:** tell the reviewer exactly how to reach gated features and trigger purchases (e.g. "the paywall
@@ -192,11 +192,14 @@ Open **"1.0 Prepare for Submission"** (left sidebar, under the app) — the *ver
 On the version page:
 
 1. **Select the build** (step 6) once it's done processing.
-2. ⚠️ **Attach the IAP.** In the *In-App Purchases and Subscriptions* section, confirm each first-time IAP
-   (status **Ready to Submit**) is actually listed. **This is the #1 missed step** — without it the IAP
-   isn't reviewed and you risk a Guideline 2.1 rejection.
-3. **Version Release** — **Manually release** gives you go-live control (review timing is unaffected);
-   alternatives are Automatic or Scheduled. (Phased release is updates-only, not first launch.)
+2. ⚠️ **Attach the IAP.** The *In-App Purchases and Subscriptions* section is labeled **"(Optional)"** —
+   which it is *not* for a first IAP. Click **Select In-App Purchases or Subscriptions** and add each
+   first-time IAP (status **Ready to Submit**). **This is the #1 missed step** — without it the IAP isn't
+   reviewed and you risk a Guideline 2.1 rejection.
+3. **Version Release** — ASC **defaults to *Automatically release*** (goes live as soon as approved).
+   **Manually release** instead gives you go-live control (review timing is unaffected); the third option
+   schedules an automatic release "no earlier than" a date you set. (Phased release is updates-only, not
+   first launch.)
 4. **Add for Review → Submit for Review.**
 
 If ASC blocks the submit, it lists what's incomplete — usually a missing screenshot, the build still
