@@ -22,9 +22,9 @@ These come from the **`cypherpoet-marketplace-kit`** plugin (enabled in `.claude
 
 - **`marketplace-publish`** — publish one plugin to `cypherpoet-toolchest` by opening a PR. Manual-only (`disable-model-invocation`); it has an outward-facing side effect, so Claude shouldn't auto-run it.
 - **`marketplace-sync-check`** — read-only audit of local plugins against both the published marketplace catalog (`marketplace.json`) and the local [`docs/CATALOG.md`](docs/CATALOG.md).
-- **`catalog-refresh`** — regenerate `docs/CATALOG.md`'s plugin table from the manifests; the write-capable counterpart to `marketplace-sync-check`. Manual-only (`disable-model-invocation`); run it after a plugin's `name`/`description`/component counts change. Local-catalog only — never the marketplace.
+- **`catalog-refresh`** — regenerate `docs/CATALOG.md`'s plugin table from the manifests; the write-capable counterpart to `marketplace-sync-check`. **Model-invokable** — run it (or let Claude run it) when the catalog needs to match a plugin's `name`/`description`/component-count change; it runs a deterministic local script and leaves a reviewable diff (never commits). Local-catalog only — never the marketplace.
 - **`dependency-tag-check`** — read-only audit of git-tag coverage for version-constrained plugin dependencies. Manual-only (`disable-model-invocation`); run it after pinning/bumping a constrained dependency.
-- **`marketplace-publish-check`** — read-only check of whether the current branch's diff needs a `marketplace-publish` (plugin added/removed, or `name`/`description`/`homepage` edited). **Model-invokable** — unlike the manual-only skills above, it's read-only and meant to auto-run at PR-creation to drive the `marketplace-publish` label.
+- **`marketplace-publish-check`** — read-only check of whether the current branch's diff needs a `marketplace-publish` (plugin added/removed, or `name`/`description`/`homepage` edited). **Model-invokable**; read-only and meant to auto-run at PR-creation to drive the `marketplace-publish` label. (The remaining `marketplace-publish` and `dependency-tag-check` stay manual-only — one has an outward side effect, the other you run at a deliberate moment.)
 
 ## Marketplace Label
 
