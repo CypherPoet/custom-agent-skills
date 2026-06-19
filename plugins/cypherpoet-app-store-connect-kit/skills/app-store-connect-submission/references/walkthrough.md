@@ -30,7 +30,10 @@ These live in the **Developer portal** and ASC's **Business** module, and gate e
 **On the "Register an App ID" page — enable nothing you don't need.** Leave capabilities unchecked
 unless the app actually uses them (Push, iCloud, Game Center, Sign in with Apple, Associated Domains,
 App Groups…). ⚠️ **In-App Purchase has no checkbox here** — it's auto-enabled on every explicit App ID,
-so don't hunt for one. You don't hand-create a distribution certificate either: Xcode's *Automatically
+so don't hunt for one. The page **does** require a **Description** (internal-only, never shown to users;
+plain alphanumerics + spaces — punctuation or symbols reject it as *"Invalid description"*), and has
+**no SKU field** (the SKU belongs to the app record, step 1 — a frequent mix-up). You don't hand-create a
+distribution certificate either: Xcode's *Automatically
 manage signing* generates the Apple Distribution cert + App Store profile during Archive.
 
 **Project build settings worth verifying (not redoing) before you ship:**
@@ -73,9 +76,19 @@ After **Create**, Apple assigns a read-only numeric **Apple ID** (distinct from 
 | **Primary Category** / Subcategories | Pick the best fit (up to two subcategories). |
 | **Content Rights** | Declare whether it contains third-party content. |
 | **License Agreement** | Leave default → Apple's Standard EULA is your Terms of Use, unless you have your own. |
-| **Age Rating** | Run the questionnaire honestly. Apple replaced the old scheme on 2025-07-24 with **4+, 9+, 13+, 16+, 18+** and added In-App Controls / Capabilities / Medical-Wellness / Violence sections. A fixed-price IAP is **not** gambling (no loot boxes / randomized rewards). |
+| **Age Rating** | Run the questionnaire honestly. Apple replaced the old scheme on 2025-07-24 with **4+, 9+, 13+, 16+, 18+**. It now runs ~**7 steps**: In-App Controls + Capabilities (Yes/No: Parental Controls, Age Assurance, Unrestricted Web Access, User-Generated Content, Messaging, Advertising), then frequency-scaled theme sections (Mature Themes · Medical/Wellness · Sexuality · Violence · Chance-Based Activities), ending with the **calculated rating** to confirm. A fixed-price IAP is **not** gambling (no loot boxes / randomized rewards). |
 
 > ⚠️ The **Privacy Policy URL is not on this page anymore** — Apple moved it to **App Privacy** (step 3).
+
+> ⚠️ **EU Digital Services Act — trader status.** App Information includes a **trader status** declaration.
+> Any app that earns money in the EU (a paid app **or** a paid IAP) must declare the developer a **trader**
+> and complete verification — legal name, address, phone, email, shown **publicly** on the EU product page.
+> Use **Get Started**; until it's verified the app is **unavailable across the EU App Store**. Apple's
+> requirements here shift — confirm via the page's **Learn More**.
+
+The page carries other sections most apps can skip: **App Encryption Documentation** (nothing to upload once
+`ITSAppUsesNonExemptEncryption = NO` is set), plus situational declarations (regulated/medical, government,
+and — for apps with a backend — **App Store Server Notifications** / **App-Specific Shared Secret**).
 
 ---
 
@@ -102,10 +115,14 @@ auto-fill the questionnaire.
 
 Monetization → **Pricing and Availability**.
 
-- **Price** — Add Pricing → choose the tier (Free for a free download). Let Apple **auto-generate** other
+- **Price** — Add Pricing → choose the tier. A **free app with a paid IAP stays Free here** — the IAP carries
+  its own price (step 5); don't price the app itself (a common mix-up). Let Apple **auto-generate** other
   storefronts from the base region; manual regional prices opt out of Apple's FX adjustments.
-- **Tax Category** — set it to match the app (e.g. *Games* for a game). The IAP inherits this via
-  "Match to parent app".
+- **Tax Category** — a **separate taxonomy from the App Store discovery category**, not a mirror of it. Most
+  apps keep the default **App Store software** — Apple's catch-all, assigned unless you change it. The list
+  *does* include a **Games** category (it's just not the default, and most apps don't need it); there is **no**
+  "Utilities" category. Only specific content types have their own (e.g. *News publications*, *Books*, *Video*).
+  The IAP inherits it via "Match to parent app".
 - **Availability** — all territories is the default; restrict only with reason.
 - ⚠️ **iPhone & iPad Apps on Apple-Silicon Macs** — defaults **on**, so a universal iOS build is also
   offered on M-series Macs via the iOS-on-Mac layer. If the app's controls/haptics/purchases are untested
@@ -124,9 +141,10 @@ discipline applies to Consumables and Subscriptions, though subscriptions add a 
 | **Type** | Non-Consumable for a permanent, restorable one-time unlock. |
 | **Reference Name** | Internal only, ≤64 chars. |
 | **Product ID** | ≤100 chars, **permanent and never reusable** — type it *exactly*; it must match the string in your StoreKit code. |
-| **Price** | Pick the tier; Apple auto-generates other storefronts. |
+| **Price** | Pick the **base** tier; Apple auto-generates **comparable** prices for the other ~175 storefronts (they vary with local currency, price points, and tax — leave the set, don't normalize per country). |
 | **Availability** | Click **Set Up Availability** — defaults to all territories → Done. Keep it aligned with the app's availability, or buyers in some regions literally can't purchase. |
-| **Display Name / Description** (localized) | Shown to customers. Description ≤45 chars. |
+| **Family Sharing** | Optional. On lets **one purchase cover the buyer's Family Sharing group** — reasonable goodwill for a one-time unlock, but **permanent**: once you enable it in App Store Connect you **can't turn it back off**, so decide deliberately. |
+| **Display Name / Description** (localized) | Shown to customers. They live under **App Store Localization → Add Localization** (a subsection, *not* top-level fields — a common "where is this?" trap). Description ≤45 chars. |
 | **Review Screenshot** | **One** capture of the in-app paywall as the user sees it (name, price, benefits, buy button). Required to review; any normal resolution. (This is *not* the marketing product-page screenshots, nor the optional 1024×1024 IAP promotional image.) |
 | **Review Notes** | How to reach the paywall. |
 
@@ -151,7 +169,7 @@ Open **"1.0 Prepare for Submission"** (left sidebar, under the app) — the *ver
 | **Support URL** | Required — a contact/support page. |
 | **Marketing URL** | Optional. |
 | **Copyright** | Format `YYYY Owner` — **no © symbol** (Apple adds it). A handle/studio name is fine. |
-| **Screenshots** | Upload the **largest** size per platform; Apple auto-scales down. Required: **6.9″ iPhone (1320×2868)** + **13″ iPad (2064×2752)** for a universal app. Must show real gameplay/usage. (Exact specs for other device classes → `apple-app-store-screenshots`.) |
+| **Screenshots** | Upload the **largest** size per platform; Apple auto-scales down (one set covers all sizes + localizations). The product page shows up to **10**, but **search results** surface only the first **1–3** (and only when there's no app preview) — front-load the strongest. Required: **6.9″ iPhone (1320×2868)** + **13″ iPad (2064×2752)** for a universal app. ⚠️ The *Previews and Screenshots* block has iPhone / iPad / Watch tabs and may default to showing a smaller **6.5″** slot (1242×2688 / 1284×2778) — use **View All Sizes in Media Manager** to reach the 6.9″ slot. Must show real usage. (Exact specs for other device classes → `apple-app-store-screenshots`.) |
 | **Build** | **Select** the processed build (see `build-and-delivery.md`). It won't be selectable until processing finishes. |
 
 > ⚠️ If **"Add for Review" is greyed out**, a required field is still empty — scroll the page; ASC flags
@@ -161,7 +179,7 @@ Open **"1.0 Prepare for Submission"** (left sidebar, under the app) — the *ver
 
 ## 7. App Review Information
 
-- **Sign-in required:** Off if there's no login; otherwise provide a working demo account.
+- **Sign-in required:** ⚠️ ASC **defaults this checked** — for a no-login app you must actively **uncheck** it, or it demands a demo username/password the app doesn't have. Otherwise provide a working demo account.
 - **Contact:** a real, reachable person — name, phone with country code, **monitored** email. This is
   private (reviewer-only), so it does not need to match any public-facing name.
 - **Notes:** tell the reviewer exactly how to reach gated features and trigger purchases (e.g. "the paywall
@@ -175,11 +193,14 @@ Open **"1.0 Prepare for Submission"** (left sidebar, under the app) — the *ver
 On the version page:
 
 1. **Select the build** (step 6) once it's done processing.
-2. ⚠️ **Attach the IAP.** In the *In-App Purchases and Subscriptions* section, confirm each first-time IAP
-   (status **Ready to Submit**) is actually listed. **This is the #1 missed step** — without it the IAP
-   isn't reviewed and you risk a Guideline 2.1 rejection.
-3. **Version Release** — **Manually release** gives you go-live control (review timing is unaffected);
-   alternatives are Automatic or Scheduled. (Phased release is updates-only, not first launch.)
+2. ⚠️ **Attach the IAP.** The *In-App Purchases and Subscriptions* section is labeled **"(Optional)"** —
+   which it is *not* for a first IAP. Click **Select In-App Purchases or Subscriptions** and add each
+   first-time IAP (status **Ready to Submit**). **This is the #1 missed step** — without it the IAP isn't
+   reviewed and you risk a Guideline 2.1 rejection.
+3. **Version Release** — ASC **defaults to *Automatically release*** (goes live as soon as approved).
+   **Manually release** instead gives you go-live control (review timing is unaffected); the third option
+   schedules an automatic release "no earlier than" a date you set. (Phased release is updates-only, not
+   first launch.)
 4. **Add for Review → Submit for Review.**
 
 If ASC blocks the submit, it lists what's incomplete — usually a missing screenshot, the build still

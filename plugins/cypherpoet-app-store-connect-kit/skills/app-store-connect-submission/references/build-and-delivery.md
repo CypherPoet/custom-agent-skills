@@ -17,9 +17,16 @@ until processing finishes.
    `DEVELOPMENT_TEAM` isn't pinned.** If the project was created "without a team," set the Team on **every**
    target here.
 4. **Product → Archive.** On success the **Organizer** opens to the new archive.
-5. **Distribute App → App Store Connect → Upload.** Accept automatic signing — Xcode mints the Apple
-   Distribution cert + App Store provisioning profile (cloud-managed). Wait for **"Upload Complete."**
-   - Alternative: **Distribute → Export** the `.ipa`, then upload with the **Transporter** app.
+5. **Distribute App.** In the **Select a method for distribution** sheet (the Xcode 15+ streamlined flow —
+   not the older step-by-step wizard Apple's help page still shows), pick the **App Store Connect** tile
+   ("Use recommended settings to upload app to App Store Connect for testing and release") and click
+   **Distribute**. The recommended path auto-signs (mints the Apple Distribution cert + App Store profile),
+   manages the version/build number, and uploads in **one step** — there is no Upload-vs-Export / options /
+   signing wizard. The Organizer's **Status** column reads **"Uploaded to Apple"** when done.
+   - The other method tiles: *TestFlight Internal Only*, *Release Testing*, *Enterprise*, *Debugging*.
+   - The granular wizard (choose **Upload** vs **Export**, distribution options, manual re-signing) now
+     lives behind the **Custom** tile. Or pick **Custom → Export** the `.ipa` and upload it with the
+     **Transporter** app.
 6. No export-compliance prompt appears if `ITSAppUsesNonExemptEncryption = NO` is set.
 
 ---

@@ -66,7 +66,9 @@ Work top to bottom. Each step has detail in a reference file (see the table at t
    Register an **explicit App ID** (not a wildcard) under **Identifiers** — *not* Certificates.
 2. **Create the app record** (ASC → Apps → ＋ → New App). SKU and Bundle ID choices here are
    permanent; the bundle ID locks after the first build.
-3. **App Information** (app-level / "General"): name, subtitle, category, content rights, age rating.
+3. **App Information** (app-level / "General"): name, subtitle, category, content rights, age rating, and the
+   **EU Digital Services Act trader status** — any app earning money in the EU (paid app or paid IAP) must
+   verify trader details or it's pulled from the EU App Store.
 4. **App Privacy** (left sidebar → Trust & Safety): answer the data-collection question, set the
    **Privacy Policy URL** (Apple moved this field here from App Information), then **Publish** —
    it stays a draft until you do.
@@ -121,13 +123,18 @@ Steps 1–6, 8–10, 12 are walked field-by-field in `references/walkthrough.md`
 Both land the build in App Store Connect; steps 8–12 are identical afterward. Full setup for each is
 in `references/build-and-delivery.md`.
 
-- **Local archive (Xcode)** — Release config, *Any iOS Device (arm64)*, Product → Archive →
-  Distribute App → App Store Connect → Upload. ⚠️ Requires a signing **Team** on every target; if
-  `DEVELOPMENT_TEAM` isn't pinned, the archive won't sign.
+- **Local archive (Xcode)** — Release config, *Any iOS Device (arm64)*, Product → Archive → in the
+  Organizer **Distribute App → the App Store Connect tile (recommended settings) → Distribute**
+  (Xcode 15+ one-click; the old Upload / options / signing wizard is under **Custom**). ⚠️ Requires a
+  signing **Team** on every target; if `DEVELOPMENT_TEAM` isn't pinned, the archive won't sign.
 - **Xcode Cloud** — a workflow builds and delivers in the cloud with **cloud-managed signing** (no
   local cert/Team setup). Two things must be right or no submittable build appears: the **Archive**
   action's **Distribution Preparation = "App Store Connect"**, and it must build your **release
   branch**. Xcode Cloud builds the **git remote**, not your local files — commit and push first.
+
+Prefer to drive uploads and the rest of the flow from the CLI / CI (or an agent) **without fastlane**? An
+App Store Connect **API key** does it: `xcrun altool` for uploads, and a small JWT + REST call for
+build-status polling, metadata, and submission. → `references/api-automation.md`
 
 ## Testing purchases — with or without the real pipeline
 
@@ -156,6 +163,7 @@ Symptom → cause → fix. Section refs point at the fuller explanation.
 | Local archive **won't sign** | `DEVELOPMENT_TEAM` not pinned on the targets | Select your **Team** per target in Signing & Capabilities; for Xcode Cloud, commit + **push** the team to the build branch. → build-and-delivery |
 | Can't find the **Description / Keywords / Screenshots** box | They're *version-level*, not on App Information | Open **"1.0 Prepare for Submission"** in the left sidebar. → walkthrough |
 | **Privacy Policy URL** field missing on App Information | Apple moved it | Set it under **Trust & Safety → App Privacy**, then **Publish**. → walkthrough |
+| App **not available in the EU** after release | EU **DSA trader status** not declared/verified | App Information → complete **trader status** (Get Started); EU storefronts hide the app until verification clears. → walkthrough |
 | IAP stuck at **"Missing Metadata"** | Price, availability, localization, or review screenshot not all set | Fill every field; availability defaults to all territories — just confirm it. → walkthrough |
 | **"Add for Review" greyed out** on the version | A required field is still empty | Scroll the version page — ASC flags every incomplete field inline; usual culprits are screenshots, support URL, or the build not yet selected. → walkthrough |
 
@@ -168,3 +176,4 @@ Load the one you need; don't read all of them upfront.
 | `references/walkthrough.md` | Doing the field-by-field ASC flow (prerequisites → app record → App Information → App Privacy → pricing → IAP → version page → review info → submit) |
 | `references/build-and-delivery.md` | Building and delivering the archive — local Xcode archive **or** Xcode Cloud workflow setup, signing, and delivery |
 | `references/testing-purchases.md` | Testing in-app purchases — the local `.storekit` simulator path and the real **Sandbox** path (testers, scheme config, purchase-time sign-in) |
+| `references/api-automation.md` | Driving submission from the CLI / CI / an agent **without fastlane** — the App Store Connect **API key** + `.env` pattern, `xcrun altool` uploads, and JWT + REST for build status / metadata / submit |
