@@ -25,6 +25,9 @@ import sys
 from datetime import datetime, timezone
 from pathlib import Path
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from handoff_paths import candidate_read_dirs, resolve_write_dir  # noqa: E402
+
 
 def run_cmd(cmd: list[str], cwd: str = None) -> tuple[bool, str]:
     """Run a command and return (success, output)."""
@@ -99,12 +102,14 @@ def get_git_info(project_path: str) -> dict:
 
 
 def find_session_plan(branch: str | None, project_path: str | None = None) -> Path | None:
-    """Look for a Claude Code session plan tied to the current session.
+    """Look for a host session plan tied to the current session.
 
-    Plans live at ~/.claude/plans/<slug>.md. Claude Code derives the slug from
-    the session context — usually it matches the git branch, but inside a
-    worktree the slug typically matches the worktree directory basename and
-    the branch carries a "worktree-" prefix.
+    Some hosts persist the session's plan to disk; Claude Code keeps them at
+    ~/.claude/plans/<slug>.md, deriving the slug from the session context —
+    usually it matches the git branch, but inside a worktree the slug typically
+    matches the worktree directory basename and the branch carries a
+    "worktree-" prefix. Hosts without an on-disk plan (e.g. Codex) simply leave
+    this directory absent, and the function returns None.
 
     Check candidates in order, returning the first hit:
       1. The branch name as-is.
@@ -139,45 +144,51 @@ def find_session_plan(branch: str | None, project_path: str | None = None) -> Pa
 
 
 def find_previous_handoffs(project_path: str) -> list[dict]:
-    """Find existing handoffs in the project."""
-    handoffs_dir = Path(project_path) / ".claude" / "handoffs"
-    if not handoffs_dir.exists():
-        return []
+    """Find existing handoffs in the project.
 
+    Scans every candidate read directory (neutral `.agents/handoffs/` plus the
+    legacy `.claude/handoffs/`), deduped by filename, so `--continues-from`
+    still finds handoffs written before the neutral-dir migration.
+    """
+    seen_names: set[str] = set()
     handoffs = []
-    for filepath in handoffs_dir.glob("*.md"):
-        try:
-            content = filepath.read_text()
-            # Strip an optional emoji prefix (e.g. `# 🤝 Handoff: foo`) before
-            # the optional `Handoff:` literal so the captured title is just the
-            # slug ("foo"), not the redundant emoji + "Handoff:" preamble.
-            match = re.search(
-                r'^#\s+(?:[^\s\w]+\s+)?(?:Handoff:\s*)?(.+)$',
-                content,
-                re.MULTILINE,
-            )
-            title = match.group(1).strip() if match else filepath.stem
-        except Exception:
-            title = filepath.stem
-
-        date_match = re.match(r'(\d{4}-\d{2}-\d{2})-(\d{6})', filepath.name)
-        if date_match:
+    for handoffs_dir in candidate_read_dirs(project_path):
+        for filepath in handoffs_dir.glob("*.md"):
+            if filepath.name in seen_names:
+                continue
+            seen_names.add(filepath.name)
             try:
-                date = datetime.strptime(
-                    f"{date_match.group(1)} {date_match.group(2)}",
-                    "%Y-%m-%d %H%M%S"
+                content = filepath.read_text()
+                # Strip an optional emoji prefix (e.g. `# 🤝 Handoff: foo`) before
+                # the optional `Handoff:` literal so the captured title is just the
+                # slug ("foo"), not the redundant emoji + "Handoff:" preamble.
+                match = re.search(
+                    r'^#\s+(?:[^\s\w]+\s+)?(?:Handoff:\s*)?(.+)$',
+                    content,
+                    re.MULTILINE,
                 )
-            except ValueError:
-                date = None
-        else:
-            date = None
+                title = match.group(1).strip() if match else filepath.stem
+            except Exception:
+                title = filepath.stem
 
-        handoffs.append({
-            "filename": filepath.name,
-            "path": str(filepath),
-            "title": title,
-            "date": date,
-        })
+            date_match = re.match(r'(\d{4}-\d{2}-\d{2})-(\d{6})', filepath.name)
+            if date_match:
+                try:
+                    date = datetime.strptime(
+                        f"{date_match.group(1)} {date_match.group(2)}",
+                        "%Y-%m-%d %H%M%S"
+                    )
+                except ValueError:
+                    date = None
+            else:
+                date = None
+
+            handoffs.append({
+                "filename": filepath.name,
+                "path": str(filepath),
+                "title": title,
+                "date": date,
+            })
 
     handoffs.sort(key=lambda x: x["date"] or datetime.min, reverse=True)
     return handoffs
@@ -319,7 +330,7 @@ def generate_handoff(
 
     filename = f"{file_timestamp}-{slug}.md"
 
-    handoffs_dir = Path(project_path) / ".claude" / "handoffs"
+    handoffs_dir = resolve_write_dir(project_path)
     handoffs_dir.mkdir(parents=True, exist_ok=True)
     filepath = handoffs_dir / filename
 
@@ -333,8 +344,8 @@ def generate_handoff(
 
     # The absolute project path is intentionally omitted from metadata — it
     # leaks environment-specific info into a document meant to be portable,
-    # and is derivable from the handoff's own location at
-    # <project>/.claude/handoffs/. See commit 1b9be45 for the rationale.
+    # and is derivable from the handoff's own location under the project's
+    # handoffs directory. See commit 1b9be45 for the rationale.
     fields = {
         "timestamp": timestamp,
         "branch_line": branch_line,
@@ -370,8 +381,19 @@ def main():
         dest="continues_from",
         help="Filename of previous handoff this continues from"
     )
+    parser.add_argument(
+        "--dir",
+        dest="dir",
+        help="Override the handoffs directory (absolute, or relative to the "
+             "project root). Same effect as setting the HANDOFF_DIR env var; "
+             "default is .agents/handoffs/."
+    )
 
     args = parser.parse_args()
+    # Funnel --dir through HANDOFF_DIR so every resolver call (read + write)
+    # honors it without threading the value through each function.
+    if args.dir:
+        os.environ["HANDOFF_DIR"] = args.dir
     project_path = os.getcwd()
 
     if not args.continues_from:

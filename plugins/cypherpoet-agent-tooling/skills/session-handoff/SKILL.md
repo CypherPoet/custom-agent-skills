@@ -50,11 +50,11 @@ python3 scripts/create_handoff.py "auth-part-2" --continues-from 2024-01-15-auth
 ```
 
 The script will:
-- Create `.claude/handoffs/` directory if needed
+- Create the handoffs directory (`.agents/handoffs/`) if needed
 - Generate timestamped filename
 - Pre-fill: timestamp, git branch, repo URL, open-PR URL (when available), recent commits, modified files
 - Add handoff chain links if continuing from previous
-- Detect a Claude Code session plan at `~/.claude/plans/<slug>.md` and link to it if present
+- Detect a host session plan (Claude Code keeps them at `~/.claude/plans/<slug>.md`) and link to it if present
 - Output file path for editing
 
 ### Step 1.5: Confirm Session Plan Reference
@@ -115,7 +115,7 @@ Report to user:
 Once validation passes (Step 3), commit the handoff — by default it belongs in version control as a durable, shareable record:
 
 ```bash
-git add .claude/handoffs/<file> && git commit -m "docs: add session handoff"
+git add .agents/handoffs/<file> && git commit -m "docs: add session handoff"
 ```
 
 Commit *after* validation so the secret scan runs first. Skip only if the user explicitly wants an ephemeral/local-only handoff. In a git worktree, commit on the working branch and let it reach the default branch through the normal PR flow rather than committing to the main checkout directly.
@@ -159,7 +159,7 @@ The 🎯 Next Action line at the top is the load-bearing instruction — everyth
 
 Before executing the next action, sanity-check that the handoff's assumptions still hold:
 
-1. You are in the correct project directory — the handoff lives at `<project>/.claude/handoffs/`, so check that the handoff's path matches your current working directory.
+1. You are in the correct project directory — the handoff lives at `<project>/.agents/handoffs/` (or the legacy `<project>/.claude/handoffs/`), so check that the handoff's path matches your current working directory.
 2. Git branch matches the handoff's `Branch:` (or you understand the deliberate divergence).
 3. Listed blockers haven't already been resolved.
 4. Files referenced in Critical Files / Files Modified still exist.
@@ -218,9 +218,11 @@ When resuming from a chain, read the most recent handoff first, then reference p
 
 ## Storage Location
 
-Handoffs are stored in: `.claude/handoffs/`
+Handoffs are stored in: `.agents/handoffs/`
 
-**Handoffs are committed by default.** They're durable, shareable session records — version-controlling them is what makes chaining, staleness checks, and team pickups work, and the `validate_handoff.py` secret scan exists precisely because they ship in git. Committing is the last step of the CREATE workflow. Only gitignore `.claude/handoffs/` if you specifically want ephemeral, local-only handoffs.
+This location is **host-neutral on purpose.** A handoff is a shared project artifact, not host-private config, so it doesn't belong in any single agent's directory (`.claude/`, `.codex/`, …) — keeping it neutral is what lets a session in one agent resume a handoff another agent wrote. The scripts also **still read** the legacy `.claude/handoffs/` location, so handoffs created before this change keep resolving and chaining; nothing needs migrating, though you can `git mv` them into `.agents/handoffs/` if you want everything in one place. To force a different directory, set the `HANDOFF_DIR` env var or pass `--dir` to `create_handoff.py`.
+
+**Handoffs are committed by default.** They're durable, shareable session records — version-controlling them is what makes chaining, staleness checks, and team pickups work, and the `validate_handoff.py` secret scan exists precisely because they ship in git. Committing is the last step of the CREATE workflow. Only gitignore `.agents/handoffs/` if you specifically want ephemeral, local-only handoffs.
 
 Naming convention: `YYYY-MM-DD-HHMMSS-[slug].md`
 

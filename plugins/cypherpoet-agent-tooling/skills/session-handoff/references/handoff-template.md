@@ -20,7 +20,7 @@ The Read Strategy section in `SKILL.md` tells the resuming agent which sections 
 | `{{pr_line}}` | `gh pr view --json url --jq '.url'` | full `\n- Source PR: <url>` line, or empty |
 | `{{commits_section}}` | `git log --oneline -5` | bulleted list, last 5 commits, or a `[no recent commits]` sentinel |
 | `{{chain_section}}` | `--continues-from` | full `## 🔗 Handoff Chain` block + trailing blank line, or empty |
-| `{{plan_section}}` | `~/.claude/plans/<slug>.md` lookup | full `## 📋 Active Session Plan` block + trailing blank line, or empty |
+| `{{plan_section}}` | host plans dir lookup (e.g. Claude Code's `~/.claude/plans/<slug>.md`) | full `## 📋 Active Session Plan` block + trailing blank line, or empty |
 | `{{modified_files_section}}` | `git diff --name-only` (staged + unstaged) | bulleted list of files, or a single sentinel bullet |
 
 Everything below the next `# 🤝 Handoff:` line is the template body.
@@ -43,7 +43,7 @@ Everything below the next `# 🤝 Handoff:` line is the template body.
 The canonical record for this work. Link by path or URL; do not restate their content elsewhere in this handoff. Write `none` for any line that genuinely has no artifact.
 
 - **PRD / spec**: [TODO: path or URL, or "none"]
-- **Session plan**: [TODO: path under `~/.claude/plans/`, or "none" — leave as-is if Active Session Plan above already links it]
+- **Session plan**: [TODO: path under your host's plans dir (e.g. `~/.claude/plans/`), or "none" — leave as-is if Active Session Plan above already links it]
 - **ADRs / design docs**: [TODO: paths, or "none"]
 - **Issues / tickets**: [TODO: Linear / Jira / GitHub issue links, or "none"]
 - **Source PR**: (auto-linked in Session Metadata above if detected)
@@ -86,7 +86,7 @@ The canonical record for this work. Link by path or URL; do not restate their co
 
 ### 🧰 Skills to Use
 
-Skills the resuming agent should consult for the work ahead. Scan your loaded skill list (or `~/.claude/skills/`) and pick ones whose triggers match upcoming steps — not skills you used this session.
+Skills the resuming agent should consult for the work ahead. Scan your loaded skill list and pick ones whose triggers match upcoming steps — not skills you used this session.
 
 - `[TODO: skill-name or plugin:skill-name]` — **when:** [TODO: trigger condition for the resuming agent]. **why:** [TODO: why this skill fits this work]
 - (add more bullets as needed, or write `none` if no skill is recommended)

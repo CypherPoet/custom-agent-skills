@@ -4,24 +4,24 @@
     {
       "id": 1,
       "prompt": "Set up the eval test environment first by running `python3 evals/setup_test_env.py`, then `cd /tmp/handoff-eval-project`.\n\nThe user says: \"I've been working on implementing user authentication. I modified src/auth.js to add JWT token validation and updated the middleware. Create a handoff so I can continue later.\"\n\nUse the session-handoff skill to handle this request.",
-      "expected_output": "Should trigger the CREATE workflow: run scripts/create_handoff.py with a meaningful slug, confirm the file was created in .claude/handoffs/, prompt the user to fill in the [TODO: ...] sections (especially the 🎯 Next Action line, Current State Summary, Important Context, Immediate Next Steps), and mention the next step is running validate_handoff.py.",
+      "expected_output": "Should trigger the CREATE workflow: run scripts/create_handoff.py with a meaningful slug, confirm the file was created in .agents/handoffs/, prompt the user to fill in the [TODO: ...] sections (especially the 🎯 Next Action line, Current State Summary, Important Context, Immediate Next Steps), and mention the next step is running validate_handoff.py.",
       "files": []
     },
     {
       "id": 2,
-      "prompt": "Set up the eval test environment first by running `python3 evals/setup_test_env.py`, then `cd /tmp/handoff-eval-project`. The setup script seeds at least one prior handoff in .claude/handoffs/.\n\nThe user says: \"I'm continuing the auth work from yesterday. Create a new handoff that links to the previous one.\"\n\nUse the session-handoff skill to handle this request.",
-      "expected_output": "Should locate the existing handoff (via list_handoffs.py or by inspecting .claude/handoffs/), then run create_handoff.py with --continues-from pointing at that file. The generated handoff should include a 'Handoff Chain' section with a link back to the predecessor.",
+      "prompt": "Set up the eval test environment first by running `python3 evals/setup_test_env.py`, then `cd /tmp/handoff-eval-project`. The setup script seeds at least one prior handoff in .agents/handoffs/.\n\nThe user says: \"I'm continuing the auth work from yesterday. Create a new handoff that links to the previous one.\"\n\nUse the session-handoff skill to handle this request.",
+      "expected_output": "Should locate the existing handoff (via list_handoffs.py or by inspecting .agents/handoffs/), then run create_handoff.py with --continues-from pointing at that file. The generated handoff should include a 'Handoff Chain' section with a link back to the predecessor.",
       "files": []
     },
     {
       "id": 3,
-      "prompt": "Set up the eval test environment first by running `python3 evals/setup_test_env.py`, then `cd /tmp/handoff-eval-project`. The setup script seeds a recent handoff in .claude/handoffs/.\n\nThe user says: \"I want to continue where I left off. Load my last handoff.\"\n\nUse the session-handoff skill to handle this request.",
+      "prompt": "Set up the eval test environment first by running `python3 evals/setup_test_env.py`, then `cd /tmp/handoff-eval-project`. The setup script seeds a recent handoff in .agents/handoffs/.\n\nThe user says: \"I want to continue where I left off. Load my last handoff.\"\n\nUse the session-handoff skill to handle this request.",
       "expected_output": "Should trigger the RESUME workflow: run list_handoffs.py to surface the candidate, run check_staleness.py and report the level, read the handoff using the Read Strategy (full read for Next Action, Important Context, Pending Work; skim Codebase Understanding and Work Completed), surface the 🎯 Next Action line, and run the Verify Context red-flags pass before doing any other work.",
       "files": []
     },
     {
       "id": 4,
-      "prompt": "Set up the eval test environment first by running `python3 evals/setup_test_env.py`, then `cd /tmp/handoff-eval-project`. The setup script seeds an incomplete handoff in .claude/handoffs/ that still has [TODO: ...] placeholders.\n\nThe user says: \"I created a handoff but I'm not sure if it's complete. Can you validate it?\"\n\nUse the session-handoff skill to handle this request.",
+      "prompt": "Set up the eval test environment first by running `python3 evals/setup_test_env.py`, then `cd /tmp/handoff-eval-project`. The setup script seeds an incomplete handoff in .agents/handoffs/ that still has [TODO: ...] placeholders.\n\nThe user says: \"I created a handoff but I'm not sure if it's complete. Can you validate it?\"\n\nUse the session-handoff skill to handle this request.",
       "expected_output": "Should run validate_handoff.py against the incomplete handoff, report the verdict (NEEDS_WORK), list missing or unfilled sections including the 🎯 Next Action line, and give the user a concrete list of what to fix before the handoff is ready.",
       "files": []
     },
@@ -39,8 +39,8 @@
     },
     {
       "id": 7,
-      "prompt": "Set up the eval test environment first by running `python3 evals/setup_test_env.py`, then `cd /tmp/handoff-eval-project`. The setup script seeds a clean fixture handoff at `.claude/handoffs/<datestamp>-fixture-a-clean-resume.md` whose 🎯 Next Action describes a specific regex fix in `src/auth.js`.\n\nThe user says: \"Pick up where I left off — use the fixture-a-clean-resume handoff.\"\n\nUse the session-handoff skill to handle this request. Report what you would do as the FIRST concrete action. You do not need to actually apply the fix or run tests — describe the first action and why it follows from the handoff.",
-      "expected_output": "Should follow the RESUME workflow, locate fixture-a-clean-resume in .claude/handoffs/, read the 🎯 Next Action line, and state that the first concrete action is to edit src/auth.js to change the bearer-prefix regex (adding the missing `+`) so the failing test in tests/auth.test.js passes. The agent should mention reading the failing-test location and the regex change explicitly — these are both in the Next Action line.",
+      "prompt": "Set up the eval test environment first by running `python3 evals/setup_test_env.py`, then `cd /tmp/handoff-eval-project`. The setup script seeds a clean fixture handoff at `.agents/handoffs/<datestamp>-fixture-a-clean-resume.md` whose 🎯 Next Action describes a specific regex fix in `src/auth.js`.\n\nThe user says: \"Pick up where I left off — use the fixture-a-clean-resume handoff.\"\n\nUse the session-handoff skill to handle this request. Report what you would do as the FIRST concrete action. You do not need to actually apply the fix or run tests — describe the first action and why it follows from the handoff.",
+      "expected_output": "Should follow the RESUME workflow, locate fixture-a-clean-resume in .agents/handoffs/, read the 🎯 Next Action line, and state that the first concrete action is to edit src/auth.js to change the bearer-prefix regex (adding the missing `+`) so the failing test in tests/auth.test.js passes. The agent should mention reading the failing-test location and the regex change explicitly — these are both in the Next Action line.",
       "files": [],
       "assertions": [
         "Identifies the handoff to resume from (clean-resume fixture)",
@@ -114,6 +114,19 @@
         "Either asks the user clarifying questions to disambiguate 'our progress', or honestly marks sections without information as `none` / TODO / explicit gap-flagged rather than filling them with invented content",
         "Where the agent does fill content, it grounds claims in auto-populated metadata (recent commits, modified files, branch) — not in fixture content from prior evals (e.g., does not claim the work is about JWT auth or legacy adapters without evidence in the actual repo state)",
         "Final state is either (a) READY after honest minimal fills with `none` flags, (b) NEEDS_WORK with the 🎯 Next Action left explicitly TODO for the user, or (c) the agent surfaces the ambiguity to the user before completing — but NOT a falsely-confident READY with fabricated content"
+      ]
+    },
+    {
+      "id": 13,
+      "prompt": "Set up the eval test environment first by running `python3 evals/setup_test_env.py`, then `cd /tmp/handoff-eval-project`. The setup script seeds most handoffs in the neutral `.agents/handoffs/`, but ALSO seeds one older handoff in the LEGACY `.claude/handoffs/` location named `<datestamp>-legacy-location-resume.md` (written before the skill moved to the neutral directory).\n\nThe user says: \"List my handoffs and then create a new one that continues from the legacy-location-resume handoff.\"\n\nUse the session-handoff skill to handle this request.",
+      "expected_output": "Should run list_handoffs.py and surface BOTH the neutral `.agents/handoffs/` handoffs AND the legacy `.claude/handoffs/` one (the read-side unions both locations). Then run create_handoff.py with --continues-from pointing at the legacy-location-resume file; --continues-from must resolve it even though it lives in `.claude/handoffs/`. The newly created handoff must be written to `.agents/handoffs/` (NOT `.claude/handoffs/`) and must contain a populated 'Handoff Chain' section linking back to the legacy predecessor.",
+      "files": [],
+      "assertions": [
+        "list_handoffs.py output includes the legacy `.claude/handoffs/` handoff alongside the `.agents/handoffs/` ones",
+        "Runs create_handoff.py with --continues-from referencing the legacy-location-resume filename",
+        "The --continues-from link resolves (Handoff Chain shows 'Continues from' pointing at the legacy predecessor, not 'Not found' or 'fresh start')",
+        "The newly created handoff file is written under .agents/handoffs/, not .claude/handoffs/",
+        "Does NOT claim the legacy handoff is missing or that the skill cannot read it"
       ]
     }
   ]
