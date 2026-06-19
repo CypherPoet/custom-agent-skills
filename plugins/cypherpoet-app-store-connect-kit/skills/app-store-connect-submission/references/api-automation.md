@@ -6,13 +6,32 @@ You can drive it from the CLI (or an agent / CI) without fastlane. *As of 2026-0
 
 ## The key, and the `.env` pattern
 
-Generate the key once: **App Store Connect → Users and Access → Integrations → App Store Connect API**
-(role **App Manager** for submission, or **Admin**). Download `AuthKey_<KEYID>.p8` **once** (it can't be
-re-downloaded). You get three things:
+Generate the key once: **App Store Connect → Users and Access → Integrations → App Store Connect API**.
+Create a **Team key** and **assign it the App Manager role** (*Which role*, below). Download
+`AuthKey_<KEYID>.p8` **once** — Apple won't let you re-download it. You get three things:
 
 - **Key ID** — short, e.g. `ABC123XYZ`. The `.p8` must be named `AuthKey_<KEYID>.p8`.
 - **Issuer ID** — a UUID at the top of the Integrations page.
 - the **`.p8`** private key file — the only real secret.
+
+### Which role: a Team key, assigned App Manager
+
+Two things are easy to conflate — *who may generate the key* vs *what the key may do*:
+
+- **Who generates it.** A **Team key** (the kind you want — it authenticates for the whole account, ideal
+  for CI or an agent) can only be created by an **Account Holder or Admin**. An App Manager can't mint a Team
+  key; they can only generate a personal **Individual key** that inherits their own permissions. This is
+  about who clicks *Generate*, not what the key can do.
+- **What it may do.** At creation you **assign the key a role**, and that role bounds which API calls
+  succeed. Assign **App Manager** — the least-privilege role that still covers the whole ship pipeline: read
+  build processing state, edit listing metadata, select the build, and **submit for review** (Apple's
+  *Submit an app* page: "Required role: Account Holder, Admin, or App Manager" — Developer can't submit).
+  App Manager and Admin are **identical for everything app-delivery**; Admin only adds powers a submission
+  key should never hold (manage users, generate more keys, banking/tax + financial reports, sign
+  certificates). So a leaked App Manager key can't drain payouts, add collaborators, or mint certs.
+
+Caveat: the role bounds the key's *permissions*, not its *app reach* — a Team key can touch **every** app in
+the account regardless of role (Apple won't scope a Team key to one app). Moot for a single-app account.
 
 Keep secrets out of git: the `.p8` stays a gitignored file; an env file holds the IDs and the key-dir
 *path* (never the key contents). Commit a `.env.template`, not `.env`:
