@@ -26,7 +26,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from handoff_paths import candidate_read_dirs, resolve_write_dir  # noqa: E402
+from handoff_paths import iter_handoff_files, resolve_write_dir  # noqa: E402
 
 
 def run_cmd(cmd: list[str], cwd: str = None) -> tuple[bool, str]:
@@ -150,45 +150,40 @@ def find_previous_handoffs(project_path: str) -> list[dict]:
     legacy `.claude/handoffs/`), deduped by filename, so `--continues-from`
     still finds handoffs written before the neutral-dir migration.
     """
-    seen_names: set[str] = set()
     handoffs = []
-    for handoffs_dir in candidate_read_dirs(project_path):
-        for filepath in handoffs_dir.glob("*.md"):
-            if filepath.name in seen_names:
-                continue
-            seen_names.add(filepath.name)
+    for filepath in iter_handoff_files(project_path):
+        try:
+            content = filepath.read_text()
+            # Strip an optional emoji prefix (e.g. `# 🤝 Handoff: foo`) before
+            # the optional `Handoff:` literal so the captured title is just the
+            # slug ("foo"), not the redundant emoji + "Handoff:" preamble.
+            match = re.search(
+                r'^#\s+(?:[^\s\w]+\s+)?(?:Handoff:\s*)?(.+)$',
+                content,
+                re.MULTILINE,
+            )
+            title = match.group(1).strip() if match else filepath.stem
+        except Exception:
+            title = filepath.stem
+
+        date_match = re.match(r'(\d{4}-\d{2}-\d{2})-(\d{6})', filepath.name)
+        if date_match:
             try:
-                content = filepath.read_text()
-                # Strip an optional emoji prefix (e.g. `# 🤝 Handoff: foo`) before
-                # the optional `Handoff:` literal so the captured title is just the
-                # slug ("foo"), not the redundant emoji + "Handoff:" preamble.
-                match = re.search(
-                    r'^#\s+(?:[^\s\w]+\s+)?(?:Handoff:\s*)?(.+)$',
-                    content,
-                    re.MULTILINE,
+                date = datetime.strptime(
+                    f"{date_match.group(1)} {date_match.group(2)}",
+                    "%Y-%m-%d %H%M%S"
                 )
-                title = match.group(1).strip() if match else filepath.stem
-            except Exception:
-                title = filepath.stem
-
-            date_match = re.match(r'(\d{4}-\d{2}-\d{2})-(\d{6})', filepath.name)
-            if date_match:
-                try:
-                    date = datetime.strptime(
-                        f"{date_match.group(1)} {date_match.group(2)}",
-                        "%Y-%m-%d %H%M%S"
-                    )
-                except ValueError:
-                    date = None
-            else:
+            except ValueError:
                 date = None
+        else:
+            date = None
 
-            handoffs.append({
-                "filename": filepath.name,
-                "path": str(filepath),
-                "title": title,
-                "date": date,
-            })
+        handoffs.append({
+            "filename": filepath.name,
+            "path": str(filepath),
+            "title": title,
+            "date": date,
+        })
 
     handoffs.sort(key=lambda x: x["date"] or datetime.min, reverse=True)
     return handoffs

@@ -91,6 +91,23 @@ def candidate_read_dirs(project_path: str | os.PathLike) -> list[Path]:
     return existing
 
 
+def iter_handoff_files(project_path: str | os.PathLike):
+    """Yield every handoff `*.md` across the candidate read directories, once.
+
+    Walks `candidate_read_dirs()` in priority order and dedupes by filename, so
+    a handoff present in both the neutral and legacy locations surfaces only
+    from the higher-priority directory. Callers layer their own per-file
+    metadata extraction on top — this owns the directory-union + dedupe so the
+    read-side scripts don't each re-implement it."""
+    seen_names: set[str] = set()
+    for handoffs_dir in candidate_read_dirs(project_path):
+        for filepath in handoffs_dir.glob("*.md"):
+            if filepath.name in seen_names:
+                continue
+            seen_names.add(filepath.name)
+            yield filepath
+
+
 def _git_toplevel(start: Path) -> str | None:
     """Best-effort `git rev-parse --show-toplevel` from `start`, or None."""
     try:

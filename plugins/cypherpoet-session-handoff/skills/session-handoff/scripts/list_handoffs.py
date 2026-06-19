@@ -22,7 +22,7 @@ from datetime import datetime
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from handoff_paths import candidate_read_dirs  # noqa: E402
+from handoff_paths import iter_handoff_files  # noqa: E402
 
 
 def extract_title(filepath: Path) -> str:
@@ -77,22 +77,17 @@ def list_handoffs(project_path: str) -> list[dict]:
     legacy `.claude/handoffs/`), deduped by filename so a handoff that exists in
     both locations is reported once.
     """
-    seen_names: set[str] = set()
     handoffs = []
-    for handoffs_dir in candidate_read_dirs(project_path):
-        for filepath in handoffs_dir.glob("*.md"):
-            if filepath.name in seen_names:
-                continue
-            seen_names.add(filepath.name)
-            parsed_date = parse_date_from_filename(filepath.name)
-            handoffs.append({
-                "path": str(filepath),
-                "filename": filepath.name,
-                "title": extract_title(filepath),
-                "status": check_completion_status(filepath),
-                "date": parsed_date,
-                "size": filepath.stat().st_size,
-            })
+    for filepath in iter_handoff_files(project_path):
+        parsed_date = parse_date_from_filename(filepath.name)
+        handoffs.append({
+            "path": str(filepath),
+            "filename": filepath.name,
+            "title": extract_title(filepath),
+            "status": check_completion_status(filepath),
+            "date": parsed_date,
+            "size": filepath.stat().st_size,
+        })
 
     # Sort by date, most recent first
     handoffs.sort(key=lambda x: x["date"] or datetime.min, reverse=True)
