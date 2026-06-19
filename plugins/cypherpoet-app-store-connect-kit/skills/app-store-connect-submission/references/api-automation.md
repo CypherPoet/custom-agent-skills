@@ -93,6 +93,35 @@ console.log(b ? `build ${b.version}: ${b.processingState}` : "no builds");
 
 `processingState` is `PROCESSING` → `VALID` (then selectable on the version page) or `FAILED` / `INVALID`.
 
+## Uploading screenshots & previews (reserve → upload → commit)
+
+Media uploads are a 3-phase flow, same shape for both (only the asset endpoint differs). First create the
+set: `POST /v1/appScreenshotSets` / `appPreviewSets` with the display type, related to an
+`appStoreVersionLocalization`. Then per asset:
+
+1. **Reserve** — `POST /v1/appScreenshots` (or `/v1/appPreviews`) with `{fileName, fileSize}` + a
+   relationship to the set. The response returns the asset id and an `uploadOperations` array.
+2. **Upload** — for each operation, `PUT` the byte range `[offset, offset+length)` of the file to its
+   pre-signed `url`, applying every `requestHeaders` entry.
+3. **Commit** — `PATCH …/<id>` with `{uploaded: true, sourceFileChecksum: <md5-hex-of-the-whole-file>}`,
+   then poll `assetDeliveryState` (→ `COMPLETE`, or `FAILED` with a `code`).
+
+**Gotchas that fail validation:**
+
+- **No `APP_IPHONE_69`.** 6.9" assets (1320×2868) upload under **`APP_IPHONE_67`** — Apple's 6.7"/6.9"
+  class shares one display type (preview `previewType` is `IPHONE_67`, sans `APP_`). Upload the largest
+  class; the smaller iPhone classes auto-scale.
+- **App previews need a stereo audio track even when silent** — no audio fails with `MOV_RESAVE_STEREO`.
+  Mux a silent stereo AAC track.
+- **App previews must be ≥ 15 s** — shorter fails with `MOV_RESAVE_LONGER` (Apple's range is 15–30 s).
+- **`sourceFileChecksum` is the MD5 of the whole original file**, not per-chunk; commit fails on a mismatch.
+- Set a preview poster with `PATCH /v1/appPreviews/<id>` `previewFrameTimeCode` (`"HH:MM:SS:FF"`, e.g.
+  `"00:00:02:00"`); it otherwise defaults to the 5 s mark.
+
+The **marketing app icon is NOT settable via the API** — it's extracted from the uploaded build's asset
+catalog (default appearance); there's no `AppStoreVersion` icon relationship. (Showing a *dark* icon on the
+listing isn't possible either without making the dark art the build's default appearance.)
+
 ## Useful endpoints
 
 | Goal | Endpoint |
@@ -101,7 +130,8 @@ console.log(b ? `build ${b.version}: ${b.processingState}` : "no builds");
 | The version being prepared | `GET /v1/apps/<id>/appStoreVersions?filter[appStoreState]=PREPARE_FOR_SUBMISSION` |
 | Read / write listing copy | `GET` / `PATCH /v1/appStoreVersionLocalizations/<id>` (description, keywords, promo, URLs) |
 | Attach the selected build | `PATCH /v1/appStoreVersions/<id>/relationships/build` |
-| Submit for review | `POST /v1/reviewSubmissions` + `reviewSubmissionItems`, then mark it submitted |
+| Upload screenshots / previews | `appScreenshotSets`/`appPreviewSets` + `appScreenshots`/`appPreviews` (reserve → `PUT` → commit; see above) |
+| Submit for review | `POST /v1/reviewSubmissions` + `reviewSubmissionItems` (a new app's first IAP rides along as its own item), then mark it submitted |
 
 Full schema: Apple's [App Store Connect API reference](https://developer.apple.com/documentation/appstoreconnectapi).
 
