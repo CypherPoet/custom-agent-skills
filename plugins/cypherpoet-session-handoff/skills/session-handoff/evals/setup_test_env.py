@@ -18,8 +18,14 @@ Usage:
 import argparse
 import shutil
 import subprocess
+import sys
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
+
+# Seed fixtures into the same directories the scripts read/write, sourced from
+# the resolver's constants so the test setup can't drift from production paths.
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
+from handoff_paths import LEGACY_HANDOFFS_SUBDIR, NEUTRAL_HANDOFFS_SUBDIR  # noqa: E402
 
 
 DEFAULT_TEST_PATH = "/tmp/handoff-eval-project"
@@ -333,7 +339,7 @@ def init_git_repo(path: Path):
 def create_sample_handoffs(path: Path):
     """Create three inline-generated handoffs (fresh / stale / incomplete) in
     the new template format. These cover the existing evals 1–6."""
-    handoffs_dir = path / ".agents" / "handoffs"
+    handoffs_dir = path.joinpath(*NEUTRAL_HANDOFFS_SUBDIR)
     handoffs_dir.mkdir(parents=True)
 
     now = datetime.now(timezone.utc)
@@ -514,7 +520,7 @@ def copy_fixture_handoffs(path: Path) -> dict[str, str]:
     date-prefixed filenames so list_handoffs / staleness scripts handle them
     correctly. Returns a map of fixture_id -> seeded_filename so the eval
     prompts can reference them by relative path."""
-    handoffs_dir = path / ".agents" / "handoffs"
+    handoffs_dir = path.joinpath(*NEUTRAL_HANDOFFS_SUBDIR)
     handoffs_dir.mkdir(parents=True, exist_ok=True)
 
     now = datetime.now(timezone.utc)
@@ -572,7 +578,7 @@ def seed_legacy_handoff(path: Path) -> str:
     Simulates a handoff written before the neutral-dir migration. The read-side
     scripts must still surface and chain it (eval 13), even though new handoffs
     are now written to `.agents/handoffs/`. Returns the seeded filename."""
-    legacy_dir = path / ".claude" / "handoffs"
+    legacy_dir = path.joinpath(*LEGACY_HANDOFFS_SUBDIR)
     legacy_dir.mkdir(parents=True, exist_ok=True)
 
     old_date = datetime.now(timezone.utc) - timedelta(days=2)

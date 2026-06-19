@@ -16,7 +16,6 @@ Usage:
 
 from __future__ import annotations
 
-import os
 import re
 import subprocess
 import sys

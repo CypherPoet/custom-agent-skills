@@ -136,7 +136,13 @@ def project_root_for(handoff_file: str | os.PathLike) -> str:
     2. else, strip a recognized `<marker>/handoffs` tail (`.agents` or
        `.claude`) from the directory path.
     3. else, the original `parent.parent.parent` fallback, which is correct for
-       both `.agents/handoffs/` and `.claude/handoffs/`.
+       the 2-level `<root>/x/handoffs/` shape the markers use.
+
+    A HANDOFF_DIR override that lives outside the project (and isn't itself in a
+    git repo) can't be mapped back to the real project root from the handoff
+    path alone — only the fallback's shape assumption applies. Keep such
+    overrides inside the (git) project when staleness/validation need an
+    accurate root.
     """
     path = Path(handoff_file).resolve()
     handoffs_dir = path.parent
