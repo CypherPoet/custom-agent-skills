@@ -3,9 +3,11 @@ name: session-handoff
 description: >
   Use when the user says "create handoff", "save state", "I need to
   pause", "context is getting full", or when resuming with "load handoff",
-  "resume from", "continue where we left off". Writes a structured handoff
-  document so a fresh agent can pick up long-running work without losing
-  context.
+  "resume from", "continue where we left off". Also use to tidy the handoffs
+  directory — "clean up handoffs", "prune old handoffs", "retire finished
+  handoffs", "remove superseded handoffs". Writes a structured handoff document
+  so a fresh agent can pick up long-running work without losing context, and
+  retires completed or superseded handoffs once the work has moved on.
 ---
 
 # Handoff
@@ -25,6 +27,8 @@ Restating ages badly (the canonical artifact updates, the handoff doesn't) and c
 **Creating a handoff?** User wants to save current state or pause work — follow the CREATE workflow below.
 
 **Resuming from a handoff?** User wants to continue previous work or mentions an existing handoff — follow the RESUME workflow below.
+
+**Cleaning up old handoffs?** User wants to retire completed or superseded handoffs (e.g. "clean up handoffs", "prune old handoffs") — follow the CLEANUP workflow below.
 
 ## CREATE Workflow
 
@@ -197,6 +201,51 @@ As you work:
 - Add new discoveries to relevant sections (especially **Important Context** and **Potential Gotchas**).
 - For long sessions, create a new handoff with `--continues-from` to chain them.
 
+## CLEANUP Workflow
+
+Handoffs are committed by default, so they accumulate. Once work has moved on, completed and superseded handoffs clutter the active list. This workflow retires them safely — git history is the undo, so removal is low-stakes, but the bar for *what* to retire is deliberately high.
+
+### Step 1: Find Candidates
+
+```bash
+python3 scripts/find_cleanup_candidates.py
+```
+
+Read-only. It scans the neutral `.agents/handoffs/` and the legacy `.claude/handoffs/`, then groups handoffs into tiers:
+
+- 🔴 **Retire — superseded + complete**: a later handoff `--continues-from` it, and it has no remaining `[TODO:` placeholders. The chain moved past finished work. Strong candidate.
+- 🟡 **Retire candidate — very stale + complete**: rated `VERY_STALE`, complete, and standalone (not a chain tip). Old, done, unlikely to resume. Advisory.
+- ⚠️ **Keep + review**: superseded but still has unfinished TODOs — never auto-retired. The successor may have moved on before this one's pending work was captured; check before removing.
+
+Each candidate line reports its title, reason, location (neutral/legacy), and whether it's git-tracked (→ `git rm`) or untracked (→ `trash`). Pass `--verbose` to also list what's being kept and why.
+
+The script exits `1` when it finds candidates and `0` when there are none — a found/not-found signal, not an error. Read its output and continue the workflow regardless of the exit code.
+
+### Step 2: Present for Approval
+
+Show the numbered candidates grouped by tier. State the bias plainly: **staleness alone never qualifies a handoff** — an old but unsuperseded record can be the only trace of why a decision was made, and is legitimate to keep. Superseded + complete is the only strong signal; very-stale is advisory. When in doubt, keep.
+
+Ask which to retire — "all / specific numbers (e.g. 1, 3) / skip the very-stale ones / none". **Never delete without explicit per-item approval, and never auto-run this workflow.**
+
+### Step 3: Apply
+
+For each approved candidate, use the removal the detector reported (a handoff may live in `.agents/handoffs/` or the legacy `.claude/handoffs/` — use the path it printed):
+
+- **Tracked** → `git rm <path>`
+- **Untracked** → `trash <path>`
+
+Then commit the `git rm`'d set:
+
+```bash
+git commit -m "docs: retire superseded/obsolete handoffs"
+```
+
+In a git worktree, commit on the working branch and let it reach the default branch through the normal PR flow rather than committing to the main checkout directly. Git history preserves every removed handoff, so a mistaken retire is recoverable with `git restore`.
+
+### Step 4: Report
+
+Tell the user what was retired and what was kept, and note that removed handoffs remain in git history.
+
 ## Handoff Chaining
 
 For long-running projects, chain handoffs together to maintain context lineage:
@@ -238,6 +287,7 @@ Example: `2024-01-15-143022-implementing-auth.md`
 | `list_handoffs.py [path]` | List available handoffs in a project |
 | `validate_handoff.py <file>` | Check completeness and security; emits a structured pass/fail/warn report and a READY/NEEDS_WORK/BLOCKED verdict |
 | `check_staleness.py <file>` | Assess if handoff context is still current |
+| `find_cleanup_candidates.py [path] [--verbose]` | Detect completed/superseded/very-stale handoffs that are safe to retire (read-only) |
 
 ### references/
 
