@@ -624,16 +624,14 @@ Nothing unusual — this is a back-compat fixture. The route should slot in befo
 def seed_cleanup_fixtures(path: Path) -> dict[str, str]:
     """Seed handoffs that exercise the CLEANUP workflow's candidate detection.
 
-    Creates, in the neutral `.agents/handoffs/`:
-      - a complete predecessor + a complete successor that `--continues-from` it,
-        so the predecessor is a 🔴 superseded+complete retire candidate while the
-        successor (the active tip) is kept;
-      - a complete, ~60-day-old handoff that references a now-missing file, so it
-        scores VERY_STALE → a 🟡 advisory candidate.
+    Creates, in the neutral `.agents/handoffs/`, a complete predecessor + a
+    complete successor that `--continues-from` it — so the predecessor is a 🔴
+    superseded+complete retire candidate while the successor (the active tip) is
+    kept.
 
-    These three are committed (the rest of the seeded handoffs are left
-    untracked) so `find_cleanup_candidates.py` reports them as git-tracked and
-    the documented `git rm` removal path is exercisable. Returns a name map."""
+    Both are committed (the rest of the seeded handoffs are left untracked) so
+    `find_cleanup_candidates.py` reports them as git-tracked and the documented
+    `git rm` removal path is exercisable. Returns a name map."""
     handoffs_dir = path.joinpath(*NEUTRAL_HANDOFFS_SUBDIR)
     handoffs_dir.mkdir(parents=True, exist_ok=True)
 
@@ -722,51 +720,12 @@ Validate after the env overlay so env values are checked too.
 """
     (handoffs_dir / current_name).write_text(current_content)
 
-    # Very stale — complete, ~60 days old, references a file that no longer
-    # exists so the staleness scorer reaches VERY_STALE.
-    very_stale_date = now - timedelta(days=60)
-    very_stale_name = (
-        very_stale_date.strftime("%Y-%m-%d-%H%M%S") + "-cleanup-very-stale.md"
-    )
-    very_stale_content = f"""# 🤝 Handoff: Legacy auth helper extraction (finished, long ago)
-
-> 🎯 **Next Action**: None remaining — extraction completed and merged.
-
-## 🧾 Session Metadata
-- Created: {very_stale_date.strftime("%Y-%m-%dT%H:%M:%SZ")}
-- Branch: main
-
-## 🔗 Handoff Chain
-
-- **Continues from**: None (fresh start)
-- **Supersedes**: None
-
-## 📍 Current State Summary
-
-The bearer-prefix logic was extracted out of a now-deleted helper into `src/auth.js`. This handoff predates two months of subsequent work.
-
-## 💡 Important Context
-
-Nothing outstanding — recorded only as history.
-
-## 🏁 Work Completed
-
-- [x] Extracted bearer-prefix logic into `src/auth.js`
-
-### Files Modified
-
-| File | Change | Notes |
-|------|--------|-------|
-| src/old_auth_helper.js | removed | logic moved into src/auth.js |
-"""
-    (handoffs_dir / very_stale_name).write_text(very_stale_content)
-
-    # Commit just these three so the detector reports them git-tracked and the
+    # Commit both so the detector reports them git-tracked and the documented
     # `git rm` removal path is exercisable; the other seeded handoffs stay
     # untracked (they exercise the trash fallback).
     rel_paths = [
         str((handoffs_dir / name).relative_to(path))
-        for name in (predecessor_name, current_name, very_stale_name)
+        for name in (predecessor_name, current_name)
     ]
     run_cmd(["git", "add", *rel_paths], cwd=str(path))
     run_cmd(
@@ -776,8 +735,7 @@ Nothing outstanding — recorded only as history.
 
     seeded["cleanup-superseded-predecessor"] = predecessor_name
     seeded["cleanup-superseded-current"] = current_name
-    seeded["cleanup-very-stale"] = very_stale_name
-    print("Seeded 3 cleanup-candidate handoffs (committed):")
+    print("Seeded 2 cleanup-candidate handoffs (committed):")
     for key, name in seeded.items():
         print(f"  - {key}: {name}")
     return seeded

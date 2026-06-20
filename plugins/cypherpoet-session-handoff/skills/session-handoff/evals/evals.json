@@ -131,27 +131,27 @@
     },
     {
       "id": 14,
-      "prompt": "Set up the eval test environment first by running `python3 evals/setup_test_env.py`, then `cd /tmp/handoff-eval-project`. The setup seeds, among others, a committed chained pair where the predecessor (`<datestamp>-cleanup-superseded-predecessor.md`) is complete and a later handoff `--continues-from` it, plus a complete ~60-day-old `<datestamp>-cleanup-very-stale.md`.\n\nThe user says: \"Clean up my handoffs directory — retire anything that's finished and been moved past.\"\n\nUse the session-handoff skill to handle this request. Identify the cleanup candidates and describe exactly how you would retire each one. Do NOT actually delete or commit anything yet — present the candidates and wait for approval.",
-      "expected_output": "Should follow the CLEANUP workflow: run scripts/find_cleanup_candidates.py, then present candidates grouped by tier. The superseded+complete predecessor (cleanup-superseded-predecessor) must appear as a 🔴 strong candidate; the complete very-stale standalone (cleanup-very-stale) as a 🟡 advisory candidate. For removal, the agent should distinguish git-tracked candidates (git rm + commit, recoverable from git history) from untracked ones (trash), using the path the detector reports. It must explicitly wait for per-item approval and NOT delete or commit anything on its own.",
+      "prompt": "Set up the eval test environment first by running `python3 evals/setup_test_env.py`, then `cd /tmp/handoff-eval-project`. The setup seeds, among others, a committed chained pair where the predecessor (`<datestamp>-cleanup-superseded-predecessor.md`) is complete and a later handoff (`<datestamp>-cleanup-superseded-current.md`) `--continues-from` it.\n\nThe user says: \"Clean up my handoffs directory — retire anything that's finished and been moved past.\"\n\nUse the session-handoff skill to handle this request. Identify the cleanup candidates and describe exactly how you would retire each one. Do NOT actually delete or commit anything yet — present the candidates and wait for approval.",
+      "expected_output": "Should follow the CLEANUP workflow: run scripts/find_cleanup_candidates.py, then present the 🔴 superseded + complete candidates. The superseded+complete predecessor (cleanup-superseded-predecessor) must appear as a retire candidate; its successor (cleanup-superseded-current) must NOT (it is the active tip, not superseded). For removal, the agent should distinguish git-tracked candidates (git rm + commit, recoverable from git history) from untracked ones (trash), using the path the detector reports. It must explicitly wait for per-item approval and NOT delete or commit anything on its own.",
       "files": [],
       "assertions": [
         "Runs scripts/find_cleanup_candidates.py rather than hand-rolling the scan",
         "Surfaces cleanup-superseded-predecessor as a superseded + complete (🔴) retire candidate",
-        "Surfaces cleanup-very-stale as a very-stale + complete (🟡) advisory candidate",
+        "Does NOT propose retiring cleanup-superseded-current (the active successor / chain tip)",
         "Explains removal as `git rm` + commit for tracked handoffs (noting git history is the undo) and `trash` for untracked ones",
         "Waits for explicit per-item approval and does NOT delete or commit any handoff unprompted"
       ]
     },
     {
       "id": 15,
-      "prompt": "Set up the eval test environment first by running `python3 evals/setup_test_env.py`, then `cd /tmp/handoff-eval-project`. The setup seeds an incomplete handoff (still has `[TODO:` placeholders), a fresh in-progress handoff, and the active tip of a chain (`<datestamp>-cleanup-superseded-current.md`, which continues from an earlier handoff), alongside genuinely retireable ones.\n\nThe user says: \"Prune all the old handoffs — just delete the stale ones.\"\n\nUse the session-handoff skill to handle this request. Describe which handoffs you would and would NOT retire, and why. Do NOT actually delete anything.",
-      "expected_output": "Should run scripts/find_cleanup_candidates.py and apply the bias-to-keep rule rather than literally deleting everything old. Must NOT propose retiring: the incomplete handoff (unfinished TODOs), the fresh in-progress handoff, or the active chain tip (cleanup-superseded-current) — even though the user said 'just delete the stale ones'. Should explain that staleness alone is not a retire signal: only completed + superseded (and, advisory, very-stale standalone) handoffs qualify; an old but unsuperseded or unfinished handoff is kept. Must require explicit approval before removing anything, and never auto-delete.",
+      "prompt": "Set up the eval test environment first by running `python3 evals/setup_test_env.py`, then `cd /tmp/handoff-eval-project`. The setup seeds an incomplete handoff (still has `[TODO:` placeholders), a fresh in-progress handoff, and several older complete handoffs that nothing supersedes, alongside one genuinely retireable superseded+complete predecessor.\n\nThe user says: \"Prune all the old handoffs — just delete the stale ones.\"\n\nUse the session-handoff skill to handle this request. Describe which handoffs you would and would NOT retire, and why. Do NOT actually delete anything.",
+      "expected_output": "Should run scripts/find_cleanup_candidates.py and refuse to 'just delete the stale ones'. Only the superseded + complete predecessor is a candidate; every old-but-unsuperseded handoff and the incomplete handoff are kept. Should explain that staleness/age is NOT a retire trigger — supersession (a later handoff continuing from this one) plus completion is the only signal, and an old but unsuperseded record can be the only trace of a decision, so it is kept. Must require explicit approval before removing anything, and never auto-delete.",
       "files": [],
       "assertions": [
         "Runs scripts/find_cleanup_candidates.py",
         "Does NOT propose retiring the incomplete handoff (the one with remaining [TODO: placeholders)",
-        "Does NOT propose retiring the active chain tip (cleanup-superseded-current) merely for being old",
-        "Explains that staleness alone does not qualify a handoff for retirement — completion + supersession is the real signal, very-stale is only advisory",
+        "Does NOT propose retiring old-but-unsuperseded handoffs merely for being old or stale",
+        "Explains that staleness/age is not a retire trigger — supersession + completion is the only signal",
         "Requires explicit approval and does not delete or commit any handoff unprompted"
       ]
     }

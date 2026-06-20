@@ -65,7 +65,7 @@ Handoffs are committed by default, so they accumulate. When work has moved on, r
 python3 scripts/find_cleanup_candidates.py
 ```
 
-It groups handoffs into 🔴 superseded + complete (strong), 🟡 very-stale + complete + standalone (advisory), and ⚠️ superseded-but-incomplete (keep + review). **Staleness alone never qualifies a handoff** — an old but unsuperseded record can be the only trace of a decision's rationale; when in doubt, keep. Present candidates and remove only with explicit per-item approval (`git rm` for tracked, `trash` for untracked); never auto-run this workflow.
+It flags 🔴 superseded + complete handoffs to retire — a later handoff `--continues-from` them and they carry no open TODOs — and lists ⚠️ superseded-but-incomplete ones to review. **Supersession is the only trigger; staleness/age is not** — an old but unsuperseded record can be the only trace of a decision's rationale, so it's kept. Present candidates and remove only with explicit per-item approval (`git rm` for tracked, `trash` for untracked); never auto-run this workflow.
 
 The full procedure — candidate tiers, the approval gate, and the removal mechanics — lives in [references/cleanup-workflow.md](references/cleanup-workflow.md). Read it before running a cleanup.
 
@@ -110,7 +110,7 @@ Example: `2024-01-15-143022-implementing-auth.md`
 | `list_handoffs.py [path]` | List available handoffs in a project |
 | `validate_handoff.py <file>` | Check completeness and security; emits a structured pass/fail/warn report and a READY/NEEDS_WORK/BLOCKED verdict |
 | `check_staleness.py <file>` | Assess if handoff context is still current |
-| `find_cleanup_candidates.py [path] [--verbose]` | Detect completed/superseded/very-stale handoffs that are safe to retire (read-only) |
+| `find_cleanup_candidates.py [path] [--verbose]` | Detect superseded + complete handoffs that are safe to retire (read-only) |
 
 ### references/
 

@@ -12,9 +12,10 @@ python3 scripts/find_cleanup_candidates.py
 
 Read-only. Scans the neutral `.agents/handoffs/` and the legacy `.claude/handoffs/`, then groups handoffs into tiers:
 
-- 🔴 **Retire — superseded + complete**: a later handoff `--continues-from` it, and it has no remaining `[TODO:` placeholders. The chain moved past finished work. Strong candidate.
-- 🟡 **Retire candidate — very stale + complete**: rated `VERY_STALE`, complete, and standalone (not a chain tip). Old, done, unlikely to resume. Advisory.
+- 🔴 **Retire — superseded + complete**: a later handoff `--continues-from` it (or names it under `**Supersedes**:`), and it has no remaining `[TODO:` placeholders. The chain moved past finished work. This is the only retire trigger.
 - ⚠️ **Keep + review**: superseded but still has unfinished TODOs — never auto-retired. The successor may have moved on before this one's pending work was captured; check before removing.
+
+Age/staleness is deliberately not a trigger — supersession is the only reliable "moved-past" signal. To eyeball old handoffs by date, use `list_handoffs.py`; for a per-handoff drift check, `check_staleness.py`.
 
 Each candidate line reports its title, reason, location (neutral/legacy), and whether it's git-tracked (→ `git rm`) or untracked (→ `trash`). Pass `--verbose` to also list what's being kept and why.
 
@@ -22,9 +23,9 @@ The script exits `1` when it finds candidates and `0` when there are none — a 
 
 ## Step 2: Present for Approval
 
-Show the numbered candidates grouped by tier. State the bias plainly: **staleness alone never qualifies a handoff** — an old but unsuperseded record can be the only trace of why a decision was made, and is legitimate to keep. Superseded + complete is the only strong signal; very-stale is advisory. When in doubt, keep.
+Show the numbered candidates. State the bias plainly: **staleness alone never qualifies a handoff** — an old but unsuperseded record can be the only trace of why a decision was made, and is legitimate to keep. Superseded + complete is the only signal. When in doubt, keep.
 
-Ask which to retire — "all / specific numbers (e.g. 1, 3) / skip the very-stale ones / none". **Never delete without explicit per-item approval, and never auto-run this workflow.**
+Ask which to retire — "all / specific numbers (e.g. 1, 3) / none". **Never delete without explicit per-item approval, and never auto-run this workflow.**
 
 ## Step 3: Apply
 

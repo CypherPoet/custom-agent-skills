@@ -7,18 +7,18 @@ workflow can present them for per-item approval — it never deletes anything
 itself. Removal (git rm / trash + commit) stays under the agent's explicit,
 approval-gated control, the same way the other scripts here only analyze.
 
-A handoff becomes a candidate only when its work has demonstrably moved on:
+A handoff is a candidate only when its work has demonstrably moved on:
 
-  - 🔴 SUPERSEDED + COMPLETE (strong): a later handoff `--continues-from` it AND
-    it has no remaining `[TODO:` placeholders. The chain moved past finished
-    work, so the record is reference-only.
-  - 🟡 VERY_STALE + COMPLETE (advisory): check_staleness rates it VERY_STALE, it
-    has no TODOs, and nothing supersedes it. Old, done, unlikely to resume.
+  - 🔴 SUPERSEDED + COMPLETE: a later handoff `--continues-from` it (or names it
+    under `**Supersedes**:`) AND it has no remaining `[TODO:` placeholders. The
+    chain moved past finished work, so the record is reference-only.
 
-Staleness alone is never a trigger — an old handoff can be the only record of a
-decision, which is legitimate to keep. Completion + supersession is the safe
-signal; very-stale is advisory. A handoff that is superseded but still carries
-unfinished TODOs is surfaced as KEEP + REVIEW, never auto-retired.
+Supersession is the only reliable "moved-past" signal, so it's the only trigger.
+Age/staleness is deliberately NOT used: an old handoff can be the only record of
+a decision, and "stale" (repo churn) says nothing about whether the work is done
+or abandoned — run `list_handoffs.py` (it shows dates) or `check_staleness.py` to
+eyeball age on demand. A handoff that is superseded but still carries unfinished
+TODOs is surfaced as KEEP + REVIEW, never auto-retired.
 
 Scans the neutral `.agents/handoffs/` and the legacy `.claude/handoffs/`
 locations (plus any HANDOFF_DIR override) through the shared resolver, so
@@ -50,7 +50,7 @@ from handoff_paths import (  # noqa: E402
     project_root_for,
 )
 from list_handoffs import check_completion_status, extract_title  # noqa: E402
-from check_staleness import check_staleness, run_cmd  # noqa: E402
+from check_staleness import run_cmd  # noqa: E402
 
 
 # `**Continues from**: [<filename>](./<filename>)` — the auto-generated chain
@@ -79,8 +79,9 @@ def build_supersession_index(handoffs: list[dict]) -> dict[str, str]:
         for match in CONTINUES_FROM_RE.finditer(content):
             predecessor = Path(match.group(1).strip()).name
             superseded.setdefault(predecessor, h["filename"])
-        supersedes_line = SUPERSEDES_RE.search(content)
-        if supersedes_line:
+        # finditer (not search) so a multi-line `**Supersedes**:` block — one
+        # handoff retiring several predecessors — indexes every listed file.
+        for supersedes_line in SUPERSEDES_RE.finditer(content):
             for name in HANDOFF_FILENAME_RE.findall(supersedes_line.group(1)):
                 superseded.setdefault(name, h["filename"])
     return superseded
@@ -107,10 +108,6 @@ def location_label(filepath: Path) -> str:
 def classify(handoffs: list[dict]) -> list[dict]:
     """Tag every handoff with a tier and a human-readable reason."""
     superseded = build_supersession_index(handoffs)
-    # Filenames that supersede something (via a `Continues from` link or a
-    # `Supersedes` declaration) are the live tips of their chains — current
-    # state, not disposable records, so age alone must not retire them.
-    superseders = set(superseded.values())
     # project_root_for shells out to git but depends only on a handoff's parent
     # directory, so derive it once per directory rather than once per file.
     root_by_dir: dict[Path, str] = {}
@@ -120,10 +117,6 @@ def classify(handoffs: list[dict]) -> list[dict]:
         path: Path = h["path"]
         complete: bool = h["complete"]
         is_superseded = h["filename"] in superseded
-        is_chain_tip = h["filename"] in superseders
-
-        stale = check_staleness(str(path))
-        level = stale.get("staleness_level", "UNKNOWN")
 
         if is_superseded and not complete:
             tier = "KEEP_REVIEW"
@@ -136,12 +129,13 @@ def classify(handoffs: list[dict]) -> list[dict]:
             reason = (
                 f"superseded by {superseded[h['filename']]}; complete (no TODOs)"
             )
-        elif level == "VERY_STALE" and complete and not is_chain_tip:
-            tier = "RETIRE_ADVISORY"
-            reason = "very stale and complete; standalone (no successor, not a chain tip)"
         else:
             tier = "KEEP"
-            reason = _keep_reason(level, complete, is_chain_tip)
+            reason = (
+                "still has unfinished TODOs — active work"
+                if not complete
+                else "complete; no successor"
+            )
 
         if path.parent not in root_by_dir:
             root_by_dir[path.parent] = project_root_for(str(path))
@@ -159,16 +153,6 @@ def classify(handoffs: list[dict]) -> list[dict]:
     # independent of filesystem glob order.
     results.sort(key=lambda r: r["filename"])
     return results
-
-
-def _keep_reason(level: str, complete: bool, is_chain_tip: bool) -> str:
-    if not complete:
-        return "still has unfinished TODOs — active work"
-    if is_chain_tip:
-        return f"complete chain tip ({level.lower()}) — kept as the latest in its chain"
-    if level in ("FRESH", "SLIGHTLY_STALE", "STALE"):
-        return f"complete but current ({level.lower()}); no successor"
-    return "complete; no successor"
 
 
 def collect_handoffs(project_path: str) -> list[dict]:
@@ -204,24 +188,19 @@ def _print_tier(title: str, items: list[dict], start_index: int) -> int:
     return index
 
 
-def print_report(results: list[dict], verbose: bool) -> int:
+def print_report(results: list[dict], project_path: str, verbose: bool) -> int:
     retire = [r for r in results if r["tier"] == "RETIRE"]
-    advisory = [r for r in results if r["tier"] == "RETIRE_ADVISORY"]
     keep_review = [r for r in results if r["tier"] == "KEEP_REVIEW"]
     keep = [r for r in results if r["tier"] == "KEEP"]
 
     print("=" * 72)
     print("Handoff Cleanup Candidates")
     print("=" * 72)
-    print(f"Scanned {len(results)} handoff(s).")
+    # Name the scanned root so a wrong-directory run (it defaults to cwd) is
+    # obvious rather than a silent "no candidates" false negative.
+    print(f"Scanned {len(results)} handoff(s) in {Path(project_path).resolve()}.")
 
-    next_index = 1
-    next_index = _print_tier(
-        "🔴 Retire — superseded + complete (strong candidates)", retire, next_index
-    )
-    next_index = _print_tier(
-        "🟡 Retire candidate — very stale + complete (advisory)", advisory, next_index
-    )
+    _print_tier("🔴 Retire — superseded + complete", retire, 1)
 
     if keep_review:
         print("\n⚠️  Keep + review — superseded but still has unfinished TODOs")
@@ -229,13 +208,14 @@ def print_report(results: list[dict], verbose: bool) -> int:
         for item in keep_review:
             print(f"  - {item['filename']}: {item['reason']}")
 
-    candidate_count = len(retire) + len(advisory)
+    candidate_count = len(retire)
     if candidate_count == 0:
-        print("\nNo cleanup candidates — nothing is both finished and moved-past.")
+        print("\nNo cleanup candidates — nothing is both superseded and complete.")
     else:
         print(
-            f"\n{candidate_count} candidate(s). Staleness alone never qualifies a "
-            "handoff; an old but unsuperseded record is legitimate to keep."
+            f"\n{candidate_count} candidate(s) — each superseded by a later handoff "
+            "and free of open TODOs. Staleness/age is not a trigger; an old but "
+            "unsuperseded record is legitimate to keep."
         )
         print(
             "Present these for per-item approval before removing. Removal: "
@@ -280,7 +260,7 @@ def main() -> None:
         sys.exit(0)
 
     results = classify(handoffs)
-    candidate_count = print_report(results, args.verbose)
+    candidate_count = print_report(results, args.project_path, args.verbose)
     sys.exit(1 if candidate_count else 0)
 
 
