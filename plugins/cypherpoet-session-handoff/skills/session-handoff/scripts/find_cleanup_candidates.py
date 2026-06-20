@@ -37,7 +37,6 @@ from __future__ import annotations
 import argparse
 import os
 import re
-import subprocess
 import sys
 from pathlib import Path
 
@@ -51,12 +50,14 @@ from handoff_paths import (  # noqa: E402
     project_root_for,
 )
 from list_handoffs import check_completion_status, extract_title  # noqa: E402
-from check_staleness import check_staleness  # noqa: E402
+from check_staleness import check_staleness, run_cmd  # noqa: E402
 
 
 # `**Continues from**: [<filename>](./<filename>)` — the auto-generated chain
-# link. Fresh handoffs emit `**Continues from**: None (fresh start)` (no
-# brackets), so this naturally matches only real predecessors.
+# link emitted by create_handoff.build_chain_section (the single producer of
+# this format; keep this parser in sync if that writer changes). Fresh handoffs
+# emit `**Continues from**: None (fresh start)` (no brackets), so this naturally
+# matches only real predecessors.
 CONTINUES_FROM_RE = re.compile(r"\*\*Continues from\*\*:\s*\[([^\]]+)\]")
 # `**Supersedes**:` is author free-text. Only treat tokens that look like an
 # actual handoff filename as a signal, so the scaffold's placeholder text
@@ -87,17 +88,10 @@ def build_supersession_index(handoffs: list[dict]) -> dict[str, str]:
 
 def is_git_tracked(filepath: Path, project_root: str) -> bool:
     """Whether git tracks this handoff — decides git rm vs trash at removal."""
-    try:
-        result = subprocess.run(
-            ["git", "ls-files", "--error-unmatch", str(filepath)],
-            cwd=project_root,
-            capture_output=True,
-            text=True,
-            timeout=10,
-        )
-    except (subprocess.TimeoutExpired, FileNotFoundError, OSError):
-        return False
-    return result.returncode == 0
+    success, _ = run_cmd(
+        ["git", "ls-files", "--error-unmatch", str(filepath)], cwd=project_root
+    )
+    return success
 
 
 def location_label(filepath: Path) -> str:
@@ -113,16 +107,20 @@ def location_label(filepath: Path) -> str:
 def classify(handoffs: list[dict]) -> list[dict]:
     """Tag every handoff with a tier and a human-readable reason."""
     superseded = build_supersession_index(handoffs)
+    # Filenames that supersede something (via a `Continues from` link or a
+    # `Supersedes` declaration) are the live tips of their chains — current
+    # state, not disposable records, so age alone must not retire them.
+    superseders = set(superseded.values())
+    # project_root_for shells out to git but depends only on a handoff's parent
+    # directory, so derive it once per directory rather than once per file.
+    root_by_dir: dict[Path, str] = {}
     results: list[dict] = []
 
     for h in handoffs:
         path: Path = h["path"]
         complete: bool = h["complete"]
         is_superseded = h["filename"] in superseded
-        # A handoff that itself `--continues-from` another is the live tip of a
-        # chain — current state, not a disposable record. Age alone must not
-        # retire it, so it's excluded from the very-stale advisory tier.
-        is_chain_tip = bool(CONTINUES_FROM_RE.search(h["content"]))
+        is_chain_tip = h["filename"] in superseders
 
         stale = check_staleness(str(path))
         level = stale.get("staleness_level", "UNKNOWN")
@@ -145,15 +143,15 @@ def classify(handoffs: list[dict]) -> list[dict]:
             tier = "KEEP"
             reason = _keep_reason(level, complete, is_chain_tip)
 
-        project_root = project_root_for(str(path))
+        if path.parent not in root_by_dir:
+            root_by_dir[path.parent] = project_root_for(str(path))
         results.append({
             "filename": h["filename"],
             "title": h["title"],
             "path": str(path),
             "tier": tier,
             "reason": reason,
-            "staleness": level,
-            "tracked": is_git_tracked(path, project_root),
+            "tracked": is_git_tracked(path, root_by_dir[path.parent]),
             "location": location_label(path),
         })
 
