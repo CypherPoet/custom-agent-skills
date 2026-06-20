@@ -8,7 +8,7 @@ The document is ordered for the **resuming agent**, not the author. The agent's 
 
 📚 Source Artifacts sits high so the resuming agent opens the PRD/plan/PR/ADRs *before* reading the handoff body — the rest of the document assumes those are available, and treats restating their content as redundant.
 
-The Read Strategy section in `SKILL.md` tells the resuming agent which sections to read in full vs. skim vs. consult on demand. Keep that guidance in sync if you reorder anything here.
+The Read Strategy section in [resume-workflow.md](resume-workflow.md) tells the resuming agent which sections to read in full vs. skim vs. consult on demand. Keep that guidance in sync if you reorder anything here.
 
 ## Placeholders
 
