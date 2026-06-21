@@ -140,4 +140,6 @@ A plugin's `version` (in `plugin.json`) is Claude Code's update cache key, so ed
 
 For skills inside a plugin, use [`/skill-creator`](https://github.com/anthropics/skills/tree/main/skills/skill-creator) — it handles drafts, evals, description optimization, and the general skill structure conventions.
 
+**Keep `SKILL.md` lean — summarize and point.** `SKILL.md` is loaded into context on *every* trigger, so it should carry only what's needed to start: a short in-body block per workflow/mode (its entry command(s) plus the load-bearing safety invariant), then a pointer to a `references/<name>-workflow.md` holding the full step-by-step. Push procedure detail, long reference material, and per-step nuance into `references/`, which loads on demand. The [`cypherpoet-session-handoff`](../plugins/cypherpoet-session-handoff/skills/session-handoff/SKILL.md) skill is the worked example: its ~120-line `SKILL.md` summarizes CREATE / RESUME / CLEANUP in-body and delegates each procedure to `references/{create,resume,cleanup}-workflow.md`.
+
 `*-workspace/` directories under any `skills/` folder are gitignored: they're transient eval-iteration scratch, not real skills.
