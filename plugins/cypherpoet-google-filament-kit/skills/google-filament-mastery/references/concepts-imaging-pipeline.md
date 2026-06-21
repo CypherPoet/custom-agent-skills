@@ -161,6 +161,8 @@ float getSensitivity() const noexcept;    //!< sensitivity in ISO
 
 Why this matters: because everything is photometric, light intensities are set in real physical units (lux, candela, lumens) and the camera's f-number / shutter / ISO determine how those map to pixels — exactly as in photography. `setExposure(float)` is the escape hatch for matching engines that use arbitrary unit-less intensities.
 
+> **"It renders too dark" is usually under-*exposure*, not under-lighting.** The default `f/16, 1/125s, ISO 100` is metered for **bright daylight** (~100,000 lux); a scene lit at modest intensities is correctly exposed *for daylight* and therefore reads dark — the lighting isn't necessarily "wrong." Two valid fixes, and you pick based on intent: raise the lights to photometric daylight levels (sun ~100,000 lux, indoor bulbs in the hundreds of lumens), **or** open the exposure via `setExposure` (lower f-number, slower shutter, or higher ISO — each brightens the image). Reach for exposure when the lighting rig is physically plausible and you just want it brighter; reach for light intensity when the rig itself is under-powered. Don't do both blindly — see the Mental Model in `SKILL.md`. Beware the trap of "fixing" darkness by flooding the scene with ambient/IBL: that brightens but **washes out shadows** — see the shadow-contrast note in [`concepts-lighting-ibl.md`](concepts-lighting-ibl.md).
+
 Related `Camera` methods used by the imaging effects:
 
 ```cpp

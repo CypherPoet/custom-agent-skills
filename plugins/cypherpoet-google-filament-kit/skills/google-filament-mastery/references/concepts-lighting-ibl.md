@@ -19,10 +19,12 @@
   - [What an IBL is](#what-an-ibl-is)
   - [Diffuse: spherical harmonics](#diffuse-spherical-harmonics-irradiance)
   - [Specular: prefiltered roughness mip chain](#specular-prefiltered-roughness-mip-chain)
+  - [Reflecting scene geometry (a glossy floor reflects only the IBL)](#reflecting-scene-geometry-a-glossy-floor-reflects-only-the-ibl)
   - [Why you cannot use a raw HDR directly](#why-you-cannot-use-a-raw-hdr-directly)
   - [Processing with cmgen (CLI)](#processing-with-cmgen-cli)
   - [Processing with iblprefilter (runtime GPU)](#processing-with-iblprefilter-runtime-gpu)
   - [Skybox](#skybox)
+- [Shadows: brightness vs. contrast, and soft-shadow types](#shadows-brightness-vs-contrast-and-soft-shadow-types)
 - [Occlusion](#occlusion)
 - [Normal mapping](#normal-mapping)
 - [Runtime API reference (verbatim signatures)](#runtime-api-reference-verbatim-signatures)
@@ -292,6 +294,18 @@ vec3 evaluateIBL(vec3 n, vec3 v, vec3 diffuseColor, vec3 f0, vec3 f90, float per
 
 Key approximations to be aware of: the prefilter assumes `v = n` (loses view-dependent "stretchy reflections"); roughness is quantized across LODs; the mips can't double as minification mips (possible aliasing/moiré at low roughness).
 
+### Reflecting scene geometry (a glossy floor reflects only the IBL)
+
+A common misread: lowering a floor's roughness toward 0 to "see the furniture/characters reflected in it." It won't. `IndirectLight::reflections()` samples the **prefiltered environment cubemap** — the distant probe — and *nothing else*. Scene meshes are never in that cubemap, so a mirror-smooth floor reflects only the environment (sky, distant surroundings), no matter how low its roughness. Roughness changes how blurry the *environment* reflection is, never whether scene objects appear in it.
+
+To reflect actual **scene geometry**, you need a different technique on top of IBL — Filament has **no local/planar reflection probes**, only the single distant `IndirectLight`:
+
+- **Screen-space reflections (SSR)** — `View::setScreenSpaceReflectionsOptions` (`Options.h`, off by default). Reflects on-screen dynamic geometry by ray-marching the depth buffer. Cheap-ish and dynamic, but breaks at screen edges and wherever the reflected surface is off-screen or occluded (no information for it).
+- **Planar mirror** — render a mirrored duplicate of the geometry (a reflection/Y-flip matrix about the floor plane) *under* a translucent floor. The reflection flips winding, so correct it with `View::setFrontFaceWindingInverted(true)` (`View.h`) for that pass, or flip culling per-material. This is the classic exact mirror, at the cost of drawing the scene twice.
+- **Baked reflection** — pre-render the reflection into a texture; only valid for **static** geometry and a fixed viewpoint.
+
+> So "make the floor reflect the robot" is not a roughness tweak — it's a choice between SSR (dynamic, screen-bounded) and a planar mirror (exact, double-draw). The IBL only ever contributes the environment reflection.
+
 ### Why you cannot use a raw HDR directly
 
 > **You cannot feed a raw equirectangular / HDR environment to `IndirectLight` directly.** The radiance of an IBL is an integral over the hemisphere — far too expensive per-pixel at runtime. The environment must first be **pre-processed** into the two runtime-friendly forms above: SH coefficients for diffuse irradiance, and a prefiltered roughness mip chain (cubemap) for specular reflections. That preprocessing is done **offline by the `cmgen` CLI** or **at runtime on the GPU by the `iblprefilter` library**. Either way, `IndirectLight::Builder::reflections()` expects an already-prefiltered, mip-mapped cubemap — not a raw HDR. (From `IndirectLight.h`: *"Environments are usually captured as high-resolution HDR equirectangular images and processed by the cmgen tool to generate the data needed by IndirectLight."*)
@@ -384,6 +398,8 @@ float computeSpecularAO(float NoV, float ao, float roughness) {
 
 All occlusion factors are applied **only to indirect lighting**.
 
+> **SSAO is not a cast shadow.** Because both baked AO and runtime SSAO/SSCT touch *only the indirect (ambient/IBL) term*, they darken contact points, creases, and cavities but **never** touch a light's direct contribution. AO can *ground* an object and augment a real shadow, but it cannot replace one: if you want an object to block a *light* and throw a shadow, you need a shadow-casting directional/spot light (or a baked shadow), not `setAmbientOcclusionOptions`.
+
 ---
 
 ## Normal mapping
@@ -456,3 +472,26 @@ Skybox* build(Engine& engine);
 ```
 
 Runtime: `setColor`, `setLayerMask(select, values)` (default 0x1), `getLayerMask`, `getIntensity` (lux), `getTexture`.
+
+---
+
+## Shadows: brightness vs. contrast, and soft-shadow types
+
+### Brightness and shadow contrast pull in opposite directions
+
+A scene can be both correctly bright *and* read as flat — these are separate problems with separate fixes:
+
+- **Cast-shadow contrast comes from a strong *directional* (or spot) light.** Only directional/spot lights cast shadows (see `Type` above), and a shadow is the *absence* of that direct contribution. A bright, contrasty shadow needs the direct light to dominate the surface's total illumination.
+- **A high omnidirectional IBL fills the shadows back in.** IBL/ambient light arrives from every direction, so cranking IBL intensity to brighten a scene lights the shadowed regions just as much as the lit ones — the shadow stops being darker than its surroundings and visually disappears. This is the usual cause of "I have a shadow caster but the shadow is barely visible."
+
+So to get **both** overall brightness and visible shadows, raise the **directional sun** intensity (photometric daylight levels, ~100,000 lux) and keep the **IBL as moderate fill**, rather than leaning on a high IBL alone. If the scene is dark, prefer opening exposure or raising the sun over flooding it with ambient — see the exposure-vs-lighting note in [`concepts-imaging-pipeline.md`](concepts-imaging-pipeline.md).
+
+### Soft-shadow look is a `View::setShadowType` choice — not a roughness or bias tweak
+
+The default shadow type is **PCF** (percentage-closer filtering): a uniform-width soft edge with *no contact hardening* — the penumbra is the same width touching the occluder as far from it. If you want a "soft contact shadow" that tightens near the contact point and widens with distance, PCF won't give it; pick a different type via `View::setShadowType(ShadowType)` (`View.h`, see [`engine-api-core.md`](engine-api-core.md)):
+
+- **PCF** — default; uniform soft edge, cheapest.
+- **DPCF / PCSS** — penumbra widens with occluder-to-receiver distance = true contact hardening. Tuned via `SoftShadowOptions` (`penumbraScale`, `penumbraRatioScale`) and the per-light `ShadowOptions.shadowBulbRadius`/`stepCount` (see [`engine-api-entities-components.md`](engine-api-entities-components.md)).
+- **VSM** (variance shadow maps) — smooth and cheap to filter, but prone to **light bleeding** (shadows leaking light where occluders overlap); needs the `Vsm` sub-options to mitigate.
+
+A baked shadow is the other route to a soft contact look for static geometry. Note these shadow types are flagged *experimental* in the engine header.

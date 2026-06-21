@@ -33,6 +33,9 @@ A goal-oriented map: find the task, jump to the reference(s), and heed the gotch
 | Add point/spot lights | [`concepts-lighting-ibl.md`](concepts-lighting-ibl.md) | Point/spot intensity is in **lumens** (or candela) — a household bulb is ~800 lm. |
 | Add image-based / environment lighting | [`concepts-lighting-ibl.md`](concepts-lighting-ibl.md) + [`tooling.md`](tooling.md) (cmgen) | You **cannot** feed a raw `.hdr`/`.exr` to `IndirectLight`. Pre-process it with `cmgen` (or `iblprefilter`) into a prefiltered KTX + spherical harmonics first. |
 | Show the environment as a background | [`concepts-lighting-ibl.md`](concepts-lighting-ibl.md) (Skybox) | The skybox cubemap is a separate `_skybox.ktx` from the `_ibl.ktx` reflections map. |
+| Reflect scene objects in a glossy floor / mirror | [`concepts-lighting-ibl.md`](concepts-lighting-ibl.md) (Reflecting scene geometry) | Lowering roughness won't do it — IBL reflections sample only the **environment** cubemap, never scene meshes. Use screen-space reflections, a planar-mirror double-draw, or a baked reflection. No local/planar probes exist. |
+| Get a visible cast shadow (caster present but no shadow) | [`concepts-lighting-ibl.md`](concepts-lighting-ibl.md) (Shadows) | A strong omnidirectional IBL fills the shadow in. Contrast comes from a strong **directional/spot** light; keep IBL as moderate fill. SSAO can't replace a cast shadow (it only darkens *indirect* light). |
+| Get a soft "contact" shadow (penumbra widens with distance) | [`concepts-lighting-ibl.md`](concepts-lighting-ibl.md) (Shadows) + [`engine-api-core.md`](engine-api-core.md) | The PCF default has a uniform-width edge with no contact hardening. Choose DPCF/PCSS via `View::setShadowType` (or bake the shadow). |
 
 ## Camera, exposure & color
 
@@ -62,6 +65,6 @@ A goal-oriented map: find the task, jump to the reference(s), and heed the gotch
 5. **Material/asset not actually loaded** — wrong path, or a `.filamat` built for the wrong feature level / API variant. → [`materials-compiling-matc.md`](materials-compiling-matc.md)
 6. **You rendered when `beginFrame` returned false** (C++/Android), or touched the engine before `onReady`/`Filament.init` resolved (web). → [`cross-platform-matrix.md`](cross-platform-matrix.md)
 
-**"Render is washed out / too dark / wrong colors"** — usually exposure vs. light-unit mismatch, or a linear-vs-sRGB texture/format mistake. → [`concepts-imaging-pipeline.md`](concepts-imaging-pipeline.md), [`materials-compiling-matc.md`](materials-compiling-matc.md) (color handling)
+**"Render is washed out / too dark / wrong colors"** — usually exposure vs. light-unit mismatch, or a linear-vs-sRGB texture/format mistake. "Too dark" is most often under-*exposure*: the default exposure is metered for ~100,000-lux daylight, so a modestly-lit scene reads dark — fix by raising lights to daylight levels **or** opening exposure (`setExposure`), not both. → [`concepts-imaging-pipeline.md`](concepts-imaging-pipeline.md), [`materials-compiling-matc.md`](materials-compiling-matc.md) (color handling)
 
 **"Performance / frame time"** — Filament is clustered-forward, so many lights are cheap; look at overdraw, texture sizes, shadow settings, and the profiling guidance in [`tooling.md`](tooling.md). Inspect compiled materials/variants with `matinfo`; debug live shaders with `matdbg`.
