@@ -2,7 +2,7 @@
 
 Two pipelines exist:
 
-- **TSL `PostProcessing` (modern, primary).** Node-based, integrates with `WebGPURenderer` natively, also runs under `WebGLRenderer` via the TSL backend. Imports come from `three/tsl`. This is the recommended path for new code.
+- **TSL `PostProcessing` (modern, primary).** Node-based, integrates with `WebGPURenderer` natively, also runs under `WebGLRenderer` via the TSL backend. Imports come from `three/tsl`, plus `three/addons/tsl/display/` for the built-in effect passes. This is the recommended path for new code.
 - **`EffectComposer` (legacy).** The classic WebGL pipeline of `Pass` objects. Still supported, large existing ecosystem of passes. Use when porting older code or when a specific pass has no TSL equivalent yet.
 
 > Scene/renderer setup: see [../SKILL.md#setup](../SKILL.md#setup).
@@ -13,7 +13,8 @@ Two pipelines exist:
 
 ```javascript
 import * as THREE from "three/webgpu";
-import { pass, bloom } from "three/tsl";
+import { pass } from "three/tsl";
+import { bloom } from "three/addons/tsl/display/BloomNode.js";
 
 const postProcessing = new THREE.PostProcessing(renderer);
 
@@ -43,21 +44,22 @@ window.addEventListener("resize", () => {
 
 ### Built-in TSL Passes
 
-The most commonly used passes are exported from `three/tsl`:
+`pass`, `mrt`, `output`, `emissive`, and `renderOutput` come from `three/tsl`. The effect passes — `bloom`, `dof`, and `fxaa` — are addons, each imported from its own module under `three/addons/tsl/display/`:
 
-| Node | Purpose |
-|------|---------|
-| `pass(scene, camera)` | Render scene to a texture pass |
-| `bloom(input, strength, radius, threshold)` | Unreal-style bloom |
-| `dof(input, focusDistance, focalLength, bokehScale)` | Depth-of-field |
-| `fxaa(input)` | Fast approximate anti-aliasing |
-| `renderOutput(input)` | Apply tone mapping + sRGB conversion manually |
-| `output` / `emissive` | MRT output channels for selective effects |
+| Node | Purpose | Import from |
+|------|---------|-------------|
+| `pass(scene, camera)` | Render scene to a texture pass | `three/tsl` |
+| `output` / `emissive` | MRT output channels for selective effects | `three/tsl` |
+| `renderOutput(input)` | Apply tone mapping + sRGB conversion manually | `three/tsl` |
+| `bloom(input, strength, radius, threshold)` | Unreal-style bloom | `three/addons/tsl/display/BloomNode.js` |
+| `dof(input, viewZNode, focusDistance, focalLength, bokehScale)` | Depth-of-field | `three/addons/tsl/display/DepthOfFieldNode.js` |
+| `fxaa(input)` | Fast approximate anti-aliasing | `three/addons/tsl/display/FXAANode.js` |
 
 ### Bloom (TSL)
 
 ```javascript
-import { pass, bloom } from "three/tsl";
+import { pass } from "three/tsl";
+import { bloom } from "three/addons/tsl/display/BloomNode.js";
 
 const scenePass = pass(scene, camera);
 const bloomPass = bloom(scenePass, 0.8, 0.4, 0.85);
@@ -70,7 +72,8 @@ postProcessing.outputNode = scenePass.add(bloomPass);
 Use Multi-Render-Target output to bloom only emissive surfaces:
 
 ```javascript
-import { pass, mrt, output, emissive, bloom } from "three/tsl";
+import { pass, mrt, output, emissive } from "three/tsl";
+import { bloom } from "three/addons/tsl/display/BloomNode.js";
 
 const scenePass = pass(scene, camera);
 scenePass.setMRT(mrt({ output, emissive }));
@@ -88,16 +91,19 @@ Set `material.emissive` and `material.emissiveIntensity` on the surfaces you wan
 ### Depth of Field (TSL)
 
 ```javascript
-import { pass, dof } from "three/tsl";
+import { pass } from "three/tsl";
+import { dof } from "three/addons/tsl/display/DepthOfFieldNode.js";
 
 const scenePass = pass(scene, camera);
-postProcessing.outputNode = dof(scenePass, /* focus */ 5, /* focal length */ 0.2, /* bokeh */ 4);
+const viewZ = scenePass.getViewZNode();   // dof needs scene depth (viewZ) as its 2nd argument
+postProcessing.outputNode = dof(scenePass, viewZ, /* focus */ 5, /* focal length */ 0.2, /* bokeh */ 4);
 ```
 
 ### FXAA (TSL)
 
 ```javascript
-import { pass, fxaa } from "three/tsl";
+import { pass } from "three/tsl";
+import { fxaa } from "three/addons/tsl/display/FXAANode.js";
 
 const scenePass = pass(scene, camera);
 postProcessing.outputNode = fxaa(scenePass);
@@ -108,7 +114,9 @@ postProcessing.outputNode = fxaa(scenePass);
 Tonemapping and sRGB conversion normally happen at the end of the pipeline. To insert effects *after* tonemapping (e.g., FXAA which expects sRGB input), disable the automatic transform and apply it explicitly:
 
 ```javascript
-import { pass, bloom, renderOutput, fxaa } from "three/tsl";
+import { pass, renderOutput } from "three/tsl";
+import { bloom } from "three/addons/tsl/display/BloomNode.js";
+import { fxaa } from "three/addons/tsl/display/FXAANode.js";
 
 postProcessing.outputColorTransform = false;     // Disable auto
 
