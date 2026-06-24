@@ -1,0 +1,21 @@
+{
+  "_comment": "Volatility tiers for the skill-fact-check routine. Methodology lives in the skill at plugins/cypherpoet-marketplace-kit/skills/skill-fact-check/SKILL.md. unit_id = <plugin>/<skill>. Unlisted units default to monthly. Re-tier by moving a unit_id between the lists.",
+  "repo": "custom-agent-skills",
+  "defaults": { "tier": "monthly" },
+  "weekly": [
+    "cypherpoet-app-store-connect-kit/app-store-connect-submission",
+    "cypherpoet-apple-app-icons/apple-app-icons",
+    "cypherpoet-apple-app-store-screenshots/apple-app-store-screenshots",
+    "cypherpoet-blender-kit/blender-mcp-playbook",
+    "cypherpoet-sf-symbols-kit/sf-symbols",
+    "cypherpoet-swift-xcode-kit/swiftui-whats-new-27",
+    "cypherpoet-threejs-kit/threejs-mastery"
+  ],
+  "never": [
+    "cypherpoet-git-flow/changelog-maintenance",
+    "cypherpoet-git-flow/emoji-commits",
+    "cypherpoet-marketplace-kit/skill-fact-check",
+    "cypherpoet-session-handoff/session-handoff",
+    "cypherpoet-session-harvest/session-harvest"
+  ]
+}
