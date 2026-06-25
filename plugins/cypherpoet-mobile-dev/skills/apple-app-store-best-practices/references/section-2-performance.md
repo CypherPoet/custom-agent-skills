@@ -207,22 +207,27 @@
 
 ### §2.3.6 Age Rating
 
-**Requirement:** Apps must provide honest answers to the age rating questionnaire so that parental controls work correctly.
+**Requirement:** Answer the age rating questionnaire honestly so that parental controls and the store's age tiers work correctly. You answer the questions; Apple derives the tier from your answers (you may set a *higher* tier than Apple assigns, never a lower one).
 
-**Triggers rejection if:**
-- The app contains mature content (violence, gambling, profanity, sexual content, drugs/alcohol references) but the age rating is set too low
-- User-generated content exists but "Unrestricted Web Access" or appropriate content flags are not selected
+**The current system (since 2025-07-24):** Apple replaced the old 4+/9+/12+/17+ scheme with five tiers (4+, 9+, 13+, 16+, 18+) for more granular ratings, and added required questionnaire sections for *every* app: **In-App Controls, Capabilities, Medical/Wellness topics, and Violent Themes**. Completing the updated questionnaire is mandatory; an app that never re-answers it can be held. See Apple's [age-rating values and definitions](https://developer.apple.com/help/app-store-connect/reference/age-ratings-values-and-definitions/) and the [2025-07-24 update notice](https://developer.apple.com/news/upcoming-requirements/?id=07242025a).
+
+**Triggers rejection (or a forced re-rate) if:**
+- The app contains mature content (violence, gambling, profanity, sexual content, drugs/alcohol references) but the rating is set too low
+- It provides unrestricted web access but the matching answer isn't selected (that alone pushes the rating to 16+)
+- User-generated content exists without the matching content answers and moderation
 - The rating contradicts what reviewers observe in the app
 
 **What to check:**
-- Search source code for content that implies mature themes: gambling mechanics, alcohol/drug references, violence, profanity filters (presence of a filter implies the content exists)
-- Check for `WKWebView` or `SFSafariViewController` usage that provides unrestricted web access
-- Look for user-generated content features (chat, forums, photo sharing) that require the UGC age rating flag
-- Review `Info.plist` for `ITSAppUsesNonExemptEncryption` and verify the rating questionnaire answers align
+- Search source code for content that implies mature themes: gambling mechanics, alcohol/drug references, violence, profanity filters (a filter's presence implies the content exists)
+- Check for `WKWebView` or `SFSafariViewController` usage that provides unrestricted web access (→ 16+)
+- Look for user-generated content features (chat, forums, photo sharing) that require the UGC content answers
+- Confirm the four sections added in 2025 (In-App Controls, Capabilities, Medical/Wellness, Violent Themes) are answered, not left at defaults
+- Review `Info.plist` for `ITSAppUsesNonExemptEncryption` and verify the questionnaire answers align with the binary
 
 **Key details:**
-- Apps with unrestricted web browsing must be rated 17+
-- Apps with user-generated content typically require higher ratings and content moderation
+- Unrestricted web browsing maps to **16+** under the current scale (the old "17+" tier no longer exists)
+- User-generated content typically requires higher ratings and content moderation
+- A fixed-price in-app purchase is **not** gambling (no loot boxes or randomized rewards), so it does not by itself raise the rating
 
 ---
 
@@ -266,7 +271,7 @@
 - Review screenshot and preview assets for age-inappropriate content
 
 **Key details:**
-- Even if the app itself is rated 17+, the metadata shown on the store page must be suitable for all audiences
+- Even if the app itself carries a high age rating (16+/18+), the metadata shown on the store page must be suitable for all audiences
 - This is because children browsing the App Store can see metadata before any parental gate applies
 
 ---
