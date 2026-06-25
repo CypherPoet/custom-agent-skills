@@ -109,8 +109,21 @@ func firstID(_ obj: [String: Any]) -> String? {
 let ver = api("GET", "/v1/apps/\(appID)/appStoreVersions?filter[appVersionState]=PREPARE_FOR_SUBMISSION&limit=1", jwt: jwt)
 guard let versionID = firstID(ver) else { fail("No PREPARE_FOR_SUBMISSION version found.") }
 
-let existing = api("GET", "/v1/appStoreVersions/\(versionID)/appStoreReviewDetail", jwt: jwt)
-let detailID = (existing["data"] as? [String: Any])?["id"] as? String
+/// Look up the detail record, tolerating a 404 — App Store Connect returns NOT_FOUND for an absent
+/// to-one resource, and the shared api() would fail() on that, making the create branch unreachable.
+func reviewDetailID(versionID: String, jwt: String) -> String? {
+    var req = URLRequest(url: URL(string: base + "/v1/appStoreVersions/\(versionID)/appStoreReviewDetail")!)
+    req.setValue("Bearer \(jwt)", forHTTPHeaderField: "Authorization")
+    let (status, data) = send(req)
+    if status == 404 { return nil }
+    guard (200 ..< 300).contains(status) else {
+        fail("HTTP \(status) reading appStoreReviewDetail:\n\(String(data: data, encoding: .utf8) ?? "")")
+    }
+    let obj = (try? JSONSerialization.jsonObject(with: data)) as? [String: Any] ?? [:]
+    return (obj["data"] as? [String: Any])?["id"] as? String
+}
+
+let detailID = reviewDetailID(versionID: versionID, jwt: jwt)
 
 if let detailID {
     _ = api("PATCH", "/v1/appStoreReviewDetails/\(detailID)", jwt: jwt, body: [

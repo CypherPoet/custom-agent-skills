@@ -193,4 +193,25 @@ _ = api("PATCH", "/v1/appScreenshotSets/\(setID)/relationships/appScreenshots", 
     "data": uploadedIDs.map { ["type": "appScreenshots", "id": $0] },
 ])
 print("locked order: \(uploadedIDs.count) screenshots")
-print("done — poll assetDeliveryState with asc-get (…/appScreenshotSets?include=appScreenshots).")
+
+// Poll each asset's delivery state. Apple validates AFTER commit (wrong dimensions, alpha channel, …),
+// so a bad upload surfaces here instead of looking like a successful upload.
+print("polling assetDeliveryState…")
+for shotID in uploadedIDs {
+    var settled = false
+    for _ in 0 ..< 20 {
+        let r = api("GET", "/v1/appScreenshots/\(shotID)?fields[appScreenshots]=assetDeliveryState", jwt: jwt)
+        let state = ((r["data"] as? [String: Any])?["attributes"] as? [String: Any])?["assetDeliveryState"] as? [String: Any]
+        switch state?["state"] as? String {
+        case "COMPLETE": print("  \(shotID): COMPLETE"); settled = true
+        case "FAILED":
+            let codes = (state?["errors"] as? [[String: Any]])?.compactMap { $0["code"] as? String }.joined(separator: ", ") ?? "?"
+            fail("  \(shotID): FAILED — \(codes)")
+        default: Thread.sleep(forTimeInterval: 3)
+        }
+        if settled { break }
+    }
+    if !settled { print("  \(shotID): still processing — re-check with asc-get") }
+}
+
+print("done.")

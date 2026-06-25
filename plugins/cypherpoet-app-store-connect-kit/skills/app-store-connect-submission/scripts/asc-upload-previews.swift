@@ -144,6 +144,7 @@ let set = api("POST", "/v1/appPreviewSets", jwt: jwt, body: [
 let setID = id(set)
 print("created IPHONE_67 preview set \(setID)")
 
+var uploadedIDs: [String] = []
 for path in files {
     let url = URL(fileURLWithPath: path)
     guard let bytes = try? Data(contentsOf: url) else { fail("Can't read \(path)") }
@@ -180,7 +181,28 @@ for path in files {
         "data": ["type": "appPreviews", "id": previewID,
                  "attributes": ["uploaded": true, "sourceFileChecksum": md5hex(bytes)]],
     ])
+    uploadedIDs.append(previewID)
     print("uploaded \(name) -> appPreview \(previewID)")
 }
 
-print("done — Apple now processes the videos (poll videoDeliveryState with asc-get).")
+// Poll each video's delivery state. Apple validates AFTER commit (MOV_RESAVE_STEREO / MOV_RESAVE_LONGER,
+// wrong resolution, …), so a bad encode surfaces here instead of looking like a successful upload.
+print("polling videoDeliveryState…")
+for previewID in uploadedIDs {
+    var settled = false
+    for _ in 0 ..< 40 {
+        let r = api("GET", "/v1/appPreviews/\(previewID)?fields[appPreviews]=videoDeliveryState", jwt: jwt)
+        let state = ((r["data"] as? [String: Any])?["attributes"] as? [String: Any])?["videoDeliveryState"] as? [String: Any]
+        switch state?["state"] as? String {
+        case "COMPLETE": print("  \(previewID): COMPLETE"); settled = true
+        case "FAILED":
+            let codes = (state?["errors"] as? [[String: Any]])?.compactMap { $0["code"] as? String }.joined(separator: ", ") ?? "?"
+            fail("  \(previewID): FAILED — \(codes)")
+        default: Thread.sleep(forTimeInterval: 4)
+        }
+        if settled { break }
+    }
+    if !settled { print("  \(previewID): still processing — re-check with asc-get") }
+}
+
+print("done.")
