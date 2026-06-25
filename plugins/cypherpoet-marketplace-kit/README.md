@@ -25,3 +25,4 @@ Install via the marketplace this plugin is published to:
 | [marketplace-publish](skills/marketplace-publish/SKILL.md) | Publish one or more plugins to a marketplace by opening a PR on the marketplace repo. |
 | [marketplace-publish-check](skills/marketplace-publish-check/SKILL.md) | Read-only check of whether the current branch's changes require a `marketplace-publish` — drives the PR label. |
 | [marketplace-sync-check](skills/marketplace-sync-check/SKILL.md) | Read-only audit of local `plugins/` against the published marketplace catalog and the local `docs/CATALOG.md`. |
+| [skill-fact-check](skills/skill-fact-check/SKILL.md) | Re-check the repo family's skills' time-sensitive facts (versions, device specs, URLs, API/CLI syntax) against primary sources and open a PR with high-confidence, cited corrections — the engine behind the scheduled fact-check routine. |
