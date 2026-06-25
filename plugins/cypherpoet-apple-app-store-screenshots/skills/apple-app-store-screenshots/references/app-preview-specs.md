@@ -31,7 +31,21 @@ durable rules live in [SKILL.md](../SKILL.md); this is the exhaustive reference.
 
 **Audio (both formats):** stereo, all tracks enabled. Stereo configuration is either one track
 with 2-channel stereo (channel 1 = L, channel 2 = R) **or** two tracks of 1-channel stereo
-(track 1 = L, track 2 = R).
+(track 1 = L, track 2 = R). A **silent** preview still needs a stereo track present — a video with no
+audio track fails validation; mux a silent stereo AAC track if your capture has none.
+
+## Content rules
+
+A technically valid preview still gets rejected if its *content* misleads:
+
+- **Show real in-app capture.** A preview is device-captured app footage, not a marketing sizzle reel.
+  Short intro/outro title cards are fine, but the bulk must be the actual UI in motion.
+- **Disclose IAP-gated content.** If the preview shows premium/Pro features that require an in-app
+  purchase, make that clear (a brief "in-app purchase required" end card or on-screen note) rather than
+  presenting paywalled features as if they're free.
+- **No prices anywhere in the video.** Prices vary by storefront and over time, so Apple rejects specific
+  prices baked into previews (and screenshots). Say "in-app purchase," never "$4.99."
+- Same **final-content, no-placeholder** bar as the app itself (§2.1).
 
 ## Upload resolutions per device class
 

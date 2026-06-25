@@ -22,7 +22,7 @@ final without reconciling it.
 ## Universal rules
 
 - **Count:** 1–10 screenshots per device class, per localization.
-- **Formats:** `.png`, `.jpg`, `.jpeg`. PNG is the safe default for crisp UI text; avoid alpha/transparency.
+- **Formats:** `.png`, `.jpg`, `.jpeg`. PNG is the safe default for crisp UI text. **No alpha channel** — App Store Connect rejects screenshots with transparency, so flatten to opaque RGB before upload (`magick in.png -alpha remove -alpha off out.png`). Export **sRGB**; a wide-gamut/Display-P3 file can shift on the store page.
 - **Landscape** sizes are the portrait sizes transposed (swap width × height). Tables list portrait.
 - **Auto-scaling:** App Store Connect generates the smaller classes from the largest one you
   upload, so you rarely produce every size. Each platform's fallback chain is in the "If omitted"
