@@ -222,7 +222,7 @@
 - Check for `WKWebView` or `SFSafariViewController` usage that provides unrestricted web access (→ 16+)
 - Look for user-generated content features (chat, forums, photo sharing) that require the UGC content answers
 - Confirm the four sections added in 2025 (In-App Controls, Capabilities, Medical/Wellness, Violent Themes) are answered, not left at defaults
-- Review `Info.plist` for `ITSAppUsesNonExemptEncryption` and verify the questionnaire answers align with the binary
+- **Export compliance:** set `ITSAppUsesNonExemptEncryption` in `Info.plist` so uploads skip the per-build encryption prompt. Use `NO` (`false`) when the app uses only *exempt* cryptography — HTTPS/TLS and Apple's standard OS crypto (Keychain, CryptoKit defaults) — which covers most apps; use `YES` only if you ship non-exempt/proprietary encryption (then export documentation may apply). Verify the value matches the binary's actual crypto.
 
 **Key details:**
 - Unrestricted web browsing maps to **16+** under the current scale (the old "17+" tier no longer exists)

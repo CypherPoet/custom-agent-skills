@@ -26,6 +26,7 @@
 - Privacy policy text: does it enumerate all collected data types, usage purposes, third-party sharing, retention periods, and deletion procedures?
 - App Privacy nutrition labels in App Store Connect match what the privacy policy describes
 - `PrivacyInfo.xcprivacy` file: `NSPrivacyCollectedDataTypes` array matches declared collection
+- **"Data Not Collected" must be consistent three ways.** If the App Store Connect labels claim no data collection, then `PrivacyInfo.xcprivacy` must have an empty `NSPrivacyCollectedDataTypes` and `NSPrivacyTracking = false`, *and* no bundled third-party SDK may collect on the app's behalf — one analytics/ads SDK silently contradicts the claim.
 
 **Key details:**
 - The privacy policy must be available both externally (App Store Connect URL) and inside the app
