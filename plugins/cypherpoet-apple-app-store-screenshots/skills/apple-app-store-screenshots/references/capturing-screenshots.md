@@ -61,6 +61,24 @@ matching Apple device bezel and can place a localized title/keyword band above i
 (required for review). Pair the band copy with the design guidance in
 [design-and-conversion.md](design-and-conversion.md).
 
+## Render your own marketing screenshots (without fastlane)
+
+`frameit` is one route to framed/captioned shots; you can also render a marketing composition
+yourself (an HTML/design mockup, a SwiftUI canvas, a design-tool export) and capture it directly.
+Two things keep custom-rendered shots crisp and acceptable:
+
+- **Render large, then downscale.** Capture the composition at a high device-scale factor (e.g.
+  headless Chromium `deviceScaleFactor: 3`, or a 3× render) and downscale to the exact target
+  dimension (`magick … -resize 1290x2796!`). Downsampling from a larger render anti-aliases small
+  UI text far better than rendering at 1×.
+- **Flatten to opaque sRGB.** A rounded-corner card or transparent canvas leaves an alpha channel
+  that App Store Connect rejects; finish with `-alpha remove -alpha off -colorspace sRGB`
+  (see [device-specifications.md](device-specifications.md)).
+
+Hit an *exact* accepted size for the class (canonical 6.9" 1320×2868 or 6.7" 1290×2796), and keep
+real app UI prominent even in a marketing composition (a shot that's mostly art is a rejection
+trap, below).
+
 ## Upload — `fastlane deliver`
 
 [`deliver`](https://docs.fastlane.tools/actions/deliver/) uploads the `screenshots/` tree (it
