@@ -31,6 +31,7 @@ This skill includes reference files in `references/` containing the full guideli
 | `section-3-business.md` | App has any monetization: IAP, subscriptions, physical goods, ads, crypto |
 | `section-4-design.md` | App has login/auth, extensions, push notifications, Apple Music, or mini-apps |
 | `section-5-legal.md` | App collects any user data, uses location, has health features, or targets kids |
+| `app-accessibility.md` | Setting the App Store Connect **App Accessibility** declarations (Accessibility Nutrition Labels) — what to declare vs. skip, and the verify-before-declare rule |
 | `reviewer-notes-template.md` | When generating the Draft App Review Notes deliverable |
 
 ## Audit Workflow
