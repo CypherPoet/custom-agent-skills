@@ -627,5 +627,5 @@ In addition to the generic file-coverage audit in `SKILL.md` Phase 5:
 
 ## API Reference
 
-- [TN3187: Architecting your app for multiple windows](https://developer.apple.com/documentation/uikit/app_and_environment/scenes)
+- [TN3187: Architecting your app for multiple windows](https://developer.apple.com/documentation/uikit/scenes)
 - [TN3124: Coordinate spaces and coordinate conversion](https://developer.apple.com/documentation/uikit/uicoordinatespace)
