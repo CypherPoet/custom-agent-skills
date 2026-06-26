@@ -714,7 +714,7 @@
 **Key details:**
 - This applies only to web browsing functionality; apps can use other engines for non-browsing purposes (e.g., game engines rendering HTML for UI)
 - `UIWebView` references anywhere in the binary (including third-party SDKs) cause rejection — check all dependencies
-- Apple now offers an entitlement process for alternative browser engines (not limited to the EU); see https://developer.apple.com/support/alternative-browser-engines/ for eligibility and requirements
+- Apple now offers an entitlement process for alternative browser engines (in the European Union); see https://developer.apple.com/support/alternative-browser-engines/ for eligibility and requirements
 
 ---
 

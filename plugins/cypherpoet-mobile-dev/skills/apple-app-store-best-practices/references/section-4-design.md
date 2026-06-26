@@ -339,7 +339,7 @@
 
 **Key details:**
 - Applies to both App Store Review (ASR) and Notarization Review (NR)
-- Apple's approved RSS feeds are documented at https://rss.applemarketingtools.com/
+- Apple's approved RSS feeds are documented at https://rss.marketingtools.apple.com/
 - Using the official App Store Connect API, iTunes Search API, or MusicKit is acceptable
 
 ---
