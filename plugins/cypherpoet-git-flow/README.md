@@ -1,6 +1,6 @@
 # cypherpoet-git-flow
 
-Git commit and changelog hygiene.
+Bundle of git commit and changelog hygiene plugins: emoji commits and changelog maintenance.
 
 ## Installation
 
@@ -14,9 +14,13 @@ Install via the [`cypherpoet-toolchest`](https://github.com/CypherPoet/cypherpoe
 /plugin install cypherpoet-git-flow@cypherpoet-toolchest
 ```
 
-## Skills
+This is a convenience bundle — it ships no skills of its own. Installing it pulls in the plugins below. Install any of them individually if you only want one.
 
-| Skill | Description |
-|---|---|
-| [changelog-maintenance](skills/changelog-maintenance/SKILL.md) | Maintain a project's `CHANGELOG.md` in Keep-a-Changelog format. |
-| [emoji-commits](skills/emoji-commits/SKILL.md) | Write expressive git commit messages with Gitmoji. |
+## Dependencies
+
+Installed automatically with this plugin:
+
+| Plugin | Version | Description |
+|---|---|---|
+| [cypherpoet-changelog-maintenance](../cypherpoet-changelog-maintenance) | `latest` | Maintain a project's `CHANGELOG.md` in Keep-a-Changelog format. |
+| [cypherpoet-emoji-commits](../cypherpoet-emoji-commits) | `latest` | Write expressive git commit messages with Gitmoji. |
