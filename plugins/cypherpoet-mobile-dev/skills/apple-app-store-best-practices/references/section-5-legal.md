@@ -5,6 +5,8 @@
 
 ---
 
+**Contents:** [5.1 Privacy](#51-privacy) · [5.2 Intellectual Property](#52-intellectual-property) · [§5.3 Gaming, Gambling, and Lotteries](#53-gaming-gambling-and-lotteries) · [§5.4 VPN Apps](#54-vpn-apps-asr--nr) · [§5.5 Mobile Device Management](#55-mobile-device-management-asr--nr)
+
 ## 5.1 Privacy
 
 ### 5.1.1 Data Collection and Storage
