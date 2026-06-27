@@ -2,6 +2,8 @@
 
 The GLSL patterns that power procedural visuals — shaped curves, soft edges, noise, signed distance fields. These compose: a great-looking shader is usually two or three of these stacked. For deep dives on any of them, [The Book of Shaders](https://thebookofshaders.com/) is the canonical reference. The snippets here are the working subset that covers ~90% of fragment-shader requests.
 
+**Contents:** [The Fullscreen Quad Setup](#the-fullscreen-quad-setup) · [`step` and `smoothstep`](#step-and-smoothstep--the-building-blocks) · [`mix`](#mix--linear-interpolation) · [Mouse-Following Soft Circle](#mouse-following-soft-circle) · [Hash and Value Noise](#hash-and-value-noise) · [Simplex / Perlin Noise](#simplex--perlin-noise) · [Fractal Brownian Motion (fBM)](#fractal-brownian-motion-fbm) · [Signed Distance Fields (SDFs)](#signed-distance-fields-sdfs) · [Polar Coordinates](#polar-coordinates) · [Color](#color) · [Composing](#composing--a-cheap-lava-lamp) · [Common Mistakes](#common-mistakes)
+
 ## The Fullscreen Quad Setup
 
 Most of these techniques run in a fragment shader on a fullscreen quad. The vertex shader is trivial — just pass clip-space positions through — and the fragment shader gets a 0..1 UV via `gl_FragCoord.xy / u_resolution.xy`. The [shader-sandbox asset](../assets/shader-sandbox.html) is exactly this scaffold with `u_resolution`, `u_time`, and `u_mouse` already wired up.

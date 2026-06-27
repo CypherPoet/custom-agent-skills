@@ -4,6 +4,8 @@ A concise diff for the cases where you need to support both: legacy code, fallba
 
 WebGL2 ships in every modern browser (including Safari since 15). WebGL1 is still useful for very old browsers and some embedded contexts. New code should default to WebGL2 with a WebGL1 fallback only if you have a concrete reason to support it.
 
+**Contents:** [Context Detection](#context-detection) · [Shader Source](#shader-source) · [Vertex Array Objects](#vertex-array-objects) · [Instancing](#instancing) · [NPOT Textures](#npot-textures) · [Features That Are WebGL2-Only](#features-that-are-webgl2-only) · [Recommended Strategy](#recommended-strategy) · [Common Mistakes](#common-mistakes)
+
 ## Context Detection
 
 ```javascript

@@ -1,5 +1,7 @@
 # Debugging
 
+**Contents:** [The Black Canvas Checklist](#the-black-canvas-checklist) · [Reading Info Logs](#reading-info-logs) · [`gl.getError()`](#glgeterror) · [Spector.js](#spectorjs--the-tool-to-reach-for) · [Print-Debugging Inside Shaders](#print-debugging-inside-shaders) · [When the Shader Compiles Differently in Production](#when-the-shader-compiles-differently-in-production) · [Common Mistakes](#common-mistakes)
+
 ## The Black Canvas Checklist
 
 By far the most common WebGL question: "my canvas is black, no errors logged, what's wrong?" Walk this checklist top to bottom. The first few catch ~80% of cases.

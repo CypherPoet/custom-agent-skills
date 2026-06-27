@@ -1,5 +1,7 @@
 # Transforms
 
+**Contents:** [Clip Space](#clip-space) · [The MVP Chain](#the-mvp-chain) · [Use a Matrix Library](#use-a-matrix-library) · [Perspective Projection](#perspective-projection) · [Orthographic Projection](#orthographic-projection) · [A Basic Camera](#a-basic-camera) · [Normals](#normals--the-subtle-matrix) · [2D Math Without 3D Overhead](#2d-math-without-3d-overhead) · [Common Mistakes](#common-mistakes)
+
 ## Clip Space
 
 The vertex shader's job is to output a `vec4` in **clip space** — a coordinate system where `(x, y, z)` after perspective divide (`/w`) lands in `[-1, +1]` for what's visible. Anything outside gets clipped.

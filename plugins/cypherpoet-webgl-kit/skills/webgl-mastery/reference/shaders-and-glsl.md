@@ -1,5 +1,7 @@
 # Shaders and GLSL
 
+**Contents:** [The Compile + Link Lifecycle](#the-compile--link-lifecycle) · [GLSL ES 3.00 (WebGL2)](#glsl-es-300-webgl2) · [Types You'll Actually Use](#types-youll-actually-use) · [Swizzling](#swizzling) · [Qualifiers](#qualifiers) · [Built-In Variables](#built-in-variables) · [Uniforms from JS](#uniforms-from-js) · [Precision](#precision) · [Control Flow Caveats](#control-flow-caveats) · [Common Mistakes](#common-mistakes)
+
 ## The Compile + Link Lifecycle
 
 A WebGL program is a vertex shader and a fragment shader compiled separately, then linked together. Both stages are required — there's no "fragment-only" program.

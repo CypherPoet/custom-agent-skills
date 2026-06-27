@@ -1,5 +1,7 @@
 # Pipeline and Setup
 
+**Contents:** [The Mental Model](#the-mental-model) · [Creating the Context](#creating-the-context) · [HiDPI and Resize](#hidpi-and-resize) · [State Machine Hygiene](#state-machine-hygiene) · [Clearing](#clearing) · [Context Loss](#context-loss) · [Common Mistakes](#common-mistakes)
+
 ## The Mental Model
 
 WebGL is a **rasterization engine**, not a "3D engine." It runs two programs you write — a vertex shader and a fragment shader — and rasterizes triangles between them. Everything else is data plumbing.
