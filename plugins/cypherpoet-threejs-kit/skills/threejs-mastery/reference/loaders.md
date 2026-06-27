@@ -229,7 +229,7 @@ import { KTX2Loader } from "three/addons/loaders/KTX2Loader.js";
 
 const ktx2Loader = new KTX2Loader();
 ktx2Loader.setTranscoderPath(
-  "https://cdn.jsdelivr.net/npm/three@0.183.0/examples/jsm/libs/basis/"
+  "https://cdn.jsdelivr.net/npm/three@0.185.0/examples/jsm/libs/basis/"
 );
 ktx2Loader.detectSupport(renderer);
 
@@ -256,6 +256,8 @@ new MTLLoader().load("model.mtl", (materials) => {
 ```
 
 ### FBX
+
+Since r184, `FBXLoader` auto-converts +Z-up models to +Y-up — any manual axis rotation you applied on load can be removed. Scale often still needs correcting:
 
 ```javascript
 import { FBXLoader } from "three/addons/loaders/FBXLoader.js";

@@ -283,6 +283,8 @@ material.positionNode = positionLocal.add(
 );
 ```
 
+> For a `SkinnedMesh` or morph-target mesh, base the offset on `positionGeometry` instead — under r185 `positionLocal` doesn't carry skinning/morph transforms inside `positionNode`. See [shaders.md](./shaders.md#vertex-displacement).
+
 ### Bind a uniform
 
 ```javascript

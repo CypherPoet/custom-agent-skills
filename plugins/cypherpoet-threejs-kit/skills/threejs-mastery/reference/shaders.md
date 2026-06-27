@@ -164,6 +164,8 @@ material.positionNode = positionLocal.add(
 );
 ```
 
+> **Skinned / morph meshes (r185):** the example above is correct for static geometry. When you assign `positionNode` on a `SkinnedMesh` or morph-target mesh, `positionLocal` no longer carries the internal skinning/morph transforms — base the displacement on `positionGeometry` (the pre-transform geometry vertices) instead. See the [Migration Guide](https://github.com/mrdoob/three.js/wiki/Migration-Guide) and [animation.md](./animation.md).
+
 ### Fresnel
 
 ```javascript
@@ -283,6 +285,15 @@ import { vec4 } from "three/tsl";
 
 material.outputNode = vec4(1, 0, 1, 1);
 ```
+
+## Recent TSL Additions (r184–r185)
+
+The node API grows each release. Two recent ones worth knowing:
+
+- **Per-frame logic in a node graph** — `OnFrameUpdate(callback)` / `OnBeforeFrameUpdate(callback)` (from `three/tsl`, r184) run a callback every frame; declare them inside an `Fn()`.
+- **Texture gather** — `texture(map, uv()).gather(channel)` (r185) returns, as a `vec4`, the four texels bilinear filtering would sample for the given channel (`0`–`3`). Add `.compare(ref)` on a depth texture for the hardware compare variant.
+
+When an example here references a node your version doesn't have, check the [release notes](https://github.com/mrdoob/three.js/releases) — the TSL surface moves fast.
 
 ## GLSL ShaderMaterial (Legacy)
 
@@ -700,6 +711,7 @@ color = mix(colorB, colorA, step(0.5, value));
 |---------|-----|
 | TSL node graph mutates but the material doesn't redraw | Assign a new node to `material.colorNode`/`positionNode`/`outputNode` and set `material.needsUpdate = true`. Don't mutate the node in place. |
 | `positionLocal` reads correctly but `material.positionNode = positionLocal.x = ...` errors | TSL nodes are immutable. Build a new expression: `positionLocal.add(...)`, not assignment to a swizzle. |
+| Vertex displacement via `positionNode` ignores skinning/morphing on a `SkinnedMesh` (r185+) | Inside `positionNode`, `positionLocal` doesn't carry internal vertex transforms. Base the displacement on `positionGeometry` for the pre-transform geometry vertices. |
 | GLSL fragment compiles, but the value is always 0 | You forgot to declare and write the `varying` in the vertex stage. Both stages must declare it; the vertex must write it. |
 | Mobile shows precision artifacts (bands, jitter) | Switch to `precision highp float;` at the top of the fragment shader; some mobile defaults to `mediump`. |
 | `texture2D` is "not defined" on a GLSL 3 shader | `glslVersion: THREE.GLSL3` changes the API to `texture(sampler, uv)` and requires `out vec4 fragColor;`. Pick GLSL 1 or 3 and write to match. |

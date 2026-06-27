@@ -177,6 +177,8 @@ renderer.setAnimationLoop(() => {
 
 ### FirstPersonControls
 
+Redesigned in r184 with smoothing (`dampingFactor`) and built-in touch/mobile support.
+
 ```javascript
 import { FirstPersonControls } from "three/addons/controls/FirstPersonControls.js";
 
@@ -187,6 +189,13 @@ controls.lookVertical = true;
 controls.constrainVertical = true;
 controls.verticalMin = Math.PI / 4;
 controls.verticalMax = (Math.PI * 3) / 4;
+controls.dampingFactor = 0.1;        // r184+ — smooths look/movement
+
+// Needs the per-frame delta, like FlyControls
+renderer.setAnimationLoop(() => {
+  controls.update(clock.getDelta());
+  renderer.render(scene, camera);
+});
 ```
 
 ### PointerLockControls

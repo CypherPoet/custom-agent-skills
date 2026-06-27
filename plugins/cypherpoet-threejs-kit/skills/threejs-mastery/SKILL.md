@@ -112,6 +112,8 @@ Or read the [release notes](https://github.com/mrdoob/three.js/releases). When a
 
 [`assets/scene-template.html`](./assets/scene-template.html) pins a specific Three.js version in its importmap — treat it as a fallback, not authoritative current state. Before handing the template (or any importmap snippet) to a user, verify against the latest release: `npm view three version`, the [release feed](https://github.com/mrdoob/three.js/releases), or context7's threejs docs. If the pin is behind by more than two minor releases, bump all three pinned URLs (`three`, `three/tsl`, `three/addons/`) before producing the answer.
 
+**Audit baseline:** this skill's content was last verified against **Three.js r185** (2026-06-26). When refreshing it for a newer release, diff **r185 → current** in the [Migration Guide](https://github.com/mrdoob/three.js/wiki/Migration-Guide) and release notes instead of re-checking everything — then bump this line (release + date) as the final step of the audit.
+
 ### Module Entry Points
 
 `three` ships several entry points. Pick the one that matches your renderer and your tooling:
@@ -275,6 +277,7 @@ These bite across every topic; topical mistakes live in each reference's own tab
 | Mixing `WebGLRenderer`-only APIs with `WebGPURenderer` and expecting them to work | Some legacy addons (`EffectComposer`, certain shader chunks) target WebGL. For WebGPU, migrate to the TSL equivalents in [postprocessing.md](./reference/postprocessing.md) and [shaders.md](./reference/shaders.md). |
 | Raycaster picks nothing on a canvas that isn't full-screen | NDC coords must use `getBoundingClientRect()`, not `window.innerWidth/Height`. See [interaction.md](./reference/interaction.md). |
 | TSL node looks correct but the material doesn't update | Reassign to `material.colorNode = …` (don't mutate nodes in place) and set `material.needsUpdate = true`. |
+| Transparency/blending looks wrong under `WebGPURenderer` after upgrading to r185 | r185 changed premultiplied-alpha handling ([#33369](https://github.com/mrdoob/three.js/issues/33369)). Set an opaque background: `scene.background = new THREE.Color(...)` or `renderer.setClearColor(color, 1)`. Use a transparent clear only when the canvas must blend with the HTML page. |
 
 ## See Also
 
