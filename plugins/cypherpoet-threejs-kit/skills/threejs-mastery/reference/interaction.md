@@ -4,6 +4,8 @@ Raycasting, camera controls, pointer/touch input, drag/transform gizmos, selecti
 
 > Scene/renderer setup: see [../SKILL.md#setup](../SKILL.md#setup).
 
+**Contents:** [Raycaster](#raycaster) · [Camera Controls](#camera-controls) · [Selection Patterns](#selection-patterns) · [Keyboard Input](#keyboard-input) · [Screen ↔ World Conversion](#screen--world-conversion) · [Interaction Manager Pattern](#interaction-manager-pattern) · [Performance Tips](#performance-tips) · [Common Mistakes](#common-mistakes)
+
 ## Raycaster
 
 ### Basic Picking

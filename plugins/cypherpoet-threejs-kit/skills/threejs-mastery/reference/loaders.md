@@ -4,6 +4,8 @@ Loading models (GLTF/GLB primary, plus OBJ/FBX/STL/PLY), textures (`TextureLoade
 
 > Scene/renderer setup: see [../SKILL.md#setup](../SKILL.md#setup).
 
+**Contents:** [LoadingManager](#loadingmanager--coordinate-progress) · [TextureLoader](#textureloader) · [CubeTextureLoader](#cubetextureloader) · [HDR / EXR Environments](#hdr--exr-environments) · [GLTFLoader](#gltfloader-primary-3d-format) · [Other Model Formats](#other-model-formats) · [Async / Promise Patterns](#async--promise-patterns) · [Cache](#cache) · [Asset Manager Pattern](#asset-manager-pattern) · [Loading From Other Sources](#loading-from-other-sources) · [Error Handling](#error-handling) · [Performance Tips](#performance-tips) · [Common Mistakes](#common-mistakes)
+
 ## LoadingManager — Coordinate Progress
 
 A single `LoadingManager` collects callbacks across multiple loaders so you can show progress and gate "ready" until everything is in.

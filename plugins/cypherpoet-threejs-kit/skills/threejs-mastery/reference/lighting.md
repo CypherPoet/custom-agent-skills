@@ -4,6 +4,8 @@ Light types, shadows, and image-based environment lighting. The light classes th
 
 > Scene/renderer setup: see [../SKILL.md#setup](../SKILL.md#setup).
 
+**Contents:** [Light Types](#light-types) · [Shadows](#shadows) · [Light Helpers](#light-helpers) · [Environment Lighting](#environment-lighting-ibl) · [Common Setups](#common-setups) · [Many Dynamic Lights](#many-dynamic-lights-webgpu) · [Performance Tips](#performance-tips) · [Common Mistakes](#common-mistakes)
+
 ## Light Types
 
 | Light            | Description            | Shadow Support | Cost     |

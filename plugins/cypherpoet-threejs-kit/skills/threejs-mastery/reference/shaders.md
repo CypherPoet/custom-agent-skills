@@ -9,6 +9,8 @@ Pick one per surface; you can mix in the same scene but the mental model is clea
 
 > Scene/renderer setup: see [../SKILL.md#setup](../SKILL.md#setup).
 
+**Contents:** [TSL](#tsl-modern) · [TSL Recipes](#tsl-recipes) · [Recent TSL Additions](#recent-tsl-additions-r184r185) · [GLSL ShaderMaterial](#glsl-shadermaterial-legacy) · [GLSL Function Reference](#glsl-built-in-function-reference) · [Common Material Options](#common-material-options-shadermaterial) · [Shader Chunks](#shader-chunks) · [Debugging](#debugging) · [Performance Tips](#performance-tips) · [Common Mistakes](#common-mistakes)
+
 ## TSL (Modern)
 
 ### Imports
@@ -298,6 +300,8 @@ When an example here references a node your version doesn't have, check the [rel
 ## GLSL ShaderMaterial (Legacy)
 
 Use when you need raw GLSL — third-party shader chunks, WebGL-only target, ports from legacy code.
+
+> For raw WebGL pipeline mechanics and deep GLSL technique *beneath* Three.js — custom `WebGLRenderingContext` work, advanced shader patterns, framework-limit drop-downs — see the sibling **`webgl-mastery`** skill (`cypherpoet-webgl-kit` dependency).
 
 ### Minimum Viable ShaderMaterial
 

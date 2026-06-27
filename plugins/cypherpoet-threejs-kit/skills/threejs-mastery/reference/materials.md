@@ -4,6 +4,8 @@ PBR, classic phong/lambert/basic, toon, point/line, and how to customize materia
 
 > Scene/renderer setup: see [../SKILL.md#setup](../SKILL.md#setup).
 
+**Contents:** [Material Types](#material-types) · [MeshBasicMaterial](#meshbasicmaterial) · [MeshLambertMaterial](#meshlambertmaterial) · [MeshPhongMaterial](#meshphongmaterial) · [MeshStandardMaterial](#meshstandardmaterial-pbr) · [MeshPhysicalMaterial](#meshphysicalmaterial) · [MeshToonMaterial](#meshtoonmaterial) · [Debug Materials](#debug-materials) · [Points / Line Materials](#pointsmaterial--linebasicmaterial--linedashedmaterial) · [Node Materials](#node-materials-tsl--modern-customization) · [ShaderMaterial](#shadermaterial-glsl--legacy--webgl) · [Patching Built-in Shaders](#patching-built-in-shaders-onbeforecompile) · [Common Material Properties](#common-material-properties) · [Multi-Material Meshes](#multi-material-meshes) · [Environment Maps](#environment-maps) · [Cloning, Modifying, and Disposing](#cloning-modifying-and-disposing) · [Performance Tips](#performance-tips) · [Common Mistakes](#common-mistakes)
+
 ## Material Types
 
 | Material                  | Use case                                  | Lighting           | Renderer note |

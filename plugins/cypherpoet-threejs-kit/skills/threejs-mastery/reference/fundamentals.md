@@ -2,6 +2,8 @@
 
 Cameras, Object3D, the scene graph, math utilities, and the building blocks every Three.js project leans on. Scene/renderer bootstrapping is covered once in [../SKILL.md#setup](../SKILL.md#setup); this file goes deeper on the parts the setup glosses over.
 
+**Contents:** [Scene](#scene) · [Cameras](#cameras) · [Renderer Configuration](#renderer-configuration) · [Object3D](#object3d) · [Group](#group) · [Mesh](#mesh) · [Coordinate System](#coordinate-system) · [Math Utilities](#math-utilities) · [LoadingManager](#loadingmanager) · [LOD](#lod-level-of-detail) · [Merging Static Geometry](#merging-static-geometry) · [Common Mistakes](#common-mistakes)
+
 ## Scene
 
 Top-level container for objects, lights, and cameras. Properties worth knowing:

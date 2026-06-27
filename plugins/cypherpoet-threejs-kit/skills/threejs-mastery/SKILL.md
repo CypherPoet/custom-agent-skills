@@ -26,6 +26,8 @@ Two rendering paths exist, and this skill treats them as primary/fallback:
 
 The two share the vast majority of the API. Specific differences are called out in the relevant reference file.
 
+**Going below the framework?** For raw WebGL2 / GLSL intricacies *beneath* Three.js — hand-rolling the GL pipeline, deep GLSL technique, or dropping down when you hit a framework limit — use the sibling **`webgl-mastery`** skill (the `cypherpoet-webgl-kit` dependency). This skill stays at the scene-graph / app level; `webgl-mastery` covers the layer underneath.
+
 ## When to Use
 
 Trigger this skill when the user:
@@ -123,23 +125,11 @@ Or read the [release notes](https://github.com/mrdoob/three.js/releases). When a
 - `three/tsl` — Shading language nodes (`uniform`, `texture`, `positionLocal`, `Fn`, etc.). Pairs with `three/webgpu`.
 - `three/addons/...` — Examples and add-ons (loaders, controls, helpers, post-processing passes). The old path `three/examples/jsm/...` still works but is being phased out — prefer `three/addons/`.
 
-### TypeScript
+### Project Setup Notes
 
-`@types/three` is no longer a separate install — type declarations ship inside the `three` package itself. In a TypeScript project, just `import * as THREE from "three"` (or `"three/webgpu"`) and types resolve automatically.
-
-### Bundler vs Importmap
-
-[`assets/scene-template.html`](./assets/scene-template.html) uses a CDN importmap for zero-tooling demos and quick prototypes — paste it into a static file and it runs. For real projects, install via npm and bundle with Vite (or Webpack, esbuild, etc.):
-
-```bash
-npm install three
-```
-
-Vite is the path-of-least-resistance choice: hot-reload, ESM, TS, and tree-shaking out of the box. The import statements in every example here work identically once `three` is installed locally.
-
-### React Projects
-
-For React, use [react-three-fiber](https://github.com/pmndrs/react-three-fiber) (`@react-three/fiber`) + [drei](https://github.com/pmndrs/drei) (`@react-three/drei`) rather than mounting Three.js directly. The references in this skill cover the underlying Three.js API; r3f wraps it in JSX components with a familiar React component lifecycle. r3f-specific patterns (`useFrame`, `useThree`, `<Canvas>`, the drei helpers) are out of scope for this skill, but the Three.js fundamentals — materials, lighting, loaders, shaders — apply unchanged.
+- **Install & bundle.** `npm install three`, then bundle with Vite (hot-reload, ESM, TS, tree-shaking out of the box; Webpack/esbuild work too). The CDN importmap in [`assets/scene-template.html`](./assets/scene-template.html) is for zero-tooling demos — the `import` statements are identical either way.
+- **TypeScript.** Types ship inside `three` now — no separate `@types/three`. Just `import * as THREE from "three"` (or `"three/webgpu"`).
+- **React.** Use [react-three-fiber](https://github.com/pmndrs/react-three-fiber) + [drei](https://github.com/pmndrs/drei) rather than mounting Three.js directly. The fundamentals in these references apply unchanged; r3f-specific APIs (`useFrame`, `<Canvas>`, drei helpers) are out of scope.
 
 ## Shared Laws
 
@@ -259,7 +249,7 @@ Quick routing cues:
 - Animating a model from GLTF, blending walk/run, morph targets, smooth follow / spring physics → **animation**.
 - Setting up a fresh scene, camera math, transforms, `Object3D` hierarchy, LOD, geometry merging → **fundamentals**.
 
-If the user asks something this skill doesn't cover (physics engines, XR/AR, audio, react-three-fiber abstractions beyond Three core), say so plainly — better to point at the right library than to half-answer.
+If the user asks something this skill doesn't cover (physics engines, XR/AR, audio, react-three-fiber abstractions beyond Three core), say so plainly — better to point at the right library than to half-answer. For raw WebGL2 / GLSL beneath the framework (hand-written pipeline, deep GLSL technique, framework-limit drop-downs), route to the **`webgl-mastery`** skill.
 
 ## Cross-Cutting Common Mistakes
 
@@ -281,6 +271,7 @@ These bite across every topic; topical mistakes live in each reference's own tab
 
 ## See Also
 
+- [`webgl-mastery` skill](../../../cypherpoet-webgl-kit/skills/webgl-mastery/SKILL.md) — sibling skill for raw WebGL2 / GLSL beneath Three.js (a declared dependency of this plugin).
 - [Three.js documentation](https://threejs.org/docs/) — official API reference.
 - [Three.js manual](https://threejs.org/manual/) — official tutorials.
 - [Three.js examples](https://threejs.org/examples/) — runnable showcases of nearly every API.

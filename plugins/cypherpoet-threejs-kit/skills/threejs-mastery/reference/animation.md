@@ -4,6 +4,8 @@ Three.js animation has three building blocks: `AnimationClip` (keyframe data), `
 
 > Render loop and `delta`: see [../SKILL.md#setup](../SKILL.md#setup).
 
+**Contents:** [Building an AnimationClip](#building-an-animationclip) · [AnimationMixer](#animationmixer) · [AnimationAction](#animationaction) · [Loading GLTF Animations](#loading-gltf-animations) · [Skeletal Animation](#skeletal-animation) · [Morph Targets](#morph-targets) · [Animation Blending](#animation-blending) · [Animation Utilities](#animation-utilities) · [Procedural Patterns](#procedural-patterns) · [Performance Tips](#performance-tips) · [Common Mistakes](#common-mistakes)
+
 ## Building an AnimationClip
 
 ```javascript

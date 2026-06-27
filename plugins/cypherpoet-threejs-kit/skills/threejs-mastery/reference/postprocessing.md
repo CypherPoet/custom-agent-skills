@@ -7,6 +7,8 @@ Two pipelines exist:
 
 > Scene/renderer setup: see [../SKILL.md#setup](../SKILL.md#setup).
 
+**Contents:** [TSL Post-Processing](#tsl-post-processing-modern) · [EffectComposer](#effectcomposer-legacy-webgl-pipeline) · [Multi-Scene Compositing](#multi-scene-compositing) · [Render to Texture](#render-to-texture-both-pipelines) · [Performance Tips](#performance-tips) · [Common Mistakes](#common-mistakes)
+
 ## TSL Post-Processing (Modern)
 
 ### Minimal Setup
