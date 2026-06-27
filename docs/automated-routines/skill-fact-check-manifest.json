@@ -12,8 +12,8 @@
     "cypherpoet-threejs-kit/threejs-mastery"
   ],
   "never": [
-    "cypherpoet-git-flow/changelog-maintenance",
-    "cypherpoet-git-flow/emoji-commits",
+    "cypherpoet-changelog-maintenance/changelog-maintenance",
+    "cypherpoet-emoji-commits/emoji-commits",
     "cypherpoet-marketplace-kit/skill-fact-check",
     "cypherpoet-session-handoff/session-handoff",
     "cypherpoet-session-harvest/session-harvest"

@@ -222,7 +222,7 @@ Open a PR **only if** the repo had ≥1 applied correction, ≥1 new flag, or �
 - bump <plugin> <oldver> → <newver>
 ```
 
-Match the repo's commit style (it uses gitmoji — see `cypherpoet-git-flow/emoji-commits`). Branch `claude/skill-fact-check`. Each cloned repo gets its **own** branch and PR via `gh pr create --repo <owner>/<repo>` / `gh pr edit --repo …`.
+Match the repo's commit style (it uses gitmoji — see `cypherpoet-emoji-commits/emoji-commits`). Branch `claude/skill-fact-check`. Each cloned repo gets its **own** branch and PR via `gh pr create --repo <owner>/<repo>` / `gh pr edit --repo …`.
 
 **PR title:** `🔍 Skill fact-check: N corrections, M flagged (<repo> <YYYY-MM-DD>)`
 
