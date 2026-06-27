@@ -140,4 +140,6 @@ A plugin's `version` (in `plugin.json`) is Claude Code's update cache key, so ed
 
 For skills inside a plugin, use [`/skill-creator`](https://github.com/anthropics/skills/tree/main/skills/skill-creator) — it handles drafts, evals, description optimization, and the general skill structure conventions.
 
+[`scripts/check-skill-structure.py`](../scripts/check-skill-structure.py) audits skill structure across the repo — `SKILL.md` stays under ~500 lines (split topical or once-needed depth into `reference/` files past that), `reference/` files over ~50 lines open with a `**Contents:**` jump-line, and those anchors resolve. Run it before opening a PR; it's report-only and the script itself is the source of truth for the rules.
+
 `*-workspace/` directories under any `skills/` folder are gitignored: they're transient eval-iteration scratch, not real skills.
