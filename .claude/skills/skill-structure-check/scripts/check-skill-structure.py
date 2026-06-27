@@ -2,30 +2,41 @@
 """
 check-skill-structure.py — audit skill structure across every plugin in this repo.
 
-Encodes the repo's skill-structure convention as runnable rules so SKILL.md files
-don't silently balloon and reference indexes don't drift:
+Bundled by the repo-local `skill-structure-check` skill. Encodes the repo's
+skill-structure convention as runnable rules so SKILL.md files don't silently
+balloon and reference indexes don't drift:
 
-  ERROR  SKILL.md over 500 lines              split topical / once-needed depth into
-                                              reference/ files (skill-creator: "<500 ideal")
-  ERROR  reference/*.md over 50 lines without it must open with a **Contents:** jump-line
+  ERROR  SKILL.md over 500 lines               split topical / once-needed depth into
+                                               reference/ files (skill-creator: "<500 ideal")
+  ERROR  reference/*.md over 50 lines without   it must open with a **Contents:** jump-line
          a **Contents:** jump-line
-  ERROR  a **Contents:** anchor that doesn't  stale table of contents — a heading was
-         resolve to a heading in its file     renamed or removed
-  WARN   SKILL.md 450-500 lines               approaching the limit; plan to split
+  ERROR  a **Contents:** anchor that doesn't    stale table of contents — a heading was
+         resolve to a heading in its file       renamed or removed
+  WARN   SKILL.md 450-500 lines                approaching the limit; plan to split
 
 Report-only. Exits 1 if any ERROR, else 0 (warnings never fail the run).
-Run from anywhere:  python3 scripts/check-skill-structure.py
+Run from anywhere in the repo:
+  python3 .claude/skills/skill-structure-check/scripts/check-skill-structure.py
 """
 import os
 import re
 import sys
 
-ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-PLUGINS = os.path.join(ROOT, "plugins")
-
 SKILL_OVER = 500      # hard limit (skill-creator's "<500 ideal")
 SKILL_WARN = 450      # soft heads-up band below the limit
 REF_TOC_FLOOR = 50    # reference files longer than this must carry a Contents line
+
+
+def find_repo_root(start):
+    """Walk up from `start` until a directory containing a plugins/ subdir is found."""
+    d = os.path.abspath(start)
+    while True:
+        if os.path.isdir(os.path.join(d, "plugins")):
+            return d
+        parent = os.path.dirname(d)
+        if parent == d:
+            return None
+        d = parent
 
 
 def gh_anchor(heading):
@@ -47,10 +58,10 @@ def heading_anchors(text):
     return valid
 
 
-def audit():
+def audit(plugins_dir):
     errors, warnings = [], []
-    for plugin in sorted(os.listdir(PLUGINS)):
-        skills_dir = os.path.join(PLUGINS, plugin, "skills")
+    for plugin in sorted(os.listdir(plugins_dir)):
+        skills_dir = os.path.join(plugins_dir, plugin, "skills")
         if not os.path.isdir(skills_dir):
             continue
         for skill in sorted(os.listdir(skills_dir)):
@@ -96,7 +107,11 @@ def render(rows, kind):
 
 
 def main():
-    errors, warnings = audit()
+    root = find_repo_root(os.path.dirname(os.path.abspath(__file__))) or find_repo_root(os.getcwd())
+    if not root:
+        print("error: could not find the repo root (no plugins/ directory above this script or the cwd).", file=sys.stderr)
+        return 2
+    errors, warnings = audit(os.path.join(root, "plugins"))
     if not errors and not warnings:
         print("OK — every SKILL.md is lean, reference files are indexed, and all Contents anchors resolve.")
         return 0
@@ -108,7 +123,7 @@ def main():
             print()
         print(f"{len(warnings)} WARNING(s):")
         render(warnings, "WARN")
-    print("\nRules: docs/PLUGIN-CONVENTIONS.md -> Skill Conventions (this script is the source of truth).")
+    print("\nRules: this skill's scripts/check-skill-structure.py is the source of truth; see docs/PLUGIN-CONVENTIONS.md -> Skill Conventions.")
     return 1 if errors else 0
 
 
