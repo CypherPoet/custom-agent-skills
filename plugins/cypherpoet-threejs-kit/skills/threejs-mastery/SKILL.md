@@ -116,20 +116,9 @@ Or read the [release notes](https://github.com/mrdoob/three.js/releases). When a
 
 **Audit baseline:** this skill's content was last verified against **Three.js r185** (2026-06-26). When refreshing it for a newer release, diff **r185 → current** in the [Migration Guide](https://github.com/mrdoob/three.js/wiki/Migration-Guide) and release notes instead of re-checking everything — then bump this line (release + date) as the final step of the audit.
 
-### Module Entry Points
+### Project Setup & Module Entry Points
 
-`three` ships several entry points. Pick the one that matches your renderer and your tooling:
-
-- `three` — WebGL build. Default for legacy projects.
-- `three/webgpu` — WebGPU build. Default for new projects targeting the modern path. Includes `WebGPURenderer`, `MeshStandardNodeMaterial`, and node-material classes.
-- `three/tsl` — Shading language nodes (`uniform`, `texture`, `positionLocal`, `Fn`, etc.). Pairs with `three/webgpu`.
-- `three/addons/...` — Examples and add-ons (loaders, controls, helpers, post-processing passes). The old path `three/examples/jsm/...` still works but is being phased out — prefer `three/addons/`.
-
-### Project Setup Notes
-
-- **Install & bundle.** `npm install three`, then bundle with Vite (hot-reload, ESM, TS, tree-shaking out of the box; Webpack/esbuild work too). The CDN importmap in [`assets/scene-template.html`](./assets/scene-template.html) is for zero-tooling demos — the `import` statements are identical either way.
-- **TypeScript.** Types ship inside `three` now — no separate `@types/three`. Just `import * as THREE from "three"` (or `"three/webgpu"`).
-- **React.** Use [react-three-fiber](https://github.com/pmndrs/react-three-fiber) + [drei](https://github.com/pmndrs/drei) rather than mounting Three.js directly. The fundamentals in these references apply unchanged; r3f-specific APIs (`useFrame`, `<Canvas>`, drei helpers) are out of scope.
+Module entry points (`three` / `three/webgpu` / `three/tsl` / `three/addons/`), npm + Vite bundling, TypeScript, and React (react-three-fiber) live in [reference/project-setup.md](./reference/project-setup.md).
 
 ## Shared Laws
 
@@ -230,6 +219,7 @@ All examples and references use `three/addons/...` — the modern alias. The old
 | Interaction | [interaction.md](./reference/interaction.md) | Raycaster, controls catalog (Orbit/Fly/PointerLock/Transform/Drag), selection, screen↔world |
 | Shaders | [shaders.md](./reference/shaders.md) | TSL essentials + recipes (primary), `ShaderMaterial`/GLSL (legacy), `onBeforeCompile` |
 | Post-processing | [postprocessing.md](./reference/postprocessing.md) | TSL `PostProcessing` pipeline + node passes (primary), `EffectComposer` (legacy) |
+| Project setup | [project-setup.md](./reference/project-setup.md) | Module entry points, npm/Vite bundling, TypeScript, React (r3f) |
 
 ## Routing Rules
 
