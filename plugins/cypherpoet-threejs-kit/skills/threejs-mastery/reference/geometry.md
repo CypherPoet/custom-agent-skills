@@ -4,6 +4,8 @@ Built-in shapes, custom `BufferGeometry`, instancing, and the math you need to b
 
 > Scene/renderer setup: see [../SKILL.md#setup](../SKILL.md#setup).
 
+**Contents:** [Built-in Geometries](#built-in-geometries) · [BufferGeometry](#buffergeometry) · [Edges & Wireframe](#edgesgeometry-and-wireframegeometry) · [Points](#points) · [Lines](#lines) · [Instancing](#instancing) · [Geometry Utilities](#geometry-utilities) · [Common Manipulations](#common-manipulations) · [Performance Tips](#performance-tips) · [Common Mistakes](#common-mistakes)
+
 ## Built-in Geometries
 
 ### Basic Shapes

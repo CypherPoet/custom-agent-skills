@@ -4,6 +4,8 @@ Three.js animation has three building blocks: `AnimationClip` (keyframe data), `
 
 > Render loop and `delta`: see [../SKILL.md#setup](../SKILL.md#setup).
 
+**Contents:** [Building an AnimationClip](#building-an-animationclip) · [AnimationMixer](#animationmixer) · [AnimationAction](#animationaction) · [Loading GLTF Animations](#loading-gltf-animations) · [Skeletal Animation](#skeletal-animation) · [Morph Targets](#morph-targets) · [Animation Blending](#animation-blending) · [Animation Utilities](#animation-utilities) · [Procedural Patterns](#procedural-patterns) · [Performance Tips](#performance-tips) · [Common Mistakes](#common-mistakes)
+
 ## Building an AnimationClip
 
 ```javascript
@@ -418,6 +420,7 @@ mesh.onAfterRender = () => {
 | `LoopOnce` plays then snaps back to frame 0 | Same fix — `clampWhenFinished = true`. |
 | Memory grows when swapping characters | Detach the mixer (`mixer.uncacheRoot(model)`), and dispose geometry/materials/textures via the model's `traverse`. |
 | Programmatic bone rotations get overwritten | The mixer is also writing those bones. Apply procedural bone changes *after* `mixer.update()` in the same frame, or use additive clips for layered motion. |
+| TSL `positionNode` displacement ignores skinning/morphing | Under r185, `positionLocal` doesn't carry skinning/morph transforms inside `positionNode`. Use `positionGeometry` for the pre-transform geometry vertices. See [shaders.md](./shaders.md#vertex-displacement). |
 | `findByName` returns `undefined` for a known-good clip | GLTF exporters sometimes rename clips (e.g., `Armature\|Walk`). Log `clips.map((c) => c.name)` to see the actual names. |
 
 ## See Also

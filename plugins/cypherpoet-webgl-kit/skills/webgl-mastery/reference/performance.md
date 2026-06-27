@@ -2,6 +2,8 @@
 
 WebGL bottlenecks fall into three families: too many draw calls, too much GPU state churn, and CPU↔GPU sync stalls. Frame budget is ~16ms at 60fps; on mobile, often half that. Measure with the browser's performance profiler before you optimize — guesses are usually wrong.
 
+**Contents:** [Instancing](#instancing--one-draw-many-copies) · [Uniform Buffer Objects (UBOs)](#uniform-buffer-objects-ubos) · [Draw Call Batching](#draw-call-batching) · [State Change Minimization](#state-change-minimization) · [Avoid CPU↔GPU Sync Points](#avoid-cpugpu-sync-points) · [Buffer Update Strategies](#buffer-update-strategies) · [Texture Atlasing](#texture-atlasing) · [Mobile-Specific Pitfalls](#mobile-specific-pitfalls) · [Measuring](#measuring) · [Common Mistakes](#common-mistakes)
+
 ## Instancing — One Draw, Many Copies
 
 When you draw the same mesh N times with only per-instance variation (position, color, scale), use **instancing**: one draw call, N copies.

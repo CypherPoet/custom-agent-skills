@@ -4,6 +4,8 @@ Loading models (GLTF/GLB primary, plus OBJ/FBX/STL/PLY), textures (`TextureLoade
 
 > Scene/renderer setup: see [../SKILL.md#setup](../SKILL.md#setup).
 
+**Contents:** [LoadingManager](#loadingmanager--coordinate-progress) · [TextureLoader](#textureloader) · [CubeTextureLoader](#cubetextureloader) · [HDR / EXR Environments](#hdr--exr-environments) · [GLTFLoader](#gltfloader-primary-3d-format) · [Other Model Formats](#other-model-formats) · [Async / Promise Patterns](#async--promise-patterns) · [Cache](#cache) · [Asset Manager Pattern](#asset-manager-pattern) · [Loading From Other Sources](#loading-from-other-sources) · [Error Handling](#error-handling) · [Performance Tips](#performance-tips) · [Common Mistakes](#common-mistakes)
+
 ## LoadingManager — Coordinate Progress
 
 A single `LoadingManager` collects callbacks across multiple loaders so you can show progress and gate "ready" until everything is in.
@@ -229,7 +231,7 @@ import { KTX2Loader } from "three/addons/loaders/KTX2Loader.js";
 
 const ktx2Loader = new KTX2Loader();
 ktx2Loader.setTranscoderPath(
-  "https://cdn.jsdelivr.net/npm/three@0.183.0/examples/jsm/libs/basis/"
+  "https://cdn.jsdelivr.net/npm/three@0.185.0/examples/jsm/libs/basis/"
 );
 ktx2Loader.detectSupport(renderer);
 
@@ -256,6 +258,8 @@ new MTLLoader().load("model.mtl", (materials) => {
 ```
 
 ### FBX
+
+Since r184, `FBXLoader` auto-converts +Z-up models to +Y-up — any manual axis rotation you applied on load can be removed. Scale often still needs correcting:
 
 ```javascript
 import { FBXLoader } from "three/addons/loaders/FBXLoader.js";

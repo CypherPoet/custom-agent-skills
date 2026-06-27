@@ -1,5 +1,7 @@
 # Buffers and Attributes
 
+**Contents:** [The Pieces](#the-pieces) · [Uploading Data](#uploading-data) · [VAOs Are Mandatory in Practice](#vaos-are-mandatory-in-practice) · [`vertexAttribPointer`](#vertexattribpointer--the-most-misread-api) · [Interleaved vs Separate Buffers](#interleaved-vs-separate-buffers) · [Indexed Draws](#indexed-draws) · [Per-Instance Attributes (Instancing)](#per-instance-attributes-instancing) · [Cleanup](#cleanup) · [Common Mistakes](#common-mistakes)
+
 ## The Pieces
 
 - **Buffer (VBO)**: a chunk of GPU memory. Holds vertex positions, colors, UVs — anything per-vertex. Created with `gl.createBuffer()`.

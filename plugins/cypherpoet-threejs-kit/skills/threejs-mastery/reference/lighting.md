@@ -4,6 +4,8 @@ Light types, shadows, and image-based environment lighting. The light classes th
 
 > Scene/renderer setup: see [../SKILL.md#setup](../SKILL.md#setup).
 
+**Contents:** [Light Types](#light-types) · [Shadows](#shadows) · [Light Helpers](#light-helpers) · [Environment Lighting](#environment-lighting-ibl) · [Common Setups](#common-setups) · [Many Dynamic Lights](#many-dynamic-lights-webgpu) · [Performance Tips](#performance-tips) · [Common Mistakes](#common-mistakes)
+
 ## Light Types
 
 | Light            | Description            | Shadow Support | Cost     |
@@ -144,6 +146,8 @@ dirLight.shadow.normalBias = 0.02;   // Bias along surface normal
 const helper = new THREE.CameraHelper(dirLight.shadow.camera);
 scene.add(helper);
 ```
+
+> **WebGPURenderer (r184+):** shadow quality improved, so these bias values can over-bias and cause peter-panning. Under WebGPU, start with `bias = 0` (and a small `normalBias`), then add bias only if acne actually appears.
 
 ### PointLight / SpotLight Shadows
 
@@ -313,6 +317,18 @@ light2.lookAt(0, 0, 0);
 scene.add(light1, light2, new THREE.AmbientLight(0x404040, 0.2));
 ```
 
+## Many Dynamic Lights (WebGPU)
+
+`WebGPURenderer` can pack lights into uniform arrays so adding or removing lights doesn't recompile affected materials — useful when the active light set changes at runtime. Opt in with `DynamicLighting` (r184):
+
+```javascript
+import { DynamicLighting } from "three/addons/lighting/DynamicLighting.js";
+
+renderer.lighting = new DynamicLighting();
+```
+
+Without it, each change to the light set can trigger a shader recompile.
+
 ## Performance Tips
 
 - **Limit light count.** Each light adds shader complexity. PBR materials with many lights re-evaluate per fragment.
@@ -334,7 +350,7 @@ otherMesh.layers.disable(1);
 |---------|-----|
 | Per-light `castShadow = true` but no visible shadows | Set `renderer.shadowMap.enabled = true` once on the renderer; verify both casting meshes (`castShadow`) and receiving surfaces (`receiveShadow`). |
 | Shadows look low-resolution or jagged | Shrink the shadow camera frustum so it tightly bounds shadow casters; bump `mapSize` only if that's not enough. |
-| Shadow acne (stripes on lit surfaces) | Tune `shadow.bias` (small negative, e.g. `-0.0001`) and `shadow.normalBias` (~`0.02`). |
+| Shadow acne (stripes on lit surfaces) | Tune `shadow.bias` (small negative, e.g. `-0.0001`) and `shadow.normalBias` (~`0.02`). Under `WebGPURenderer` (r184+) shadows improved — try `bias = 0` first; the old values can over-bias. |
 | Peter-panning (objects look detached from their shadows) | Reduce `normalBias`. The two biases trade off; tune both. |
 | RectAreaLight has no effect | Call `RectAreaLightUniformsLib.init()` once at startup, and only use it with `MeshStandardMaterial`/`MeshPhysicalMaterial`. |
 | HDR environment loaded but reflections look noisy | Run the HDR through `PMREMGenerator.fromEquirectangular()` before assigning to `scene.environment`. |

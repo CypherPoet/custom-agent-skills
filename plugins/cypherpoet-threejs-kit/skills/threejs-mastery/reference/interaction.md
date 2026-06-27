@@ -4,6 +4,8 @@ Raycasting, camera controls, pointer/touch input, drag/transform gizmos, selecti
 
 > Scene/renderer setup: see [../SKILL.md#setup](../SKILL.md#setup).
 
+**Contents:** [Raycaster](#raycaster) · [Camera Controls](#camera-controls) · [Selection Patterns](#selection-patterns) · [Keyboard Input](#keyboard-input) · [Screen ↔ World Conversion](#screen--world-conversion) · [Interaction Manager Pattern](#interaction-manager-pattern) · [Performance Tips](#performance-tips) · [Common Mistakes](#common-mistakes)
+
 ## Raycaster
 
 ### Basic Picking
@@ -177,6 +179,8 @@ renderer.setAnimationLoop(() => {
 
 ### FirstPersonControls
 
+Redesigned in r184 with smoothing (`dampingFactor`) and built-in touch/mobile support.
+
 ```javascript
 import { FirstPersonControls } from "three/addons/controls/FirstPersonControls.js";
 
@@ -187,6 +191,13 @@ controls.lookVertical = true;
 controls.constrainVertical = true;
 controls.verticalMin = Math.PI / 4;
 controls.verticalMax = (Math.PI * 3) / 4;
+controls.dampingFactor = 0.1;        // r184+ — smooths look/movement
+
+// Needs the per-frame delta, like FlyControls
+renderer.setAnimationLoop(() => {
+  controls.update(clock.getDelta());
+  renderer.render(scene, camera);
+});
 ```
 
 ### PointerLockControls

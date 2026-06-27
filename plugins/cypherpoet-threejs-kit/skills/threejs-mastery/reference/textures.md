@@ -4,6 +4,8 @@ Image, data, canvas, video, and HDR textures; color space; filtering; render tar
 
 > Scene/renderer setup: see [../SKILL.md#setup](../SKILL.md#setup).
 
+**Contents:** [Loading](#loading) · [Color Space](#color-space--the-1-gotcha) · [Wrapping & Repeat](#wrapping-repeat-offset-rotation) · [Filtering & Mipmaps](#filtering-and-mipmaps) · [Texture Sources](#texture-sources) · [Cube & HDR Environments](#cube-textures-and-hdr-environments) · [Render Targets](#render-targets) · [CubeCamera](#cubecamera--dynamic-environment-maps) · [UV Mapping](#uv-mapping) · [Texture Atlases](#texture-atlases) · [PBR Texture Set](#pbr-texture-set) · [Procedural Textures](#procedural-textures) · [Memory Management](#memory-management) · [Performance Tips](#performance-tips) · [Common Mistakes](#common-mistakes)
+
 ## Loading
 
 ### TextureLoader

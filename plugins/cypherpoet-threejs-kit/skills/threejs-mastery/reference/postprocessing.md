@@ -7,6 +7,8 @@ Two pipelines exist:
 
 > Scene/renderer setup: see [../SKILL.md#setup](../SKILL.md#setup).
 
+**Contents:** [TSL Post-Processing](#tsl-post-processing-modern) · [EffectComposer](#effectcomposer-legacy-webgl-pipeline) · [Multi-Scene Compositing](#multi-scene-compositing) · [Render to Texture](#render-to-texture-both-pipelines) · [Performance Tips](#performance-tips) · [Common Mistakes](#common-mistakes)
+
 ## TSL Post-Processing (Modern)
 
 ### Minimal Setup
@@ -107,6 +109,37 @@ import { fxaa } from "three/addons/tsl/display/FXAANode.js";
 
 const scenePass = pass(scene, camera);
 postProcessing.outputNode = fxaa(scenePass);
+```
+
+### Upscaling: FSR1 and TAAU (r184, WebGPU)
+
+Render the scene below display resolution and reconstruct to full res — a large GPU win on heavy scenes.
+
+**FSR1** (spatial, simplest) — AMD FidelityFX Super Resolution 1:
+
+```javascript
+import { pass } from "three/tsl";
+import { fsr1 } from "three/addons/tsl/display/FSR1Node.js";
+
+const scenePass = pass(scene, camera);     // render target sized below display res
+postProcessing.outputNode = fsr1(scenePass, /* sharpness */ 0.2, /* denoise */ false);
+```
+
+**TAAU** (temporal, higher quality) reconstructs from motion. Its signature is `taau(beauty, depth, velocity, camera)`, so the scene pass must expose depth plus a `velocity` MRT channel:
+
+```javascript
+import { pass, mrt, output, velocity } from "three/tsl";
+import { taau } from "three/addons/tsl/display/TAAUNode.js";
+
+const scenePass = pass(scene, camera);
+scenePass.setMRT(mrt({ output, velocity }));
+
+postProcessing.outputNode = taau(
+  scenePass.getTextureNode("output"),
+  scenePass.getTextureNode("depth"),
+  scenePass.getTextureNode("velocity"),
+  camera
+);
 ```
 
 ### Custom Output Transform (Tonemap Where You Need It)
@@ -457,6 +490,7 @@ new UnrealBloomPass(
 - **Toggle passes by device tier.** Disable expensive passes on mobile or low-end GPUs.
 - **`pass.enabled = false`** suppresses a pass without rebuilding the chain.
 - **FXAA is cheap** compared to `samples > 0` on the render target. Use it as the default AA in post-processing chains.
+- **Render below display resolution and upscale** with FSR1 or TAAU (r184) for a large GPU win on heavy scenes — see *Upscaling* above.
 
 ## Common Mistakes
 

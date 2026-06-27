@@ -26,6 +26,8 @@ Two rendering paths exist, and this skill treats them as primary/fallback:
 
 The two share the vast majority of the API. Specific differences are called out in the relevant reference file.
 
+**Going below the framework?** For raw WebGL2 / GLSL intricacies *beneath* Three.js — hand-rolling the GL pipeline, deep GLSL technique, or dropping down when you hit a framework limit — use the sibling **`webgl-mastery`** skill (the `cypherpoet-webgl-kit` dependency). This skill stays at the scene-graph / app level; `webgl-mastery` covers the layer underneath.
+
 ## When to Use
 
 Trigger this skill when the user:
@@ -112,32 +114,11 @@ Or read the [release notes](https://github.com/mrdoob/three.js/releases). When a
 
 [`assets/scene-template.html`](./assets/scene-template.html) pins a specific Three.js version in its importmap — treat it as a fallback, not authoritative current state. Before handing the template (or any importmap snippet) to a user, verify against the latest release: `npm view three version`, the [release feed](https://github.com/mrdoob/three.js/releases), or context7's threejs docs. If the pin is behind by more than two minor releases, bump all three pinned URLs (`three`, `three/tsl`, `three/addons/`) before producing the answer.
 
-### Module Entry Points
+**Audit baseline:** this skill's content was last verified against **Three.js r185** (2026-06-26). When refreshing it for a newer release, diff **r185 → current** in the [Migration Guide](https://github.com/mrdoob/three.js/wiki/Migration-Guide) and release notes instead of re-checking everything — then bump this line (release + date) as the final step of the audit.
 
-`three` ships several entry points. Pick the one that matches your renderer and your tooling:
+### Project Setup & Module Entry Points
 
-- `three` — WebGL build. Default for legacy projects.
-- `three/webgpu` — WebGPU build. Default for new projects targeting the modern path. Includes `WebGPURenderer`, `MeshStandardNodeMaterial`, and node-material classes.
-- `three/tsl` — Shading language nodes (`uniform`, `texture`, `positionLocal`, `Fn`, etc.). Pairs with `three/webgpu`.
-- `three/addons/...` — Examples and add-ons (loaders, controls, helpers, post-processing passes). The old path `three/examples/jsm/...` still works but is being phased out — prefer `three/addons/`.
-
-### TypeScript
-
-`@types/three` is no longer a separate install — type declarations ship inside the `three` package itself. In a TypeScript project, just `import * as THREE from "three"` (or `"three/webgpu"`) and types resolve automatically.
-
-### Bundler vs Importmap
-
-[`assets/scene-template.html`](./assets/scene-template.html) uses a CDN importmap for zero-tooling demos and quick prototypes — paste it into a static file and it runs. For real projects, install via npm and bundle with Vite (or Webpack, esbuild, etc.):
-
-```bash
-npm install three
-```
-
-Vite is the path-of-least-resistance choice: hot-reload, ESM, TS, and tree-shaking out of the box. The import statements in every example here work identically once `three` is installed locally.
-
-### React Projects
-
-For React, use [react-three-fiber](https://github.com/pmndrs/react-three-fiber) (`@react-three/fiber`) + [drei](https://github.com/pmndrs/drei) (`@react-three/drei`) rather than mounting Three.js directly. The references in this skill cover the underlying Three.js API; r3f wraps it in JSX components with a familiar React component lifecycle. r3f-specific patterns (`useFrame`, `useThree`, `<Canvas>`, the drei helpers) are out of scope for this skill, but the Three.js fundamentals — materials, lighting, loaders, shaders — apply unchanged.
+Module entry points (`three` / `three/webgpu` / `three/tsl` / `three/addons/`), npm + Vite bundling, TypeScript, and React (react-three-fiber) live in [reference/project-setup.md](./reference/project-setup.md).
 
 ## Shared Laws
 
@@ -238,6 +219,7 @@ All examples and references use `three/addons/...` — the modern alias. The old
 | Interaction | [interaction.md](./reference/interaction.md) | Raycaster, controls catalog (Orbit/Fly/PointerLock/Transform/Drag), selection, screen↔world |
 | Shaders | [shaders.md](./reference/shaders.md) | TSL essentials + recipes (primary), `ShaderMaterial`/GLSL (legacy), `onBeforeCompile` |
 | Post-processing | [postprocessing.md](./reference/postprocessing.md) | TSL `PostProcessing` pipeline + node passes (primary), `EffectComposer` (legacy) |
+| Project setup | [project-setup.md](./reference/project-setup.md) | Module entry points, npm/Vite bundling, TypeScript, React (r3f) |
 
 ## Routing Rules
 
@@ -257,7 +239,7 @@ Quick routing cues:
 - Animating a model from GLTF, blending walk/run, morph targets, smooth follow / spring physics → **animation**.
 - Setting up a fresh scene, camera math, transforms, `Object3D` hierarchy, LOD, geometry merging → **fundamentals**.
 
-If the user asks something this skill doesn't cover (physics engines, XR/AR, audio, react-three-fiber abstractions beyond Three core), say so plainly — better to point at the right library than to half-answer.
+If the user asks something this skill doesn't cover (physics engines, XR/AR, audio, react-three-fiber abstractions beyond Three core), say so plainly — better to point at the right library than to half-answer. For raw WebGL2 / GLSL beneath the framework (hand-written pipeline, deep GLSL technique, framework-limit drop-downs), route to the **`webgl-mastery`** skill.
 
 ## Cross-Cutting Common Mistakes
 
@@ -275,9 +257,11 @@ These bite across every topic; topical mistakes live in each reference's own tab
 | Mixing `WebGLRenderer`-only APIs with `WebGPURenderer` and expecting them to work | Some legacy addons (`EffectComposer`, certain shader chunks) target WebGL. For WebGPU, migrate to the TSL equivalents in [postprocessing.md](./reference/postprocessing.md) and [shaders.md](./reference/shaders.md). |
 | Raycaster picks nothing on a canvas that isn't full-screen | NDC coords must use `getBoundingClientRect()`, not `window.innerWidth/Height`. See [interaction.md](./reference/interaction.md). |
 | TSL node looks correct but the material doesn't update | Reassign to `material.colorNode = …` (don't mutate nodes in place) and set `material.needsUpdate = true`. |
+| Transparency/blending looks wrong under `WebGPURenderer` after upgrading to r185 | r185 changed premultiplied-alpha handling ([#33369](https://github.com/mrdoob/three.js/issues/33369)). Set an opaque background: `scene.background = new THREE.Color(...)` or `renderer.setClearColor(color, 1)`. Use a transparent clear only when the canvas must blend with the HTML page. |
 
 ## See Also
 
+- [`webgl-mastery` skill](../../../cypherpoet-webgl-kit/skills/webgl-mastery/SKILL.md) — sibling skill for raw WebGL2 / GLSL beneath Three.js (a declared dependency of this plugin).
 - [Three.js documentation](https://threejs.org/docs/) — official API reference.
 - [Three.js manual](https://threejs.org/manual/) — official tutorials.
 - [Three.js examples](https://threejs.org/examples/) — runnable showcases of nearly every API.
