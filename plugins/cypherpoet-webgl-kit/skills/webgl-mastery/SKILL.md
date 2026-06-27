@@ -22,9 +22,9 @@ description: >
 
 ## Overview
 
-A guide for working in raw WebGL2 (and WebGL1 where it differs) plus the GLSL technique that powers shaders. The body of this file is shared mental models, cross-cutting laws, a routing table, and the mistakes that bite across every topic. Topical depth lives in [reference/](./reference/) — one file per topic, each closing with its own Common Mistakes table.
+A guide for working in raw WebGL2 (and WebGL1 where it differs) plus the GLSL technique that powers shaders. The body of this file is shared mental models, cross-cutting laws, a routing table, and the mistakes that bite across every topic. Topical depth lives in [references/](./references/) — one file per topic, each closing with its own Common Mistakes table.
 
-**WebGL2 is the default path.** This skill teaches WebGL2 first. WebGL1 still ships in older browsers (and is the only option on a few legacy embedded WebViews); the differences are concentrated in [reference/webgl1-vs-webgl2.md](./reference/webgl1-vs-webgl2.md). When in doubt, ask `getContext('webgl2')` first and fall back to `getContext('webgl')`.
+**WebGL2 is the default path.** This skill teaches WebGL2 first. WebGL1 still ships in older browsers (and is the only option on a few legacy embedded WebViews); the differences are concentrated in [references/webgl1-vs-webgl2.md](./references/webgl1-vs-webgl2.md). When in doubt, ask `getContext('webgl2')` first and fall back to `getContext('webgl')`.
 
 **Raw WebGL vs. framework.** If the user is building a real 3D app — scene graph, model loaders, cameras, lighting rigs, post-processing chains — point them at [threejs-mastery](../../../cypherpoet-threejs-kit/skills/threejs-mastery/SKILL.md). This skill is for the layer underneath: writing custom shaders, learning the pipeline, hitting a framework limit and dropping down, or wanting zero dependencies.
 
@@ -121,16 +121,16 @@ gl.viewport(0, 0, canvas.width, canvas.height);
 
 | Topic | Reference | What it covers |
 |-------|-----------|----------------|
-| Pipeline and setup | [pipeline-and-setup.md](./reference/pipeline-and-setup.md) | Rasterization model, state machine, context creation, HiDPI/resize, context loss |
-| Shaders and GLSL | [shaders-and-glsl.md](./reference/shaders-and-glsl.md) | Shader anatomy, compile/link lifecycle, GLSL ES 3.00 syntax, qualifiers, built-ins |
-| Buffers and attributes | [buffers-and-attributes.md](./reference/buffers-and-attributes.md) | VBOs, IBOs, VAOs, attribute layout, interleaved vs separate, indexed draws |
-| Transforms | [transforms.md](./reference/transforms.md) | 2D matrices, model-view-projection, orthographic vs perspective, basic camera |
-| Textures and framebuffers | [textures-and-framebuffers.md](./reference/textures-and-framebuffers.md) | Texture creation/upload, filtering, mipmaps, FBOs, render-to-texture |
-| Lighting | [lighting.md](./reference/lighting.md) | Directional/point/spot, normals, ambient + diffuse + specular |
-| Shader techniques | [shader-techniques.md](./reference/shader-techniques.md) | `smoothstep`/`mix`, noise (value/Perlin/simplex), SDFs, polar coords, FBM |
-| Performance | [performance.md](./reference/performance.md) | Instancing, UBOs, draw-call batching, state caching, CPU↔GPU sync stalls |
-| Debugging | [debugging.md](./reference/debugging.md) | Reading info logs, `gl.getError`, Spector.js, the black-canvas checklist |
-| WebGL1 vs WebGL2 | [webgl1-vs-webgl2.md](./reference/webgl1-vs-webgl2.md) | Concise diff for legacy code or fallback paths |
+| Pipeline and setup | [pipeline-and-setup.md](./references/pipeline-and-setup.md) | Rasterization model, state machine, context creation, HiDPI/resize, context loss |
+| Shaders and GLSL | [shaders-and-glsl.md](./references/shaders-and-glsl.md) | Shader anatomy, compile/link lifecycle, GLSL ES 3.00 syntax, qualifiers, built-ins |
+| Buffers and attributes | [buffers-and-attributes.md](./references/buffers-and-attributes.md) | VBOs, IBOs, VAOs, attribute layout, interleaved vs separate, indexed draws |
+| Transforms | [transforms.md](./references/transforms.md) | 2D matrices, model-view-projection, orthographic vs perspective, basic camera |
+| Textures and framebuffers | [textures-and-framebuffers.md](./references/textures-and-framebuffers.md) | Texture creation/upload, filtering, mipmaps, FBOs, render-to-texture |
+| Lighting | [lighting.md](./references/lighting.md) | Directional/point/spot, normals, ambient + diffuse + specular |
+| Shader techniques | [shader-techniques.md](./references/shader-techniques.md) | `smoothstep`/`mix`, noise (value/Perlin/simplex), SDFs, polar coords, FBM |
+| Performance | [performance.md](./references/performance.md) | Instancing, UBOs, draw-call batching, state caching, CPU↔GPU sync stalls |
+| Debugging | [debugging.md](./references/debugging.md) | Reading info logs, `gl.getError`, Spector.js, the black-canvas checklist |
+| WebGL1 vs WebGL2 | [webgl1-vs-webgl2.md](./references/webgl1-vs-webgl2.md) | Concise diff for legacy code or fallback paths |
 
 ## Routing Rules
 
@@ -155,7 +155,7 @@ These bite across every topic. Topical mistakes live in each reference's own tab
 
 | Mistake | Fix |
 |---------|-----|
-| Canvas is black, no errors logged | Walk the [debugging checklist](./reference/debugging.md). The top suspects: viewport not set after canvas resize, depth test rejecting everything, attribute not enabled, wrong VAO bound, uniform set before `useProgram`. |
+| Canvas is black, no errors logged | Walk the [debugging checklist](./references/debugging.md). The top suspects: viewport not set after canvas resize, depth test rejecting everything, attribute not enabled, wrong VAO bound, uniform set before `useProgram`. |
 | Shader compiles, draw does nothing | Linking probably failed silently — check `getProgramInfoLog`. Common cause: vertex `out` and fragment `in` names/types don't match. |
 | `gl.bufferData` "applies to the wrong buffer" | You forgot to `bindBuffer` first, or a later call rebound the target. WebGL is a state machine — bind before every upload. |
 | Attribute pointers reset themselves between draws | You're not using a VAO. WebGL2: always bind a VAO before setting attribute pointers; the VAO captures the pointer state. WebGL1: same thing via `OES_vertex_array_object`. |

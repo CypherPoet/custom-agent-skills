@@ -10,7 +10,7 @@ Real-time shading boils down to three terms added together per fragment:
 - **Diffuse** (Lambertian): how much the surface is facing the light. `max(dot(normal, lightDir), 0)`.
 - **Specular**: the shiny highlight. Depends on the angle between the reflection and the camera.
 
-This is the Blinn-Phong model — old-school, but cheap, well-understood, and a great starting point for any custom shader. PBR (physically based rendering) is the modern standard for app-level engines; for raw-WebGL custom effects, Phong/Blinn-Phong is usually what you want. (For PBR in a framework, hand off to [`threejs-mastery` materials](../../../../cypherpoet-threejs-kit/skills/threejs-mastery/reference/materials.md).)
+This is the Blinn-Phong model — old-school, but cheap, well-understood, and a great starting point for any custom shader. PBR (physically based rendering) is the modern standard for app-level engines; for raw-WebGL custom effects, Phong/Blinn-Phong is usually what you want. (For PBR in a framework, hand off to [`threejs-mastery` materials](../../../../cypherpoet-threejs-kit/skills/threejs-mastery/references/materials.md).)
 
 ## Per-Vertex vs Per-Fragment
 
