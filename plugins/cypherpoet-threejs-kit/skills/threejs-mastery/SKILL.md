@@ -21,7 +21,7 @@ Comprehensive Three.js reference covering modern best practices. The body of thi
 
 Two rendering paths exist, and this skill treats them as primary/fallback:
 
-- **Primary: `WebGPURenderer` + TSL.** Recommended for new code. Async initialization, node-based shading, modern post-processing pipeline. Works in Chrome, Edge, Safari 18+, and Firefox behind a flag.
+- **Primary: `WebGPURenderer` + TSL.** Recommended for new code. Async initialization, node-based shading, modern post-processing pipeline. Works by default in Chrome/Edge 113+, Safari 26+, and Firefox 141+.
 - **Fallback: `WebGLRenderer` + GLSL.** The compatibility path. Same scene graph, same API surface for materials/lights/loaders, classic `ShaderMaterial` + `EffectComposer`. Use when you need to support older browsers or you're porting existing code.
 
 The two share the vast majority of the API. Specific differences are called out in the relevant reference file.

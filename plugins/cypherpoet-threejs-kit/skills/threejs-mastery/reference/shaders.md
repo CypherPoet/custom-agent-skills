@@ -41,7 +41,7 @@ import {
   texture, cubeTexture,
 
   // Time
-  time, timerLocal,
+  time, deltaTime,
 
   // Flow / functions
   Fn, If, Discard,

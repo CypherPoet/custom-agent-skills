@@ -4,7 +4,7 @@ Generated from: iOS 27.0, macOS 27.0, tvOS 27.0, watchOS 27.0, visionOS 27.0
 
 ## Types
 
-- `struct CarouselTabViewStyle : TabViewStyle` (iOS, macOS, tvOS, watchOS, visionOS)
+- `struct CarouselTabViewStyle : TabViewStyle` (watchOS)
   - Renamed to VerticalPageTabViewStyle
 - `struct MenuButton<Label, Content> : View where Label : View, Content : View` (iOS, macOS, tvOS, watchOS, visionOS)
   - Use `Menu` instead.
