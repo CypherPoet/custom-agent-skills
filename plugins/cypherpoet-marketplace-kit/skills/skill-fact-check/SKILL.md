@@ -55,10 +55,12 @@ Fact-check the `SKILL.md` body and **all** `references/**/*.md` under the unit (
 ## Inputs
 
 - **Manifest:** `docs/automated-routines/skill-fact-check-manifest.json` (in the repo being checked) — maps units to a volatility tier (`weekly`, `monthly`, `never`); unlisted units default to `monthly`. See [Manifest reference](#manifest-reference).
-- **Datelines** (the freshness cursor). Parse these formats, all real in this repo family:
-  - `**Verified:** 2026-05-30`
-  - `verified 2026-05-30` (inline, e.g. "specs here verified 2026-05-30")
-  - `**(as of 2026-06)**` and `*As of 2026-06; trust the screen*` (month precision → treat as the 1st)
+- **Datelines** (the freshness cursor). Parse every form below — all real in this repo family. Match only these explicit verification/sync labels, never bare content dates (`released …`, `Created: …`), which would falsely mark a stale unit fresh:
+  - `**Verified:** 2026-05-30` — the canonical marker this routine writes.
+  - `> Last synced: 2026-06-19` and `*Last synced with Apple HIG: 2026-06-16*` — the dominant existing form (the label may carry trailing words before the colon).
+  - `**Audit baseline:** … verified against … (2026-06-26)` — parenthetical date (e.g. the three.js audit marker).
+  - `verified 2026-05-30` (inline, e.g. "specs here verified 2026-05-30").
+  - `**(as of 2026-06)**` and `*As of 2026-06; trust the screen*` (month precision → treat as the 1st).
 - **Source markers:** `**Source:**` and `**Source of truth:**` — the URL a skill declares as its own authority. Check this first.
 - **Caps:** `MAX_UNITS_PER_RUN = 12`, `MAX_AUTOAPPLY = 10`.
 
@@ -76,20 +78,27 @@ tier_of = {u: 'weekly' for u in m.get('weekly', [])}
 tier_of.update({u: 'never' for u in m.get('never', [])})
 default_tier = m.get('defaults', {}).get('tier', 'monthly')
 
+# Recognize every freshness-marker dialect in the repo family — but only
+# explicit verification/sync labels, never bare content dates ("released …",
+# "Created: …", "replaced … on …"), which would falsely mark a stale unit fresh.
 DATE = re.compile(
-    r'\*\*Verified:\*\*\s*(\d{4}-\d{2}-\d{2})'      # **Verified:** YYYY-MM-DD
-    r'|verified\s+(\d{4}-\d{2}-\d{2})'              # verified YYYY-MM-DD
-    r'|as of\s+(\d{4})-(\d{2})', re.I)             # (as of) YYYY-MM
+    r'\*\*verified:\*\*\s*(?P<full>\d{4}-\d{2}-\d{2})'                      # **Verified:** YYYY-MM-DD (canonical)
+    r'|(?:last\s+)?synced\b[^\n:]{0,40}?:\s*(?P<synced>\d{4}-\d{2}-\d{2})'  # [Last ]synced[ with …]: YYYY-MM-DD
+    r'|audit baseline\b[^\n]*?\((?P<audit>\d{4}-\d{2}-\d{2})\)'             # **Audit baseline:** … (YYYY-MM-DD)
+    r'|\bverified\s+(?P<vinline>\d{4}-\d{2}-\d{2})'                         # verified YYYY-MM-DD (inline)
+    r'|\bas of\s+(?P<month>\d{4}-\d{2})', re.I)                            # as of YYYY-MM (month → 1st)
 
 def newest(unit_dir: pathlib.Path) -> datetime.date:
     found = []
     for p in unit_dir.rglob('*.md'):
         if '/evals/' in str(p) or '-workspace/' in str(p):
             continue
-        for g in DATE.finditer(p.read_text(errors='ignore')):
-            if g.group(1):   found.append(g.group(1))
-            elif g.group(2): found.append(g.group(2))
-            elif g.group(3): found.append(f"{g.group(3)}-{g.group(4)}-01")
+        for m in DATE.finditer(p.read_text(errors='ignore')):
+            iso = m.group('full') or m.group('synced') or m.group('audit') or m.group('vinline')
+            if iso:
+                found.append(iso)
+            elif m.group('month'):
+                found.append(m.group('month') + '-01')
     return max((datetime.date.fromisoformat(d) for d in found),
                default=datetime.date(1970, 1, 1))
 
@@ -116,7 +125,7 @@ for row in due[:12]:                         # MAX_UNITS_PER_RUN
 print(f"# {len(due)} due, {min(len(due),12)} this run, {max(0,len(due)-12)} deferred")
 ```
 
-The first runs will surface a large backlog (most units have no dateline yet → epoch → always due). That's expected: the cap drains it most-overdue-first, and the set shrinks as merged PRs stamp datelines.
+Early runs surface a backlog: any unit with no *recognized* dateline reads as epoch → always due. That's expected — the cap drains it most-overdue-first, and the set shrinks as the parser above picks up the freshness markers already in the files and merged PRs stamp datelines (Step 6) on the units that lack one.
 
 ## Step 2 — Idempotency check (per repo)
 
@@ -206,8 +215,8 @@ After editing any file under a plugin, bump that plugin's `.claude-plugin/plugin
 
 ## Step 6 — Datelines
 
-- **`CONFIRMED_UNCHANGED`** section that carries a dateline → **re-stamp** it to today's date (this is what lets a re-verified unit go quiet until its next interval; without it the unit re-researches every run forever). Re-stamp in place; no version bump.
-- **No dateline but a `**Source:**`/`**Source of truth:**` marker exists** → append `**Verified:** <today>` right after that marker so future runs can age-gate the unit. (This bootstraps the private repo's units, which start with no datelines.)
+- **`CONFIRMED_UNCHANGED`** section that carries a recognized dateline → **re-stamp** it to today's date, updating whichever marker form the unit already uses (`**Verified:**`, `Last synced:`, the audit-baseline date, etc.) — this is what lets a re-verified unit go quiet until its next interval; without it the unit re-researches every run forever. Re-stamp in place; no version bump.
+- **No recognized dateline anywhere in the unit** → stamp `**Verified:** <today>` so future runs can age-gate it (only when the unit was actually verified this run — ≥1 `CONFIRMED_UNCHANGED` or `CORRECT`; never on a pure `ERROR`). Place it right after a `**Source:**`/`**Source of truth:**` marker if one exists, otherwise as a new line directly under the unit's `SKILL.md` H1 title. This drains the backlog of units that start with no dateline (the whole private repo, plus units whose only freshness cue is a version like "As of iOS 27") and converges every unit on the canonical `**Verified:**` marker — so the age-gate stops depending on legacy dialects. No version bump (a dateline isn't user-visible guidance).
 - **`ERROR`** (couldn't verify) → **never** re-stamp; leaving the date stale correctly keeps the unit due.
 - **`CORRECT`** → the correction already bumps the version; re-stamp the section's dateline to today as part of the same edit.
 
