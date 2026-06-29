@@ -77,7 +77,7 @@ ForEach(items.enumerated(), id: \.element.id) { index, item in
 
 ### `.enumerated()` and `RandomAccessCollection`
 
-As of Swift 6.1, the sequence returned by `.enumerated()` conditionally conforms to `Collection`, `BidirectionalCollection`, and `RandomAccessCollection` when the base collection does. `ForEach` requires its data to be a `RandomAccessCollection`, so on Swift 6.1 and later you can pass `items.enumerated()` directly - no `Array(...)` wrapper is needed. On earlier toolchains the wrapper is still required. Favor the direct form in new code; it avoids an eager copy of the collection on every body evaluation.
+As of Swift 6.2, the sequence returned by `.enumerated()` conditionally conforms to `Collection`, `BidirectionalCollection`, and `RandomAccessCollection` when the base collection does. `ForEach` requires its data to be a `RandomAccessCollection`, so on Swift 6.2 and later you can pass `items.enumerated()` directly - no `Array(...)` wrapper is needed. On earlier toolchains the wrapper is still required. Favor the direct form in new code; it avoids an eager copy of the collection on every body evaluation.
 
 ## Don't create a new id on every body evaluation
 

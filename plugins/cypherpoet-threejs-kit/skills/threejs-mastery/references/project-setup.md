@@ -14,7 +14,7 @@ Module entry points, build tooling, and framework integration *around* a Three.j
 ## Install, Bundle, and Frameworks
 
 - **Install & bundle.** `npm install three`, then bundle with Vite (hot-reload, ESM, TS, tree-shaking out of the box; Webpack/esbuild work too). The CDN importmap in [../assets/scene-template.html](../assets/scene-template.html) is for zero-tooling demos — the `import` statements are identical either way.
-- **TypeScript.** Types ship inside `three` now — no separate `@types/three`. Just `import * as THREE from "three"` (or `"three/webgpu"`).
+- **TypeScript.** Install `@types/three` separately — `three` doesn't bundle its own declarations (`npm i -D @types/three`; keep its version aligned with `three`). Then `import * as THREE from "three"` (or `"three/webgpu"`).
 - **React.** Use [react-three-fiber](https://github.com/pmndrs/react-three-fiber) + [drei](https://github.com/pmndrs/drei) rather than mounting Three.js directly. The fundamentals in these references apply unchanged; r3f-specific APIs (`useFrame`, `<Canvas>`, drei helpers) are out of scope.
 
 ## See Also
