@@ -5,6 +5,8 @@
 
 ---
 
+**Contents:** [§2.1 App Completeness](#21-app-completeness) · [§2.2 Beta Testing](#22-beta-testing) · [§2.3 Accurate Metadata](#23-accurate-metadata) · [§2.4 Hardware Compatibility](#24-hardware-compatibility) · [§2.5 Software Requirements](#25-software-requirements)
+
 ## §2.1 App Completeness
 
 ### §2.1(a) Final Versions Only

@@ -7,6 +7,8 @@ If the business model is not obvious, it must be explained in metadata and App R
 
 ---
 
+**Contents:** [3.1 Payments](#31-payments) · [3.2 Other Business Model Issues](#32-other-business-model-issues)
+
 ## 3.1 Payments
 
 ---

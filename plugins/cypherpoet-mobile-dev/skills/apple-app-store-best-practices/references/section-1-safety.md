@@ -5,6 +5,8 @@
 
 ---
 
+**Contents:** [§1.1 Objectionable Content](#11-objectionable-content) · [§1.2 User-Generated Content](#12-user-generated-content) · [§1.3 Kids Category](#13-kids-category) · [§1.4 Physical Harm](#14-physical-harm-asr--nr) · [§1.5 Developer Information](#15-developer-information-asr--nr) · [§1.6 Data Security](#16-data-security-asr--nr) · [§1.7 Reporting Criminal Activity](#17-reporting-criminal-activity)
+
 ## §1.1 Objectionable Content
 
 Apps should not include content that is offensive, insensitive, upsetting, intended to disgust, in exceptionally poor taste, or just plain creepy.

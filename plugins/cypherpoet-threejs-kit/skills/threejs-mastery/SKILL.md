@@ -17,7 +17,7 @@ description: >
 
 ## Overview
 
-Comprehensive Three.js reference covering modern best practices. The body of this file is shared setup, cross-cutting laws, a topic routing table, and the mistakes that bite across every topic. Topical depth lives in [reference/](./reference/) — one file per topic, each ending in its own Common Mistakes table.
+Comprehensive Three.js reference covering modern best practices. The body of this file is shared setup, cross-cutting laws, a topic routing table, and the mistakes that bite across every topic. Topical depth lives in [references/](./references/) — one file per topic, each ending in its own Common Mistakes table.
 
 Two rendering paths exist, and this skill treats them as primary/fallback:
 
@@ -118,7 +118,7 @@ Or read the [release notes](https://github.com/mrdoob/three.js/releases). When a
 
 ### Project Setup & Module Entry Points
 
-Module entry points (`three` / `three/webgpu` / `three/tsl` / `three/addons/`), npm + Vite bundling, TypeScript, and React (react-three-fiber) live in [reference/project-setup.md](./reference/project-setup.md).
+Module entry points (`three` / `three/webgpu` / `three/tsl` / `three/addons/`), npm + Vite bundling, TypeScript, and React (react-three-fiber) live in [references/project-setup.md](./references/project-setup.md).
 
 ## Shared Laws
 
@@ -133,7 +133,7 @@ PBR rendering assumes linear math internally and sRGB on the way out. Stick to t
 - Data textures (normal, roughness, metalness, AO, displacement) stay at the default (no color space).
 - `GLTFLoader` sets these correctly automatically. `TextureLoader` does not — set them yourself.
 
-See [reference/textures.md#color-space](./reference/textures.md#color-space--the-1-gotcha).
+See [references/textures.md#color-space](./references/textures.md#color-space--the-1-gotcha).
 
 ### Frame Delta
 
@@ -209,17 +209,17 @@ All examples and references use `three/addons/...` — the modern alias. The old
 
 | Topic | Reference | What it covers |
 |-------|-----------|----------------|
-| Fundamentals | [fundamentals.md](./reference/fundamentals.md) | Cameras, Object3D, scene graph, math utilities, LoadingManager, LOD, merging |
-| Geometry | [geometry.md](./reference/geometry.md) | Built-in shapes, `BufferGeometry`, attributes, instancing, edges/wireframe, morph targets |
-| Materials | [materials.md](./reference/materials.md) | PBR (`MeshStandardMaterial`), classic types, node materials (TSL), ShaderMaterial (GLSL) |
-| Lighting | [lighting.md](./reference/lighting.md) | Light types, shadows tuning, IBL/PMREM/HDR environment lighting |
-| Textures | [textures.md](./reference/textures.md) | Loaders, color space, filtering, render targets, UVs, compressed textures |
-| Loaders | [loaders.md](./reference/loaders.md) | GLTF deep dive, Draco/Meshopt/KTX2 compression, OBJ/FBX/STL/PLY, async patterns |
-| Animation | [animation.md](./reference/animation.md) | `AnimationMixer`, GLTF clips, skeletal/morph targets, blending, procedural patterns |
-| Interaction | [interaction.md](./reference/interaction.md) | Raycaster, controls catalog (Orbit/Fly/PointerLock/Transform/Drag), selection, screen↔world |
-| Shaders | [shaders.md](./reference/shaders.md) | TSL essentials + recipes (primary), `ShaderMaterial`/GLSL (legacy), `onBeforeCompile` |
-| Post-processing | [postprocessing.md](./reference/postprocessing.md) | TSL `PostProcessing` pipeline + node passes (primary), `EffectComposer` (legacy) |
-| Project setup | [project-setup.md](./reference/project-setup.md) | Module entry points, npm/Vite bundling, TypeScript, React (r3f) |
+| Fundamentals | [fundamentals.md](./references/fundamentals.md) | Cameras, Object3D, scene graph, math utilities, LoadingManager, LOD, merging |
+| Geometry | [geometry.md](./references/geometry.md) | Built-in shapes, `BufferGeometry`, attributes, instancing, edges/wireframe, morph targets |
+| Materials | [materials.md](./references/materials.md) | PBR (`MeshStandardMaterial`), classic types, node materials (TSL), ShaderMaterial (GLSL) |
+| Lighting | [lighting.md](./references/lighting.md) | Light types, shadows tuning, IBL/PMREM/HDR environment lighting |
+| Textures | [textures.md](./references/textures.md) | Loaders, color space, filtering, render targets, UVs, compressed textures |
+| Loaders | [loaders.md](./references/loaders.md) | GLTF deep dive, Draco/Meshopt/KTX2 compression, OBJ/FBX/STL/PLY, async patterns |
+| Animation | [animation.md](./references/animation.md) | `AnimationMixer`, GLTF clips, skeletal/morph targets, blending, procedural patterns |
+| Interaction | [interaction.md](./references/interaction.md) | Raycaster, controls catalog (Orbit/Fly/PointerLock/Transform/Drag), selection, screen↔world |
+| Shaders | [shaders.md](./references/shaders.md) | TSL essentials + recipes (primary), `ShaderMaterial`/GLSL (legacy), `onBeforeCompile` |
+| Post-processing | [postprocessing.md](./references/postprocessing.md) | TSL `PostProcessing` pipeline + node passes (primary), `EffectComposer` (legacy) |
+| Project setup | [project-setup.md](./references/project-setup.md) | Module entry points, npm/Vite bundling, TypeScript, React (r3f) |
 
 ## Routing Rules
 
@@ -249,13 +249,13 @@ These bite across every topic; topical mistakes live in each reference's own tab
 |---------|-----|
 | `WebGPURenderer` scene renders nothing | Forgot `await renderer.init()` before the first render. Always async-initialize. |
 | Loaded GLB looks washed out / overbright | Set `texture.colorSpace = THREE.SRGBColorSpace` on color/albedo/emissive maps. Data textures stay linear. GLTFLoader does this automatically; TextureLoader does not. |
-| Animations don't play | Missing `mixer.update(delta)` in the render loop. See [animation.md](./reference/animation.md). |
+| Animations don't play | Missing `mixer.update(delta)` in the render loop. See [animation.md](./references/animation.md). |
 | Damped `OrbitControls` feel skippy | Missing `controls.update()` in the render loop (required whenever damping or autoRotate is on). |
 | Post-processing effects don't appear | Render loop still calls `renderer.render()` instead of `composer.render()` / `postProcessing.render()`. |
 | Memory grows when swapping models/textures | Every retired geometry/material/texture/render target needs `.dispose()`. Walk the model on teardown. |
 | Resize handler updates camera and renderer but effects stay blurry | Composer / postProcessing also need `setSize(w, h)`. |
-| Mixing `WebGLRenderer`-only APIs with `WebGPURenderer` and expecting them to work | Some legacy addons (`EffectComposer`, certain shader chunks) target WebGL. For WebGPU, migrate to the TSL equivalents in [postprocessing.md](./reference/postprocessing.md) and [shaders.md](./reference/shaders.md). |
-| Raycaster picks nothing on a canvas that isn't full-screen | NDC coords must use `getBoundingClientRect()`, not `window.innerWidth/Height`. See [interaction.md](./reference/interaction.md). |
+| Mixing `WebGLRenderer`-only APIs with `WebGPURenderer` and expecting them to work | Some legacy addons (`EffectComposer`, certain shader chunks) target WebGL. For WebGPU, migrate to the TSL equivalents in [postprocessing.md](./references/postprocessing.md) and [shaders.md](./references/shaders.md). |
+| Raycaster picks nothing on a canvas that isn't full-screen | NDC coords must use `getBoundingClientRect()`, not `window.innerWidth/Height`. See [interaction.md](./references/interaction.md). |
 | TSL node looks correct but the material doesn't update | Reassign to `material.colorNode = …` (don't mutate nodes in place) and set `material.needsUpdate = true`. |
 | Transparency/blending looks wrong under `WebGPURenderer` after upgrading to r185 | r185 changed premultiplied-alpha handling ([#33369](https://github.com/mrdoob/three.js/issues/33369)). Set an opaque background: `scene.background = new THREE.Color(...)` or `renderer.setClearColor(color, 1)`. Use a transparent clear only when the canvas must blend with the HTML page. |
 
