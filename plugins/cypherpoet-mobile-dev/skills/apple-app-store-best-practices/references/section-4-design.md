@@ -5,6 +5,8 @@
 
 ---
 
+**Contents:** [4.1 Copycats](#41-copycats) · [4.2 Minimum Functionality](#42-minimum-functionality) · [4.3 Spam](#43-spam) · [4.4 Extensions](#44-extensions-asr--nr) · [4.5 Apple Sites and Services](#45-apple-sites-and-services-asr--nr) · [4.7 Mini Apps, Mini Games, Streaming Games, Chatbots, Plug-ins, Game Emulators](#47-mini-apps-mini-games-streaming-games-chatbots-plug-ins-game-emulators-asr--nr) · [4.8 Login Services](#48-login-services-asr--nr) · [4.9 Apple Pay](#49-apple-pay-asr--nr) · [4.10 Monetizing Built-In Capabilities](#410-monetizing-built-in-capabilities-asr--nr)
+
 ## 4.1 Copycats
 
 ### 4.1(a) Original Ideas Required

@@ -4,17 +4,21 @@ check-skill-structure.py — audit skill structure across every plugin in this r
 
 Bundled by the repo-local `skill-structure-check` skill. Encodes the repo's
 skill-structure convention as runnable rules so SKILL.md files don't silently
-balloon and reference indexes don't drift:
+balloon and large reference files stay navigable:
 
-  ERROR  SKILL.md over 500 lines               split topical / once-needed depth into
-                                               reference/ files (skill-creator: "<500 ideal")
-  ERROR  reference/*.md over 50 lines without   it must open with a **Contents:** jump-line
-         a **Contents:** jump-line
-  ERROR  a **Contents:** anchor that doesn't    stale table of contents — a heading was
-         resolve to a heading in its file       renamed or removed
-  WARN   SKILL.md 450-500 lines                approaching the limit; plan to split
+  ERROR     SKILL.md over 500 lines              split topical / once-needed depth into
+                                                 references/ files (skill-creator: "<500 ideal")
+  ERROR     a **Contents:** anchor that doesn't   stale table of contents — a heading was
+            resolve to a heading in its file      renamed or removed
+  WARNING   SKILL.md 450-500 lines               approaching the limit; plan to split
+  ADVISORY  references/*.md over 300 lines        large reference files get a **Contents:** jump-line
+            without a **Contents:** jump-line     so they stay navigable (summarized, non-failing)
 
-Report-only. Exits 1 if any ERROR, else 0 (warnings never fail the run).
+The skill-level "table of contents" is the routing table in SKILL.md that points
+at the references/ files; that's a soft convention, not machine-checked here.
+Short reference files don't need their own Contents line.
+
+Report-only. Exits 1 if any ERROR, else 0 (warnings/advisories never fail the run).
 Run from anywhere in the repo:
   python3 .claude/skills/skill-structure-check/scripts/check-skill-structure.py
 """
@@ -24,7 +28,7 @@ import sys
 
 SKILL_OVER = 500      # hard limit (skill-creator's "<500 ideal")
 SKILL_WARN = 450      # soft heads-up band below the limit
-REF_TOC_FLOOR = 50    # reference files longer than this must carry a Contents line
+REF_TOC_FLOOR = 300   # only large reference files (skill-creator's >300-line threshold) need a Contents line
 
 
 def find_repo_root(start):
@@ -59,7 +63,7 @@ def heading_anchors(text):
 
 
 def audit(plugins_dir):
-    errors, warnings = [], []
+    errors, warnings, missing_contents = [], [], []
     for plugin in sorted(os.listdir(plugins_dir)):
         skills_dir = os.path.join(plugins_dir, plugin, "skills")
         if not os.path.isdir(skills_dir):
@@ -73,11 +77,11 @@ def audit(plugins_dir):
 
             n = len(open(skill_md, encoding="utf-8").read().splitlines())
             if n > SKILL_OVER:
-                errors.append((label, "SKILL.md", f"{n} lines (>{SKILL_OVER}) — split depth into reference/ files"))
+                errors.append((label, "SKILL.md", f"{n} lines (>{SKILL_OVER}) — split depth into references/ files"))
             elif n >= SKILL_WARN:
                 warnings.append((label, "SKILL.md", f"{n} lines — approaching the {SKILL_OVER}-line limit"))
 
-            ref_dir = os.path.join(base, "reference")
+            ref_dir = os.path.join(base, "references")
             if not os.path.isdir(ref_dir):
                 continue
             for f in sorted(os.listdir(ref_dir)):
@@ -88,13 +92,13 @@ def audit(plugins_dir):
                 contents = re.search(r"^\*\*Contents:\*\*.*$", text, re.M)
                 if not contents:
                     if rlines > REF_TOC_FLOOR:
-                        errors.append((label, f"reference/{f}", f"{rlines} lines — missing a **Contents:** jump-line"))
+                        missing_contents.append((label, f"{f} ({rlines} lines)"))
                     continue
                 valid = heading_anchors(text)
                 broken = [t for t in re.findall(r"\(#([^)]+)\)", contents.group(0)) if t not in valid]
                 if broken:
-                    errors.append((label, f"reference/{f}", "stale **Contents:** anchors: " + ", ".join("#" + b for b in broken)))
-    return errors, warnings
+                    errors.append((label, f"references/{f}", "stale **Contents:** anchors: " + ", ".join("#" + b for b in broken)))
+    return errors, warnings, missing_contents
 
 
 def render(rows, kind):
@@ -111,10 +115,12 @@ def main():
     if not root:
         print("error: could not find the repo root (no plugins/ directory above this script or the cwd).", file=sys.stderr)
         return 2
-    errors, warnings = audit(os.path.join(root, "plugins"))
-    if not errors and not warnings:
-        print("OK — every SKILL.md is lean, reference files are indexed, and all Contents anchors resolve.")
+    errors, warnings, missing_contents = audit(os.path.join(root, "plugins"))
+
+    if not errors and not warnings and not missing_contents:
+        print("OK — every SKILL.md is lean, large reference files are indexed, and all Contents anchors resolve.")
         return 0
+
     if errors:
         print(f"{len(errors)} ERROR(s):")
         render(errors, "ERROR")
@@ -123,6 +129,16 @@ def main():
             print()
         print(f"{len(warnings)} WARNING(s):")
         render(warnings, "WARN")
+    if missing_contents:
+        if errors or warnings:
+            print()
+        by_skill = {}
+        for label, f in missing_contents:
+            by_skill.setdefault(label, []).append(f)
+        print(f"ADVISORY — {len(missing_contents)} large reference file(s) across {len(by_skill)} skill(s) lack a **Contents:** jump-line (non-failing):")
+        for label in sorted(by_skill):
+            print(f"  {label}: {', '.join(by_skill[label])}")
+
     print("\nRules: this skill's scripts/check-skill-structure.py is the source of truth; see docs/PLUGIN-CONVENTIONS.md -> Skill Conventions.")
     return 1 if errors else 0
 
