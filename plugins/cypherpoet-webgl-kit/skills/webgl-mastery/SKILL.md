@@ -20,6 +20,8 @@ description: >
 
 # WebGL Fundamentals
 
+**Verified:** 2026-07-03
+
 ## Overview
 
 A guide for working in raw WebGL2 (and WebGL1 where it differs) plus the GLSL technique that powers shaders. The body of this file is shared mental models, cross-cutting laws, a routing table, and the mistakes that bite across every topic. Topical depth lives in [references/](./references/) — one file per topic, each closing with its own Common Mistakes table.
