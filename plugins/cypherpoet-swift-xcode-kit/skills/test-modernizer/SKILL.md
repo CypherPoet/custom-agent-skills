@@ -4,6 +4,8 @@ name: test-modernizer
 ---
 # Test Modernizer
 
+**Verified:** 2026-07-03
+
 Apply when: user asks to modernize, update, migrate, supercharge, or convert their tests.
 XCTest should be migrated to Swift Testing when possible, existing Swift Testing tests should be evaluated to see if they could be better structured adopting newer features.
 
