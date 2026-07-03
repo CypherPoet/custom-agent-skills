@@ -1,0 +1,161 @@
+{
+  "skill_name": "react-three-fiber-mastery",
+  "evals": [
+    {
+      "id": 1,
+      "eval_name": "v9-typescript-extend-typing",
+      "prompt": "I upgraded to @react-three/fiber v9 and my custom element typing broke. I had this working before:\n\n```ts\nimport { extend, Object3DNode } from '@react-three/fiber'\nimport { MeshLineGeometry } from 'meshline'\nextend({ MeshLineGeometry })\ndeclare global {\n  namespace JSX {\n    interface IntrinsicElements {\n      meshLineGeometry: Object3DNode<MeshLineGeometry, typeof MeshLineGeometry>\n    }\n  }\n}\n```\n\nNow TypeScript says Object3DNode doesn't exist. How do I fix this for v9?",
+      "expected_output": "In v9, Object3DNode (along with Node, BufferGeometryNode, MaterialNode, LightNode, MeshProps, etc.) was removed and the global JSX.IntrinsicElements augmentation pattern no longer applies (React 19 deprecated the global JSX namespace). Fix: augment the ThreeElements interface via module augmentation using ThreeElement<T>: declare module '@react-three/fiber' { interface ThreeElements { meshLineGeometry: ThreeElement<typeof MeshLineGeometry> } }. Alternatively use the v9 factory extend signature (const MeshLine = extend(MeshLineGeometry)) which infers types with no augmentation.",
+      "files": [],
+      "assertions": [
+        "States that Object3DNode (and related *Node types) were removed in v9 and replaced by ThreeElement<T>",
+        "Replaces the global JSX.IntrinsicElements augmentation with `declare module '@react-three/fiber'` augmentation of the ThreeElements interface",
+        "Shows correct v9 syntax: ThreeElement<typeof MeshLineGeometry> inside interface ThreeElements",
+        "Optionally offers the factory extend form (const X = extend(Class)) as the augmentation-free alternative",
+        "Does NOT present the global JSX namespace pattern as still workable in v9"
+      ]
+    },
+    {
+      "id": 2,
+      "eval_name": "v9-bufferattribute-args",
+      "prompt": "My custom point cloud renders nothing after upgrading React Three Fiber. The geometry code is:\n\n```jsx\n<points>\n  <bufferGeometry>\n    <bufferAttribute attach=\"attributes-position\" count={positions.length / 3} array={positions} itemSize={3} />\n  </bufferGeometry>\n  <pointsMaterial size={0.05} />\n</points>\n```\n\nIt worked before the upgrade. What's wrong?",
+      "expected_output": "The count/array/itemSize prop form is the v8 pattern; in v9 a bufferAttribute must be constructed via constructor args: <bufferAttribute attach=\"attributes-position\" args={[positions, 3]} />. Setting array/itemSize as props no longer initializes the attribute correctly.",
+      "files": [],
+      "assertions": [
+        "Identifies the v8 count/array/itemSize prop form as the cause",
+        "Gives the v9 fix using constructor args: args={[positions, 3]}",
+        "Keeps attach=\"attributes-position\"",
+        "Does NOT suggest the props form is fine and look elsewhere for the bug"
+      ]
+    },
+    {
+      "id": 3,
+      "eval_name": "setstate-in-useframe",
+      "prompt": "I'm animating a mesh in React Three Fiber like this and my whole app gets janky:\n\n```jsx\nconst [rotation, setRotation] = useState(0)\nuseFrame(() => setRotation((r) => r + 0.01))\nreturn <mesh rotation-y={rotation}>...</mesh>\n```\n\nHow should I do this instead?",
+      "expected_output": "Never setState inside useFrame — it re-renders the React tree every frame. Mutate the object through a ref instead: const ref = useRef(); useFrame((state, delta) => (ref.current.rotation.y += delta)); and use delta (seconds) rather than a fixed 0.01 so speed is refresh-rate independent.",
+      "files": [],
+      "assertions": [
+        "States the rule that setState must never be called inside useFrame (per-frame re-renders cause the jank)",
+        "Rewrites the animation as a ref mutation inside useFrame",
+        "Uses the delta argument for frame-rate independent speed instead of a fixed increment",
+        "Does NOT propose throttling setState or memoizing as the primary fix"
+      ]
+    },
+    {
+      "id": 4,
+      "eval_name": "v9-gl-callback-props",
+      "prompt": "In my React Three Fiber v9 app I want to construct the WebGLRenderer myself to tweak its constructor options. I remember doing gl={(canvas) => new THREE.WebGLRenderer({ canvas, logarithmicDepthBuffer: true })} — is that still right?",
+      "expected_output": "No — in v9 the Canvas gl callback receives the default constructor props (which include the canvas) instead of the bare canvas element: gl={(props) => new THREE.WebGLRenderer({ ...props, logarithmicDepthBuffer: true })}. The callback may also be async / return a Promise (which is how WebGPURenderer with await renderer.init() is supported).",
+      "files": [],
+      "assertions": [
+        "States that in v9 the gl callback receives constructor props, not the canvas element",
+        "Shows spreading the received props into the renderer constructor",
+        "Mentions the callback can be async / return a Promise (WebGPU support)",
+        "Does NOT present the (canvas) => ... v8 signature as current"
+      ]
+    },
+    {
+      "id": 5,
+      "eval_name": "react19-peer-pairing",
+      "prompt": "I'm on React 18.3 and npm install @react-three/drei@latest fails with an ERESOLVE peer dependency error. Can I force-install it? What are my options?",
+      "expected_output": "Don't force it — drei v10 hard-requires @react-three/fiber ^9 and React ^19, and fiber v9 requires React >=19. On React 18 the compatible line is fiber v8 + drei v9, but that line is frozen (fiber's last v8 release was 8.18.0 in February 2025, no maintenance since). The real options: upgrade the app to React 19 and use fiber 9 + drei 10, or pin drei@9 + fiber@8 and accept no further updates.",
+      "files": [],
+      "assertions": [
+        "States drei 10 requires fiber 9 and React 19 (peer deps), so force-installing on React 18 is broken, not a workaround",
+        "Identifies fiber 8 + drei 9 as the React 18 compatible pairing",
+        "Notes the v8 line is frozen/unmaintained (final release 8.18.0, Feb 2025)",
+        "Recommends upgrading to React 19 as the forward path"
+      ]
+    },
+    {
+      "id": 6,
+      "eval_name": "demand-frameloop-invalidate",
+      "prompt": "To save battery I set <Canvas frameloop=\"demand\"> in my R3F app. Now the scene only updates when I resize the window — my imperative camera tween and my custom pointer-driven mutations do nothing visible. What am I missing?",
+      "expected_output": "Under frameloop=\"demand\" R3F only renders when it knows state changed. Imperative mutations outside React must request a frame with invalidate() (from useThree). Calls coalesce — invalidate() requests a frame rather than rendering immediately. Wire control/tween change events to invalidate (drei controls do this automatically when using frameloop=\"demand\").",
+      "files": [],
+      "assertions": [
+        "Explains that demand mode renders only on requested frames",
+        "Prescribes calling invalidate() (from useThree or the global export) after imperative mutations",
+        "Notes invalidate() coalesces/requests rather than renders synchronously",
+        "Mentions drei controls (or event wiring like controls.addEventListener('change', invalidate)) handle this automatically"
+      ]
+    },
+    {
+      "id": 7,
+      "eval_name": "aomap-uv1-channel",
+      "prompt": "My aoMap has no effect on a plain planeGeometry mesh in React Three Fiber (three r185, meshStandardMaterial). The texture loads fine. What do I need to add?",
+      "expected_output": "aoMap (and lightMap) sample the second UV set. In three r151+ that attribute is named uv1 (it was uv2 before r151): geometry.setAttribute('uv1', geometry.attributes.uv). Add that (e.g. in a useLayoutEffect/useEffect over a geometry ref, or via a cloned geometry) and the aoMap will apply.",
+      "files": [],
+      "assertions": [
+        "Identifies the missing second UV set as the cause",
+        "Names the attribute uv1 for three r151+ (not uv2)",
+        "Shows copying the base uv attribute: geometry.setAttribute('uv1', geometry.attributes.uv)",
+        "Does NOT instruct setting uv2 as the current fix (mentioning it as the pre-r151 legacy name is fine)"
+      ]
+    },
+    {
+      "id": 8,
+      "eval_name": "bloom-emissive-pairing",
+      "prompt": "I added <EffectComposer><Bloom /></EffectComposer> from @react-three/postprocessing but I want only my neon sign mesh to glow, not the whole scene. How do I make just that one material bloom?",
+      "expected_output": "Raise the bloom luminanceThreshold above normal scene brightness and push the neon material's emissive past 1: <meshStandardMaterial emissive={color} emissiveIntensity={2+} toneMapped={false} /> — toneMapped={false} is required so the >1 values survive tone mapping and cross the threshold. (Alternatively mipmapBlur + Selection/Select from @react-three/postprocessing for true per-object selection.)",
+      "files": [],
+      "assertions": [
+        "Pairs emissiveIntensity greater than 1 with toneMapped={false} on the glowing material",
+        "Uses luminanceThreshold on Bloom to exclude normal-brightness surfaces",
+        "Explains why toneMapped={false} matters (tone mapping clamps the >1 emissive values)",
+        "Optionally mentions Selection/Select as the explicit selective-bloom mechanism"
+      ]
+    },
+    {
+      "id": 9,
+      "eval_name": "rapier-collider-half-extents",
+      "prompt": "Using @react-three/rapier, I have a 2×1×4 (width × height × depth) box mesh and I'm adding an explicit collider: <CuboidCollider args={[2, 1, 4]} />. The box sinks halfway into other objects before colliding. Why?",
+      "expected_output": "CuboidCollider args are HALF-extents, not full sizes. For a 2×1×4 box the collider is args={[1, 0.5, 2]}. (Same convention family: BallCollider takes a radius; CapsuleCollider args are [halfHeight, radius].) The doubled collider explains the interpenetration offset.",
+      "files": [],
+      "assertions": [
+        "States that Rapier cuboid collider args are half-extents",
+        "Gives the corrected args={[1, 0.5, 2]} for the 2×1×4 box",
+        "Connects the oversized collider to the observed sinking/offset behavior",
+        "Optionally notes CapsuleCollider's [halfHeight, radius] convention"
+      ]
+    },
+    {
+      "id": 10,
+      "eval_name": "kinematic-velocity-body-control",
+      "prompt": "In @react-three/rapier, what's the difference between type=\"kinematicPosition\" and type=\"kinematicVelocity\" on a RigidBody, and which API calls move each one?",
+      "expected_output": "Both are script-driven bodies that push dynamic bodies but ignore forces. kinematicPosition is moved by setting target transforms each step: setNextKinematicTranslation / setNextKinematicRotation. kinematicVelocity is moved by setting velocities: setLinvel / setAngvel. (Fixed never moves; dynamic is force/impulse-driven via applyImpulse/addForce.)",
+      "files": [],
+      "assertions": [
+        "kinematicPosition: moved via setNextKinematicTranslation/setNextKinematicRotation",
+        "kinematicVelocity: moved via setLinvel/setAngvel (velocity API), NOT setNextKinematic* calls",
+        "States kinematic bodies ignore forces/gravity but affect dynamic bodies",
+        "Does NOT swap the two control surfaces"
+      ]
+    },
+    {
+      "id": 11,
+      "eval_name": "smaa-multisampling-conflict",
+      "prompt": "I'm using @react-three/postprocessing with <EffectComposer multisampling={8}><SMAA /></EffectComposer>. Edges still look shimmery and performance dropped. Anything wrong with this setup?",
+      "expected_output": "Don't stack MSAA with SMAA — when using SMAA (or FXAA) set multisampling={0} on the EffectComposer. Running both costs performance for no quality gain. Also keep AA as the last effect in the chain.",
+      "files": [],
+      "assertions": [
+        "Says to set multisampling={0} when using SMAA/FXAA",
+        "Explains the redundancy/cost of stacking MSAA with post-process AA",
+        "Mentions anti-aliasing should come last in the effect ordering"
+      ]
+    },
+    {
+      "id": 12,
+      "eval_name": "v9-texture-srgb-custom-shader",
+      "prompt": "After migrating my R3F app from v8 to v9, the diffuse texture I feed into my custom ShaderMaterial looks washed out / too bright, but the same texture on a meshStandardMaterial looks correct. What changed?",
+      "expected_output": "v9 removed the automatic sRGB conversion R3F v8 applied to texture props. Built-in materials still get correct handling from three.js itself, but textures used in custom materials/shaders must be annotated manually: texture.colorSpace = THREE.SRGBColorSpace (or texture-colorSpace={THREE.SRGBColorSpace} in JSX). Data textures (normal/roughness/etc.) stay linear — v8's blanket conversion used to corrupt those.",
+      "files": [],
+      "assertions": [
+        "Attributes the change to v9 removing automatic sRGB conversion of texture props",
+        "Fix: set colorSpace = SRGBColorSpace on the color texture (property or pierced JSX prop)",
+        "Notes built-in materials are unaffected because three.js handles their color textures",
+        "Notes data textures must stay linear (and benefited from the change)"
+      ]
+    }
+  ]
+}
