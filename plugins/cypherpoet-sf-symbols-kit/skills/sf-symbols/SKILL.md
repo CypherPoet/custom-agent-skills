@@ -16,6 +16,8 @@ description: >-
 
 # SF Symbols
 
+**Verified:** 2026-07-03
+
 One bundled CLI does everything: `scripts/sf_symbols.py` (paths relative to this
 skill's directory). Lookup commands need only the Python stdlib; rendering
 commands need macOS + PyObjC and import it lazily.
