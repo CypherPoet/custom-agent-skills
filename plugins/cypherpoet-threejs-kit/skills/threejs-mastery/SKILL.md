@@ -261,8 +261,8 @@ These bite across every topic; topical mistakes live in each reference's own tab
 
 ## See Also
 
-- [`webgl-mastery` skill](../../../cypherpoet-webgl-kit/skills/webgl-mastery/SKILL.md) — sibling skill for raw WebGL2 / GLSL beneath Three.js (a declared dependency of this plugin).
-- [`react-three-fiber-mastery` skill](../../../cypherpoet-react-three-fiber-kit/skills/react-three-fiber-mastery/SKILL.md) — sibling skill for the React layer above Three.js: `<Canvas>`, hooks, events, drei, and the pmndrs ecosystem.
+- [`webgl-mastery` skill](https://github.com/CypherPoet/custom-agent-skills/blob/main/plugins/cypherpoet-webgl-kit/skills/webgl-mastery/SKILL.md) — sibling skill for raw WebGL2 / GLSL beneath Three.js (a declared dependency of this plugin).
+- [`react-three-fiber-mastery` skill](https://github.com/CypherPoet/custom-agent-skills/blob/main/plugins/cypherpoet-react-three-fiber-kit/skills/react-three-fiber-mastery/SKILL.md) — sibling skill for the React layer above Three.js: `<Canvas>`, hooks, events, drei, and the pmndrs ecosystem.
 - [Three.js documentation](https://threejs.org/docs/) — official API reference.
 - [Three.js manual](https://threejs.org/manual/) — official tutorials.
 - [Three.js examples](https://threejs.org/examples/) — runnable showcases of nearly every API.
