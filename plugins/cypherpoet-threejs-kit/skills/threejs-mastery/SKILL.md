@@ -219,6 +219,8 @@ All examples and references use `three/addons/...` — the modern alias. The old
 | Interaction | [interaction.md](./references/interaction.md) | Raycaster, controls catalog (Orbit/Fly/PointerLock/Transform/Drag), selection, screen↔world |
 | Shaders | [shaders.md](./references/shaders.md) | TSL essentials + recipes (primary), `ShaderMaterial`/GLSL (legacy), `onBeforeCompile` |
 | Post-processing | [postprocessing.md](./references/postprocessing.md) | TSL `PostProcessing` pipeline + node passes (primary), `EffectComposer` (legacy) |
+| Compute | [compute.md](./references/compute.md) | GPU compute (WebGPU only): storage buffers, `instancedArray`/`attributeArray`, `compute()` dispatch, particles/simulation |
+| WebGPU runtime | [webgpu-runtime.md](./references/webgpu-runtime.md) | Device-loss handling and recovery, requesting device limits/features (WebGPU) |
 | Project setup | [project-setup.md](./references/project-setup.md) | Module entry points, npm/Vite bundling, TypeScript, React (r3f) |
 
 ## Routing Rules
@@ -232,6 +234,8 @@ Quick routing cues:
 - "Make my mesh shiny / glossy / metallic" → **materials** (PBR `MeshStandardMaterial`).
 - "Custom visual effect on a mesh", "wave effect on vertices", "fragment shader", "glitch/dissolve/fresnel/rim" → **shaders**.
 - "Bloom", "DOF", "screen effect", "color grading", "post-process X" → **postprocessing** (and possibly **shaders** for the custom-pass body).
+- "GPU compute", "particle simulation", "boids/cloth/physics on the GPU", "storage buffers", "`instancedArray`" → **compute** (WebGPU only).
+- "Device lost / context lost", "GPU crash recovery", "requesting higher WebGPU limits or features" → **webgpu-runtime**.
 - Click/hover/touch detection, "select an object in the scene" → **interaction**.
 - Camera controls (orbit, fly, first-person, drag, gizmo) → **interaction**.
 - "Why are my shadows wrong?" or "set up nice lighting" → **lighting** (often with **textures** for HDR IBL).
@@ -258,6 +262,13 @@ These bite across every topic; topical mistakes live in each reference's own tab
 | Raycaster picks nothing on a canvas that isn't full-screen | NDC coords must use `getBoundingClientRect()`, not `window.innerWidth/Height`. See [interaction.md](./references/interaction.md). |
 | TSL node looks correct but the material doesn't update | Reassign to `material.colorNode = …` (don't mutate nodes in place) and set `material.needsUpdate = true`. |
 | Transparency/blending looks wrong under `WebGPURenderer` after upgrading to r185 | r185 changed premultiplied-alpha handling ([#33369](https://github.com/mrdoob/three.js/issues/33369)). Set an opaque background: `scene.background = new THREE.Color(...)` or `renderer.setClearColor(color, 1)`. Use a transparent clear only when the canvas must blend with the HTML page. |
+
+## Change-Signal Sources
+
+Secondary leads for noticing when this skill's facts drift — the `skill-fact-check` routine consults them to discover *what* may have changed, then confirms every change against the primary sources above (official docs, release notes, the Migration Guide) before editing. These are leads, never authorities: don't cite them as the source for a correction.
+
+- [threejsroadmap.com/blog](https://threejsroadmap.com/blog) — Daniel Greenheck's blog; tracks new releases, TSL/WebGPU shifts, and API changes (roughly 1–2 posts/month).
+- [dgreenheck/webgpu-claude-skill](https://github.com/dgreenheck/webgpu-claude-skill) — Greenheck's focused WebGPU + TSL skill; a useful cross-check for compute, WGSL-interop, and device-loss specifics.
 
 ## See Also
 

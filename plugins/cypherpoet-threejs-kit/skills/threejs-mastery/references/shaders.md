@@ -9,7 +9,7 @@ Pick one per surface; you can mix in the same scene but the mental model is clea
 
 > Scene/renderer setup: see [../SKILL.md#setup](../SKILL.md#setup).
 
-**Contents:** [TSL](#tsl-modern) · [TSL Recipes](#tsl-recipes) · [Recent TSL Additions](#recent-tsl-additions-r184r185) · [GLSL ShaderMaterial](#glsl-shadermaterial-legacy) · [GLSL Function Reference](#glsl-built-in-function-reference) · [Common Material Options](#common-material-options-shadermaterial) · [Shader Chunks](#shader-chunks) · [Debugging](#debugging) · [Performance Tips](#performance-tips) · [Common Mistakes](#common-mistakes)
+**Contents:** [TSL](#tsl-modern) · [TSL Recipes](#tsl-recipes) · [Recent TSL Additions](#recent-tsl-additions-r184r185) · [WGSL Interop](#wgsl-interop) · [GLSL ShaderMaterial](#glsl-shadermaterial-legacy) · [GLSL Function Reference](#glsl-built-in-function-reference) · [Common Material Options](#common-material-options-shadermaterial) · [Shader Chunks](#shader-chunks) · [Debugging](#debugging) · [Performance Tips](#performance-tips) · [Common Mistakes](#common-mistakes)
 
 ## TSL (Modern)
 
@@ -296,6 +296,35 @@ The node API grows each release. Two recent ones worth knowing:
 - **Texture gather** — `texture(map, uv()).gather(channel)` (r185) returns, as a `vec4`, the four texels bilinear filtering would sample for the given channel (`0`–`3`). Add `.compare(ref)` on a depth texture for the hardware compare variant.
 
 When an example here references a node your version doesn't have, check the [release notes](https://github.com/mrdoob/three.js/releases) — the TSL surface moves fast.
+
+## WGSL Interop
+
+When you need hand-written WGSL under `WebGPURenderer` — porting an existing shader, or reaching for something TSL doesn't expose — wrap it in a `wgslFn` node (from `three/tsl`). There is no `wgsl` tagged-template; the API is `wgslFn(code, includes?)`, and WGSL runs only under `WebGPURenderer`.
+
+```javascript
+import { wgslFn, texture } from "three/tsl";
+
+const desaturate = wgslFn(`
+  fn desaturate( color: vec3<f32> ) -> vec3<f32> {
+    let lum = vec3<f32>( 0.299, 0.587, 0.114 );
+    return vec3<f32>( dot( lum, color ) );
+  }
+`);
+
+// Call the node with a named-params object.
+material.colorNode = desaturate({ color: texture(map) });
+```
+
+Parameter and return types use WGSL spelling; they map onto TSL types one-to-one:
+
+| TSL | WGSL |
+|-----|------|
+| `float` | `f32` |
+| `int` / `uint` | `i32` / `u32` |
+| `vec2` / `vec3` / `vec4` | `vec2<f32>` / `vec3<f32>` / `vec4<f32>` (short forms `vec2f`/`vec3f`/`vec4f`) |
+| `mat3` / `mat4` | `mat3x3<f32>` / `mat4x4<f32>` |
+
+To reuse one WGSL function inside another, pass it in the second `includes` argument — `wgslFn(codeThatCallsHelper, [helperFn])` — so the helper's source is emitted alongside the caller.
 
 ## GLSL ShaderMaterial (Legacy)
 
