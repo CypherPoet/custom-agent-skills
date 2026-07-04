@@ -1,0 +1,12 @@
+# Render helper environment (created by `uv sync` / `playwright install`)
+scripts/.venv/
+scripts/uv.lock
+scripts/__pycache__/
+**/__pycache__/
+
+# Downloaded icon sets are large and carry their own licenses — fetch locally
+scripts/libraries/
+
+# Generated render output and safe-edit sidecars
+*.png
+*.excalidraw.edit
