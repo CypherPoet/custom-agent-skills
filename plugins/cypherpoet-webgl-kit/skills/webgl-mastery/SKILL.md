@@ -26,7 +26,7 @@ A guide for working in raw WebGL2 (and WebGL1 where it differs) plus the GLSL te
 
 **WebGL2 is the default path.** This skill teaches WebGL2 first. WebGL1 still ships in older browsers (and is the only option on a few legacy embedded WebViews); the differences are concentrated in [references/webgl1-vs-webgl2.md](./references/webgl1-vs-webgl2.md). When in doubt, ask `getContext('webgl2')` first and fall back to `getContext('webgl')`.
 
-**Raw WebGL vs. framework.** If the user is building a real 3D app — scene graph, model loaders, cameras, lighting rigs, post-processing chains — point them at [threejs-mastery](../../../cypherpoet-threejs-kit/skills/threejs-mastery/SKILL.md). This skill is for the layer underneath: writing custom shaders, learning the pipeline, hitting a framework limit and dropping down, or wanting zero dependencies.
+**Raw WebGL vs. framework.** If the user is building a real 3D app — scene graph, model loaders, cameras, lighting rigs, post-processing chains — point them at [threejs-mastery](https://github.com/CypherPoet/custom-agent-skills/blob/main/plugins/cypherpoet-threejs-kit/skills/threejs-mastery/SKILL.md). This skill is for the layer underneath: writing custom shaders, learning the pipeline, hitting a framework limit and dropping down, or wanting zero dependencies.
 
 ## When to Use
 
@@ -147,7 +147,7 @@ Quick routing cues:
 - "Make this look lit / shiny / matte" → **lighting**.
 - "Render to a texture", "post-process pass", "ping-pong buffers" → **textures-and-framebuffers** (the FBO half).
 - "Why is `varying` not a keyword anymore" / "this WebGL1 sample doesn't work" → **webgl1-vs-webgl2**.
-- App-level 3D (scene graph, GLTF loaders, OrbitControls, EffectComposer) → hand off to [`threejs-mastery`](../../../cypherpoet-threejs-kit/skills/threejs-mastery/SKILL.md).
+- App-level 3D (scene graph, GLTF loaders, OrbitControls, EffectComposer) → hand off to [`threejs-mastery`](https://github.com/CypherPoet/custom-agent-skills/blob/main/plugins/cypherpoet-threejs-kit/skills/threejs-mastery/SKILL.md).
 
 ## Cross-Cutting Common Mistakes
 
@@ -172,7 +172,7 @@ These bite across every topic. Topical mistakes live in each reference's own tab
 
 This skill stops being the right tool when the user needs:
 
-- A scene graph with parented transforms, animated cameras, multiple models — use [`threejs-mastery`](../../../cypherpoet-threejs-kit/skills/threejs-mastery/SKILL.md).
+- A scene graph with parented transforms, animated cameras, multiple models — use [`threejs-mastery`](https://github.com/CypherPoet/custom-agent-skills/blob/main/plugins/cypherpoet-threejs-kit/skills/threejs-mastery/SKILL.md).
 - GLTF/GLB/HDR loaders, IBL, PBR materials, post-processing chains — same.
 - WebGPU (compute shaders, modern API surface) — Three.js's `WebGPURenderer` path, also in `threejs-mastery`.
 - A 2D rendering layer (sprites, batched UI) — consider PixiJS or Konva instead of rolling it raw.
