@@ -10,6 +10,9 @@ balloon and large reference files stay navigable:
                                                  references/ files (skill-creator: "<500 ideal")
   ERROR     a **Contents:** anchor that doesn't   stale table of contents — a heading was
             resolve to a heading in its file      renamed or removed
+  ERROR     a cross-plugin relative link in a     dead path in an installed sparse-clone (only
+            SKILL.md / references file            this plugin's dir is fetched) — use an
+                                                  absolute GitHub URL instead
   WARNING   SKILL.md 450-500 lines               approaching the limit; plan to split
   ADVISORY  references/*.md over 300 lines        large reference files get a **Contents:** jump-line
             without a **Contents:** jump-line     so they stay navigable (summarized, non-failing)
@@ -62,6 +65,44 @@ def heading_anchors(text):
     return valid
 
 
+LINK_RE = re.compile(r"\]\(([^)]+)\)")
+
+
+def strip_code_fences(text):
+    """Drop ``` fenced blocks so example code in a skill isn't scanned for links."""
+    out, in_fence = [], False
+    for line in text.splitlines():
+        if line.lstrip().startswith("```"):
+            in_fence = not in_fence
+            continue
+        if not in_fence:
+            out.append(line)
+    return "\n".join(out)
+
+
+def escaping_links(text, md_path, plugin_root):
+    """Relative markdown links in `md_path` that resolve OUTSIDE plugin_root.
+
+    A plugin ships via a git-subdir sparse-clone of only its own directory, so a
+    relative link climbing into a sibling plugin (../../../other-plugin/...) is a
+    dead path once installed. Cross-plugin links must be absolute GitHub URLs.
+    Returns the offending (deduped) targets; absolute URLs and in-file anchors pass.
+    """
+    bad, file_dir = [], os.path.dirname(md_path)
+    root = os.path.abspath(plugin_root)
+    for raw in LINK_RE.findall(strip_code_fences(text)):
+        target = raw.split()[0].strip()                 # drop any optional "title"
+        if target.startswith(("http://", "https://", "mailto:", "#", "<")):
+            continue
+        target = target.split("#", 1)[0]                # strip a #fragment
+        if not target:
+            continue
+        resolved = os.path.normpath(os.path.join(file_dir, target))
+        if resolved != root and not resolved.startswith(root + os.sep):
+            bad.append(target)
+    return list(dict.fromkeys(bad))
+
+
 def audit(plugins_dir):
     errors, warnings, missing_contents = [], [], []
     for plugin in sorted(os.listdir(plugins_dir)):
@@ -74,12 +115,18 @@ def audit(plugins_dir):
             if not os.path.isfile(skill_md):
                 continue
             label = f"{plugin}/{skill}"
+            plugin_root = os.path.join(plugins_dir, plugin)
 
-            n = len(open(skill_md, encoding="utf-8").read().splitlines())
+            skill_text = open(skill_md, encoding="utf-8").read()
+            n = len(skill_text.splitlines())
             if n > SKILL_OVER:
                 errors.append((label, "SKILL.md", f"{n} lines (>{SKILL_OVER}) — split depth into references/ files"))
             elif n >= SKILL_WARN:
                 warnings.append((label, "SKILL.md", f"{n} lines — approaching the {SKILL_OVER}-line limit"))
+
+            esc = escaping_links(skill_text, skill_md, plugin_root)
+            if esc:
+                errors.append((label, "SKILL.md", "cross-plugin relative link(s) — dead in a sparse-clone install, use an absolute GitHub URL: " + ", ".join(esc)))
 
             ref_dir = os.path.join(base, "references")
             if not os.path.isdir(ref_dir):
@@ -87,8 +134,12 @@ def audit(plugins_dir):
             for f in sorted(os.listdir(ref_dir)):
                 if not f.endswith(".md"):
                     continue
-                text = open(os.path.join(ref_dir, f), encoding="utf-8").read()
+                ref_path = os.path.join(ref_dir, f)
+                text = open(ref_path, encoding="utf-8").read()
                 rlines = len(text.splitlines())
+                esc = escaping_links(text, ref_path, plugin_root)
+                if esc:
+                    errors.append((label, f"references/{f}", "cross-plugin relative link(s) — use an absolute GitHub URL: " + ", ".join(esc)))
                 contents = re.search(r"^\*\*Contents:\*\*.*$", text, re.M)
                 if not contents:
                     if rlines > REF_TOC_FLOOR:
