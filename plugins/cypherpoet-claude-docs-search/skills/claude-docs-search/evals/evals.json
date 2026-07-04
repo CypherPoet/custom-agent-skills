@@ -5,19 +5,40 @@
       "id": 1,
       "prompt": "How do I set up hooks in Claude Code to auto-format my code after every edit?",
       "expected_output": "A clear explanation of how to configure a PostToolUse hook that runs a formatter after file edits, with correct config syntax from the official docs",
-      "files": []
+      "files": [],
+      "assertions": [
+        "Fetched a hooks page directly (hooks.md or hooks-guide.md) rather than routing through the full docs map",
+        "Did NOT fetch the full docs map (claude_code_docs_map.md) — the ~24k-token index",
+        "Answer explains configuring a PostToolUse hook that runs after file edits",
+        "Answer shows where the hook config lives (settings.json hooks section) with correct syntax",
+        "Answer cites the source docs URL without the .md suffix"
+      ]
     },
     {
       "id": 2,
       "prompt": "claude code keeps asking me for permission every time it runs a bash command, how do i make it stop asking for things i've already approved",
       "expected_output": "Explanation of permission modes (especially auto mode or allowlist rules) with correct syntax for configuring allowed tools in settings, sourced from official docs",
-      "files": []
+      "files": [],
+      "assertions": [
+        "Fetched a permissions page directly (permissions.md or permission-modes.md) rather than routing through the full docs map",
+        "Did NOT fetch the full docs map (claude_code_docs_map.md) — the ~24k-token index",
+        "Answer explains allowlisting / permission rules so pre-approved commands stop prompting",
+        "Answer gives correct settings syntax (e.g. permissions.allow rules) or the /permissions workflow",
+        "Answer cites the source docs URL without the .md suffix"
+      ]
     },
     {
       "id": 3,
       "prompt": "Can Claude Code connect to my Jira and Slack? I want it to pull tickets and post updates. How does that work?",
       "expected_output": "Explanation of MCP servers as the mechanism for connecting external tools, with practical guidance on how to add MCP servers, sourced from official docs",
-      "files": []
+      "files": [],
+      "assertions": [
+        "Fetched the MCP page directly (mcp.md, possibly mcp-quickstart.md) rather than routing through the full docs map",
+        "Did NOT fetch the full docs map (claude_code_docs_map.md) — the ~24k-token index",
+        "Answer identifies MCP servers as the mechanism for connecting Jira and Slack",
+        "Answer explains how to add an MCP server (e.g. claude mcp add or .mcp.json config)",
+        "Answer cites the source docs URL without the .md suffix"
+      ]
     }
   ]
 }
