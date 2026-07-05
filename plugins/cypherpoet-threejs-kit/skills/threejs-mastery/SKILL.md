@@ -217,7 +217,8 @@ All examples and references use `three/addons/...` — the modern alias. The old
 | Loaders | [loaders.md](./references/loaders.md) | GLTF deep dive, Draco/Meshopt/KTX2 compression, OBJ/FBX/STL/PLY, async patterns |
 | Animation | [animation.md](./references/animation.md) | `AnimationMixer`, GLTF clips, skeletal/morph targets, blending, procedural patterns |
 | Interaction | [interaction.md](./references/interaction.md) | Raycaster, controls catalog (Orbit/Fly/PointerLock/Transform/Drag), selection, screen↔world |
-| Shaders | [shaders.md](./references/shaders.md) | TSL essentials + recipes (primary), `ShaderMaterial`/GLSL (legacy), `onBeforeCompile` |
+| Shaders (TSL) | [shaders.md](./references/shaders.md) | TSL essentials + recipes (primary), WGSL interop, shader debugging + performance |
+| Shaders (GLSL, legacy) | [shaders-glsl.md](./references/shaders-glsl.md) | Raw-GLSL `ShaderMaterial`/`RawShaderMaterial`, `onBeforeCompile`, `ShaderChunk`, GLSL function reference |
 | Post-processing | [postprocessing.md](./references/postprocessing.md) | TSL `PostProcessing` pipeline + node passes (primary), `EffectComposer` (legacy) |
 | Compute | [compute.md](./references/compute.md) | GPU compute (WebGPU only): storage buffers, `instancedArray`/`attributeArray`, `compute()` dispatch, particles/simulation |
 | WebGPU runtime | [webgpu-runtime.md](./references/webgpu-runtime.md) | Device-loss handling and recovery, requesting device limits/features (WebGPU) |
@@ -232,7 +233,8 @@ Quick routing cues:
 - Loading a `.glb`/`.gltf`/`.hdr`/`.exr` → **loaders**. Then check **animation** if it has clips, **lighting** if it's an HDR env, **materials** if textures look wrong.
 - Mesh appearance question (color, reflectivity, transparency, normal maps) → **materials**, often with **textures** for color-space issues.
 - "Make my mesh shiny / glossy / metallic" → **materials** (PBR `MeshStandardMaterial`).
-- "Custom visual effect on a mesh", "wave effect on vertices", "fragment shader", "glitch/dissolve/fresnel/rim" → **shaders**.
+- "Custom visual effect on a mesh", "wave effect on vertices", "fragment shader", "glitch/dissolve/fresnel/rim" → **shaders** (TSL).
+- Raw GLSL, `ShaderMaterial`/`RawShaderMaterial`, `onBeforeCompile`, third-party shader chunks → **shaders-glsl** (legacy path).
 - "Bloom", "DOF", "screen effect", "color grading", "post-process X" → **postprocessing** (and possibly **shaders** for the custom-pass body).
 - "GPU compute", "particle simulation", "boids/cloth/physics on the GPU", "storage buffers", "`instancedArray`" → **compute** (WebGPU only).
 - "Device lost / context lost", "GPU crash recovery", "requesting higher WebGPU limits or features" → **webgpu-runtime**.
