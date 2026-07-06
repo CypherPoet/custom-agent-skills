@@ -62,6 +62,7 @@ Fact-check the `SKILL.md` body and **all** `references/**/*.md` under the unit (
   - `verified 2026-05-30` (inline, e.g. "specs here verified 2026-05-30").
   - `**(as of 2026-06)**` and `*As of 2026-06; trust the screen*` (month precision → treat as the 1st).
 - **Source markers:** `**Source:**` and `**Source of truth:**` — the URL a skill declares as its own authority. Check this first.
+- **Change-signal leads:** an optional per-unit `Change-Signal Sources` block lists secondary leads (e.g. a maintainer's blog) to scan for *what* may have drifted since the last dateline. Leads only — confirm against a primary source, never cite one in an edit.
 - **Caps:** `MAX_UNITS_PER_RUN = 12`, `MAX_AUTOAPPLY = 10`.
 
 ## Step 1 — Compute the due set
@@ -181,6 +182,7 @@ Give each subagent: the unit's `unit_dir` and `plugin_dir`, the [verification pr
 >
 > 1. **Pick the primary source by type.** VERSION/"latest" → the vendor's own release channel (GitHub Releases/tags for the real project, Apple "What's New"/release notes, Blender release notes). SPEC → the vendor's official reference page. EXTERNAL_URL → resolve the URL itself (HTTP 200 at the same canonical content = ok; 301 to a new canonical = changed; 404/410/soft-404 = gone). API_SYNTAX → the tool's official docs or its migration/changelog for that version. **Blogs, aggregators, and forums are not primary.**
 > 2. **Honor the skill's own cited source first.** If the file declares `**Source:**`/`**Source of truth:** <url>`, fetch THAT as the primary check. If it's unreachable or gone and you fall back to another source, the result is a **flag** (the skill's own source may be stale and needs human attention) — never a silent edit.
+> 2b. **Consult declared change-signal leads.** If the unit declares a **Change-Signal Sources** list (secondary leads such as a maintainer's blog), scan them first to *discover* what may have changed since the last dateline — but treat them as leads, never authorities. Anything they surface must still pass the both-conditions gate (step 3) against a **vendor-primary** source, and a lead URL must never appear in `source_url` for an applied edit. Blogs, aggregators, and forums remain non-primary (step 1).
 > 3. **Both-conditions gate.** The source must establish BOTH that the current text is wrong AND what the correct value is. A source that says "this changed" but not "to what" → `FLAG_UNCERTAIN`.
 > 4. **Adversarial / two-source rule for value changes.** Before proposing a changed value, confirm it from a second independent authoritative source, or at two stable locations on the vendor's own site. One source only, or sources disagree → `FLAG_AMBIGUOUS` (return both URLs). (Re-confirming an UNCHANGED value needs only one authoritative source → `CONFIRMED_UNCHANGED`.)
 > 5. **Confidence.** `high` only if 1–4 all pass against vendor-primary sources. Anything resting on inference or a single non-vendor source → `medium`/`low` → flag, don't apply.
