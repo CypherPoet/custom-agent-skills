@@ -61,7 +61,8 @@ Fact-check the `SKILL.md` body and **all** `references/**/*.md` under the unit (
   - `**Audit baseline:** … verified against … (2026-06-26)` — parenthetical date (e.g. the three.js audit marker).
   - `verified 2026-05-30` (inline, e.g. "specs here verified 2026-05-30").
   - `**(as of 2026-06)**` and `*As of 2026-06; trust the screen*` (month precision → treat as the 1st).
-- **Source markers:** `**Source:**` and `**Source of truth:**` — the URL a skill declares as its own authority. Check this first.
+- **Source markers:** `**Source:**` and `**Source of truth:**` — the URL a file declares as the authority for a specific fact. Check this first.
+- **Declared source set:** a `## Primary Sources` section at the end of a unit's `SKILL.md` — the skill's own list of canonical verification sources (one bullet per source, each saying what it's authoritative for). Prefer these over free-choice research; a placeholder section ("None declared yet …") means fall back to vendor-primary sources per claim.
 - **Caps:** `MAX_UNITS_PER_RUN = 12`, `MAX_AUTOAPPLY = 10`.
 
 ## Step 1 — Compute the due set
@@ -75,6 +76,7 @@ today = datetime.date.fromisoformat(
     subprocess.check_output(['date', '-u', '+%F']).decode().strip())
 m = json.loads(pathlib.Path('docs/automated-routines/skill-fact-check-manifest.json').read_text())
 tier_of = {u: 'weekly' for u in m.get('weekly', [])}
+tier_of.update({u: 'monthly' for u in m.get('monthly', [])})
 tier_of.update({u: 'never' for u in m.get('never', [])})
 default_tier = m.get('defaults', {}).get('tier', 'monthly')
 
@@ -180,7 +182,7 @@ Give each subagent: the unit's `unit_dir` and `plugin_dir`, the [verification pr
 > For each claim, apply this gate. A claim may be returned as `CORRECT` (an applied edit) **only if every step passes**; otherwise downgrade to a `FLAG_*` or `ERROR`.
 >
 > 1. **Pick the primary source by type.** VERSION/"latest" → the vendor's own release channel (GitHub Releases/tags for the real project, Apple "What's New"/release notes, Blender release notes). SPEC → the vendor's official reference page. EXTERNAL_URL → resolve the URL itself (HTTP 200 at the same canonical content = ok; 301 to a new canonical = changed; 404/410/soft-404 = gone). API_SYNTAX → the tool's official docs or its migration/changelog for that version. **Blogs, aggregators, and forums are not primary.**
-> 2. **Honor the skill's own cited source first.** If the file declares `**Source:**`/`**Source of truth:** <url>`, fetch THAT as the primary check. If it's unreachable or gone and you fall back to another source, the result is a **flag** (the skill's own source may be stale and needs human attention) — never a silent edit.
+> 2. **Honor the skill's own cited sources first.** Two declaration forms, in precedence order: (a) a per-fact `**Source:**`/`**Source of truth:** <url>` marker in the file — fetch THAT as the primary check for that fact; (b) the unit's `## Primary Sources` section in its `SKILL.md` — the skill's declared source set; when a claim falls under a declared source's stated scope (versions, specs, API syntax, …), fetch that source before choosing one on your own. Only claims covered by neither fall through to your own step-1 choice. If a declared source (either form) is unreachable or gone and you fall back to another source, the result is a **flag** (the skill's own source may be stale and needs human attention) — never a silent edit.
 > 3. **Both-conditions gate.** The source must establish BOTH that the current text is wrong AND what the correct value is. A source that says "this changed" but not "to what" → `FLAG_UNCERTAIN`.
 > 4. **Adversarial / two-source rule for value changes.** Before proposing a changed value, confirm it from a second independent authoritative source, or at two stable locations on the vendor's own site. One source only, or sources disagree → `FLAG_AMBIGUOUS` (return both URLs). (Re-confirming an UNCHANGED value needs only one authoritative source → `CONFIRMED_UNCHANGED`.)
 > 5. **Confidence.** `high` only if 1–4 all pass against vendor-primary sources. Anything resting on inference or a single non-vendor source → `medium`/`low` → flag, don't apply.
@@ -292,9 +294,10 @@ Auto-applied: A corrections (all high-confidence, sourced). Flagged: B.
 ```json
 {
   "defaults": { "tier": "monthly" },
-  "weekly": ["<plugin>/<skill>", "..."],
-  "never":  ["<plugin>/<skill>", "..."]
+  "weekly":  ["<plugin>/<skill>", "..."],
+  "monthly": ["<plugin>/<skill>", "..."],
+  "never":   ["<plugin>/<skill>", "..."]
 }
 ```
 
-Tiers: **weekly** (≥7 days) for fast-drifting skills (Apple OS/App Store specs, SwiftUI "what's new", SF Symbols, three.js, Blender); **never** for evergreen methodology (session handoff/harvest, emoji commits, changelog, readme badges, GDScript); **monthly** (≥28 days, the default) for everything else. To re-tier a skill, move its `unit_id` between lists — no skill change needed. A `unit_id` not in any list is `monthly`.
+Tiers: **weekly** (≥7 days) for fast-drifting skills (Apple OS/App Store specs, SwiftUI "what's new", SF Symbols, three.js, Blender); **never** for evergreen methodology (session handoff/harvest, emoji commits, changelog, readme badges, GDScript); **monthly** (≥28 days, the default) for everything else. To re-tier a skill, move its `unit_id` between lists — no skill change needed. A `unit_id` not in any list is `monthly` — so a manifest without an explicit `monthly` array (or missing a newly added skill) still resolves every unit. Repos may list the monthly units explicitly anyway so tiering is a deliberate choice per skill; where a repo-local structure check exists (e.g. `custom-agent-skills`' `skill-structure-check`), it flags untiered units as a non-failing advisory.
