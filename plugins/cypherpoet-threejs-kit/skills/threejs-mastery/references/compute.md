@@ -106,7 +106,7 @@ renderer.setAnimationLoop(() => {
 });
 ```
 
-To draw the result, bind the position buffer to a node material's `positionNode` — e.g. a `Points` whose geometry has `count` vertices, with `material.positionNode = positions.element(instanceIndex)`. The vertex stage then reads each particle's computed position straight from GPU memory, with no CPU round-trip.
+To draw the result, expose the buffer as a per-instance attribute with `positions.toAttribute()` and assign it to a node material's `positionNode` on an object rendered with `count` instances — the render stage then reads each particle's computed position straight from GPU memory, with no CPU round-trip. Don't reuse `.element(instanceIndex)` for the render bind: that's the *compute-pass* index, and on a non-instanced draw it's `0` for every vertex, so all particles collapse onto one point. The official [`webgpu_compute_particles`](https://threejs.org/examples/#webgpu_compute_particles) example shows the full setup (`material.positionNode = positions.toAttribute()`).
 
 ## Common Mistakes
 
@@ -115,6 +115,7 @@ To draw the result, bind the position buffer to a node material's `positionNode`
 | `renderer.compute()` warns or does nothing | The backend isn't initialized. `await renderer.init()` first, or use `renderer.computeAsync()` (it initializes for you). |
 | Reassigning a JS `const`/`let` inside `Fn()` has no effect | The shader graph only tracks node mutations. Wrap the value in `.toVar()` and write via `.assign()` (or set a component like `pos.y = 0`); rebinding the JS name just points it at a new node. |
 | Compute silently missing under `WebGLRenderer` | There is no WebGL compute path — compute requires `WebGPURenderer`. Feature-detect and branch. |
+| Compute-driven particles all render at one point | The render material bound `positionNode` with `.element(instanceIndex)`. Use `positions.toAttribute()` on an instanced object instead; `.element(instanceIndex)` is the compute-pass index (constant per non-instanced draw). |
 | Buffer element type mismatch | Pass the element type to `instancedArray(count, "vec3")`; `.element(i)` returns that type. A wrong type corrupts strides silently. |
 | Large particle counts fail to allocate | Big buffers can exceed `maxStorageBufferBindingSize` (default 128 MiB). Request a higher limit — see [webgpu-runtime.md](./webgpu-runtime.md). |
 
