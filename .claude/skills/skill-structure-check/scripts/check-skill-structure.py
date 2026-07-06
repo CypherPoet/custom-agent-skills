@@ -16,6 +16,9 @@ balloon and large reference files stay navigable:
   WARNING   SKILL.md 450-500 lines               approaching the limit; plan to split
   ADVISORY  references/*.md over 300 lines        large reference files get a **Contents:** jump-line
             without a **Contents:** jump-line     so they stay navigable (summarized, non-failing)
+  ADVISORY  a unit missing from the fact-check    every unit should be deliberately tiered in
+            manifest's tier lists (or a listed    docs/automated-routines/skill-fact-check-manifest.json
+            unit that no longer exists)           (an unlisted unit still defaults to monthly)
 
 The skill-level "table of contents" is the routing table in SKILL.md that points
 at the references/ files; that's a soft convention, not machine-checked here.
@@ -25,6 +28,7 @@ Report-only. Exits 1 if any ERROR, else 0 (warnings/advisories never fail the ru
 Run from anywhere in the repo:
   python3 .claude/skills/skill-structure-check/scripts/check-skill-structure.py
 """
+import json
 import os
 import re
 import sys
@@ -32,6 +36,8 @@ import sys
 SKILL_OVER = 500      # hard limit (skill-creator's "<500 ideal")
 SKILL_WARN = 450      # soft heads-up band below the limit
 REF_TOC_FLOOR = 300   # only large reference files (skill-creator's >300-line threshold) need a Contents line
+FACT_CHECK_MANIFEST = os.path.join("docs", "automated-routines", "skill-fact-check-manifest.json")
+TIER_KEYS = ("weekly", "monthly", "never")
 
 
 def find_repo_root(start):
@@ -103,8 +109,26 @@ def escaping_links(text, md_path, plugin_root):
     return list(dict.fromkeys(bad))
 
 
+def tier_findings(root, units):
+    """Units missing from the fact-check manifest's tier lists, and listed units that
+    don't exist on disk. Advisory only — an unlisted unit still defaults to monthly —
+    and skipped entirely (empty result) when the repo has no manifest.
+    """
+    path = os.path.join(root, FACT_CHECK_MANIFEST)
+    if not os.path.isfile(path):
+        return [], [], None
+    try:
+        manifest = json.load(open(path, encoding="utf-8"))
+    except (json.JSONDecodeError, OSError) as e:
+        return [], [], f"could not read {FACT_CHECK_MANIFEST}: {e}"
+    tiered = {u for k in TIER_KEYS for u in manifest.get(k, [])}
+    untiered = sorted(units - tiered)
+    orphaned = sorted(tiered - units)
+    return untiered, orphaned, None
+
+
 def audit(plugins_dir):
-    errors, warnings, missing_contents = [], [], []
+    errors, warnings, missing_contents, units = [], [], [], set()
     for plugin in sorted(os.listdir(plugins_dir)):
         skills_dir = os.path.join(plugins_dir, plugin, "skills")
         if not os.path.isdir(skills_dir):
@@ -114,7 +138,10 @@ def audit(plugins_dir):
             skill_md = os.path.join(base, "SKILL.md")
             if not os.path.isfile(skill_md):
                 continue
+            if skill.endswith("-workspace"):
+                continue
             label = f"{plugin}/{skill}"
+            units.add(label)
             plugin_root = os.path.join(plugins_dir, plugin)
 
             skill_text = open(skill_md, encoding="utf-8").read()
@@ -149,7 +176,7 @@ def audit(plugins_dir):
                 broken = [t for t in re.findall(r"\(#([^)]+)\)", contents.group(0)) if t not in valid]
                 if broken:
                     errors.append((label, f"references/{f}", "stale **Contents:** anchors: " + ", ".join("#" + b for b in broken)))
-    return errors, warnings, missing_contents
+    return errors, warnings, missing_contents, units
 
 
 def render(rows, kind):
@@ -166,10 +193,11 @@ def main():
     if not root:
         print("error: could not find the repo root (no plugins/ directory above this script or the cwd).", file=sys.stderr)
         return 2
-    errors, warnings, missing_contents = audit(os.path.join(root, "plugins"))
+    errors, warnings, missing_contents, units = audit(os.path.join(root, "plugins"))
+    untiered, orphaned, manifest_note = tier_findings(root, units)
 
-    if not errors and not warnings and not missing_contents:
-        print("OK — every SKILL.md is lean, large reference files are indexed, and all Contents anchors resolve.")
+    if not errors and not warnings and not missing_contents and not untiered and not orphaned and not manifest_note:
+        print("OK — every SKILL.md is lean, large reference files are indexed, all Contents anchors resolve, and every unit is tiered in the fact-check manifest.")
         return 0
 
     if errors:
@@ -189,6 +217,16 @@ def main():
         print(f"ADVISORY — {len(missing_contents)} large reference file(s) across {len(by_skill)} skill(s) lack a **Contents:** jump-line (non-failing):")
         for label in sorted(by_skill):
             print(f"  {label}: {', '.join(by_skill[label])}")
+    if untiered or orphaned or manifest_note:
+        if errors or warnings or missing_contents:
+            print()
+        print(f"ADVISORY — fact-check manifest drift in {FACT_CHECK_MANIFEST} (non-failing):")
+        if manifest_note:
+            print(f"  {manifest_note}")
+        for u in untiered:
+            print(f"  {u}: not in any tier list — add it to weekly/monthly/never (defaults to monthly meanwhile)")
+        for u in orphaned:
+            print(f"  {u}: listed in the manifest but no such unit exists — remove or rename the entry")
 
     print("\nRules: this skill's scripts/check-skill-structure.py is the source of truth; see docs/PLUGIN-CONVENTIONS.md -> Skill Conventions.")
     return 1 if errors else 0
