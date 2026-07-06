@@ -74,3 +74,9 @@ Load only the file(s) the current task touches. If unsure, `bpy-essentials.md` a
 | MCP timeouts, mode-context traps, undo surprises, common bpy stack traces | `references/errors.md` |
 | The MCP feedback loop itself, headless escape hatch, idempotent edits | `references/mcp-workflow.md` |
 
+
+## Primary Sources
+
+- [Blender Python API reference](https://docs.blender.org/api/current/) — authoritative for `bpy` API syntax (this skill pins versioned URLs such as `/api/5.1/`).
+- [Blender manual](https://docs.blender.org/manual/en/latest/) — authoritative for feature behavior and workflows.
+- [Blender release notes](https://developer.blender.org/docs/release_notes/) — release channel; authoritative for versions.

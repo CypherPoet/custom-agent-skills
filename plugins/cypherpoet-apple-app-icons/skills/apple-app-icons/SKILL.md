@@ -184,3 +184,8 @@ python3 "${CLAUDE_PLUGIN_ROOT}/skills/apple-app-icons/scripts/generate-app-icons
 - **Raising the deployment target just to use the `.icon`** → unnecessary, and it drops users. Ship both instead.
 - **Flat icon looks dead in Tinted/Clear** → a single full-bleed layer has nothing for the system to separate. Split the emblem onto its own transparent layer over a background layer; verify on device (those appearances render at runtime).
 - **Wanted a dark icon on the App Store listing** → the listing icon is the build's *default* appearance — there's no separate upload, and making it dark also makes dark the Home Screen default. Pick which look is your default and design both appearances to that.
+
+## Primary Sources
+
+- [HIG: App icons](https://developer.apple.com/design/human-interface-guidelines/app-icons) — authoritative for sizes, appearances (dark/tinted/clear), and per-platform shape rules.
+- [Creating your app icon using Icon Composer](https://developer.apple.com/documentation/xcode/creating-your-app-icon-using-icon-composer) — authoritative for the `.icon` format and Icon Composer workflow.

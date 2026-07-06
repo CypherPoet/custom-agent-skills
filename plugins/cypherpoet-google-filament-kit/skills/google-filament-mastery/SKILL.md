@@ -97,3 +97,9 @@ A few things the upstream v1.72.0 docs leave incomplete — don't fill them with
 - The **subsurface** material model and **area lights** are `[TODO]` placeholders in the official docs; their properties are named but not fully specified, and there is no area-light `LightManager::Type`. Say so rather than inventing an API.
 - `matc`'s documented `--api` values are `opengl`, `vulkan`, `all` — the CLI docs don't list `metal` even though the engine renders with Metal (the `filamat` `TargetApi::ALL` covers it).
 - Filament versions move fast; if exact current behavior matters, verify against the installed version's headers.
+
+## Primary Sources
+
+- [Filament releases](https://github.com/google/filament/releases) — release channel; authoritative for versions.
+- [Filament documentation](https://google.github.io/filament/) — official docs hub (Materials guide, tooling); authoritative for material syntax and engine facts.
+- [google/filament](https://github.com/google/filament) — the source itself; the fallback authority when the docs lag the headers.

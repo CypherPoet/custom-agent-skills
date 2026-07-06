@@ -18,3 +18,8 @@ When asked to provide general guidance about performance or best practices on a 
 - `references/foreach.md`: Use when writing or reviewing `ForEach`, or any data-driven initializer that behaves like it (`List`, `Table`, `OutlineGroup`). Covers element identity requirements (state preservation, animations, performance), common anti-patterns around indices, transient ids, and content-derived ids, and how row-view structure (unary vs multi) affects `List` performance.
 - `references/soft-deprecation.md`: Use when generating, reviewing, refactoring, or cleaning up SwiftUI code. Covers soft-deprecated APIs — how to identify them and when to migrate.
 - `references/soft-deprecated-apis.md`: Searchable list of all soft-deprecated SwiftUI APIs with their replacements. Search this file when you need to check if a specific API is soft-deprecated.
+
+## Primary Sources
+
+- [SwiftUI documentation](https://developer.apple.com/documentation/swiftui) — authoritative for API syntax, availability, and deprecations (per-symbol availability via the docs JSON endpoint).
+- [SwiftUI updates](https://developer.apple.com/documentation/updates/swiftui) — Apple's per-release SwiftUI change log.

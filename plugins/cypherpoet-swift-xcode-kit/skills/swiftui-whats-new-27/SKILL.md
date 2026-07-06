@@ -21,3 +21,8 @@ Use these references to understand what changed in SwiftUI for the 2027 OS relea
 - `references/state-macro.md`: `@State` migrated from a property wrapper to a macro. Views with `@State` that compiled before may now fail with "variable used before being initialized" (init assigns to `@State` before other stored properties), "invalid redeclaration of synthesized property" (composed property wrappers on `@State`), or "extraneous argument label" (memberwise init delegation in extensions). The fix is NOT to reorder assignments; consult this reference.
 - `references/content-builder.md`: Unified result builders under `@ContentBuilder`. Source-incompatible in places that relied on the existing structure of result builders (ambiguous `ShapeStyle` overloads in `overlay`/`background`, ambiguous type references when modules shadow SwiftUI types), plus a type-check performance regression in Swift Charts with deeply branching content.
 - `references/deprecations.md`: APIs hard-deprecated in SDK 27.0, such as `statusBarHidden` on visionOS (no effect, remove the call). Soft-deprecated APIs are covered by the `swiftui-specialist` skill.
+
+## Primary Sources
+
+- [SwiftUI updates](https://developer.apple.com/documentation/updates/swiftui) — Apple's per-release change log; authoritative for what shipped in each OS release.
+- [SwiftUI documentation](https://developer.apple.com/documentation/swiftui) — authoritative for per-symbol availability and deprecation.
