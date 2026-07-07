@@ -2,10 +2,12 @@
 """Structurally validate an Excalidraw scene file.
 
 Checks the things that silently break a `.excalidraw` file when you author it by
-hand: malformed JSON, a wrong wrapper, duplicate element ids, and dangling
+hand: malformed JSON, a wrong wrapper, duplicate element ids, dangling
 references (an arrow bound to an element that doesn't exist, a text whose
-`containerId` points nowhere, a `boundElements` entry with no matching element).
-Pure standard library — no dependencies, runs anywhere Python 3.8+ does.
+`containerId` points nowhere, a `boundElements` entry with no matching element),
+and one-sided bindings (a binding not mirrored in the target's boundElements, so
+the arrow/label won't track the shape when it moves). Pure standard library —
+no dependencies, runs anywhere Python 3.8+ does.
 
 Usage:
     python validate_excalidraw.py <file.excalidraw> [more.excalidraw ...]
@@ -83,9 +85,10 @@ def validate(data: object, report: Report) -> None:
     if not live:
         report.warn("'elements' has no live (non-deleted) elements — nothing will render")
 
-    # First pass: collect ids, catch duplicates and missing required fields.
+    # First pass: collect ids and each element's boundElements, catch duplicates.
     ids: dict[str, int] = {}
     id_set: set[str] = set()
+    bound_map: dict[str, set[str]] = {}
     for i, el in enumerate(elements):
         if not isinstance(el, dict):
             report.error(f"elements[{i}] must be an object, got {type(el).__name__}")
@@ -99,6 +102,11 @@ def validate(data: object, report: Report) -> None:
                 report.error(f"Duplicate id {eid!r} (elements[{ids[eid]}] and elements[{i}])")
             ids.setdefault(eid, i)
             id_set.add(eid)
+            bound = el.get("boundElements")
+            if isinstance(bound, list):
+                bound_map[eid] = {
+                    b["id"] for b in bound if isinstance(b, dict) and isinstance(b.get("id"), str)
+                }
         if not isinstance(etype, str) or not etype:
             report.error(f"{_elem_label(el, i)} is missing a non-empty string 'type'")
         elif etype not in KNOWN_TYPES:
@@ -122,12 +130,17 @@ def validate(data: object, report: Report) -> None:
             if not isinstance(pts, list) or len(pts) < 2:
                 report.warn(f"{where} should have a 'points' array with at least 2 points")
             for side in ("startBinding", "endBinding"):
-                _check_binding(el.get(side), side, where, id_set, report)
+                binding = el.get(side)
+                _check_binding(binding, side, where, id_set, report)
+                target = binding.get("elementId") if isinstance(binding, dict) else None
+                _check_reciprocity(el.get("id"), target, side, where, id_set, bound_map, report)
 
         if etype == "text":
             cid = el.get("containerId")
             if cid is not None and cid not in id_set:
                 report.error(f"{where} containerId {cid!r} references no existing element")
+            else:
+                _check_reciprocity(el.get("id"), cid, "containerId", where, id_set, bound_map, report)
 
         _check_bound_elements(el, where, id_set, report)
 
@@ -164,6 +177,22 @@ def _check_binding(binding: object, side: str, where: str, id_set: set[str], rep
         report.warn(f"{where} {side} has no 'elementId'")
     elif target not in id_set:
         report.error(f"{where} {side}.elementId {target!r} references no existing element")
+
+
+def _check_reciprocity(
+    owner_id: object, target_id: object, kind: str, where: str,
+    id_set: set[str], bound_map: dict[str, set[str]], report: Report
+) -> None:
+    """Warn when a binding isn't mirrored in the target's boundElements (one-sided)."""
+    if not isinstance(owner_id, str) or not isinstance(target_id, str):
+        return
+    if target_id not in id_set:  # a dangling target is already reported as an error
+        return
+    if owner_id not in bound_map.get(target_id, set()):
+        report.warn(
+            f"{where} {kind} -> {target_id!r}, but {target_id!r} does not list it back in "
+            f"boundElements (one-sided binding; it won't track the element when moved)"
+        )
 
 
 def _check_bound_elements(el: dict, where: str, id_set: set[str], report: Report) -> None:

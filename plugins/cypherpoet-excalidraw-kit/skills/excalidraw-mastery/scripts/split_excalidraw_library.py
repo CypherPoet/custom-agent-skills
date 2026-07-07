@@ -61,9 +61,19 @@ def split_library(library_dir: Path) -> None:
     icons_dir.mkdir(exist_ok=True)
 
     icon_list: list[dict[str, str]] = []
-    for item in library_data["libraryItems"]:
+    used: set[str] = set()
+    for i, item in enumerate(library_data["libraryItems"]):
         icon_name = item.get("name", "Unnamed")
-        filename = sanitize_filename(icon_name) + ".json"
+        # Disambiguate stems that collide (or sanitize to empty) so no icon is
+        # silently overwritten by a later one with the same sanitized name.
+        stem = sanitize_filename(icon_name) or f"icon-{i}"
+        candidate, n = stem, 2
+        while candidate in used:
+            candidate, n = f"{stem}-{n}", n + 1
+        if candidate != stem:
+            print(f"  note  name collision for {icon_name!r}; writing as {candidate}.json")
+        used.add(candidate)
+        filename = candidate + ".json"
         (icons_dir / filename).write_text(
             json.dumps(item, ensure_ascii=False, indent=2), encoding="utf-8"
         )

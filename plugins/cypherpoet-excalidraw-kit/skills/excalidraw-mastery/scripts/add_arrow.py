@@ -20,6 +20,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import sys
 import uuid
 import zlib
 from pathlib import Path
@@ -153,11 +154,15 @@ def main() -> None:
         parser.error(f"Diagram not found: {args.diagram}")
 
     coords = (args.from_x, args.from_y, args.to_x, args.to_y)
-    work_path, final_path = edit_paths(args.diagram, safe_edit=not args.no_safe_edit)
     try:
-        add_arrow(work_path, coords, args.style, args.color, args.label)
-    finally:
-        finalize(work_path, final_path)
+        work_path, final_path = edit_paths(args.diagram, safe_edit=not args.no_safe_edit)
+        try:
+            add_arrow(work_path, coords, args.style, args.color, args.label)
+        finally:
+            finalize(work_path, final_path)
+    except Exception as exc:
+        print(f"Error: {exc}", file=sys.stderr)
+        sys.exit(1)
 
 
 if __name__ == "__main__":

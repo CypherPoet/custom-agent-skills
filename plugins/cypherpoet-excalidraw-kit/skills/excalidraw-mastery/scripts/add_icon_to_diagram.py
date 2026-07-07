@@ -20,6 +20,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import sys
 import uuid
 import zlib
 from pathlib import Path
@@ -182,11 +183,15 @@ def main() -> None:
     if not args.library_path.exists():
         parser.error(f"Library path not found: {args.library_path}")
 
-    work_path, final_path = edit_paths(args.diagram, safe_edit=not args.no_safe_edit)
     try:
-        add_icon(work_path, args.icon_name, args.x, args.y, args.library_path, args.label)
-    finally:
-        finalize(work_path, final_path)
+        work_path, final_path = edit_paths(args.diagram, safe_edit=not args.no_safe_edit)
+        try:
+            add_icon(work_path, args.icon_name, args.x, args.y, args.library_path, args.label)
+        finally:
+            finalize(work_path, final_path)
+    except Exception as exc:
+        print(f"Error: {exc}", file=sys.stderr)
+        sys.exit(1)
 
 
 if __name__ == "__main__":
