@@ -77,6 +77,6 @@ Load only the file(s) the current task touches. If unsure, `bpy-essentials.md` a
 
 ## Primary Sources
 
-- [Blender Python API reference](https://docs.blender.org/api/current/) — authoritative for `bpy` API syntax (this skill pins versioned URLs such as `/api/5.1/`).
-- [Blender manual](https://docs.blender.org/manual/en/latest/) — authoritative for feature behavior and workflows.
+- [Blender 5.1 Python API reference](https://docs.blender.org/api/5.1/) — authoritative for `bpy` API syntax at the skill's pinned baseline; re-point alongside the pin when the baseline moves.
+- [Blender 5.1 manual](https://docs.blender.org/manual/en/5.1/) — authoritative for feature behavior and workflows at the pinned baseline.
 - [Blender release notes](https://developer.blender.org/docs/release_notes/) — release channel; authoritative for versions.

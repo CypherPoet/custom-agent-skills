@@ -93,4 +93,6 @@ job. (That plugin declares this one as a dependency, so both ship together.)
 
 - [Screenshot specifications](https://developer.apple.com/help/app-store-connect/reference/app-information/screenshot-specifications) — authoritative for accepted screenshot dimensions per device class.
 - [App preview specifications](https://developer.apple.com/help/app-store-connect/reference/app-information/app-preview-specifications) — authoritative for preview video specs (resolutions, duration, codecs, bitrates).
-- [fastlane docs: snapshot](https://docs.fastlane.tools/actions/snapshot/), [frameit](https://docs.fastlane.tools/actions/frameit/), [deliver](https://docs.fastlane.tools/actions/deliver/) — authoritative for capture/framing/upload CLI syntax.
+- [fastlane snapshot docs](https://docs.fastlane.tools/actions/snapshot/) — authoritative for capture-automation CLI syntax.
+- [fastlane frameit docs](https://docs.fastlane.tools/actions/frameit/) — authoritative for framing CLI syntax.
+- [fastlane deliver docs](https://docs.fastlane.tools/actions/deliver/) — authoritative for upload/metadata CLI syntax.

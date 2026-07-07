@@ -239,4 +239,5 @@ These bite across every topic; topical mistakes live in each reference's own tab
 
 - [React Three Fiber documentation](https://r3f.docs.pmnd.rs/) — authoritative for fiber API syntax.
 - [fiber releases](https://github.com/pmndrs/react-three-fiber/releases) — release channel; authoritative for versions.
-- [drei documentation](https://drei.docs.pmnd.rs/) and [drei releases](https://github.com/pmndrs/drei/releases) — authoritative for helper APIs and versions.
+- [drei documentation](https://drei.docs.pmnd.rs/) — authoritative for helper API syntax.
+- [drei releases](https://github.com/pmndrs/drei/releases) — release channel; authoritative for drei versions.

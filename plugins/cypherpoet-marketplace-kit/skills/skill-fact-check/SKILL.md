@@ -119,16 +119,28 @@ for s in skills:
         continue
     last = newest(pathlib.Path(s).parent)
     age = (today - last).days
-    if age >= INTERVAL[tier]:
+    if age >= INTERVAL.get(tier, 28):       # unknown/typo'd tier → monthly, never crash
         due.append((age, unit_id, str(pathlib.Path(s).parent), tier, last.isoformat()))
 
 due.sort(reverse=True)                      # most overdue first
 for row in due[:12]:                         # MAX_UNITS_PER_RUN
     print(*row, sep='\t')
 print(f"# {len(due)} due, {min(len(due),12)} this run, {max(0,len(due)-12)} deferred")
+
+# Manifest drift — works in every cloned repo; report, don't edit (see below)
+unit_ids = {f"{pathlib.Path(s).parts[1]}/{pathlib.Path(s).parts[3]}" for s in skills}
+listed = [u for k in ('weekly', 'monthly', 'never') for u in m.get(k, [])]
+for u in sorted(set(listed) - unit_ids):
+    print(f"# DRIFT orphaned: {u} listed in the manifest but not on disk")
+for u in sorted({u for u in listed if listed.count(u) > 1}):
+    print(f"# DRIFT double-listed: {u} in more than one tier (later list wins — keep one)")
+for u in sorted(unit_ids - set(listed)):
+    print(f"# DRIFT untiered: {u} not in any tier list (defaults to monthly)")
 ```
 
 Early runs surface a backlog: any unit with no *recognized* dateline reads as epoch → always due. That's expected — the cap drains it most-overdue-first, and the set shrinks as the parser above picks up the freshness markers already in the files and merged PRs stamp datelines (Step 6) on the units that lack one.
+
+`# DRIFT` lines are manifest hygiene, not fact findings: never edit the manifest for them — list them in the PR body's flagged section so a human re-tiers deliberately.
 
 ## Step 2 — Idempotency check (per repo)
 
@@ -302,4 +314,4 @@ Auto-applied: A corrections (all high-confidence, sourced). Flagged: B.
 }
 ```
 
-Tiers: **weekly** (≥7 days) for fast-drifting skills (Apple OS/App Store specs, SwiftUI "what's new", SF Symbols, three.js, Blender); **never** for evergreen methodology (session handoff/harvest, emoji commits, changelog, readme badges, GDScript); **monthly** (≥28 days, the default) for everything else. To re-tier a skill, move its `unit_id` between lists — no skill change needed. A `unit_id` not in any list is `monthly`, so a manifest without an explicit `monthly` array still resolves every unit; listing monthly units explicitly makes tiering a deliberate per-skill choice (`custom-agent-skills`' `skill-structure-check` flags untiered units as a non-failing advisory).
+Tiers: **weekly** (≥7 days) for fast-drifting skills (Apple OS/App Store specs, SwiftUI "what's new", SF Symbols, three.js, Blender); **never** for evergreen methodology (session handoff/harvest, emoji commits, changelog, readme badges, GDScript); **monthly** (≥28 days, the default) for everything else. To re-tier a skill, move its `unit_id` between lists — no skill change needed. A `unit_id` not in any list is `monthly`, so a manifest without an explicit `monthly` array still resolves every unit; listing monthly units explicitly makes tiering a deliberate per-skill choice, and Step 1 prints `# DRIFT` lines for untiered, orphaned, or double-listed entries.
