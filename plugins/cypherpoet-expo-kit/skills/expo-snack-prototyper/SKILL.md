@@ -32,3 +32,9 @@ Expo Snack supports common Expo libraries automatically. You may freely use:
 
 ### 5. Delivery Format
 When delivering the code to the user, wrap it in a single markdown code block with the language set to `tsx` or `jsx`. Precede the block with instructions directing the user to copy/paste the block directly into [snack.expo.dev](https://snack.expo.dev/).
+
+## Primary Sources
+
+- [Expo Snack](https://snack.expo.dev/) — the runtime itself; authoritative for supported SDK versions and Snack behavior.
+- [Expo changelog](https://expo.dev/changelog) — release channel; authoritative for SDK releases.
+- [Expo documentation](https://docs.expo.dev/) — authoritative for API syntax and SDK package facts.

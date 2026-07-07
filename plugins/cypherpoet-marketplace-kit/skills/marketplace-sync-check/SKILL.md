@@ -57,3 +57,7 @@ Present both surfaces plainly, each clearly labelled, and stop. Then hand off �
 - **`docs/CATALOG.md`** missing / stale / orphan rows → regenerate the table with the `catalog-refresh` skill (or fix by hand) and commit it — a normal docs change. **Not** `marketplace-publish`; the local catalog isn't the marketplace.
 
 **Do not modify anything** unless the user explicitly asks.
+
+## Primary Sources
+
+- [Plugin marketplaces (Claude Code docs)](https://code.claude.com/docs/en/plugin-marketplaces) — authoritative for `marketplace.json` schema and semantics.

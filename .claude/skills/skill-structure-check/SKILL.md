@@ -3,8 +3,9 @@ name: skill-structure-check
 description: >
   Audit this repo's plugin skills for structural drift. Flags any SKILL.md that
   has grown past ~500 lines (split its depth into references/ files), any stale
-  table-of-contents anchor, and — as a non-failing advisory — any large references/
-  file (>~300 lines) missing its **Contents:** jump-line. Use after creating,
+  table-of-contents anchor, and — as non-failing advisories — any large references/
+  file (>~300 lines) missing its **Contents:** jump-line and any skill unit missing
+  from (or orphaned in) the skill-fact-check manifest's tier lists. Use after creating,
   editing, or restructuring a skill, before opening a PR that touches skills, or
   whenever the user says "audit the skills", "check skill structure", "is this
   skill too big", "lint the skills", or "did I break a Contents link". Runs a
@@ -39,6 +40,7 @@ directory doesn't matter.
 | ERROR | a `**Contents:**` anchor that doesn't resolve | The TOC drifted from the headings — fix the link or the heading. |
 | WARN | `SKILL.md` 450–500 lines | Approaching the limit; plan the split now. |
 | ADVISORY | `references/*.md` over ~300 lines with no `**Contents:**` line | Large reference files benefit from a jump-line; short ones don't need one. Summarized per skill, non-failing. |
+| ADVISORY | a unit absent from every tier list in `docs/automated-routines/skill-fact-check-manifest.json`, or a listed unit that no longer exists on disk | Every skill should be deliberately classified for the fact-check routine (weekly/monthly/never). An unlisted unit still safely defaults to monthly; an orphaned entry usually means a rename. Non-failing; skipped in repos without the manifest. |
 
 The skill-level routing table in `SKILL.md` is a soft convention — not machine-checked here.
 
@@ -47,5 +49,6 @@ The skill-level routing table in `SKILL.md` is a soft convention — not machine
 - **SKILL.md too large** → extract topical sections into `references/<topic>.md` and leave a routing table in the body. `cypherpoet-threejs-kit` / `cypherpoet-mobile-dev` are worked examples; follow `/skill-creator`'s progressive-disclosure guidance.
 - **Stale anchor** → a heading was renamed or removed; update the Contents link. Anchors are GitHub-style: lowercase, punctuation dropped, spaces → hyphens.
 - **Large file missing `**Contents:**` (advisory)** → add a one-line `**Contents:** [Section](#anchor) · …` after the intro, linking the file's `##` headings.
+- **Untiered / orphaned fact-check unit (advisory)** → add the new unit's `<plugin>/<skill>` id to the right tier list in `docs/automated-routines/skill-fact-check-manifest.json` (or remove/rename the stale entry). Tier definitions live in the `skill-fact-check` skill's Manifest reference.
 
 Thresholds live at the top of the script — adjust them there if the convention changes; the script is the source of truth.

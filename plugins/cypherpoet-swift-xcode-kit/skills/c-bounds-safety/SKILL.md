@@ -26,3 +26,7 @@ You MUST have fully read the following three documents (via the Read tool) at th
 For compiler flags, Xcode build settings, soft trap mode, and `ptrcheck.h` configuration, read [build-settings.md](references/build-settings.md).
 
 For debugging bounds violations at runtime — trap behavior, LLDB commands, wide pointer inspection, watchpoints, crash log analysis, and soft trap debugging, read [runtime-debugging.md](references/runtime-debugging.md).
+
+## Primary Sources
+
+- [Clang: `-fbounds-safety`](https://clang.llvm.org/docs/BoundsSafety.html) — authoritative for pointer-annotation semantics and language rules.

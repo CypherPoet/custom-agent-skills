@@ -131,3 +131,7 @@ When verifying, distinguish between these categories:
 - If tap target unclear, re-read hierarchy data for correct center coordinates.
 - You can inspect runtime logs to troubleshoot. If you suspect timing bugs, suggest to the main agent that temporarily adding `print` statements in the relevant code may help diagnose the issue.
 - Report issues back to the main agent with details and suggestions.
+
+## Primary Sources
+
+None declared yet — the fact-check routine falls back to vendor-primary sources per claim. Add entries as `- [Name](url) — what it's authoritative for.`

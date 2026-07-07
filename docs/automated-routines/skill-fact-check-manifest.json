@@ -1,5 +1,5 @@
 {
-  "_comment": "Volatility tiers for the skill-fact-check routine. Methodology lives in the skill at plugins/cypherpoet-marketplace-kit/skills/skill-fact-check/SKILL.md. unit_id = <plugin>/<skill>. Unlisted units default to monthly. Re-tier by moving a unit_id between the lists.",
+  "_comment": "Volatility tiers for the skill-fact-check routine. Methodology lives in the skill at plugins/cypherpoet-marketplace-kit/skills/skill-fact-check/SKILL.md. unit_id = <plugin>/<skill>. Every unit is listed explicitly — check-skill-structure.py advises when one is missing; an unlisted unit still safely defaults to monthly. Re-tier by moving a unit_id between the lists.",
   "repo": "custom-agent-skills",
   "defaults": { "tier": "monthly" },
   "weekly": [
@@ -10,6 +10,28 @@
     "cypherpoet-sf-symbols-kit/sf-symbols",
     "cypherpoet-swift-xcode-kit/swiftui-whats-new-27",
     "cypherpoet-threejs-kit/threejs-mastery"
+  ],
+  "monthly": [
+    "cypherpoet-apple-human-interface-guidelines/apple-human-interface-guidelines",
+    "cypherpoet-claude-docs-search/claude-docs-search",
+    "cypherpoet-claude-memory-consolidation/claude-memory-consolidation",
+    "cypherpoet-expo-kit/expo-snack-prototyper",
+    "cypherpoet-google-filament-kit/google-filament-mastery",
+    "cypherpoet-marketplace-kit/catalog-refresh",
+    "cypherpoet-marketplace-kit/dependency-tag-check",
+    "cypherpoet-marketplace-kit/marketplace-publish",
+    "cypherpoet-marketplace-kit/marketplace-publish-check",
+    "cypherpoet-marketplace-kit/marketplace-sync-check",
+    "cypherpoet-mobile-dev/apple-app-store-best-practices",
+    "cypherpoet-react-three-fiber-kit/react-three-fiber-mastery",
+    "cypherpoet-svg-tools/svgo",
+    "cypherpoet-swift-xcode-kit/audit-xcode-security-settings",
+    "cypherpoet-swift-xcode-kit/c-bounds-safety",
+    "cypherpoet-swift-xcode-kit/device-interaction",
+    "cypherpoet-swift-xcode-kit/swiftui-specialist",
+    "cypherpoet-swift-xcode-kit/test-modernizer",
+    "cypherpoet-swift-xcode-kit/uikit-app-modernization",
+    "cypherpoet-webgl-kit/webgl-mastery"
   ],
   "never": [
     "cypherpoet-changelog-maintenance/changelog-maintenance",

@@ -78,3 +78,7 @@ Share the URL **without** the `.md` suffix — that gives the user the nicely re
 - **Claude API / Anthropic SDK** — those live at `docs.anthropic.com`, not `code.claude.com`
 - **User's own project** — questions about their codebase, their code, their bugs
 - **Already known with high confidence** — if you're certain about a simple, stable fact (e.g., "Claude Code uses `claude` as the CLI command"), you don't need to look it up every time. Use your judgment — when in doubt, look it up.
+
+## Primary Sources
+
+- [Claude Code docs map](https://code.claude.com/docs/en/claude_code_docs_map.md) — the index this skill fetches; authoritative for page slugs and the docs URL scheme.

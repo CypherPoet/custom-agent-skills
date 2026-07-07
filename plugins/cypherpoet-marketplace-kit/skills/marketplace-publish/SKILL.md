@@ -80,3 +80,8 @@ Re-running for an already-listed plugin just updates its entry — the operation
 ## After publishing
 
 Review and merge the PR on the marketplace repo; once merged, `/plugin install <name>@<marketplace>` resolves the entry. To see what's listed vs. what's local at any point, use the `marketplace-sync-check` skill.
+
+## Primary Sources
+
+- [Plugin marketplaces (Claude Code docs)](https://code.claude.com/docs/en/plugin-marketplaces) — authoritative for `marketplace.json` schema and marketplace commands.
+- [Plugins reference (Claude Code docs)](https://code.claude.com/docs/en/plugins-reference) — authoritative for plugin manifest fields.

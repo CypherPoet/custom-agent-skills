@@ -234,3 +234,10 @@ These bite across every topic; topical mistakes live in each reference's own tab
 - [pmndrs market](https://market.pmnd.rs/) — free models/HDRIs for prototyping.
 - [gltfjsx](https://github.com/pmndrs/gltfjsx) — GLTF → JSX component generator (web UI: https://gltf.pmnd.rs/).
 - [fiber releases](https://github.com/pmndrs/react-three-fiber/releases) — release notes; check when APIs seem missing.
+
+## Primary Sources
+
+- [React Three Fiber documentation](https://r3f.docs.pmnd.rs/) — authoritative for fiber API syntax.
+- [fiber releases](https://github.com/pmndrs/react-three-fiber/releases) — release channel; authoritative for versions.
+- [drei documentation](https://drei.docs.pmnd.rs/) — authoritative for helper API syntax.
+- [drei releases](https://github.com/pmndrs/drei/releases) — release channel; authoritative for drei versions.
