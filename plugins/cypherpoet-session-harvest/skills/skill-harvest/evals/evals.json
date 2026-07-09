@@ -1,0 +1,23 @@
+{
+  "skill_name": "skill-harvest",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Given everything we learned during this project, can you think of any potential worthwhile improvements to the custom apple/ios dev skills from my cypherpoet toolchest repos?",
+      "expected_output": "Sweeps the session/project for skill-relevant learnings, maps each to a specific skill in the user's toolchest repos, verifies claims, presents a numbered approval list, and ships approved items as one PR per plugin following repo conventions.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "The threejs skill's guidance on the bloom import path was wrong again -- three.js moved it in the latest release. Harvest that into the skill.",
+      "expected_output": "Verifies the API change against three.js release notes/source, proposes a version-stamped fix to the specific skill file, and opens a PR on the owning plugin with a version bump per conventions.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "before I wrap up: anything from this session that my skills should learn? most of it was just normal debugging",
+      "expected_output": "Applies precision-over-recall: only surfaces candidates with real generalizable evidence, possibly reporting that nothing clears the bar; routes memory/CLAUDE.md-bound items to session-harvest instead.",
+      "files": []
+    }
+  ]
+}

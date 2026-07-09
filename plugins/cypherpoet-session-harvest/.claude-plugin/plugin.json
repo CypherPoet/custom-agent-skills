@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "cypherpoet-session-harvest",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Run a pre-exit sweep of a conversation for learnings worth preserving, routing each to its right home: a memory, or a suggested repo edit (CLAUDE.md/AGENTS.md, docs, or a hook).",
   "author": { "name": "CypherPoet" },
   "homepage": "https://github.com/CypherPoet/custom-agent-skills/tree/main/plugins/cypherpoet-session-harvest",
