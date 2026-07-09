@@ -112,18 +112,13 @@ def get_changed_files_since(timestamp: datetime, project_path: str) -> list[str]
     if not timestamp:
         return []
 
+    # `git log --name-only` is the reliable source here — `git diff` has no
+    # --since option, so the old diff-based attempt always failed silently.
     iso_time = timestamp.strftime("%Y-%m-%dT%H:%M:%S%z")
     success, output = run_cmd(
-        ["git", "diff", "--name-only", f"--since={iso_time}", "HEAD"],
+        ["git", "log", f"--since={iso_time}", "--name-only", "--pretty=format:"],
         cwd=project_path
     )
-
-    # Fallback: get files changed in commits since timestamp
-    if not output:
-        success, output = run_cmd(
-            ["git", "log", f"--since={iso_time}", "--name-only", "--pretty=format:"],
-            cwd=project_path
-        )
 
     if success and output:
         files = [f.strip() for f in output.split("\n") if f.strip()]
@@ -379,14 +374,12 @@ def main():
     result = check_staleness(handoff_path)
     print_report(result)
 
-    # Exit code based on staleness
-    level = result.get("staleness_level", "UNKNOWN")
-    if level in ["FRESH", "SLIGHTLY_STALE"]:
-        sys.exit(0)
-    elif level == "STALE":
-        sys.exit(1)
-    else:
-        sys.exit(2)
+    # A produced report is a SUCCESS regardless of how stale the handoff is —
+    # the verdict lives in the output, not the exit code. Encoding staleness
+    # as a nonzero exit made agent harnesses (which treat nonzero as tool
+    # failure) report "Handoff Staleness Report failed (exit 1)" for a
+    # perfectly healthy STALE verdict. Nonzero is reserved for real errors.
+    sys.exit(1 if "error" in result else 0)
 
 
 if __name__ == "__main__":

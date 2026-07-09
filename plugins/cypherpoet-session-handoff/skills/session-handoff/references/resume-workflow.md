@@ -16,7 +16,7 @@ Shows all handoffs with dates, titles, and completion status.
 python3 scripts/check_staleness.py <handoff-file>
 ```
 
-The script reports a level (FRESH / SLIGHTLY_STALE / STALE / VERY_STALE) and flags specific drift — commits, branch mismatch, missing files. Treat STALE/VERY_STALE as a signal to verify context carefully or start a fresh handoff.
+The script reports a level (FRESH / SLIGHTLY_STALE / STALE / VERY_STALE) and flags specific drift — commits, branch mismatch, missing files. Treat STALE/VERY_STALE as a signal to verify context carefully or start a fresh handoff. The verdict lives in the printed report; the script exits 0 whenever it produced one, so a nonzero exit means the check itself failed (e.g. missing file), not that the handoff is stale.
 
 ## Step 3: Load the Handoff
 
@@ -70,9 +70,10 @@ Reference these sections as you work:
 - **Potential Gotchas** for known landmines.
 - **Skills to Use** for the right tool/skill to invoke at each step.
 
-## Step 6: Update or Chain Handoffs
+## Step 6: Chain, Don't Rewrite
 
-As you work:
-- Mark completed items in **Pending Work** as you finish them.
-- Add new discoveries to relevant sections (especially **Important Context** and **Potential Gotchas**).
-- For long sessions, create a new handoff with `--continues-from` to chain them.
+The handoff you resumed from is a consumed record, not a live scratchpad. Routine bookkeeping edits to it ("marked item 2 done") add nothing — progress is already visible in commits, the PR, and this session — and they muddy the document's provenance as a point-in-time snapshot.
+
+- **Don't update the resumed handoff as you work.** The one exception is a factual hazard: something in it is now wrong enough to mislead a future reader (a decision got reversed, a gotcha resolved differently than recorded). Correct that in place, and nothing else.
+- **When this session pauses with work remaining**, write a *new* handoff with `--continues-from <the-one-you-resumed>` — that's where completed/pending status belongs.
+- **When the work is simply finished**, no handoff writing is needed at all; the CLEANUP workflow retires superseded records later.
