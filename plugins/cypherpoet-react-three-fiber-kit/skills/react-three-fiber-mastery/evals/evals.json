@@ -156,6 +156,19 @@
         "Notes built-in materials are unaffected because three.js handles their color textures",
         "Notes data textures must stay linear (and benefited from the change)"
       ]
+    },
+    {
+      "id": 13,
+      "eval_name": "aomap-plain-plane-no-second-uv",
+      "prompt": "An old tutorial says my aoMap won't show on a plain planeGeometry in React Three Fiber until I add a second UV set with geometry.setAttribute('uv2', geometry.attributes.uv). Is that still what I need on current three (r185)?",
+      "expected_output": "No — that's the pre-r151 recipe. Since three r151, aoMap defaults to channel 0, which reads the primary uv, and a planeGeometry already has a uv attribute — so aoMap already samples valid UVs on a plain plane. You don't need a second UV set, and copying uv into uv1 (uv2's current name) changes nothing while the channel stays 0. Only author a uv1 attribute and set material.aoMap.channel = 1 when the AO is baked against a separate UV layout. (If the map genuinely shows nothing, the cause is elsewhere — e.g. no ambient/environment light for AO to modulate, or aoMapIntensity at 0.)",
+      "files": [],
+      "assertions": [
+        "Says the second-UV-set / uv2 recipe is stale (pre-r151) and not needed on a plain plane",
+        "Explains aoMap defaults to channel 0 = the primary uv, which a planeGeometry already has",
+        "Notes copying uv into uv1 is a no-op while the channel stays 0 (a distinct uv1 needs material.aoMap.channel = 1)",
+        "Names uv1 as the current attribute and uv2 only as the pre-r151 name (does not prescribe uv2 as the fix)"
+      ]
     }
   ]
 }
