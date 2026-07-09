@@ -188,4 +188,4 @@ tweaks Mermaid rendering (`flowchart.curve`, `themeVariables.fontSize`, `maxEdge
 fastest route from a textual spec to an *editable* Excalidraw diagram (versus static SVG).
 
 ---
-*Grounded in the official [`@excalidraw/excalidraw` API docs](https://docs.excalidraw.com/docs/@excalidraw/excalidraw/api) and the `mermaid-to-excalidraw` docs (package v0.18.1).*
+*Grounded in the official [`@excalidraw/excalidraw` API docs](https://docs.excalidraw.com/docs/@excalidraw/excalidraw/api) (v0.18.1) and the separately-versioned [`@excalidraw/mermaid-to-excalidraw`](https://github.com/excalidraw/mermaid-to-excalidraw) docs.*

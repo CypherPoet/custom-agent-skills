@@ -1,6 +1,6 @@
 # cypherpoet-excalidraw-kit
 
-Comprehensive [Excalidraw](https://excalidraw.com) mastery: authoring `.excalidraw` scene files by hand (the JSON format, element model, arrow/text binding, and a diagrams-that-argue design methodology), plus the [`@excalidraw/excalidraw`](https://docs.excalidraw.com/docs/@excalidraw/excalidraw/api) developer API (React component, `initialData`, the `convertToExcalidrawElements` skeleton API, `restore`, SVG/PNG/clipboard export, and Mermaid-to-Excalidraw) — shipped with scripts to validate a scene, render it to PNG, and insert icon-library elements, grounded in the official Excalidraw documentation.
+Comprehensive [Excalidraw](https://excalidraw.com) mastery: authoring `.excalidraw` scene files by hand (the JSON format, element model, arrow/text binding, and a diagrams-that-argue design methodology), plus the [`@excalidraw/excalidraw`](https://docs.excalidraw.com/docs/@excalidraw/excalidraw/api) developer API (React component, `initialData`, the `convertToExcalidrawElements` skeleton API, `restore`, SVG/PNG/clipboard export, and Mermaid-to-Excalidraw), shipped with scripts to validate a scene, render it to PNG, and insert icon-library elements — grounded in the official Excalidraw documentation.
 
 ## Installation
 

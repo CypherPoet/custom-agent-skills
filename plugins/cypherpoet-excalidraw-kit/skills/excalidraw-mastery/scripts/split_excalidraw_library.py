@@ -67,12 +67,14 @@ def split_library(library_dir: Path) -> None:
         # Disambiguate stems that collide (or sanitize to empty) so no icon is
         # silently overwritten by a later one with the same sanitized name.
         stem = sanitize_filename(icon_name) or f"icon-{i}"
+        # Compare case-insensitively: macOS/Windows filesystems are, so 'EC2' and
+        # 'ec2' would otherwise map to the same file and silently overwrite.
         candidate, n = stem, 2
-        while candidate in used:
+        while candidate.casefold() in used:
             candidate, n = f"{stem}-{n}", n + 1
         if candidate != stem:
             print(f"  note  name collision for {icon_name!r}; writing as {candidate}.json")
-        used.add(candidate)
+        used.add(candidate.casefold())
         filename = candidate + ".json"
         (icons_dir / filename).write_text(
             json.dumps(item, ensure_ascii=False, indent=2), encoding="utf-8"

@@ -56,8 +56,9 @@ This is not optional for anything non-trivial. Render to PNG, **Read the image**
 see — in a loop, typically 2–4 passes.
 
 ```bash
-# one-time: cd ../scripts && uv sync && uv run playwright install chromium
-uv run python ../scripts/render_excalidraw.py your-scene.excalidraw
+# one-time: (cd ../scripts && uv sync && uv run playwright install chromium)
+# --project points uv at the render env in scripts/ while keeping your cwd:
+uv run --project ../scripts python ../scripts/render_excalidraw.py your-scene.excalidraw
 ```
 
 It rasterizes through Excalidraw's own `exportToSvg`, so the PNG matches the editor. Then:

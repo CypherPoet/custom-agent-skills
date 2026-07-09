@@ -64,7 +64,7 @@ Load only the rows the task touches — usually one or two.
 2. **Map concepts to visual patterns** and sketch the eye's flow — [`design-principles.md`](references/design-principles.md).
 3. **Write the elements** with descriptive ids and two-sided bindings — [`elements.md`](references/elements.md). Build large diagrams **section by section**.
 4. **Validate**: `python scripts/validate_excalidraw.py scene.excalidraw` — fix every ERROR.
-5. **Render & fix**: `uv run python scripts/render_excalidraw.py scene.excalidraw`, **Read the PNG**, fix defects, repeat (2–4 passes). Full loop in [`authoring-workflow.md`](references/authoring-workflow.md).
+5. **Render & fix**: `uv run --project scripts python scripts/render_excalidraw.py scene.excalidraw`, **Read the PNG**, fix defects, repeat (2–4 passes). (`--project scripts` points `uv` at the render env in `scripts/`.) Full loop in [`authoring-workflow.md`](references/authoring-workflow.md).
 
 ### Generate a scene from code
 Use `convertToExcalidrawElements([...])` — specify only `type`/`x`/`y` (+ `label`, `start`/`end` to bind arrows) and it fills the rest; pass the result to `initialData` or `api.updateScene`. See [`developer-api.md`](references/developer-api.md).

@@ -55,8 +55,8 @@ python ../scripts/add_icon_to_diagram.py scene.excalidraw EC2 500 300 \
 
 - `<x> <y>` is the icon's top-left target position.
 - `--label` adds a centered caption below the icon.
-- Writes through a `.excalidraw.edit` rename by default so a live editor can't clobber the file
-  mid-write; pass `--no-safe-edit` to write in place.
+- Writes atomically (temp file + `os.replace`), so an interrupted write leaves the original
+  scene intact rather than corrupting it.
 
 Then connect icons with bound arrows ([`elements.md`](elements.md#binding-arrows-to-shapes)) or the
 quick `add_arrow.py` helper, and **validate + render** as usual

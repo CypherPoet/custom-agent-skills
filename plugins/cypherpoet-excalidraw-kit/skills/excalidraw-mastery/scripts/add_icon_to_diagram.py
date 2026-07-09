@@ -3,9 +3,12 @@
 
 Reads an icon's element array (produced by split_excalidraw_library.py), offsets
 it to a target position, regenerates every id / groupId (and rewrites internal
-bindings, containerIds, and boundElements to match) so it can't collide with the
-diagram it's dropped into, then appends it. Works with any library (AWS, GCP,
-Azure, Kubernetes, ...). Pure standard library.
+bindings, containerIds, frameIds, and boundElements to match) so it can't collide
+with the diagram it's dropped into, then appends it. Works with any library (AWS,
+GCP, Azure, Kubernetes, ...). Pure standard library.
+
+The scene is written atomically (temp file + os.replace), so an interrupted write
+leaves the original intact rather than corrupting it.
 
 Usage:
     python add_icon_to_diagram.py <diagram.excalidraw> <icon_name> <x> <y> [OPTIONS]
@@ -13,13 +16,14 @@ Usage:
 Options:
     --library-path PATH    Icon library directory (default: libraries/aws-architecture-icons)
     --label TEXT           Add a text label centered below the icon
-    --no-safe-edit         Write the file in place instead of via a .edit rename
 """
 
 from __future__ import annotations
 
 import argparse
 import json
+import os
+import re
 import sys
 import uuid
 import zlib
@@ -34,14 +38,33 @@ def stable_seed(text: str) -> int:
     return zlib.crc32(text.encode("utf-8")) % 2_000_000_000
 
 
+def _num(value: object) -> float:
+    """Coerce a coordinate/size to a number; treat missing/non-numeric as 0."""
+    return float(value) if isinstance(value, (int, float)) and not isinstance(value, bool) else 0.0
+
+
 def bounding_box(elements: list[dict]) -> tuple[float, float, float, float]:
-    xs = [e["x"] for e in elements if "x" in e]
-    ys = [e["y"] for e in elements if "y" in e]
-    if not xs or not ys:
+    """Min/max extent across elements, honoring arrow/line `points` and abs sizes.
+
+    Matches render_excalidraw.py's box: linear elements carry their real extent in
+    `points` (with possibly zero/negative width/height), so we walk those.
+    """
+    min_x = min_y = float("inf")
+    max_x = max_y = float("-inf")
+    for el in elements:
+        x, y = _num(el.get("x")), _num(el.get("y"))
+        if el.get("type") in ("arrow", "line") and isinstance(el.get("points"), list):
+            for pt in el["points"]:
+                if isinstance(pt, (list, tuple)) and len(pt) >= 2:
+                    px, py = _num(pt[0]), _num(pt[1])
+                    min_x, min_y = min(min_x, x + px), min(min_y, y + py)
+                    max_x, max_y = max(max_x, x + px), max(max_y, y + py)
+        else:
+            w, h = abs(_num(el.get("width"))), abs(_num(el.get("height")))
+            min_x, min_y = min(min_x, x), min(min_y, y)
+            max_x, max_y = max(max_x, x + w), max(max_y, y + h)
+    if min_x == float("inf"):
         return (0.0, 0.0, 0.0, 0.0)
-    min_x, min_y = min(xs), min(ys)
-    max_x = max(e["x"] + e.get("width", 0) for e in elements if "x" in e)
-    max_y = max(e["y"] + e.get("height", 0) for e in elements if "y" in e)
     return (min_x, min_y, max_x, max_y)
 
 
@@ -77,6 +100,8 @@ def transform_icon(elements: list[dict], target_x: float, target_y: float) -> li
                 new[side] = binding
         if new.get("containerId") in id_map:
             new["containerId"] = id_map[new["containerId"]]
+        if new.get("frameId") in id_map:
+            new["frameId"] = id_map[new["frameId"]]
         if isinstance(new.get("boundElements"), list):
             new["boundElements"] = [
                 {**b, "id": id_map[b["id"]]} if isinstance(b, dict) and b.get("id") in id_map else b
@@ -86,11 +111,21 @@ def transform_icon(elements: list[dict], target_x: float, target_y: float) -> li
     return out
 
 
+def _sanitize(name: str) -> str:
+    """Mirror split_excalidraw_library.py's filename sanitization."""
+    stem = re.sub(r"[^\w\-.]", "", name.replace(" ", "-"))
+    return re.sub(r"-+", "-", stem).strip("-")
+
+
 def load_icon(icon_name: str, library_path: Path) -> list[dict]:
-    icon_file = library_path / "icons" / f"{icon_name}.json"
-    if not icon_file.exists():
-        raise FileNotFoundError(f"Icon not found: {icon_file}")
-    return json.loads(icon_file.read_text(encoding="utf-8")).get("elements", [])
+    icons_dir = library_path / "icons"
+    # Accept either the raw display name (as shown in reference.md) or the
+    # sanitized filename stem — split writes files under the sanitized name.
+    for stem in dict.fromkeys([icon_name, _sanitize(icon_name)]):
+        icon_file = icons_dir / f"{stem}.json"
+        if icon_file.exists():
+            return json.loads(icon_file.read_text(encoding="utf-8")).get("elements", [])
+    raise FileNotFoundError(f"Icon not found: {icons_dir / (icon_name + '.json')} (also tried the sanitized name)")
 
 
 def text_label(text: str, x: float, y: float) -> dict:
@@ -131,6 +166,19 @@ def text_label(text: str, x: float, y: float) -> dict:
     }
 
 
+def write_atomic(path: Path, data: dict) -> None:
+    """Write JSON to a temp file in the same directory, then atomically replace
+    `path`. The original is never truncated, so an interrupted write leaves it
+    intact — unlike an in-place write or a rename-the-original-away sidecar."""
+    tmp = path.with_name(f".{path.name}.{os.getpid()}.tmp")
+    try:
+        tmp.write_text(json.dumps(data, ensure_ascii=False, indent=2), encoding="utf-8")
+        os.replace(tmp, path)
+    finally:
+        if tmp.exists():
+            tmp.unlink()
+
+
 def add_icon(diagram_path: Path, icon_name: str, x: float, y: float, library_path: Path, label: str | None) -> None:
     elements = transform_icon(load_icon(icon_name, library_path), x, y)
     print(f"Loaded '{icon_name}' ({len(elements)} elements) -> ({x}, {y})")
@@ -143,27 +191,8 @@ def add_icon(diagram_path: Path, icon_name: str, x: float, y: float, library_pat
 
     diagram = json.loads(diagram_path.read_text(encoding="utf-8"))
     diagram.setdefault("elements", []).extend(elements)
-    diagram_path.write_text(json.dumps(diagram, ensure_ascii=False, indent=2), encoding="utf-8")
+    write_atomic(diagram_path, diagram)
     print(f"Wrote {diagram_path} (now {len(diagram['elements'])} elements)")
-
-
-def edit_paths(diagram_path: Path, safe_edit: bool) -> tuple[Path, Path | None]:
-    """Rename to a .edit sidecar during the write so a live editor can't clobber it."""
-    if not safe_edit or diagram_path.suffix != ".excalidraw":
-        return diagram_path, None
-    edit_path = diagram_path.with_suffix(".excalidraw.edit")
-    if edit_path.exists():
-        raise FileExistsError(f"Edit sidecar already exists: {edit_path}")
-    diagram_path.rename(edit_path)
-    return edit_path, diagram_path
-
-
-def finalize(work_path: Path, final_path: Path | None) -> None:
-    if final_path is None:
-        return
-    if final_path.exists():
-        final_path.unlink()
-    work_path.rename(final_path)
 
 
 def main() -> None:
@@ -175,7 +204,6 @@ def main() -> None:
     default_lib = Path(__file__).parent / "libraries" / "aws-architecture-icons"
     parser.add_argument("--library-path", type=Path, default=default_lib)
     parser.add_argument("--label", default=None)
-    parser.add_argument("--no-safe-edit", action="store_true", help="Write in place")
     args = parser.parse_args()
 
     if not args.diagram.exists():
@@ -184,11 +212,7 @@ def main() -> None:
         parser.error(f"Library path not found: {args.library_path}")
 
     try:
-        work_path, final_path = edit_paths(args.diagram, safe_edit=not args.no_safe_edit)
-        try:
-            add_icon(work_path, args.icon_name, args.x, args.y, args.library_path, args.label)
-        finally:
-            finalize(work_path, final_path)
+        add_icon(args.diagram, args.icon_name, args.x, args.y, args.library_path, args.label)
     except Exception as exc:
         print(f"Error: {exc}", file=sys.stderr)
         sys.exit(1)

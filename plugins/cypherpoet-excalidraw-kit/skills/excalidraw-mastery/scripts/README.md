@@ -60,8 +60,8 @@ python add_icon_to_diagram.py scene.excalidraw EC2 500 300 --label "Web Server" 
     --library-path libraries/aws-architecture-icons
 ```
 
-By default the write goes through a `.excalidraw.edit` rename so a live editor
-can't clobber it mid-write; pass `--no-safe-edit` to write in place.
+The scene is written atomically (temp file + `os.replace`), so an interrupted
+write leaves the original intact rather than corrupting it.
 
 **Licensing:** downloaded icon sets carry their own terms (AWS Content License,
 Google's marks, etc.). Confirm the license before redistributing split icon files.

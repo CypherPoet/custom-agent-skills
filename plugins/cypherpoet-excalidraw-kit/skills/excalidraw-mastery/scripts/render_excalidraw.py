@@ -6,7 +6,7 @@ through Excalidraw's own `exportToSvg`, so the output matches the real editor.
 
 Usage:
     cd <skill>/scripts
-    uv run python render_excalidraw.py <file.excalidraw> [--output out.png] [--scale 2] [--width 1920]
+    uv run python render_excalidraw.py <file.excalidraw> [--output out.png] [--scale 2]
 
 First-time setup (one dependency, one browser download):
     cd <skill>/scripts
@@ -26,53 +26,37 @@ import json
 import sys
 from pathlib import Path
 
+# The PNG is an element screenshot of the exported SVG, which captures the SVG's
+# full bounds regardless of page viewport size — so this only needs to be a sane
+# default; it never clips the diagram. Output size is set by the scene + --scale.
+VIEWPORT = {"width": 1280, "height": 800}
+
 
 def _structural_check(data: dict) -> list[str]:
     """Fast pre-flight so a broken scene fails before we launch a browser.
 
-    Prefers the full validator (sibling module); falls back to a minimal check.
+    Uses the full validator (sibling module) when importable; only the *import*
+    is guarded, so a real bug inside validate() surfaces instead of being hidden.
     """
     try:
         from validate_excalidraw import Report, validate  # type: ignore
-
-        report = Report("<scene>")
-        validate(data, report)
-        return report.errors
-    except Exception:
+    except ImportError:
         errors: list[str] = []
         if data.get("type") != "excalidraw":
             errors.append(f"Expected type 'excalidraw', got {data.get('type')!r}")
         elements = data.get("elements")
         if not isinstance(elements, list):
             errors.append("'elements' must be an array")
-        elif not any(not e.get("isDeleted") for e in elements if isinstance(e, dict)):
+        elif not any(isinstance(e, dict) and not e.get("isDeleted") for e in elements):
             errors.append("'elements' has nothing to render")
         return errors
 
-
-def compute_bounding_box(elements: list[dict]) -> tuple[float, float, float, float]:
-    """Bounding box (min_x, min_y, max_x, max_y) across live elements."""
-    min_x = min_y = float("inf")
-    max_x = max_y = float("-inf")
-    for el in elements:
-        if el.get("isDeleted"):
-            continue
-        x, y = el.get("x", 0), el.get("y", 0)
-        w, h = el.get("width", 0), el.get("height", 0)
-        if el.get("type") in ("arrow", "line") and isinstance(el.get("points"), list):
-            for pt in el["points"]:
-                px, py = pt[0], pt[1]
-                min_x, min_y = min(min_x, x + px), min(min_y, y + py)
-                max_x, max_y = max(max_x, x + px), max(max_y, y + py)
-        else:
-            min_x, min_y = min(min_x, x), min(min_y, y)
-            max_x, max_y = max(max_x, x + abs(w)), max(max_y, y + abs(h))
-    if min_x == float("inf"):
-        return (0, 0, 800, 600)
-    return (min_x, min_y, max_x, max_y)
+    report = Report("<scene>")
+    validate(data, report)
+    return report.errors
 
 
-def render(excalidraw_path: Path, output_path: Path | None, scale: int, max_width: int) -> Path:
+def render(excalidraw_path: Path, output_path: Path | None, scale: int) -> Path:
     try:
         from playwright.sync_api import sync_playwright
     except ImportError:
@@ -90,12 +74,6 @@ def render(excalidraw_path: Path, output_path: Path | None, scale: int, max_widt
         print("Fix these (see validate_excalidraw.py) before rendering.", file=sys.stderr)
         sys.exit(1)
 
-    elements = [e for e in data["elements"] if not e.get("isDeleted")]
-    min_x, min_y, max_x, max_y = compute_bounding_box(elements)
-    padding = 80
-    vp_width = min(int(max_x - min_x + padding * 2), max_width)
-    vp_height = max(int(max_y - min_y + padding * 2), 600)
-
     output_path = output_path or excalidraw_path.with_suffix(".png")
     template_path = Path(__file__).parent / "render_template.html"
     if not template_path.exists():
@@ -112,26 +90,30 @@ def render(excalidraw_path: Path, output_path: Path | None, scale: int, max_widt
                 )
             raise
 
-        page = browser.new_page(
-            viewport={"width": vp_width, "height": vp_height},
-            device_scale_factor=scale,
-        )
-        page.goto(template_path.as_uri())
-        page.wait_for_function("window.__moduleReady === true", timeout=30000)
+        try:
+            page = browser.new_page(viewport=VIEWPORT, device_scale_factor=scale)
+            page.goto(template_path.as_uri())
+            try:
+                page.wait_for_function("window.__moduleReady === true", timeout=30000)
+            except Exception:
+                _fail(
+                    "Timed out loading the Excalidraw module (network/CDN issue?).",
+                    "The render fetches @excalidraw/excalidraw from esm.sh — check connectivity.",
+                )
 
-        result = page.evaluate(f"window.renderDiagram({json.dumps(data)})")
-        if not result or not result.get("success"):
-            msg = result.get("error", "unknown") if result else "renderDiagram returned null"
-            browser.close()
-            _fail(f"Render failed: {msg}", None)
+            # renderDiagram is async; evaluate awaits it, so on return the SVG is
+            # in the DOM and `result` reports success/failure.
+            result = page.evaluate(f"window.renderDiagram({json.dumps(data)})")
+            if not result or not result.get("success"):
+                msg = result.get("error", "unknown") if result else "renderDiagram returned null"
+                _fail(f"Render failed: {msg}", None)
 
-        page.wait_for_function("window.__renderComplete === true", timeout=15000)
-        svg_el = page.query_selector("#root svg")
-        if svg_el is None:
+            svg_el = page.query_selector("#root svg")
+            if svg_el is None:
+                _fail("No SVG element produced after render.", None)
+            svg_el.screenshot(path=str(output_path))
+        finally:
             browser.close()
-            _fail("No SVG element produced after render.", None)
-        svg_el.screenshot(path=str(output_path))
-        browser.close()
 
     return output_path
 
@@ -153,14 +135,13 @@ def main() -> None:
     parser.add_argument("input", type=Path, help="Path to the .excalidraw file")
     parser.add_argument("--output", "-o", type=Path, default=None, help="Output PNG path")
     parser.add_argument("--scale", "-s", type=int, default=2, help="Device scale factor (default 2)")
-    parser.add_argument("--width", "-w", type=int, default=1920, help="Max viewport width (default 1920)")
     args = parser.parse_args()
 
     if not args.input.exists():
         print(f"ERROR: file not found: {args.input}", file=sys.stderr)
         sys.exit(1)
 
-    print(render(args.input, args.output, args.scale, args.width))
+    print(render(args.input, args.output, args.scale))
 
 
 if __name__ == "__main__":
