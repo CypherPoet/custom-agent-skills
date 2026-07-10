@@ -231,7 +231,7 @@ import { KTX2Loader } from "three/addons/loaders/KTX2Loader.js";
 
 const ktx2Loader = new KTX2Loader();
 ktx2Loader.setTranscoderPath(
-  "https://cdn.jsdelivr.net/npm/three@0.185.0/examples/jsm/libs/basis/"
+  "https://cdn.jsdelivr.net/npm/three@0.185.1/examples/jsm/libs/basis/"
 );
 ktx2Loader.detectSupport(renderer);
 
