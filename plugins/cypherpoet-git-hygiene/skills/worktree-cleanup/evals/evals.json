@@ -1,0 +1,23 @@
+{
+  "skill_name": "worktree-cleanup",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "clean up my stale/outdated branches and worktrees",
+      "expected_output": "Inventory branches and worktrees, classify by tier with dirty/unpushed flags, present a candidate table, and remove only after per-item approval; unmerged work is reported but never proposed for deletion.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "there are a bunch of leftover .claude-worktrees checkouts from old sessions, can you tidy those up?",
+      "expected_output": "Discover them via git worktree list, check each for uncommitted/unpushed work, flag risky ones, and remove only approved clean ones via git worktree remove + prune.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "prune old worktrees but one of them might still have changes I never pushed",
+      "expected_output": "The dirty/unpushed worktree is flagged red and excluded from removal unless the user explicitly approves it with --force; everything else proceeds normally.",
+      "files": []
+    }
+  ]
+}

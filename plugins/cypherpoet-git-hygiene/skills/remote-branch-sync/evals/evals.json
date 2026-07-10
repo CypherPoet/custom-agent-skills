@@ -1,0 +1,23 @@
+{
+  "skill_name": "remote-branch-sync",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "sync with the remote",
+      "expected_output": "Fetch with prune, fast-forward the current branch if safe, and report branch state (ahead/behind, pruned refs, gone branches) without rebasing/merging or stashing anything unasked.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "pull in the latest from main -- i'm on a feature branch and want to keep going after",
+      "expected_output": "Update the local default branch via fetch refspec (or report if checked out in another worktree), then integrate into the feature branch per project convention, asking rebase-vs-merge if no convention is discoverable.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "get my branch up to date, I think there were some changes on origin. I also have some local edits I haven't committed yet",
+      "expected_output": "Report the dirty working tree and stop before moving the branch; no silent stash. Offer the options rather than acting.",
+      "files": []
+    }
+  ]
+}

@@ -23,6 +23,11 @@ Example: `python3 scripts/create_handoff.py implementing-user-auth`
 python3 scripts/create_handoff.py "auth-part-2" --continues-from 2024-01-15-auth.md
 ```
 
+**When the work lives in a different tree than your shell cwd** (typical when the session edits a worktree by absolute path without cd'ing into it), point the script at that tree — otherwise the handoff lands in the wrong checkout and the next session in the worktree never sees it:
+```bash
+python3 scripts/create_handoff.py "auth-part-2" --project /path/to/worktree
+```
+
 The script will:
 - Create the handoffs directory (`.agents/handoffs/`) if needed
 - Generate timestamped filename

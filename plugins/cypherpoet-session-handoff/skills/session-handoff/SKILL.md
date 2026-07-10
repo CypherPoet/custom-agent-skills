@@ -38,6 +38,8 @@ Pin down the next-session focus first — the single outcome the resuming agent 
 python3 scripts/create_handoff.py [task-slug]   # add --continues-from <file> to chain
 ```
 
+**Write the handoff into the tree where the work lives, not where your shell happens to sit.** A session often keeps its cwd in the main checkout while editing worktree files by absolute path — and a handoff written to the main checkout is invisible to the next session that opens the worktree. Resolve the project root from the directory of the files this session changed (`git -C <that-dir> rev-parse --show-toplevel` — returns the worktree root inside a worktree, the repo root otherwise) and pass it via `--project` whenever it differs from your cwd.
+
 Fill the 🎯 **Next Action** line first — it's the single most load-bearing field; a triaging agent may read only that line. Capture deltas and non-obvious context, not restatements of linked artifacts ([Reference, don't duplicate](#reference-dont-duplicate)). Then validate and commit — handoffs are version-controlled by default:
 
 ```bash
@@ -55,7 +57,7 @@ python3 scripts/check_staleness.py <handoff-file>   # FRESH → VERY_STALE, plus
 
 Read by triage, not cover to cover: the 🎯 **Next Action** line is the load-bearing instruction, and the 📚 Source Artifacts it links are assumed open. **Before acting, verify the handoff's assumptions still hold** — right project and branch, referenced files still exist, blockers not already resolved. Treat missing files or substantial branch divergence as a stop-and-reassess signal, not a green light. Then execute the Next Action.
 
-The full step-by-step — the read strategy, the verify-context red flags, and updating/chaining as you work — lives in [references/resume-workflow.md](references/resume-workflow.md). Read it before resuming.
+The full step-by-step — the read strategy, the verify-context red flags, and when to chain a new handoff rather than edit the consumed one — lives in [references/resume-workflow.md](references/resume-workflow.md). Read it before resuming.
 
 ## CLEANUP Workflow
 
@@ -88,13 +90,17 @@ Each handoff in the chain:
 
 When resuming from a chain, read the most recent handoff first, then reference predecessors as needed.
 
+## Unattended Loops
+
+When a handoff → compact → resume cycle runs without a human watching (`/loop`, a scheduled task), the two known loop-killers are permission prompts and transient API drops. Before the loop starts, verify that every step it performs — compaction, git commands, script execution — is allowed without prompting in the session's permission mode; a `/compact` that stalls on an approval dialog silently ends the run. If a step will prompt, say so up front so the user can pre-approve it, rather than letting the loop discover it mid-flight.
+
 ## Storage Location
 
 Handoffs are stored in: `.agents/handoffs/`
 
 This location is **host-neutral on purpose.** A handoff is a shared project artifact, not host-private config, so it doesn't belong in any single agent's directory (`.claude/`, `.codex/`, …) — keeping it neutral is what lets a session in one agent resume a handoff another agent wrote. The scripts also **still read** the legacy `.claude/handoffs/` location, so handoffs created before this change keep resolving and chaining; nothing needs migrating, though you can `git mv` them into `.agents/handoffs/` if you want everything in one place. To force a different directory, set the `HANDOFF_DIR` env var or pass `--dir` to `create_handoff.py` — keep an override inside the (git) project, since staleness and validation derive the project root from the handoff's own location.
 
-**Handoffs are committed by default.** They're durable, shareable session records — version-controlling them is what makes chaining, staleness checks, and team pickups work, and the `validate_handoff.py` secret scan exists precisely because they ship in git. Committing is the last step of the CREATE workflow. Only gitignore `.agents/handoffs/` if you specifically want ephemeral, local-only handoffs.
+**Handoffs are committed by default.** They're durable, shareable session records — version-controlling them is what makes chaining, staleness checks, and team pickups work, and the `validate_handoff.py` secret scan exists precisely because they ship in git. Committing is the last step of the CREATE workflow. Only gitignore `.agents/handoffs/` if you specifically want ephemeral, local-only handoffs — and that choice belongs to the user: never add the handoffs directory to a `.gitignore` yourself, and if you find it already ignored, surface that and ask before proceeding.
 
 Naming convention: `YYYY-MM-DD-HHMMSS-[slug].md`
 
@@ -106,7 +112,7 @@ Example: `2024-01-15-143022-implementing-auth.md`
 
 | Script | Purpose |
 |--------|---------|
-| `create_handoff.py [slug] [--continues-from <file>]` | Generate new handoff with smart scaffolding |
+| `create_handoff.py [slug] [--continues-from <file>] [--project <root>]` | Generate new handoff with smart scaffolding; `--project` targets the tree the work lives in when it isn't the cwd |
 | `list_handoffs.py [path]` | List available handoffs in a project |
 | `validate_handoff.py <file>` | Check completeness and security; emits a structured pass/fail/warn report and a READY/NEEDS_WORK/BLOCKED verdict |
 | `check_staleness.py <file>` | Assess if handoff context is still current |

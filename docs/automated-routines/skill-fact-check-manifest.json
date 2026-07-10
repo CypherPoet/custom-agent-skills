@@ -36,8 +36,11 @@
   "never": [
     "cypherpoet-changelog-maintenance/changelog-maintenance",
     "cypherpoet-emoji-commits/emoji-commits",
+    "cypherpoet-git-hygiene/remote-branch-sync",
+    "cypherpoet-git-hygiene/worktree-cleanup",
     "cypherpoet-marketplace-kit/skill-fact-check",
     "cypherpoet-session-handoff/session-handoff",
-    "cypherpoet-session-harvest/session-harvest"
+    "cypherpoet-session-harvest/session-harvest",
+    "cypherpoet-session-harvest/skill-harvest"
   ]
 }

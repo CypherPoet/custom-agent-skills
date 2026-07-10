@@ -383,13 +383,27 @@ def main():
              "project root). Same effect as setting the HANDOFF_DIR env var; "
              "default is .agents/handoffs/."
     )
+    parser.add_argument(
+        "--project",
+        dest="project",
+        help="Project root the handoff belongs to — the worktree or checkout "
+             "where the session's work actually lives. Defaults to the cwd, "
+             "which is wrong whenever the session edits a worktree by "
+             "absolute path without cd'ing into it."
+    )
 
     args = parser.parse_args()
     # Funnel --dir through HANDOFF_DIR so every resolver call (read + write)
     # honors it without threading the value through each function.
     if args.dir:
         os.environ["HANDOFF_DIR"] = args.dir
-    project_path = os.getcwd()
+    project_path = (
+        os.path.abspath(os.path.expanduser(args.project))
+        if args.project
+        else os.getcwd()
+    )
+    if not os.path.isdir(project_path):
+        parser.error(f"--project path does not exist: {project_path}")
 
     if not args.continues_from:
         prev_handoffs = find_previous_handoffs(project_path)
