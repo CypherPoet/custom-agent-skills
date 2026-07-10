@@ -280,3 +280,9 @@ Secondary leads for noticing when this skill's facts drift — the `skill-fact-c
 - [Three.js manual](https://threejs.org/manual/) — official tutorials.
 - [Three.js examples](https://threejs.org/examples/) — runnable showcases of nearly every API.
 - [TSL discussions](https://github.com/mrdoob/three.js/discussions) — Three.js Shading Language threads on GitHub.
+
+## Primary Sources
+
+- [Three.js releases](https://github.com/mrdoob/three.js/releases) — release channel; authoritative for versions.
+- [Three.js Migration Guide](https://github.com/mrdoob/three.js/wiki/Migration-Guide) — authoritative for API changes between releases.
+- [Three.js documentation](https://threejs.org/docs/) — official API reference; authoritative for API syntax.

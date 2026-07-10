@@ -186,3 +186,9 @@ Raw WebGL is the right tool for: writing one custom shader, prototyping a graphi
 - [Khronos WebGL2 spec](https://registry.khronos.org/webgl/specs/latest/2.0/) — the source of truth when behavior surprises you.
 - [Shadertoy](https://www.shadertoy.com/) — a galaxy of fragment-shader examples (uses its own uniform conventions; adapt to your scaffold).
 - [Spector.js](https://spector.babylonjs.com/) — capture-and-inspect every WebGL call in a frame; the single most useful debugging tool.
+
+## Primary Sources
+
+- [Khronos WebGL 2.0 specification](https://registry.khronos.org/webgl/specs/latest/2.0/) — the spec; authoritative for API behavior.
+- [Khronos WebGL extension registry](https://registry.khronos.org/webgl/extensions/) — authoritative for extension names and status.
+- [MDN: WebGL API](https://developer.mozilla.org/en-US/docs/Web/API/WebGL_API) — authoritative for browser support and API reference.

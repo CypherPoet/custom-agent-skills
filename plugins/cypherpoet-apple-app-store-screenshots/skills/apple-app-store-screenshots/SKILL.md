@@ -88,3 +88,11 @@ compliance** (e.g. screenshots must show the real app — §2.3.3), **rejection-
 broader **ASO/metadata** (keywords, subtitle, description), defer to the
 `apple-app-store-best-practices` skill — it's the compliance-and-listing-strategy half of the same
 job. (That plugin declares this one as a dependency, so both ship together.)
+
+## Primary Sources
+
+- [Screenshot specifications](https://developer.apple.com/help/app-store-connect/reference/app-information/screenshot-specifications) — authoritative for accepted screenshot dimensions per device class.
+- [App preview specifications](https://developer.apple.com/help/app-store-connect/reference/app-information/app-preview-specifications) — authoritative for preview video specs (resolutions, duration, codecs, bitrates).
+- [fastlane snapshot docs](https://docs.fastlane.tools/actions/snapshot/) — authoritative for capture-automation CLI syntax.
+- [fastlane frameit docs](https://docs.fastlane.tools/actions/frameit/) — authoritative for framing CLI syntax.
+- [fastlane deliver docs](https://docs.fastlane.tools/actions/deliver/) — authoritative for upload/metadata CLI syntax.

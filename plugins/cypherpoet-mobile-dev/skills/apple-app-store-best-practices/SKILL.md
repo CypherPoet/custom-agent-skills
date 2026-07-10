@@ -74,3 +74,9 @@ For targeted questions during development (not full audits), map the task to gui
 ## Listing Optimization (Beyond Compliance)
 
 Metadata/ASO, screenshot & app-preview strategy, review/rating management, and localization — the discoverability and conversion side of the listing — live in [references/listing-optimization.md](references/listing-optimization.md). For exact screenshot specs and capture automation, the **`apple-app-store-screenshots`** skill ships as a dependency of this plugin.
+
+## Primary Sources
+
+- [App Review Guidelines](https://developer.apple.com/app-store/review/guidelines/) — authoritative for guideline section numbers and rules.
+- [Upcoming requirements (Apple Developer News)](https://developer.apple.com/news/upcoming-requirements/) — authoritative for deadline-driven requirement changes.
+- [Age ratings values and definitions](https://developer.apple.com/help/app-store-connect/reference/age-ratings-values-and-definitions/) — authoritative for age-rating facts.

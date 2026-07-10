@@ -244,3 +244,8 @@ improve readability, e.g. `@Test func `Authenticate, fetch summary, then check c
 - For suites with shared mutable state between tests, add `@Suite(.serialized)` and consider using `actor` or `class` instead of `struct`.
 - Do not use underscore-prefixed symbols such as `#_sourceLocation`; only use public API. For source locations, always use
   the full `SourceLocation(fileID:filePath:line:column:)` initializer.
+
+## Primary Sources
+
+- [Swift Testing documentation](https://developer.apple.com/documentation/testing) — authoritative for `@Test`/`#expect`/`#require` API syntax.
+- [swiftlang/swift-testing](https://github.com/swiftlang/swift-testing) — the source and release channel.

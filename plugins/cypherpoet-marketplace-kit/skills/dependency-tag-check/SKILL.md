@@ -52,3 +52,7 @@ It locates the repo root via git, walks every `plugins/*/.claude-plugin/plugin.j
 - **DRIFT** → the user decides whether the tag should move; this skill only flags the mismatch.
 
 Re-running after a fix re-confirms coverage. This skill never writes anything — it only tells the user what to run.
+
+## Primary Sources
+
+- [Plugin dependencies (Claude Code docs)](https://code.claude.com/docs/en/plugin-dependencies) — authoritative for version-constraint and git-tag resolution semantics.

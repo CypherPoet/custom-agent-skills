@@ -227,3 +227,7 @@ After applying, confirm what changed:
 - **Conservative brevity.** Don't surface brevity findings unless the directory has crossed the 150-line / 50-file / 300-word thresholds. The system tolerates 200 lines; consolidation pressure belongs in the upper half of that range.
 - **Respect user edits.** If the user asks to revise a proposal before applying ("edit 4"), use their version exactly — don't second-guess.
 - **One pass per invocation.** If the user wants another round after applying changes, they'll ask. Don't loop automatically.
+
+## Primary Sources
+
+- [Claude Code memory documentation](https://code.claude.com/docs/en/memory) — authoritative for the memory-system behavior this skill audits (file locations, the MEMORY.md index, truncation limits).

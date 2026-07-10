@@ -32,3 +32,7 @@ python3 "${CLAUDE_PLUGIN_ROOT}/skills/marketplace-publish-check/scripts/needs_ma
 ## After labeling
 
 The `marketplace-publish` label flags the PR so that, once merged, the catalog gets refreshed via the `marketplace-publish` skill (or a label-gated publish routine, if configured). This skill only **detects and reports** — it never runs the publish itself.
+
+## Primary Sources
+
+- [Plugin marketplaces (Claude Code docs)](https://code.claude.com/docs/en/plugin-marketplaces) — authoritative for which manifest fields the marketplace catalog copies.

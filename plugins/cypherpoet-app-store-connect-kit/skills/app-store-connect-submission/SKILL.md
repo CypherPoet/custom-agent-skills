@@ -179,3 +179,8 @@ Load the one you need; don't read all of them upfront.
 | `references/build-and-delivery.md` | Building and delivering the archive — local Xcode archive **or** Xcode Cloud workflow setup, signing, and delivery |
 | `references/testing-purchases.md` | Testing in-app purchases — the local `.storekit` simulator path and the real **Sandbox** path (testers, scheme config, purchase-time sign-in) |
 | `references/api-automation.md` | Driving submission from the CLI / CI / an agent **without fastlane** — the App Store Connect **API key** + `.env` pattern, `xcrun altool` uploads, and JWT + REST for build status / metadata / submit |
+
+## Primary Sources
+
+- [App Store Connect API documentation](https://developer.apple.com/documentation/appstoreconnectapi) — authoritative for API endpoints, JWT auth, and request syntax.
+- [App Store Connect help](https://developer.apple.com/help/app-store-connect/) — authoritative for the submission workflow, field names, and review requirements.

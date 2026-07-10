@@ -206,3 +206,8 @@ const optimized = result.data;
 ```
 
 For the full API surface — `optimize()` options, `loadConfig()`, error shape, types — see `references/programmatic-api.md`.
+
+## Primary Sources
+
+- [SVGO plugin docs](https://svgo.dev/docs/plugins/) — authoritative for plugin names, defaults, and parameters.
+- [SVGO releases](https://github.com/svg/svgo/releases) — release channel; authoritative for versions.

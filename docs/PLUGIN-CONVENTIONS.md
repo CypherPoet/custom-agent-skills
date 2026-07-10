@@ -142,6 +142,23 @@ For skills inside a plugin, use [`/skill-creator`](https://github.com/anthropics
 
 The repo-local **`skill-structure-check`** skill ([`.claude/skills/skill-structure-check`](../.claude/skills/skill-structure-check/SKILL.md)) audits skill structure across the repo — `SKILL.md` stays under ~500 lines (split topical or once-needed depth into `references/` files past that, routed from a table in the SKILL.md that serves as the skill-level table of contents), large `references/` files (>~300 lines) carry their own `**Contents:**` jump-line, any `**Contents:**` anchors resolve, and every cross-plugin link is an absolute URL rather than a dead relative path ([Cross-Plugin Links](#cross-plugin-links)). Short reference files don't need a jump-line. Run it (or ask Claude to) before opening a PR that touches skills; it's report-only and its bundled `scripts/check-skill-structure.py` is the source of truth for the rules.
 
+### Primary Sources
+
+Every skill the fact-check routine covers (see [Fact-Check Tiering](#fact-check-tiering)) ends its `SKILL.md` with a **`## Primary Sources`** section — the skill's declared set of canonical verification sources, one bullet per source:
+
+```markdown
+## Primary Sources
+
+- [Three.js releases](https://github.com/mrdoob/three.js/releases) — release channel; authoritative for versions.
+- [Three.js documentation](https://threejs.org/docs/) — official API reference; authoritative for API syntax.
+```
+
+Each bullet says what the source is authoritative for (releases/versions, specs, API syntax, …). **Vendor-primary only** — official docs, release channels, spec registries; no blogs, aggregators, or forums. The [`skill-fact-check`](../plugins/cypherpoet-marketplace-kit/skills/skill-fact-check/SKILL.md) routine reads this section as the skill's declared source set — how it consumes it, and how it interplays with per-fact `**Source:**` markers and `## Change-Signal Sources` leads, is defined in that skill's verification procedure (don't restate it here). A skill with nothing citable yet keeps the section as a placeholder — `None declared yet — the fact-check routine falls back to vendor-primary sources per claim.` — so there's a slot to fill in later. This section complements `## See Also` (related skills, tutorials, community links); a canonical doc URL may legitimately appear in both.
+
+### Fact-Check Tiering
+
+When creating (or renaming/removing) a skill, classify its unit — `<plugin>/<skill>` — into a tier in [`docs/automated-routines/skill-fact-check-manifest.json`](automated-routines/skill-fact-check-manifest.json); the tier definitions live in the `skill-fact-check` skill's [Manifest reference](../plugins/cypherpoet-marketplace-kit/skills/skill-fact-check/SKILL.md#manifest-reference) (don't restate them here). Every unit is listed exactly once; an unlisted unit still safely defaults to monthly, and `skill-structure-check` reports untiered, orphaned, or double-listed entries — and fact-checked units missing their [Primary Sources](#primary-sources) section — as non-failing advisories.
+
 ### Cross-Plugin Links
 
 A skill's `SKILL.md` and `references/*.md` ship via a `git-subdir` sparse-clone that fetches **only** that plugin's own directory. A relative link that climbs out of the plugin into a sibling — `[threejs-mastery](../../../cypherpoet-threejs-kit/skills/threejs-mastery/SKILL.md)` — resolves when browsing this monorepo but is a **dead path in an installed copy**, because the sibling plugin isn't on disk. So **a link from one plugin's skill to a different plugin's file must be an absolute GitHub URL** — `https://github.com/CypherPoet/custom-agent-skills/blob/main/plugins/<plugin>/skills/<skill>/…` — which resolves in both contexts and matches how these See Also sections already link external docs. In-plugin links (`./references/…`, `../SKILL.md`, `../assets/…`) stay relative — they ship together in the sparse-clone. `check-skill-structure.py` enforces this: any skill-file link that resolves outside its own plugin is an ERROR.
