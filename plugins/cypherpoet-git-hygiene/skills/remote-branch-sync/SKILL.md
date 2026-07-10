@@ -40,7 +40,7 @@ Identify the default branch (`git symbolic-ref refs/remotes/origin/HEAD --short`
 
 When the ask includes catching up with the default branch while on feature work:
 
-1. Update the local default branch without leaving the current checkout: `git fetch origin <default>:<default>`. This refuses to move a branch that's checked out in another worktree — in that case update it from that worktree (`git -C <worktree> pull --ff-only`) or report and skip.
+1. Update the local default branch without leaving the current checkout: `git fetch origin <default>:<default>`. This refspec fast-forwards the local default and refuses in two cases: the branch is checked out in another worktree, or the update isn't a fast-forward because the local default has diverged (carries commits not on the remote). Either way, **report and stop — don't force it** (`+<default>:<default>` would silently discard the divergent local commits). For the worktree case, update it from that worktree instead (`git -C <worktree> pull --ff-only`); for divergence, surface it and let the user decide.
 2. Integrate into the current branch per the project's convention (rebase or merge). If no convention is discoverable, ask once and reuse the answer for the rest of the session.
 
 **Worktree guardrail:** when the session runs in a worktree, syncing means fetching and fast-forwarding local refs — never fast-forward-and-push the default branch from the main checkout on the feature's behalf; feature work reaches the default branch through its PR.

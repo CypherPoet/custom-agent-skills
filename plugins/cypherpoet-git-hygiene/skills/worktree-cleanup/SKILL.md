@@ -36,9 +36,11 @@ git worktree prune --dry-run -v      # orphaned admin entries (dir already delet
 For every proposed worktree, check what it's holding before showing it to the user:
 
 ```bash
-git -C <worktree> status --porcelain      # uncommitted changes?
-git -C <worktree> log --oneline @{u}..    # unpushed commits? (no upstream → treat ALL local commits as unpushed)
+git -C <worktree> status --porcelain                     # uncommitted changes?
+git -C <worktree> rev-parse --abbrev-ref @{u} 2>/dev/null # upstream, or empty if none
 ```
+
+Then count unpushed commits. If the branch has an upstream, `git -C <worktree> log --oneline @{u}..` lists them. If it has **none** (`@{u}` printed nothing — common for the fresh, never-pushed branches these abandoned worktrees sit on), don't run `@{u}..`: it fatals with "no upstream configured". Treat every local commit not already on the default branch as unpushed instead: `git -C <worktree> log --oneline <default-branch>..HEAD` (or all of `HEAD` when the branch shares no history with the default).
 
 Anything dirty or unpushed gets flagged 🔴 in the candidate list regardless of tier — deleting it destroys work.
 
