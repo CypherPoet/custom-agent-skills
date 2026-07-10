@@ -28,7 +28,7 @@ This is the sibling of [session-harvest](../session-harvest/SKILL.md), split by 
 
 ## Phase 1: Gather Field Evidence
 
-Sweep the session (and, when invoked at project close, the whole project) for moments where a personal skill's coverage was tested:
+When session-harvest hands off flagged candidates, start from those instead of re-sweeping — this phase becomes a quick supplement, and the work resumes at Phase 2. Otherwise, sweep the session (and, when invoked at project close, the whole project) for moments where a personal skill's coverage was tested:
 
 - **Guidance that turned out wrong or stale** — the session followed a skill and hit reality: an import path moved, an API signature changed, a recommended tool version no longer exists. Version churn is the classic case.
 - **Gotchas discovered the hard way** — anything that burned real debugging time and would have been a one-line warning in the right skill.
