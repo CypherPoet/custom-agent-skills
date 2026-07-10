@@ -17,7 +17,7 @@ description: >
 
 Claude already saves memories during a conversation when something obviously worth keeping comes up. But ad-hoc saving has blind spots — small corrections accumulate without being captured, validated approaches go unrecorded, and project context that felt obvious in the moment evaporates when the session ends. This skill does a deliberate, structured sweep at the end of a session to catch what slipped through.
 
-The goal is to present candidates, not to auto-save. The user decides what's worth keeping, and where it belongs. Not everything worth remembering belongs in memory. A project convention, decision, or rule usually belongs in the repo (a `CLAUDE.md`/`AGENTS.md` line, project docs, or a hook), where it is versioned, reviewed, and visible to teammates and other agents rather than locked in one assistant's private notes. Routing each finding to its right home is part of the sweep's job.
+The goal is to present candidates, not to auto-save. The user decides what's worth keeping, and where it belongs. Not everything worth remembering belongs in memory. A project convention, decision, or rule usually belongs in the repo (a `CLAUDE.md`/`AGENTS.md` line, project docs, or a hook), where it is versioned, reviewed, and visible to teammates and other agents rather than locked in one assistant's private notes. A learning about one of the user's *own agent skills* belongs in that skill's repo — the sibling [skill-harvest](../skill-harvest/SKILL.md) skill ships those. Routing each finding to its right home is part of the sweep's job.
 
 Most sessions yield little worth keeping — often nothing, and that's the normal, healthy outcome of a sweep, not a failure of it. A low-value memory has a real cost: it dilutes the index and future sessions *trust* it. So bias toward precision over recall — when a candidate doesn't clearly clear the bar, leave it out. A near-constant four or five findings every session is the tell that you're matching categories instead of judging value. Calibrate to the conversation, not to the list of categories below.
 
@@ -119,22 +119,26 @@ For each candidate, apply these filters:
 
    When a candidate routes to a committed home, stop treating it as a memory. Carry it into Phase 4 as a **suggested edit to the named file**. Suggest it; do not silently make it. Committed files are shared and usually go through review, so the user (or a PR) owns that change, whereas you can write a memory directly on approval. A convention occasionally earns both a one-line `CLAUDE.md` rule and a deeper `docs/` page it links to; say so when it does.
 
-5. **Universal or obvious?** "Test before committing" or "read the error message" aren't memory-worthy — they're general practice, not session-specific insights.
+5. **Belongs in one of the user's own skills?** If the learning is domain knowledge a personal skill or plugin teaches — stale guidance the session fought, a gotcha the skill should have warned about, a sequence it should encode — its home is that skill's repo, not memory. Flag it as a skill-harvest candidate and carry it into Phase 4 under its own section. Don't verify or draft the skill edit here; [skill-harvest](../skill-harvest/SKILL.md) owns that, and runs only if the user opts in.
 
-6. **Durable?** Will this matter in a week? A month? Corrections and preferences tend to be durable. A specific bug's details usually aren't, unless the pattern recurs.
+6. **Universal or obvious?** "Test before committing" or "read the error message" aren't memory-worthy — they're general practice, not session-specific insights.
 
-7. **Worth saving, or just borderline?** The filters above remove what doesn't belong (and route project artifacts to the repo); this step decides which *memory* candidates are worth surfacing *as a recommendation*. Rate each survivor on three axes — **durability** (will it matter next month?), **specificity** (a concrete, reusable rule, or something vague?), and **non-derivability** (absent from code and git?). A candidate strong on all three is **Worth saving**. One that's plausible but weak on any axis — a marginal reference, a mild preference, a lesson that may not recur — is **Borderline**: surface it as optional, not recommended. When you can't decide which tier, it's Borderline.
+7. **Durable?** Will this matter in a week? A month? Corrections and preferences tend to be durable. A specific bug's details usually aren't, unless the pattern recurs.
+
+8. **Worth saving, or just borderline?** The filters above remove what doesn't belong (and route project artifacts and skill candidates to their repos); this step decides which *memory* candidates are worth surfacing *as a recommendation*. Rate each survivor on three axes — **durability** (will it matter next month?), **specificity** (a concrete, reusable rule, or something vague?), and **non-derivability** (absent from code and git?). A candidate strong on all three is **Worth saving**. One that's plausible but weak on any axis — a marginal reference, a mild preference, a lesson that may not recur — is **Borderline**: surface it as optional, not recommended. When you can't decide which tier, it's Borderline.
 
 Most sessions produce a small Worth-saving tier — often empty or a single item. Resist the pull to populate all four categories; a sweep that surfaces one strong memory and nothing else has done its job well.
 
 
 ## Phase 4: Present Findings
 
-Findings have two destinations: **committed artifacts** (the repo) and **memory**. Lead with the committed-artifact suggestions, since misfiling a project convention into private memory is the trap this guards against, then present the memory tiers.
+Findings have three destinations: **committed artifacts** (the repo), **skill improvements** (the user's own skill repos, via skill-harvest), and **memory**. Lead with the committed-artifact and skill suggestions, since misfiling those into private memory is the trap this guards against, then present the memory tiers.
 
 For **committed artifacts**, present each routed candidate under a `## Belongs in the repo (not memory)` section: name the target file, show the line or section you'd add, and say in a phrase why it belongs in the repo rather than memory.
 
-For **memory**, present findings under two value tiers: **Worth saving** first, then **Borderline — optional**. Within each tier, group by memory type under its own subheading; don't mix types under one subheading. A `user` item goes under `### User`, not `### Feedback`, even if it surfaced alongside feedback. Number items sequentially across *all* sections (committed and memory) so the user can reference them as "1, 3, 5". Skip any empty section, tier, or subheading: the committed-artifacts section when nothing routes there, the Borderline tier when nothing is marginal.
+For **skill improvements**, present each flagged candidate under a `## Belongs in a skill (skill-harvest)` section: name the target skill and state the learning and its evidence in a line or two. These are hand-off candidates, not drafted edits — approving one hands it to skill-harvest, which starts from the flagged candidates rather than re-sweeping the session.
+
+For **memory**, present findings under two value tiers: **Worth saving** first, then **Borderline — optional**. Within each tier, group by memory type under its own subheading; don't mix types under one subheading. A `user` item goes under `### User`, not `### Feedback`, even if it surfaced alongside feedback. Number items sequentially across *all* sections (committed, skill, and memory) so the user can reference them as "1, 3, 5". Skip any empty section, tier, or subheading: the committed-artifacts or skill section when nothing routes there, the Borderline tier when nothing is marginal.
 
 For each finding, show:
 - A proposed title (the memory's `name` field)
@@ -151,17 +155,23 @@ Format like this:
    > The convention, and the exact line or section you'd add. One phrase on why
    > it belongs in the repo, not memory.
 
+## Belongs in a skill (skill-harvest)
+
+2. **Stale guidance in one of your skills**
+   → target: `<plugin>/<skill>` — approve to hand off to skill-harvest
+   > The learning and what happened this session that exposed it.
+
 ## Worth saving
 
 ### Feedback (N items)
 
-2. **Title of the learning**
+3. **Title of the learning**
    `feedback_slug.md`
    > Content preview — the rule, why it matters, when to apply it.
 
 ### Project (N items)
 
-3. **A project decision**
+4. **A project decision**
    `project_slug.md`
    > Content preview here.
 
@@ -169,7 +179,7 @@ Format like this:
 
 ### Reference (N items)
 
-4. **A link that helped once**
+5. **A link that helped once**
    `reference_slug.md`
    > Content preview — plus why it's marginal (e.g. "solved one
    > specific bug; may not recur").
@@ -177,7 +187,7 @@ Format like this:
 
 After presenting, ask:
 
-> Which should I act on? Say "all", list numbers (e.g. "1, 3, 5"), "none", or ask me to edit any item first. For repo items I'll make the suggested edit (or open a PR where that's the norm) rather than write a memory; for memory items I'll save the file. The repo and Worth-saving items are genuine recommendations. The Borderline ones are surfaced for completeness, so skipping them is a fine default.
+> Which should I act on? Say "all", list numbers (e.g. "1, 3, 5"), "none", or ask me to edit any item first. For repo items I'll make the suggested edit (or open a PR where that's the norm) rather than write a memory; for skill items I'll hand them to skill-harvest; for memory items I'll save the file. The repo, skill, and Worth-saving items are genuine recommendations. The Borderline ones are surfaced for completeness, so skipping them is a fine default.
 
 **When nothing clears the bar** — which is common, not exceptional — say so directly and stop:
 
@@ -232,6 +242,10 @@ Apply each approved item to the home it was routed to.
 
 Make the suggested change in the named file: add the `CLAUDE.md`/`AGENTS.md` line, edit the `docs/` page, or set up the hook. Two cautions, mirroring the never-auto-save rule: never edit a committed file without the user's approval of *that specific edit*, and where the repo's norm is review, propose the change on a branch or PR rather than committing to the default branch. Keep `CLAUDE.md`/`AGENTS.md` lean: a one-line imperative that links to deeper `docs/`, not a transplanted essay.
 
+### Skill items (hand-off)
+
+Invoke [skill-harvest](../skill-harvest/SKILL.md) with the approved candidates as its input. It picks up at its mapping phase — the sweep is already done — and owns claim verification, per-item approval of the actual edits, and shipping as PRs.
+
 ### Write the memory file
 
 For each approved memory item, use this format:
@@ -272,6 +286,7 @@ If the memory directory or `MEMORY.md` doesn't exist yet, create them.
 After applying all approved items, report what changed in each home you touched. Skip a line for a home nothing went to, so a memory-only run still reads cleanly.
 
 > **Repo:** added a `CLAUDE.md` line; created `docs/foo.md`.
+> **Skills:** handed 1 candidate to skill-harvest (PR opened on `<repo>`).
 > **Memory:** saved `feedback_x.md`, `project_y.md`; updated MEMORY.md.
 
 
@@ -282,4 +297,4 @@ After applying all approved items, report what changed in each home you touched.
 - **Distill, don't transcribe.** Capture the actionable essence, not a transcript of the conversation. Keep memories concise.
 - **Precision over recall.** A low-value memory has a real cost — it dilutes the index and future sessions trust it. When unsure whether something clears the bar, leave it out or mark it Borderline. The sweep's success is the *value* of what it surfaces, not the count.
 - **Respect user edits.** If the user modifies a proposed memory before saving, use their version exactly.
-- **Right home before memory.** A project convention, decision, command, or rule usually belongs in a committed artifact (a hook, `CLAUDE.md`/`AGENTS.md`, or `docs/`), not memory. Memory is for how Claude should work with *this* user and for cross-session context that isn't a project fact. Suggest the committed edit; never make it without approval.
+- **Right home before memory.** A project convention, decision, command, or rule usually belongs in a committed artifact (a hook, `CLAUDE.md`/`AGENTS.md`, or `docs/`), and a learning about one of the user's own skills belongs in that skill's repo via skill-harvest — not memory. Memory is for how Claude should work with *this* user and for cross-session context that isn't a project fact. Suggest the committed edit or hand-off; never act without approval.
