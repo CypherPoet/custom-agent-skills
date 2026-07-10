@@ -55,6 +55,7 @@ Fact-check the `SKILL.md` body and **all** `references/**/*.md` under the unit (
 ## Inputs
 
 - **Manifest:** `docs/automated-routines/skill-fact-check-manifest.json` (in the repo being checked) — maps units to a volatility tier (`weekly`, `monthly`, `never`); unlisted units default to `monthly`. See [Manifest reference](#manifest-reference).
+- **Acknowledged flags:** an optional `acknowledged` array in that same manifest lists flags a human already reviewed and accepted — the "not wrong / no vendor source / won't change" findings — so they stop re-appearing as new every run. Each entry pins a `unit_id` + a `locator` (unique substring of the flagged text), a human `reason`, and a `recheck_after` date (or `"never"`). Applied in [Step 4](#step-4--reduce--apply-orchestrator); shape in [Manifest reference](#manifest-reference).
 - **Datelines** (the freshness cursor). Parse every form below — all real in this repo family. Match only these explicit verification/sync labels, never bare content dates (`released …`, `Created: …`), which would falsely mark a stale unit fresh:
   - `**Verified:** 2026-05-30` — the canonical marker this routine writes.
   - `> Last synced: 2026-06-19` and `*Last synced with Apple HIG: 2026-06-16*` — the dominant existing form (the label may carry trailing words before the colon).
@@ -221,6 +222,13 @@ For each claim with `status == "CORRECT"`, in most-overdue-unit order, apply it 
 
 Apply with an exact-substring `Edit` using `locator` → replace `old` with `new`. Group edits by plugin. Track which plugins were touched (for the version bump).
 
+**Suppress acknowledged flags.** Build the manifest's `acknowledged` list once per repo, then reduce every `FLAG_*` claim against it. A flag is **acknowledged** when a live entry shares its `unit_id` and the entry's `locator` is a substring of the flag's `locator` (or, if that's empty, its `old`/`note`). For a match:
+
+- `recheck_after` is `"never"` or a future date → **drop the flag from the active `🚩 Flagged` table**, list it under `🔕 Known / acknowledged` (Step 7) instead, and exclude it from the flagged count.
+- `recheck_after` has passed → **do not suppress**; keep it flagged and annotate `(acknowledgment expired <date> — re-confirm or renew)`.
+
+The subagent still researches the fact every run — an acknowledgment only changes where its result lands, so a fact that quietly *changed* still surfaces (its `locator`/`old` shifts and no longer matches). Acknowledgments silence **only** `FLAG_*` findings: never suppress a `CORRECT` (a sourced fix) or an `ERROR` (a fact that couldn't be verified).
+
 ## Step 5 — Version bumps
 
 After editing any file under a plugin, bump that plugin's `.claude-plugin/plugin.json` `version` **once** (dedupe — a plugin touched by two skills bumps once):
@@ -256,7 +264,7 @@ Match the repo's commit style (it uses gitmoji — see `cypherpoet-emoji-commits
 ```markdown
 Automated skill fact-check (the `skill-fact-check` skill in `cypherpoet-marketplace-kit`).
 Branch `claude/skill-fact-check`. Units due: X · checked this run: Y · deferred (cap): Z.
-Auto-applied: A corrections (all high-confidence, sourced). Flagged: B.
+Auto-applied: A corrections (all high-confidence, sourced). Flagged: B (new) · acknowledged (suppressed): C.
 
 ## ✅ Corrections applied (cited)
 | Plugin | File | Type | Old → New | Source | Quote |
@@ -265,6 +273,11 @@ Auto-applied: A corrections (all high-confidence, sourced). Flagged: B.
 ## 🚩 Flagged for human review (NOT changed)
 | Plugin | File | Why | Detail | Source(s) |
 |---|---|---|---|---|
+
+## 🔕 Known / acknowledged (not re-flagged)
+_Flags a human already reviewed and accepted (manifest `acknowledged`) — shown for the record, excluded from the flagged count. An entry whose `recheck_after` has passed moves back up to 🚩._
+| Plugin | Acknowledged item | Reason | Re-check after |
+|---|---|---|---|
 
 ## 🔁 Re-verified unchanged (datelines re-stamped)
 - <unit>: <what was confirmed> (source)
@@ -300,6 +313,7 @@ Auto-applied: A corrections (all high-confidence, sourced). Flagged: B.
 - Never edit anything under `**/evals/` or `**/*-workspace/`.
 - Never open a second PR while one is open (reuse the stable branch).
 - Never re-stamp a dateline for a claim it couldn't actually verify.
+- Never let a manifest `acknowledged` entry suppress a `CORRECT` or an `ERROR` — acknowledgments silence only human-accepted `FLAG_*` findings, and an expired one (`recheck_after` in the past) must surface again.
 
 ## Manifest reference
 
@@ -310,8 +324,19 @@ Auto-applied: A corrections (all high-confidence, sourced). Flagged: B.
   "defaults": { "tier": "monthly" },
   "weekly":  ["<plugin>/<skill>", "..."],
   "monthly": ["<plugin>/<skill>", "..."],
-  "never":   ["<plugin>/<skill>", "..."]
+  "never":   ["<plugin>/<skill>", "..."],
+  "acknowledged": [
+    {
+      "unit_id": "<plugin>/<skill>",
+      "locator": "unique substring of the flagged text",
+      "reason": "why this flag is accepted, not a defect",
+      "ack_date": "YYYY-MM-DD",
+      "recheck_after": "YYYY-MM-DD"
+    }
+  ]
 }
 ```
 
 Tiers: **weekly** (≥7 days) for fast-drifting skills (Apple OS/App Store specs, SwiftUI "what's new", SF Symbols, three.js, Blender); **never** for evergreen methodology (session handoff/harvest, emoji commits, changelog, readme badges, GDScript); **monthly** (≥28 days, the default) for everything else. To re-tier a skill, move its `unit_id` between lists — no skill change needed. A `unit_id` not in any list is `monthly`, so a manifest without an explicit `monthly` array still resolves every unit; listing monthly units explicitly makes tiering a deliberate per-skill choice, and Step 1 prints `# DRIFT` lines for untiered, orphaned, or double-listed entries.
+
+**`acknowledged`** (optional) silences flags a human has judged acceptable — the "not wrong", "no vendor-primary source exists", or "won't change" findings that otherwise re-appear every run. Each entry pins a `unit_id` and a `locator` (a unique substring of the flagged text, same idea as a claim's locator), a human `reason`, an `ack_date`, and a `recheck_after` — a date, or `"never"` for a permanently-accepted item. [Step 4](#step-4--reduce--apply-orchestrator) routes a matching flag into the PR's `🔕 Known / acknowledged` section instead of `🚩 Flagged`; once `recheck_after` passes it resurfaces so the acceptance is re-confirmed. Prefer a dated `recheck_after` over `"never"` so a fact accepted only because it's currently undocumented resurfaces if the vendor later documents it. An acknowledgment silences a `FLAG_*` only — never a sourced `CORRECT` or an unverifiable `ERROR`.
