@@ -301,16 +301,19 @@ uvs.needsUpdate = true;
 
 ### Second UV Channel
 
-PBR `aoMap` and `lightMap` use a second UV channel:
+`aoMap` and `lightMap` sample whichever UV set the texture's `channel` selects: `0`
+(the default) reads the primary `uv`, `1` reads `uv1`. (Before r151 they were hardwired
+to a second attribute named `uv2`, which is now `uv1`.)
 
 ```javascript
-// Reuse the primary UVs if a separate set isn't authored
-geometry.setAttribute("uv2", geometry.attributes.uv);
+// Reuse the primary UVs: nothing to do — channel 0 (the default) already reads `uv`.
 
-// Or build a custom one
-const uv2 = new Float32Array(vertexCount * 2);
+// Use a distinct second set: author `uv1`, then point the maps at it.
+const uv1 = new Float32Array(vertexCount * 2);
 // ...fill
-geometry.setAttribute("uv2", new THREE.BufferAttribute(uv2, 2));
+geometry.setAttribute("uv1", new THREE.BufferAttribute(uv1, 2));
+material.aoMap.channel = 1;
+material.lightMap.channel = 1;
 ```
 
 ### UV Transform in a Shader
@@ -380,7 +383,7 @@ const material = new THREE.MeshStandardMaterial({
   metalnessMap: metalnessTexture,      // Linear
   metalness: 1,
 
-  aoMap: aoTexture,                    // Linear; uses uv2
+  aoMap: aoTexture,                    // Linear; samples uv (channel 0) by default
   aoMapIntensity: 1,
 
   emissiveMap: emissiveTexture,        // sRGB
@@ -395,7 +398,8 @@ const material = new THREE.MeshStandardMaterial({
   transparent: true,
 });
 
-geometry.setAttribute("uv2", geometry.attributes.uv);
+// aoMap reads the primary `uv` by default. For a separate AO/lightmap UV layout,
+// author a `uv1` attribute and set `material.aoMap.channel = 1` (`uv1` was `uv2` before r151).
 
 // Albedo and emissive maps must be sRGB
 colorTexture.colorSpace    = THREE.SRGBColorSpace;
@@ -510,7 +514,7 @@ const targetSize = isMobile ? 1024 : 2048;
 |---------|-----|
 | GLB looks washed out / overbright vs the reference | Albedo/`map` and `emissiveMap` need `colorSpace = THREE.SRGBColorSpace`. Data textures must NOT — leave them at default. |
 | Normal map looks fine but lighting is off | Flip `normalMap.flipY` (`false` for KTX2/normal maps from many tools) and/or set `material.normalMapType = THREE.TangentSpaceNormalMap`. |
-| `aoMap` has no visible effect | Provide `geometry.attributes.uv2` (often `geometry.setAttribute("uv2", geometry.attributes.uv)`). |
+| `aoMap` has no visible effect | It samples channel 0 (the primary `uv`) by default. For a separate AO UV layout, author a `uv1` attribute and set `material.aoMap.channel = 1` (the second-UV attribute was `uv2` before r151). |
 | Mipmaps look smeary on a data texture | Disable them: `generateMipmaps = false; minFilter = LinearFilter;` (and set `magFilter = LinearFilter`). |
 | Canvas drawing doesn't update on the mesh | Set `texture.needsUpdate = true` after redrawing. |
 | Memory grows when textures change | Call `oldTexture.dispose()` before assigning the new texture; same for render targets when resizing. |

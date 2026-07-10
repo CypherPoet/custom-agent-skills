@@ -97,7 +97,7 @@ new THREE.MeshStandardMaterial({
   metalnessMap: metalTexture,
   normalMap: normalTexture,
   normalScale: new THREE.Vector2(1, 1),
-  aoMap: aoTexture,          // Uses uv2 — assign geometry.attributes.uv2
+  aoMap: aoTexture,          // Samples uv (channel 0) by default
   aoMapIntensity: 1,
   displacementMap: dispTexture,
   displacementScale: 0.1,
@@ -115,8 +115,8 @@ new THREE.MeshStandardMaterial({
   fog: true,
 });
 
-// aoMap requires a second UV channel
-geometry.setAttribute("uv2", geometry.attributes.uv);
+// aoMap reads the primary `uv` by default. For a separate AO UV layout, author a
+// `uv1` attribute and set `aoMap.channel = 1` (`uv1` was `uv2` before r151).
 ```
 
 ## MeshPhysicalMaterial
@@ -557,7 +557,7 @@ function getMaterial(color) {
 | PBR model looks washed out / overbright | Color/albedo textures need `colorSpace = THREE.SRGBColorSpace`. Normal/metalness/roughness textures stay in linear (`NoColorSpace`). See [textures.md](./textures.md). |
 | Swapping `material.map` doesn't update | Set `material.needsUpdate = true` after the change. |
 | `flatShading` change has no effect at runtime | Same — set `needsUpdate = true`; otherwise the compiled shader is reused. |
-| `aoMap` has no effect | Provide a second UV channel: `geometry.setAttribute("uv2", geometry.attributes.uv)`. |
+| `aoMap` has no effect | It reads channel 0 (the primary `uv`) by default; for a separate AO UV set, author `uv1` and set `material.aoMap.channel = 1` (`uv1` was `uv2` before r151). |
 | Mixing `ShaderMaterial` (GLSL) with `MeshStandardNodeMaterial` (TSL) and expecting consistent behavior | They compile through different pipelines. Pick one per scene where possible; mixing is allowed but watch for tone-mapping / color-space mismatches. |
 | Transmission/clearcoat have no effect on `MeshStandardMaterial` | Those properties belong to `MeshPhysicalMaterial`. |
 | Memory grows over time when swapping materials | Call `oldMaterial.dispose()` before dropping the reference. |

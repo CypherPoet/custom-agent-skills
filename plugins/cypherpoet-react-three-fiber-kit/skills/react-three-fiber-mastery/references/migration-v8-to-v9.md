@@ -300,17 +300,20 @@ These are not fiber changes, but they land in the same upgrade window and produc
 
 ### three r151+: uv2 → uv1
 
-`aoMap` and `lightMap` read their second UV set from the attribute named `uv1` (renamed from `uv2` in three r151):
+three r151 renamed the second UV attribute `uv2` → `uv1`, and maps now select their UV set via `texture.channel` (default `0` = the base `uv`, `1` = `uv1`) rather than auto-reading a second set:
 
 ```jsx
-// Legacy (three < r151)
+// Legacy (three < r151): aoMap auto-read the `uv2` attribute
 geometry.setAttribute("uv2", geometry.attributes.uv);
 
-// Current (three r151+)
-geometry.setAttribute("uv1", geometry.attributes.uv);
+// Current (three r151+): a bake sharing the base UVs needs nothing (channel 0).
+// For a separate AO/lightmap layout, author `uv1` and select it:
+geometry.setAttribute("uv1", aoUvAttribute); // BufferAttribute of the AO UVs
+material.aoMap.channel = 1;
+material.needsUpdate = true; // if the material already rendered — a channel change needs a recompile
 ```
 
-Symptom of the stale spelling: `aoMap` silently does nothing.
+Symptom of a half-done migration: you rename `uv2` → `uv1` but forget `channel = 1`, so `aoMap` reads the base `uv` and the second set is ignored.
 
 ### three/examples/jsm → three/addons
 
@@ -394,7 +397,7 @@ Teach and write v9 as current: `state.gl` is correct today, `state.renderer` doe
 | TS: `no exported member 'MeshProps'` / `'Object3DNode'` / `'Props'` | `ThreeElements["mesh"]` for element props, `ThreeElement<typeof X>` for custom elements, `CanvasProps` for Canvas. |
 | Custom element JSX types stopped resolving despite a `JSX.IntrinsicElements` augmentation | React 19 dropped the global JSX namespace; augment `interface ThreeElements` via `declare module "@react-three/fiber"`, or use factory `extend`. |
 | Effects inside `<Canvas>` suddenly double-invoke in dev after upgrading | Expected: v9 inherits the app-level `<StrictMode>` into the scene. Remove any duplicate `<StrictMode>` inside `<Canvas>` and fix non-idempotent effects. |
-| `aoMap`/`lightMap` silently has no effect on current three | three r151+ reads the second UV set from `uv1`, not `uv2`: `geometry.setAttribute("uv1", geometry.attributes.uv)`. |
+| `aoMap`/`lightMap` silently has no effect on current three | Maps default to channel 0 (the base `uv`); for a separate AO set, author `uv1` and set `material.aoMap.channel = 1` (renamed from `uv2` in three r151). |
 | Imports from `three/examples/jsm/...` fail to resolve | Use `three/addons/...` (or the drei wrapper). |
 | zustand v5: `useStore(selector, shallow)` type error | Wrap the selector: `useStore(useShallow(selector))` from `zustand/react/shallow`. |
 | zustand v5: `store.subscribe(selector, cb)` fires with the whole state | Selector-based subscribe requires the `subscribeWithSelector` middleware. |
