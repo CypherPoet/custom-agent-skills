@@ -1,6 +1,6 @@
 # cypherpoet-session-harvest
 
-Run a pre-exit sweep of a conversation for learnings worth preserving in project memory.
+Harvest a session's learnings into their right homes: project memory, a suggested repo edit, or a PR that improves one of your own agent skills.
 
 ## Installation
 
