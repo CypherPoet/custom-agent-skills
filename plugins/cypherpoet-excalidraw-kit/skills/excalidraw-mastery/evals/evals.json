@@ -1,0 +1,163 @@
+{
+  "skill_name": "excalidraw-mastery",
+  "evals": [
+    {
+      "id": 1,
+      "eval_name": "stroke-width-valid-values",
+      "prompt": "In an Excalidraw element, what are the valid values for `strokeWidth`? I want a slightly-thicker-than-normal border.",
+      "expected_output": "Excalidraw's stroke widths are a fixed set: 1 (thin), 2 (medium), 4 (bold), and 8 (extra-bold). There is no strokeWidth 3 — the editor only offers thin/medium/bold, so a value of 3 is nonstandard. For 'slightly thicker than normal' use 2 (medium) or step up to 4 (bold).",
+      "files": [],
+      "assertions": [
+        "States the valid strokeWidth values are 1, 2, 4 (and 8), not an arbitrary range",
+        "Explicitly notes that 3 is NOT a standard/valid strokeWidth value",
+        "Maps them to thin (1) / medium (2) / bold (4)"
+      ],
+      "ground_truth": "Verified from @excalidraw/excalidraw packages/common/src/constants.ts: STROKE_WIDTH = { thin: 1, medium: 2, bold: 4, extraBold: 8 }. 3 is not a value."
+    },
+    {
+      "id": 2,
+      "eval_name": "font-family-numeric-map",
+      "prompt": "I'm writing raw .excalidraw JSON by hand. What integer do I put in `fontFamily` for the default hand-drawn font, and what integer gives me a monospace/code font?",
+      "expected_output": "fontFamily is a numeric id. The default hand-drawn font is Excalifont = 5. For a monospace/code look use Comic Shanns = 8 (the current code font) or the legacy Cascadia = 3. Other ids: Virgil = 1 (legacy hand-drawn), Helvetica = 2, Nunito = 6. There is no fontFamily 4. Both 3 and 5 render fine; pick one and stay consistent.",
+      "files": [],
+      "assertions": [
+        "States the default hand-drawn font is Excalifont = 5",
+        "Gives a monospace/code font id of 8 (Comic Shanns) and/or 3 (Cascadia)",
+        "Does not invent a fontFamily 4 (there is none)"
+      ],
+      "ground_truth": "Verified from constants.ts FONT_FAMILY: Virgil 1, Helvetica 2, Cascadia 3, Excalifont 5, Nunito 6, 'Lilita One' 7, 'Comic Shanns' 8, 'Liberation Sans' 9, Assistant 10. Default is Excalifont (5); no id 4."
+    },
+    {
+      "id": 3,
+      "eval_name": "arrow-points-relative",
+      "prompt": "For an Excalidraw arrow that goes from (100, 150) to (300, 150), what should `x`, `y`, and `points` be? Are the points absolute canvas coordinates?",
+      "expected_output": "The points array is RELATIVE to the arrow element's own x/y, and the first point is always [0, 0]. So x = 100, y = 150, and points = [[0, 0], [200, 0]] (the second point is the offset 300-100, 150-150). width = 200, height = 0. Points are not absolute canvas coordinates.",
+      "files": [],
+      "assertions": [
+        "States that points are relative to the element's x/y (not absolute)",
+        "States the first point is [0, 0]",
+        "Gives points = [[0,0],[200,0]] with x=100, y=150 for that arrow"
+      ],
+      "ground_truth": "Excalidraw linear elements store points relative to (x, y); the first point is the origin [0,0]."
+    },
+    {
+      "id": 4,
+      "eval_name": "binding-is-two-sided",
+      "prompt": "I authored an Excalidraw arrow and set its endBinding.elementId to my rectangle's id, but when I drag the rectangle in the editor the arrow doesn't follow it. And a label I gave a shape via containerId isn't attaching. What's wrong?",
+      "expected_output": "Binding in Excalidraw is two-sided and you've only done one side. For the arrow: besides the arrow's startBinding/endBinding, the target shape must list the arrow in its own boundElements array ({ type: 'arrow', id: <arrowId> }). For the label: the text needs containerId set to the shape AND the shape must list the text in boundElements ({ type: 'text', id: <textId> }). Add the shape-side boundElements entries and both will track.",
+      "files": [],
+      "assertions": [
+        "Identifies that binding requires BOTH the arrow's start/endBinding AND the shape's boundElements",
+        "States contained text needs the text's containerId AND the container's boundElements entry",
+        "Frames the fix as adding the missing shape-side boundElements references"
+      ],
+      "ground_truth": "Excalidraw stores bindings reciprocally: linear elements reference targets via startBinding/endBinding, and each shape lists bound text/arrows in boundElements."
+    },
+    {
+      "id": 5,
+      "eval_name": "binding-focus-and-gap",
+      "prompt": "In an Excalidraw arrow's startBinding/endBinding, what do the `focus` and `gap` fields mean, and what's the range of focus?",
+      "expected_output": "focus controls where along the target shape's edge the arrow attaches, ranging from -1 to 1, with 0 meaning the center. gap is the clearance in pixels between the arrow's tip and the shape's edge (a small value like 2-8 is typical). elementId names the shape being bound to.",
+      "files": [],
+      "assertions": [
+        "States focus ranges from -1 to 1 with 0 = center",
+        "States gap is the pixel clearance between the arrow and the shape edge",
+        "Does not claim focus is an absolute coordinate"
+      ]
+    },
+    {
+      "id": 6,
+      "eval_name": "minimal-valid-scene",
+      "prompt": "Give me a minimal valid empty .excalidraw file I can save and open.",
+      "expected_output": "A JSON object with type: 'excalidraw', version: 2, source: 'https://excalidraw.com', elements: [] (empty is valid), appState: { viewBackgroundColor: '#ffffff', gridSize: 20 }, and files: {}.",
+      "files": [],
+      "assertions": [
+        "Top-level type is \"excalidraw\" and version is 2",
+        "Includes elements (an array, may be empty), appState, and files",
+        "Is valid JSON with no trailing commas or comments"
+      ],
+      "ground_truth": "Current .excalidraw scene format is version 2; a valid file needs type/version/elements/appState/files."
+    },
+    {
+      "id": 7,
+      "eval_name": "authored-flowchart-artifact",
+      "prompt": "Produce a complete, valid .excalidraw scene (JSON): a Start ellipse, an arrow, and a rounded rectangle labeled \"Deploy\". The ellipse should have centered text \"Start\", the rectangle centered text \"Deploy\", and the arrow should be bound to both shapes. Output only the JSON.",
+      "expected_output": "A version-2 scene whose elements include: an ellipse and a rectangle (rectangle with roundness {type:3}); two text elements each with containerId pointing to its shape AND each shape listing that text in boundElements; and an arrow whose startBinding/endBinding reference the ellipse and rectangle by id, with those shapes also listing the arrow in boundElements. All ids unique; arrow points relative with first point [0,0]; opacity 100.",
+      "files": [],
+      "assertions": [
+        "Output is a single valid JSON object with type 'excalidraw' and version 2",
+        "All element ids are unique across the scene",
+        "Contains an ellipse, a rectangle (rounded via roundness {type:3}), two text elements, and an arrow",
+        "Each label text has containerId set to its shape AND the shape lists the text in boundElements (two-sided)",
+        "The arrow has startBinding and endBinding referencing the two shapes by id, and those shapes list the arrow in boundElements",
+        "The arrow's points are relative with the first point [0,0]",
+        "Does not use invalid values (e.g. strokeWidth 3, fontFamily 4)"
+      ]
+    },
+    {
+      "id": 8,
+      "eval_name": "convert-to-excalidraw-elements",
+      "prompt": "In @excalidraw/excalidraw, what's the ergonomic way to build elements in JavaScript without hand-writing every field like seed and versionNonce, and how do I bind an arrow between two shapes with that API?",
+      "expected_output": "Use convertToExcalidrawElements([...]) — you pass minimal descriptors (type, x, y, maybe id/label) and it fills in all the required fields. To bind an arrow, give it start and end objects that reference an existing element by { id: '...' } or spawn a new one by { type: '...' }, and add a label with label: { text: '...' }. Pass the returned elements to initialData.elements or excalidrawAPI.updateScene({ elements }).",
+      "files": [],
+      "assertions": [
+        "Names convertToExcalidrawElements as the skeleton/ergonomic builder that fills required fields",
+        "Shows arrow binding via start/end referencing an element by id or by type",
+        "Mentions passing the result to initialData or updateScene (not that it draws directly)"
+      ],
+      "ground_truth": "Verified from the @excalidraw/excalidraw excalidraw-element-skeleton docs: convertToExcalidrawElements accepts skeletons; arrows bind via start/end ({id} or {type}) and label:{text}."
+    },
+    {
+      "id": 9,
+      "eval_name": "mermaid-to-excalidraw",
+      "prompt": "I have a Mermaid flowchart as a string. How do I turn it into an editable Excalidraw diagram in code (not just a static image)?",
+      "expected_output": "Use the @excalidraw/mermaid-to-excalidraw package: await parseMermaidToExcalidraw(mermaidString, config?) returns a Promise of { elements, files } where elements are Excalidraw element skeletons. Finalize them with convertToExcalidrawElements(elements) and load into the editor via initialData or excalidrawAPI.updateScene({ elements, files }). This yields editable elements, unlike exporting a static SVG.",
+      "files": [],
+      "assertions": [
+        "Names @excalidraw/mermaid-to-excalidraw and parseMermaidToExcalidraw",
+        "States it returns { elements, files } (skeletons) to be run through convertToExcalidrawElements",
+        "Loads via initialData/updateScene rather than exportToSvg (keeps it editable)"
+      ],
+      "ground_truth": "Verified from mermaid-to-excalidraw docs: parseMermaidToExcalidraw(mermaidString, config?) => Promise<{ elements, files }>; combine with convertToExcalidrawElements."
+    },
+    {
+      "id": 10,
+      "eval_name": "export-svg-vs-blob-png",
+      "prompt": "Using @excalidraw/excalidraw's utilities, what's the difference between exportToSvg and exportToBlob, and how do I get a PNG of a scene?",
+      "expected_output": "exportToSvg({ elements, appState, files, exportPadding }) returns a Promise resolving to an SVG element (vector). exportToBlob({ ...opts, mimeType, quality }) returns a Promise resolving to an image Blob — pass mimeType 'image/png' (the default) to get a PNG (quality ~0.92 applies to JPEG/WebP). There's also exportToClipboard({ type: 'png' | 'svg' | 'json' }) to copy directly.",
+      "files": [],
+      "assertions": [
+        "exportToSvg returns an SVG (Promise), exportToBlob returns an image Blob (Promise)",
+        "Getting a PNG uses exportToBlob with mimeType 'image/png'",
+        "Mentions exportToClipboard and/or that these are async"
+      ],
+      "ground_truth": "Verified from the @excalidraw/excalidraw utils/export docs: exportToSvg -> Promise<svg>; exportToBlob({mimeType='image/png', quality=0.92}) -> Promise<Blob>; exportToClipboard({type})."
+    },
+    {
+      "id": 11,
+      "eval_name": "scene-vs-library-file",
+      "prompt": "What's the difference between a `.excalidraw` file and a `.excalidrawlib` file?",
+      "expected_output": "A .excalidraw file is a scene: top-level type 'excalidraw' with an elements array (plus appState and files). A .excalidrawlib file is a library of reusable stamps: top-level type 'excalidrawlib' with a libraryItems array, where each item has a name and its own elements. Different top-level shape and purpose — one is a drawing, the other a palette of items to drop into drawings.",
+      "files": [],
+      "assertions": [
+        "States a .excalidraw scene has type 'excalidraw' and an elements array",
+        "States a .excalidrawlib has type 'excalidrawlib' and a libraryItems array",
+        "Distinguishes a scene (a drawing) from a library (reusable stamps)"
+      ],
+      "ground_truth": "A library file uses type 'excalidrawlib' with libraryItems[] (each { name, elements }); a scene uses type 'excalidraw' with elements[]."
+    },
+    {
+      "id": 12,
+      "eval_name": "scene-format-version",
+      "prompt": "What value should the top-level `version` field of a .excalidraw file be, and is that the same as the Excalidraw app/package version?",
+      "expected_output": "The top-level version is the scene-format schema version, currently 2 — not the app or npm package version (which is separate, around 0.18.x). Version 1 is the old deprecated format. So a current file has \"version\": 2 regardless of which Excalidraw release created it.",
+      "files": [],
+      "assertions": [
+        "States the top-level version should be 2 (the current scene format)",
+        "Clarifies it is the scene/schema format version, NOT the app/package version",
+        "Does not conflate it with the @excalidraw/excalidraw package version"
+      ],
+      "ground_truth": "The .excalidraw scene format is at version 2; this is distinct from the @excalidraw/excalidraw package version (~0.18.1)."
+    }
+  ]
+}
