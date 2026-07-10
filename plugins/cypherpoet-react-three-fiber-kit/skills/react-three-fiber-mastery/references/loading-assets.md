@@ -349,7 +349,8 @@ function BakedPlane({ aoMap, aoUv }) {
     const mesh = meshRef.current
     mesh.geometry.setAttribute('uv1', new BufferAttribute(aoUv, 2)) // 'uv1' was 'uv2' before three r151
     mesh.material.aoMap.channel = 1 // 0 (default) = base `uv`; 1 = `uv1`
-  }, [aoUv])
+    mesh.material.needsUpdate = true // channel is baked into the program — force a recompile
+  }, [aoMap, aoUv])
   return (
     <mesh ref={meshRef}>
       <planeGeometry args={[4, 4]} />

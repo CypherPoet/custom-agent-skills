@@ -84,7 +84,7 @@
       "id": 7,
       "eval_name": "aomap-uv1-channel",
       "prompt": "In React Three Fiber (three r185, meshStandardMaterial), my aoMap is baked against a separate UV layout, so I added a uv1 attribute to the geometry — but the material still ignores it and the AO looks wrong. What am I missing?",
-      "expected_output": "Since three r151 aoMap picks its UV set via aoMap.channel, which defaults to 0 (the base uv). Adding a uv1 attribute alone doesn't switch it — set material.aoMap.channel = 1 so it samples uv1 (the attribute that was named uv2 before r151). In R3F, set it on a ref, e.g. meshRef.current.material.aoMap.channel = 1 in a useEffect/useLayoutEffect. (With useGLTF, GLTFLoader already sets channel = 1 when the AO is authored on TEXCOORD_1.)",
+      "expected_output": "Since three r151 aoMap picks its UV set via aoMap.channel, which defaults to 0 (the base uv). Adding a uv1 attribute alone doesn't switch it — set material.aoMap.channel = 1 so it samples uv1 (the attribute that was named uv2 before r151). In R3F, set it on a ref in a useEffect/useLayoutEffect, e.g. meshRef.current.material.aoMap.channel = 1; and because the material may already have compiled at channel 0, meshRef.current.material.needsUpdate = true to force the recompile that rebinds uv1. (With useGLTF, GLTFLoader already sets channel = 1 when the AO is authored on TEXCOORD_1.)",
       "files": [],
       "assertions": [
         "Identifies aoMap.channel (defaulting to 0 = the base uv) as why the uv1 attribute is ignored",

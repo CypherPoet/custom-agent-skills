@@ -310,6 +310,7 @@ geometry.setAttribute("uv2", geometry.attributes.uv);
 // For a separate AO/lightmap layout, author `uv1` and select it:
 geometry.setAttribute("uv1", aoUvAttribute); // BufferAttribute of the AO UVs
 material.aoMap.channel = 1;
+material.needsUpdate = true; // if the material already rendered — a channel change needs a recompile
 ```
 
 Symptom of a half-done migration: you rename `uv2` → `uv1` but forget `channel = 1`, so `aoMap` reads the base `uv` and the second set is ignored.
