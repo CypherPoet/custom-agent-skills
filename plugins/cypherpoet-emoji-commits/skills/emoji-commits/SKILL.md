@@ -15,26 +15,11 @@ Prefix every commit message with a categorized emoji from the [Gitmoji](https://
 
 1. **Read staged changes** — run `git diff --cached` to understand what's being committed.
 2. **Identify the primary intent** — is this a feature, bug fix, refactor, docs update, etc.?
-3. **Pick the emoji** — map the intent to a Gitmoji. For the most common ones, use this quick reference:
-
-| Emoji | When to use |
-|-------|-------------|
-| ✨ | Introduce new features |
-| 🐛 | Fix a bug |
-| ♻️ | Refactor code |
-| 📝 | Add or update documentation |
-| ✅ | Add, update, or pass tests |
-| 🔧 | Add or update configuration files |
-| 🔥 | Remove code or files |
-| ⚡️ | Improve performance |
-| 🎨 | Improve structure / format of the code |
-| 💄 | Add or update the UI and style files |
-
-For the full list (50+ emojis), consult `references/gitmoji.md`.
-
-4. **Compose the message** — format: `<emoji> <concise message explaining the why>`
-5. **Present for approval** — show the proposed message and wait for confirmation.
-6. **Commit** — run `git commit -m "<emoji> <message>"`.
+3. **Check the repo's voice** — run `git log --oneline -15`. History wins over the reference table: match an established house prefix even when it isn't in the table (e.g. a repo that sweeps with 🧹), and note whether messages carry a scope.
+4. **Pick the emoji** — unless step 3 found an established prefix for this kind of change, map the intent to a Gitmoji from `references/gitmoji.md`.
+5. **Compose the message** — format: `<emoji> <concise message explaining the why>`, mirroring the repo's scoping when history uses one (`<emoji> <Area>: <summary>`, `<emoji> <type>(<scope>): <summary>`, …).
+6. **Present for approval** — show the proposed message and wait for confirmation. In an unattended run there is no one to ask: skip this step and commit directly.
+7. **Commit** — run `git commit -m "<emoji> <message>"`.
 
 Use the actual Unicode emoji character, not the `:shortcode:` — it's more portable across Git clients, terminals, and GitHub.
 
@@ -53,6 +38,11 @@ Use the actual Unicode emoji character, not the `:shortcode:` — it's more port
 **Documentation update:**
 ```
 📝 Update API reference with new rate limit endpoints
+```
+
+**Same change in a repo whose history scopes messages (step 3):**
+```
+📝 Docs: update API reference with new rate limit endpoints
 ```
 
 **Ambiguous case — refactor that also fixes a bug:**
