@@ -4,6 +4,8 @@ name: uikit-app-modernization
 ---
 # UIKit App Modernization Skill
 
+**Verified:** 2026-07-11
+
 ## Purpose
 
 Modernize UIKit apps to behave correctly on modern iOS by:

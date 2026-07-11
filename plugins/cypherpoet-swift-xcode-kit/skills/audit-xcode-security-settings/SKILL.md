@@ -5,6 +5,8 @@ name: audit-xcode-security-settings
 ---
 # Audit Xcode Security Settings
 
+**Verified:** 2026-07-11
+
 Assess an Xcode project's security posture and progressively enable security build settings and entitlements — from broadly applicable warnings through Enhanced Security hardening.
 
 ## Tool Preferences
