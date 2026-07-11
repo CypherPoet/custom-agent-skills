@@ -10,6 +10,8 @@ Common failures when driving Blender via the MCP and writing `bpy` scripts. Orga
 | Connection refused / can't reach MCP | Blender MCP addon not running or wrong port | Have the user enable the addon (Preferences → Add-ons → Blender MCP) and restart Blender |
 | Socket timeout | Blender is busy (rendering, heavy compute) | Wait for current op to finish, then retry |
 | Export timeout | Export operation exceeds MCP timeout | Always use the headless CLI for exports — never expect MCP to handle them inline |
+| "Empty response from Blender", then connection refused | The script called `bpy.ops.wm.read_homefile()` / `open_mainfile()` — in-session file reloads crash Blender (SIGABRT observed on 5.1.1/macOS, GUI *and* `--background` alike), taking the MCP server down with it | Never reload or open files through the MCP. Build fresh files headless and relaunch — see `mcp-workflow.md` "Fresh files without read_homefile" |
+| Addon tracebacks on every save (e.g. a `save_post` handler error) | A broken user addon hooks save/depsgraph handlers | The save itself still succeeds — look for `Info: Saved` in the same output. Disable the addon, or pass `--factory-startup` for headless jobs so user addons never load |
 
 ## bpy runtime errors
 
@@ -21,6 +23,7 @@ Common failures when driving Blender via the MCP and writing `bpy` scripts. Orga
 | `RecursionError` in hierarchy traversal | Deep parent chain hits Python's default recursion limit | Use iterative (stack-based) traversal, or `sys.setrecursionlimit` carefully |
 | `bpy.context.scene` is `None` (in `--background`) | Headless launch hasn't fully initialized | Use `bpy.data.scenes[0]` or `bpy.context.window.scene` |
 | `ReferenceError: ... has been removed` | Tried to use a Python object after `bpy.data.X.remove()` was called on it | Re-fetch by name, or store names not references when there's a chance of removal |
+| `AttributeError: 'Action' object has no attribute 'fcurves'` | Blender 5.0 removed the legacy Action API (slotted actions, introduced in 4.4) | Read fcurves via `action.layers[].strips[].channelbags[].fcurves`; `obj.keyframe_insert()` still works unchanged. See `animation-rigging.md` "Slotted actions" |
 
 ## Mode and selection traps
 
@@ -89,7 +92,7 @@ What survives a Blender → GLTF export and what doesn't:
 | Vertex colors | Yes | As `COLOR_0` |
 | Custom UV layers | First two | Most viewers only honor `TEXCOORD_0` and `TEXCOORD_1` |
 | Armatures and skinning | Yes | Up to 4 weights per vertex |
-| NLA strips | As one combined animation | NLA is flattened |
+| NLA strips | As one combined animation (default) | With `export_animation_mode='NLA_TRACKS'`, same-named tracks across objects merge into one *named* clip — see `export.md` "Named animation clips" |
 | Drivers | No | Bake to fcurves first |
 | Constraints | No | Bake to fcurves first |
 | Modifiers (default) | No | `export_apply=False`; runtime instances |

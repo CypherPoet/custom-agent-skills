@@ -55,6 +55,26 @@ For visual changes (materials, lighting, geometry, camera), call `screenshot`. F
 
 Don't skip verification. The MCP runs Python in-process, so a script that half-completes leaves visible state in the scene that you'd otherwise miss.
 
+When the extension's screenshot tools misbehave (all observed on the official lab extension v1.0.0 / Blender 5.1):
+
+- The area-screenshot tool can fail with `Invalid response … Unterminated string` regardless of any size cap — the bridge chokes on large payloads.
+- `render_viewport_to_path`-style tools may ignore the requested output path and write to a sandboxed temp directory; the *returned* filepath in the result is the real one — copy the file out rather than assuming your path was honored.
+- The robust fallback is an OpenGL viewport render written to a path you choose, then read from disk:
+
+```python
+scene = bpy.context.scene
+scene.render.filepath = "/path/of/your/choice.png"
+for win in bpy.context.window_manager.windows:
+    for area in win.screen.areas:
+        if area.type == 'VIEW_3D':
+            region = next(r for r in area.regions if r.type == 'WINDOW')
+            with bpy.context.temp_override(window=win, area=area, region=region):
+                bpy.ops.render.opengl(write_still=True, view_context=True)
+            break
+```
+
+Caveat: empty objects' display axes render into OpenGL captures — stray black lines poking out of meshes are usually pivots, not broken geometry.
+
 ### 5. Iterate
 
 If verification fails:
@@ -70,6 +90,52 @@ Scripts that can re-run safely save you from half-completed-state hell. Some pat
 - **Use stable names, not auto-numbered ones.** Blender appends `.001`, `.002` on conflicts. Always set names explicitly when creating data so re-runs find the same object.
 - **Clear-then-rebuild for node trees.** When setting up a material's node tree, `nodes.clear()` first, then build. Trying to "patch" an existing tree is fragile.
 - **Don't trust the active object across calls.** It can shift if the user clicks something between MCP calls. Set it explicitly: `bpy.context.view_layer.objects.active = bpy.data.objects["X"]`.
+
+## Persistent helpers module
+
+`execute_python` calls share one interpreter, so a module registered in `sys.modules` once
+is importable in every later call — build a helper library in call #1 instead of re-sending
+helper code each time:
+
+```python
+import sys, types
+
+LIB_SRC = '''
+import bpy, bmesh
+def box(name, dims, loc=(0,0,0)):
+    ...
+'''
+lib = types.ModuleType("scene_lib")
+exec(LIB_SRC, lib.__dict__)
+sys.modules["scene_lib"] = lib
+```
+
+Later calls just `import scene_lib`. The module survives across MCP calls but **not** file
+reloads or Blender restarts — re-register after either.
+
+## Fresh files without read_homefile
+
+`bpy.ops.wm.read_homefile()` (and in-session file opens generally) can crash Blender
+outright — SIGABRT observed on 5.1.1/macOS from both MCP calls and `--background` scripts
+(see `errors.md`). To start a clean file, never reload in-session. Instead:
+
+1. Headless, clean the *default* scene and save — no reload involved:
+
+```bash
+blender --background --factory-startup --python-expr "
+import bpy
+for obj in list(bpy.data.objects):
+    bpy.data.objects.remove(obj, do_unlink=True)
+for coll in (bpy.data.meshes, bpy.data.cameras, bpy.data.lights, bpy.data.materials, bpy.data.worlds):
+    for block in list(coll):
+        coll.remove(block)
+bpy.ops.wm.save_as_mainfile(filepath='/path/to/new.blend')
+"
+```
+
+2. Launch the GUI directly into it: `open -a Blender /path/to/new.blend` (macOS). The
+   official lab MCP extension auto-starts its server on launch when the preference is set,
+   so the MCP reconnects without user action.
 
 ## Chunking large operations
 

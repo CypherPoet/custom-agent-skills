@@ -1,11 +1,18 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "cypherpoet-blender-kit",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Blender 3D modeling and MCP integration.",
-  "author": { "name": "CypherPoet" },
+  "author": {
+    "name": "CypherPoet"
+  },
   "homepage": "https://github.com/CypherPoet/custom-agent-skills/tree/main/plugins/cypherpoet-blender-kit",
   "repository": "https://github.com/CypherPoet/custom-agent-skills.git",
   "license": "MIT",
-  "keywords": ["claude-code", "blender", "3d", "mcp"]
+  "keywords": [
+    "claude-code",
+    "blender",
+    "3d",
+    "mcp"
+  ]
 }
