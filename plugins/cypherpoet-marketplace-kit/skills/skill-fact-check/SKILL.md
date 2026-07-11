@@ -38,7 +38,7 @@ Guarantees: never touches `main` (pushes only to a `claude/`-prefixed branch and
 - **Every applied edit needs a citation** — a `source_url` plus a `source_quote` that literally contains the new value. No quote ⇒ not applied (it becomes a flag).
 - **Fact corrections only.** No stylistic edits, no rewrites, no scope creep. Change the smallest span that makes the fact correct.
 - **Respect the protected surface** (see [What this routine must NEVER do](#what-this-routine-must-never-do)).
-- **Caps:** at most **12 units** researched per run, at most **10 edits** auto-applied per run (across all repos in one routine run). Overflow is deferred or downgraded to a flag and noted in the PR.
+- **Caps:** at most **12 units** researched and at most **10 edits** auto-applied per run, **per cloned repo** — each repo gets its own budget, so one repo's backlog never starves another's PR. Overflow is deferred or downgraded to a flag and noted in the PR.
 
 ## Scope & exclusions
 
@@ -65,7 +65,7 @@ Fact-check the `SKILL.md` body and **all** `references/**/*.md` under the unit (
 - **Source markers:** `**Source:**` and `**Source of truth:**` — the URL a file declares as the authority for a specific fact. Check this first.
 - **Declared source set:** a `## Primary Sources` section at the end of a unit's `SKILL.md` — the skill's own list of canonical verification sources (one bullet per source, each saying what it's authoritative for). Prefer these over free-choice research; a placeholder section ("None declared yet …") means fall back to vendor-primary sources per claim.
 - **Change-signal leads:** an optional per-unit `Change-Signal Sources` block lists secondary leads (e.g. a maintainer's blog) to scan for *what* may have drifted since the last dateline. Leads only — confirm against a primary source (a declared one where the claim is covered), never cite one in an edit.
-- **Caps:** `MAX_UNITS_PER_RUN = 12`, `MAX_AUTOAPPLY = 10`.
+- **Caps:** `MAX_UNITS_PER_RUN = 12`, `MAX_AUTOAPPLY = 10` — both per cloned repo.
 
 ## Step 1 — Compute the due set
 
