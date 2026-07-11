@@ -1,17 +1,17 @@
 ---
-name: blender-mcp-playbook
+name: blender-mastery
 description: >
   Use whenever the user mentions Blender, `bpy`, a `.blend` file, or asks
   to model / sculpt / rig / animate / texture / bake / render / export
-  anything in Blender — even if they don't name the skill. Pro tips and
-  `bpy` patterns for driving Blender through the official Blender MCP
-  server, covering modeling, materials, rigging, geometry nodes,
-  rendering, asset import, and export.
+  anything in Blender — even if they don't name the skill. Pro tips,
+  `bpy` patterns, and Blender mental models covering modeling, materials,
+  rigging, geometry nodes, rendering, asset import, and export — driven
+  through the official Blender MCP server or the headless CLI.
 ---
 
-# Blender MCP Playbook
+# Blender Mastery
 
-Pro tips, `bpy` patterns, and Blender mental models for working through the [official Blender MCP server](https://www.blender.org/lab/mcp-server/). The body of this file holds the cross-cutting plays and routing table — domain-specific depth lives in `references/` and is loaded only when relevant.
+Pro tips, `bpy` patterns, and Blender mental models — primarily driven through the [official Blender MCP server](https://www.blender.org/lab/mcp-server/), with a headless-CLI escape hatch for long-running work. The body of this file holds the cross-cutting plays and routing table — domain-specific depth lives in `references/` and is loaded only when relevant.
 
 ## Setup
 

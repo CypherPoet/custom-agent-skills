@@ -1,6 +1,6 @@
 # cypherpoet-blender-kit
 
-Blender 3D modeling and MCP integration.
+Blender mastery — modeling, materials, rigging, geometry nodes, rendering, and export via bpy, driven through the official Blender MCP server or the headless CLI.
 
 ## Installation
 
@@ -18,4 +18,4 @@ Install via the [`cypherpoet-toolchest`](https://github.com/CypherPoet/cypherpoe
 
 | Skill | Description |
 |---|---|
-| [blender-mcp-playbook](skills/blender-mcp-playbook/SKILL.md) | Practical playbook for working with Blender via MCP. |
+| [blender-mastery](skills/blender-mastery/SKILL.md) | Blender pro tips, `bpy` patterns, and mental models — modeling, materials, rigging, geometry nodes, rendering, and export — via the official Blender MCP server or the headless CLI. |
