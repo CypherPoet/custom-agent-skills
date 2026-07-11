@@ -1,7 +1,7 @@
 # Confirmation Dialog and Alert Item Binding
 **SDK Version:** 27.0 and later
 
-If the user's deployment target is below iOS 27 / macOS 27 / watchOS 27 / tvOS 27 / visionOS 27, the new APIs in this reference (`confirmationDialog(_:item:…)` and `alert(_:item:…)` overloads) require availability gating. See "Deployment target below SDK 27" below for the gating shape to use.
+The APIs in this reference (the `confirmationDialog(_:item:…)` and `alert(_:item:…)` overloads) are new in SDK 27 but **back-deployed**: Apple's documentation marks them available on iOS 15 / macOS 12 / watchOS 8 / tvOS 15 / visionOS 1 (Mac Catalyst 15). Compiling them requires the SDK 27 toolchain, but they run on those earlier OS versions — no `#available(iOS 27)` runtime gate is needed. See "No availability gating needed" below.
 
 `confirmationDialog` and `alert` gain overloads that take an `item: Binding<T?>` in place of an `isPresented: Binding<Bool>`. The dialog or alert presents while the binding holds a value, the unwrapped value is passed to the `actions` (and optional `message`) closures, and SwiftUI resets the binding to `nil` when it is dismissed. This is the presentation shape of `sheet(item:)` applied to dialogs and alerts; the earlier forms drove presentation from a separate `Bool` and read the data from a stored optional or a `presenting:` argument. `T` has no `Identifiable` requirement. When a dialog or alert acts on a specific value, such as the row a person tapped or the item pending deletion, prefer this `item:` overload over a separate `isPresented` Bool, a `presenting:` argument, or the older `Alert`-returning `alert(item:)`: one optional drives presentation and hands the value to the `actions`/`message` builders.
 
@@ -26,7 +26,7 @@ struct PhotoGrid: View {
 }
 ```
 
-**Availability:** iOS 27, macOS 27, watchOS 27, tvOS 27, visionOS 27.
+**Availability:** iOS 15, macOS 12, watchOS 8, tvOS 15, visionOS 1 (back-deployed; the SDK 27 toolchain is required to compile).
 
 ## Alert from an item binding
 
@@ -48,52 +48,17 @@ struct FolderView: View {
 }
 ```
 
-**Availability:** iOS 27, macOS 27, watchOS 27, tvOS 27, visionOS 27.
+**Availability:** iOS 15, macOS 12, watchOS 8, tvOS 15, visionOS 1 (back-deployed; the SDK 27 toolchain is required to compile).
 
-## Deployment target below SDK 27
+## No availability gating needed
 
-When the user's deployment target is below SDK 27 and the answer needs a per-item dialog or alert, gate the new `item:` overload behind `#available` and provide a fallback for older OS versions using the existing `isPresented:` (and `presenting:` where the unwrapped value is needed). The shape:
-
-```swift
-@State private var photoToDelete: Photo?
-@State private var isConfirmingDelete = false
-
-var body: some View {
-    SomeContent()
-        .modifier(DeleteConfirmation(item: $photoToDelete, isPresented: $isConfirmingDelete))
-}
-
-private struct DeleteConfirmation: ViewModifier {
-    @Binding var item: Photo?
-    @Binding var isPresented: Bool
-
-    func body(content: Content) -> some View {
-        if #available(iOS 27, *) {
-            content.confirmationDialog("Delete photo?", item: $item) { photo in
-                Button("Delete \(photo.name)", role: .destructive) { /* delete */ }
-            } message: { photo in
-                Text("\(photo.name) will be removed.")
-            }
-        } else {
-            content.confirmationDialog(
-                "Delete photo?",
-                isPresented: $isPresented,
-                presenting: item
-            ) { photo in
-                Button("Delete \(photo.name)", role: .destructive) { /* delete */ }
-            } message: { photo in
-                Text("\(photo.name) will be removed.")
-            }
-        }
-    }
-}
-```
-
-Use this shape (or `@available(iOS 27, *)` on an enclosing declaration) whenever the prompt names a deployment target below SDK 27. Don't emit unconditional calls to the new `item:` overloads; the typecheck will fail with `'<API>' is only available in iOS 27.0 or newer`.
+The `item:` overloads are back-deployed to iOS 15 / macOS 12 / watchOS 8 / tvOS 15 / visionOS 1 — at or below the floor of every fallback you could gate to (`confirmationDialog(_:isPresented:titleVisibility:presenting:actions:)` and `alert(_:isPresented:presenting:actions:)` require iOS 16 / macOS 13). There is no OS version where an `isPresented:`/`presenting:` fallback compiles but the `item:` overload doesn't run, so do **not** wrap calls in `#available(iOS 27, *)` and do not emit a fallback branch for their sake — the gate compiles but wrongly withholds the API from users on iOS 15–26. The only requirement is building with the SDK 27 toolchain, which declares the overloads.
 
 ## Availability summary
 
 | API | iOS | macOS | watchOS | tvOS | visionOS |
 |---|---|---|---|---|---|
-| `confirmationDialog(_:item:titleVisibility:actions:)` / `…actions:message:)` | 27 | 27 | 27 | 27 | 27 |
-| `alert(_:item:actions:)` / `…actions:message:)` | 27 | 27 | 27 | 27 | 27 |
+| `confirmationDialog(_:item:titleVisibility:actions:)` / `…actions:message:)` | 15 | 12 | 8 | 15 | 1 |
+| `alert(_:item:actions:)` / `…actions:message:)` | 15 | 12 | 8 | 15 | 1 |
+
+All rows are back-deployed SDK 27 APIs: they need the SDK 27 toolchain to compile but run on the OS versions listed.
