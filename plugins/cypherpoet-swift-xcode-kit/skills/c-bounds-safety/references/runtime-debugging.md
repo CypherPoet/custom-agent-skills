@@ -211,8 +211,8 @@ Soft trap mode must be enabled at build time — see [build-settings.md](build-s
 
 ### Supported OSs
 
-The mode relies on an implementation of the `__bounds_safety_soft_trap` function being provided. On macOS/iOS 27.0 and newer this symbol is provided by libSystem and so this mode will work out-of-the-box.
-On older OSs this symbol is not provided and so linker errors will be observed. However, projects can provide their own implementation so that debugging is still possible. E.g.:
+The mode relies on an implementation of the `__bounds_safety_soft_trap` function being provided. Apple's OS runtimes are expected to provide this symbol via libSystem (per the upstream change in llvm/llvm-project PR #169117), but neither the released Clang documentation nor Apple states which OS versions include it — verify by linking.
+Where the OS doesn't provide the symbol, linker errors will be observed. However, projects can provide their own implementation so that debugging is still possible. E.g.:
 
 ```c
 #include <bounds_safety_soft_traps.h>

@@ -50,7 +50,7 @@ Remove the `com.apple.security.hardened-process.checked-allocations` entitlement
 
 ## Platform Availability
 
-- **Hardware:** Available on all models of iPhone 17 (iPhone 17, 17 Pro, 17 Pro Max) and iPhone Air, powered by the A19 / A19 Pro chips. Apple has not announced Memory Integrity Enforcement support for Macs, iPads, or Vision Pro.
+- **Hardware:** Available on devices with A19 / A19 Pro or M5 (or later) chips — per Apple's security guide, Memory Integrity Enforcement is "available on A19 and M5 processors or later". That covers all models of iPhone 17 (iPhone 17, 17 Pro, 17 Pro Max) and iPhone Air, plus M5-class Macs, iPads, and Apple Vision Pro.
 
 ## Performance and Stability Impact
 

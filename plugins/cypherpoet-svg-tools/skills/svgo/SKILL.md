@@ -19,6 +19,8 @@ description: >
 
 # SVGO
 
+**Verified:** 2026-07-11
+
 A manual for driving [SVGO](https://github.com/svg/svgo), the SVG optimizer. SVGO is a Node CLI and library that runs a configurable pipeline of plugins over an SVG to shrink it. Most of the time you want the default pipeline (`preset-default`); the value of this skill is knowing the few defaults to *turn off* for the SVG to keep working in its target context, and the few non-default plugins to *turn on*.
 
 The deep references live alongside this file:
