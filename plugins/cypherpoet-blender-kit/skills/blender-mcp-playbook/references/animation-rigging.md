@@ -164,11 +164,31 @@ The action holding the keyframes lives on `arm_obj.animation_data.action`. To in
 
 ```python
 action = arm_obj.animation_data.action
-for fcu in action.fcurves:
+for fcu in iter_action_fcurves(action):
     print(fcu.data_path, fcu.array_index, len(fcu.keyframe_points))
 ```
 
 Each fcurve covers one scalar (e.g., `location[0]`, `rotation_quaternion[2]`). Vector properties become multiple fcurves with `array_index` 0..n-1.
+
+### Slotted actions (Blender 5.x): `action.fcurves` is gone
+
+Blender 4.4 introduced slotted (layered) actions; Blender 5.x removed the legacy
+`action.fcurves` collection — accessing it raises
+`AttributeError: 'Action' object has no attribute 'fcurves'` (as of 5.1). Fcurves now
+live under `action.layers[].strips[].channelbags[].fcurves`. `obj.keyframe_insert()`
+still works and creates the slot machinery for you — it's the write path that needs no
+migration. For reading, use a version-safe accessor:
+
+```python
+def iter_action_fcurves(action):
+    if hasattr(action, "fcurves"):          # legacy API (<= 4.x)
+        yield from action.fcurves
+        return
+    for layer in action.layers:             # slotted actions (5.x)
+        for strip in layer.strips:
+            for bag in strip.channelbags:
+                yield from bag.fcurves
+```
 
 ## NLA strips
 
