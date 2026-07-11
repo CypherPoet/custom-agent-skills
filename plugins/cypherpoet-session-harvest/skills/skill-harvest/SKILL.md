@@ -46,19 +46,31 @@ Locate the user's skill library — the local dev clones behind their personal p
 - **Public vs. private repo** — anything personal, client-specific, or unpublishable routes to the private library.
 - **Nothing** — a one-off anecdote that doesn't generalize. Discarding here is healthy; a harvest where every candidate survives is matching categories instead of judging value.
 
+**Read the target before proposing.** A candidate is only a gap if the skill actually lacks it. Open the target skill's current content — SKILL.md *and* its `references/` files — and confirm the "missing" guidance isn't already there; recollection and diff hunks aren't evidence of absence, the file is. Then check `git log` on the file: material that was deliberately cut would come back as a regression, not an improvement. If the skill already covers the ground but could be sharpened, propose an update to the existing passage rather than a parallel addition.
+
 **Generalize before proposing.** A skill ships to every future session, so a single session's workaround becomes guidance only if it holds beyond this project's particulars. Prefer "X changed in version Y — check Z" over rules overfit to today's bug.
 
 ## Phase 3: Verify Claims
 
 A wrong claim in a skill misleads every future session that loads it. Before presenting candidates for approval, verify each one's factual assertions against a primary source — release notes, changelogs, the library's actual code — not training intuition or the session's own summary. Date-stamp or version-stamp anything version-sensitive ("as of r184") so future staleness is detectable.
 
+Verification runs *before* presentation on purpose: what the user approves is what ships, so it must already be checked. When a claim doesn't hold up:
+
+- **Wrong** — correct it, or drop the candidate if the correction guts it.
+- **Unverifiable in reasonable time** — soften or cut the unverifiable sentence. A skill edit with fewer, verified claims beats a fuller one resting on confident-sounding speculation.
+- **Right but imprecise** — tighten it ("moved in a recent release" becomes "moved in r163").
+
 ## Phase 4: Present for Approval
 
-Show one numbered list across all candidates: the learning, the evidence (what happened this session), the target skill and file, and the shape of the change (one-line fix / new gotcha entry / new reference section). Then ask which to ship. Never edit a skill repo without approval of the specific items. Briefly list what was skipped and why, so the user can overrule.
+Show one numbered list across all candidates: the learning, the evidence (what happened this session), the target skill and file, and the shape of the change (one-line fix / new gotcha entry / new reference section). Present in two tiers, mirroring session-harvest: candidates strong on durability (matters beyond this month), generality (holds beyond this project), and evidence (traceable to something that happened) are genuine **recommendations**; anything weak on one of those axes goes under **borderline — optional**, with a phrase on why it's marginal, so skipping it reads as a fine default rather than a rejection. When you can't decide the tier, it's borderline. Then ask which to ship. Never edit a skill repo without approval of the specific items. Briefly list what was skipped and why, so the user can overrule.
 
 ## Phase 5: Ship as PRs
 
-For each approved item, follow the target repo's own contribution conventions — look for a conventions doc (e.g. `docs/PLUGIN-CONVENTIONS.md`) and honor it: version bumps so content changes reach installed users, per-plugin README/catalog rows, validation steps. Group changes into one branch and PR per plugin, built in a worktree, with the PR description citing the field evidence. Offer a `/code-review` pass on the PRs as the closing step.
+For each approved item, follow the target repo's own contribution conventions — look for a conventions doc (e.g. `docs/PLUGIN-CONVENTIONS.md`) and honor it: version bumps so content changes reach installed users, per-plugin README/catalog rows, validation steps. Group changes into one branch and PR per plugin, built in a worktree, with the PR description citing the field evidence.
+
+When a fix corrects a stale fact, check the skill's eval files for the same stale premise — an eval can encode the outdated claim and then contradict the corrected skill. Realign the eval in the same PR where the repo allows it; where evals are convention-protected, flag the mismatch in the PR description instead of leaving the two silently at odds.
+
+Ship exactly what was approved. If anything had to shift between approval and the PR — a claim tightened, a target file changed — say so in the PR description rather than letting the diff quietly diverge from what the user signed off on. Offer a `/code-review` pass on the PRs as the closing step.
 
 ## Constraints
 

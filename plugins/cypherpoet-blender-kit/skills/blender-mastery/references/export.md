@@ -61,6 +61,30 @@ bpy.ops.export_scene.gltf(
 
 If the runtime doesn't honor modifiers, you have to bake — but consider whether the runtime should grow up first.
 
+### Named animation clips for runtimes
+
+Drivers don't export (glTF carries keyframes only), and the default animation export
+flattens NLA into one anonymous clip. To ship a *named*, multi-object clip that runtimes
+like Three.js can look up with `AnimationClip.findByName`:
+
+1. Bake the driven motion to keyframes on each object (`obj.keyframe_insert(...)`), with
+   `LINEAR` interpolation for seamless loops (e.g. exactly one wheel revolution).
+2. Push each object's action onto an NLA track **with the same track name** on every
+   object — same-named tracks merge into one glTF animation under that name.
+3. Export with `export_animation_mode='NLA_TRACKS'`.
+
+```python
+track = obj.animation_data.nla_tracks.new()
+track.name = "WheelsRolling"            # same name on every participating object
+track.strips.new("WheelsRolling", 0, action)
+obj.animation_data.action = None        # active actions would export separately
+```
+
+Verified on Blender 5.1: four objects with `WheelsRolling` tracks export as a single
+`WheelsRolling` animation with four channels. Validate without a viewer by decoding the
+GLB's JSON chunk (`animations[0].channels` → node names) — and for rotation *direction*,
+decode the first few output-accessor quaternion keys rather than eyeballing a render.
+
 ## FBX — game engines, legacy DCC tools
 
 ```bash
