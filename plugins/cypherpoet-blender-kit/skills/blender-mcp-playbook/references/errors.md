@@ -23,7 +23,7 @@ Common failures when driving Blender via the MCP and writing `bpy` scripts. Orga
 | `RecursionError` in hierarchy traversal | Deep parent chain hits Python's default recursion limit | Use iterative (stack-based) traversal, or `sys.setrecursionlimit` carefully |
 | `bpy.context.scene` is `None` (in `--background`) | Headless launch hasn't fully initialized | Use `bpy.data.scenes[0]` or `bpy.context.window.scene` |
 | `ReferenceError: ... has been removed` | Tried to use a Python object after `bpy.data.X.remove()` was called on it | Re-fetch by name, or store names not references when there's a chance of removal |
-| `AttributeError: 'Action' object has no attribute 'fcurves'` | Blender 5.x slotted actions removed the legacy `action.fcurves` collection (as of 5.1) | Read fcurves via `action.layers[].strips[].channelbags[].fcurves`; `obj.keyframe_insert()` still works unchanged. See `animation-rigging.md` "Slotted actions" |
+| `AttributeError: 'Action' object has no attribute 'fcurves'` | Blender 5.0 removed the legacy Action API (slotted actions, introduced in 4.4) | Read fcurves via `action.layers[].strips[].channelbags[].fcurves`; `obj.keyframe_insert()` still works unchanged. See `animation-rigging.md` "Slotted actions" |
 
 ## Mode and selection traps
 

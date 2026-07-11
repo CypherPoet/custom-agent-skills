@@ -170,11 +170,12 @@ for fcu in iter_action_fcurves(action):
 
 Each fcurve covers one scalar (e.g., `location[0]`, `rotation_quaternion[2]`). Vector properties become multiple fcurves with `array_index` 0..n-1.
 
-### Slotted actions (Blender 5.x): `action.fcurves` is gone
+### Slotted actions (Blender 5.0+): `action.fcurves` is gone
 
-Blender 4.4 introduced slotted (layered) actions; Blender 5.x removed the legacy
-`action.fcurves` collection — accessing it raises
-`AttributeError: 'Action' object has no attribute 'fcurves'` (as of 5.1). Fcurves now
+Blender 4.4 introduced slotted (layered) actions; Blender 5.0 removed the legacy
+Action API, including the `action.fcurves` collection (see the [5.0 Python API release
+notes](https://developer.blender.org/docs/release_notes/5.0/python_api/)) — accessing it
+raises `AttributeError: 'Action' object has no attribute 'fcurves'`. Fcurves now
 live under `action.layers[].strips[].channelbags[].fcurves`. `obj.keyframe_insert()`
 still works and creates the slot machinery for you — it's the write path that needs no
 migration. For reading, use a version-safe accessor:
