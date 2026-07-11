@@ -15,6 +15,7 @@
     "cypherpoet-apple-human-interface-guidelines/apple-human-interface-guidelines",
     "cypherpoet-claude-docs-search/claude-docs-search",
     "cypherpoet-claude-memory-consolidation/claude-memory-consolidation",
+    "cypherpoet-excalidraw-kit/excalidraw-mastery",
     "cypherpoet-expo-kit/expo-snack-prototyper",
     "cypherpoet-google-filament-kit/google-filament-mastery",
     "cypherpoet-marketplace-kit/catalog-refresh",
@@ -42,5 +43,28 @@
     "cypherpoet-session-handoff/session-handoff",
     "cypherpoet-session-harvest/session-harvest",
     "cypherpoet-session-harvest/skill-harvest"
+  ],
+  "acknowledged": [
+    {
+      "unit_id": "cypherpoet-sf-symbols-kit/sf-symbols",
+      "locator": "3,200",
+      "reason": "Catalog counts are self-measured from the SF Symbols app's name_availability.plist; Apple publishes no authoritative figure to correct against. Valid for the SF Symbols 7.x stable line.",
+      "ack_date": "2026-07-10",
+      "recheck_after": "2026-10-01"
+    },
+    {
+      "unit_id": "cypherpoet-sf-symbols-kit/sf-symbols",
+      "locator": "9,184",
+      "reason": "Same self-measured plist count as the ~3,200 keyword figure — no vendor-primary source exists. Re-count when SF Symbols 8 leaves beta.",
+      "ack_date": "2026-07-10",
+      "recheck_after": "2026-10-01"
+    },
+    {
+      "unit_id": "cypherpoet-sf-symbols-kit/sf-symbols",
+      "locator": "2,635",
+      "reason": "Same self-measured plist count as the ~3,200 keyword figure — no vendor-primary source exists. Re-count when SF Symbols 8 leaves beta.",
+      "ack_date": "2026-07-10",
+      "recheck_after": "2026-10-01"
+    }
   ]
 }
