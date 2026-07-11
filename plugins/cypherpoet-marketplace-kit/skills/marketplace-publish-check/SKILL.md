@@ -5,6 +5,8 @@ description: Read-only check of whether the current branch's changes require a m
 
 # marketplace-publish-check
 
+**Verified:** 2026-07-11
+
 Report whether the changes on the current branch touch the **marketplace catalog surface** — the parts of a plugin the marketplace `marketplace.json` actually stores: its presence (added/removed) and its `name` / `description` / `homepage`. When they do, a `marketplace-publish` is needed after merge; when they don't (a plain content edit or a version-only bump), it isn't.
 
 Unlike the other maintainer skills here, this one is **model-invokable on purpose**: it's read-only and meant to run automatically at PR-creation to drive the `marketplace-publish` label. It never writes, pushes, or publishes — it only reports.

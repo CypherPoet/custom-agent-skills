@@ -5,6 +5,8 @@ description: Audit whether this repo's local plugins/ match the two places that 
 
 # marketplace-sync-check
 
+**Verified:** 2026-07-11
+
 Report drift between this source repo's local `plugins/` and the two places that index them: the **published marketplace catalog** (`marketplace.json`, in the marketplace repo) and the **local catalog** (`docs/CATALOG.md`, in this repo). **Read-only** — never edit either catalog, never commit, never open a PR. Just report what's out of sync and point at the right fix for each gap.
 
 This is a plain procedure to run with your normal tools (`gh`, `jq`) — adapt as needed.
