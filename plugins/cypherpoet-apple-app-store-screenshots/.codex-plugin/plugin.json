@@ -1,0 +1,20 @@
+{
+  "name": "cypherpoet-apple-app-store-screenshots",
+  "version": "0.2.0",
+  "description": "Apple App Store screenshot and app preview specifications.",
+  "author": {
+    "name": "CypherPoet"
+  },
+  "homepage": "https://github.com/CypherPoet/custom-agent-skills/tree/main/plugins/cypherpoet-apple-app-store-screenshots",
+  "repository": "https://github.com/CypherPoet/custom-agent-skills.git",
+  "license": "MIT",
+  "keywords": [
+    "claude-code",
+    "app-store",
+    "screenshots",
+    "apple",
+    "ios",
+    "aso"
+  ],
+  "skills": "./skills/"
+}

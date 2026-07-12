@@ -1,8 +1,8 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "cypherpoet-marketplace-kit",
-  "version": "0.8.0",
-  "description": "Maintainer toolkit for running a Claude Code plugin marketplace — publish plugins, audit marketplace and catalog sync, regenerate the local catalog, and verify dependency-version tags.",
+  "version": "0.9.0",
+  "description": "Maintainer toolkit for running a Claude Code plugin marketplace — publish plugins, audit marketplace and catalog sync, and regenerate the local catalog.",
   "author": { "name": "CypherPoet" },
   "homepage": "https://github.com/CypherPoet/custom-agent-skills/tree/main/plugins/cypherpoet-marketplace-kit",
   "repository": "https://github.com/CypherPoet/custom-agent-skills.git",

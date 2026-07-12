@@ -36,7 +36,7 @@ Beyond compliance, well-optimized metadata improves discoverability and conversi
 
 Screenshots and app preview videos are the primary conversion driver on the App Store listing page.
 
-This section covers *strategy and compliance*. For the exact specifications — screenshot dimensions per device class, formats and counts, the upload-the-largest / auto-scale model, app preview video specs, and capture/`fastlane` automation — use the **`apple-app-store-screenshots`** skill, which ships as a dependency of this plugin.
+This section covers *strategy and compliance*. For the exact specifications — screenshot dimensions per device class, formats and counts, the upload-the-largest / auto-scale model, app preview video specs, and capture/`fastlane` automation — use the **`apple-app-store-screenshots`** skill, which ships with this plugin.
 
 **Screenshot best practices:**
 - Use all 10 available screenshot slots — more screenshots give users more reasons to download

@@ -24,7 +24,7 @@ The deterministic logic lives in [scripts/check-skill-structure.py](scripts/chec
 ## Run It
 
 ```shell
-python3 .Codex/skills/skill-structure-check/scripts/check-skill-structure.py
+python3 .claude/skills/skill-structure-check/scripts/check-skill-structure.py
 ```
 
 Report-only — it never modifies files. Exits `1` if there are any ERRORs, `0`

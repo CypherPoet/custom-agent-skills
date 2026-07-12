@@ -13,6 +13,10 @@ balloon and large reference files stay navigable:
   ERROR     a cross-plugin relative link in a     dead path in an installed sparse-clone (only
             SKILL.md / references file            this plugin's dir is fetched) — use an
                                                   absolute GitHub URL instead
+  ERROR     a dual-harness generated artifact      a vendored skill copy, generated Codex manifest,
+            (vendored skill / .codex-plugin /      or marketplace.json drifted from its source, or a
+            marketplace.json) drifted, or a new    plugin is unclassified — run
+            plugin is unclassified                 scripts/sync_dual_harness.py (skipped if absent)
   WARNING   SKILL.md 450-500 lines               approaching the limit; plan to split
   ADVISORY  references/*.md over 300 lines        large reference files get a **Contents:** jump-line
             without a **Contents:** jump-line     so they stay navigable (summarized, non-failing)
@@ -202,6 +206,29 @@ def audit(plugins_dir):
     return errors, warnings, missing_contents, units, units_with_sources
 
 
+def dual_harness_drift(root):
+    """Dual-harness sync drift as ERROR strings; [] when the tooling is absent (portable
+    to repos without it) or everything is in sync. Delegates to scripts/sync_dual_harness.py
+    so the vendored-copy / Codex-manifest / marketplace generators have one source of truth."""
+    scripts_dir = os.path.join(root, "scripts")
+    if not (
+        os.path.isfile(os.path.join(scripts_dir, "dual-harness.json"))
+        and os.path.isfile(os.path.join(scripts_dir, "sync_dual_harness.py"))
+    ):
+        return []
+    sys.path.insert(0, scripts_dir)
+    try:
+        import sync_dual_harness
+        from pathlib import Path
+
+        return sync_dual_harness.sync(Path(root), write=False)
+    except Exception as e:  # never let the guard's own failure mask a clean structure run
+        return [f"dual-harness check could not run: {e}"]
+    finally:
+        if scripts_dir in sys.path:
+            sys.path.remove(scripts_dir)
+
+
 def render(rows, kind):
     cur = None
     for label, where, msg in rows:
@@ -218,6 +245,8 @@ def main():
         return 2
     errors, warnings, missing_contents, units, units_with_sources = audit(os.path.join(root, "plugins"))
     tier_advisories, tier_checked = tier_findings(root, units, units_with_sources)
+    for msg in dual_harness_drift(root):
+        errors.append(("dual-harness", "sync", msg))
 
     if not (errors or warnings or missing_contents or tier_advisories):
         tier_note = ", and the fact-check manifest is drift-free" if tier_checked else ""

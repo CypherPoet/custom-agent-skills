@@ -1,10 +1,11 @@
 # Plugin Conventions
 
-This repo applies a handful of conventions on top of Claude Code's standard plugin shape. Use [`/plugin-dev:create-plugin`](https://github.com/anthropics/claude-plugins-official/blob/main/plugins/plugin-dev/commands/create-plugin.md) as the canonical scaffold workflow, then apply the deltas below. Don't commit until the staged files have been reviewed.
+This repo applies a handful of conventions on top of the standard plugin shape, and ships every plugin for **both Claude Code and Codex** (see [Dual-Harness Plugins](#dual-harness-plugins)). Scaffold with Claude Code's [`/plugin-dev:create-plugin`](https://github.com/anthropics/claude-plugins-official/blob/main/plugins/plugin-dev/commands/create-plugin.md) (or Codex's `$plugin-creator`), then apply the deltas below. Don't commit until the staged files have been reviewed.
 
 For plugin anatomy (component types, auto-discovery, `${CLAUDE_PLUGIN_ROOT}` usage, `hooks.json` shape, MCP transport fields, etc.), defer to the canonical sources:
 
 - [Claude Code plugins reference](https://code.claude.com/docs/en/plugins-reference)
+- [Codex: Build skills](https://learn.chatgpt.com/docs/build-skills) / [Build plugins](https://learn.chatgpt.com/docs/build-plugins) — the Codex plugin + skill format
 - [`plugin-dev:plugin-structure`](https://github.com/anthropics/claude-plugins-official/tree/main/plugins/plugin-dev/skills/plugin-structure) — manifest fields, component patterns, examples
 - [`plugin-dev:skill-development`](https://github.com/anthropics/claude-plugins-official/tree/main/plugins/plugin-dev/skills/skill-development) — skill creation methodology
 - [`plugin-dev:hook-development`](https://github.com/anthropics/claude-plugins-official/tree/main/plugins/plugin-dev/skills/hook-development) — hook patterns and validators
@@ -20,29 +21,42 @@ For plugin anatomy (component types, auto-discovery, `${CLAUDE_PLUGIN_ROOT}` usa
 Use [`/plugin-dev:create-plugin`](https://github.com/anthropics/claude-plugins-official/blob/main/plugins/plugin-dev/commands/create-plugin.md) to scaffold a working `plugin.json`. Recommended defaults this repo applies on top:
 
 - Set `"author": { "name": "CypherPoet" }` (no email field).
-- Set `"version": "0.1.0"` for new plugins. Bump per semver as the plugin evolves: PATCH for fixes, MINOR for additive changes, MAJOR for breaking changes (pre-1.0, treat MINOR as the default bump for anything user-visible). This is Claude Code's update cache key — resolved from `plugin.json` first, with the `git-subdir` commit SHA only as the fallback when no version is set — so existing installs update *only* when you bump it; pushing new commits to `main` alone won't reach them.
+- Set `"version": "0.1.0"` for new plugins. Bump per semver as the plugin evolves: PATCH for fixes, MINOR for additive changes, MAJOR for breaking changes (pre-1.0, treat MINOR as the default bump for anything user-visible). This is each harness's update cache key (Claude Code resolves it from `plugin.json` first, with the `git-subdir` commit SHA only as the fallback when no version is set) — so existing installs update *only* when you bump it; pushing new commits to `main` alone won't reach them.
 - Add `"license": "MIT"`.
 - Add `"keywords"`: 4–6 lowercase kebab-case tags, leading with `"claude-code"` and the plugin's domain (`git`, `blender`, `svg`, …).
 
 See any existing manifest under `plugins/*/.claude-plugin/plugin.json` for canonical shape and the standard fields (`$schema`, `homepage`, `repository`) worth including for catalog and IDE support.
 
-## Dependencies
+## Dual-Harness Plugins
 
-A plugin can require another via the manifest `dependencies` array; Claude Code auto-installs them. **Default to the bare-string form:**
+Plugins target **both** Claude Code and Codex. Each plugin is **self-contained**: install pulls only its own directory (Claude Code `git-subdir` sparse-clone; Codex marketplace fetch), so a plugin must physically ship every skill it needs. Neither harness resolves a reference to a skill in another plugin, and Codex has no plugin-to-plugin dependency mechanism — so composition is by **vendoring** (copying a skill into each plugin that ships it), never dependencies.
 
-```jsonc
-"dependencies": ["cypherpoet-webgl-kit"]
-```
+[`scripts/dual-harness.json`](../scripts/dual-harness.json) is the single source of truth; [`scripts/sync_dual_harness.py`](../scripts/sync_dual_harness.py) generates every derived artifact and, with `--check`, fails on drift (the repo-local `skill-structure-check` runs this check). **After editing a vendored skill's source or any `.claude-plugin/plugin.json`, run `python scripts/sync_dual_harness.py`.** Never hand-edit a generated file.
 
-Every plugin here lives in one repo, and a consumer always installs from `main` — so a bare-string dependency hands them the *current, coherent set*: the dependent and its dependency at the versions that ship together. No tags, nothing to maintain. Each plugin still carries its own `version`, and bumping it ships updates exactly as described under [Manifest](#manifest); bare-string only means you don't *constrain* which version of the dependency is pulled.
+### Manifests
 
-**Only pin a version range — `{ "name": "...", "version": "~0.1.0" }` — when the dependency lives in a *different repo* or releases on a cadence you can't bump in the same commit**, so "latest" is no longer guaranteed to be the version you built against. That's the only case the constraint earns its cost. A version constraint on a `git-subdir` dependency resolves against **git tags** on the source repo (the one the `git-subdir` source fetches from, *not* the marketplace repo); with no satisfying tag the install hard-fails with `no-matching-tag` — there is no soft "check only" mode for git sources. So if you pin, you must tag every release of the depended-on plugin. Once its version is on `main`, run from its directory:
+A dual-harness plugin carries two manifests over a shared `skills/` directory:
 
-```shell
-claude plugin tag --push   # creates <plugin-name>--v<version> on the source repo, then pushes it
-```
+- `.claude-plugin/plugin.json` — hand-authored, the source of truth (see [Manifest](#manifest)).
+- `.codex-plugin/plugin.json` — **generated** from the Claude manifest: the same `name`/`version`/`description`/`author`/`homepage`/`repository`/`license`/`keywords`, plus `"skills": "./skills/"` (no `$schema`). Don't edit it.
 
-Re-tag on every bump — an untagged bump is invisible to the range, which silently keeps resolving to the older tag. Mind the pre-1.0 interaction with the "MINOR is the default bump" rule above: a `~0.1.0` range only matches `0.1.x`, so a MINOR bump of the depended-on plugin (to `0.2.0`) won't be picked up until the dependent ships a widened constraint. See [Constrain plugin dependency versions](https://code.claude.com/docs/en/plugin-dependencies) for the full mechanics.
+A plugin whose function is Claude-Code-specific runs on Claude only: list it in `dual-harness.json`'s `claude_only_plugins` (with a reason) and it gets no `.codex-plugin/` manifest.
+
+### Vendoring
+
+When a plugin needs a skill authored elsewhere — its own skill functionally builds on it, or it curates a set — the source skill is **copied (vendored)** into the plugin. Declare the edge in `dual-harness.json` under `vendored_skills` (`source` → `targets`) and run the sync.
+
+- The skill is authored **once**, in its owner plugin. Every target is a byte-identical generated copy (minus dev-only `evals/` and `*-workspace/`). Edit the source, never a copy.
+- Targets vendor from the **original source**, never from another vendored copy.
+- A vendored copy ships inside a different plugin, so any link it makes to *another* plugin must be an absolute GitHub URL ([Cross-Plugin Links](#cross-plugin-links)) — the copy inherits the source's links, and well-formed skills already satisfy this.
+- Vendored copies are tiered `never` in the [fact-check manifest](#fact-check-tiering): the routine corrects the authoritative source, and the sync propagates the fix.
+
+A **curated bundle** — a plugin that ships several skills it doesn't author (e.g. `git-flow` = `emoji-commits` + `changelog-maintenance`) — is just an ordinary plugin that vendors them. Keep a bundle only when its members share harness-applicability; one whose members split across Claude-only and dual-harness is better dissolved into its already-standalone members.
+
+### Marketplaces
+
+- **Claude Code:** the separate [`cypherpoet-toolchest`](https://github.com/CypherPoet/cypherpoet-toolchest) marketplace repo (see [Publishing](#publishing)).
+- **Codex:** [`.agents/plugins/marketplace.json`](../.agents/plugins/marketplace.json) in this repo, generated by the sync from `dual_harness_plugins`. Consumers add it with `codex plugin marketplace add CypherPoet/custom-agent-skills`.
 
 ## Validate
 
@@ -75,13 +89,7 @@ Install via the marketplace this plugin is published to:
 /plugin install <plugin-name>@<marketplace-name>
 ```
 
-## Dependencies
-
-Installed automatically with this plugin:
-
-| Plugin | Version | Description |
-|---|---|---|
-| [<dep-name>](../<dep-name>) | `latest` | <one-sentence description, from the dependency's manifest>. |
+On Codex, add this repo's marketplace instead: `codex plugin marketplace add CypherPoet/custom-agent-skills`, then install `<plugin-name>` from the Codex plugin directory.
 
 ## Skills
 
@@ -118,7 +126,7 @@ Configured in [hooks/hooks.json](hooks/hooks.json):
 
 Only include the section per component type the plugin actually ships — drop the rest. A skills-only plugin's README has just `## Skills`. Append a row to the matching table whenever a component is added — the per-plugin README is its primary index, and PR review treats a missing row as a defect.
 
-The optional `## Dependencies` section (right after Installation) lists the plugins this one pulls in. Include it only when the manifest declares `dependencies`, mirror that array — `plugin.json` is the source of truth — and refresh the table when the array changes. The `Version` column shows `latest` for a bare-string dependency or the semver range for a pinned one; see [Dependencies](#dependencies) for when each applies.
+A plugin's `## Skills` table lists **every** skill it ships, including any vendored in from another plugin ([Vendoring](#vendoring)) — refresh it whenever the sync adds or removes one.
 
 When copying the install command, replace **all** placeholders: `<plugin-name>` with the plugin's slug, `<marketplace-owner>/<marketplace-repo>` with the GitHub path of the marketplace repo, and `<marketplace-name>` with the marketplace's `name` field from its `marketplace.json` (often the same as the repo name). For plugins published to this repo's marketplace (the default for everything currently in `plugins/`), those resolve to a fixed pair: `CypherPoet/cypherpoet-toolchest` and `cypherpoet-toolchest`. The shipped READMEs already use those values verbatim — the placeholder form only matters when scaffolding for a *different* marketplace.
 
@@ -134,13 +142,13 @@ Rather than hand-editing, regenerate the whole table from the manifests by invok
 
 After the plugin is ready, use the `marketplace-publish` skill to open a PR on the marketplace this repo publishes to. Scaffolding alone never publishes — the catalog only changes when you explicitly publish.
 
-A plugin's `version` (in `plugin.json`) is Claude Code's update cache key, so edits to a plugin's **content** (skills, commands, agents, scripts) reach existing installs only when you **bump that version** — pushing commits to `main` alone won't update them (a *fresh* install always pulls `main`'s latest). Separately, the catalog stores its own copy of each plugin's `name`, `description`, and `homepage` — editing any of those manifest fields requires running `marketplace-publish` again to refresh the entry. Content ships on a version bump; catalog metadata ships on a re-publish.
+A plugin's `version` (in `.claude-plugin/plugin.json`) is each harness's update cache key, so edits to a plugin's **content** (skills, scripts) reach existing installs only when you **bump that version** — pushing commits to `main` alone won't update them (a *fresh* install always pulls `main`'s latest). Re-run `scripts/sync_dual_harness.py` after a bump so the generated `.codex-plugin` version matches. Separately, the Claude catalog stores its own copy of each plugin's `name`, `description`, and `homepage` — editing any of those requires running `marketplace-publish` again to refresh the entry. Content ships on a version bump; catalog metadata ships on a re-publish.
 
 ## Skill Conventions
 
 For skills inside a plugin, use [`/skill-creator`](https://github.com/anthropics/skills/tree/main/skills/skill-creator) — it handles drafts, evals, description optimization, and the general skill structure conventions.
 
-The repo-local **`skill-structure-check`** skill ([`.claude/skills/skill-structure-check`](../.claude/skills/skill-structure-check/SKILL.md)) audits skill structure across the repo — `SKILL.md` stays under ~500 lines (split topical or once-needed depth into `references/` files past that, routed from a table in the SKILL.md that serves as the skill-level table of contents), large `references/` files (>~300 lines) carry their own `**Contents:**` jump-line, any `**Contents:**` anchors resolve, and every cross-plugin link is an absolute URL rather than a dead relative path ([Cross-Plugin Links](#cross-plugin-links)). Short reference files don't need a jump-line. Run it (or ask Claude to) before opening a PR that touches skills; it's report-only and its bundled `scripts/check-skill-structure.py` is the source of truth for the rules.
+The repo-local **`skill-structure-check`** skill ([`.claude/skills/skill-structure-check`](../.claude/skills/skill-structure-check/SKILL.md)) audits skill structure across the repo — `SKILL.md` stays under ~500 lines (split topical or once-needed depth into `references/` files past that, routed from a table in the SKILL.md that serves as the skill-level table of contents), large `references/` files (>~300 lines) carry their own `**Contents:**` jump-line, any `**Contents:**` anchors resolve, every cross-plugin link is an absolute URL rather than a dead relative path ([Cross-Plugin Links](#cross-plugin-links)), and every dual-harness generated artifact is in sync ([Dual-Harness Plugins](#dual-harness-plugins)). Short reference files don't need a jump-line. Run it (or ask Claude to) before opening a PR that touches skills; it's report-only and its bundled `scripts/check-skill-structure.py` is the source of truth for the rules.
 
 ### Primary Sources
 
@@ -163,6 +171,6 @@ When creating (or renaming/removing) a skill, classify its unit — `<plugin>/<s
 
 A skill's `SKILL.md` and `references/*.md` ship via a `git-subdir` sparse-clone that fetches **only** that plugin's own directory. A relative link that climbs out of the plugin into a sibling — `[threejs-mastery](../../../cypherpoet-threejs-kit/skills/threejs-mastery/SKILL.md)` — resolves when browsing this monorepo but is a **dead path in an installed copy**, because the sibling plugin isn't on disk. So **a link from one plugin's skill to a different plugin's file must be an absolute GitHub URL** — `https://github.com/CypherPoet/custom-agent-skills/blob/main/plugins/<plugin>/skills/<skill>/…` — which resolves in both contexts and matches how these See Also sections already link external docs. In-plugin links (`./references/…`, `../SKILL.md`, `../assets/…`) stay relative — they ship together in the sparse-clone. `check-skill-structure.py` enforces this: any skill-file link that resolves outside its own plugin is an ERROR.
 
-This covers skill markdown, not the per-plugin `README.md` — its [Dependencies table](#per-plugin-readme) deliberately uses `../<dep-name>` relative links aimed at GitHub-repo browsing.
+This covers skill markdown (`SKILL.md`, `references/*.md`), not the per-plugin `README.md`, which is a GitHub-browsing artifact and may use ordinary relative links.
 
 `*-workspace/` directories under any `skills/` folder are gitignored: they're transient eval-iteration scratch, not real skills.
