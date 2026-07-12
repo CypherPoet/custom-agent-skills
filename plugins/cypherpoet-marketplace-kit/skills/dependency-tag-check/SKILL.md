@@ -14,7 +14,7 @@ The audit logic is a bundled script — Python 3 standard library only (no `node
 
 ## When this matters (and when it's a clean no-op)
 
-This repo's default is **bare-string** dependencies (`"dependencies": ["other-plugin"]`), which track latest and need no tags. Tags only enter the picture for a **constrained** dependency — an object with a `version` range, e.g. `{ "name": "other-plugin", "version": "~0.1.0" }` — which is the deliberate exception (a pinned line, e.g. holding a consumer on `0.1.x` while a `0.2.x` line develops). See `docs/PLUGIN-CONVENTIONS.md` → Dependencies for the full rationale.
+Tags only matter for a **constrained** dependency — an object with a `version` range, e.g. `{ "name": "other-plugin", "version": "~0.1.0" }` (a pinned line, e.g. holding a consumer on `0.1.x` while a `0.2.x` line develops). **This repo no longer uses plugin `dependencies`** — composition is by vendoring (see `docs/PLUGIN-CONVENTIONS.md` → Dual-Harness Plugins) — so the audit is a clean no-op here; the skill remains for marketplaces that do pin constrained dependencies.
 
 So if the audit finds zero constrained dependencies, "nothing to check — all clean" is the **expected, correct** result, not a sign something is wrong. Say so plainly and stop.
 

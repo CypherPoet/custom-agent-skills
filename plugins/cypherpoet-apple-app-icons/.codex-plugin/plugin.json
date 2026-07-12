@@ -1,6 +1,6 @@
 {
   "name": "cypherpoet-apple-app-icons",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "Apple app icons end to end: design one that converts in the App Store (tap-through, audit, A/B testing) and ship it correctly — Icon Composer Liquid Glass .icon plus an appiconset fallback for older OS versions.",
   "author": {
     "name": "CypherPoet"

@@ -104,7 +104,7 @@ def build_marketplace(cfg: dict) -> dict:
                 "name": name,
                 "source": {"source": "local", "path": f"./plugins/{name}"},
                 "policy": {"installation": "AVAILABLE", "authentication": "ON_INSTALL"},
-                "category": dual[name]["category"],
+                "category": dual[name].get("category", "Uncategorized"),
             }
             for name in sorted(dual)
         ],
@@ -113,11 +113,6 @@ def build_marketplace(cfg: dict) -> dict:
 
 def dumps(obj: dict) -> str:
     return json.dumps(obj, indent=2, ensure_ascii=False) + "\n"
-
-
-def vendored_target_dirs(cfg: dict) -> list[str]:
-    """Every vendored copy path (repo-relative) — consumed by skill-structure-check."""
-    return [t for edge in cfg["vendored_skills"] for t in edge["targets"]]
 
 
 def load_config(root: Path) -> dict:
@@ -147,6 +142,9 @@ def sync(root: Path, write: bool) -> list[str]:
             problems.append(f"[vendor] source missing: {edge['source']}")
             continue
         src_tree = read_tree(src)
+        if not src_tree:
+            problems.append(f"[vendor] source has no vendorable files: {edge['source']}")
+            continue
         for target in edge["targets"]:
             dst = root / target
             if write:
@@ -156,16 +154,25 @@ def sync(root: Path, write: bool) -> list[str]:
 
     # 2. Codex manifests.
     for name in sorted(dual):
+        if "category" not in cfg["dual_harness_plugins"][name]:
+            problems.append(f"[config] {name}: dual_harness_plugins entry needs a 'category'")
         claude_path = root / "plugins" / name / ".claude-plugin" / "plugin.json"
         if not claude_path.exists():
             problems.append(f"[codex-manifest] missing Claude manifest for {name}")
             continue
         claude = json.loads(claude_path.read_text(encoding="utf-8"))
+        missing = [k for k in ("name", "version", "description") if k not in claude]
+        if missing:
+            problems.append(f"[codex-manifest] {name}: Claude manifest missing {', '.join(missing)}")
+            continue
+        unported = [k for k in ("mcpServers", "hooks", "apps", "commands") if k in claude]
+        if unported:
+            problems.append(f"[codex-manifest] {name}: Claude manifest declares {', '.join(unported)} — the generator does not carry these into .codex-plugin; port it or make the plugin Claude-only")
         want = dumps(build_codex_manifest(claude))
         codex_path = root / "plugins" / name / ".codex-plugin" / "plugin.json"
         if write:
             codex_path.parent.mkdir(parents=True, exist_ok=True)
-            codex_path.write_text(want, encoding="utf-8")
+            codex_path.write_text(want, encoding="utf-8", newline="\n")
         elif not codex_path.exists() or codex_path.read_text(encoding="utf-8") != want:
             problems.append(f"[codex-manifest] out of sync: {codex_path.relative_to(root)} (run: python scripts/sync_dual_harness.py)")
 
@@ -174,7 +181,7 @@ def sync(root: Path, write: bool) -> list[str]:
     mkt_path = root / cfg["codex_marketplace"]["output"]
     if write:
         mkt_path.parent.mkdir(parents=True, exist_ok=True)
-        mkt_path.write_text(want_mkt, encoding="utf-8")
+        mkt_path.write_text(want_mkt, encoding="utf-8", newline="\n")
     elif not mkt_path.exists() or mkt_path.read_text(encoding="utf-8") != want_mkt:
         problems.append(f"[marketplace] out of sync: {cfg['codex_marketplace']['output']} (run: python scripts/sync_dual_harness.py)")
 
