@@ -14,16 +14,9 @@ Install via the [`cypherpoet-toolchest`](https://github.com/CypherPoet/cypherpoe
 /plugin install cypherpoet-threejs-kit@cypherpoet-toolchest
 ```
 
-## Dependencies
-
-Installed automatically with this plugin:
-
-| Plugin | Version | Description |
-|---|---|---|
-| [cypherpoet-webgl-kit](../cypherpoet-webgl-kit) | `latest` | Raw WebGL2 + GLSL shader tooling. |
-
 ## Skills
 
 | Skill | Description |
 |---|---|
 | [threejs-mastery](skills/threejs-mastery/SKILL.md) | Comprehensive Three.js reference covering WebGPU/WebGL rendering, shaders, animation, loaders, and post-processing. |
+| [webgl-mastery](skills/webgl-mastery/SKILL.md) | Raw WebGL2 + GLSL shader fundamentals beneath Three.js (vendored from [cypherpoet-webgl-kit](../cypherpoet-webgl-kit)). |

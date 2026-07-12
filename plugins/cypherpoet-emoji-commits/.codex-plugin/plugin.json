@@ -1,0 +1,19 @@
+{
+  "name": "cypherpoet-emoji-commits",
+  "version": "0.2.0",
+  "description": "Write expressive git commit messages with Gitmoji.",
+  "author": {
+    "name": "CypherPoet"
+  },
+  "homepage": "https://github.com/CypherPoet/custom-agent-skills/tree/main/plugins/cypherpoet-emoji-commits",
+  "repository": "https://github.com/CypherPoet/custom-agent-skills.git",
+  "license": "MIT",
+  "keywords": [
+    "claude-code",
+    "git",
+    "commits",
+    "gitmoji",
+    "emoji"
+  ],
+  "skills": "./skills/"
+}

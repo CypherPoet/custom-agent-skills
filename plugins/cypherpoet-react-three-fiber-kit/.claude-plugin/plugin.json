@@ -1,12 +1,11 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "cypherpoet-react-three-fiber-kit",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "description": "React Three Fiber (R3F) + drei tooling for declarative Three.js in React.",
   "author": { "name": "CypherPoet" },
   "homepage": "https://github.com/CypherPoet/custom-agent-skills/tree/main/plugins/cypherpoet-react-three-fiber-kit",
   "repository": "https://github.com/CypherPoet/custom-agent-skills.git",
   "license": "MIT",
-  "keywords": ["claude-code", "react-three-fiber", "threejs", "react", "drei", "webgl"],
-  "dependencies": ["cypherpoet-threejs-kit"]
+  "keywords": ["claude-code", "react-three-fiber", "threejs", "react", "drei", "webgl"]
 }
