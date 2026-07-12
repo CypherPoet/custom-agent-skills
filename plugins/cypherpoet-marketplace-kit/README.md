@@ -1,6 +1,6 @@
 # cypherpoet-marketplace-kit
 
-Maintainer toolkit for running a Claude Code plugin marketplace — publish plugins, audit marketplace and catalog sync, regenerate the local catalog, and verify dependency-version tags.
+Maintainer toolkit for running a Claude Code plugin marketplace — publish plugins, audit marketplace and catalog sync, and regenerate the local catalog.
 
 > **Primarily the maintainer's own tooling.** Although published to a public marketplace, this kit exists to maintain the [`custom-agent-skills`](https://github.com/CypherPoet/custom-agent-skills) and `private-custom-agent-skills` repos. The skills are repo-agnostic — they infer the target marketplace from the repo's `origin` (see [`references/marketplaces.md`](references/marketplaces.md)) — so anyone running a Claude Code plugin marketplace can reuse them, but they assume this repo family's conventions (`plugins/`, `docs/CATALOG.md`, a `git-subdir`-sourced marketplace).
 
@@ -21,7 +21,6 @@ Install via the marketplace this plugin is published to:
 | Skill | Description |
 |---|---|
 | [catalog-refresh](skills/catalog-refresh/SKILL.md) | Regenerate the local `docs/CATALOG.md` plugin table from the manifests — the write-capable counterpart to `marketplace-sync-check`. |
-| [dependency-tag-check](skills/dependency-tag-check/SKILL.md) | Read-only audit of git-tag coverage for version-constrained plugin dependencies, so a pinned dependency won't fail to install. |
 | [marketplace-publish](skills/marketplace-publish/SKILL.md) | Publish one or more plugins to a marketplace by opening a PR on the marketplace repo. |
 | [marketplace-publish-check](skills/marketplace-publish-check/SKILL.md) | Read-only check of whether the current branch's changes require a `marketplace-publish` — drives the PR label. |
 | [marketplace-sync-check](skills/marketplace-sync-check/SKILL.md) | Read-only audit of local `plugins/` against the published marketplace catalog and the local `docs/CATALOG.md`. |
