@@ -52,11 +52,11 @@ The goal: **one PR on the marketplace repo** that adds or updates the chosen plu
 
    To resolve `<owner>/<this-repo>` for the fallback, prefer `gh repo view --json nameWithOwner -q .nameWithOwner` on the source repo — it returns the canonical `owner/repo` regardless of remote protocol. If you fall back to `git remote get-url origin`, normalize the output: HTTPS form `https://github.com/<owner>/<repo>.git` and SSH form `git@github.com:<owner>/<repo>.git` both reduce to `<owner>/<repo>` after stripping the prefix and trailing `.git`. Never interpolate the raw remote string into the URL — an SSH origin produces a broken link like `https://github.com/git@github.com:<owner>/<repo>.git/tree/main/...`.
 
-   **Codex catalog entry.** Read the source repo's `scripts/dual-harness.json`: a plugin listed under `dual_harness_plugins` also gets a Codex entry, carrying that plugin's `category` from the same file; a plugin under `claude_only_plugins` — or any plugin in a repo with no `scripts/dual-harness.json` — is Claude-only, so skip its Codex entry and publish to the Claude catalog alone. The Codex entry (`policy` is constant; `ref` pins the source repo's default branch):
+   **Codex catalog entry.** Read the source repo's `scripts/dual-harness.json`: a plugin listed under `dual_harness_plugins` also gets a Codex entry, carrying that plugin's `category` from the same file; a plugin under `claude_only_plugins` — or any plugin in a repo with no `scripts/dual-harness.json` — is Claude-only, so skip its Codex entry and publish to the Claude catalog alone. The Codex entry (`policy` is constant; for `ref`, resolve the source repo's default branch — `gh repo view <owner>/<this-repo> --json defaultBranchRef -q .defaultBranchRef.name` — rather than assuming `main`):
    ```json
    {
      "name": "<plugin>",
-     "source": { "source": "git-subdir", "url": "https://github.com/<owner>/<this-repo>.git", "path": "plugins/<plugin>", "ref": "main" },
+     "source": { "source": "git-subdir", "url": "https://github.com/<owner>/<this-repo>.git", "path": "plugins/<plugin>", "ref": "<default-branch>" },
      "policy": { "installation": "AVAILABLE", "authentication": "ON_INSTALL" },
      "category": "<from dual-harness.json>"
    }
@@ -71,21 +71,32 @@ The goal: **one PR on the marketplace repo** that adds or updates the chosen plu
    ```
    Apply once per plugin (or fold several into one jq pass).
 
-   Apply the same merge to the Codex catalog at `.agents/plugins/marketplace.json` for every Codex entry built in step 1. If that file doesn't exist yet, create it first as `{"name": "<marketplace-name>", "plugins": []}`, where `<marketplace-name>` matches the `name` field in `.claude-plugin/marketplace.json`. Confirm both files still parse (`jq empty`).
+   Apply the same merge to the Codex catalog at `.agents/plugins/marketplace.json` for every Codex entry built in step 1. If that file doesn't exist yet, create it first as `{"name": "<marketplace-name>", "plugins": []}`, where `<marketplace-name>` matches the `name` field in `.claude-plugin/marketplace.json`.
 
-   If the marketplace generates its **Plugins** table from the catalog — the table is wrapped in `<!-- BEGIN/END:PLUGINS-TABLE -->` markers and the repo ships `scripts/sync-readme-table.mjs` — regenerate it now so the README reflects the new entries: `(cd /tmp/mkt-publish && node scripts/sync-readme-table.mjs)`. Skip this for catalogs without that script. The `git commit -am` in step 6 picks up the regenerated `README.md` alongside `marketplace.json`.
+   **Removals.** The merge above only adds or updates — handle removals explicitly, with `jq --arg n "<plugin>" '.plugins |= map(select(.name != $n))'`:
+   - A plugin **deleted from the source repo** comes out of **both** catalog files.
+   - A plugin **reclassified from `dual_harness_plugins` to `claude_only_plugins`** comes out of the **Codex catalog only** — its Claude entry stays published.
+
+   Confirm both files still parse (`jq empty`).
+
+   If the marketplace generates its **Plugins** table from the catalog — the table is wrapped in `<!-- BEGIN/END:PLUGINS-TABLE -->` markers and the repo ships `scripts/sync-readme-table.mjs` — regenerate it now so the README reflects the new entries: `(cd /tmp/mkt-publish && node scripts/sync-readme-table.mjs)`. Skip this for catalogs without that script. The staged commit in step 6 picks up the regenerated `README.md` alongside the catalog files.
 
 4. **Validate the marketplace manifest.** Run `claude plugin validate /tmp/mkt-publish` to confirm the updated Claude manifest still passes schema checks. If it errors, fix and re-run before continuing. (The Codex catalog has no local validator — the `jq empty` parse check in step 3 is its gate; `codex plugin marketplace add` on the merged repo is the runtime proof.)
 
-5. **Show the diff and confirm.** Run `git -C /tmp/mkt-publish diff` and show the user before anything is pushed. If there's no change, say so and stop.
+5. **Show the diff and confirm.** Stage everything first — a first Codex publish creates `.agents/plugins/marketplace.json` as an *untracked* file, which plain `git diff` (and `commit -am`) silently skip:
+   ```bash
+   git -C /tmp/mkt-publish add -A
+   git -C /tmp/mkt-publish diff --staged
+   ```
+   Show the user before anything is pushed. If there's no staged change, say so and stop.
 
-6. **Open the PR** on the marketplace repo using local creds:
+6. **Open the PR** on the marketplace repo using local creds (committing the staged changes from step 5):
    ```bash
    git -C /tmp/mkt-publish switch -c publish/<slug>-$(date +%Y%m%d%H%M%S)
-   git -C /tmp/mkt-publish commit -am "➕ Publish <plugins> to the marketplace catalog"
+   git -C /tmp/mkt-publish commit -m "➕ Publish <plugins> to the marketplace catalog"
    git -C /tmp/mkt-publish push -u origin HEAD
    gh pr create --repo <marketplace> --title "➕ Publish <plugins>" \
-     --body "Adds/updates the listed plugin entries in marketplace.json, sourced from this repo via git-subdir."
+     --body "Adds/updates the listed plugin entries in the marketplace catalogs, sourced from this repo via git-subdir."
    ```
 
 7. **Report the PR URL** and clean up the temp clone.

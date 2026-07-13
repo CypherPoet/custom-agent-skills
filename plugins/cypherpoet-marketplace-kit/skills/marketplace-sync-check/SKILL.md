@@ -36,10 +36,10 @@ The two surfaces drift independently and are *not* reconciled the same way:
 
    When comparing `homepage`, mirror `marketplace-publish`'s fallback rule: if the local manifest has no `homepage` (or it's empty), derive the expected fallback `https://github.com/<owner>/<this-repo>/tree/main/plugins/<name>` and compare against *that* instead of treating the field as a mismatch. This keeps the two skills symmetric — a plugin published with the fallback URL stays in sync until the manifest itself changes.
 
-5. **Compare the Codex catalog** against the source repo's `scripts/dual-harness.json` classification (if the repo has no such file, every plugin is Claude-only and the Codex catalog should list none of them). Only plugins under `dual_harness_plugins` belong in the Codex file; expected entry fields are the `git-subdir` source pointing at this repo and the `category` from `dual-harness.json`. Report the same buckets:
+5. **Compare the Codex catalog** against the source repo's `scripts/dual-harness.json` classification (if the repo has no such file, every plugin is Claude-only and the Codex catalog should list none of them). Only plugins under `dual_harness_plugins` belong in the Codex file; expected entry fields are the `git-subdir` source pointing at this repo, the `category` from `dual-harness.json`, and the constant `policy` (`installation: AVAILABLE`, `authentication: ON_INSTALL`). Report the same buckets:
    - **NEW** — a `dual_harness_plugins` plugin already in the *Claude* catalog but missing from the Codex catalog (an unpublished plugin missing from both is one `NEW`, not two).
-   - **CHANGED** — listed, but the `category` or `source` differs from what `dual-harness.json` + this repo imply.
-   - **REMOVED** — a Codex entry whose plugin is gone from `plugins/` *or* is now classified `claude_only_plugins`.
+   - **CHANGED** — listed, but the `category`, `source`, or `policy` differs from what `dual-harness.json` + this repo imply (a missing or wrong `policy.installation`/`policy.authentication` counts — Codex documents both as required).
+   - **REMOVED** — a Codex entry whose plugin is gone from `plugins/` *or* is now classified `claude_only_plugins`. Note which of the two causes applies — the remediation differs (see [Reporting](#reporting)).
 
 ## Local catalog (`docs/CATALOG.md`)
 
@@ -61,7 +61,7 @@ The manifest is the source of truth for `description` (the row should match it v
 
 Present both surfaces plainly, each clearly labelled, and stop. Then hand off — don't fix anything yourself:
 
-- **Marketplace** (either catalog) `NEW`/`CHANGED` → `marketplace-publish <name>` (one run reconciles both harness catalogs); `REMOVED` → a manual catalog PR on the marketplace repo to drop the entry from both files. `NEW` is expected for anything not yet deliberately published, so don't frame it as a mistake.
+- **Marketplace** (either catalog) `NEW`/`CHANGED` → `marketplace-publish <name>` (one run reconciles both harness catalogs). `REMOVED` → route by cause, per `marketplace-publish`'s removal rules: a plugin **deleted** from the repo comes out of **both** catalog files, while one merely **reclassified to `claude_only_plugins`** comes out of the **Codex catalog only** — its still-valid Claude entry stays published. `NEW` is expected for anything not yet deliberately published, so don't frame it as a mistake.
 - **`docs/CATALOG.md`** missing / stale / orphan rows → regenerate the table with the `catalog-refresh` skill (or fix by hand) and commit it — a normal docs change. **Not** `marketplace-publish`; the local catalog isn't the marketplace.
 
 **Do not modify anything** unless the user explicitly asks.

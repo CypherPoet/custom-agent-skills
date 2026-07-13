@@ -10,9 +10,13 @@ HEAD, and reports the plugins whose surface changed:
 A version-only bump does NOT count: that's content, gated by the version key,
 and reaches installs without a catalog re-publish.
 
+Both snapshots are taken at the merge base of the base ref and HEAD, so changes
+that landed on the base after this branch forked are never attributed to it.
+
 Use it when opening a PR to decide whether to apply the `marketplace-publish`
 label. Stdlib only — no jq, no network. Exit status is 1 when a publish is
-needed (something actionable), else 0; 2 on error.
+needed (something actionable), else 0; 2 on error (including a malformed
+scripts/dual-harness.json — never silently treated as a catalog removal).
 
 Usage: python3 .../needs_marketplace_publish.py [base-ref]   # base-ref defaults to "main"
 """
@@ -56,20 +60,35 @@ def plugin_name(path):
 
 
 def codex_categories(root, ref):
-    """{plugin: category} from dual_harness_plugins in scripts/dual-harness.json at <ref>; {} if absent/unparsable."""
+    """{plugin: category} from dual_harness_plugins in scripts/dual-harness.json at <ref>.
+
+    {} when the file doesn't exist at <ref> (no Codex catalog surface there — e.g. the
+    commit that first introduces it). A file that exists but is malformed raises
+    ValueError: that's an error to surface (exit 2), not a mass catalog removal."""
     res = git(root, "show", f"{ref}:{DUAL_HARNESS_PATH}")
     if res.returncode != 0:
         return {}
     try:
-        data = json.loads(res.stdout)
-    except json.JSONDecodeError:
-        return {}
-    return {name: entry.get("category") for name, entry in data.get("dual_harness_plugins", {}).items()}
+        entries = json.loads(res.stdout).get("dual_harness_plugins", {})
+        return {name: entry.get("category") for name, entry in entries.items()}
+    except (json.JSONDecodeError, AttributeError) as e:
+        raise ValueError(f"{DUAL_HARNESS_PATH} at {ref} is malformed: {e}")
+
+
+def merge_base(root, base):
+    """SHA of the merge base of <base> and HEAD; falls back to <base> when unresolvable."""
+    res = git(root, "merge-base", base, "HEAD")
+    sha = res.stdout.strip()
+    return sha if res.returncode == 0 and sha else base
 
 
 def main():
     base = sys.argv[1] if len(sys.argv) > 1 else "main"
     root = repo_root()
+    # Snapshot "before" at the merge base, not the base tip — the diff below already uses
+    # merge-base semantics (base...HEAD), so reading file contents at the tip would blame
+    # this branch for changes that landed on the base after it forked.
+    mb = merge_base(root, base)
 
     diff = git(root, "diff", "--name-only", "--diff-filter=AMD", f"{base}...HEAD", "--", MANIFEST_GLOB)
     if diff.returncode != 0:
@@ -82,7 +101,7 @@ def main():
         reasons_by_plugin.setdefault(name, []).append(reason)
 
     for path in (line for line in diff.stdout.splitlines() if line.strip()):
-        before = signature(root, base, path)
+        before = signature(root, mb, path)
         after = signature(root, "HEAD", path)
         if before == after:
             continue  # manifest touched, but catalog fields unchanged (e.g. a version-only bump)
@@ -94,8 +113,12 @@ def main():
             reason = "changed " + ", ".join(k for k in CATALOG_FIELDS if before.get(k) != after.get(k))
         flag(plugin_name(path), reason)
 
-    before_codex = codex_categories(root, base)
-    after_codex = codex_categories(root, "HEAD")
+    try:
+        before_codex = codex_categories(root, mb)
+        after_codex = codex_categories(root, "HEAD")
+    except ValueError as e:
+        print(f"ERROR: {e}", file=sys.stderr)
+        return 2
     for name in set(before_codex) | set(after_codex):
         if name not in before_codex:
             flag(name, "added to the Codex catalog surface")
