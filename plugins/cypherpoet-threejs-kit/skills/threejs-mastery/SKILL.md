@@ -264,6 +264,7 @@ These bite across every topic; topical mistakes live in each reference's own tab
 | Raycaster picks nothing on a canvas that isn't full-screen | NDC coords must use `getBoundingClientRect()`, not `window.innerWidth/Height`. See [interaction.md](./references/interaction.md). |
 | TSL node looks correct but the material doesn't update | Reassign to `material.colorNode = …` (don't mutate nodes in place) and set `material.needsUpdate = true`. |
 | Transparency/blending looks wrong under `WebGPURenderer` after upgrading to r185 | r185 changed premultiplied-alpha handling ([#33369](https://github.com/mrdoob/three.js/issues/33369)). Set an opaque background: `scene.background = new THREE.Color(...)` or `renderer.setClearColor(color, 1)`. Use a transparent clear only when the canvas must blend with the HTML page. |
+| Scene goes black only when devtools or browser automation probes the canvas | `canvas.getContext(type)` on a canvas whose renderer hasn't initialised yet **claims** the canvas's context type, so a pending renderer of the other type (`webgpu` probe vs WebGL2 renderer, or vice versa) fails when it later requests its own context. Probe context types only after the first frame has visibly rendered — on an initialised canvas, `getContext` with the same type returns the existing context and a different type returns `null`, both read-only. |
 
 ## Change-Signal Sources
 
