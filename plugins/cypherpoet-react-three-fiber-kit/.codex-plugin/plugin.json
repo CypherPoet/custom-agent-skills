@@ -1,6 +1,6 @@
 {
   "name": "cypherpoet-react-three-fiber-kit",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "React Three Fiber (R3F) + drei tooling for declarative Three.js in React.",
   "author": {
     "name": "CypherPoet"
