@@ -305,9 +305,18 @@ export default function App() {
 ```
 
 - `ThreeToJSXElements` maps the whole `three/webgpu` namespace into `ThreeElements`, and `extend(THREE as any)` registers it as the JSX catalog — both are required because the WebGPU build exposes node materials and classes the default catalog doesn't know.
-- `WebGPURenderer` falls back to WebGL2 automatically where WebGPU is unavailable.
+- `WebGPURenderer` falls back to WebGL2 automatically where WebGPU is unavailable — **silently**; see the lifecycle gotchas below.
 - In v9 the renderer still lives at `state.gl` regardless of backend. **R3F v10 (alpha)** makes WebGPU first-class and renames `state.gl` → `state.renderer`; drei v11 alphas pair with it. Teach v9 as current, flag the rename when writing forward-compatible code.
 - Under WebGPU, custom shading is TSL/node-material based — GLSL `ShaderMaterial` belongs to the WebGL path. See [shaders-and-custom-materials.md](./shaders-and-custom-materials.md).
+
+### WebGPU Lifecycle Gotchas
+
+Four failure modes of the async-factory path, all verified against the installed fiber 9.6.1 + three r185 sources (2026-07); none is caught by React error boundaries or surfaced by R3F:
+
+- **A rejected `gl` factory is swallowed.** Canvas's internal effect calls its async configure path fire-and-forget with no catch, and R3F's error channel is only wired by the `render()` call that sits *after* the failed await — so if `renderer.init()` throws, neither `onCreated` nor any app error boundary ever fires. The canvas stays permanently blank with only an `unhandledrejection`. If init can fail on your tiering path, catch inside the factory, surface app state yourself (flip to a fallback/unsupported screen), then rethrow.
+- **The WebGL2 auto-fallback is silent.** Unless `forceWebGL: true` is passed, the `WebGPURenderer` constructor installs a `getFallback` that swaps in the WebGL backend when WebGPU init throws (adapter acquired but `requestDevice` fails, blocklists, driver resets). The init promise still *resolves*; the only signal is a console warning. If app state depends on which backend runs, verify after init: `renderer.backend.isWebGPUBackend === true`.
+- **Unmount never disposes a WebGPURenderer.** R3F's unmount cleanup calls WebGL-only APIs (`renderLists.dispose()`, `forceContextLoss()` — both absent on `WebGPURenderer`) and never calls `gl.dispose()`, so every Canvas unmount orphans a live `GPUDevice`. Own disposal yourself on real unmounts — and remember StrictMode's *simulated* unmounts run effect cleanup while the renderer is still live, so a naive dispose-in-cleanup breaks dev.
+- **The factory can run twice during init.** The configure path checks `state.gl` *before* awaiting the factory, and the layout effect that calls it re-runs on every commit — a commit landing inside the init window (resize, zoom, devtools toggle) re-invokes the factory and constructs a second renderer on the same canvas, leaking the loser. Memoize the in-flight promise per canvas: `WeakMap<HTMLCanvasElement, Promise<Renderer>>` keyed on the `canvas` in the factory's props.
 
 ## Custom Tree-Shakable Roots
 
@@ -375,6 +384,9 @@ Full breaking-change list: [migration-v8-to-v9.md](./migration-v8-to-v9.md).
 | Next.js: ESM import errors from `three`, or Canvas crashes during SSR | Add `transpilePackages: ['three']` to next.config.js and mark the scene component `'use client'` |
 | React Native: Metro can't resolve `.glb`/`.gltf` assets | Push `'glb', 'gltf', 'png', 'jpg'` onto `config.resolver.assetExts` in metro.config.js |
 | WebGPU canvas stays black | Return the renderer from the async `gl` callback only after `await renderer.init()` |
+| Blank canvas plus an `unhandledrejection` when `renderer.init()` fails | R3F swallows async `gl` factory rejections and no error boundary fires — catch inside the factory, surface app state, then rethrow (see [WebGPU Lifecycle Gotchas](#webgpu-lifecycle-gotchas)) |
+| App state says WebGPU but frames render on WebGL2 | three's silent `getFallback` swapped backends at init — verify `renderer.backend.isWebGPUBackend` after init |
+| GPU device count climbs across route changes / remounts | R3F's unmount cleanup is WebGL-only and never disposes a `WebGPURenderer` — dispose it yourself on real unmounts |
 | Code targeting the v10 alpha reads `state.gl` as undefined | v10 renames `state.gl` → `state.renderer`; on v9 (current) keep `state.gl` |
 | Raw `dpr={window.devicePixelRatio}` tanks performance on mobile | Keep a clamp range — the default `dpr={[1, 2]}` stops 3×+ displays from overpaying fill rate |
 | drei 10 install fails / peer conflicts on a React 18 project | drei 10 requires fiber ^9 + React 19; on React 18 stay on drei 9 + fiber 8 (frozen, legacy) or upgrade React |
