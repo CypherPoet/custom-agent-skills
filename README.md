@@ -24,11 +24,11 @@ This repo publishes its plugins for both **Claude Code** (via the [`cypherpoet-t
 # ...etc
 ```
 
-**Codex:**
+**Codex** (same marketplace repo — it carries both harness catalogs):
 
 ```shell
-codex plugin marketplace add CypherPoet/custom-agent-skills
-# then install plugins from the Codex plugin directory
+codex plugin marketplace add CypherPoet/cypherpoet-toolchest
+codex plugin add cypherpoet-git-flow@cypherpoet-toolchest
 ```
 
 ## Repository Structure
@@ -39,6 +39,7 @@ codex plugin marketplace add CypherPoet/custom-agent-skills
 ├── docs/
 │   ├── CATALOG.md            # Cross-plugin index
 │   └── PLUGIN-CONVENTIONS.md # Per-plugin conventions this repo applies
+├── scripts/                  # Dual-harness config + generator
 └── .claude/                  # Claude Code config
 ```
 
