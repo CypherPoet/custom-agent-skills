@@ -31,7 +31,6 @@ codex plugin marketplace add CypherPoet/cypherpoet-toolchest
 codex plugin add cypherpoet-git-flow@cypherpoet-toolchest
 ```
 
-> **Added this repo itself as a Codex marketplace before?** The in-repo Codex catalog has moved to `cypherpoet-toolchest`. Remove the old `CypherPoet/custom-agent-skills` marketplace registration, add `CypherPoet/cypherpoet-toolchest` as above, and reinstall your plugins under the new marketplace name — installs pointing at the old catalog no longer receive updates.
 
 ## Repository Structure
 
