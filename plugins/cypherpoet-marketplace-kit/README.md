@@ -2,7 +2,7 @@
 
 Maintainer toolkit for running a plugin marketplace with Claude Code and Codex catalogs — publish plugins, audit marketplace and catalog sync, and regenerate the local catalog.
 
-> **Primarily the maintainer's own tooling.** Although published to a public marketplace, this kit exists to maintain the [`custom-agent-skills`](https://github.com/CypherPoet/custom-agent-skills) and `private-custom-agent-skills` repos. The skills are repo-agnostic — they infer the target marketplace from the repo's `origin` (see [`references/marketplaces.md`](references/marketplaces.md)) — so anyone running a Claude Code plugin marketplace can reuse them, but they assume this repo family's conventions (`plugins/`, `docs/CATALOG.md`, a `git-subdir`-sourced marketplace).
+> **Primarily the maintainer's own tooling.** Although published to a public marketplace, this kit exists to maintain the [`custom-agent-skills`](https://github.com/CypherPoet/custom-agent-skills) and `private-custom-agent-skills` repos. The skills are repo-agnostic — they infer the target marketplace from the repo's `origin` (see [`references/marketplaces.md`](references/marketplaces.md)) — so anyone running a plugin marketplace with Claude Code (and optionally Codex) catalogs can reuse them, but they assume this repo family's conventions (`plugins/`, `docs/CATALOG.md`, a `git-subdir`-sourced marketplace).
 
 ## Installation
 

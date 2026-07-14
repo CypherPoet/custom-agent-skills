@@ -10,7 +10,7 @@ A curated collection of reusable AI agent skills, packaged as Claude Code and Co
 
 ## Installation
 
-This repo publishes its plugins for both **Claude Code** (via the [`cypherpoet-toolchest`](https://github.com/CypherPoet/cypherpoet-toolchest) marketplace) and **Codex** (via this repo's own marketplace).
+This repo publishes its plugins for both **Claude Code** and **Codex** via the [`cypherpoet-toolchest`](https://github.com/CypherPoet/cypherpoet-toolchest) marketplace — one repo carrying both harness catalogs.
 
 **Claude Code:**
 
@@ -30,6 +30,8 @@ This repo publishes its plugins for both **Claude Code** (via the [`cypherpoet-t
 codex plugin marketplace add CypherPoet/cypherpoet-toolchest
 codex plugin add cypherpoet-git-flow@cypherpoet-toolchest
 ```
+
+> **Added this repo itself as a Codex marketplace before?** The in-repo Codex catalog has moved to `cypherpoet-toolchest`. Remove the old `CypherPoet/custom-agent-skills` marketplace registration, add `CypherPoet/cypherpoet-toolchest` as above, and reinstall your plugins under the new marketplace name — installs pointing at the old catalog no longer receive updates.
 
 ## Repository Structure
 
