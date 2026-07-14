@@ -18,7 +18,7 @@ This repo publishes the following plugins via the [`cypherpoet-toolchest`](https
 | [cypherpoet-git-flow](../plugins/cypherpoet-git-flow/README.md) | Bundle of git commit and changelog hygiene plugins: emoji commits and changelog maintenance. | 2 skills |
 | [cypherpoet-git-hygiene](../plugins/cypherpoet-git-hygiene/README.md) | Keep local git state tidy: sync branches with the remote, and clean up stale branches and worktrees with per-item approval. | 2 skills |
 | [cypherpoet-google-filament-kit](../plugins/cypherpoet-google-filament-kit/README.md) | Comprehensive working knowledge of Google Filament, the real-time physically-based rendering engine — the PBR material model and lighting/IBL, the material definition language and matc compiler, the core engine API (Engine/Scene/View/Renderer/Camera, resources, gltfio), and per-binding setup for C++, Web (JS/WASM), and Android, distilled from the official documentation with a synced reference corpus that tracks Filament releases. | 1 skill |
-| [cypherpoet-marketplace-kit](../plugins/cypherpoet-marketplace-kit/README.md) | Maintainer toolkit for running a Claude Code plugin marketplace — publish plugins, audit marketplace and catalog sync, and regenerate the local catalog. | 5 skills |
+| [cypherpoet-marketplace-kit](../plugins/cypherpoet-marketplace-kit/README.md) | Maintainer toolkit for running a plugin marketplace with Claude Code and Codex catalogs — publish plugins, audit marketplace and catalog sync, and regenerate the local catalog. | 5 skills |
 | [cypherpoet-mobile-dev](../plugins/cypherpoet-mobile-dev/README.md) | iOS App Store publishing best practices. | 2 skills |
 | [cypherpoet-react-three-fiber-kit](../plugins/cypherpoet-react-three-fiber-kit/README.md) | React Three Fiber (R3F) + drei tooling for declarative Three.js in React. | 3 skills |
 | [cypherpoet-session-handoff](../plugins/cypherpoet-session-handoff/README.md) | Write a structured handoff document so a fresh agent can resume long-running work without losing context. | 1 skill |
@@ -38,11 +38,11 @@ This repo publishes the following plugins via the [`cypherpoet-toolchest`](https
 /plugin install <plugin-name>@cypherpoet-toolchest
 ```
 
-**Codex** — via this repo's marketplace:
+**Codex** — the same marketplace repo carries the Codex catalog:
 
 ```shell
-codex plugin marketplace add CypherPoet/custom-agent-skills
-# then install <plugin-name> from the Codex plugin directory
+codex plugin marketplace add CypherPoet/cypherpoet-toolchest
+codex plugin add <plugin-name>@cypherpoet-toolchest
 ```
 
 A few plugins are Claude Code only (the marketplace/catalog tooling and the `claude-*` plugins) — see [`scripts/dual-harness.json`](../scripts/dual-harness.json).

@@ -2,7 +2,7 @@
 """Generate and guard every dual-harness (Claude Code + Codex) derived artifact.
 
 Single source of truth: scripts/dual-harness.json. From it this tool produces
-three kinds of generated artifact and, in --check mode, fails if any has drifted:
+two kinds of generated artifact and, in --check mode, fails if any has drifted:
 
   1. Vendored skill copies  — a skill authored once (its owner plugin) copied
      byte-for-byte into every plugin that ships it. Required because neither
@@ -10,18 +10,19 @@ three kinds of generated artifact and, in --check mode, fails if any has drifted
      sparse-clones one plugin dir; Codex has no plugin-to-plugin dependencies).
   2. Codex plugin manifests — plugins/<name>/.codex-plugin/plugin.json, mirrored
      from the plugin's .claude-plugin/plugin.json plus "skills": "./skills/".
-  3. Codex marketplace       — .agents/plugins/marketplace.json listing every
-     dual-harness plugin.
 
 It also validates that every plugin under plugins/ is classified as either
 dual-harness or Claude-only, so adding a plugin forces an explicit decision.
 
+The marketplace catalogs (Claude and Codex) live in the marketplace repo, not
+here — they're maintained by the cypherpoet-marketplace-kit publish flow.
+
 Usage:
-    python scripts/sync_dual_harness.py            # --write (default): (re)generate
-    python scripts/sync_dual_harness.py --check    # exit 1 on any drift or misclassification
+    python3 scripts/sync_dual_harness.py           # write mode (default): (re)generate
+    python3 scripts/sync_dual_harness.py --check   # exit 1 on any drift or misclassification
 
 Never hand-edit a generated artifact; edit the source (skill or Claude manifest)
-and re-run --write.
+and re-run the bare command to regenerate.
 """
 
 from __future__ import annotations
@@ -29,6 +30,7 @@ from __future__ import annotations
 import argparse
 import fnmatch
 import json
+import shutil
 import sys
 from pathlib import Path
 
@@ -61,8 +63,6 @@ def read_tree(base: Path) -> dict[str, bytes]:
             continue
         if path.is_dir():
             continue
-        if _dir_ignored(path.parent.name) and path.parent != base:
-            continue
         if _file_ignored(path.name):
             continue
         out[rel.as_posix()] = path.read_bytes()
@@ -71,11 +71,9 @@ def read_tree(base: Path) -> dict[str, bytes]:
 
 def write_tree(src: Path, dst: Path) -> None:
     """Replace dst with the (ignore-filtered) contents of src."""
-    import shutil
-
+    files = read_tree(src)
     if dst.exists():
         shutil.rmtree(dst)
-    files = read_tree(src)
     for rel, data in files.items():
         target = dst / rel
         target.parent.mkdir(parents=True, exist_ok=True)
@@ -93,22 +91,6 @@ def build_codex_manifest(claude: dict) -> dict:
             manifest[key] = claude[key]
     manifest["skills"] = "./skills/"
     return manifest
-
-
-def build_marketplace(cfg: dict) -> dict:
-    dual = cfg["dual_harness_plugins"]
-    return {
-        "name": cfg["codex_marketplace"]["name"],
-        "plugins": [
-            {
-                "name": name,
-                "source": {"source": "local", "path": f"./plugins/{name}"},
-                "policy": {"installation": "AVAILABLE", "authentication": "ON_INSTALL"},
-                "category": dual[name].get("category", "Uncategorized"),
-            }
-            for name in sorted(dual)
-        ],
-    }
 
 
 def dumps(obj: dict) -> str:
@@ -150,7 +132,7 @@ def sync(root: Path, write: bool) -> list[str]:
             if write:
                 write_tree(src, dst)
             elif read_tree(dst) != src_tree:
-                problems.append(f"[vendor] out of sync: {target} != {edge['source']} (run: python scripts/sync_dual_harness.py)")
+                problems.append(f"[vendor] out of sync: {target} != {edge['source']} (run: python3 scripts/sync_dual_harness.py)")
 
     # 2. Codex manifests.
     for name in sorted(dual):
@@ -165,25 +147,35 @@ def sync(root: Path, write: bool) -> list[str]:
         if missing:
             problems.append(f"[codex-manifest] {name}: Claude manifest missing {', '.join(missing)}")
             continue
-        unported = [k for k in ("mcpServers", "hooks", "apps", "commands") if k in claude]
+        plugin_dir = root / "plugins" / name
+        unported = [k for k in ("mcpServers", "hooks", "agents", "commands") if k in claude]
+        skills_val = claude.get("skills", "./skills/")
+        if not (isinstance(skills_val, str) and skills_val.lstrip("./").rstrip("/") == "skills"):
+            unported.append("skills (custom path)")
+        for comp in ("commands", "agents", "hooks"):
+            if (plugin_dir / comp).is_dir() and comp not in unported:
+                unported.append(f"{comp}/ (auto-discovered)")
+        if (plugin_dir / ".mcp.json").is_file() and "mcpServers" not in unported:
+            unported.append(".mcp.json")
         if unported:
-            problems.append(f"[codex-manifest] {name}: Claude manifest declares {', '.join(unported)} — the generator does not carry these into .codex-plugin; port it or make the plugin Claude-only")
-        want = dumps(build_codex_manifest(claude))
-        codex_path = root / "plugins" / name / ".codex-plugin" / "plugin.json"
+            problems.append(f"[codex-manifest] {name}: Claude-only components ({', '.join(unported)}) — the generator does not carry these into .codex-plugin; port them or make the plugin Claude-only")
+            continue
+        want = dumps(build_codex_manifest(claude)).encode("utf-8")
+        codex_path = plugin_dir / ".codex-plugin" / "plugin.json"
         if write:
             codex_path.parent.mkdir(parents=True, exist_ok=True)
-            codex_path.write_text(want, encoding="utf-8", newline="\n")
-        elif not codex_path.exists() or codex_path.read_text(encoding="utf-8") != want:
-            problems.append(f"[codex-manifest] out of sync: {codex_path.relative_to(root)} (run: python scripts/sync_dual_harness.py)")
+            codex_path.write_bytes(want)
+        elif not codex_path.exists() or codex_path.read_bytes() != want:
+            problems.append(f"[codex-manifest] out of sync: {codex_path.relative_to(root)} (run: python3 scripts/sync_dual_harness.py)")
 
-    # 3. Codex marketplace.
-    want_mkt = dumps(build_marketplace(cfg))
-    mkt_path = root / cfg["codex_marketplace"]["output"]
-    if write:
-        mkt_path.parent.mkdir(parents=True, exist_ok=True)
-        mkt_path.write_text(want_mkt, encoding="utf-8", newline="\n")
-    elif not mkt_path.exists() or mkt_path.read_text(encoding="utf-8") != want_mkt:
-        problems.append(f"[marketplace] out of sync: {cfg['codex_marketplace']['output']} (run: python scripts/sync_dual_harness.py)")
+    # 3. A Claude-only plugin must not present itself as a Codex plugin.
+    for name in sorted(claude_only & existing):
+        stale = root / "plugins" / name / ".codex-plugin"
+        if stale.exists():
+            if write:
+                shutil.rmtree(stale)
+            else:
+                problems.append(f"[codex-manifest] stale .codex-plugin/ for Claude-only plugin {name} (run: python3 scripts/sync_dual_harness.py)")
 
     return problems
 
@@ -207,10 +199,10 @@ def main() -> int:
         for msg in problems:
             print(msg, file=sys.stderr)
         if args.check:
-            print(f"\n{len(problems)} dual-harness issue(s). Run: python scripts/sync_dual_harness.py", file=sys.stderr)
+            print(f"\n{len(problems)} dual-harness issue(s). Run: python3 scripts/sync_dual_harness.py", file=sys.stderr)
             return 1
-        # In write mode, classification/source problems are still fatal.
-        fatal = [p for p in problems if p.startswith("[config]") or "source missing" in p or "missing Claude manifest" in p]
+        # In write mode, anything that blocked or skipped generation is still fatal.
+        fatal = [p for p in problems if p.startswith("[config]") or "source missing" in p or "no vendorable files" in p or "missing Claude manifest" in p or "Claude manifest missing" in p or "Claude-only components" in p]
         if fatal:
             return 1
     print("dual-harness: checked" if args.check else "dual-harness: written", "(no issues)" if not problems else "")

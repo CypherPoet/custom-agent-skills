@@ -1,10 +1,5 @@
 {
-  "_comment": "Single source of truth for dual-harness (Claude Code + Codex) generation. Run scripts/sync_dual_harness.py --write to regenerate every derived artifact; --check to fail on drift. Never hand-edit generated files: .codex-plugin/plugin.json, .agents/plugins/marketplace.json, or any vendored skill copy.",
-
-  "codex_marketplace": {
-    "name": "cypherpoet-marketplace",
-    "output": ".agents/plugins/marketplace.json"
-  },
+  "_comment": "Single source of truth for dual-harness (Claude Code + Codex) generation. Run scripts/sync_dual_harness.py (bare — write mode is the default) to regenerate every derived artifact; --check to fail on drift. Never hand-edit generated files: any .codex-plugin/plugin.json or vendored skill copy. The categories feed the Codex catalog entries that marketplace-publish writes to the cypherpoet-toolchest marketplace repo (both harness catalogs live there, not in this repo).",
 
   "vendored_skills": [
     {
@@ -71,7 +66,7 @@
   },
 
   "claude_only_plugins": {
-    "cypherpoet-marketplace-kit": "Claude Code plugin-marketplace maintainer tooling — no Codex analog.",
+    "cypherpoet-marketplace-kit": "Marketplace maintainer tooling that runs on Claude Code — it maintains both harness catalogs, but the kit itself is not consumable from Codex.",
     "cypherpoet-claude-docs-search": "Looks up Claude Code documentation — not applicable to Codex.",
     "cypherpoet-claude-memory-consolidation": "Operates on Claude's per-project memory directory — not applicable to Codex."
   }
