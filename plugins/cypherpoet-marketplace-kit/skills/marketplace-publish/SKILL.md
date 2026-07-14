@@ -27,7 +27,7 @@ If the user is only editing an already-listed plugin's instructions, tell them n
 ## Before you start
 
 - `gh` is authenticated (`gh auth status`) with write access to the marketplace repo.
-- Each plugin to publish exists at `plugins/<name>/.claude-plugin/plugin.json`. If a plugin doesn't exist yet, scaffold it with [`/plugin-dev:create-plugin`](https://github.com/anthropics/claude-plugins-official/blob/main/plugins/plugin-dev/commands/create-plugin.md), then run `claude plugin validate plugins/<name>` to confirm it's well-formed.
+- Each plugin to publish exists at `plugins/<name>/.claude-plugin/plugin.json`. If a plugin doesn't exist yet, scaffold it with [`/plugin-dev:create-plugin`](https://github.com/anthropics/claude-plugins-official/blob/main/plugins/plugin-dev/commands/create-plugin.md), then run `claude plugin validate plugins/<name>` to confirm it's well-formed. **Removals are the exception**: a plugin being removed from the catalogs (deleted from the repo, or reclassified Claude-only) has no manifest to read — skip this check and step 1 for it; step 3's removal commands are its whole path.
 
 ## Which marketplace
 
@@ -73,9 +73,15 @@ The goal: **one PR on the marketplace repo** that adds or updates the chosen plu
 
    Apply the same merge to the Codex catalog at `.agents/plugins/marketplace.json` for every Codex entry built in step 1. If that file doesn't exist yet, create it first as `{"name": "<marketplace-name>", "plugins": []}`, where `<marketplace-name>` matches the `name` field in `.claude-plugin/marketplace.json`.
 
-   **Removals.** The merge above only adds or updates — handle removals explicitly, with `jq --arg n "<plugin>" '.plugins |= map(select(.name != $n))'`:
-   - A plugin **deleted from the source repo** comes out of **both** catalog files.
-   - A plugin **reclassified from `dual_harness_plugins` to `claude_only_plugins`** comes out of the **Codex catalog only** — its Claude entry stays published.
+   **Removals.** The merge above only adds or updates — handle removals explicitly (no manifest is read; the plugin may no longer exist in the source repo):
+   - A plugin **deleted from the source repo** comes out of **both** catalog files:
+     ```bash
+     jq --arg n "<plugin>" '.plugins |= map(select(.name != $n))' \
+       .claude-plugin/marketplace.json > tmp && mv tmp .claude-plugin/marketplace.json
+     jq --arg n "<plugin>" '.plugins |= map(select(.name != $n))' \
+       .agents/plugins/marketplace.json > tmp && mv tmp .agents/plugins/marketplace.json
+     ```
+   - A plugin **reclassified from `dual_harness_plugins` to `claude_only_plugins`** comes out of the **Codex catalog only** (run just the second command) — its Claude entry stays published.
 
    Confirm both files still parse (`jq empty`).
 
@@ -83,12 +89,13 @@ The goal: **one PR on the marketplace repo** that adds or updates the chosen plu
 
 4. **Validate the marketplace manifest.** Run `claude plugin validate /tmp/mkt-publish` to confirm the updated Claude manifest still passes schema checks. If it errors, fix and re-run before continuing. (The Codex catalog has no local validator — the `jq empty` parse check in step 3 is its gate; `codex plugin marketplace add` on the merged repo is the runtime proof.)
 
-5. **Show the diff and confirm.** Stage everything first — a first Codex publish creates `.agents/plugins/marketplace.json` as an *untracked* file, which plain `git diff` (and `commit -am`) silently skip:
+5. **Show the diff and confirm.** Stage the publish's files explicitly, then review the staged diff — a first Codex publish creates `.agents/plugins/marketplace.json` as an *untracked* file, which plain `git diff` (and `commit -am`) silently skip:
    ```bash
-   git -C /tmp/mkt-publish add -A
+   git -C /tmp/mkt-publish status --short   # confirm nothing unexpected changed in the clone
+   git -C /tmp/mkt-publish add .claude-plugin/marketplace.json .agents/plugins/marketplace.json README.md
    git -C /tmp/mkt-publish diff --staged
    ```
-   Show the user before anything is pushed. If there's no staged change, say so and stop.
+   Stage exactly what this publish touched — drop from the `add` any path that doesn't apply (a Claude-only change with no Codex catalog; a README that wasn't regenerated). Never stage blindly (`add -A`/`add .`): the clone may hold stray files from validation or table generation. Show the user the staged diff before anything is pushed. If there's no staged change, say so and stop.
 
 6. **Open the PR** on the marketplace repo using local creds (committing the staged changes from step 5):
    ```bash
