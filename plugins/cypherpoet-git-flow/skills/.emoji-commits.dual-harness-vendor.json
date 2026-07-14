@@ -1,0 +1,5 @@
+{
+  "source": "plugins/cypherpoet-emoji-commits/skills/emoji-commits",
+  "target": "plugins/cypherpoet-git-flow/skills/emoji-commits",
+  "tree_sha256": "766dfe0567ef27a9b6ff3e779cd821d4e3ea465bafce0d52787562ca1ae33b5b"
+}

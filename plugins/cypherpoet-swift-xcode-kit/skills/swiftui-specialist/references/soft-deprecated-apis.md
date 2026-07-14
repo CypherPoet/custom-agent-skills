@@ -2,6 +2,8 @@
 
 Generated from: iOS 27.0, macOS 27.0, tvOS 27.0, watchOS 27.0, visionOS 27.0
 
+**Contents:** [Types](#types) · [Protocols](#protocols) · [Initializers](#initializers) · [Functions and Methods](#functions-and-methods) · [Properties](#properties) · [Subscripts](#subscripts)
+
 ## Types
 
 - `struct CarouselTabViewStyle : TabViewStyle` (watchOS)

@@ -1,0 +1,5 @@
+{
+  "source": "plugins/cypherpoet-threejs-kit/skills/threejs-mastery",
+  "target": "plugins/cypherpoet-react-three-fiber-kit/skills/threejs-mastery",
+  "tree_sha256": "5519ee4b98a168b02112fa08c8aa59bc7ad7236bf9cefda56b4678022e88e241"
+}

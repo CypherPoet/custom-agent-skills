@@ -21,7 +21,7 @@ Public collection of reusable AI agent skills, packaged as **both** Claude Code 
 
 ## Working In This Repo
 
-- **After editing a vendored skill's source or any `.claude-plugin/plugin.json`, run `python scripts/sync_dual_harness.py`** to regenerate the vendored copies and Codex manifests. **Never hand-edit a generated file** — any `.codex-plugin/plugin.json` or a vendored skill copy. Edit the source and re-sync.
+- **After editing a vendored skill's source or any `.claude-plugin/plugin.json`, run `python3 scripts/sync_dual_harness.py`** to regenerate the vendored copies and Codex manifests. **Never hand-edit a generated file** — any `.codex-plugin/plugin.json`, vendoring ownership marker, or vendored skill copy. Edit the source and re-sync.
 - **Bump a plugin's `version`** whenever a content change should reach installed users — pushing to `main` alone won't (version is each harness's update cache key). Keep the `.codex-plugin` version in step by re-running the sync after the bump.
 - **Before a PR that touches skills**, run the repo-local `skill-structure-check` skill — it audits skill structure and fails on any dual-harness drift (`scripts/sync_dual_harness.py --check`).
 - **Creating plugins/skills:** see [`docs/PLUGIN-CONVENTIONS.md`](docs/PLUGIN-CONVENTIONS.md). Scaffold via Claude Code `/plugin-dev:create-plugin` or Codex `$plugin-creator`; author skills with `/skill-creator`.

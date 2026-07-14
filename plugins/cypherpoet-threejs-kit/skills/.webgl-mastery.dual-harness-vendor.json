@@ -1,0 +1,5 @@
+{
+  "source": "plugins/cypherpoet-webgl-kit/skills/webgl-mastery",
+  "target": "plugins/cypherpoet-threejs-kit/skills/webgl-mastery",
+  "tree_sha256": "3ebaa57ff99893df80a5fc7cbc92354f38353277981c7f51105bb8b74359084d"
+}

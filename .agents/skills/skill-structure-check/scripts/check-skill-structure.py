@@ -1,39 +1,5 @@
 #!/usr/bin/env python3
-"""
-check-skill-structure.py — audit skill structure across every plugin in this repo.
-
-Bundled by the repo-local `skill-structure-check` skill. Encodes the repo's
-skill-structure convention as runnable rules so SKILL.md files don't silently
-balloon and large reference files stay navigable:
-
-  ERROR     SKILL.md over 500 lines              split topical / once-needed depth into
-                                                 references/ files (skill-creator: "<500 ideal")
-  ERROR     a **Contents:** anchor that doesn't   stale table of contents — a heading was
-            resolve to a heading in its file      renamed or removed
-  ERROR     a cross-plugin relative link in a     dead path in an installed sparse-clone (only
-            SKILL.md / references file            this plugin's dir is fetched) — use an
-                                                  absolute GitHub URL instead
-  ERROR     a dual-harness generated artifact      a vendored skill copy or generated Codex manifest
-            (vendored skill / .codex-plugin)       drifted from its source, or a plugin is
-            drifted, or a new plugin is            unclassified — run
-            unclassified                           scripts/sync_dual_harness.py (skipped if absent)
-  WARNING   SKILL.md 450-500 lines               approaching the limit; plan to split
-  ADVISORY  references/*.md over 300 lines        large reference files get a **Contents:** jump-line
-            without a **Contents:** jump-line     so they stay navigable (summarized, non-failing)
-  ADVISORY  fact-check manifest drift: a unit     every unit should be deliberately tiered in
-            missing from every tier list, an      docs/automated-routines/skill-fact-check-manifest.json,
-            orphaned or double-listed entry, or   listed exactly once, and (unless never-tier) declare
-            a fact-checked unit with no           its verification sources in a **## Primary Sources**
-            **## Primary Sources** section        section (see PLUGIN-CONVENTIONS.md)
-
-The skill-level "table of contents" is the routing table in SKILL.md that points
-at the references/ files; that's a soft convention, not machine-checked here.
-Short reference files don't need their own Contents line.
-
-Report-only. Exits 1 if any ERROR, else 0 (warnings/advisories never fail the run).
-Run from anywhere in the repo:
-  python3 .claude/skills/skill-structure-check/scripts/check-skill-structure.py
-"""
+"""Implement the canonical rule contract in ../SKILL.md."""
 import json
 import os
 import re
@@ -75,6 +41,20 @@ def heading_anchors(text):
         valid.add(a if n == 0 else f"{a}-{n}")
         seen[a] = n + 1
     return valid
+
+
+def contents_anchors(text):
+    """Return indexed anchors, or None when no populated Contents index exists."""
+    jump_line = re.search(r"^\*\*Contents:\*\*.*$", text, re.M)
+    if jump_line:
+        anchors = re.findall(r"\(#([^)]+)\)", jump_line.group(0))
+        return anchors or None
+
+    section = re.search(r"^## Contents\s*$\n(.*?)(?=^##\s|\Z)", text, re.M | re.S)
+    if not section:
+        return None
+    anchors = re.findall(r"\(#([^)]+)\)", section.group(1))
+    return anchors or None
 
 
 LINK_RE = re.compile(r"\]\(([^)]+)\)")
@@ -129,7 +109,8 @@ def tier_findings(root, units, units_with_sources):
     if not os.path.isfile(path):
         return [], False
     try:
-        manifest = json.load(open(path, encoding="utf-8"))
+        with open(path, encoding="utf-8") as manifest_file:
+            manifest = json.load(manifest_file)
         if not isinstance(manifest, dict) or not all(
             isinstance(manifest.get(k, []), list) for k in TIER_KEYS
         ):
@@ -165,7 +146,8 @@ def audit(plugins_dir):
             label = f"{plugin}/{skill}"
             plugin_root = os.path.join(plugins_dir, plugin)
 
-            skill_text = open(skill_md, encoding="utf-8").read()
+            with open(skill_md, encoding="utf-8") as skill_file:
+                skill_text = skill_file.read()
             # *-workspace dirs are gitignored /skill-creator scratch: still structure-checked
             # (they may be promoted), but not units the fact-check manifest should tier.
             if not skill.endswith("-workspace"):
@@ -189,20 +171,21 @@ def audit(plugins_dir):
                 if not f.endswith(".md"):
                     continue
                 ref_path = os.path.join(ref_dir, f)
-                text = open(ref_path, encoding="utf-8").read()
+                with open(ref_path, encoding="utf-8") as reference_file:
+                    text = reference_file.read()
                 rlines = len(text.splitlines())
                 esc = escaping_links(text, ref_path, plugin_root)
                 if esc:
                     errors.append((label, f"references/{f}", "cross-plugin relative link(s) — use an absolute GitHub URL: " + ", ".join(esc)))
-                contents = re.search(r"^\*\*Contents:\*\*.*$", text, re.M)
-                if not contents:
+                indexed = contents_anchors(text)
+                if indexed is None:
                     if rlines > REF_TOC_FLOOR:
                         missing_contents.append((label, f"{f} ({rlines} lines)"))
                     continue
                 valid = heading_anchors(text)
-                broken = [t for t in re.findall(r"\(#([^)]+)\)", contents.group(0)) if t not in valid]
+                broken = [target for target in indexed if target not in valid]
                 if broken:
-                    errors.append((label, f"references/{f}", "stale **Contents:** anchors: " + ", ".join("#" + b for b in broken)))
+                    errors.append((label, f"references/{f}", "stale Contents anchors: " + ", ".join("#" + b for b in broken)))
     return errors, warnings, missing_contents, units, units_with_sources
 
 
@@ -277,7 +260,7 @@ def main():
         for a in tier_advisories:
             print(f"  {a}")
 
-    print("\nRules: this skill's scripts/check-skill-structure.py is the source of truth; see docs/PLUGIN-CONVENTIONS.md -> Skill Conventions.")
+    print("\nRules and remediation: .claude/skills/skill-structure-check/SKILL.md")
     return 1 if errors else 0
 
 

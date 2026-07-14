@@ -1,0 +1,5 @@
+{
+  "source": "plugins/cypherpoet-apple-app-store-screenshots/skills/apple-app-store-screenshots",
+  "target": "plugins/cypherpoet-mobile-dev/skills/apple-app-store-screenshots",
+  "tree_sha256": "63506e01ce46847878c215e904b2d462fc854650e8ed7833c245dfbe9f85034e"
+}

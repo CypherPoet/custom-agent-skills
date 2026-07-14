@@ -31,7 +31,7 @@ See any existing manifest under `plugins/*/.claude-plugin/plugin.json` for canon
 
 Plugins target **both** Claude Code and Codex. Each plugin is **self-contained**: install pulls only its own directory (Claude Code `git-subdir` sparse-clone; Codex marketplace fetch), so a plugin must physically ship every skill it needs. Neither harness resolves a reference to a skill in another plugin, and Codex has no plugin-to-plugin dependency mechanism — so composition is by **vendoring** (copying a skill into each plugin that ships it), never dependencies.
 
-[`scripts/dual-harness.json`](../scripts/dual-harness.json) is the single source of truth; [`scripts/sync_dual_harness.py`](../scripts/sync_dual_harness.py) generates every derived artifact and, with `--check`, fails on drift (the repo-local `skill-structure-check` runs this check). **After editing a vendored skill's source or any `.claude-plugin/plugin.json`, run `python scripts/sync_dual_harness.py`.** Never hand-edit a generated file.
+[`scripts/dual-harness.json`](../scripts/dual-harness.json) is the single source of truth; [`scripts/sync_dual_harness.py`](../scripts/sync_dual_harness.py) generates every derived artifact and, with `--check`, fails on drift (the repo-local `skill-structure-check` runs this check). **After editing a vendored skill's source or any `.claude-plugin/plugin.json`, run `python3 scripts/sync_dual_harness.py`.** Never hand-edit a generated file.
 
 ### Manifests
 
@@ -47,6 +47,7 @@ A plugin whose function is Claude-Code-specific runs on Claude only: list it in 
 When a plugin needs a skill authored elsewhere — its own skill functionally builds on it, or it curates a set — the source skill is **copied (vendored)** into the plugin. Declare the edge in `dual-harness.json` under `vendored_skills` (`source` → `targets`) and run the sync.
 
 - The skill is authored **once**, in its owner plugin. Every target is a byte-identical generated copy (minus dev-only `evals/` and `*-workspace/`). Edit the source, never a copy.
+- Each generated target has an adjacent hidden `.<skill>.dual-harness-vendor.json` ownership marker. The marker lets the generator remove a retired copy after its config edge is deleted while refusing to delete a copy with local changes. It is generated state, not another source of truth. To turn a formerly vendored skill into an authored skill, remove its edge, delete the marker, and keep the skill directory before re-running the generator.
 - Targets vendor from the **original source**, never from another vendored copy.
 - A vendored copy ships inside a different plugin, so any link it makes to *another* plugin must be an absolute GitHub URL ([Cross-Plugin Links](#cross-plugin-links)) — the copy inherits the source's links, and well-formed skills already satisfy this.
 - Vendored copies are tiered `never` in the [fact-check manifest](#fact-check-tiering): the routine corrects the authoritative source, and the sync propagates the fix.
@@ -150,7 +151,7 @@ A plugin's `version` (in `.claude-plugin/plugin.json`) is each harness's update 
 
 For skills inside a plugin, use [`/skill-creator`](https://github.com/anthropics/skills/tree/main/skills/skill-creator) — it handles drafts, evals, description optimization, and the general skill structure conventions.
 
-The repo-local **`skill-structure-check`** skill ([`.claude/skills/skill-structure-check`](../.claude/skills/skill-structure-check/SKILL.md)) audits skill structure across the repo — `SKILL.md` stays under ~500 lines (split topical or once-needed depth into `references/` files past that, routed from a table in the SKILL.md that serves as the skill-level table of contents), large `references/` files (>~300 lines) carry their own `**Contents:**` jump-line, any `**Contents:**` anchors resolve, every cross-plugin link is an absolute URL rather than a dead relative path ([Cross-Plugin Links](#cross-plugin-links)), and every dual-harness generated artifact is in sync ([Dual-Harness Plugins](#dual-harness-plugins)). Short reference files don't need a jump-line. Run it (or ask Claude to) before opening a PR that touches skills; it's report-only and its bundled `scripts/check-skill-structure.py` is the source of truth for the rules.
+The repo-local **`skill-structure-check`** skill audits skill structure across the repo. Its [`SKILL.md`](../.claude/skills/skill-structure-check/SKILL.md) is the canonical rule contract and remediation guide; the bundled Python script implements that contract. Run the skill before opening a PR that touches skills.
 
 ### Primary Sources
 

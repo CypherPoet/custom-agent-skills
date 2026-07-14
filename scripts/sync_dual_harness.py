@@ -2,7 +2,7 @@
 """Generate and guard every dual-harness (Claude Code + Codex) derived artifact.
 
 Single source of truth: scripts/dual-harness.json. From it this tool produces
-two kinds of generated artifact and, in --check mode, fails if any has drifted:
+three kinds of generated artifact and, in --check mode, fails if any has drifted:
 
   1. Vendored skill copies  — a skill authored once (its owner plugin) copied
      byte-for-byte into every plugin that ships it. Required because neither
@@ -10,6 +10,9 @@ two kinds of generated artifact and, in --check mode, fails if any has drifted:
      sparse-clones one plugin dir; Codex has no plugin-to-plugin dependencies).
   2. Codex plugin manifests — plugins/<name>/.codex-plugin/plugin.json, mirrored
      from the plugin's .claude-plugin/plugin.json plus "skills": "./skills/".
+  3. Vendoring ownership markers — adjacent hidden JSON files that record which
+     source owns each generated copy and its last generated content digest. They
+     let write mode safely remove a copy after its config edge is deleted.
 
 It also validates that every plugin under plugins/ is classified as either
 dual-harness or Claude-only, so adding a plugin forces an explicit decision.
@@ -29,6 +32,7 @@ from __future__ import annotations
 
 import argparse
 import fnmatch
+import hashlib
 import json
 import shutil
 import sys
@@ -39,6 +43,7 @@ IGNORE_DIR_NAMES = {"__pycache__", "evals", ".git"}
 IGNORE_DIR_GLOBS = ("*-workspace",)
 IGNORE_FILE_NAMES = {".DS_Store"}
 IGNORE_FILE_GLOBS = ("*.pyc",)
+VENDOR_MARKER_SUFFIX = ".dual-harness-vendor.json"
 
 # Manifest fields copied verbatim from .claude-plugin into .codex-plugin, in order.
 CODEX_MANIFEST_CARRY = ("author", "homepage", "repository", "license", "keywords")
@@ -80,6 +85,102 @@ def write_tree(src: Path, dst: Path) -> None:
         target.write_bytes(data)
 
 
+def tree_digest(files: dict[str, bytes]) -> str:
+    """Stable digest of an ignore-filtered tree, including paths and boundaries."""
+    digest = hashlib.sha256()
+    for relative_path, data in sorted(files.items()):
+        path_bytes = relative_path.encode("utf-8")
+        digest.update(len(path_bytes).to_bytes(8, "big"))
+        digest.update(path_bytes)
+        digest.update(len(data).to_bytes(8, "big"))
+        digest.update(data)
+    return digest.hexdigest()
+
+
+def valid_skill_path(value: str) -> bool:
+    path = Path(value)
+    if path.is_absolute() or ".." in path.parts or path.as_posix() != value:
+        return False
+    parts = path.parts
+    return (
+        len(parts) == 4 and parts[0] == "plugins" and parts[2] == "skills"
+    ) or (
+        len(parts) == 3 and parts[0] in {".agents", ".claude"} and parts[1] == "skills"
+    )
+
+
+def vendor_marker_path(root: Path, target: str) -> Path:
+    target_path = root / target
+    return target_path.parent / f".{target_path.name}{VENDOR_MARKER_SUFFIX}"
+
+
+def vendor_marker(source: str, target: str, files: dict[str, bytes]) -> dict:
+    return {
+        "source": source,
+        "target": target,
+        "tree_sha256": tree_digest(files),
+    }
+
+
+def discover_vendor_markers(root: Path) -> tuple[dict[str, tuple[Path, dict]], list[str]]:
+    """Return valid target-keyed ownership markers and non-destructive errors."""
+    discovered: dict[str, tuple[Path, dict]] = {}
+    problems: list[str] = []
+    for marker_path in sorted(root.rglob(f"*{VENDOR_MARKER_SUFFIX}")):
+        relative = marker_path.relative_to(root)
+        if ".git" in relative.parts or "worktrees" in relative.parts:
+            continue
+        try:
+            data = json.loads(marker_path.read_text(encoding="utf-8"))
+        except (json.JSONDecodeError, OSError) as error:
+            problems.append(f"[vendor] malformed ownership marker {relative}: {error}")
+            continue
+        if not isinstance(data, dict) or not all(
+            isinstance(data.get(key), str) and data.get(key)
+            for key in ("source", "target", "tree_sha256")
+        ):
+            problems.append(f"[vendor] malformed ownership marker {relative}: expected source, target, and tree_sha256 strings")
+            continue
+        target = data["target"]
+        if not valid_skill_path(target) or marker_path != vendor_marker_path(root, target):
+            problems.append(f"[vendor] ownership marker at unexpected path: {relative}")
+            continue
+        if target in discovered:
+            problems.append(f"[vendor] duplicate ownership markers for {target}")
+            continue
+        discovered[target] = (marker_path, data)
+    return discovered, problems
+
+
+def desired_vendor_targets(cfg: dict) -> tuple[dict[str, str], list[str]]:
+    desired: dict[str, str] = {}
+    problems: list[str] = []
+    for edge in cfg["vendored_skills"]:
+        source = edge.get("source")
+        targets = edge.get("targets")
+        if not isinstance(source, str) or not valid_skill_path(source):
+            problems.append(f"[vendor] invalid source path: {source!r}")
+            continue
+        if not isinstance(targets, list) or not targets:
+            problems.append(f"[vendor] {source}: targets must be a non-empty array")
+            continue
+        for target in targets:
+            if not isinstance(target, str) or not valid_skill_path(target):
+                problems.append(f"[vendor] invalid target path: {target!r}")
+                continue
+            if target == source:
+                problems.append(f"[vendor] source and target are identical: {target}")
+                continue
+            previous = desired.get(target)
+            if previous is not None:
+                problems.append(f"[vendor] duplicate target {target}: declared by {previous} and {source}")
+                continue
+            desired[target] = source
+    for source in sorted(set(desired.values()) & set(desired)):
+        problems.append(f"[vendor] vendoring chains are not allowed: source is also a target: {source}")
+    return desired, problems
+
+
 def build_codex_manifest(claude: dict) -> dict:
     manifest = {
         "name": claude["name"],
@@ -117,22 +218,47 @@ def sync(root: Path, write: bool) -> list[str]:
     for name in sorted(existing - dual - claude_only):
         problems.append(f"[config] plugins/{name}/ is unclassified — add it to dual_harness_plugins or claude_only_plugins")
 
-    # 1. Vendored skills.
-    for edge in cfg["vendored_skills"]:
-        src = root / edge["source"]
-        if not src.exists():
-            problems.append(f"[vendor] source missing: {edge['source']}")
-            continue
-        src_tree = read_tree(src)
-        if not src_tree:
-            problems.append(f"[vendor] source has no vendorable files: {edge['source']}")
-            continue
-        for target in edge["targets"]:
+    # 1. Vendored skills and their adjacent ownership markers.
+    desired_targets, vendor_config_problems = desired_vendor_targets(cfg)
+    problems.extend(vendor_config_problems)
+    markers, marker_problems = discover_vendor_markers(root)
+    problems.extend(marker_problems)
+
+    if not vendor_config_problems and not marker_problems:
+        for target in sorted(set(markers) - set(desired_targets)):
+            marker_path, marker = markers[target]
             dst = root / target
+            if not write:
+                state = "copy and marker remain" if dst.exists() or dst.is_symlink() else "marker remains"
+                problems.append(f"[vendor] stale generated copy: {target} ({state}; was vendored from {marker['source']})")
+                continue
+            if dst.exists() or dst.is_symlink():
+                if dst.is_symlink() or not dst.is_dir() or tree_digest(read_tree(dst)) != marker["tree_sha256"]:
+                    problems.append(f"[vendor] stale target has local changes; refusing to remove: {target} (delete {marker_path.relative_to(root)} to adopt it as authored)")
+                    continue
+                shutil.rmtree(dst)
+            marker_path.unlink()
+
+        for target, source in sorted(desired_targets.items()):
+            src = root / source
+            if not src.exists():
+                problems.append(f"[vendor] source missing: {source}")
+                continue
+            src_tree = read_tree(src)
+            if not src_tree:
+                problems.append(f"[vendor] source has no vendorable files: {source}")
+                continue
+            dst = root / target
+            expected_marker = dumps(vendor_marker(source, target, src_tree)).encode("utf-8")
+            marker_path = vendor_marker_path(root, target)
             if write:
                 write_tree(src, dst)
-            elif read_tree(dst) != src_tree:
-                problems.append(f"[vendor] out of sync: {target} != {edge['source']} (run: python3 scripts/sync_dual_harness.py)")
+                marker_path.write_bytes(expected_marker)
+            else:
+                if read_tree(dst) != src_tree:
+                    problems.append(f"[vendor] out of sync: {target} != {source} (run: python3 scripts/sync_dual_harness.py)")
+                if not marker_path.exists() or marker_path.read_bytes() != expected_marker:
+                    problems.append(f"[vendor] ownership marker out of sync: {marker_path.relative_to(root)} (run: python3 scripts/sync_dual_harness.py)")
 
     # 2. Codex manifests.
     for name in sorted(dual):
@@ -202,7 +328,7 @@ def main() -> int:
             print(f"\n{len(problems)} dual-harness issue(s). Run: python3 scripts/sync_dual_harness.py", file=sys.stderr)
             return 1
         # In write mode, anything that blocked or skipped generation is still fatal.
-        fatal = [p for p in problems if p.startswith("[config]") or "source missing" in p or "no vendorable files" in p or "missing Claude manifest" in p or "Claude manifest missing" in p or "Claude-only components" in p]
+        fatal = [p for p in problems if p.startswith(("[config]", "[vendor]")) or "missing Claude manifest" in p or "Claude manifest missing" in p or "Claude-only components" in p]
         if fatal:
             return 1
     print("dual-harness: checked" if args.check else "dual-harness: written", "(no issues)" if not problems else "")
