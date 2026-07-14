@@ -9,7 +9,7 @@ description: Read-only check of whether the current branch's changes require a m
 
 Report whether the changes on the current branch touch the **marketplace catalog surface** — the parts of a plugin the marketplace's catalog files actually store: its presence (added/removed) and its `name` / `description` / `homepage` (the Claude `.claude-plugin/marketplace.json`), plus its dual-harness classification and Codex `category` from `scripts/dual-harness.json` (the Codex `.agents/plugins/marketplace.json`). When they do, a `marketplace-publish` is needed after merge; when they don't (a plain content edit or a version-only bump), it isn't.
 
-Like the kit's other read-only skills, this one is **model-invokable on purpose** — and it's specifically meant to run automatically at PR-creation to drive the `marketplace-publish` label (only `marketplace-publish` itself, the skill with side effects, is manual-only). It never writes, pushes, or publishes — it only reports.
+Like the kit's other read-only skills, this one is **model-invokable on purpose** — and it's specifically meant to run automatically at PR-creation to drive the `marketplace-publish` label (only `marketplace-publish` itself, the skill that pushes to the marketplace repo, is manual-only). It never writes, pushes, or publishes — it only reports.
 
 ## When this matters
 

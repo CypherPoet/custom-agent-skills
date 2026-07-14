@@ -56,6 +56,8 @@ def signature(root, ref, path):
         data = json.loads(res.stdout)
     except json.JSONDecodeError as e:
         raise ValueError(f"{path} at {ref} is malformed: {e}")
+    if not isinstance(data, dict):
+        raise ValueError(f"{path} at {ref} is malformed: manifest must be a JSON object")
     return {k: data.get(k) for k in CATALOG_FIELDS}
 
 

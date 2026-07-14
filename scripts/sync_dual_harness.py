@@ -149,7 +149,8 @@ def sync(root: Path, write: bool) -> list[str]:
             continue
         plugin_dir = root / "plugins" / name
         unported = [k for k in ("mcpServers", "hooks", "agents", "commands") if k in claude]
-        if claude.get("skills", "./skills/") != "./skills/":
+        skills_val = claude.get("skills", "./skills/")
+        if not (isinstance(skills_val, str) and skills_val.lstrip("./").rstrip("/") == "skills"):
             unported.append("skills (custom path)")
         for comp in ("commands", "agents", "hooks"):
             if (plugin_dir / comp).is_dir() and comp not in unported:
@@ -201,7 +202,7 @@ def main() -> int:
             print(f"\n{len(problems)} dual-harness issue(s). Run: python3 scripts/sync_dual_harness.py", file=sys.stderr)
             return 1
         # In write mode, anything that blocked or skipped generation is still fatal.
-        fatal = [p for p in problems if p.startswith("[config]") or "source missing" in p or "missing Claude manifest" in p or "Claude manifest missing" in p or "Claude-only components" in p]
+        fatal = [p for p in problems if p.startswith("[config]") or "source missing" in p or "no vendorable files" in p or "missing Claude manifest" in p or "Claude manifest missing" in p or "Claude-only components" in p]
         if fatal:
             return 1
     print("dual-harness: checked" if args.check else "dual-harness: written", "(no issues)" if not problems else "")
