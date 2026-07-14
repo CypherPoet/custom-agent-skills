@@ -27,7 +27,7 @@ If the user is only editing an already-listed plugin's instructions, tell them n
 ## Before you start
 
 - `gh` is authenticated (`gh auth status`) with write access to the marketplace repo.
-- Each plugin to publish exists at `plugins/<name>/.claude-plugin/plugin.json`. If a plugin doesn't exist yet, scaffold it with [`/plugin-dev:create-plugin`](https://github.com/anthropics/claude-plugins-official/blob/main/plugins/plugin-dev/commands/create-plugin.md), then run `claude plugin validate plugins/<name>` to confirm it's well-formed. **Removals are the exception**: a plugin being removed from the catalogs (deleted from the repo, or reclassified Claude-only) has no manifest to read — skip this check and step 1 for it; step 3's removal commands are its whole path.
+- Each plugin to publish exists at `plugins/<name>/.claude-plugin/plugin.json`. If a plugin doesn't exist yet, scaffold it with [`/plugin-dev:create-plugin`](https://github.com/anthropics/claude-plugins-official/blob/main/plugins/plugin-dev/commands/create-plugin.md), then run `claude plugin validate plugins/<name>` to confirm it's well-formed. **Removals differ by cause**: a plugin **deleted** from the source repo has no manifest to read — skip this check and step 1 for it; step 3's removal commands are its whole path. A plugin **reclassified Claude-only** still exists and still has its manifest: only its Codex entry is removed (step 3), and if the same change also edited its `name`/`description`/`homepage`, run steps 1–3 for its Claude entry as usual — don't let the reclassification swallow a concurrent Claude-catalog update.
 
 ## Which marketplace
 
@@ -48,7 +48,7 @@ The goal: **one PR on the marketplace repo** that adds or updates the chosen plu
    ```
    The manifest is the source of truth for `description` and `homepage`. Precedence:
    - **`description`** — copy verbatim. If the field is missing or empty, stop and ask the user to populate it before continuing; the catalog can't ship a blank description.
-   - **`homepage`** — if the field is present in the manifest, copy verbatim. If it's absent, derive the fallback `https://github.com/<owner>/<this-repo>/tree/main/plugins/<plugin>`.
+   - **`homepage`** — if the field is present in the manifest, copy verbatim. If it's absent, derive the fallback `https://github.com/<owner>/<this-repo>/tree/<default-branch>/plugins/<plugin>`, resolving `<default-branch>` the same way step 1's Codex `ref` does — never hardcode `main`.
 
    To resolve `<owner>/<this-repo>` for the fallback, prefer `gh repo view --json nameWithOwner -q .nameWithOwner` on the source repo — it returns the canonical `owner/repo` regardless of remote protocol. If you fall back to `git remote get-url origin`, normalize the output: HTTPS form `https://github.com/<owner>/<repo>.git` and SSH form `git@github.com:<owner>/<repo>.git` both reduce to `<owner>/<repo>` after stripping the prefix and trailing `.git`. Never interpolate the raw remote string into the URL — an SSH origin produces a broken link like `https://github.com/git@github.com:<owner>/<repo>.git/tree/main/...`.
 
@@ -64,10 +64,10 @@ The goal: **one PR on the marketplace repo** that adds or updates the chosen plu
 
 2. **Clone the marketplace** shallowly to a temp dir, e.g. `gh repo clone <marketplace> /tmp/mkt-publish -- --depth 1`.
 
-3. **Merge into the catalog.** In `/tmp/mkt-publish/.claude-plugin/marketplace.json`, add each entry to `plugins[]` — replacing any existing entry with the same `name` — and keep the array sorted by `name`. `jq` does this cleanly; for a single entry held in `$ENTRY`:
+3. **Merge into the catalog.** Run every command in this step from the clone root (`/tmp/mkt-publish`) — the paths below are all clone-root-relative. In `.claude-plugin/marketplace.json`, add each entry to `plugins[]` — replacing any existing entry with the same `name` — and keep the array sorted by `name`. `jq` does this cleanly; for a single entry held in `$ENTRY`:
    ```bash
    jq --argjson e "$ENTRY" '.plugins = (((.plugins // []) | map(select(.name != $e.name))) + [$e] | sort_by(.name))' \
-     marketplace.json > tmp && mv tmp marketplace.json
+     .claude-plugin/marketplace.json > tmp && mv tmp .claude-plugin/marketplace.json
    ```
    Apply once per plugin (or fold several into one jq pass).
 
@@ -76,12 +76,13 @@ The goal: **one PR on the marketplace repo** that adds or updates the chosen plu
    **Removals.** The merge above only adds or updates — handle removals explicitly (no manifest is read; the plugin may no longer exist in the source repo):
    - A plugin **deleted from the source repo** comes out of **both** catalog files:
      ```bash
-     jq --arg n "<plugin>" '.plugins |= map(select(.name != $n))' \
+     jq --arg n "<plugin>" '.plugins = ((.plugins // []) | map(select(.name != $n)))' \
        .claude-plugin/marketplace.json > tmp && mv tmp .claude-plugin/marketplace.json
-     jq --arg n "<plugin>" '.plugins |= map(select(.name != $n))' \
+     jq --arg n "<plugin>" '.plugins = ((.plugins // []) | map(select(.name != $n)))' \
        .agents/plugins/marketplace.json > tmp && mv tmp .agents/plugins/marketplace.json
      ```
    - A plugin **reclassified from `dual_harness_plugins` to `claude_only_plugins`** comes out of the **Codex catalog only** (run just the second command) — its Claude entry stays published.
+   - If `.agents/plugins/marketplace.json` doesn't exist (a marketplace that has never published Codex entries), skip the Codex removal command — don't create the file just to delete from it.
 
    Confirm both files still parse (`jq empty`).
 
@@ -99,12 +100,13 @@ The goal: **one PR on the marketplace repo** that adds or updates the chosen plu
 
 6. **Open the PR** on the marketplace repo using local creds (committing the staged changes from step 5):
    ```bash
-   git -C /tmp/mkt-publish switch -c publish/<slug>-$(date +%Y%m%d%H%M%S)
+   git -C /tmp/mkt-publish switch -c publish/<slug>-<timestamp>   # e.g. publish/webgl-kit-20260713220541
    git -C /tmp/mkt-publish commit -m "➕ Publish <plugins> to the marketplace catalog"
    git -C /tmp/mkt-publish push -u origin HEAD
-   gh pr create --repo <marketplace> --title "➕ Publish <plugins>" \
+   gh pr create --repo <marketplace> --head publish/<slug>-<timestamp> --title "➕ Publish <plugins>" \
      --body "Adds/updates the listed plugin entries in the marketplace catalogs, sourced from this repo via git-subdir."
    ```
+   The explicit `--head` keeps `gh pr create` independent of your current directory — without it, gh infers the head branch from whatever git repo the shell happens to sit in (usually the *source* repo, which aborts the command).
 
 7. **Report the PR URL** and clean up the temp clone.
 
