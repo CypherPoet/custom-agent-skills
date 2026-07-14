@@ -38,11 +38,11 @@ This repo publishes the following plugins via the [`cypherpoet-toolchest`](https
 /plugin install <plugin-name>@cypherpoet-toolchest
 ```
 
-**Codex** — via this repo's marketplace:
+**Codex** — the same marketplace repo carries the Codex catalog:
 
 ```shell
-codex plugin marketplace add CypherPoet/custom-agent-skills
-# then install <plugin-name> from the Codex plugin directory
+codex plugin marketplace add CypherPoet/cypherpoet-toolchest
+codex plugin add <plugin-name>@cypherpoet-toolchest
 ```
 
 A few plugins are Claude Code only (the marketplace/catalog tooling and the `claude-*` plugins) — see [`scripts/dual-harness.json`](../scripts/dual-harness.json).

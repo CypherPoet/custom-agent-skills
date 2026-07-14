@@ -2,7 +2,7 @@
 """Generate and guard every dual-harness (Claude Code + Codex) derived artifact.
 
 Single source of truth: scripts/dual-harness.json. From it this tool produces
-three kinds of generated artifact and, in --check mode, fails if any has drifted:
+two kinds of generated artifact and, in --check mode, fails if any has drifted:
 
   1. Vendored skill copies  — a skill authored once (its owner plugin) copied
      byte-for-byte into every plugin that ships it. Required because neither
@@ -10,11 +10,12 @@ three kinds of generated artifact and, in --check mode, fails if any has drifted
      sparse-clones one plugin dir; Codex has no plugin-to-plugin dependencies).
   2. Codex plugin manifests — plugins/<name>/.codex-plugin/plugin.json, mirrored
      from the plugin's .claude-plugin/plugin.json plus "skills": "./skills/".
-  3. Codex marketplace       — .agents/plugins/marketplace.json listing every
-     dual-harness plugin.
 
 It also validates that every plugin under plugins/ is classified as either
 dual-harness or Claude-only, so adding a plugin forces an explicit decision.
+
+The marketplace catalogs (Claude and Codex) live in the marketplace repo, not
+here — they're maintained by the cypherpoet-marketplace-kit publish flow.
 
 Usage:
     python scripts/sync_dual_harness.py            # --write (default): (re)generate
@@ -95,22 +96,6 @@ def build_codex_manifest(claude: dict) -> dict:
     return manifest
 
 
-def build_marketplace(cfg: dict) -> dict:
-    dual = cfg["dual_harness_plugins"]
-    return {
-        "name": cfg["codex_marketplace"]["name"],
-        "plugins": [
-            {
-                "name": name,
-                "source": {"source": "local", "path": f"./plugins/{name}"},
-                "policy": {"installation": "AVAILABLE", "authentication": "ON_INSTALL"},
-                "category": dual[name].get("category", "Uncategorized"),
-            }
-            for name in sorted(dual)
-        ],
-    }
-
-
 def dumps(obj: dict) -> str:
     return json.dumps(obj, indent=2, ensure_ascii=False) + "\n"
 
@@ -175,15 +160,6 @@ def sync(root: Path, write: bool) -> list[str]:
             codex_path.write_text(want, encoding="utf-8", newline="\n")
         elif not codex_path.exists() or codex_path.read_text(encoding="utf-8") != want:
             problems.append(f"[codex-manifest] out of sync: {codex_path.relative_to(root)} (run: python scripts/sync_dual_harness.py)")
-
-    # 3. Codex marketplace.
-    want_mkt = dumps(build_marketplace(cfg))
-    mkt_path = root / cfg["codex_marketplace"]["output"]
-    if write:
-        mkt_path.parent.mkdir(parents=True, exist_ok=True)
-        mkt_path.write_text(want_mkt, encoding="utf-8", newline="\n")
-    elif not mkt_path.exists() or mkt_path.read_text(encoding="utf-8") != want_mkt:
-        problems.append(f"[marketplace] out of sync: {cfg['codex_marketplace']['output']} (run: python scripts/sync_dual_harness.py)")
 
     return problems
 
