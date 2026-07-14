@@ -5,8 +5,9 @@ Diffs the *marketplace catalog surface* between a base ref (default: main) and
 HEAD, and reports the plugins whose surface changed:
   - every plugins/*/.claude-plugin/plugin.json — a plugin added or removed, or
     its name / description / homepage edited (the Claude catalog fields);
-  - scripts/dual-harness.json — a plugin's dual-harness classification or its
-    Codex `category` changed (the Codex catalog fields).
+  - scripts/dual-harness.json — a plugin's dual-harness classification changed,
+    or any field of its dual_harness_plugins entry (the Codex catalog surface,
+    e.g. `category`) changed.
 A version-only bump does NOT count: that's content, gated by the version key,
 and reaches installs without a catalog re-publish.
 
@@ -16,7 +17,8 @@ that landed on the base after this branch forked are never attributed to it.
 Use it when opening a PR to decide whether to apply the `marketplace-publish`
 label. Stdlib only — no jq, no network. Exit status is 1 when a publish is
 needed (something actionable), else 0; 2 on error (including a malformed
-scripts/dual-harness.json — never silently treated as a catalog removal).
+scripts/dual-harness.json or plugin manifest — never silently treated as a
+catalog removal).
 
 Usage: python3 .../needs_marketplace_publish.py [base-ref]   # base-ref defaults to "main"
 """
@@ -34,23 +36,26 @@ DUAL_HARNESS_PATH = "scripts/dual-harness.json"
 
 
 def git(root, *args):
-    return subprocess.run(["git", "-C", str(root), *args], capture_output=True, text=True)
+    return subprocess.run(["git", "-C", str(root), *args], capture_output=True, text=True, encoding="utf-8")
 
 
 def repo_root():
-    res = subprocess.run(["git", "rev-parse", "--show-toplevel"], capture_output=True, text=True)
+    res = subprocess.run(["git", "rev-parse", "--show-toplevel"], capture_output=True, text=True, encoding="utf-8")
     return Path(res.stdout.strip()) if res.returncode == 0 else Path.cwd()
 
 
 def signature(root, ref, path):
-    """The catalog fields of <path> at <ref>, or None if the file is absent there."""
+    """The catalog fields of <path> at <ref>, or None if the file is absent there.
+
+    A file that exists but is malformed raises ValueError: that's an error to
+    surface (exit 2), never silently read as an addition or removal."""
     res = git(root, "show", f"{ref}:{path}")
     if res.returncode != 0:
         return None
     try:
         data = json.loads(res.stdout)
-    except json.JSONDecodeError:
-        return None
+    except json.JSONDecodeError as e:
+        raise ValueError(f"{path} at {ref} is malformed: {e}")
     return {k: data.get(k) for k in CATALOG_FIELDS}
 
 
@@ -59,19 +64,23 @@ def plugin_name(path):
     return Path(path).parts[1]
 
 
-def codex_categories(root, ref):
-    """{plugin: category} from dual_harness_plugins in scripts/dual-harness.json at <ref>.
+def codex_entries(root, ref):
+    """{plugin: full dual_harness_plugins entry} from scripts/dual-harness.json at <ref>.
 
-    {} when the file doesn't exist at <ref> (no Codex catalog surface there — e.g. the
-    commit that first introduces it). A file that exists but is malformed raises
-    ValueError: that's an error to surface (exit 2), not a mass catalog removal."""
+    Whole entries, not just `category`, so any future per-plugin field the Codex
+    catalog stores is covered without a script edit. {} when the file doesn't exist
+    at <ref> (no Codex catalog surface there — e.g. the commit that first introduces
+    it). A file that exists but is malformed raises ValueError: that's an error to
+    surface (exit 2), not a mass catalog removal."""
     res = git(root, "show", f"{ref}:{DUAL_HARNESS_PATH}")
     if res.returncode != 0:
         return {}
     try:
         entries = json.loads(res.stdout).get("dual_harness_plugins", {})
-        return {name: entry.get("category") for name, entry in entries.items()}
-    except (json.JSONDecodeError, AttributeError) as e:
+        if not isinstance(entries, dict) or not all(isinstance(v, dict) for v in entries.values()):
+            raise ValueError("dual_harness_plugins entries must be objects")
+        return entries
+    except (json.JSONDecodeError, AttributeError, ValueError) as e:
         raise ValueError(f"{DUAL_HARNESS_PATH} at {ref} is malformed: {e}")
 
 
@@ -90,7 +99,9 @@ def main():
     # this branch for changes that landed on the base after it forked.
     mb = merge_base(root, base)
 
-    diff = git(root, "diff", "--name-only", "--diff-filter=AMD", f"{base}...HEAD", "--", MANIFEST_GLOB)
+    # --no-renames: git's rename detection would report a renamed plugin as a single
+    # R pair that --diff-filter=AMD silently drops, hiding a remove+add surface change.
+    diff = git(root, "diff", "--name-only", "--no-renames", "--diff-filter=AMD", f"{base}...HEAD", "--", MANIFEST_GLOB)
     if diff.returncode != 0:
         print(f"ERROR: could not diff {base}...HEAD ({diff.stderr.strip()})", file=sys.stderr)
         return 2
@@ -100,22 +111,22 @@ def main():
     def flag(name, reason):
         reasons_by_plugin.setdefault(name, []).append(reason)
 
-    for path in (line for line in diff.stdout.splitlines() if line.strip()):
-        before = signature(root, mb, path)
-        after = signature(root, "HEAD", path)
-        if before == after:
-            continue  # manifest touched, but catalog fields unchanged (e.g. a version-only bump)
-        if before is None:
-            reason = "added"
-        elif after is None:
-            reason = "removed"
-        else:
-            reason = "changed " + ", ".join(k for k in CATALOG_FIELDS if before.get(k) != after.get(k))
-        flag(plugin_name(path), reason)
-
     try:
-        before_codex = codex_categories(root, mb)
-        after_codex = codex_categories(root, "HEAD")
+        for path in (line for line in diff.stdout.splitlines() if line.strip()):
+            before = signature(root, mb, path)
+            after = signature(root, "HEAD", path)
+            if before == after:
+                continue  # manifest touched, but catalog fields unchanged (e.g. a version-only bump)
+            if before is None:
+                reason = "added"
+            elif after is None:
+                reason = "removed"
+            else:
+                reason = "changed " + ", ".join(k for k in CATALOG_FIELDS if before.get(k) != after.get(k))
+            flag(plugin_name(path), reason)
+
+        before_codex = codex_entries(root, mb)
+        after_codex = codex_entries(root, "HEAD")
     except ValueError as e:
         print(f"ERROR: {e}", file=sys.stderr)
         return 2
@@ -125,7 +136,9 @@ def main():
         elif name not in after_codex:
             flag(name, "left the Codex catalog surface")
         elif before_codex[name] != after_codex[name]:
-            flag(name, "changed Codex category")
+            b, a = before_codex[name], after_codex[name]
+            changed = sorted(k for k in set(b) | set(a) if b.get(k) != a.get(k))
+            flag(name, "changed Codex " + ", ".join(changed))
 
     affected = sorted((name, "; ".join(reasons)) for name, reasons in reasons_by_plugin.items())
     if not affected:

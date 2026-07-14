@@ -9,7 +9,7 @@ description: Read-only check of whether the current branch's changes require a m
 
 Report whether the changes on the current branch touch the **marketplace catalog surface** — the parts of a plugin the marketplace's catalog files actually store: its presence (added/removed) and its `name` / `description` / `homepage` (the Claude `.claude-plugin/marketplace.json`), plus its dual-harness classification and Codex `category` from `scripts/dual-harness.json` (the Codex `.agents/plugins/marketplace.json`). When they do, a `marketplace-publish` is needed after merge; when they don't (a plain content edit or a version-only bump), it isn't.
 
-Unlike the other maintainer skills here, this one is **model-invokable on purpose**: it's read-only and meant to run automatically at PR-creation to drive the `marketplace-publish` label. It never writes, pushes, or publishes — it only reports.
+Like the kit's other read-only skills, this one is **model-invokable on purpose** — and it's specifically meant to run automatically at PR-creation to drive the `marketplace-publish` label (only `marketplace-publish` itself, the skill with side effects, is manual-only). It never writes, pushes, or publishes — it only reports.
 
 ## When this matters
 
@@ -28,7 +28,7 @@ python3 "${CLAUDE_PLUGIN_ROOT}/skills/marketplace-publish-check/scripts/needs_ma
 
 `base-ref` defaults to `main`. The script locates the repo root via git, diffs every `plugins/*/.claude-plugin/plugin.json` plus `scripts/dual-harness.json` between the base and `HEAD`, and compares only the catalog fields — so a manifest that changed for an unrelated reason (a version bump) is correctly ignored. Stdlib only; no `jq`, no network.
 
-- **Exit 1** — a publish is needed. It lists the affected plugins and why (`added` / `removed` / `changed <fields>`). Apply the `marketplace-publish` label to the PR.
+- **Exit 1** — a publish is needed. It lists the affected plugins and why: `added` / `removed` / `changed <fields>` for the Claude catalog fields, and `added to the Codex catalog surface` / `left the Codex catalog surface` / `changed Codex <fields>` for classification or `dual-harness.json` entry changes (a plugin with several reasons joins them with `;`). Apply the `marketplace-publish` label to the PR.
 - **Exit 0** — no catalog-surface change; no label, no publish.
 
 ## After labeling
