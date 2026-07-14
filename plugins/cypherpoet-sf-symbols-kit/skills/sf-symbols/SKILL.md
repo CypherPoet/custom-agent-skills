@@ -1,17 +1,12 @@
 ---
 name: sf-symbols
-description: >-
-  Work with Apple SF Symbols end to end. Use whenever the user wants to find or
-  look up a symbol ("is there an SF Symbol for a coffee mug?"), browse them in
-  an HTML gallery, check a symbol's availability/keywords/categories, export one
-  as a clean SVG at any weight (for web, THREE.js, or an icon set), or create a
-  CUSTOM SF Symbol from their own SVG art — converting it to an importable
-  template, exporting a system symbol's template, or validating one. Also use
-  for SF Symbols design questions: naming conventions, rendering modes
-  (monochrome/hierarchical/palette/multicolor), variable color, weights/scales,
-  outline-vs-fill choice, and animations — bundled references cover Apple's HIG.
-  Triggers include "SF Symbol(s)", "Apple/system icons", "convert this SVG to an
-  SF Symbol", and "custom symbol".
+description: >
+  Work with Apple SF Symbols end to end: find or look up symbols, browse them in
+  an HTML gallery, check availability and keywords, export clean SVGs at any
+  weight, or create a custom SF Symbol from the user's own SVG art (template
+  conversion, export, validation). Also for SF Symbols design questions:
+  rendering modes, variable color, weights/scales, animations. Triggers on "SF
+  Symbol", "Apple/system icons", "convert this SVG to an SF Symbol".
 ---
 
 # SF Symbols

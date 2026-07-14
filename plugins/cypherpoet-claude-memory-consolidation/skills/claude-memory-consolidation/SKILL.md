@@ -1,18 +1,12 @@
 ---
 name: claude-memory-consolidation
 description: >
-  Use this skill whenever the user says "clean up memory", "consolidate
-  memory", "audit memory", "prune memories", "dedupe memory", "tidy my
-  memory", "memory housekeeping", or asks to review, optimize, or shrink
-  the project memory system. Also trigger when the user complains about
-  stale or duplicated memories, when recent sessions surfaced memory
-  references that no longer resolve, or when MEMORY.md is approaching the
-  200-line truncation cap. Audits and consolidates Claude's per-project
-  auto-memory directory (~/.claude/projects/{encoded-cwd}/memory/),
-  producing a severity-tiered audit (broken references, likely duplicates,
-  index repair, description drift, brevity pressure), waits for
-  per-cluster approval, then applies edits. Never modifies memory without
-  explicit confirmation.
+  Audit and consolidate Claude's per-project auto-memory directory. Use when the
+  user says "clean up / consolidate / audit / prune memory" or similar,
+  complains about stale or duplicated memories, hits memory references that no
+  longer resolve, or when MEMORY.md nears the 200-line truncation cap. Produces
+  a severity-tiered audit, waits for per-cluster approval, then applies edits —
+  never modifies memory without explicit confirmation.
 ---
 
 # Consolidate Memory

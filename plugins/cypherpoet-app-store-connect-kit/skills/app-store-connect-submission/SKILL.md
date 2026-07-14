@@ -1,26 +1,16 @@
 ---
 name: app-store-connect-submission
 description: >
-  Step-by-step playbook for actually submitting an Apple-platform app (iOS/iPadOS,
-  and the shared flow for macOS/tvOS/watchOS/visionOS) to the App Store through App
-  Store Connect — the operational mechanics and console navigation, NOT review-guideline
-  compliance. Use this whenever someone is taking an app from "built" to "Submitted for
-  Review": creating the app record; the agreements/tax/banking + Small Business Program
-  prerequisites; registering an explicit App ID; filling App Information vs the version
-  ("1.0 Prepare for Submission") page; App Privacy / "Data Not Collected" + where the
-  Privacy Policy URL now lives; pricing & availability incl. the Apple-Silicon-Mac toggle;
-  creating in-app purchases and ATTACHING them to the version; building and delivering the
-  archive via Xcode (Organizer / Distribute / Transporter) OR Xcode Cloud; and setting up
-  sandbox testing. ALSO use it to debug App Store Connect / submission errors and traps —
-  "Invalid bundle … error 90474" / UIRequiresFullScreen, "Apple Account is incorrect" on a
-  sandbox tester, "Manage Workflows is greyed out" in Xcode Cloud, an empty sandbox paywall,
-  a build that archives but never reaches the App Store, the DEVELOPMENT_TEAM signing gap, or
-  a missing Privacy Policy URL field. Trigger even when the user only says "how do I submit to
-  the App Store", "ship my iOS app", "set up Xcode Cloud", "sandbox test my purchase", "attach
-  my IAP", or names one of those errors — don't wait for them to say "App Store Connect".
-  For App Review compliance / rejection-risk audits / keyword & metadata optimization, use
-  apple-app-store-best-practices instead; for exact screenshot dimensions, apple-app-store-screenshots;
-  for writing IAP/StoreKit code, the storekit skill.
+  Step-by-step playbook for submitting an Apple-platform app through App Store
+  Connect — the console mechanics from "built" to "Submitted for Review": app
+  records, agreements/tax/banking, App Information vs version pages, App
+  Privacy, pricing, attaching in-app purchases, archive delivery via Xcode or
+  Xcode Cloud, and sandbox testing. Also use to debug submission errors
+  ("Invalid bundle", greyed-out Xcode Cloud workflows, sandbox tester or
+  empty-paywall traps). Trigger on "submit/ship my app to the App Store" even
+  when App Store Connect is never named. For review-guideline compliance and ASO
+  use apple-app-store-best-practices; for screenshot specs,
+  apple-app-store-screenshots.
 ---
 
 # App Store Connect Submission

@@ -1,16 +1,12 @@
 ---
 name: changelog-maintenance
 description: >
-  Use this skill whenever the user asks to update a changelog, prepare or
-  cut a release, write release notes, document breaking changes, create a
-  migration or upgrade guide, catch up on unreleased changes, or do a
-  version bump. Also use when the user references CHANGELOG.md directly,
-  asks "what changed since the last release", says "prep for release", or
-  wants to know what version number to use next. Maintains a project's
-  CHANGELOG.md, writes user-facing release notes, and generates migration
-  guides following Keep a Changelog format and Semantic Versioning. This
-  is for the user's own project changelog — not for fetching external
-  release notes.
+  Use whenever the user wants to update a changelog, cut a release, write
+  release notes, document breaking changes, create a migration guide, or pick
+  the next version number — including any reference to CHANGELOG.md or "what
+  changed since the last release". Follows Keep a Changelog and Semantic
+  Versioning. For the user's own project changelog only — not for fetching
+  external release notes.
 ---
 
 # Changelog Maintenance

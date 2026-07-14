@@ -1,18 +1,12 @@
 ---
 name: react-three-fiber-mastery
 description: >
-  Use whenever the user is working with React Three Fiber — building,
-  debugging, or optimizing 3D scenes in React with `@react-three/fiber`,
-  drei, or the pmndrs ecosystem (`@react-three/postprocessing`,
-  `@react-three/rapier`, `@react-spring/three`, gltfjsx, leva, zustand for
-  3D state). Load this skill whenever R3F, `<Canvas>`, `useFrame`,
-  `useThree`, `useLoader`, `useGLTF`, drei helpers (`OrbitControls`,
-  `Environment`, `Html`, `Instances`), or "three.js in React / Next.js /
-  React Native / Expo" come up — even if the user doesn't name the
-  library explicitly. Covers
-  R3F v9 + React 19 best practices, the render-loop performance doctrine,
-  declarative scene JSX, and v8 → v9 migration. Routes to focused topic
-  references.
+  Use whenever the user is working with React Three Fiber or the pmndrs
+  ecosystem: @react-three/fiber, drei, @react-three/postprocessing, rapier,
+  gltfjsx, leva. Trigger on <Canvas>, useFrame, useThree, useGLTF, drei helpers,
+  or "three.js in React / Next.js / Expo" — even when the library is never
+  named. Covers R3F v9 + React 19. For plain Three.js questions beneath the
+  React layer, defer to threejs-mastery.
 ---
 
 # React Three Fiber Mastery

@@ -1,13 +1,11 @@
 ---
 name: session-handoff
 description: >
-  Use when the user says "create handoff", "save state", "I need to
-  pause", "context is getting full", or when resuming with "load handoff",
-  "resume from", "continue where we left off". Also use to tidy the handoffs
-  directory — "clean up handoffs", "prune old handoffs", "retire finished
-  handoffs", "remove superseded handoffs". Writes a structured handoff document
-  so a fresh agent can pick up long-running work without losing context, and
-  retires completed or superseded handoffs once the work has moved on.
+  Use when the user says "create handoff", "save state", "I need to pause", or
+  "context is getting full", and when resuming — "load handoff", "continue where
+  we left off". Also tidies the handoffs directory ("clean up / prune / retire
+  handoffs"). Writes a structured handoff document so a fresh agent can pick up
+  long-running work, and retires completed or superseded handoffs.
 ---
 
 # Handoff

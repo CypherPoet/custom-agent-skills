@@ -1,17 +1,12 @@
 ---
 name: skill-harvest
 description: >
-  Use when a project, milestone, or heavy work session wraps up and the user
-  asks what their own agent skills should learn from it — "harvest skill
-  improvements", "update my skills from what we learned", "can you think of
-  worthwhile improvements to my custom <domain> skills", "is this skill
-  stale?" — or whenever a session catches a personal skill giving outdated or
-  incomplete guidance (API churn, version drift, a missing gotcha the session
-  had to discover the hard way). Sweeps the work for learnings that belong in
-  the user's own skill/plugin repos, maps each to the specific skill it
-  should improve, and ships approved changes as PRs following each repo's
-  conventions. For learnings headed to memory, CLAUDE.md, or project docs,
-  use session-harvest instead.
+  Use when work wraps up and the user asks what their own agent skills should
+  learn from it — "harvest skill improvements", "is this skill stale?" — or when
+  a session catches a personal skill giving outdated or incomplete guidance.
+  Maps each learning to the specific skill it should improve and ships approved
+  changes as PRs following each repo's conventions. Learnings headed to memory,
+  CLAUDE.md, or project docs go to session-harvest instead.
 ---
 
 # Skill Harvest

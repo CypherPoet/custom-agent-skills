@@ -1,16 +1,12 @@
 ---
 name: claude-docs-search
 description: >
-  Use this skill whenever the user asks about Claude Code features, setup,
-  configuration, permissions, hooks, MCP servers, skills, settings,
-  subagents, plugins, troubleshooting, keyboard shortcuts, CLI flags,
-  environment variables, or any other Claude Code behavior. Also use when
-  the user asks "how do I do X in Claude Code", "does Claude Code support
-  X", "what's the command for X", or seems confused about how a Claude
-  Code feature works — even if they don't explicitly say "docs". Looks up
-  answers in the official Claude Code documentation. Do NOT use for
-  general coding questions, the Claude API/SDK (as opposed to Claude Code
-  itself), or questions about the user's own project code.
+  Use whenever the user asks about Claude Code itself — features, setup,
+  configuration, permissions, hooks, MCP servers, skills, settings, subagents,
+  plugins, CLI flags, or troubleshooting — including "how do I X in Claude Code"
+  and "does Claude Code support X", even when "docs" is never said. Looks up
+  answers in the official Claude Code documentation. Not for general coding
+  questions, the Claude API/SDK, or the user's own project code.
 ---
 
 # Claude Code Docs Search

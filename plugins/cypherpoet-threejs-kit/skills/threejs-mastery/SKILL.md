@@ -1,16 +1,12 @@
 ---
 name: threejs-mastery
 description: >
-  Use whenever the user is working with Three.js — building, fixing,
-  optimizing, or asking about 3D scenes, WebGPU/WebGL rendering, geometry,
-  materials, lighting, textures, shaders (TSL or GLSL), animation, loaders
-  (GLTF/GLB/HDR), raycasting and controls, or post-processing. Load this
-  skill whenever Three.js, `.glb`/`.gltf` files, ShaderMaterial,
-  NodeMaterial, OrbitControls, EffectComposer, or related Three.js APIs
-  come up — even if the user doesn't name "Three.js" explicitly. Covers
-  modern Three.js best practices with `WebGPURenderer` + TSL as the
-  primary path and `WebGLRenderer` + GLSL as the compatibility fallback.
-  Routes to focused topic references.
+  Use whenever the user is working with Three.js: scenes, WebGPU/WebGL
+  rendering, geometry, materials, lighting, textures, TSL or GLSL shaders,
+  animation, loaders, raycasting, controls, or post-processing. Trigger on
+  .glb/.gltf files, NodeMaterial, OrbitControls, EffectComposer, or any Three.js
+  API — even when "Three.js" is never named. Treats WebGPURenderer + TSL as the
+  primary path, WebGLRenderer + GLSL as the fallback.
 ---
 
 # Three.js Mastery

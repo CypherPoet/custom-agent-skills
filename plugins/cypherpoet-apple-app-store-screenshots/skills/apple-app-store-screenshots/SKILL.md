@@ -1,18 +1,14 @@
 ---
 name: apple-app-store-screenshots
-description: >-
-  Authoritative spec and workflow for Apple App Store screenshots and app preview
-  videos. Use whenever someone is preparing, sizing, capturing, automating, localizing,
-  or troubleshooting the images or videos on an App Store product page — iPhone, iPad,
-  Mac, Apple TV, Apple Vision Pro, or Apple Watch. Trigger on "what size screenshots",
-  screenshot dimensions, '6.9"/6.5"/6.3" display', 1290x2796 / 1320x2868 / 2064x2752,
-  "App Store Connect rejected my screenshot" or wrong-dimensions upload errors, how many
-  screenshots are allowed, PNG vs JPEG for the store, app preview video length / codec /
-  bitrate / duration, fastlane snapshot or frameit, localized screenshots, or designing
-  and ordering a screenshot set for conversion. Reach for this even when the user doesn't
-  say "screenshot" outright — if they're shipping an App Store listing and need the imagery
-  right, this is the skill. For App Review compliance, rejection-risk audits, and broader
-  ASO/metadata (keywords, subtitle, description), defer to apple-app-store-best-practices.
+description: >
+  Authoritative spec and workflow for App Store screenshots and app preview
+  videos across every Apple device class. Use when preparing, sizing, capturing,
+  automating, localizing, or troubleshooting product-page imagery — screenshot
+  dimensions ('6.9" display', 1290x2796), upload rejections, counts and formats,
+  preview video specs, fastlane snapshot/frameit, or ordering a screenshot set
+  for conversion — even when "screenshot" is never said but store imagery is the
+  task. For review compliance and broader ASO, defer to
+  apple-app-store-best-practices.
 ---
 
 # Apple App Store Screenshots
