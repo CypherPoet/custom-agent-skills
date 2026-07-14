@@ -146,6 +146,8 @@ for i, edge in enumerate(me.edges):
 
 With `limit_method='WEIGHT'`, only weighted edges fillet — tag silhouette edges at 1.0, soften interior seams at 0.3, leave the rest alone. UI routes: `Ctrl+E ‣ Edge Bevel Weight` then type a value and `Return`; or Sidebar ‣ Item ‣ Transform ‣ Edge Data ‣ Bevel Weight (labeled *Mean* Bevel Weight when several edges are selected; edge-select mode required).
 
+Stored weights go stale when upstream modifiers (Mirror, Solidify) change the topology they were tagged on. For weights that survive that, tag procedurally: a small geometry-nodes modifier placed before the Bevel can write `bevel_weight_edge` by rule (e.g. convex edges past a threshold angle) — the Bevel reads whatever the evaluated stack hands it, verified on 5.1.
+
 **Control loops** (doctrine): a loop slid close to a corner pinches Subdivision Surface sharp at that corner while the rest stays smooth. Scripting note: interactive `Ctrl+R` loop cut is hover-driven (see below); from `bpy`, prefer weighted bevels or `bmesh.ops.subdivide_edges` on a chosen edge ring instead of simulating the modal tool.
 
 ## The hand-off audit
