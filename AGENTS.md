@@ -27,9 +27,9 @@ Public collection of reusable AI agent skills, packaged as **both** Claude Code 
 - **Before any PR**, run the repo health suite: `python3 -m unittest discover -s tests`. The `Verify` workflow (`.github/workflows/verify.yml`) runs the same suite on every PR and push to `main`; it runs the structure checker in `--strict` mode, so warnings and advisories fail CI there.
 - **Creating plugins/skills:** see [`docs/PLUGIN-CONVENTIONS.md`](docs/PLUGIN-CONVENTIONS.md). Scaffold via Claude Code `/plugin-dev:create-plugin` or Codex `$plugin-creator`; author skills with `/skill-creator`.
 
-## Maintainer Skills (Claude Code)
+## Maintainer Skills
 
-Marketplace and catalog tooling from the **`cypherpoet-marketplace-kit`** plugin (enabled in `.claude/settings.json`) — the kit runs on Claude Code, and the catalogs it maintains serve both harnesses. All run locally (no tokens, no CI):
+Marketplace and catalog tooling from the **`cypherpoet-marketplace-kit`** plugin — dual-harness as of 0.11.0, so its skills run on Claude Code (enabled in `.claude/settings.json`) or Codex (`codex plugin add cypherpoet-marketplace-kit@cypherpoet-toolchest`), and the catalogs it maintains serve both harnesses. All run locally (no tokens, no CI):
 
 - **`marketplace-publish`** — publish or remove one plugin on `cypherpoet-toolchest` (both its Claude and Codex catalogs) by opening a PR. Manual-only (`disable-model-invocation`); outward-facing side effect.
 - **`marketplace-sync-check`** — read-only audit of local plugins against both published catalogs and the local [`docs/CATALOG.md`](docs/CATALOG.md).
