@@ -12,6 +12,8 @@ A marketplace repo carries **two catalog files**, one per harness: `.claude-plug
 
 Follow the procedure below with your normal tools (`gh`, `git`, `jq`); it's deliberately plain rather than a script so you can adapt to how many plugins are being published and to anything unusual in the catalog.
 
+**Manual-only on every harness.** Claude Code enforces this via the `disable-model-invocation` flag; on a harness without that flag (e.g. Codex), apply the same rule yourself — run this skill only on the user's explicit request, never proactively.
+
 ## When this is needed (and when it isn't)
 
 This skill changes only the marketplace **catalog** (`marketplace.json`) — it does **not** ship plugin content. Content updates are gated by each plugin's `version` in `plugin.json` (Claude Code's update cache key; the `git-subdir` commit SHA is only the fallback when no version is set), so reaching existing installs with edited content means **bumping that plugin's `version`**, not republishing the catalog.
@@ -27,11 +29,11 @@ If the user is only editing an already-listed plugin's instructions, tell them n
 ## Before you start
 
 - `gh` is authenticated (`gh auth status`) with write access to the marketplace repo.
-- Each plugin to publish exists at `plugins/<name>/.claude-plugin/plugin.json`. If a plugin doesn't exist yet, scaffold it with [`/plugin-dev:create-plugin`](https://github.com/anthropics/claude-plugins-official/blob/main/plugins/plugin-dev/commands/create-plugin.md), then run `claude plugin validate plugins/<name>` to confirm it's well-formed. **Removals differ by cause**: a plugin **deleted** from the source repo has no manifest to read — skip this check and step 1 for it; step 3's removal commands are its whole path. A plugin **reclassified Claude-only** still exists and still has its manifest: only its Codex entry is removed (step 3), and if the same change also edited its `name`/`description`/`homepage`, run steps 1–3 for its Claude entry as usual — don't let the reclassification swallow a concurrent Claude-catalog update.
+- Each plugin to publish exists at `plugins/<name>/.claude-plugin/plugin.json`. If a plugin doesn't exist yet, scaffold it with Claude Code's [`/plugin-dev:create-plugin`](https://github.com/anthropics/claude-plugins-official/blob/main/plugins/plugin-dev/commands/create-plugin.md) or Codex's `$plugin-creator`, then confirm it's well-formed — `claude plugin validate plugins/<name>` where the `claude` CLI exists; otherwise check the manifest parses and carries `name`, `version`, and `description`. **Removals differ by cause**: a plugin **deleted** from the source repo has no manifest to read — skip this check and step 1 for it; step 3's removal commands are its whole path. A plugin **reclassified Claude-only** still exists and still has its manifest: only its Codex entry is removed (step 3), and if the same change also edited its `name`/`description`/`homepage`, run steps 1–3 for its Claude entry as usual — don't let the reclassification swallow a concurrent Claude-catalog update.
 
 ## Which marketplace
 
-Resolve this repo's `owner/repo` (`gh repo view --json nameWithOwner -q .nameWithOwner`, or a normalized `git remote get-url origin`) and look it up in the bundled registry [`references/marketplaces.md`](../../references/marketplaces.md) (at runtime, read `${CLAUDE_PLUGIN_ROOT}/references/marketplaces.md`). If there's no row for this repo, ask the user which marketplace to target — and offer to add a row so the next run resolves it automatically.
+Resolve this repo's `owner/repo` (`gh repo view --json nameWithOwner -q .nameWithOwner`, or a normalized `git remote get-url origin`) and look it up in the bundled registry [`references/marketplaces.md`](../../references/marketplaces.md) (at runtime, resolve that link relative to this skill's directory — it lives at the plugin root, two levels up from this SKILL.md). If there's no row for this repo, ask the user which marketplace to target — and offer to add a row so the next run resolves it automatically.
 
 ## Procedure
 
@@ -88,7 +90,7 @@ The goal: **one PR on the marketplace repo** that adds or updates the chosen plu
 
    If the marketplace generates its **Plugins** table from the catalog — the table is wrapped in `<!-- BEGIN/END:PLUGINS-TABLE -->` markers and the repo ships `scripts/sync-readme-table.mjs` — regenerate it now so the README reflects the new entries: `(cd /tmp/mkt-publish && node scripts/sync-readme-table.mjs)`. Skip this for catalogs without that script. The staged commit in step 6 picks up the regenerated `README.md` alongside the catalog files.
 
-4. **Validate the marketplace manifest.** Run `claude plugin validate /tmp/mkt-publish` to confirm the updated Claude manifest still passes schema checks. If it errors, fix and re-run before continuing. (The Codex catalog has no local validator — the `jq empty` parse check in step 3 is its gate; `codex plugin marketplace add` on the merged repo is the runtime proof.)
+4. **Validate the marketplace manifest.** Run `claude plugin validate /tmp/mkt-publish` to confirm the updated Claude manifest still passes schema checks; in a session without the `claude` CLI (e.g. Codex), fall back to confirming the file parses and every entry carries `name` and `source`. If it errors, fix and re-run before continuing. (The Codex catalog has no local validator — the `jq empty` parse check in step 3 is its gate; `codex plugin marketplace add` on the merged repo is the runtime proof.)
 
 5. **Show the diff and confirm.** Stage the publish's files explicitly, then review the staged diff — a first Codex publish creates `.agents/plugins/marketplace.json` as an *untracked* file, which plain `git diff` (and `commit -am`) silently skip:
    ```bash
