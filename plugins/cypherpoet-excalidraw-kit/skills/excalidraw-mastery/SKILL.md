@@ -1,17 +1,22 @@
 ---
 name: excalidraw-mastery
 description: >
-  Create, edit, validate, render, or reason about Excalidraw diagrams and files,
-  including `.excalidraw` JSON, shapes, arrows, text binding, layout, styles,
-  architecture diagrams, flowcharts, mind maps, sequence diagrams, ER diagrams,
-  and `.excalidrawlib` icons. Use when the user requests an editable hand-drawn
-  diagram, provides Excalidraw JSON or files, or works with
-  `@excalidraw/excalidraw` in React: embedding the component, `initialData`,
-  `convertToExcalidrawElements`, `restore`, SVG/PNG/clipboard export, and Mermaid
-  conversion. Also trigger when the user clearly describes an editable
-  hand-drawn diagram without naming Excalidraw. Includes bundled validation,
-  rendering, and icon-insertion scripts. Use svg-tools for non-Excalidraw vector
-  work and a Mermaid skill for Mermaid syntax without Excalidraw conversion.
+  Use this skill whenever the user is creating, editing, or reasoning about Excalidraw
+  diagrams or the Excalidraw library — authoring a `.excalidraw` scene file (the JSON
+  format, shapes, arrows, text, binding), designing a flowchart / architecture / mind-map /
+  sequence / ER diagram that reads well, or working with `@excalidraw/excalidraw` in code
+  (embedding the React component, `initialData`, the `convertToExcalidrawElements` skeleton
+  API, `restore`, exporting to SVG/PNG/clipboard, or Mermaid-to-Excalidraw). Trigger for
+  requests like "make a diagram of…", "create a flowchart", "draw this architecture",
+  "add a box / arrow / label", "change the diagram's style or colors", "export this
+  diagram", "embed Excalidraw in my app", "convert this Mermaid to Excalidraw", "insert AWS
+  icons", or when the user pastes Excalidraw JSON or hands you a `.excalidraw` / `.excalidrawlib`
+  file — even if they never say "Excalidraw" but clearly mean an editable hand-drawn diagram.
+  Distills the official Excalidraw documentation: the scene file format, the element model and
+  its exact constants, a design methodology for diagrams that argue, the developer API, and
+  Mermaid conversion — with bundled scripts to validate a scene, render it to PNG, and insert
+  icon-library elements. For non-Excalidraw vector work use svg-tools; for Mermaid *syntax*
+  itself (not converting it into Excalidraw) use a Mermaid skill instead.
 ---
 
 # Excalidraw Mastery
