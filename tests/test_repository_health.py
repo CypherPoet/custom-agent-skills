@@ -63,10 +63,19 @@ class RepositoryHealthTests(unittest.TestCase):
                 self.assertTrue(data.get("description"))
                 self.assertRegex(data.get("version", ""), r"^\d+\.\d+\.\d+$")
 
+    def test_no_tracked_file_references_the_stale_generator_name(self):
+        # The generator's old name (sync + _dual_harness) must not linger; nothing tracked
+        # should still point at the old name. (The old dual-harness.json config
+        # name is NOT guarded: legacy-fallback constants reference it on
+        # purpose.) The needle is split so this file never matches itself.
+        needle = "sync_dual" + "_harness"
+        match = git(ROOT, "grep", "-l", "--fixed-strings", needle, check=False)
+        self.assertEqual(match.returncode, 1, f"stale reference in:\n{match.stdout}")
+
     def test_no_tracked_file_instructs_bare_python_for_the_sync(self):
         # The sync must always be invoked as python3 (macOS ships no bare
         # `python`). Split the needle so this file never matches itself.
-        needle = "python scripts/sync_dual" + "_harness.py"
+        needle = "python scripts/sync" + "_plugins.py"
         match = git(ROOT, "grep", "-l", "--fixed-strings", needle, check=False)
         self.assertEqual(match.returncode, 1, f"stale instruction in:\n{match.stdout}")
 

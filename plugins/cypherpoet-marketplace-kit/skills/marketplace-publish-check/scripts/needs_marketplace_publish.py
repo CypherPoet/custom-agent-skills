@@ -5,7 +5,7 @@ Diffs the *marketplace catalog surface* between a base ref (default: main) and
 HEAD, and reports the plugins whose surface changed:
   - every plugins/*/.claude-plugin/plugin.json — a plugin added or removed, or
     its name / description / homepage edited (the Claude catalog fields);
-  - scripts/dual-harness.json — a plugin's dual-harness classification changed,
+  - scripts/plugin-registry.json — a plugin's dual-harness classification changed,
     or any field of its dual_harness_plugins entry (the Codex catalog surface,
     e.g. `category`) changed.
 A version-only bump does NOT count: that's content, gated by the version key,
@@ -17,7 +17,7 @@ that landed on the base after this branch forked are never attributed to it.
 Use it when opening a PR to decide whether to apply the `marketplace-publish`
 label. Stdlib only — no jq, no network. Exit status is 1 when a publish is
 needed (something actionable), else 0; 2 on error (including a malformed
-scripts/dual-harness.json or plugin manifest — never silently treated as a
+scripts/plugin-registry.json or plugin manifest — never silently treated as a
 catalog removal).
 
 Usage: python3 .../needs_marketplace_publish.py [base-ref]   # base-ref defaults to "main"
@@ -32,7 +32,10 @@ from pathlib import Path
 CATALOG_FIELDS = ("name", "description", "homepage")
 MANIFEST_GLOB = "plugins/*/.claude-plugin/plugin.json"
 # The config whose classification + categories the Codex catalog stores.
-DUAL_HARNESS_PATH = "scripts/dual-harness.json"
+PLUGIN_REGISTRY_PATH = "scripts/plugin-registry.json"
+# The registry was named dual-harness.json before 2026-07; reading refs that
+# predate the rename must keep working.
+LEGACY_REGISTRY_PATH = "scripts/dual-harness.json"
 
 
 def git(root, *args):
@@ -67,14 +70,18 @@ def plugin_name(path):
 
 
 def codex_entries(root, ref):
-    """{plugin: full dual_harness_plugins entry} from scripts/dual-harness.json at <ref>.
+    """{plugin: full dual_harness_plugins entry} from the plugin registry at <ref>.
 
     Whole entries, not just `category`, so any future per-plugin field the Codex
     catalog stores is covered without a script edit. {} when the file doesn't exist
     at <ref> (no Codex catalog surface there — e.g. the commit that first introduces
     it). A file that exists but is malformed raises ValueError: that's an error to
     surface (exit 2), not a mass catalog removal."""
-    res = git(root, "show", f"{ref}:{DUAL_HARNESS_PATH}")
+    shown_path = PLUGIN_REGISTRY_PATH
+    res = git(root, "show", f"{ref}:{shown_path}")
+    if res.returncode != 0:
+        shown_path = LEGACY_REGISTRY_PATH
+        res = git(root, "show", f"{ref}:{shown_path}")
     if res.returncode != 0:
         return {}
     try:
@@ -83,7 +90,7 @@ def codex_entries(root, ref):
             raise ValueError("dual_harness_plugins entries must be objects")
         return entries
     except (json.JSONDecodeError, AttributeError, ValueError) as e:
-        raise ValueError(f"{DUAL_HARNESS_PATH} at {ref} is malformed: {e}")
+        raise ValueError(f"{shown_path} at {ref} is malformed: {e}")
 
 
 def merge_base(root, base):

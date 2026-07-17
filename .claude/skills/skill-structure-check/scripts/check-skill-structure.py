@@ -191,21 +191,21 @@ def audit(plugins_dir):
 
 
 def dual_harness_drift(root):
-    """Dual-harness sync drift as ERROR strings; [] when the tooling is absent (portable
-    to repos without it) or everything is in sync. Delegates to scripts/sync_dual_harness.py
+    """Plugin sync drift as ERROR strings; [] when the tooling is absent (portable
+    to repos without it) or everything is in sync. Delegates to scripts/sync_plugins.py
     so the vendored-copy / Codex-manifest generators have one source of truth."""
     scripts_dir = os.path.join(root, "scripts")
     if not (
-        os.path.isfile(os.path.join(scripts_dir, "dual-harness.json"))
-        and os.path.isfile(os.path.join(scripts_dir, "sync_dual_harness.py"))
+        os.path.isfile(os.path.join(scripts_dir, "plugin-registry.json"))
+        and os.path.isfile(os.path.join(scripts_dir, "sync_plugins.py"))
     ):
         return []
     sys.path.insert(0, scripts_dir)
     try:
-        import sync_dual_harness
+        import sync_plugins
         from pathlib import Path
 
-        return sync_dual_harness.sync(Path(root), write=False)
+        return sync_plugins.sync(Path(root), write=False)
     except Exception as e:  # never let the guard's own failure mask a clean structure run
         return [f"dual-harness check could not run: {e}"]
     finally:

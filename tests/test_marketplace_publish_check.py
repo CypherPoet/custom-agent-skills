@@ -57,7 +57,7 @@ class MarketplacePublishCheckTests(unittest.TestCase):
     @staticmethod
     def write_dual_config_at(repo, category):
         write_json(
-            repo / "scripts/dual-harness.json",
+            repo / "scripts/plugin-registry.json",
             {
                 "vendored_skills": [],
                 "dual_harness_plugins": {"example": {"category": category}},
@@ -112,11 +112,11 @@ class MarketplacePublishCheckTests(unittest.TestCase):
 
     def test_malformed_dual_harness_config_is_error_not_removal(self):
         self.feature_branch()
-        (self.repo / "scripts/dual-harness.json").write_text("[]\n", encoding="utf-8")
+        (self.repo / "scripts/plugin-registry.json").write_text("[]\n", encoding="utf-8")
         commit_all(self.repo, "malformed config")
         result = self.run_check()
         self.assertEqual(result.returncode, 2)
-        self.assertIn("dual-harness.json", result.stderr)
+        self.assertIn("plugin-registry.json", result.stderr)
 
     def test_plugin_rename_is_detected_as_remove_and_add(self):
         self.feature_branch()
@@ -132,6 +132,26 @@ class MarketplacePublishCheckTests(unittest.TestCase):
         self.assertEqual(result.returncode, 1)
         self.assertIn("example", result.stdout)
         self.assertIn("renamed", result.stdout)
+
+    def test_registry_rename_boundary_reads_legacy_name_at_base(self):
+        # A base ref that predates the plugin-registry.json rename still has
+        # scripts/dual-harness.json; category comparison must read it there.
+        repo = fixture_directory(self) / "legacy"
+        repo.mkdir()
+        initialize_git_repo(repo)
+        self.write_manifest_at(repo, version="0.1.0", description="Fixture plugin")
+        legacy = repo / "scripts/dual-harness.json"
+        registry = repo / "scripts/plugin-registry.json"
+        self.write_dual_config_at(repo, category="Developer Tools")
+        registry.rename(legacy)
+        commit_all(repo, "pre-rename baseline")
+        git(repo, "switch", "-c", "feature")
+        legacy.unlink()
+        self.write_dual_config_at(repo, category="Design")
+        commit_all(repo, "rename registry and change category")
+        result = run([sys.executable, str(SCRIPT), "main"], repo, check=False)
+        self.assertEqual(result.returncode, 1, result.stderr)
+        self.assertIn("changed Codex category", result.stdout)
 
     def test_merge_base_does_not_blame_feature_for_later_base_change(self):
         self.feature_branch()
