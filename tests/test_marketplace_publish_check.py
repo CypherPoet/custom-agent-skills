@@ -1,11 +1,19 @@
 import json
-import subprocess
+import shutil
 import sys
 import tempfile
 import unittest
 from pathlib import Path
 
-from support import ROOT, commit_all, git, initialize_git_repo, write_json
+from support import (
+    ROOT,
+    commit_all,
+    fixture_directory,
+    git,
+    initialize_git_repo,
+    run,
+    write_json,
+)
 
 
 SCRIPT = ROOT / (
@@ -15,20 +23,29 @@ SCRIPT = ROOT / (
 
 
 class MarketplacePublishCheckTests(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        # The baseline fixture repo is identical for every test; build it once
+        # and copy it per test — git init + config + commit subprocesses were
+        # the dominant cost of the whole suite.
+        cls.template_directory = tempfile.TemporaryDirectory()
+        cls.addClassCleanup(cls.template_directory.cleanup)
+        template = Path(cls.template_directory.name) / "repo"
+        template.mkdir()
+        initialize_git_repo(template)
+        cls.write_manifest_at(template, version="0.1.0", description="Fixture plugin")
+        cls.write_dual_config_at(template, category="Developer Tools")
+        commit_all(template, "baseline")
+        cls.template = template
+
     def setUp(self):
-        self.temporary_directory = tempfile.TemporaryDirectory()
-        self.repo = Path(self.temporary_directory.name)
-        initialize_git_repo(self.repo)
-        self.write_manifest(version="0.1.0", description="Fixture plugin")
-        self.write_dual_config(category="Developer Tools")
-        commit_all(self.repo, "baseline")
+        self.repo = fixture_directory(self) / "repo"
+        shutil.copytree(self.template, self.repo)
 
-    def tearDown(self):
-        self.temporary_directory.cleanup()
-
-    def write_manifest(self, version, description):
+    @staticmethod
+    def write_manifest_at(repo, version, description):
         write_json(
-            self.repo / "plugins/example/.claude-plugin/plugin.json",
+            repo / "plugins/example/.claude-plugin/plugin.json",
             {
                 "name": "example",
                 "version": version,
@@ -37,9 +54,10 @@ class MarketplacePublishCheckTests(unittest.TestCase):
             },
         )
 
-    def write_dual_config(self, category):
+    @staticmethod
+    def write_dual_config_at(repo, category):
         write_json(
-            self.repo / "scripts/dual-harness.json",
+            repo / "scripts/dual-harness.json",
             {
                 "vendored_skills": [],
                 "dual_harness_plugins": {"example": {"category": category}},
@@ -47,13 +65,14 @@ class MarketplacePublishCheckTests(unittest.TestCase):
             },
         )
 
+    def write_manifest(self, version, description):
+        self.write_manifest_at(self.repo, version, description)
+
+    def write_dual_config(self, category):
+        self.write_dual_config_at(self.repo, category)
+
     def run_check(self):
-        return subprocess.run(
-            [sys.executable, str(SCRIPT), "main"],
-            cwd=self.repo,
-            capture_output=True,
-            text=True,
-        )
+        return run([sys.executable, str(SCRIPT), "main"], self.repo, check=False)
 
     def feature_branch(self):
         git(self.repo, "switch", "-c", "feature")

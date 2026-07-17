@@ -1,8 +1,6 @@
-import tempfile
 import unittest
-from pathlib import Path
 
-from support import load_module, write, write_json
+from support import fixture_directory, load_module, write, write_json
 
 
 catalog_refresh = load_module(
@@ -13,11 +11,7 @@ catalog_refresh = load_module(
 
 class CatalogRefreshTests(unittest.TestCase):
     def setUp(self):
-        self.temporary_directory = tempfile.TemporaryDirectory()
-        self.root = Path(self.temporary_directory.name)
-
-    def tearDown(self):
-        self.temporary_directory.cleanup()
+        self.root = fixture_directory(self)
 
     def test_components_count_all_supported_types(self):
         plugin = self.root / "plugins/example"

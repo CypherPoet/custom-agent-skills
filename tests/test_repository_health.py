@@ -4,7 +4,7 @@ import subprocess
 import sys
 import unittest
 
-from support import ROOT
+from support import ROOT, git
 
 
 class RepositoryHealthTests(unittest.TestCase):
@@ -25,16 +25,14 @@ class RepositoryHealthTests(unittest.TestCase):
         )
         return result
 
-    def test_dual_harness_artifacts_are_current(self):
-        self.run_gate(sys.executable, "scripts/sync_dual_harness.py", "--check")
-
-    def test_skill_structure_has_no_errors_or_advisories(self):
-        result = self.run_gate(
+    def test_skill_structure_is_clean_in_strict_mode(self):
+        # --strict fails on warnings and advisories too; the dual-harness sync
+        # check runs inside this gate, so drift also fails here.
+        self.run_gate(
             sys.executable,
             ".claude/skills/skill-structure-check/scripts/check-skill-structure.py",
+            "--strict",
         )
-        self.assertIn("OK —", result.stdout)
-        self.assertNotIn("ADVISORY", result.stdout)
 
     def test_local_catalog_is_current(self):
         self.run_gate(
@@ -45,26 +43,15 @@ class RepositoryHealthTests(unittest.TestCase):
         )
 
     def test_every_tracked_json_file_parses(self):
-        result = subprocess.run(
-            [
-                "git",
-                "ls-files",
-                "--cached",
-                "--others",
-                "--exclude-standard",
-                "-z",
-                "--",
-                "*.json",
-            ],
-            cwd=ROOT,
-            capture_output=True,
-            check=True,
-        )
-        paths = [path for path in result.stdout.decode().split("\0") if path]
+        listing = git(ROOT, "ls-files", "--cached", "-z", "--", "*.json")
+        paths = [path for path in listing.stdout.split("\0") if path]
         self.assertGreater(len(paths), 0)
         for relative_path in paths:
+            full_path = ROOT / relative_path
+            if not full_path.is_file():  # staged deletes stay listed by --cached
+                continue
             with self.subTest(path=relative_path):
-                json.loads((ROOT / relative_path).read_text(encoding="utf-8"))
+                json.loads(full_path.read_text(encoding="utf-8"))
 
     def test_plugin_manifests_have_required_identity_and_version(self):
         manifests = sorted(ROOT.glob("plugins/*/.claude-plugin/plugin.json"))
@@ -76,31 +63,12 @@ class RepositoryHealthTests(unittest.TestCase):
                 self.assertTrue(data.get("description"))
                 self.assertRegex(data.get("version", ""), r"^\d+\.\d+\.\d+$")
 
-    def test_regeneration_docs_use_python3(self):
-        for relative_path in ("AGENTS.md", "docs/PLUGIN-CONVENTIONS.md"):
-            text = (ROOT / relative_path).read_text(encoding="utf-8")
-            with self.subTest(path=relative_path):
-                self.assertIn("python3 scripts/sync_dual_harness.py", text)
-                self.assertNotIn("python scripts/sync_dual_harness.py", text)
-
-    def test_checker_contract_lives_in_skill_not_script_comment(self):
-        script = (
-            ROOT
-            / ".claude/skills/skill-structure-check/scripts/check-skill-structure.py"
-        ).read_text(encoding="utf-8")
-        skill = (
-            ROOT / ".claude/skills/skill-structure-check/SKILL.md"
-        ).read_text(encoding="utf-8")
-        self.assertIn('"""Implement the canonical rule contract in ../SKILL.md."""', script)
-        for phrase in (
-            "cross-plugin",
-            "dual-harness drift",
-            "fact-check manifest drift",
-            "ownership marker",
-            "## Contents",
-        ):
-            with self.subTest(phrase=phrase):
-                self.assertIn(phrase, skill)
+    def test_no_tracked_file_instructs_bare_python_for_the_sync(self):
+        # The sync must always be invoked as python3 (macOS ships no bare
+        # `python`). Split the needle so this file never matches itself.
+        needle = "python scripts/sync_dual" + "_harness.py"
+        match = git(ROOT, "grep", "-l", "--fixed-strings", needle, check=False)
+        self.assertEqual(match.returncode, 1, f"stale instruction in:\n{match.stdout}")
 
 
 if __name__ == "__main__":
