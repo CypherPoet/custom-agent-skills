@@ -1,5 +1,0 @@
-{
-  "source": ".claude/skills/skill-structure-check",
-  "target": ".agents/skills/skill-structure-check",
-  "tree_sha256": "fd12958fc96f85222199e4f071d789c84167686a0757f493d93b226a286b9a42"
-}

@@ -1,5 +1,5 @@
 {
-  "_comment": "Single source of truth for dual-harness (Claude Code + Codex) generation. Run python3 scripts/sync_dual_harness.py (bare — write mode is the default) to regenerate every derived artifact; --check to fail on drift. Never hand-edit generated files: any .codex-plugin/plugin.json, .*.dual-harness-vendor.json ownership marker, or vendored skill copy. The categories feed the Codex catalog entries that marketplace-publish writes to the cypherpoet-toolchest marketplace repo (both harness catalogs live there, not in this repo).",
+  "_comment": "Single source of truth for dual-harness (Claude Code + Codex) generation. Run python3 scripts/sync_dual_harness.py (bare — write mode is the default) to regenerate every derived artifact; --check to fail on drift. Never hand-edit generated files: any .codex-plugin/plugin.json, the scripts/dual-harness-state.json state file, or vendored skill copy. The categories feed the Codex catalog entries that marketplace-publish writes to the cypherpoet-toolchest marketplace repo (both harness catalogs live there, not in this repo).",
 
   "vendored_skills": [
     {

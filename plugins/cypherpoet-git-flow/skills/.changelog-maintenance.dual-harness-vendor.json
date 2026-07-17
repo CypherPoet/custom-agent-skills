@@ -1,5 +1,0 @@
-{
-  "source": "plugins/cypherpoet-changelog-maintenance/skills/changelog-maintenance",
-  "target": "plugins/cypherpoet-git-flow/skills/changelog-maintenance",
-  "tree_sha256": "d0d466882676089ee9daee872d54759dde3f9d67ccfd92a9f3887f58b1eba93f"
-}
