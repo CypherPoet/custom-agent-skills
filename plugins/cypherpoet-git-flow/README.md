@@ -20,5 +20,5 @@ A convenience bundle of git-hygiene skills. Each is also available as its own pl
 
 | Skill | Description |
 |---|---|
-| [emoji-commits](skills/emoji-commits/SKILL.md) | Write expressive git commit messages with Gitmoji (vendored from [cypherpoet-emoji-commits](../cypherpoet-emoji-commits)). |
-| [changelog-maintenance](skills/changelog-maintenance/SKILL.md) | Maintain a project's `CHANGELOG.md` in Keep-a-Changelog format (vendored from [cypherpoet-changelog-maintenance](../cypherpoet-changelog-maintenance)). |
+| [emoji-commits](skills/emoji-commits/SKILL.md) | Write expressive git commit messages with Gitmoji (vendored from [cypherpoet-emoji-commits](https://github.com/CypherPoet/custom-agent-skills/tree/main/plugins/cypherpoet-emoji-commits)). |
+| [changelog-maintenance](skills/changelog-maintenance/SKILL.md) | Maintain a project's `CHANGELOG.md` in Keep-a-Changelog format (vendored from [cypherpoet-changelog-maintenance](https://github.com/CypherPoet/custom-agent-skills/tree/main/plugins/cypherpoet-changelog-maintenance)). |
