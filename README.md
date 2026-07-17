@@ -36,12 +36,14 @@ codex plugin add cypherpoet-git-flow@cypherpoet-toolchest
 
 ```
 .
-├── plugins/                  # Published agentic plugins
+├── plugins/                  # Self-contained published plugins
 ├── docs/
 │   ├── CATALOG.md            # Cross-plugin index
-│   └── PLUGIN-CONVENTIONS.md # Per-plugin conventions this repo applies
-├── scripts/                  # Dual-harness config + generator
-└── .claude/                  # Claude Code config
+│   ├── PLUGIN-CONVENTIONS.md # Plugin architecture and contributor workflow
+│   └── automated-routines/   # Maintenance routine configuration
+├── scripts/                  # Dual-harness source config and generator
+├── .agents/skills/           # Codex maintainer skills
+└── .claude/                  # Claude Code maintainer config and skills
 ```
 
 Claude plugin anatomy (component dirs, manifest fields, auto-discovery) follows the [Claude Code plugins reference](https://code.claude.com/docs/en/plugins-reference). This repo's specific conventions live in [`docs/PLUGIN-CONVENTIONS.md`](docs/PLUGIN-CONVENTIONS.md).
