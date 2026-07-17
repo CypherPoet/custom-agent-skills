@@ -18,7 +18,7 @@ The two surfaces drift independently and are *not* reconciled the same way:
 
 ## Marketplace Catalogs (Claude + Codex)
 
-1. **Pick the marketplace.** Resolve this repo's `owner/repo` (`gh repo view --json nameWithOwner -q .nameWithOwner`, or a normalized `git remote get-url origin`) and look it up in the bundled registry [`references/marketplaces.md`](../../references/marketplaces.md) (at runtime, read `${CLAUDE_PLUGIN_ROOT}/references/marketplaces.md`). If there's no row for this repo, ask the user which marketplace to target — and offer to add a row so the next run resolves it automatically.
+1. **Pick the marketplace.** Resolve this repo's `owner/repo` (`gh repo view --json nameWithOwner -q .nameWithOwner`, or a normalized `git remote get-url origin`) and look it up in the bundled registry [`references/marketplaces.md`](../../references/marketplaces.md) (at runtime, resolve that link relative to this skill's directory — it lives at the plugin root, two levels up from this SKILL.md). If there's no row for this repo, ask the user which marketplace to target — and offer to add a row so the next run resolves it automatically.
 
 2. **Fetch the live catalogs** (raw file contents; the Codex file may 404 on a marketplace that hasn't published Codex entries yet — report that rather than erroring):
    ```bash

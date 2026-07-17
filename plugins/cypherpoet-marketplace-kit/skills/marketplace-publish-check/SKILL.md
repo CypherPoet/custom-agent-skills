@@ -22,8 +22,10 @@ This is the **marketplace** surface only. Component-count changes that affect `d
 
 ## Run the check
 
+With your working directory anywhere in the source repo, run the bundled script (`scripts/` is relative to **this skill's directory** — your harness shows the skill's location when it loads; prefix the command with it):
+
 ```shell
-python3 "${CLAUDE_PLUGIN_ROOT}/skills/marketplace-publish-check/scripts/needs_marketplace_publish.py" [base-ref]
+python3 scripts/needs_marketplace_publish.py [base-ref]
 ```
 
 `base-ref` defaults to `main`. The script locates the repo root via git, diffs every `plugins/*/.claude-plugin/plugin.json` plus `scripts/plugin-registry.json` between the base and `HEAD`, and compares only the catalog fields — so a manifest that changed for an unrelated reason (a version bump) is correctly ignored. Stdlib only; no `jq`, no network.
