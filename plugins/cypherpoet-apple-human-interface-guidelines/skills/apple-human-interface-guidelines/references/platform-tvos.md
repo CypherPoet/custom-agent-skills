@@ -5,10 +5,7 @@
 
 Distilled from Apple's HIG platform pages: Designing for tvOS, Top Shelf, Live-viewing apps.
 
-## Contents
-- [Designing for tvOS](#designing-for-tvos)
-- [Top Shelf](#top-shelf)
-- [Live-viewing apps](#live-viewing-apps)
+**Contents:** [Designing for tvOS](#designing-for-tvos) · [Top Shelf](#top-shelf) · [Live-viewing apps](#live-viewing-apps)
 
 ### Designing for tvOS
 *Last changed: 2022-09*

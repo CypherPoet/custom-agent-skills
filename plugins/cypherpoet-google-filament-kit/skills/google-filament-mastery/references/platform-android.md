@@ -3,25 +3,7 @@
 > Source: Filament android samples (Kotlin) + repo README + Maven guide, Filament v1.72.0
 > Last synced: 2026-06-19
 
-## Contents
-
-- [Dependencies](#dependencies)
-- [Initialize Filament (`Filament.init()`)](#initialize-filament-filamentinit)
-- [Canonical Render Setup](#canonical-render-setup)
-  - [Field declarations](#field-declarations)
-  - [`onCreate` wiring](#oncreate-wiring)
-  - [`UiHelper` + `SurfaceView`](#uihelper--surfaceview)
-  - [Engine / Renderer / View / Scene / Camera](#engine--renderer--view--scene--camera)
-  - [Configuring the View](#configuring-the-view)
-- [The `UiHelper.RendererCallback` (swap chain lifecycle)](#the-uihelperrenderercallback-swap-chain-lifecycle)
-- [The Frame Loop (`Choreographer` + `Renderer`)](#the-frame-loop-choreographer--renderer)
-- [Loading Assets from the APK](#loading-assets-from-the-apk)
-  - [Reading a raw asset into a `ByteBuffer`](#reading-a-raw-asset-into-a-bytebuffer)
-  - [Materials (`.filamat`) and material instances](#materials-filamat-and-material-instances)
-  - [Image-based lighting (IBL / KTX)](#image-based-lighting-ibl--ktx)
-  - [Meshes (`.filamesh`)](#meshes-filamesh)
-- [JNI / Lifetime: explicit destruction](#jni--lifetime-explicit-destruction)
-- [Kotlin vs Java](#kotlin-vs-java)
+**Contents:** [Dependencies](#dependencies) · [Initialize Filament (`Filament.init()`)](#initialize-filament-filamentinit) · [Canonical Render Setup](#canonical-render-setup) · [Field declarations](#field-declarations) · [`onCreate` wiring](#oncreate-wiring) · [`UiHelper` + `SurfaceView`](#uihelper--surfaceview) · [Engine / Renderer / View / Scene / Camera](#engine--renderer--view--scene--camera) · [Configuring the View](#configuring-the-view) · [The `UiHelper.RendererCallback` (swap chain lifecycle)](#the-uihelperrenderercallback-swap-chain-lifecycle) · [The Frame Loop (`Choreographer` + `Renderer`)](#the-frame-loop-choreographer--renderer) · [Loading Assets from the APK](#loading-assets-from-the-apk) · [Reading a raw asset into a `ByteBuffer`](#reading-a-raw-asset-into-a-bytebuffer) · [Materials (`.filamat`) and material instances](#materials-filamat-and-material-instances) · [Image-based lighting (IBL / KTX)](#image-based-lighting-ibl--ktx) · [Meshes (`.filamesh`)](#meshes-filamesh) · [JNI / Lifetime: explicit destruction](#jni--lifetime-explicit-destruction) · [Kotlin vs Java](#kotlin-vs-java)
 
 ---
 

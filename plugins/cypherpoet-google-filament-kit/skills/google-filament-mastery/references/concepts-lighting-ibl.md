@@ -3,29 +3,7 @@
 > Source: Filament Core Concepts — "Lighting" (Filament.md) + cmgen/iblprefilter docs, Filament v1.72.0
 > Last synced: 2026-06-19
 
-## Contents
-
-- [Physical light units (the trap)](#physical-light-units-the-trap)
-- [Direct lighting](#direct-lighting)
-  - [Directional lights (sun)](#directional-lights-sun)
-  - [Point lights](#point-lights)
-  - [Spot lights](#spot-lights)
-  - [Falloff / influence radius](#falloff--influence-radius)
-  - [Photometric (IES) lights](#photometric-ies-lights)
-  - [Area lights](#area-lights)
-  - [Light color & color temperature](#light-color--color-temperature)
-  - [Pre-exposed lights](#pre-exposed-lights)
-- [Image-based lighting (IBL)](#image-based-lighting-ibl)
-  - [What an IBL is](#what-an-ibl-is)
-  - [Diffuse: spherical harmonics](#diffuse-spherical-harmonics-irradiance)
-  - [Specular: prefiltered roughness mip chain](#specular-prefiltered-roughness-mip-chain)
-  - [Why you cannot use a raw HDR directly](#why-you-cannot-use-a-raw-hdr-directly)
-  - [Processing with cmgen (CLI)](#processing-with-cmgen-cli)
-  - [Processing with iblprefilter (runtime GPU)](#processing-with-iblprefilter-runtime-gpu)
-  - [Skybox](#skybox)
-- [Occlusion](#occlusion)
-- [Normal mapping](#normal-mapping)
-- [Runtime API reference (verbatim signatures)](#runtime-api-reference-verbatim-signatures)
+**Contents:** [Physical light units (the trap)](#physical-light-units-the-trap) · [Direct lighting](#direct-lighting) · [Directional lights (sun)](#directional-lights-sun) · [Point lights](#point-lights) · [Spot lights](#spot-lights) · [Falloff / influence radius](#falloff--influence-radius) · [Photometric (IES) lights](#photometric-ies-lights) · [Area lights](#area-lights) · [Light color & color temperature](#light-color--color-temperature) · [Pre-exposed lights](#pre-exposed-lights) · [Image-based lighting (IBL)](#image-based-lighting-ibl) · [What an IBL is](#what-an-ibl-is) · [Diffuse: spherical harmonics](#diffuse-spherical-harmonics-irradiance) · [Specular: prefiltered roughness mip chain](#specular-prefiltered-roughness-mip-chain) · [Why you cannot use a raw HDR directly](#why-you-cannot-use-a-raw-hdr-directly) · [Processing with cmgen (CLI)](#processing-with-cmgen-cli) · [Processing with iblprefilter (runtime GPU)](#processing-with-iblprefilter-runtime-gpu) · [Skybox](#skybox) · [Occlusion](#occlusion) · [Normal mapping](#normal-mapping) · [Runtime API reference (verbatim signatures)](#runtime-api-reference-verbatim-signatures)
 
 ---
 

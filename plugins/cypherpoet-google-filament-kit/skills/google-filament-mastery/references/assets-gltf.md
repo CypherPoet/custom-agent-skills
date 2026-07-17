@@ -3,26 +3,7 @@
 > Source: Filament gltfio library (public headers) + web suzanne tutorial + C++ sample, Filament v1.72.0
 > Last synced: 2026-06-19
 
-## Contents
-
-- [The short version](#the-short-version)
-- [gltfio is a separate library, not core Filament](#gltfio-is-a-separate-library-not-core-filament)
-- [The gltfio object model](#the-gltfio-object-model)
-  - [AssetLoader](#assetloader)
-  - [ResourceLoader](#resourceloader)
-  - [FilamentAsset](#filamentasset)
-  - [FilamentInstance](#filamentinstance)
-  - [Animator](#animator)
-  - [MaterialProvider (ubershader vs JIT)](#materialprovider-ubershader-vs-jit)
-  - [TextureProvider (PNG/JPEG vs KTX2 vs WebP)](#textureprovider-pngjpeg-vs-ktx2-vs-webp)
-- [The canonical end-to-end C++ load flow](#the-canonical-end-to-end-c-load-flow)
-- [The ubershader archive (.uberz) toolchain](#the-ubershader-archive-uberz-toolchain)
-- [Texture compression & mesh compression](#texture-compression--mesh-compression)
-- [IMPORTANT: filamesh is NOT glTF](#important-filamesh-is-not-gltf)
-- [What the Filament v1.72.0 samples actually load](#what-the-filament-v1720-samples-actually-load)
-  - [C++ sample (samples/suzanne.cpp) — filamesh + KTX2](#c-sample-samplessuzannecpp--filamesh--ktx2)
-  - [Web tutorial (web/suzanne) — filamesh + KTX2](#web-tutorial-websuzanne--filamesh--ktx2)
-- [What is verified vs not in this file](#what-is-verified-vs-not-in-this-file)
+**Contents:** [The short version](#the-short-version) · [gltfio is a separate library, not core Filament](#gltfio-is-a-separate-library-not-core-filament) · [The gltfio object model](#the-gltfio-object-model) · [AssetLoader](#assetloader) · [ResourceLoader](#resourceloader) · [FilamentAsset](#filamentasset) · [FilamentInstance](#filamentinstance) · [Animator](#animator) · [MaterialProvider (ubershader vs JIT)](#materialprovider-ubershader-vs-jit) · [TextureProvider (PNG/JPEG vs KTX2 vs WebP)](#textureprovider-pngjpeg-vs-ktx2-vs-webp) · [The canonical end-to-end C++ load flow](#the-canonical-end-to-end-c-load-flow) · [The ubershader archive (.uberz) toolchain](#the-ubershader-archive-uberz-toolchain) · [Texture compression & mesh compression](#texture-compression--mesh-compression) · [IMPORTANT: filamesh is NOT glTF](#important-filamesh-is-not-gltf) · [What the Filament v1.72.0 samples actually load](#what-the-filament-v1720-samples-actually-load) · [C++ sample (samples/suzanne.cpp) — filamesh + KTX2](#c-sample-samplessuzannecpp--filamesh--ktx2) · [Web tutorial (web/suzanne) — filamesh + KTX2](#web-tutorial-websuzanne--filamesh--ktx2) · [What is verified vs not in this file](#what-is-verified-vs-not-in-this-file)
 
 ---
 

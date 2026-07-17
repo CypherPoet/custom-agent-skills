@@ -1,8 +1,6 @@
-import tempfile
 import unittest
-from pathlib import Path
 
-from support import load_module, write
+from support import fixture_directory, load_module, write
 
 
 checker = load_module(
@@ -13,33 +11,18 @@ checker = load_module(
 
 class SkillStructureCheckTests(unittest.TestCase):
     def setUp(self):
-        self.temporary_directory = tempfile.TemporaryDirectory()
-        self.root = Path(self.temporary_directory.name)
+        self.root = fixture_directory(self)
         self.skill = self.root / "plugins/example/skills/example"
         write(
             self.skill / "SKILL.md",
             "---\nname: example\ndescription: Example fixture.\n---\n\n## Primary Sources\n",
         )
 
-    def tearDown(self):
-        self.temporary_directory.cleanup()
-
     def audit(self):
         return checker.audit(self.root / "plugins")
 
-    def test_module_comment_only_points_to_canonical_skill(self):
-        self.assertEqual(
-            checker.__doc__,
-            "Implement the canonical rule contract in ../SKILL.md.",
-        )
-
-    def test_bold_contents_line_is_accepted_and_validated(self):
+    def test_jump_line_is_accepted_and_validated(self):
         text = "# Reference\n\n**Contents:** [Topic](#topic)\n\n## Topic\n"
-        self.assertEqual(checker.contents_anchors(text), ["topic"])
-        self.assertIn("topic", checker.heading_anchors(text))
-
-    def test_contents_section_is_accepted_and_validated(self):
-        text = "# Reference\n\n## Contents\n\n- [Topic](#topic)\n\n## Topic\n"
         self.assertEqual(checker.contents_anchors(text), ["topic"])
         self.assertIn("topic", checker.heading_anchors(text))
 
@@ -48,19 +31,56 @@ class SkillStructureCheckTests(unittest.TestCase):
         self.assertEqual(checker.contents_anchors(text), ["topic", "topic-1"])
         self.assertTrue(set(checker.contents_anchors(text)) <= checker.heading_anchors(text))
 
-    def test_large_contents_section_is_not_reported_missing(self):
-        text = "# Reference\n\n## Contents\n\n- [Topic](#topic)\n\n## Topic\n"
+    def test_contents_section_is_not_an_index(self):
+        # The one canonical index format is the **Contents:** jump-line; an
+        # old-style `## Contents` section reads as plain prose, so a large
+        # file carrying only that section is reported as unindexed.
+        text = "# Reference\n\n## Contents\n\n- [Topic](#topic)\n\n## Topic\n\n"
         text += "\n".join("detail" for _ in range(301))
         write(self.skill / "references/reference.md", text)
         errors, _, missing, _, _ = self.audit()
         self.assertEqual(errors, [])
-        self.assertEqual(missing, [])
+        self.assertEqual(len(missing), 1)
 
-    def test_stale_contents_anchor_is_an_error(self):
-        text = "# Reference\n\n## Contents\n\n- [Missing](#missing)\n\n## Topic\n"
+    def test_stale_jump_line_anchor_is_an_error(self):
+        text = "# Reference\n\n**Contents:** [Missing](#missing)\n\n## Topic\n"
         write(self.skill / "references/reference.md", text)
         errors, _, _, _, _ = self.audit()
         self.assertTrue(any("stale Contents anchors" in error[2] for error in errors))
+
+    def test_fenced_contents_example_is_not_the_index(self):
+        fence = chr(96) * 3
+        text = (
+            "# Reference\n\nHow to write an index:\n\n"
+            + fence + "markdown\n**Contents:** [Example](#not-a-real-heading)\n" + fence + "\n\n"
+            "**Contents:** [Topic](#topic)\n\n## Topic\n"
+        )
+        self.assertEqual(checker.contents_anchors(text), ["topic"])
+        write(self.skill / "references/reference.md", text)
+        errors, _, _, _, _ = self.audit()
+        self.assertEqual(errors, [])
+
+    def test_fenced_heading_does_not_satisfy_an_anchor(self):
+        fence = chr(96) * 3
+        text = (
+            "# Reference\n\n**Contents:** [Setup](#setup)\n\n"
+            + fence + "bash\n## Setup\n" + fence + "\n"
+        )
+        write(self.skill / "references/reference.md", text)
+        errors, _, _, _, _ = self.audit()
+        self.assertTrue(any("stale Contents anchors: #setup" in error[2] for error in errors))
+
+    def test_prose_parenthetical_is_not_an_anchor(self):
+        text = "# Reference\n\n**Contents:** [Topic](#topic) (#42)\n\n## Topic\n"
+        self.assertEqual(checker.contents_anchors(text), ["topic"])
+
+    def test_linkless_contents_line_counts_as_unindexed(self):
+        text = "# Reference\n\n**Contents:** see the sections below.\n\n## Topic\n\n"
+        text += "\n".join("detail" for _ in range(301))
+        write(self.skill / "references/reference.md", text)
+        errors, _, missing, _, _ = self.audit()
+        self.assertEqual(errors, [])
+        self.assertEqual(len(missing), 1)
 
     def test_large_unindexed_reference_is_an_advisory(self):
         text = "# Reference\n\n" + "\n".join("detail" for _ in range(301))

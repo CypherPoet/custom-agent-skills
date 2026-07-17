@@ -9,15 +9,7 @@ and auto-scaling rules. This is the exhaustive table; the durable decision rules
 source after each major iPhone/iPad release and re-stamp this date — don't trust a number here as
 final without reconciling it.
 
-## Contents
-
-- [Universal rules](#universal-rules)
-- [iPhone](#iphone)
-- [iPad](#ipad)
-- [Mac](#mac)
-- [Apple TV](#apple-tv)
-- [Apple Vision Pro](#apple-vision-pro)
-- [Apple Watch](#apple-watch)
+**Contents:** [Universal rules](#universal-rules) · [iPhone](#iphone) · [iPad](#ipad) · [Mac](#mac) · [Apple TV](#apple-tv) · [Apple Vision Pro](#apple-vision-pro) · [Apple Watch](#apple-watch)
 
 ## Universal rules
 

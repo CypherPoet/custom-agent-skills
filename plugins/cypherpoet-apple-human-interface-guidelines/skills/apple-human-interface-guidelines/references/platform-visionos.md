@@ -5,11 +5,7 @@
 
 Distilled from Apple's HIG platform pages: Designing for visionOS, Spatial layout, Immersive experiences, Ornaments.
 
-## Contents
-- [Designing for visionOS](#designing-for-visionos)
-- [Spatial layout](#spatial-layout)
-- [Immersive experiences](#immersive-experiences)
-- [Ornaments](#ornaments)
+**Contents:** [Designing for visionOS](#designing-for-visionos) · [Spatial layout](#spatial-layout) · [Immersive experiences](#immersive-experiences) · [Ornaments](#ornaments)
 
 ### Designing for visionOS
 *Last changed: 2024-02*

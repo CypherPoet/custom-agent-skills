@@ -5,15 +5,7 @@
 
 Distilled from Apple's HIG Components pages: App icons, Widgets, Controls, Complications, Watch faces, Home Screen quick actions, App Clips, iMessage apps and stickers.
 
-## Contents
-- [App icons](#app-icons)
-- [Widgets](#widgets)
-- [Controls](#controls)
-- [Complications](#complications)
-- [Watch faces](#watch-faces)
-- [Home Screen quick actions](#home-screen-quick-actions)
-- [App Clips](#app-clips)
-- [iMessage apps and stickers](#imessage-apps-and-stickers)
+**Contents:** [App icons](#app-icons) · [Widgets](#widgets) · [Controls](#controls) · [Complications](#complications) · [Watch faces](#watch-faces) · [Home Screen quick actions](#home-screen-quick-actions) · [App Clips](#app-clips) · [iMessage apps and stickers](#imessage-apps-and-stickers)
 
 ### App icons
 *Last changed: 2026-06*

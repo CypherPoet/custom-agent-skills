@@ -30,9 +30,11 @@ def gh_anchor(heading):
 
 
 def heading_anchors(text):
-    """The set of in-file anchors, with GitHub's -1/-2 suffixing for duplicate headings."""
+    """The set of in-file anchors, with GitHub's -1/-2 suffixing for duplicate
+    headings. Fenced code is stripped first so a '## foo' line inside an example
+    block can't satisfy a Contents link."""
     seen, valid = {}, set()
-    for line in text.splitlines():
+    for line in strip_code_fences(text).splitlines():
         m = re.match(r"^#{1,6}\s+(.*)$", line)
         if not m:
             continue
@@ -44,16 +46,15 @@ def heading_anchors(text):
 
 
 def contents_anchors(text):
-    """Return indexed anchors, or None when no populated Contents index exists."""
-    jump_line = re.search(r"^\*\*Contents:\*\*.*$", text, re.M)
-    if jump_line:
-        anchors = re.findall(r"\(#([^)]+)\)", jump_line.group(0))
-        return anchors or None
-
-    section = re.search(r"^## Contents\s*$\n(.*?)(?=^##\s|\Z)", text, re.M | re.S)
-    if not section:
+    """Anchors from the file's `**Contents:**` jump-line — the single canonical
+    index format (see ../SKILL.md) — or None when no populated jump-line exists.
+    Fenced code is stripped first so a documented example is never parsed as the
+    file's real index, and only markdown links `[text](#anchor)` count as
+    entries, so prose parentheticals like '(#42)' are ignored."""
+    jump_line = re.search(r"^\*\*Contents:\*\*.*$", strip_code_fences(text), re.M)
+    if not jump_line:
         return None
-    anchors = re.findall(r"\(#([^)]+)\)", section.group(1))
+    anchors = re.findall(r"\[[^\]]*\]\(#([^)]+)\)", jump_line.group(0))
     return anchors or None
 
 
@@ -222,6 +223,7 @@ def render(rows, kind):
 
 
 def main():
+    strict = "--strict" in sys.argv[1:]
     root = find_repo_root(os.path.dirname(os.path.abspath(__file__))) or find_repo_root(os.getcwd())
     if not root:
         print("error: could not find the repo root (no plugins/ directory above this script or the cwd).", file=sys.stderr)
@@ -261,7 +263,11 @@ def main():
             print(f"  {a}")
 
     print("\nRules and remediation: .claude/skills/skill-structure-check/SKILL.md")
-    return 1 if errors else 0
+    if errors:
+        return 1
+    # Bare runs are report-only for WARN/ADVISORY; --strict (used by the CI
+    # health suite) fails on them too.
+    return 1 if strict and (warnings or missing_contents or tier_advisories) else 0
 
 
 if __name__ == "__main__":

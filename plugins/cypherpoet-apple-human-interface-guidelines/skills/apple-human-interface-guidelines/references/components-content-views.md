@@ -5,19 +5,7 @@
 
 Distilled from Apple's HIG Components pages: Lists and tables, Collections, Split views, Scroll views, Outline views, Column views, Boxes, Image views, Web views, Lockups, Charts, Charting data.
 
-## Contents
-- [Lists and tables](#lists-and-tables)
-- [Collections](#collections)
-- [Split views](#split-views)
-- [Scroll views](#scroll-views)
-- [Outline views](#outline-views)
-- [Column views](#column-views)
-- [Boxes](#boxes)
-- [Image views](#image-views)
-- [Web views](#web-views)
-- [Lockups](#lockups)
-- [Charts](#charts)
-- [Charting data](#charting-data)
+**Contents:** [Lists and tables](#lists-and-tables) · [Collections](#collections) · [Split views](#split-views) · [Scroll views](#scroll-views) · [Outline views](#outline-views) · [Column views](#column-views) · [Boxes](#boxes) · [Image views](#image-views) · [Web views](#web-views) · [Lockups](#lockups) · [Charts](#charts) · [Charting data](#charting-data)
 
 ### Lists and tables
 *Last changed: 2023-06*

@@ -3,17 +3,7 @@
 The end-to-end App Store Connect flow, in order. *As of 2026-06; trust the screen when it
 disagrees.* Examples use placeholders like `com.you.YourApp` — substitute the real values.
 
-## Contents
-
-- [0. Before you open App Store Connect](#0-before-you-open-app-store-connect)
-- [1. Create the app record](#1-create-the-app-record)
-- [2. App Information (app-level)](#2-app-information-app-level)
-- [3. App Privacy](#3-app-privacy)
-- [4. Pricing & availability](#4-pricing--availability)
-- [5. In-app purchases](#5-in-app-purchases)
-- [6. Version page metadata](#6-version-page-metadata)
-- [7. App Review Information](#7-app-review-information)
-- [8. Attach the IAP, pick a release option, submit](#8-attach-the-iap-pick-a-release-option-submit)
+**Contents:** [0. Before you open App Store Connect](#0-before-you-open-app-store-connect) · [1. Create the app record](#1-create-the-app-record) · [2. App Information (app-level)](#2-app-information-app-level) · [3. App Privacy](#3-app-privacy) · [4. Pricing & availability](#4-pricing--availability) · [5. In-app purchases](#5-in-app-purchases) · [6. Version page metadata](#6-version-page-metadata) · [7. App Review Information](#7-app-review-information) · [8. Attach the IAP, pick a release option, submit](#8-attach-the-iap-pick-a-release-option-submit)
 
 ---
 
