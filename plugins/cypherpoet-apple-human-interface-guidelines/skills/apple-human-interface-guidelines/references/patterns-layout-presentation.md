@@ -5,14 +5,7 @@
 
 Distilled from Apple's HIG Patterns pages: Right to left, Drag and drop, Undo and redo, Loading, Offering help, Collaboration and sharing, File management.
 
-## Contents
-- [Right to left](#right-to-left)
-- [Drag and drop](#drag-and-drop)
-- [Undo and redo](#undo-and-redo)
-- [Loading](#loading)
-- [Offering help](#offering-help)
-- [Collaboration and sharing](#collaboration-and-sharing)
-- [File management](#file-management)
+**Contents:** [Right to left](#right-to-left) · [Drag and drop](#drag-and-drop) · [Undo and redo](#undo-and-redo) · [Loading](#loading) · [Offering help](#offering-help) · [Collaboration and sharing](#collaboration-and-sharing) · [File management](#file-management)
 
 ### Right to left
 

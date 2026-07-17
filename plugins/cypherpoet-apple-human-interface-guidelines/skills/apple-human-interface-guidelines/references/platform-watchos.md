@@ -5,9 +5,7 @@
 
 Distilled from Apple's HIG platform pages: Designing for watchOS, Always On.
 
-## Contents
-- [Designing for watchOS](#designing-for-watchos)
-- [Always On](#always-on)
+**Contents:** [Designing for watchOS](#designing-for-watchos) · [Always On](#always-on)
 
 ### Designing for watchOS
 *Last changed: 2023-06*

@@ -20,7 +20,7 @@ A marketplace's **catalog** only needs a change when you:
 - **add** a new plugin to it,
 - **remove** one,
 - **change a plugin's catalog metadata** — its `name`, `description`, or homepage, or
-- **change a plugin's harness classification or Codex `category`** in the source repo's `scripts/dual-harness.json` (these drive the Codex catalog entry).
+- **change a plugin's harness classification or Codex `category`** in the source repo's `scripts/plugin-registry.json` (these drive the Codex catalog entry).
 
 If the user is only editing an already-listed plugin's instructions, tell them no publish is needed.
 
@@ -52,13 +52,13 @@ The goal: **one PR on the marketplace repo** that adds or updates the chosen plu
 
    To resolve `<owner>/<this-repo>` for the fallback, prefer `gh repo view --json nameWithOwner -q .nameWithOwner` on the source repo — it returns the canonical `owner/repo` regardless of remote protocol. If you fall back to `git remote get-url origin`, normalize the output: HTTPS form `https://github.com/<owner>/<repo>.git` and SSH form `git@github.com:<owner>/<repo>.git` both reduce to `<owner>/<repo>` after stripping the prefix and trailing `.git`. Never interpolate the raw remote string into the URL — an SSH origin produces a broken link like `https://github.com/git@github.com:<owner>/<repo>.git/tree/main/...`.
 
-   **Codex catalog entry.** Read the source repo's `scripts/dual-harness.json`: a plugin listed under `dual_harness_plugins` also gets a Codex entry, carrying that plugin's `category` from the same file; a plugin under `claude_only_plugins` — or any plugin in a repo with no `scripts/dual-harness.json` — is Claude-only, so skip its Codex entry and publish to the Claude catalog alone. The Codex entry (`policy` is constant; for `ref`, resolve the source repo's default branch — `gh repo view <owner>/<this-repo> --json defaultBranchRef -q .defaultBranchRef.name` — rather than assuming `main`):
+   **Codex catalog entry.** Read the source repo's `scripts/plugin-registry.json`: a plugin listed under `dual_harness_plugins` also gets a Codex entry, carrying that plugin's `category` from the same file; a plugin under `claude_only_plugins` — or any plugin in a repo with no `scripts/plugin-registry.json` — is Claude-only, so skip its Codex entry and publish to the Claude catalog alone. The Codex entry (`policy` is constant; for `ref`, resolve the source repo's default branch — `gh repo view <owner>/<this-repo> --json defaultBranchRef -q .defaultBranchRef.name` — rather than assuming `main`):
    ```json
    {
      "name": "<plugin>",
      "source": { "source": "git-subdir", "url": "https://github.com/<owner>/<this-repo>.git", "path": "plugins/<plugin>", "ref": "<default-branch>" },
      "policy": { "installation": "AVAILABLE", "authentication": "ON_INSTALL" },
-     "category": "<from dual-harness.json>"
+     "category": "<from plugin-registry.json>"
    }
    ```
 

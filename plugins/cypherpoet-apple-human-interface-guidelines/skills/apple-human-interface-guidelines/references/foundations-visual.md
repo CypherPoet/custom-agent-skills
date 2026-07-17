@@ -5,15 +5,7 @@
 
 Distilled from Apple's HIG Foundations pages: Branding, Color, Dark Mode, Icons, Images, Materials, SF Symbols, Typography.
 
-## Contents
-- [Branding](#branding)
-- [Color](#color)
-- [Dark Mode](#dark-mode)
-- [Icons](#icons)
-- [Images](#images)
-- [Materials](#materials)
-- [SF Symbols](#sf-symbols)
-- [Typography](#typography)
+**Contents:** [Branding](#branding) · [Color](#color) · [Dark Mode](#dark-mode) · [Icons](#icons) · [Images](#images) · [Materials](#materials) · [SF Symbols](#sf-symbols) · [Typography](#typography)
 
 ### Branding
 

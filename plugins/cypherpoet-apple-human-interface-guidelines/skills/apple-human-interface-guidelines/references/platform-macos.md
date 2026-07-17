@@ -5,11 +5,7 @@
 
 Distilled from Apple's HIG platform pages: Designing for macOS, The menu bar, Dock menus, Mac Catalyst.
 
-## Contents
-- [Designing for macOS](#designing-for-macos)
-- [The menu bar](#the-menu-bar)
-- [Dock menus](#dock-menus)
-- [Mac Catalyst](#mac-catalyst)
+**Contents:** [Designing for macOS](#designing-for-macos) · [The menu bar](#the-menu-bar) · [Dock menus](#dock-menus) · [Mac Catalyst](#mac-catalyst)
 
 ### Designing for macOS
 

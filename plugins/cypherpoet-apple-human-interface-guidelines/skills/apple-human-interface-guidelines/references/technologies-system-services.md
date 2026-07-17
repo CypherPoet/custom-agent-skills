@@ -5,21 +5,7 @@
 
 Distilled from Apple's HIG Technologies pages: Siri, App Shortcuts, Snippets, Generative AI, Machine learning, Maps, Nearby interactions, NFC, CarPlay, Game Center, Designing for games, iCloud, Printing, VoiceOver.
 
-## Contents
-- [Siri](#siri)
-- [App Shortcuts](#app-shortcuts)
-- [Snippets](#snippets)
-- [Generative AI](#generative-ai)
-- [Machine learning](#machine-learning)
-- [Maps](#maps)
-- [Nearby interactions](#nearby-interactions)
-- [NFC](#nfc)
-- [CarPlay](#carplay)
-- [Game Center](#game-center)
-- [Designing for games](#designing-for-games)
-- [iCloud](#icloud)
-- [Printing](#printing)
-- [VoiceOver](#voiceover)
+**Contents:** [Siri](#siri) · [App Shortcuts](#app-shortcuts) · [Snippets](#snippets) · [Generative AI](#generative-ai) · [Machine learning](#machine-learning) · [Maps](#maps) · [Nearby interactions](#nearby-interactions) · [NFC](#nfc) · [CarPlay](#carplay) · [Game Center](#game-center) · [Designing for games](#designing-for-games) · [iCloud](#icloud) · [Printing](#printing) · [VoiceOver](#voiceover)
 
 ### Siri
 *Last changed: 2026-06*

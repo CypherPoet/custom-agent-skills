@@ -5,12 +5,7 @@
 
 Distilled from Apple's HIG Components pages: Progress indicators, Gauges, Activity rings, Rating indicators, Labels.
 
-## Contents
-- [Progress indicators](#progress-indicators)
-- [Gauges](#gauges)
-- [Activity rings](#activity-rings)
-- [Rating indicators](#rating-indicators)
-- [Labels](#labels)
+**Contents:** [Progress indicators](#progress-indicators) · [Gauges](#gauges) · [Activity rings](#activity-rings) · [Rating indicators](#rating-indicators) · [Labels](#labels)
 
 ### Progress indicators
 *Last changed: 2023-09*

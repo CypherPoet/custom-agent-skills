@@ -10,6 +10,8 @@ If identity is unstable, none of this works: state resets, animations break into
 
 The rule of thumb: the identity of a `ForEach` element must be **stable** (the same element has the same id across body evaluations, even if its position in the collection changes) and **unique** (no two distinct elements share an id in the same `ForEach`).
 
+**Contents:** [Applies to other data-driven initializers](#applies-to-other-data-driven-initializers) · [Avoid collection indices as identity](#avoid-collection-indices-as-identity) · [Don't create a new id on every body evaluation](#dont-create-a-new-id-on-every-body-evaluation) · [Prefer `Identifiable` conformance](#prefer-identifiable-conformance) · [Keep the id cheap to hash](#keep-the-id-cheap-to-hash) · [Identity must outlive the view that renders the `ForEach`](#identity-must-outlive-the-view-that-renders-the-foreach) · [Don't sort or filter inline in `ForEach`](#dont-sort-or-filter-inline-in-foreach) · [Prefer unary row views in `List`](#prefer-unary-row-views-in-list)
+
 ## Applies to other data-driven initializers
 
 Everything in this document applies to any SwiftUI API that takes a `RandomAccessCollection` of data plus an `id:` key path (or `Identifiable` elements) and internally behaves like `ForEach`. The most common ones:

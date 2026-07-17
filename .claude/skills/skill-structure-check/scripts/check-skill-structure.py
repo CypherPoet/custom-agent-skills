@@ -1,39 +1,5 @@
 #!/usr/bin/env python3
-"""
-check-skill-structure.py — audit skill structure across every plugin in this repo.
-
-Bundled by the repo-local `skill-structure-check` skill. Encodes the repo's
-skill-structure convention as runnable rules so SKILL.md files don't silently
-balloon and large reference files stay navigable:
-
-  ERROR     SKILL.md over 500 lines              split topical / once-needed depth into
-                                                 references/ files (skill-creator: "<500 ideal")
-  ERROR     a **Contents:** anchor that doesn't   stale table of contents — a heading was
-            resolve to a heading in its file      renamed or removed
-  ERROR     a cross-plugin relative link in a     dead path in an installed sparse-clone (only
-            SKILL.md / references file            this plugin's dir is fetched) — use an
-                                                  absolute GitHub URL instead
-  ERROR     a dual-harness generated artifact      a vendored skill copy or generated Codex manifest
-            (vendored skill / .codex-plugin)       drifted from its source, or a plugin is
-            drifted, or a new plugin is            unclassified — run
-            unclassified                           scripts/sync_dual_harness.py (skipped if absent)
-  WARNING   SKILL.md 450-500 lines               approaching the limit; plan to split
-  ADVISORY  references/*.md over 300 lines        large reference files get a **Contents:** jump-line
-            without a **Contents:** jump-line     so they stay navigable (summarized, non-failing)
-  ADVISORY  fact-check manifest drift: a unit     every unit should be deliberately tiered in
-            missing from every tier list, an      docs/automated-routines/skill-fact-check-manifest.json,
-            orphaned or double-listed entry, or   listed exactly once, and (unless never-tier) declare
-            a fact-checked unit with no           its verification sources in a **## Primary Sources**
-            **## Primary Sources** section        section (see PLUGIN-CONVENTIONS.md)
-
-The skill-level "table of contents" is the routing table in SKILL.md that points
-at the references/ files; that's a soft convention, not machine-checked here.
-Short reference files don't need their own Contents line.
-
-Report-only. Exits 1 if any ERROR, else 0 (warnings/advisories never fail the run).
-Run from anywhere in the repo:
-  python3 .claude/skills/skill-structure-check/scripts/check-skill-structure.py
-"""
+"""Implement the canonical rule contract in ../SKILL.md."""
 import json
 import os
 import re
@@ -64,9 +30,11 @@ def gh_anchor(heading):
 
 
 def heading_anchors(text):
-    """The set of in-file anchors, with GitHub's -1/-2 suffixing for duplicate headings."""
+    """The set of in-file anchors, with GitHub's -1/-2 suffixing for duplicate
+    headings. Fenced code is stripped first so a '## foo' line inside an example
+    block can't satisfy a Contents link."""
     seen, valid = {}, set()
-    for line in text.splitlines():
+    for line in strip_code_fences(text).splitlines():
         m = re.match(r"^#{1,6}\s+(.*)$", line)
         if not m:
             continue
@@ -75,6 +43,19 @@ def heading_anchors(text):
         valid.add(a if n == 0 else f"{a}-{n}")
         seen[a] = n + 1
     return valid
+
+
+def contents_anchors(text):
+    """Anchors from the file's `**Contents:**` jump-line — the single canonical
+    index format (see ../SKILL.md) — or None when no populated jump-line exists.
+    Fenced code is stripped first so a documented example is never parsed as the
+    file's real index, and only markdown links `[text](#anchor)` count as
+    entries, so prose parentheticals like '(#42)' are ignored."""
+    jump_line = re.search(r"^\*\*Contents:\*\*.*$", strip_code_fences(text), re.M)
+    if not jump_line:
+        return None
+    anchors = re.findall(r"\[[^\]]*\]\(#([^)]+)\)", jump_line.group(0))
+    return anchors or None
 
 
 LINK_RE = re.compile(r"\]\(([^)]+)\)")
@@ -129,7 +110,8 @@ def tier_findings(root, units, units_with_sources):
     if not os.path.isfile(path):
         return [], False
     try:
-        manifest = json.load(open(path, encoding="utf-8"))
+        with open(path, encoding="utf-8") as manifest_file:
+            manifest = json.load(manifest_file)
         if not isinstance(manifest, dict) or not all(
             isinstance(manifest.get(k, []), list) for k in TIER_KEYS
         ):
@@ -165,7 +147,8 @@ def audit(plugins_dir):
             label = f"{plugin}/{skill}"
             plugin_root = os.path.join(plugins_dir, plugin)
 
-            skill_text = open(skill_md, encoding="utf-8").read()
+            with open(skill_md, encoding="utf-8") as skill_file:
+                skill_text = skill_file.read()
             # *-workspace dirs are gitignored /skill-creator scratch: still structure-checked
             # (they may be promoted), but not units the fact-check manifest should tier.
             if not skill.endswith("-workspace"):
@@ -189,39 +172,40 @@ def audit(plugins_dir):
                 if not f.endswith(".md"):
                     continue
                 ref_path = os.path.join(ref_dir, f)
-                text = open(ref_path, encoding="utf-8").read()
+                with open(ref_path, encoding="utf-8") as reference_file:
+                    text = reference_file.read()
                 rlines = len(text.splitlines())
                 esc = escaping_links(text, ref_path, plugin_root)
                 if esc:
                     errors.append((label, f"references/{f}", "cross-plugin relative link(s) — use an absolute GitHub URL: " + ", ".join(esc)))
-                contents = re.search(r"^\*\*Contents:\*\*.*$", text, re.M)
-                if not contents:
+                indexed = contents_anchors(text)
+                if indexed is None:
                     if rlines > REF_TOC_FLOOR:
                         missing_contents.append((label, f"{f} ({rlines} lines)"))
                     continue
                 valid = heading_anchors(text)
-                broken = [t for t in re.findall(r"\(#([^)]+)\)", contents.group(0)) if t not in valid]
+                broken = [target for target in indexed if target not in valid]
                 if broken:
-                    errors.append((label, f"references/{f}", "stale **Contents:** anchors: " + ", ".join("#" + b for b in broken)))
+                    errors.append((label, f"references/{f}", "stale Contents anchors: " + ", ".join("#" + b for b in broken)))
     return errors, warnings, missing_contents, units, units_with_sources
 
 
 def dual_harness_drift(root):
-    """Dual-harness sync drift as ERROR strings; [] when the tooling is absent (portable
-    to repos without it) or everything is in sync. Delegates to scripts/sync_dual_harness.py
+    """Plugin sync drift as ERROR strings; [] when the tooling is absent (portable
+    to repos without it) or everything is in sync. Delegates to scripts/sync_plugins.py
     so the vendored-copy / Codex-manifest generators have one source of truth."""
     scripts_dir = os.path.join(root, "scripts")
     if not (
-        os.path.isfile(os.path.join(scripts_dir, "dual-harness.json"))
-        and os.path.isfile(os.path.join(scripts_dir, "sync_dual_harness.py"))
+        os.path.isfile(os.path.join(scripts_dir, "plugin-registry.json"))
+        and os.path.isfile(os.path.join(scripts_dir, "sync_plugins.py"))
     ):
         return []
     sys.path.insert(0, scripts_dir)
     try:
-        import sync_dual_harness
+        import sync_plugins
         from pathlib import Path
 
-        return sync_dual_harness.sync(Path(root), write=False)
+        return sync_plugins.sync(Path(root), write=False)
     except Exception as e:  # never let the guard's own failure mask a clean structure run
         return [f"dual-harness check could not run: {e}"]
     finally:
@@ -239,6 +223,7 @@ def render(rows, kind):
 
 
 def main():
+    strict = "--strict" in sys.argv[1:]
     root = find_repo_root(os.path.dirname(os.path.abspath(__file__))) or find_repo_root(os.getcwd())
     if not root:
         print("error: could not find the repo root (no plugins/ directory above this script or the cwd).", file=sys.stderr)
@@ -277,8 +262,12 @@ def main():
         for a in tier_advisories:
             print(f"  {a}")
 
-    print("\nRules: this skill's scripts/check-skill-structure.py is the source of truth; see docs/PLUGIN-CONVENTIONS.md -> Skill Conventions.")
-    return 1 if errors else 0
+    print("\nRules and remediation: .claude/skills/skill-structure-check/SKILL.md")
+    if errors:
+        return 1
+    # Bare runs are report-only for WARN/ADVISORY; --strict (used by the CI
+    # health suite) fails on them too.
+    return 1 if strict and (warnings or missing_contents or tier_advisories) else 0
 
 
 if __name__ == "__main__":
