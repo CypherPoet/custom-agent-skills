@@ -156,5 +156,5 @@ For pure video concatenation or trimming, drop to `ffmpeg`.
 ## Sources
 
 - [Blender Manual: Video Sequencer](https://docs.blender.org/manual/en/5.1/video_editing/index.html)
-- [Blender Python API: Sequence](https://docs.blender.org/api/5.1/bpy.types.Sequence.html)
+- [Blender Python API: Strip](https://docs.blender.org/api/5.1/bpy.types.Strip.html)
 - [Blender Python API: SequenceEditor](https://docs.blender.org/api/5.1/bpy.types.SequenceEditor.html)
