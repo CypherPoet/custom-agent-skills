@@ -5,12 +5,7 @@
 
 Distilled from Apple's HIG Components pages: Sheets, Popovers, Alerts, Panels, Windows.
 
-## Contents
-- [Sheets](#sheets)
-- [Popovers](#popovers)
-- [Alerts](#alerts)
-- [Panels](#panels)
-- [Windows](#windows)
+**Contents:** [Sheets](#sheets) · [Popovers](#popovers) · [Alerts](#alerts) · [Panels](#panels) · [Windows](#windows)
 
 ### Sheets
 *Last changed: 2026-03*

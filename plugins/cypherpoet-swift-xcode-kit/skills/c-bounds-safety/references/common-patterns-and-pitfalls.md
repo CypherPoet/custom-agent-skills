@@ -2,6 +2,8 @@
 
 This document covers common patterns for working with `-fbounds-safety` and pitfalls encountered during real-world adoption.
 
+**Contents:** [Common Patterns](#common-patterns) · [Common Pitfalls](#common-pitfalls)
+
 ## Common Patterns
 
 ### Using Local Variables to Avoid Assignment Restrictions

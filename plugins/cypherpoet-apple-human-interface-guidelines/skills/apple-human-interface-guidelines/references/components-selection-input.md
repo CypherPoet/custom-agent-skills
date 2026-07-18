@@ -5,20 +5,7 @@
 
 Distilled from Apple's HIG Components pages: Entering data, Text fields, Text views, Combo boxes, Token fields, Pickers, Digit entry views, Sliders, Steppers, Toggles, Disclosure controls, Color wells, Image wells.
 
-## Contents
-- [Entering data](#entering-data)
-- [Text fields](#text-fields)
-- [Text views](#text-views)
-- [Combo boxes](#combo-boxes)
-- [Token fields](#token-fields)
-- [Pickers](#pickers)
-- [Digit entry views](#digit-entry-views)
-- [Sliders](#sliders)
-- [Steppers](#steppers)
-- [Toggles](#toggles)
-- [Disclosure controls](#disclosure-controls)
-- [Color wells](#color-wells)
-- [Image wells](#image-wells)
+**Contents:** [Entering data](#entering-data) · [Text fields](#text-fields) · [Text views](#text-views) · [Combo boxes](#combo-boxes) · [Token fields](#token-fields) · [Pickers](#pickers) · [Digit entry views](#digit-entry-views) · [Sliders](#sliders) · [Steppers](#steppers) · [Toggles](#toggles) · [Disclosure controls](#disclosure-controls) · [Color wells](#color-wells) · [Image wells](#image-wells)
 
 ### Entering data
 *Last changed: 2023-06*

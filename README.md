@@ -41,7 +41,9 @@ codex plugin add cypherpoet-git-flow@cypherpoet-toolchest
 │   ├── CATALOG.md            # Cross-plugin index
 │   ├── PLUGIN-CONVENTIONS.md # Plugin architecture and contributor workflow
 │   └── automated-routines/   # Maintenance routine configuration
-├── scripts/                  # Dual-harness source config and generator
+├── scripts/                  # Plugin registry and sync generator
+├── tests/                    # Repository health suite
+├── .github/                  # CI (Verify workflow)
 ├── .agents/skills/           # Codex maintainer skills
 └── .claude/                  # Claude Code maintainer config and skills
 ```

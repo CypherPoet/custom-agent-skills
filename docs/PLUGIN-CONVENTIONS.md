@@ -31,7 +31,7 @@ See any existing manifest under `plugins/*/.claude-plugin/plugin.json` for canon
 
 Plugins target **both** Claude Code and Codex. Each plugin is **self-contained**: install pulls only its own directory (Claude Code `git-subdir` sparse-clone; Codex marketplace fetch), so a plugin must physically ship every skill it needs. Neither harness resolves a reference to a skill in another plugin, and Codex has no plugin-to-plugin dependency mechanism — so composition is by **vendoring** (copying a skill into each plugin that ships it), never dependencies.
 
-[`scripts/dual-harness.json`](../scripts/dual-harness.json) is the single source of truth; [`scripts/sync_dual_harness.py`](../scripts/sync_dual_harness.py) generates every derived artifact and, with `--check`, fails on drift (the repo-local `skill-structure-check` runs this check). **After editing a vendored skill's source or any `.claude-plugin/plugin.json`, run `python scripts/sync_dual_harness.py`.** Never hand-edit a generated file.
+[`scripts/plugin-registry.json`](../scripts/plugin-registry.json) is the single source of truth; [`scripts/sync_plugins.py`](../scripts/sync_plugins.py) generates every derived artifact and, with `--check`, fails on drift (the repo-local `skill-structure-check` runs this check). **After editing a vendored skill's source or any `.claude-plugin/plugin.json`, run `python3 scripts/sync_plugins.py`.** Never hand-edit a generated file.
 
 ### Manifests
 
@@ -40,13 +40,14 @@ A dual-harness plugin carries two manifests over a shared `skills/` directory:
 - `.claude-plugin/plugin.json` — hand-authored, the source of truth (see [Manifest](#manifest)).
 - `.codex-plugin/plugin.json` — **generated** from the Claude manifest: the same `name`/`version`/`description`/`author`/`homepage`/`repository`/`license`/`keywords`, plus `"skills": "./skills/"` (no `$schema`). Don't edit it.
 
-A plugin whose function is Claude-Code-specific runs on Claude only: list it in `dual-harness.json`'s `claude_only_plugins` (with a reason) and it gets no `.codex-plugin/` manifest.
+A plugin whose function is Claude-Code-specific runs on Claude only: list it in `plugin-registry.json`'s `claude_only_plugins` (with a reason) and it gets no `.codex-plugin/` manifest.
 
 ### Vendoring
 
-When a plugin needs a skill authored elsewhere — its own skill functionally builds on it, or it curates a set — the source skill is **copied (vendored)** into the plugin. Declare the edge in `dual-harness.json` under `vendored_skills` (`source` → `targets`) and run the sync.
+When a plugin needs a skill authored elsewhere — its own skill functionally builds on it, or it curates a set — the source skill is **copied (vendored)** into the plugin. Declare the edge in `plugin-registry.json` under `vendored_skills` (`source` → `targets`) and run the sync.
 
 - The skill is authored **once**, in its owner plugin. Every target is a byte-identical generated copy (minus dev-only `evals/` and `*-workspace/`). Edit the source, never a copy.
+- The generator keeps no state of its own; git is the safety net. Removing an edge retires the copy on the next sync run — deleted only when `git status` under it is clean (committed content is always recoverable), refused otherwise. A skill directory byte-identical to a declared source but not a declared target is flagged as an undeclared copy, so to adopt a retired copy as authored, keep the directory and change its content (even one line).
 - Targets vendor from the **original source**, never from another vendored copy.
 - A vendored copy ships inside a different plugin, so any link it makes to *another* plugin must be an absolute GitHub URL ([Cross-Plugin Links](#cross-plugin-links)) — the copy inherits the source's links, and well-formed skills already satisfy this.
 - Vendored copies are tiered `never` in the [fact-check manifest](#fact-check-tiering): the routine corrects the authoritative source, and the sync propagates the fix.
@@ -58,7 +59,7 @@ A **curated bundle** — a plugin that ships several skills it doesn't author (e
 The separate [`cypherpoet-toolchest`](https://github.com/CypherPoet/cypherpoet-toolchest) marketplace repo carries **two catalog files**, maintained together by the `marketplace-publish` flow (see [Publishing](#publishing)):
 
 - `.claude-plugin/marketplace.json` — the Claude Code catalog. Consumers: `/plugin marketplace add CypherPoet/cypherpoet-toolchest`.
-- `.agents/plugins/marketplace.json` — the Codex catalog (`git-subdir` entries pointing back at this repo, plus each plugin's `category` from [`scripts/dual-harness.json`](../scripts/dual-harness.json)). Consumers: `codex plugin marketplace add CypherPoet/cypherpoet-toolchest`.
+- `.agents/plugins/marketplace.json` — the Codex catalog (`git-subdir` entries pointing back at this repo, plus each plugin's `category` from [`scripts/plugin-registry.json`](../scripts/plugin-registry.json)). Consumers: `codex plugin marketplace add CypherPoet/cypherpoet-toolchest`.
 
 ## Validate
 
@@ -144,13 +145,13 @@ Rather than hand-editing, regenerate the whole table from the manifests by invok
 
 After the plugin is ready, use the `marketplace-publish` skill to open a PR on the marketplace this repo publishes to. One publish maintains both catalog files there — the Claude entry and, for dual-harness plugins, the Codex entry (see [Marketplaces](#marketplaces)). Scaffolding alone never publishes — the catalogs only change when you explicitly publish.
 
-A plugin's `version` (in `.claude-plugin/plugin.json`) is each harness's update cache key, so edits to a plugin's **content** (skills, scripts) reach existing installs only when you **bump that version** — pushing commits to `main` alone won't update them (a *fresh* install always pulls `main`'s latest). Re-run `scripts/sync_dual_harness.py` after a bump so the generated `.codex-plugin` version matches. Separately, the catalogs store their own copy of each plugin's `name`, `description`, and `homepage` (Claude) and its classification + `category` (Codex) — editing any of those requires running `marketplace-publish` again to refresh the entry. Content ships on a version bump; catalog metadata ships on a re-publish.
+A plugin's `version` (in `.claude-plugin/plugin.json`) is each harness's update cache key, so edits to a plugin's **content** (skills, scripts) reach existing installs only when you **bump that version** — pushing commits to `main` alone won't update them (a *fresh* install always pulls `main`'s latest). Re-run `scripts/sync_plugins.py` after a bump so the generated `.codex-plugin` version matches. Separately, the catalogs store their own copy of each plugin's `name`, `description`, and `homepage` (Claude) and its classification + `category` (Codex) — editing any of those requires running `marketplace-publish` again to refresh the entry. Content ships on a version bump; catalog metadata ships on a re-publish.
 
 ## Skill Conventions
 
 For skills inside a plugin, use [`/skill-creator`](https://github.com/anthropics/skills/tree/main/skills/skill-creator) — it handles drafts, evals, description optimization, and the general skill structure conventions.
 
-The repo-local **`skill-structure-check`** skill ([`.claude/skills/skill-structure-check`](../.claude/skills/skill-structure-check/SKILL.md)) audits skill structure across the repo — `SKILL.md` stays under ~500 lines (split topical or once-needed depth into `references/` files past that, routed from a table in the SKILL.md that serves as the skill-level table of contents), large `references/` files (>~300 lines) carry their own `**Contents:**` jump-line, any `**Contents:**` anchors resolve, every cross-plugin link is an absolute URL rather than a dead relative path ([Cross-Plugin Links](#cross-plugin-links)), and every dual-harness generated artifact is in sync ([Dual-Harness Plugins](#dual-harness-plugins)). Short reference files don't need a jump-line. Run it (or ask Claude to) before opening a PR that touches skills; it's report-only and its bundled `scripts/check-skill-structure.py` is the source of truth for the rules.
+The repo-local **`skill-structure-check`** skill audits skill structure across the repo. Its [`SKILL.md`](../.claude/skills/skill-structure-check/SKILL.md) is the canonical rule contract and remediation guide; the bundled Python script implements that contract. Run the skill before opening a PR that touches skills.
 
 ### Primary Sources
 
@@ -167,7 +168,7 @@ Each bullet says what the source is authoritative for (releases/versions, specs,
 
 ### Fact-Check Tiering
 
-When creating (or renaming/removing) a skill, classify its unit — `<plugin>/<skill>` — into a tier in [`docs/automated-routines/skill-fact-check-manifest.json`](automated-routines/skill-fact-check-manifest.json); the tier definitions live in the `skill-fact-check` skill's [Manifest reference](../plugins/cypherpoet-marketplace-kit/skills/skill-fact-check/SKILL.md#manifest-reference) (don't restate them here). Every unit is listed exactly once; an unlisted unit still safely defaults to monthly, and `skill-structure-check` reports untiered, orphaned, or double-listed entries — and fact-checked units missing their [Primary Sources](#primary-sources) section — as non-failing advisories.
+When creating (or renaming/removing) a skill, classify its unit — `<plugin>/<skill>` — into a tier in [`docs/automated-routines/skill-fact-check-manifest.json`](automated-routines/skill-fact-check-manifest.json); the tier definitions live in the `skill-fact-check` skill's [Manifest reference](../plugins/cypherpoet-marketplace-kit/skills/skill-fact-check/SKILL.md#manifest-reference) (don't restate them here). Every unit is listed exactly once; an unlisted unit still safely defaults to monthly, and `skill-structure-check` reports untiered, orphaned, or double-listed entries — and fact-checked units missing their [Primary Sources](#primary-sources) section — as non-failing advisories (the CI health suite runs the checker with `--strict`, where they do fail).
 
 ### Cross-Plugin Links
 

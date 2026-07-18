@@ -5,15 +5,7 @@
 
 Distilled from Apple's HIG Components pages: Buttons, Menus, Context menus, Pull-down buttons, Pop-up buttons, Edit menus, Action sheets, Activity views.
 
-## Contents
-- [Buttons](#buttons)
-- [Menus](#menus)
-- [Context menus](#context-menus)
-- [Pull-down buttons](#pull-down-buttons)
-- [Pop-up buttons](#pop-up-buttons)
-- [Edit menus](#edit-menus)
-- [Action sheets](#action-sheets)
-- [Activity views](#activity-views)
+**Contents:** [Buttons](#buttons) · [Menus](#menus) · [Context menus](#context-menus) · [Pull-down buttons](#pull-down-buttons) · [Pop-up buttons](#pop-up-buttons) · [Edit menus](#edit-menus) · [Action sheets](#action-sheets) · [Activity views](#activity-views)
 
 ### Buttons
 *Last changed: 2025-12*

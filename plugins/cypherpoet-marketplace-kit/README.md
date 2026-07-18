@@ -16,6 +16,8 @@ Install via the marketplace this plugin is published to:
 /plugin install cypherpoet-marketplace-kit@cypherpoet-toolchest
 ```
 
+On Codex, add the same marketplace: `codex plugin marketplace add CypherPoet/cypherpoet-toolchest`, then `codex plugin add cypherpoet-marketplace-kit@cypherpoet-toolchest`.
+
 ## Skills
 
 | Skill | Description |

@@ -15,6 +15,8 @@ This guide walks through the process of adopting `-fbounds-safety` in an existin
 > **Before advising on adoption, ask the user whether they want full adoption or header-only adoption, then provide guidance for the chosen approach.**
 > **Always make a plan when applying this skill because changes are rarely trivial and the developer needs to understand the process**
 
+**Contents:** [Choosing an Adoption Approach](#choosing-an-adoption-approach) · [Full Adoption](#full-adoption) · [Header-Only Adoption](#header-only-adoption)
+
 ## Choosing an Adoption Approach
 
 There are two approaches to adopting `-fbounds-safety`:

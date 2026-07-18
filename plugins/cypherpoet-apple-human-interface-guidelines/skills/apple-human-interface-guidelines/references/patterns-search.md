@@ -5,11 +5,7 @@
 
 Distilled from Apple's HIG Patterns pages: Searching, Search fields, Settings, Managing accounts.
 
-## Contents
-- [Searching](#searching)
-- [Search fields](#search-fields)
-- [Settings](#settings)
-- [Managing accounts](#managing-accounts)
+**Contents:** [Searching](#searching) · [Search fields](#search-fields) · [Settings](#settings) · [Managing accounts](#managing-accounts)
 
 ### Searching
 *Last changed: 2026-06*

@@ -15,14 +15,14 @@ The regeneration logic is a bundled script — Python 3 standard library only, n
 
 ## Run it
 
-From anywhere in the repo:
+With your working directory anywhere in the target repo, run the bundled script. `scripts/` below is relative to **this skill's directory** — your harness shows the skill's location when it loads; prefix the commands with it:
 
 ```shell
 # Dry-run: report drift and show the diff, write nothing (exit 1 if stale)
-python3 "${CLAUDE_PLUGIN_ROOT}/skills/catalog-refresh/scripts/refresh_catalog.py" --check
+python3 scripts/refresh_catalog.py --check
 
 # Regenerate the table in place
-python3 "${CLAUDE_PLUGIN_ROOT}/skills/catalog-refresh/scripts/refresh_catalog.py"
+python3 scripts/refresh_catalog.py
 ```
 
 The script finds the repo root via git, walks every `plugins/*/.claude-plugin/plugin.json`, derives each plugin's `description` (verbatim from the manifest) and `Components` count, sorts by name, and replaces **only** the markdown table — the intro line and `## Installing` section are left untouched. Component counting (the order skills → commands → agents → hooks → MCP servers, singular vs plural, dropping zeros) follows `docs/PLUGIN-CONVENTIONS.md` → Top-Level Catalog.

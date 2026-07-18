@@ -3,30 +3,7 @@
 > Source: Filament Core Concepts — "Material system" (Filament.md), Filament v1.72.0
 > Last synced: 2026-06-19
 
-## Contents
-
-- [Notation](#notation)
-- [The standard surface model](#the-standard-surface-model)
-- [Microfacet theory](#microfacet-theory)
-- [Dielectrics vs conductors](#dielectrics-vs-conductors)
-- [Energy conservation](#energy-conservation)
-- [Specular BRDF (Cook-Torrance)](#specular-brdf-cook-torrance)
-  - [D — Normal distribution (GGX)](#d--normal-distribution-ggx)
-  - [G / V — Geometric shadowing (Smith-GGX)](#g--v--geometric-shadowing-smith-ggx)
-  - [F — Fresnel (Schlick)](#f--fresnel-schlick)
-- [Diffuse BRDF (Lambert vs Disney)](#diffuse-brdf-lambert-vs-disney)
-- [Energy compensation (multiscattering)](#energy-compensation-multiscattering)
-- [Parameterization & remapping](#parameterization--remapping)
-  - [Standard parameters and ranges](#standard-parameters-and-ranges)
-  - [baseColor → diffuse / f0](#basecolor--diffuse--f0)
-  - [reflectance → f0 (dielectrics)](#reflectance--f0-dielectrics)
-  - [perceptualRoughness → roughness](#perceptualroughness--roughness)
-  - [Authoring cheat sheet](#authoring-cheat-sheet)
-- [Extended models](#extended-models)
-  - [Clear coat](#clear-coat)
-  - [Anisotropic](#anisotropic)
-  - [Subsurface](#subsurface)
-  - [Cloth (sheen)](#cloth-sheen)
+**Contents:** [Notation](#notation) · [The standard surface model](#the-standard-surface-model) · [Microfacet theory](#microfacet-theory) · [Dielectrics vs conductors](#dielectrics-vs-conductors) · [Energy conservation](#energy-conservation) · [Specular BRDF (Cook-Torrance)](#specular-brdf-cook-torrance) · [D — Normal distribution (GGX)](#d--normal-distribution-ggx) · [G / V — Geometric shadowing (Smith-GGX)](#g--v--geometric-shadowing-smith-ggx) · [F — Fresnel (Schlick)](#f--fresnel-schlick) · [Diffuse BRDF (Lambert vs Disney)](#diffuse-brdf-lambert-vs-disney) · [Energy compensation (multiscattering)](#energy-compensation-multiscattering) · [Parameterization & remapping](#parameterization--remapping) · [Standard parameters and ranges](#standard-parameters-and-ranges) · [baseColor → diffuse / f0](#basecolor--diffuse--f0) · [reflectance → f0 (dielectrics)](#reflectance--f0-dielectrics) · [perceptualRoughness → roughness](#perceptualroughness--roughness) · [Authoring cheat sheet](#authoring-cheat-sheet) · [Extended models](#extended-models) · [Clear coat](#clear-coat) · [Anisotropic](#anisotropic) · [Subsurface](#subsurface) · [Cloth (sheen)](#cloth-sheen)
 
 ## Notation
 
