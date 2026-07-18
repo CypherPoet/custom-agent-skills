@@ -1,10 +1,8 @@
-# AGENTS.md
-
-The definitive project rules for this repo. Read by **Codex** directly and by **Claude Code** through the `@AGENTS.md` import in [`CLAUDE.md`](CLAUDE.md). Keep everything here harness-neutral; where a detail differs between harnesses, state it for **both**.
+Harness-neutral by default. Where a detail differs between harnesses, state it for **both**.
 
 ## Project
 
-Public collection of reusable AI agent skills, packaged as **both** Claude Code and Codex plugins and distributed through each harness's plugin marketplace. Skills use the shared agent-skills [`SKILL.md`](https://agentskills.io/) format, so a skill body runs on either harness unchanged.
+Public collection of reusable AI agent skills, packaged as **both** Claude Code and Codex plugins and distributed through each harness's plugin marketplace. Skills use the shared agent-skills [`SKILL.md`](https://agentskills.io/) format.
 
 ## Map
 
