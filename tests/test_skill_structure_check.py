@@ -113,6 +113,53 @@ class SkillStructureCheckTests(unittest.TestCase):
         errors, _, _, _, _ = self.audit()
         self.assertEqual(errors, [])
 
+    def test_cross_plugin_readme_link_is_an_error(self):
+        write(
+            self.root / "plugins/example/README.md",
+            "# Example\n\n[Other](../other-plugin/skills/other/SKILL.md)\n",
+        )
+        errors, _, _, _, _ = self.audit()
+        self.assertTrue(
+            any(
+                error[:2] == ("example", "README.md")
+                and "cross-plugin relative link" in error[2]
+                for error in errors
+            )
+        )
+
+    def test_in_plugin_and_absolute_readme_links_pass(self):
+        write(
+            self.root / "plugins/example/README.md",
+            "# Example\n\n[Skill](skills/example/SKILL.md)\n"
+            "[Sibling](https://github.com/CypherPoet/custom-agent-skills/tree/main/plugins/other-plugin)\n",
+        )
+        errors, _, _, _, _ = self.audit()
+        self.assertEqual(errors, [])
+
+    def test_fenced_cross_plugin_readme_example_is_ignored(self):
+        fence = chr(96) * 3
+        write(
+            self.root / "plugins/example/README.md",
+            "# Example\n\n"
+            + fence
+            + "\n[Other](../other-plugin/skills/other/SKILL.md)\n"
+            + fence
+            + "\n",
+        )
+        errors, _, _, _, _ = self.audit()
+        self.assertEqual(errors, [])
+
+    def test_readme_of_plugin_without_skills_is_still_checked(self):
+        # A dependencies-only bundle plugin has a README but no skills/ dir.
+        write(
+            self.root / "plugins/bundle/README.md",
+            "# Bundle\n\n[Other](../example/skills/example/SKILL.md)\n",
+        )
+        errors, _, _, _, _ = self.audit()
+        self.assertTrue(
+            any(error[:2] == ("bundle", "README.md") for error in errors)
+        )
+
     def test_skill_over_500_lines_is_an_error(self):
         write(self.skill / "SKILL.md", "\n".join("line" for _ in range(501)))
         errors, _, _, _, _ = self.audit()

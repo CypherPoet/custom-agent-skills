@@ -136,7 +136,16 @@ def audit(plugins_dir):
     errors, warnings, missing_contents = [], [], []
     units, units_with_sources = set(), set()
     for plugin in sorted(os.listdir(plugins_dir)):
-        skills_dir = os.path.join(plugins_dir, plugin, "skills")
+        plugin_root = os.path.join(plugins_dir, plugin)
+        # The plugin README ships in the sparse-clone install alongside the
+        # skills, so it follows the same cross-plugin link rule as skill files.
+        readme = os.path.join(plugin_root, "README.md")
+        if os.path.isfile(readme):
+            with open(readme, encoding="utf-8") as readme_file:
+                esc = escaping_links(readme_file.read(), readme, plugin_root)
+            if esc:
+                errors.append((plugin, "README.md", "cross-plugin relative link(s) — dead in a sparse-clone install, use an absolute GitHub URL: " + ", ".join(esc)))
+        skills_dir = os.path.join(plugin_root, "skills")
         if not os.path.isdir(skills_dir):
             continue
         for skill in sorted(os.listdir(skills_dir)):
@@ -145,7 +154,6 @@ def audit(plugins_dir):
             if not os.path.isfile(skill_md):
                 continue
             label = f"{plugin}/{skill}"
-            plugin_root = os.path.join(plugins_dir, plugin)
 
             with open(skill_md, encoding="utf-8") as skill_file:
                 skill_text = skill_file.read()
