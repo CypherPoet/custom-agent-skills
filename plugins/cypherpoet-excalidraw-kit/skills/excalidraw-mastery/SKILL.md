@@ -21,6 +21,8 @@ description: >
 
 # Excalidraw Mastery
 
+**Verified:** 2026-07-17
+
 *Grounded in the official [Excalidraw documentation](https://docs.excalidraw.com/) and the `@excalidraw/excalidraw` v0.18.1 source (scene format `version` 2). Design methodology adapted from the community Excalidraw skills by [coleam00](https://github.com/coleam00/excalidraw-diagram-skill) and [awesome-copilot](https://github.com/github/awesome-copilot).*
 
 Working knowledge of [Excalidraw](https://excalidraw.com) — the virtual whiteboard for hand-drawn-style diagrams. Use this to author correct `.excalidraw` files, design diagrams that actually communicate, drive the `@excalidraw/excalidraw` API from code, and convert Mermaid — grounded in the docs and the source, not training-data guesses.

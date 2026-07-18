@@ -6,6 +6,8 @@ disable-model-invocation: true
 
 # marketplace-publish
 
+**Verified:** 2026-07-17
+
 Publish one plugin from this source repo to a marketplace **catalog** by opening a pull request on the marketplace repo. Works for a single plugin or a set, in one PR. Runs on your local `gh` credentials — no GitHub Actions, no tokens.
 
 A marketplace repo carries **two catalog files**, one per harness: `.claude-plugin/marketplace.json` (Claude Code) and `.agents/plugins/marketplace.json` (Codex). One publish run keeps both in step — a dual-harness plugin gets an entry in each; a Claude-only plugin gets a Claude entry alone.
