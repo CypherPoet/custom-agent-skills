@@ -19,5 +19,5 @@ Install via the [`cypherpoet-toolchest`](https://github.com/CypherPoet/cypherpoe
 | Skill | Description |
 |---|---|
 | [react-three-fiber-mastery](skills/react-three-fiber-mastery/SKILL.md) | Comprehensive React Three Fiber reference covering the R3F v9 + React 19 stack — Canvas setup, declarative scene JSX, hooks, events, drei, performance doctrine, shaders, post-processing, physics, and v8 → v9 migration. |
-| [threejs-mastery](skills/threejs-mastery/SKILL.md) | Three.js reference beneath the R3F reconciler (vendored from [cypherpoet-threejs-kit](../cypherpoet-threejs-kit)). |
-| [webgl-mastery](skills/webgl-mastery/SKILL.md) | Raw WebGL2 + GLSL fundamentals beneath Three.js (vendored from [cypherpoet-webgl-kit](../cypherpoet-webgl-kit)). |
+| [threejs-mastery](skills/threejs-mastery/SKILL.md) | Three.js reference beneath the R3F reconciler (vendored from [cypherpoet-threejs-kit](https://github.com/CypherPoet/custom-agent-skills/tree/main/plugins/cypherpoet-threejs-kit)). |
+| [webgl-mastery](skills/webgl-mastery/SKILL.md) | Raw WebGL2 + GLSL fundamentals beneath Three.js (vendored from [cypherpoet-webgl-kit](https://github.com/CypherPoet/custom-agent-skills/tree/main/plugins/cypherpoet-webgl-kit)). |
