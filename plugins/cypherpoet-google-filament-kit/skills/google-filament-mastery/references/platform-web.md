@@ -10,26 +10,7 @@ JS API is a thin binding over the C++ API: same objects (`Engine`, `Scene`, `Vie
 demand it (e.g. `createIblFromKtx1`, `setColor3Parameter`). All API names below are copied verbatim
 from the tutorials — do not substitute guessed names.
 
-## Contents
-
-- [Page Skeleton (HTML)](#page-skeleton-html)
-- [Bootstrapping: `Filament.init` and Engine Creation](#bootstrapping-filamentinit-and-engine-creation)
-- [WebGL2 / WebGPU Backend](#webgl2--webgpu-backend)
-- [Serving Over HTTP (CORS / MIME)](#serving-over-http-cors--mime)
-- [Core Object Graph](#core-object-graph)
-- [Entities, Components, Managers](#entities-components-managers)
-- [The Builder Pattern in JS](#the-builder-pattern-in-js)
-- [Vertex & Index Buffers](#vertex--index-buffers)
-- [Materials & Material Instances](#materials--material-instances)
-- [Lighting (Directional / Sun / IBL)](#lighting-directional--sun--ibl)
-- [Skybox & IBL from KTX](#skybox--ibl-from-ktx)
-- [Textures (KTX2, Compressed, Async)](#textures-ktx2-compressed-async)
-- [Meshes: filamesh](#meshes-filamesh)
-- [The Render & Resize Loop](#the-render--resize-loop)
-- [Resize / DPR Handling](#resize--dpr-handling)
-- [Asset-Production Toolchain (matc / cmgen / filamesh / mipgen)](#asset-production-toolchain-matc--cmgen--filamesh--mipgen)
-- [Asset Type Reference](#asset-type-reference)
-- [Gotchas](#gotchas)
+**Contents:** [Page Skeleton (HTML)](#page-skeleton-html) · [Bootstrapping: `Filament.init` and Engine Creation](#bootstrapping-filamentinit-and-engine-creation) · [WebGL2 / WebGPU Backend](#webgl2--webgpu-backend) · [Serving Over HTTP (CORS / MIME)](#serving-over-http-cors--mime) · [Core Object Graph](#core-object-graph) · [Entities, Components, Managers](#entities-components-managers) · [The Builder Pattern in JS](#the-builder-pattern-in-js) · [Vertex & Index Buffers](#vertex--index-buffers) · [Materials & Material Instances](#materials--material-instances) · [Lighting (Directional / Sun / IBL)](#lighting-directional--sun--ibl) · [Skybox & IBL from KTX](#skybox--ibl-from-ktx) · [Textures (KTX2, Compressed, Async)](#textures-ktx2-compressed-async) · [Meshes: filamesh](#meshes-filamesh) · [The Render & Resize Loop](#the-render--resize-loop) · [Resize / DPR Handling](#resize--dpr-handling) · [Asset-Production Toolchain (matc / cmgen / filamesh / mipgen)](#asset-production-toolchain-matc--cmgen--filamesh--mipgen) · [Asset Type Reference](#asset-type-reference) · [Gotchas](#gotchas)
 
 ---
 

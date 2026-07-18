@@ -3,23 +3,7 @@
 > Source: Filament C++ headers (Engine/SwapChain/Renderer/View/Scene/Camera) + repo README, Filament v1.72.0
 > Last synced: 2026-06-19
 
-## Contents
-
-- [Mental Model & Ownership](#mental-model--ownership)
-- [Minimal Setup + Render Loop](#minimal-setup--render-loop)
-- [Engine](#engine)
-  - [Creating an Engine](#creating-an-engine)
-  - [Engine::Config](#engineconfig)
-  - [Factory Methods](#factory-methods)
-  - [Destruction & Resource Tracking](#destruction--resource-tracking)
-  - [Feature Levels](#feature-levels)
-  - [Threading & Frame Pumping](#threading--frame-pumping)
-- [SwapChain](#swapchain)
-- [Renderer](#renderer)
-- [View](#view)
-- [Scene](#scene)
-- [Camera](#camera)
-- [Common Pitfalls](#common-pitfalls)
+**Contents:** [Mental Model & Ownership](#mental-model--ownership) · [Minimal Setup + Render Loop](#minimal-setup--render-loop) · [Engine](#engine) · [Creating an Engine](#creating-an-engine) · [Engine::Config](#engineconfig) · [Factory Methods](#factory-methods) · [Destruction & Resource Tracking](#destruction--resource-tracking) · [Feature Levels](#feature-levels) · [Threading & Frame Pumping](#threading--frame-pumping) · [SwapChain](#swapchain) · [Renderer](#renderer) · [View](#view) · [Scene](#scene) · [Camera](#camera) · [Common Pitfalls](#common-pitfalls)
 
 > Build, linking, SDK install, and native-window creation (SDL2 / NSView / HWND / ANativeWindow) live in the platform reference, not here. Exposure / tone-mapping / post-processing depth lives in `concepts-imaging-pipeline.md`.
 

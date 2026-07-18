@@ -5,13 +5,7 @@
 
 Distilled from Apple's HIG Patterns pages: Feedback, Notifications, Managing notifications, Live Activities, Privacy, Ratings and reviews.
 
-## Contents
-- [Feedback](#feedback)
-- [Notifications](#notifications)
-- [Managing notifications](#managing-notifications)
-- [Live Activities](#live-activities)
-- [Privacy](#privacy)
-- [Ratings and reviews](#ratings-and-reviews)
+**Contents:** [Feedback](#feedback) · [Notifications](#notifications) · [Managing notifications](#managing-notifications) · [Live Activities](#live-activities) · [Privacy](#privacy) · [Ratings and reviews](#ratings-and-reviews)
 
 ### Feedback
 

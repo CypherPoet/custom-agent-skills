@@ -5,12 +5,7 @@
 
 Distilled from Apple's HIG Patterns pages: Launching, Onboarding, Modality, Multitasking, Going full screen.
 
-## Contents
-- [Launching](#launching)
-- [Onboarding](#onboarding)
-- [Modality](#modality)
-- [Multitasking](#multitasking)
-- [Going full screen](#going-full-screen)
+**Contents:** [Launching](#launching) · [Onboarding](#onboarding) · [Modality](#modality) · [Multitasking](#multitasking) · [Going full screen](#going-full-screen)
 
 ### Launching
 *Last changed: 2024-06*

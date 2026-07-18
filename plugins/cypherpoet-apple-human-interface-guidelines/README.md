@@ -25,6 +25,6 @@ Install via the marketplace this plugin is published to:
 | Question | Plugin |
 |---|---|
 | How should this screen look / behave / feel native? | **this plugin** |
-| Will this pass App Review? Keyword/metadata strategy? | [cypherpoet-mobile-dev](../cypherpoet-mobile-dev) (`apple-app-store-best-practices`) |
-| How do I get the build submitted through App Store Connect? | [cypherpoet-app-store-connect-kit](../cypherpoet-app-store-connect-kit) |
-| What are the store screenshot dimensions / capture flow? | [cypherpoet-apple-app-store-screenshots](../cypherpoet-apple-app-store-screenshots) |
+| Will this pass App Review? Keyword/metadata strategy? | [cypherpoet-mobile-dev](https://github.com/CypherPoet/custom-agent-skills/tree/main/plugins/cypherpoet-mobile-dev) (`apple-app-store-best-practices`) |
+| How do I get the build submitted through App Store Connect? | [cypherpoet-app-store-connect-kit](https://github.com/CypherPoet/custom-agent-skills/tree/main/plugins/cypherpoet-app-store-connect-kit) |
+| What are the store screenshot dimensions / capture flow? | [cypherpoet-apple-app-store-screenshots](https://github.com/CypherPoet/custom-agent-skills/tree/main/plugins/cypherpoet-apple-app-store-screenshots) |

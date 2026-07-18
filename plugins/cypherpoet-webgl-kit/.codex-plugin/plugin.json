@@ -1,0 +1,20 @@
+{
+  "name": "cypherpoet-webgl-kit",
+  "version": "0.2.0",
+  "description": "Raw WebGL2 + GLSL shader tooling.",
+  "author": {
+    "name": "CypherPoet"
+  },
+  "homepage": "https://github.com/CypherPoet/custom-agent-skills/tree/main/plugins/cypherpoet-webgl-kit",
+  "repository": "https://github.com/CypherPoet/custom-agent-skills.git",
+  "license": "MIT",
+  "keywords": [
+    "claude-code",
+    "webgl",
+    "webgl2",
+    "glsl",
+    "shaders",
+    "graphics"
+  ],
+  "skills": "./skills/"
+}

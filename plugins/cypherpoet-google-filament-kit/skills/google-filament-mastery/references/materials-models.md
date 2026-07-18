@@ -3,33 +3,7 @@
 > Source: Filament Materials — "Material models" (Materials.md), Filament v1.72.0
 > Last synced: 2026-06-19
 
-## Contents
-
-- [Core Concepts](#core-concepts)
-- [Choosing a Model](#choosing-a-model)
-- [Lit Model (Standard)](#lit-model-standard)
-  - [Base Color](#base-color)
-  - [Metallic](#metallic)
-  - [Roughness](#roughness)
-  - [Reflectance](#reflectance)
-  - [Specular Factor And Specular Color Factor](#specular-factor-and-specular-color-factor)
-  - [Sheen Color And Sheen Roughness](#sheen-color-and-sheen-roughness)
-  - [Clear Coat, Clear Coat Roughness, Clear Coat Normal](#clear-coat-clear-coat-roughness-clear-coat-normal)
-  - [Anisotropy And Anisotropy Direction](#anisotropy-and-anisotropy-direction)
-  - [Ambient Occlusion](#ambient-occlusion)
-  - [Normal And Bent Normal](#normal-and-bent-normal)
-  - [Emissive](#emissive)
-  - [Post-Lighting Color](#post-lighting-color)
-  - [Index Of Refraction (ior)](#index-of-refraction-ior)
-  - [Transmission](#transmission)
-  - [Absorption](#absorption)
-  - [Thickness And Micro-Thickness](#thickness-and-micro-thickness)
-  - [Dispersion](#dispersion)
-  - [Shadow Strength](#shadow-strength)
-- [Subsurface Model](#subsurface-model)
-- [Cloth Model](#cloth-model)
-- [Unlit Model](#unlit-model)
-- [Specular Glossiness (Legacy)](#specular-glossiness-legacy)
+**Contents:** [Core Concepts](#core-concepts) · [Choosing a Model](#choosing-a-model) · [Lit Model (Standard)](#lit-model-standard) · [Base Color](#base-color) · [Metallic](#metallic) · [Roughness](#roughness) · [Reflectance](#reflectance) · [Specular Factor And Specular Color Factor](#specular-factor-and-specular-color-factor) · [Sheen Color And Sheen Roughness](#sheen-color-and-sheen-roughness) · [Clear Coat, Clear Coat Roughness, Clear Coat Normal](#clear-coat-clear-coat-roughness-clear-coat-normal) · [Anisotropy And Anisotropy Direction](#anisotropy-and-anisotropy-direction) · [Ambient Occlusion](#ambient-occlusion) · [Normal And Bent Normal](#normal-and-bent-normal) · [Emissive](#emissive) · [Post-Lighting Color](#post-lighting-color) · [Index Of Refraction (ior)](#index-of-refraction-ior) · [Transmission](#transmission) · [Absorption](#absorption) · [Thickness And Micro-Thickness](#thickness-and-micro-thickness) · [Dispersion](#dispersion) · [Shadow Strength](#shadow-strength) · [Subsurface Model](#subsurface-model) · [Cloth Model](#cloth-model) · [Unlit Model](#unlit-model) · [Specular Glossiness (Legacy)](#specular-glossiness-legacy)
 
 ---
 

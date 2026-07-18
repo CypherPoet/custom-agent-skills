@@ -1,5 +1,5 @@
 {
-  "_comment": "Volatility tiers for the skill-fact-check routine. Methodology lives in the skill at plugins/cypherpoet-marketplace-kit/skills/skill-fact-check/SKILL.md. unit_id = <plugin>/<skill>. Every unit is listed explicitly — check-skill-structure.py advises when one is missing; an unlisted unit still safely defaults to monthly. Re-tier by moving a unit_id between the lists.",
+  "_comment": "Volatility tiers for the skill-fact-check routine. Methodology lives in the skill at plugins/cypherpoet-marketplace-kit/skills/skill-fact-check/SKILL.md. unit_id = <plugin>/<skill>. Every unit is listed explicitly — check-skill-structure.py advises when one is missing; an unlisted unit still safely defaults to monthly. Re-tier by moving a unit_id between the lists. Vendored skill copies (a skill generated into a plugin that isn't its author — see scripts/plugin-registry.json) are tiered 'never': the routine corrects the authoritative source, and scripts/sync_plugins.py propagates the fix to every copy.",
   "repo": "custom-agent-skills",
   "defaults": { "tier": "monthly" },
   "weekly": [
@@ -18,8 +18,6 @@
     "cypherpoet-excalidraw-kit/excalidraw-mastery",
     "cypherpoet-expo-kit/expo-snack-prototyper",
     "cypherpoet-google-filament-kit/google-filament-mastery",
-    "cypherpoet-marketplace-kit/catalog-refresh",
-    "cypherpoet-marketplace-kit/dependency-tag-check",
     "cypherpoet-marketplace-kit/marketplace-publish",
     "cypherpoet-marketplace-kit/marketplace-publish-check",
     "cypherpoet-marketplace-kit/marketplace-sync-check",
@@ -36,13 +34,20 @@
   ],
   "never": [
     "cypherpoet-changelog-maintenance/changelog-maintenance",
+    "cypherpoet-marketplace-kit/catalog-refresh",
     "cypherpoet-emoji-commits/emoji-commits",
     "cypherpoet-git-hygiene/remote-branch-sync",
     "cypherpoet-git-hygiene/worktree-cleanup",
     "cypherpoet-marketplace-kit/skill-fact-check",
     "cypherpoet-session-handoff/session-handoff",
     "cypherpoet-session-harvest/session-harvest",
-    "cypherpoet-session-harvest/skill-harvest"
+    "cypherpoet-session-harvest/skill-harvest",
+    "cypherpoet-git-flow/changelog-maintenance",
+    "cypherpoet-git-flow/emoji-commits",
+    "cypherpoet-mobile-dev/apple-app-store-screenshots",
+    "cypherpoet-react-three-fiber-kit/threejs-mastery",
+    "cypherpoet-react-three-fiber-kit/webgl-mastery",
+    "cypherpoet-threejs-kit/webgl-mastery"
   ],
   "acknowledged": [
     {

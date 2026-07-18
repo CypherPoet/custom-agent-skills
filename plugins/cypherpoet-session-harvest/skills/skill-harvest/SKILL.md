@@ -39,7 +39,7 @@ Check beyond the transcript: the project's memory directory often holds stalenes
 
 ## Phase 2: Map Candidates to Skills
 
-Locate the user's skill library — the local dev clones behind their personal plugin marketplaces. `~/.claude/plugins/known_marketplaces.json` lists the marketplace sources; if the dev-clone locations aren't already known, ask. Then route each candidate:
+Locate the user's skill library — the local dev clones behind their personal plugin marketplaces. The harness lists the configured marketplace sources (Claude Code: `~/.claude/plugins/known_marketplaces.json`; Codex: `codex plugin marketplace list`); if the dev-clone locations aren't already known, ask. Then route each candidate:
 
 - **Fix or extend an existing skill** — the common case. Name the exact skill and roughly where the change lands (SKILL.md body vs. a `references/` file).
 - **A genuinely new skill** — out of scope here; hand it to skill-creator and say so.

@@ -228,7 +228,7 @@ These bite across every topic; topical mistakes live in each reference's own tab
 
 ## See Also
 
-- [`threejs-mastery` skill](https://github.com/CypherPoet/custom-agent-skills/blob/main/plugins/cypherpoet-threejs-kit/skills/threejs-mastery/SKILL.md) — sibling skill for Three.js itself beneath the reconciler (a declared dependency of this plugin).
+- [`threejs-mastery` skill](https://github.com/CypherPoet/custom-agent-skills/blob/main/plugins/cypherpoet-threejs-kit/skills/threejs-mastery/SKILL.md) — sibling skill for Three.js itself beneath the reconciler (ships with this plugin).
 - [React Three Fiber documentation](https://r3f.docs.pmnd.rs/) — official docs.
 - [drei documentation](https://drei.docs.pmnd.rs/) — the helper catalog, searchable.
 - [pmndrs market](https://market.pmnd.rs/) — free models/HDRIs for prototyping.

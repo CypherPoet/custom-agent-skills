@@ -5,20 +5,7 @@
 
 Distilled from Apple's HIG Inputs pages: Gestures, Focus and selection, Keyboards, Virtual keyboards, Playing haptics, Digital Crown, Apple Pencil and Scribble, Camera Control, Action button, Game controls, Remotes, Eyes, Gyroscope and accelerometer.
 
-## Contents
-- [Gestures](#gestures)
-- [Focus and selection](#focus-and-selection)
-- [Keyboards](#keyboards)
-- [Virtual keyboards](#virtual-keyboards)
-- [Playing haptics](#playing-haptics)
-- [Digital Crown](#digital-crown)
-- [Apple Pencil and Scribble](#apple-pencil-and-scribble)
-- [Camera Control](#camera-control)
-- [Action button](#action-button)
-- [Game controls](#game-controls)
-- [Remotes](#remotes)
-- [Eyes](#eyes)
-- [Gyroscope and accelerometer](#gyroscope-and-accelerometer)
+**Contents:** [Gestures](#gestures) · [Focus and selection](#focus-and-selection) · [Keyboards](#keyboards) · [Virtual keyboards](#virtual-keyboards) · [Playing haptics](#playing-haptics) · [Digital Crown](#digital-crown) · [Apple Pencil and Scribble](#apple-pencil-and-scribble) · [Camera Control](#camera-control) · [Action button](#action-button) · [Game controls](#game-controls) · [Remotes](#remotes) · [Eyes](#eyes) · [Gyroscope and accelerometer](#gyroscope-and-accelerometer)
 
 ### Gestures
 *Last changed: 2024-09*

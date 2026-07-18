@@ -2,14 +2,7 @@
 
 How to make an Apple app icon *convert* — the design and tap-through side that complements the build-and-ship engineering in [`../SKILL.md`](../SKILL.md). This is Apple-focused; Android adaptive icons and Play Store experiments are a separate concern.
 
-## Contents
-
-- [Why the icon is your highest-leverage asset](#why-the-icon-is-your-highest-leverage-asset)
-- [Design principles](#design-principles)
-- [Apple icon sizes](#apple-icon-sizes)
-- [Icon audit rubric](#icon-audit-rubric)
-- [A/B-testing icons on iOS](#ab-testing-icons-on-ios)
-- [Designer brief template](#designer-brief-template)
+**Contents:** [Why the icon is your highest-leverage asset](#why-the-icon-is-your-highest-leverage-asset) · [Design principles](#design-principles) · [Apple icon sizes](#apple-icon-sizes) · [Icon audit rubric](#icon-audit-rubric) · [A/B-testing icons on iOS](#ab-testing-icons-on-ios) · [Designer brief template](#designer-brief-template)
 
 ## Why the icon is your highest-leverage asset
 

@@ -3,24 +3,7 @@
 > Source: Filament C++ headers (RenderableManager/LightManager/TransformManager/Box), Filament v1.72.0
 > Last synced: 2026-06-19
 
-## Contents
-
-- [Mental Model: Entity-Component](#mental-model-entity-component)
-- [Entities: utils::Entity & utils::EntityManager](#entities-utilsentity--utilsentitymanager)
-- [Common Manager Surface (Instance pattern)](#common-manager-surface-instance-pattern)
-- [RenderableManager](#renderablemanager)
-  - [Builder method set (verbatim)](#renderablemanager-builder-method-set-verbatim)
-  - [PrimitiveType enum](#primitivetype-enum)
-  - [Geometry overloads](#geometry-overloads)
-  - [Post-build mutators](#renderablemanager-post-build-mutators)
-- [LightManager](#lightmanager)
-  - [Type enum (verbatim)](#lightmanager-type-enum-verbatim)
-  - [Builder method set (verbatim)](#lightmanager-builder-method-set-verbatim)
-  - [Physical units](#physical-units)
-  - [Post-build mutators](#lightmanager-post-build-mutators)
-- [TransformManager](#transformmanager)
-- [Box & Aabb (bounding boxes)](#box--aabb-bounding-boxes)
-- [End-to-End Flow (grounded in hellopbr.cpp)](#end-to-end-flow-grounded-in-hellopbrcpp)
+**Contents:** [Mental Model: Entity-Component](#mental-model-entity-component) · [Entities: utils::Entity & utils::EntityManager](#entities-utilsentity--utilsentitymanager) · [Common Manager Surface (Instance pattern)](#common-manager-surface-instance-pattern) · [RenderableManager](#renderablemanager) · [Builder method set (verbatim)](#renderablemanager-builder-method-set-verbatim) · [PrimitiveType enum](#primitivetype-enum) · [Geometry overloads](#geometry-overloads) · [Post-build mutators](#renderablemanager-post-build-mutators) · [LightManager](#lightmanager) · [Type enum (verbatim)](#lightmanager-type-enum-verbatim) · [Builder method set (verbatim)](#lightmanager-builder-method-set-verbatim) · [Physical units](#physical-units) · [Post-build mutators](#lightmanager-post-build-mutators) · [TransformManager](#transformmanager) · [Box & Aabb (bounding boxes)](#box--aabb-bounding-boxes) · [End-to-End Flow (grounded in hellopbr.cpp)](#end-to-end-flow-grounded-in-hellopbrcpp)
 
 ---
 

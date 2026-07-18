@@ -1,0 +1,20 @@
+{
+  "name": "cypherpoet-threejs-kit",
+  "version": "0.8.1",
+  "description": "Three.js / WebGPU / WebGL tooling.",
+  "author": {
+    "name": "CypherPoet"
+  },
+  "homepage": "https://github.com/CypherPoet/custom-agent-skills/tree/main/plugins/cypherpoet-threejs-kit",
+  "repository": "https://github.com/CypherPoet/custom-agent-skills.git",
+  "license": "MIT",
+  "keywords": [
+    "claude-code",
+    "threejs",
+    "webgl",
+    "webgl2",
+    "webgpu",
+    "graphics"
+  ],
+  "skills": "./skills/"
+}

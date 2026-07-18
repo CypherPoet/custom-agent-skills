@@ -15,7 +15,7 @@ description: >
 
 # Apple App Store Best Practices
 
-*Last synced with Apple guidelines: 2026-06-01*
+*Last synced with Apple guidelines: 2026-07-17*
 
 Comprehensive guide for Apple App Store success: compliance auditing against all 5 sections of the [Apple App Store Review Guidelines](https://developer.apple.com/app-store/review/guidelines/) with exact section citations and actionable remediation, plus metadata optimization, screenshot strategy, review management, and localization best practices.
 
@@ -73,7 +73,7 @@ For targeted questions during development (not full audits), map the task to gui
 
 ## Listing Optimization (Beyond Compliance)
 
-Metadata/ASO, screenshot & app-preview strategy, review/rating management, and localization — the discoverability and conversion side of the listing — live in [references/listing-optimization.md](references/listing-optimization.md). For exact screenshot specs and capture automation, the **`apple-app-store-screenshots`** skill ships as a dependency of this plugin.
+Metadata/ASO, screenshot & app-preview strategy, review/rating management, and localization — the discoverability and conversion side of the listing — live in [references/listing-optimization.md](references/listing-optimization.md). For exact screenshot specs and capture automation, the **`apple-app-store-screenshots`** skill ships with this plugin.
 
 ## Primary Sources
 

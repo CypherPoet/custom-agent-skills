@@ -5,20 +5,7 @@
 
 Distilled from Apple's HIG Technologies pages: Playing audio, Playing video, AirPlay, SharePlay, Live Photos, Photo editing, ShazamKit, HealthKit, CareKit, ResearchKit, Workouts, HomeKit, Augmented reality.
 
-## Contents
-- [Playing audio](#playing-audio)
-- [Playing video](#playing-video)
-- [AirPlay](#airplay)
-- [SharePlay](#shareplay)
-- [Live Photos](#live-photos)
-- [Photo editing](#photo-editing)
-- [ShazamKit](#shazamkit)
-- [HealthKit](#healthkit)
-- [CareKit](#carekit)
-- [ResearchKit](#researchkit)
-- [Workouts](#workouts)
-- [HomeKit](#homekit)
-- [Augmented reality](#augmented-reality)
+**Contents:** [Playing audio](#playing-audio) · [Playing video](#playing-video) · [AirPlay](#airplay) · [SharePlay](#shareplay) · [Live Photos](#live-photos) · [Photo editing](#photo-editing) · [ShazamKit](#shazamkit) · [HealthKit](#healthkit) · [CareKit](#carekit) · [ResearchKit](#researchkit) · [Workouts](#workouts) · [HomeKit](#homekit) · [Augmented reality](#augmented-reality)
 
 ### Playing audio
 *Last changed: 2023-06*

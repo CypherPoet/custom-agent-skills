@@ -25,5 +25,5 @@ Install via the marketplace this plugin is published to:
 | Question | Plugin |
 |---|---|
 | Real-time PBR rendering with Google Filament (C++, Web, or Android)? | **this plugin** |
-| Raw WebGL / WebGL2 — buffers, shaders, draw calls, the GPU pipeline? | [cypherpoet-webgl-kit](../cypherpoet-webgl-kit) |
-| Scene-graph 3D on the web with Three.js? | [cypherpoet-threejs-kit](../cypherpoet-threejs-kit) |
+| Raw WebGL / WebGL2 — buffers, shaders, draw calls, the GPU pipeline? | [cypherpoet-webgl-kit](https://github.com/CypherPoet/custom-agent-skills/tree/main/plugins/cypherpoet-webgl-kit) |
+| Scene-graph 3D on the web with Three.js? | [cypherpoet-threejs-kit](https://github.com/CypherPoet/custom-agent-skills/tree/main/plugins/cypherpoet-threejs-kit) |

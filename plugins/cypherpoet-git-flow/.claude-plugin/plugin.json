@@ -1,15 +1,11 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "cypherpoet-git-flow",
-  "version": "0.2.0",
+  "version": "0.3.1",
   "description": "Bundle of git commit and changelog hygiene plugins: emoji commits and changelog maintenance.",
   "author": { "name": "CypherPoet" },
   "homepage": "https://github.com/CypherPoet/custom-agent-skills/tree/main/plugins/cypherpoet-git-flow",
   "repository": "https://github.com/CypherPoet/custom-agent-skills.git",
   "license": "MIT",
-  "keywords": ["claude-code", "git", "commits", "changelog", "bundle"],
-  "dependencies": [
-    "cypherpoet-changelog-maintenance",
-    "cypherpoet-emoji-commits"
-  ]
+  "keywords": ["claude-code", "git", "commits", "changelog", "bundle"]
 }

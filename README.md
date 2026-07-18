@@ -4,33 +4,48 @@
 
 ## About
 
-A curated collection of reusable AI agent skills, packaged as Claude Code plugins. Each plugin holds a focused set of related skills — install only the themes you need.
+A curated collection of reusable AI agent skills, packaged as Claude Code and Codex plugins. Each plugin holds a focused set of related skills — install only the themes you need.
 
 **[Browse the Plugin Catalog &rarr;](docs/CATALOG.md)**
 
 ## Installation
 
-This repo publishes its plugins via the [`cypherpoet-toolchest`](https://github.com/CypherPoet/cypherpoet-toolchest) Claude Code marketplace.
+This repo publishes its plugins for both **Claude Code** and **Codex** via the [`cypherpoet-toolchest`](https://github.com/CypherPoet/cypherpoet-toolchest) marketplace — one repo carrying both harness catalogs.
+
+**Claude Code:**
 
 ```shell
 # Subscribe to the marketplace once
 /plugin marketplace add CypherPoet/cypherpoet-toolchest
 
 # Install whichever plugins you want
-/plugin install cypherpoet-agent-tooling@cypherpoet-toolchest
 /plugin install cypherpoet-git-flow@cypherpoet-toolchest
+/plugin install cypherpoet-blender-kit@cypherpoet-toolchest
 # ...etc
 ```
+
+**Codex** (same marketplace repo — it carries both harness catalogs):
+
+```shell
+codex plugin marketplace add CypherPoet/cypherpoet-toolchest
+codex plugin add cypherpoet-git-flow@cypherpoet-toolchest
+```
+
 
 ## Repository Structure
 
 ```
 .
-├── plugins/                  # Published agentic plugins
+├── plugins/                  # Self-contained published plugins
 ├── docs/
 │   ├── CATALOG.md            # Cross-plugin index
-│   └── PLUGIN-CONVENTIONS.md # Per-plugin conventions this repo applies
-└── .claude/                  # Claude Code config
+│   ├── PLUGIN-CONVENTIONS.md # Plugin architecture and contributor workflow
+│   └── automated-routines/   # Maintenance routine configuration
+├── scripts/                  # Plugin registry and sync generator
+├── tests/                    # Repository health suite
+├── .github/                  # CI (Verify workflow)
+├── .agents/skills/           # Codex maintainer skills
+└── .claude/                  # Claude Code maintainer config and skills
 ```
 
 Claude plugin anatomy (component dirs, manifest fields, auto-discovery) follows the [Claude Code plugins reference](https://code.claude.com/docs/en/plugins-reference). This repo's specific conventions live in [`docs/PLUGIN-CONVENTIONS.md`](docs/PLUGIN-CONVENTIONS.md).

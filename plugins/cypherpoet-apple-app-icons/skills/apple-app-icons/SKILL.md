@@ -19,6 +19,8 @@ description: >
 
 # Apple App Icons (Icon Composer + appiconset)
 
+**Verified:** 2026-07-17
+
 ## Overview
 
 An app icon has two jobs: **earn the tap** in the App Store (a design / conversion problem) and **ship correctly** across every OS version and appearance (an engineering problem). This skill covers both — settle the design first, then build and wire the assets.
@@ -62,7 +64,7 @@ For the full audit rubric, an iOS A/B-test workflow (App Store Connect → Produ
 | iOS 1024 marketing PNG | **no alpha channel** (App Store rejects alpha); full-bleed, system masks corners |
 | App Store listing icon | derived from the build's asset-catalog **default** appearance — there's no separate App Store upload; a *dark* listing icon means making dark the build default (which also flips the Home Screen) |
 | Verify | `xcodebuild … build`, then inspect the compiled `Assets.car` |
-| Generate the appiconset fallback | `${CLAUDE_PLUGIN_ROOT}/skills/apple-app-icons/scripts/generate-app-icons.py` (cleans the source, writes the macOS ladder; author the `.icon` in Icon Composer) |
+| Generate the appiconset fallback | `scripts/generate-app-icons.py` (cleans the source, writes the macOS ladder; author the `.icon` in Icon Composer) |
 
 ## The `.icon` bundle
 
@@ -162,10 +164,10 @@ Expect Liquid Glass layer renditions plus `AppIcon … UIAppearanceAny` / `…Da
 
 ## Generation script
 
-`scripts/generate-app-icons.py` (Pillow) cleans one source and emits the **`.appiconset`** fallback. Author the Liquid Glass `.icon` itself in **Icon Composer** — its material and Default / Dark / Clear appearance variants can't be produced by a script.
+`scripts/generate-app-icons.py` (Pillow; paths relative to this skill's directory) cleans one source and emits the **`.appiconset`** fallback. Author the Liquid Glass `.icon` itself in **Icon Composer** — its material and Default / Dark / Clear appearance variants can't be produced by a script.
 
 ```shell
-python3 "${CLAUDE_PLUGIN_ROOT}/skills/apple-app-icons/scripts/generate-app-icons.py" \
+python3 scripts/generate-app-icons.py \
   source.png --clean --recenter \
   --appiconset path/to/AppIcon.appiconset
 ```
