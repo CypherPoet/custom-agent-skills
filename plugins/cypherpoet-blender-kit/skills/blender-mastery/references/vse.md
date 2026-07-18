@@ -4,7 +4,7 @@ The VSE is Blender's non-linear video editor. From script: build sequences, add 
 
 ## Mental model
 
-A *scene* in Blender has one VSE timeline (`scene.sequence_editor`). The timeline holds *strips* arranged on *channels* (numbered tracks, 1 to 32). Strips can be video, image, sound, color, transition, or effect.
+A *scene* in Blender has one VSE timeline (`scene.sequence_editor`). The timeline holds *strips* arranged on *channels* (numbered tracks, 1 to 128). Strips can be video, image, sound, color, transition, or effect.
 
 ```python
 import bpy
@@ -21,7 +21,7 @@ def get_or_create_vse():
 ```python
 def add_video_strip(filepath, channel=1, frame_start=1, name=None):
     seq = get_or_create_vse()
-    strip = seq.sequences.new_movie(
+    strip = seq.strips.new_movie(
         name=name or filepath.split("/")[-1],
         filepath=filepath,
         channel=channel,
@@ -31,7 +31,7 @@ def add_video_strip(filepath, channel=1, frame_start=1, name=None):
 
 def add_image_strip(filepath, channel=1, frame_start=1, frame_duration=24):
     seq = get_or_create_vse()
-    strip = seq.sequences.new_image(
+    strip = seq.strips.new_image(
         name=filepath.split("/")[-1],
         filepath=filepath,
         channel=channel,
@@ -42,7 +42,7 @@ def add_image_strip(filepath, channel=1, frame_start=1, frame_duration=24):
 
 def add_sound_strip(filepath, channel=2, frame_start=1):
     seq = get_or_create_vse()
-    strip = seq.sequences.new_sound(
+    strip = seq.strips.new_sound(
         name=filepath.split("/")[-1],
         filepath=filepath,
         channel=channel,
@@ -58,14 +58,14 @@ Transitions are *effect strips* placed between two video / image strips. They re
 ```python
 def add_crossfade(seq, strip_a, strip_b, channel=3):
     """Crossfade from strip_a to strip_b. strip_b should overlap strip_a's tail."""
-    fade = seq.sequences.new_effect(
+    fade = seq.strips.new_effect(
         name="Crossfade",
         type='CROSS',
         channel=channel,
         frame_start=strip_b.frame_final_start,
-        frame_end=strip_a.frame_final_end,
-        seq1=strip_a,
-        seq2=strip_b,
+        length=strip_a.frame_final_end - strip_b.frame_final_start,
+        input1=strip_a,
+        input2=strip_b,
     )
     return fade
 ```
@@ -95,13 +95,13 @@ def add_sound_at_time(filepath, seconds_in, channel=2):
 For slow motion or speed-up of a video clip:
 
 ```python
-speed = seq.sequences.new_effect(
+speed = seq.strips.new_effect(
     name="Speed",
     type='SPEED',
     channel=4,
     frame_start=video.frame_final_start,
-    frame_end=video.frame_final_end,
-    seq1=video,
+    length=video.frame_final_duration,
+    input1=video,
 )
 speed.use_default_fade = False
 speed.speed_factor = 0.5  # half-speed
@@ -137,11 +137,11 @@ blender --background project.blend --render-anim
 ```python
 def list_strips(seq=None):
     seq = seq or get_or_create_vse()
-    for s in seq.sequences_all:
+    for s in seq.strips_all:
         print(f"{s.type:10s} ch{s.channel:2d}  {s.frame_final_start:>5d}-{s.frame_final_end:<5d}  {s.name}")
 ```
 
-`sequences_all` is recursive (includes meta-strip contents). `sequences` is just the top level.
+`strips_all` is recursive (includes meta-strip contents). `strips` is just the top level. (The `sequences`/`sequences_all` names were deprecated in Blender 4.4 and removed in 5.0.)
 
 ## When the VSE isn't the right tool
 
