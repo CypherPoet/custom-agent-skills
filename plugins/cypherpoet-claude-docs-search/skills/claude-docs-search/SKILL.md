@@ -15,6 +15,8 @@ description: >
 
 # Claude Code Docs Search
 
+**Verified:** 2026-07-17
+
 Look up answers in the official Claude Code documentation by fetching current, authoritative markdown directly from the docs site.
 
 ## Why This Exists
