@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "cypherpoet-app-store-connect-kit",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "Hands-on App Store Connect submission workflow and console navigation.",
   "author": { "name": "CypherPoet" },
   "homepage": "https://github.com/CypherPoet/custom-agent-skills/tree/main/plugins/cypherpoet-app-store-connect-kit",

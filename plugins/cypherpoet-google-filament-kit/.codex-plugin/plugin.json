@@ -1,6 +1,6 @@
 {
   "name": "cypherpoet-google-filament-kit",
-  "version": "0.2.1",
+  "version": "0.2.3",
   "description": "Comprehensive working knowledge of Google Filament, the real-time physically-based rendering engine — the PBR material model and lighting/IBL, the material definition language and matc compiler, the core engine API (Engine/Scene/View/Renderer/Camera, resources, gltfio), and per-binding setup for C++, Web (JS/WASM), and Android, distilled from the official documentation with a synced reference corpus that tracks Filament releases.",
   "author": {
     "name": "CypherPoet"

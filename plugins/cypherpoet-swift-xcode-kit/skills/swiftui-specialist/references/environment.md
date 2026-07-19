@@ -1,5 +1,7 @@
 # Environment Performance
 
+**Contents:** [How environment comparison works](#how-environment-comparison-works) · [Closures in the Environment](#closures-in-the-environment) · [Rapidly Updating Environment Values](#rapidly-updating-environment-values) · [Unstable Environment Default Values](#unstable-environment-default-values) · [Unused @Environment Reads](#unused-environment-reads)
+
 ## How environment comparison works
 
 When an environment value propagates, SwiftUI compares the old and new value to decide whether each reader needs to re-evaluate. Four facts about that comparison drive the rest of this document:

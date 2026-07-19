@@ -1,5 +1,7 @@
 # Task: UIScreen.main Modernization
 
+**Contents:** [Overview](#overview) · [Pattern 1: UIScreen.main.scale → traitCollection.displayScale](#pattern-1-uiscreenmainscale--traitcollectiondisplayscale) · [Invalidation Analysis (mandatory for every displayScale replacement)](#invalidation-analysis-mandatory-for-every-displayscale-replacement) · [Pattern 2: UIScreen.main.bounds → view.bounds](#pattern-2-uiscreenmainbounds--viewbounds) · [Pattern 3: UIScreen.main.nativeScale — NO trait-collection equivalent](#pattern-3-uiscreenmainnativescale--no-trait-collection-equivalent) · [Pattern 4: Keyboard Notification Coordinate Space](#pattern-4-keyboard-notification-coordinate-space) · [Special Cases](#special-cases) · [Analysis](#analysis) · [Implementation Gates](#implementation-gates) · [Implementation Rules](#implementation-rules) · [Post-file Checklist](#post-file-checklist) · [Final Verification](#final-verification) · [API Reference](#api-reference)
+
 ## Overview
 
 `UIScreen.main` reflects a single-window assumption and is now deprecated for window-relative use. Modern iOS supports multiple windows (iPad multitasking, Stage Manager, iPhone Mirroring), where `UIScreen.main` may not represent the display the calling code is rendering on.

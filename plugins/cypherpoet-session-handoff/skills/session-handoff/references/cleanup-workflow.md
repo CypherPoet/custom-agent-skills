@@ -2,7 +2,7 @@
 
 The full procedure for retiring handoffs whose work has demonstrably moved on. Invoked from the CLEANUP mode in [SKILL.md](../SKILL.md); the procedure lives here so the always-loaded skill body stays lean and only carries the entry point and the safety invariant.
 
-Handoffs are committed by default, so they accumulate. Removal is low-stakes — git history is the undo — but the bar for *what* to retire is deliberately high: **completion + supersession, never staleness alone.**
+Handoffs accumulate over time. Removal is low-stakes for tracked handoffs — git history is the undo — but the bar for *what* to retire is deliberately high: **completion + supersession, never staleness alone.**
 
 ## Step 1: Find Candidates
 

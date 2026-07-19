@@ -1,7 +1,7 @@
 # Section 2: Performance
 
 > Source: https://developer.apple.com/app-store/review/guidelines/
-> Last synced: 2026-06-01
+> Last synced: 2026-07-17
 
 ---
 
@@ -913,7 +913,7 @@
 - Check App Clip binary is included in the main app's archive
 - Search App Clip source code for ad SDKs (`GoogleMobileAds`, `AdMob`, `FBAudienceNetwork`, `AdColony`, `AppLovin`, `UnityAds`, `IronSource`)
 - Check `_XCAppClipURL` associated domains in entitlements
-- Verify App Clip size is under 15MB (check build product size)
+- Verify App Clip size is within the tiered limits — 10 MB (iOS 15), 15 MB (iOS 16), 50 MB (iOS 16.4+ digital invocations only) (check build product size)
 
 **What to check (widgets/extensions generally):**
 - Review all extension targets in the Xcode project (`*.appex` bundles)

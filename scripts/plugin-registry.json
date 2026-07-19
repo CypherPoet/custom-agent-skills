@@ -1,0 +1,114 @@
+{
+  "_comment": "The plugin registry: harness targeting for every plugin plus the skill-sharing (vendoring) edges. Single source of truth for all generated plugin artifacts. Run python3 scripts/sync_plugins.py (bare — write mode is the default) to regenerate every derived artifact; --check to fail on drift. Never hand-edit generated files: any .codex-plugin/plugin.json or vendored skill copy. The categories feed the Codex catalog entries that marketplace-publish writes to the cypherpoet-toolchest marketplace repo (both harness catalogs live there, not in this repo).",
+  "vendored_skills": [
+    {
+      "source": "plugins/cypherpoet-webgl-kit/skills/webgl-mastery",
+      "targets": [
+        "plugins/cypherpoet-threejs-kit/skills/webgl-mastery",
+        "plugins/cypherpoet-react-three-fiber-kit/skills/webgl-mastery"
+      ]
+    },
+    {
+      "source": "plugins/cypherpoet-threejs-kit/skills/threejs-mastery",
+      "targets": [
+        "plugins/cypherpoet-react-three-fiber-kit/skills/threejs-mastery"
+      ]
+    },
+    {
+      "source": "plugins/cypherpoet-apple-app-store-screenshots/skills/apple-app-store-screenshots",
+      "targets": [
+        "plugins/cypherpoet-mobile-dev/skills/apple-app-store-screenshots"
+      ]
+    },
+    {
+      "source": "plugins/cypherpoet-emoji-commits/skills/emoji-commits",
+      "targets": [
+        "plugins/cypherpoet-git-flow/skills/emoji-commits"
+      ]
+    },
+    {
+      "source": "plugins/cypherpoet-changelog-maintenance/skills/changelog-maintenance",
+      "targets": [
+        "plugins/cypherpoet-git-flow/skills/changelog-maintenance"
+      ]
+    },
+    {
+      "source": ".claude/skills/skill-structure-check",
+      "targets": [
+        ".agents/skills/skill-structure-check"
+      ]
+    }
+  ],
+  "dual_harness_plugins": {
+    "cypherpoet-app-store-connect-kit": {
+      "category": "Developer Tools"
+    },
+    "cypherpoet-apple-app-icons": {
+      "category": "Design"
+    },
+    "cypherpoet-apple-app-store-screenshots": {
+      "category": "Developer Tools"
+    },
+    "cypherpoet-apple-human-interface-guidelines": {
+      "category": "Design"
+    },
+    "cypherpoet-blender-kit": {
+      "category": "Developer Tools"
+    },
+    "cypherpoet-changelog-maintenance": {
+      "category": "Developer Tools"
+    },
+    "cypherpoet-emoji-commits": {
+      "category": "Developer Tools"
+    },
+    "cypherpoet-excalidraw-kit": {
+      "category": "Design"
+    },
+    "cypherpoet-expo-kit": {
+      "category": "Developer Tools"
+    },
+    "cypherpoet-git-flow": {
+      "category": "Developer Tools"
+    },
+    "cypherpoet-git-hygiene": {
+      "category": "Developer Tools"
+    },
+    "cypherpoet-google-filament-kit": {
+      "category": "Developer Tools"
+    },
+    "cypherpoet-marketplace-kit": {
+      "category": "Developer Tools"
+    },
+    "cypherpoet-mobile-dev": {
+      "category": "Developer Tools"
+    },
+    "cypherpoet-react-three-fiber-kit": {
+      "category": "Developer Tools"
+    },
+    "cypherpoet-session-handoff": {
+      "category": "Productivity"
+    },
+    "cypherpoet-session-harvest": {
+      "category": "Productivity"
+    },
+    "cypherpoet-sf-symbols-kit": {
+      "category": "Design"
+    },
+    "cypherpoet-svg-tools": {
+      "category": "Design"
+    },
+    "cypherpoet-swift-xcode-kit": {
+      "category": "Developer Tools"
+    },
+    "cypherpoet-threejs-kit": {
+      "category": "Developer Tools"
+    },
+    "cypherpoet-webgl-kit": {
+      "category": "Developer Tools"
+    }
+  },
+  "claude_only_plugins": {
+    "cypherpoet-claude-docs-search": "Looks up Claude Code documentation — not applicable to Codex.",
+    "cypherpoet-claude-memory-consolidation": "Operates on Claude's per-project memory directory — not applicable to Codex."
+  }
+}

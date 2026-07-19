@@ -7,6 +7,8 @@
 material package (`.filamat`). `filamat` is the library that does the same thing at
 runtime / on-device. This file covers both, plus how colors must be fed to materials.
 
+**Contents:** [The `matc` CLI](#the-matc-cli) · [Material Packages, Variants & Platforms](#material-packages-variants--platforms) · [Runtime Compilation — the `filamat` Library](#runtime-compilation--the-filamat-library) · [Handling Colors](#handling-colors)
+
 ## The `matc` CLI
 
 Simplest invocation — give it an input `.mat` and an output `.filamat`:

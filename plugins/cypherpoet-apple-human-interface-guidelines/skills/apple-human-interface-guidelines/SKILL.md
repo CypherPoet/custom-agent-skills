@@ -14,7 +14,7 @@ description: >
 
 # Apple Human Interface Guidelines
 
-*Last synced with Apple HIG: 2026-06-16*
+*Last synced with Apple HIG: 2026-07-17*
 
 Distillation of the complete [Apple Human Interface Guidelines](https://developer.apple.com/design/human-interface-guidelines) — every Foundations, Patterns, Components, Inputs, and Technologies page, across all six platforms — compressed to the load-bearing guidance: what each element is for, when to use it over its alternatives, Apple's best practices as imperatives, the hard numbers, and how behavior differs per platform.
 

@@ -3,31 +3,7 @@
 > Source: Filament Core Concepts — "Imaging pipeline" + Annex (Filament.md), Filament v1.72.0
 > Last synced: 2026-06-19
 
-## Contents
-
-- [The Imaging Pipeline](#the-imaging-pipeline)
-- [Physically Based Camera & Exposure](#physically-based-camera--exposure)
-  - [The Exposure Triangle](#the-exposure-triangle)
-  - [Exposure Value (EV)](#exposure-value-ev)
-  - [Photometric Exposure & Normalization](#photometric-exposure--normalization)
-  - [`Camera` Exposure API](#camera-exposure-api)
-  - [`Exposure` Utility Namespace](#exposure-utility-namespace)
-  - [Automatic Exposure & Metering](#automatic-exposure--metering)
-  - [EV as a Light Unit & Emissive Bloom](#ev-as-a-light-unit--emissive-bloom)
-- [Post-Processing & `View` Options](#post-processing--view-options)
-  - [Tone Mapping (`ToneMapper`)](#tone-mapping-tonemapper)
-  - [Color Grading (`ColorGrading::Builder`)](#color-grading-colorgradingbuilder)
-  - [Bloom, Lens Flare & Chromatic Aberration (`BloomOptions`)](#bloom-lens-flare--chromatic-aberration-bloomoptions)
-  - [Depth of Field (`DepthOfFieldOptions`)](#depth-of-field-depthoffieldoptions)
-  - [Vignette (`VignetteOptions`)](#vignette-vignetteoptions)
-  - [Other `View` Post-Process Options](#other-view-post-process-options)
-- [Color Management](#color-management)
-  - [Linear vs sRGB](#linear-vs-srgb)
-  - [`Color` Conversion API](#color-conversion-api)
-  - [`ColorSpace` API](#colorspace-api)
-- [Renderer Pipeline: Clustered Forward Rendering](#renderer-pipeline-clustered-forward-rendering)
-- [Coordinate Systems & Conventions](#coordinate-systems--conventions)
-- [Validation & Debug](#validation--debug)
+**Contents:** [The Imaging Pipeline](#the-imaging-pipeline) · [Physically Based Camera & Exposure](#physically-based-camera--exposure) · [The Exposure Triangle](#the-exposure-triangle) · [Exposure Value (EV)](#exposure-value-ev) · [Photometric Exposure & Normalization](#photometric-exposure--normalization) · [`Camera` Exposure API](#camera-exposure-api) · [`Exposure` Utility Namespace](#exposure-utility-namespace) · [Automatic Exposure & Metering](#automatic-exposure--metering) · [EV as a Light Unit & Emissive Bloom](#ev-as-a-light-unit--emissive-bloom) · [Post-Processing & `View` Options](#post-processing--view-options) · [Tone Mapping (`ToneMapper`)](#tone-mapping-tonemapper) · [Color Grading (`ColorGrading::Builder`)](#color-grading-colorgradingbuilder) · [Bloom, Lens Flare & Chromatic Aberration (`BloomOptions`)](#bloom-lens-flare--chromatic-aberration-bloomoptions) · [Depth of Field (`DepthOfFieldOptions`)](#depth-of-field-depthoffieldoptions) · [Vignette (`VignetteOptions`)](#vignette-vignetteoptions) · [Other `View` Post-Process Options](#other-view-post-process-options) · [Color Management](#color-management) · [Linear vs sRGB](#linear-vs-srgb) · [`Color` Conversion API](#color-conversion-api) · [`ColorSpace` API](#colorspace-api) · [Renderer Pipeline: Clustered Forward Rendering](#renderer-pipeline-clustered-forward-rendering) · [Coordinate Systems & Conventions](#coordinate-systems--conventions) · [Validation & Debug](#validation--debug)
 
 ---
 

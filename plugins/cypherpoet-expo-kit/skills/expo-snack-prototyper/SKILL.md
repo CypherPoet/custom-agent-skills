@@ -4,6 +4,8 @@ description: Use when the user requests a visual prototype, styling exploration,
 ---
 # Expo Snack Prototyper
 
+**Verified:** 2026-07-17
+
 When the user needs to visually verify a complex layout, animation, or rendering trick (like combining SVGs, gradients, and shadows) before implementing it into the main codebase, you should generate an **Expo Snack ready prototype**.
 
 Expo Snack requires specific boilerplate and constraints to run smoothly without a local simulator.

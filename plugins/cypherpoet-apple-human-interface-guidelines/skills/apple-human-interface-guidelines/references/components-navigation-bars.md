@@ -5,14 +5,7 @@
 
 Distilled from Apple's HIG Components pages: Tab bars, Sidebars, Tab views, Toolbars, Segmented controls, Path controls, Page controls.
 
-## Contents
-- [Tab bars](#tab-bars)
-- [Sidebars](#sidebars)
-- [Tab views](#tab-views)
-- [Toolbars](#toolbars)
-- [Segmented controls](#segmented-controls)
-- [Path controls](#path-controls)
-- [Page controls](#page-controls)
+**Contents:** [Tab bars](#tab-bars) · [Sidebars](#sidebars) · [Tab views](#tab-views) · [Toolbars](#toolbars) · [Segmented controls](#segmented-controls) · [Path controls](#path-controls) · [Page controls](#page-controls)
 
 ### Tab bars
 *Last changed: 2026-06*

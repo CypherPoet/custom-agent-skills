@@ -5,13 +5,7 @@
 
 Distilled from Apple's HIG Technologies pages: Apple Pay, In-app purchase, Wallet, Sign in with Apple, Tap to Pay on iPhone, ID Verifier.
 
-## Contents
-- [Apple Pay](#apple-pay)
-- [In-app purchase](#in-app-purchase)
-- [Wallet](#wallet)
-- [Sign in with Apple](#sign-in-with-apple)
-- [Tap to Pay on iPhone](#tap-to-pay-on-iphone)
-- [ID Verifier](#id-verifier)
+**Contents:** [Apple Pay](#apple-pay) · [In-app purchase](#in-app-purchase) · [Wallet](#wallet) · [Sign in with Apple](#sign-in-with-apple) · [Tap to Pay on iPhone](#tap-to-pay-on-iphone) · [ID Verifier](#id-verifier)
 
 ### Apple Pay
 *Last changed: 2026-06*

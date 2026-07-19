@@ -33,18 +33,18 @@ The private repo has no copy of this procedure — that's intentional. It's fact
 
 Each run, re-check the time-sensitive factual claims in a repo's skills against primary sources, then open **one pull request** with:
 
-- **Corrections** applied automatically — but only high-confidence ones that carry a primary-source citation with a verbatim supporting quote.
-- **Flags** for anything uncertain, ambiguous, or out of bounds — surfaced in the PR body, never silently edited.
+- **Corrections** applied directly — any fix the cited evidence genuinely establishes, from a one-token version bump to a multi-site API rename or a rewritten note whose logic was inverted.
+- **Flags** for anything the evidence leaves uncertain or ambiguous, or that is an editorial judgment call rather than a factual one — surfaced in the PR body **with proposed wording**, never silently edited.
 
-Guarantees: never touches `main` (pushes only to a `claude/`-prefixed branch and opens a PR — a human merges); never applies an edit without a citation; stays within per-run caps so PRs remain reviewable; and obeys this repo's plugin conventions (version bumps, no marketplace-publish, no catalog refresh).
+**The quality-control mechanism is git + PR review.** The routine never touches `main` (it pushes only to a `claude/`-prefixed branch and opens a PR a human merges), every applied edit cites the primary source a reviewer can check it against, and the PR body lays each change next to its evidence. Within that frame, use judgment: the standard for applying a correction is *"would a competent reviewer, shown this evidence, make this edit?"* — not a mechanical size or format rule. The routine also obeys this repo's plugin conventions (version bumps, no marketplace-publish, no catalog refresh).
 
 ## Operating constraints (non-negotiable)
 
-- **PR-only.** Work on the stable branch `claude/skill-fact-check`; open or update exactly one PR per repo. Never commit to `main`.
-- **Every applied edit needs a citation** — a `source_url` plus a `source_quote` that literally contains the new value. No quote ⇒ not applied (it becomes a flag).
-- **Fact corrections only.** No stylistic edits, no rewrites, no scope creep. Change the smallest span that makes the fact correct.
+- **PR-only.** Work on the stable branch `claude/skill-fact-check`; open or update exactly one PR per repo. Never commit to `main`. PR review is the quality gate — everything else here exists to make that review easy, not to substitute for it.
+- **Every applied edit is evidence-backed** — it carries a `source_url` (primary source) and a `source_quote` showing what the source establishes, so a reviewer can verify the fix without redoing the research. Evidence too thin to convince a reviewer ⇒ flag with proposed wording, don't edit.
+- **Fact corrections only.** Fix what the evidence shows is wrong — a token, a corrected code snippet, a rename applied at every site in a file, or a note whose logic is inverted — and nothing more. No stylistic edits, no restructuring, no scope creep beyond what the fact requires.
 - **Respect the protected surface** (see [What this routine must NEVER do](#what-this-routine-must-never-do)).
-- **Caps:** at most **12 units** researched and at most **10 edits** auto-applied per run, **per cloned repo** — each repo gets its own budget, so one repo's backlog never starves another's PR. Overflow is deferred or downgraded to a flag and noted in the PR.
+- **Batches, not ceilings:** research the due set most-overdue-first in waves of ~12 units per repo (fan-out limit, keeps subagent batches manageable), and keep launching waves until the due set is drained or the session genuinely runs short of budget. Anything actually deferred is listed in the PR and stays due next run (age-gating self-heals) — but deferral is the fallback for real resource pressure, not the design.
 
 ## Scope & exclusions
 
@@ -71,11 +71,11 @@ Fact-check the `SKILL.md` body and **all** `references/**/*.md` under the unit (
 - **Source markers:** `**Source:**` and `**Source of truth:**` — the URL a file declares as the authority for a specific fact. Check this first.
 - **Declared source set:** a `## Primary Sources` section at the end of a unit's `SKILL.md` — the skill's own list of canonical verification sources (one bullet per source, each saying what it's authoritative for). Prefer these over free-choice research; a placeholder section ("None declared yet …") means fall back to vendor-primary sources per claim.
 - **Change-signal leads:** an optional per-unit `Change-Signal Sources` block lists secondary leads (e.g. a maintainer's blog) to scan for *what* may have drifted since the last dateline. Leads only — confirm against a primary source (a declared one where the claim is covered), never cite one in an edit.
-- **Caps:** `MAX_UNITS_PER_RUN = 12`, `MAX_AUTOAPPLY = 10` — both per cloned repo.
+- **Batch size:** `BATCH_SIZE = 12` — units per research wave, per cloned repo. A wave bound, not a per-run ceiling: waves repeat until the due set drains.
 
 ## Step 1 — Compute the due set
 
-A unit is **due** when its tier's interval has elapsed since its newest dateline. This is age-gated, not run-gated: the dateline *is* the cursor, so a unit skipped by a crash or a cap stays due next time. Run this deterministically (don't eyeball dates), with the cwd set to the repo being checked:
+A unit is **due** when its tier's interval has elapsed since its newest dateline. This is age-gated, not run-gated: the dateline *is* the cursor, so a unit skipped by a crash or a deferral stays due next time. Run this deterministically (don't eyeball dates), with the cwd set to the repo being checked:
 
 ```python
 import json, re, subprocess, datetime, pathlib
@@ -130,9 +130,9 @@ for s in skills:
         due.append((age, unit_id, str(pathlib.Path(s).parent), tier, last.isoformat()))
 
 due.sort(reverse=True)                      # most overdue first
-for row in due[:12]:                         # MAX_UNITS_PER_RUN
+for row in due:
     print(*row, sep='\t')
-print(f"# {len(due)} due, {min(len(due),12)} this run, {max(0,len(due)-12)} deferred")
+print(f"# {len(due)} due — research in waves of ~12, most-overdue-first, until drained")
 
 # Manifest drift — works in every cloned repo; report, don't edit (see below)
 unit_ids = {f"{pathlib.Path(s).parts[1]}/{pathlib.Path(s).parts[3]}" for s in skills}
@@ -145,7 +145,7 @@ for u in sorted(unit_ids - set(listed)):
     print(f"# DRIFT untiered: {u} not in any tier list (defaults to monthly)")
 ```
 
-Early runs surface a backlog: any unit with no *recognized* dateline reads as epoch → always due. That's expected — the cap drains it most-overdue-first, and the set shrinks as the parser above picks up the freshness markers already in the files and merged PRs stamp datelines (Step 6) on the units that lack one.
+Early runs surface a backlog: any unit with no *recognized* dateline reads as epoch → always due. That's expected — waves drain it most-overdue-first, and the set shrinks as the parser above picks up the freshness markers already in the files and merged PRs stamp datelines (Step 6) on the units that lack one.
 
 `# DRIFT` lines are manifest hygiene, not fact findings: never edit the manifest for them — list them in the PR body's flagged section so a human re-tiers deliberately.
 
@@ -164,7 +164,7 @@ gh pr list --state merged --head claude/skill-fact-check --json number -q '.[0].
 
 ## Step 3 — Fan out (one subagent per due unit)
 
-Deep-researching 12 units in the orchestrator's own context would overflow it. Instead, spawn **one `Task` subagent per due unit**, in batches of **≤6 concurrent**. The orchestrator never reads skill bodies — subagents do the reading and research and return a compact JSON result.
+Deep-researching a wave of units in the orchestrator's own context would overflow it. Instead, spawn **one `Task` subagent per due unit**, in batches of **≤6 concurrent**, wave after wave until the due set is drained. The orchestrator never reads skill bodies — subagents do the reading and research and return a compact JSON result.
 
 Give each subagent: the unit's `unit_dir` and `plugin_dir`, the [verification procedure](#step-3a--subagent-verification-procedure-paste-verbatim) **pasted verbatim** (subagents do not inherit this file), and the JSON contract below. Subagents **propose**; they never edit files.
 
@@ -183,7 +183,7 @@ Give each subagent: the unit's `unit_dir` and `plugin_dir`, the [verification pr
       "new": "1290×2796",
       "status": "CORRECT",
       "source_url": "https://developer.apple.com/help/app-store-connect/.../screenshot-specifications",
-      "source_quote": "verbatim quote from the source that contains the new value 1290×2796",
+      "source_quote": "verbatim passage from the source that establishes the correction",
       "confidence": "high",
       "note": ""
     }
@@ -193,7 +193,7 @@ Give each subagent: the unit's `unit_dir` and `plugin_dir`, the [verification pr
 }
 ```
 
-`status` is one of: `CORRECT` (current text is wrong; `new` ≠ `old`; cite the fix), `CONFIRMED_UNCHANGED` (verified correct; `new` == `old`), `FLAG_UNCERTAIN`, `FLAG_AMBIGUOUS`, `FLAG_DESCRIPTION_FRONTMATTER`, or `ERROR` (couldn't verify). `locator` must be an **exact, unique substring** of the live file (not a line number — those drift).
+`status` is one of: `CORRECT` (current text is wrong; `new` ≠ `old`; cite the fix), `CONFIRMED_UNCHANGED` (verified correct; `new` == `old`), `FLAG_UNCERTAIN`, `FLAG_AMBIGUOUS`, `FLAG_DESCRIPTION_FRONTMATTER`, or `ERROR` (couldn't verify). `locator` must be an **exact, unique substring** of the live file (not a line number — those drift). A fix that touches several sites (e.g. an API rename used throughout a file) is one *finding* returned as multiple `CORRECT` claims — one per site, each with its own locator, sharing the citation.
 
 ## Step 3a — Subagent verification procedure (paste verbatim)
 
@@ -205,10 +205,10 @@ Give each subagent: the unit's `unit_dir` and `plugin_dir`, the [verification pr
 > 2. **Honor the skill's own cited sources first.** Two declaration forms, in precedence order: (a) a per-fact `**Source:**`/`**Source of truth:** <url>` marker in the file — fetch THAT as the primary check for that fact; (b) the unit's `## Primary Sources` section in its `SKILL.md` — the skill's declared source set; when a claim falls under a declared source's stated scope (versions, specs, API syntax, …), fetch that source before choosing one on your own. Only claims covered by neither fall through to your own step-1 choice. If a declared source (either form) is unreachable or gone and you fall back to another source, the result is a **flag** (the skill's own source may be stale and needs human attention) — never a silent edit.
 > 2b. **Consult declared change-signal leads.** If the unit declares a **Change-Signal Sources** list (secondary leads such as a maintainer's blog), scan them first to *discover* what may have changed since the last dateline — but treat them as leads, never authorities. Anything they surface must still pass the both-conditions gate (step 3) against a **vendor-primary** source (per steps 1–2), and a lead URL must never appear in `source_url` for an applied edit. Blogs, aggregators, and forums remain non-primary (step 1).
 > 3. **Both-conditions gate.** The source must establish BOTH that the current text is wrong AND what the correct value is. A source that says "this changed" but not "to what" → `FLAG_UNCERTAIN`.
-> 4. **Adversarial / two-source rule for value changes.** Before proposing a changed value, confirm it from a second independent authoritative source, or at two stable locations on the vendor's own site. One source only, or sources disagree → `FLAG_AMBIGUOUS` (return both URLs). (Re-confirming an UNCHANGED value needs only one authoritative source → `CONFIRMED_UNCHANGED`.)
+> 4. **Corroborate value changes.** Before proposing a changed value, corroborate it — a second independent authoritative source, two stable locations on the vendor's own site, or direct verification (resolving the URL, hitting the documented API endpoint). If sources genuinely disagree → `FLAG_AMBIGUOUS` (return both URLs). (Re-confirming an UNCHANGED value needs only one authoritative source → `CONFIRMED_UNCHANGED`.)
 > 5. **Confidence.** `high` only if 1–4 all pass against vendor-primary sources. Anything resting on inference or a single non-vendor source → `medium`/`low` → flag, don't apply.
-> 6. **Citation is mandatory.** Every `CORRECT` claim must include `source_url` and a `source_quote` that literally contains the value in `new`. If you can't produce that quote, it is not a correction — flag it.
-> 6b. **Surgical edits only.** A `CORRECT` must be a *localized* replacement — a token, a value, a single import/line. If the accurate fix needs a multi-sentence rewrite or prose restructuring (even at high confidence), return `FLAG_UNCERTAIN` with the proposed wording in `note`. Keep auto-edits small and reviewable.
+> 6. **Cite what you fix.** Every `CORRECT` claim includes `source_url` and a `source_quote` — the passage a reviewer would check the fix against. The quote must *establish* the correction; it need not contain your replacement text verbatim (a changelog can document a rename without printing your exact line). The test is whether a reviewer reading the quote would make the same edit. No evidence you can point to ⇒ not a correction — flag it.
+> 6b. **Propose the full fix the evidence supports.** A correction can be any size the evidence establishes: a token swap, a rename applied at every site in the file (one `CORRECT` claim per site, sharing the citation), a corrected code snippet, or a rewritten note whose logic was inverted. Supply exact replacement text in `new`. What makes something a correction is the evidence behind it, not the edit's size. Only when the fix is genuinely an *editorial* call — the current text isn't wrong, just incomplete or arguably framed — flag it, with your proposed wording in `note` so the human can apply it with one decision.
 > 7. **Frontmatter guard.** If a wrong fact lives in a `description:` value in `SKILL.md` YAML frontmatter, return `FLAG_DESCRIPTION_FRONTMATTER` — never edit it. (Only when the value is actually wrong; if it's correct, it's `CONFIRMED_UNCHANGED` — don't flag a frontmatter value just for being in frontmatter.)
 > 8. **Fetch fallback.** For Apple developer-docs symbols, hit the docs **JSON endpoint** first — `https://developer.apple.com/tutorials/data/documentation/<framework>/<lowercased-symbol-path>.json` (e.g. `swiftui/view/statusbarhidden(_:).json`). It is not bot-walled and returns structured availability in `metadata.platforms[]` (`introducedAt` / `deprecatedAt` / deprecation `message`); a `404` means the symbol doesn't exist. For other bot-walled sources prefer the Firecrawl connector; fall back to `WebFetch`/`WebSearch`. If a source is unreachable every way, return `ERROR` for that claim (it will be flagged, not edited) — do not guess.
 >
@@ -216,17 +216,15 @@ Give each subagent: the unit's `unit_dir` and `plugin_dir`, the [verification pr
 
 ## Step 4 — Reduce & apply (orchestrator)
 
-Collect the subagents' JSON. The orchestrator now performs every mutation — editing authority is centralized so the caps and guards are enforced in one place.
+Collect the subagents' JSON. The orchestrator now performs every mutation — editing authority is centralized so the guards are enforced in one place, and because subagents research while the orchestrator *reviews*: read each proposed correction the way a PR reviewer would.
 
-For each claim with `status == "CORRECT"`, in most-overdue-unit order, apply it **only if** all hold:
+For each claim with `status == "CORRECT"`, in most-overdue-unit order, apply it when:
 
-- `source_url` is non-empty **and** `source_quote` literally contains `new` (validate the substring — this is the hard anti-hallucination gate; a claim failing it becomes a flag).
-- `confidence == "high"`.
-- The edit is a **localized** replacement (`old` → `new` is a token/value/line, not a multi-sentence rewrite). If `old` spans more than a sentence or two, downgrade it to a flag.
-- The target file is not under `evals/` or `*-workspace/`, and the edit is not to a `description:` frontmatter line or a protected `plugin.json` field.
-- The `MAX_AUTOAPPLY` budget isn't exhausted (otherwise downgrade remaining corrections to "would-apply, deferred for review" flags).
+- The cited `source_url` is a primary source and the `source_quote` genuinely establishes both that the old text is wrong and that `new` is right. Spot-check anything surprising or load-bearing (fetch the source, resolve the URL yourself) — the subagent did the research, but the orchestrator owns the edit.
+- `confidence == "high"` — anything lower ships as a flag with its evidence attached.
+- It's a fact correction within scope: not under `evals/` or `*-workspace/`, not a `description:` frontmatter line or a protected `plugin.json` field, and not a stylistic rewrite wearing a correction's clothes.
 
-Apply with an exact-substring `Edit` using `locator` → replace `old` with `new`. Group edits by plugin. Track which plugins were touched (for the version bump).
+**Size is not a gate.** A sourced multi-site rename or corrected snippet applies just like a token swap — apply each site with an exact-substring `Edit` using its `locator`. If one unit's corrections would dominate the PR (dozens of edits), give them their own commit so the diff reviews cleanly; don't downgrade them to flags for being numerous. Group edits by plugin. Track which plugins were touched (for the version bump).
 
 **Suppress acknowledged flags.** Build the manifest's `acknowledged` list once per repo, then reduce every `FLAG_*` claim against it. A flag is **acknowledged** when a live entry shares its `unit_id` and the entry's `locator` is a substring of the flag's `locator` (or, if that's empty, its `old`/`note`). For a match:
 
@@ -269,15 +267,16 @@ Match the repo's commit style (it uses gitmoji — see `cypherpoet-emoji-commits
 
 ```markdown
 Automated skill fact-check (the `skill-fact-check` skill in `cypherpoet-marketplace-kit`).
-Branch `claude/skill-fact-check`. Units due: X · checked this run: Y · deferred (cap): Z.
-Auto-applied: A corrections (all high-confidence, sourced). Flagged: B (new) · acknowledged (suppressed): C.
+Branch `claude/skill-fact-check`. Units due: X · checked this run: Y · deferred (budget): Z.
+Applied: A corrections (all high-confidence, sourced). Flagged: B (new) · acknowledged (suppressed): C.
 
 ## ✅ Corrections applied (cited)
 | Plugin | File | Type | Old → New | Source | Quote |
 |---|---|---|---|---|---|
 
 ## 🚩 Flagged for human review (NOT changed)
-| Plugin | File | Why | Detail | Source(s) |
+_Each flag carries proposed wording where one exists, so accepting it is one decision, not a research task._
+| Plugin | File | Why | Detail + proposed fix | Source(s) |
 |---|---|---|---|---|
 
 ## 🔕 Known / acknowledged (not re-flagged)
@@ -294,7 +293,7 @@ _Flags a human already reviewed and accepted (manifest `acknowledged`) — shown
 ## ⬆️ Version bumps
 - <plugin>: <old> → <new>
 
-## ⏭️ Deferred to next run (per-run cap)
+## ⏭️ Deferred to next run (ran short of budget)
 - <unit>, <unit>
 ```
 
@@ -303,16 +302,16 @@ _Flags a human already reviewed and accepted (manifest `acknowledged`) — shown
 | Failure | Guardrail |
 |---|---|
 | Firecrawl connector missing / `host_not_allowed` 403 | Fall back to WebFetch/WebSearch; if still unreachable → `ERROR` → claim is **flagged, not edited**. Run does not fail; note it under "Could not verify" so the connector can be fixed. |
-| Subagent proposes an unsourced / hallucinated fix | Orchestrator drops any `CORRECT` whose `source_quote` doesn't contain `new`. Subagents can't write files, so a hallucination becomes a flag at worst. |
+| Subagent proposes an unsourced or wrong fix | Subagents can't write files. The orchestrator reviews every proposal against its cited evidence and spot-checks before applying — and the PR diff with citations gives the human reviewer the final check. |
 | Ambiguous / conflicting sources | `FLAG_AMBIGUOUS` with both URLs; never auto-resolved. |
-| Runaway PR / rate limits / usage | `MAX_UNITS_PER_RUN=12`, `MAX_AUTOAPPLY=10`, batches ≤6, age-gated due set. A throttled run just leaves units un-restamped → still due next week. |
+| Runaway PR / rate limits / usage | Research waves of ~12 with ≤6 concurrent subagents; age-gated due set. A throttled run just leaves units un-restamped → still due next week. |
 | Partial completion (orchestrator dies mid-run) | Per-plugin commits + age-gating → finished plugins persist, un-restamped units stay due, the open PR is folded into next run (Step 2). "Green run" status ≠ task success — the PR body's "Could not verify" / "Deferred" sections are the real signal. |
 | A correction would touch a protected surface | The guards in Steps 4 and below → flag instead. |
 
 ## What this routine must NEVER do
 
 - Never commit to `main`, never widen branch-push beyond `claude/`-prefixed.
-- Never apply an edit without a `source_url` + a `source_quote` containing the new value.
+- Never apply an edit without cited primary-source evidence a reviewer can check it against.
 - Never edit a `description:` frontmatter field, or `plugin.json` `name`/`description`/`homepage` (only `version`).
 - Never add the `marketplace-publish` label (fact edits don't touch the marketplace catalog surface).
 - Never refresh `docs/CATALOG.md` (component counts don't change).

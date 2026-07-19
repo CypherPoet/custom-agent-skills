@@ -31,18 +31,21 @@ codex plugin marketplace add CypherPoet/cypherpoet-toolchest
 codex plugin add cypherpoet-git-flow@cypherpoet-toolchest
 ```
 
-> **Added this repo itself as a Codex marketplace before?** The in-repo Codex catalog has moved to `cypherpoet-toolchest`. Remove the old `CypherPoet/custom-agent-skills` marketplace registration, add `CypherPoet/cypherpoet-toolchest` as above, and reinstall your plugins under the new marketplace name — installs pointing at the old catalog no longer receive updates.
 
 ## Repository Structure
 
 ```
 .
-├── plugins/                  # Published agentic plugins
+├── plugins/                  # Self-contained published plugins
 ├── docs/
 │   ├── CATALOG.md            # Cross-plugin index
-│   └── PLUGIN-CONVENTIONS.md # Per-plugin conventions this repo applies
-├── scripts/                  # Dual-harness config + generator
-└── .claude/                  # Claude Code config
+│   ├── PLUGIN-CONVENTIONS.md # Plugin architecture and contributor workflow
+│   └── automated-routines/   # Maintenance routine configuration
+├── scripts/                  # Plugin registry and sync generator
+├── tests/                    # Repository health suite
+├── .github/                  # CI (Verify workflow)
+├── .agents/skills/           # Codex maintainer skills
+└── .claude/                  # Claude Code maintainer config and skills
 ```
 
 Claude plugin anatomy (component dirs, manifest fields, auto-discovery) follows the [Claude Code plugins reference](https://code.claude.com/docs/en/plugins-reference). This repo's specific conventions live in [`docs/PLUGIN-CONVENTIONS.md`](docs/PLUGIN-CONVENTIONS.md).

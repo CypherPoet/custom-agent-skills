@@ -5,14 +5,7 @@
 
 Distilled from Apple's HIG Foundations pages: Design principles, Accessibility, Inclusion, Layout, Motion, Pointing devices, Writing.
 
-## Contents
-- [Design principles](#design-principles)
-- [Accessibility](#accessibility)
-- [Inclusion](#inclusion)
-- [Layout](#layout)
-- [Motion](#motion)
-- [Pointing devices](#pointing-devices)
-- [Writing](#writing)
+**Contents:** [Design principles](#design-principles) · [Accessibility](#accessibility) · [Inclusion](#inclusion) · [Layout](#layout) · [Motion](#motion) · [Pointing devices](#pointing-devices) · [Writing](#writing)
 
 ### Design principles
 *Last changed: 2026-06*

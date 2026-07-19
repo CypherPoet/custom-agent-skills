@@ -1,6 +1,6 @@
 {
   "name": "cypherpoet-apple-human-interface-guidelines",
-  "version": "0.3.1",
+  "version": "0.3.3",
   "description": "Thorough distillation of Apple's complete Human Interface Guidelines across all six platforms (iOS, iPadOS, macOS, tvOS, visionOS, watchOS) — component-by-component best practices, hard specs (tap targets, type sizes, color tokens), per-platform deltas, and choose-the-right-component decision tables, with a synced reference corpus that tracks Apple's updates.",
   "author": {
     "name": "CypherPoet"

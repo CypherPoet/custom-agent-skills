@@ -13,7 +13,7 @@ description: >
 
 # Google Filament Mastery
 
-*Distilled from the official [Filament documentation](https://google.github.io/filament/) and the `google/filament` source at tag **v1.72.0** (released 2026-06-17). Last synced: 2026-06-19.*
+*Distilled from the official [Filament documentation](https://google.github.io/filament/) and the `google/filament` source at tag **v1.72.0** (released 2026-06-17). Last synced: 2026-07-17.*
 
 Working knowledge of [Google Filament](https://github.com/google/filament) — a real-time **physically-based** rendering engine for C++ (desktop/iOS), the web (WebAssembly over WebGL2), and Android. Use this to write correct, idiomatic Filament code, author and compile materials, light scenes with real photometric units, load assets, and explain the rendering model — grounded in the docs, not training-data guesses.
 

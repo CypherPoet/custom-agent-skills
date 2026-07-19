@@ -3,35 +3,7 @@
 > Source: Filament C++ headers (VertexBuffer/IndexBuffer/BufferObject/Texture/TextureSampler/Material/MaterialInstance/Skybox/IndirectLight), Filament v1.72.0
 > Last synced: 2026-06-19
 
-## Contents
-
-- [Mental Model & Lifetime](#mental-model--lifetime)
-- [VertexBuffer](#vertexbuffer)
-  - [Builder method set (verbatim)](#vertexbuffer-builder-method-set-verbatim)
-  - [VertexAttribute enum (verbatim)](#vertexattribute-enum-verbatim)
-  - [AttributeType / ElementType enum (verbatim)](#attributetype--elementtype-enum-verbatim)
-  - [Uploading data (setBufferAt + BufferDescriptor)](#vertexbuffer-uploading-data-setbufferat--bufferdescriptor)
-- [IndexBuffer](#indexbuffer)
-- [BufferObject](#bufferobject)
-- [Texture](#texture)
-  - [Builder method set (verbatim)](#texture-builder-method-set-verbatim)
-  - [Sampler / SamplerType enum (verbatim)](#sampler--samplertype-enum-verbatim)
-  - [InternalFormat / TextureFormat enum (representative, verbatim)](#internalformat--textureformat-enum-representative-verbatim)
-  - [Usage / TextureUsage enum (verbatim)](#usage--textureusage-enum-verbatim)
-  - [Format / PixelDataFormat & Type / PixelDataType (verbatim)](#format--pixeldataformat--type--pixeldatatype-verbatim)
-  - [Uploading texels (setImage + PixelBufferDescriptor)](#texture-uploading-texels-setimage--pixelbufferdescriptor)
-  - [Mipmaps & cubemaps](#mipmaps--cubemaps)
-- [TextureSampler](#texturesampler)
-  - [Filter / Wrap / Compare enums (verbatim)](#filter--wrap--compare-enums-verbatim)
-- [Material](#material)
-- [MaterialInstance](#materialinstance)
-  - [setParameter overloads](#setparameter-overloads)
-  - [Render-state overrides](#render-state-overrides)
-  - [Enums for render state (verbatim)](#enums-for-render-state-verbatim)
-- [Skybox](#skybox)
-- [IndirectLight](#indirectlight)
-- [BufferDescriptor & PixelBufferDescriptor (the upload+free contract)](#bufferdescriptor--pixelbufferdescriptor-the-uploadfree-contract)
-- [End-to-End Resource Flow](#end-to-end-resource-flow)
+**Contents:** [Mental Model & Lifetime](#mental-model--lifetime) · [VertexBuffer](#vertexbuffer) · [Builder method set (verbatim)](#vertexbuffer-builder-method-set-verbatim) · [VertexAttribute enum (verbatim)](#vertexattribute-enum-verbatim) · [AttributeType / ElementType enum (verbatim)](#attributetype--elementtype-enum-verbatim) · [Uploading data (setBufferAt + BufferDescriptor)](#vertexbuffer-uploading-data-setbufferat--bufferdescriptor) · [IndexBuffer](#indexbuffer) · [BufferObject](#bufferobject) · [Texture](#texture) · [Builder method set (verbatim)](#texture-builder-method-set-verbatim) · [Sampler / SamplerType enum (verbatim)](#sampler--samplertype-enum-verbatim) · [InternalFormat / TextureFormat enum (representative, verbatim)](#internalformat--textureformat-enum-representative-verbatim) · [Usage / TextureUsage enum (verbatim)](#usage--textureusage-enum-verbatim) · [Format / PixelDataFormat & Type / PixelDataType (verbatim)](#format--pixeldataformat--type--pixeldatatype-verbatim) · [Uploading texels (setImage + PixelBufferDescriptor)](#texture-uploading-texels-setimage--pixelbufferdescriptor) · [Mipmaps & cubemaps](#mipmaps--cubemaps) · [TextureSampler](#texturesampler) · [Filter / Wrap / Compare enums (verbatim)](#filter--wrap--compare-enums-verbatim) · [Material](#material) · [MaterialInstance](#materialinstance) · [setParameter overloads](#setparameter-overloads) · [Render-state overrides](#render-state-overrides) · [Enums for render state (verbatim)](#enums-for-render-state-verbatim) · [Skybox](#skybox) · [IndirectLight](#indirectlight) · [BufferDescriptor & PixelBufferDescriptor (the upload+free contract)](#bufferdescriptor--pixelbufferdescriptor-the-uploadfree-contract) · [End-to-End Resource Flow](#end-to-end-resource-flow)
 
 ---
 

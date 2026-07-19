@@ -13,6 +13,8 @@ description: >
 
 # Apple App Icons (Icon Composer + appiconset)
 
+**Verified:** 2026-07-17
+
 ## Overview
 
 An app icon has two jobs: **earn the tap** in the App Store (a design / conversion problem) and **ship correctly** across every OS version and appearance (an engineering problem). This skill covers both — settle the design first, then build and wire the assets.
