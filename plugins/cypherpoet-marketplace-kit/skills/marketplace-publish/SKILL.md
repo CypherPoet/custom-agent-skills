@@ -64,6 +64,8 @@ The goal: **one PR on the marketplace repo** that adds or updates the chosen plu
    }
    ```
 
+   The marketplace repo's CI enforces this same entry shape mechanically: `scripts/catalog-health.mjs` there pins the contract as exported constants (`SOURCE_REPOSITORY_URL`, `SOURCE_DEFAULT_BRANCH`, `EXPECTED_CODEX_POLICY`). This skill resolves the source URL and default branch dynamically; the checker pins them — so a source-repo rename, default-branch rename, or any change to the entry shape must update those constants in the marketplace repo in the same release, or publish PRs will fail its `catalog-validation` check.
+
 2. **Clone the marketplace** shallowly to a temp dir, e.g. `gh repo clone <marketplace> /tmp/mkt-publish -- --depth 1`.
 
 3. **Merge into the catalog.** Run every command in this step from the clone root (`/tmp/mkt-publish`) — the paths below are all clone-root-relative. In `.claude-plugin/marketplace.json`, add each entry to `plugins[]` — replacing any existing entry with the same `name` — and keep the array sorted by `name`. `jq` does this cleanly; for a single entry held in `$ENTRY`:
