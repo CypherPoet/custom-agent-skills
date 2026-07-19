@@ -54,7 +54,7 @@ for v in bm.verts:
 bmesh.update_edit_mesh(obj.data)
 ```
 
-Keyboard route: `S X 0 Return` (scale-to-zero on the axis — see the orientation caveat below). To nudge stray verts without denting the silhouette, slide them along their edges (`G G`) instead of free-moving; from scripts, reposition along the edge with bmesh rather than calling the viewport-modal slide operator.
+Keyboard route: `S X 0 Return` (scale-to-zero on the axis — see the orientation caveat below). Scaling pivots on the current pivot point, so this flattens the selection onto its *median* X, not onto X=0; to land on an exact datum, snap the 3D cursor to it and pivot on the cursor first (the `v.co.x = 0.0` script above has no such caveat — it writes the coordinate directly). To nudge stray verts without denting the silhouette, slide them along their edges (`G G`) instead of free-moving; from scripts, reposition along the edge with bmesh rather than calling the viewport-modal slide operator.
 
 ## Booleans: cut fast, clean deliberately
 
@@ -161,7 +161,7 @@ report = {
     "non_manifold_edges": sum(1 for e in bm.edges if not e.is_manifold),
     "ngons": sum(1 for p in obj.data.polygons if len(p.vertices) > 4),
     "scale_applied": all(abs(s - 1.0) < 1e-6 for s in obj.scale),
-    "rotation_applied": all(abs(r) < 1e-6 for r in obj.rotation_euler),
+    "rotation_applied": obj.matrix_basis.to_quaternion().angle < 1e-6,  # matrix-based: rotation_euler is stale under Quaternion / Axis-Angle mode
     "viewport_render_parity": all(m.show_viewport == m.show_render for m in obj.modifiers),
 }
 bm.free()
@@ -184,7 +184,7 @@ For agents with keyboard/screen control (or advising a human at the keyboard), B
 
 | Goal | Route (default keymap, Edit/Object mode as implied) |
 |---|---|
-| Flatten selection to a datum | `S` `X` `0` `Return` (assumes Global orientation) |
+| Flatten selection onto its median plane | `S` `X` `0` `Return` (flattens about the pivot, not onto X=0; assumes Global orientation) |
 | Slide vert/edge along its rails | `G G`, move (typed factor works in practice; undocumented), `LMB` confirm |
 | Merge selected by distance | `M`, choose *By Distance* |
 | Apply rotation + scale | `Ctrl+A`, *Rotation & Scale* |
