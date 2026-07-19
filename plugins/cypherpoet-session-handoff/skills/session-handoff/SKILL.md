@@ -40,13 +40,13 @@ python3 scripts/create_handoff.py [task-slug]   # add --continues-from <file> to
 
 **Write the handoff into the tree where the work lives, not where your shell happens to sit.** A session often keeps its cwd in the main checkout while editing worktree files by absolute path — and a handoff written to the main checkout is invisible to the next session that opens the worktree. Resolve the project root from the directory of the files this session changed (`git -C <that-dir> rev-parse --show-toplevel` — returns the worktree root inside a worktree, the repo root otherwise) and pass it via `--project` whenever it differs from your cwd.
 
-Fill the 🎯 **Next Action** line first — it's the single most load-bearing field; a triaging agent may read only that line. Capture deltas and non-obvious context, not restatements of linked artifacts ([Reference, don't duplicate](#reference-dont-duplicate)). Then validate and commit — handoffs are version-controlled by default:
+Fill the 🎯 **Next Action** line first — it's the single most load-bearing field; a triaging agent may read only that line. Capture deltas and non-obvious context, not restatements of linked artifacts ([Reference, don't duplicate](#reference-dont-duplicate)). Then validate:
 
 ```bash
 python3 scripts/validate_handoff.py <handoff-file>   # verdict: READY / NEEDS_WORK / BLOCKED (runs the secret scan)
 ```
 
-The full step-by-step — focus-setting, the session-plan confirmation, the prioritized fill order, validation verdicts, and commit guidance — lives in [references/create-workflow.md](references/create-workflow.md). Read it before authoring.
+The full step-by-step — focus-setting, the session-plan confirmation, the prioritized fill order, and validation verdicts — lives in [references/create-workflow.md](references/create-workflow.md). Read it before authoring.
 
 ## RESUME Workflow
 
@@ -61,7 +61,7 @@ The full step-by-step — the read strategy, the verify-context red flags, and w
 
 ## CLEANUP Workflow
 
-Handoffs are committed by default, so they accumulate. When work has moved on, retire the completed and superseded ones. Start with the read-only detector:
+Handoffs accumulate over time. When work has moved on, retire the completed and superseded ones. Start with the read-only detector:
 
 ```bash
 python3 scripts/find_cleanup_candidates.py
@@ -100,7 +100,7 @@ Handoffs are stored in: `.agents/handoffs/`
 
 This location is **host-neutral on purpose.** A handoff is a shared project artifact, not host-private config, so it doesn't belong in any single agent's directory (`.claude/`, `.codex/`, …) — keeping it neutral is what lets a session in one agent resume a handoff another agent wrote. The scripts also **still read** the legacy `.claude/handoffs/` location, so handoffs created before this change keep resolving and chaining; nothing needs migrating, though you can `git mv` them into `.agents/handoffs/` if you want everything in one place. To force a different directory, set the `HANDOFF_DIR` env var or pass `--dir` to `create_handoff.py` — keep an override inside the (git) project, since staleness and validation derive the project root from the handoff's own location.
 
-**Handoffs are committed by default.** They're durable, shareable session records — version-controlling them is what makes chaining, staleness checks, and team pickups work, and the `validate_handoff.py` secret scan exists precisely because they ship in git. Committing is the last step of the CREATE workflow. Only gitignore `.agents/handoffs/` if you specifically want ephemeral, local-only handoffs — and that choice belongs to the user: never add the handoffs directory to a `.gitignore` yourself, and if you find it already ignored, surface that and ask before proceeding.
+Whether handoffs are tracked in git, gitignored, or committed is a repo/user decision — not this skill's concern. Its job stops at getting the file into `.agents/handoffs/` at the right project root; leave `.gitignore` entries and commit timing to the user's own conventions, and don't ask about or nudge toward either. The `validate_handoff.py` secret scan still runs regardless, since a handoff can end up in git with no explicit action from anyone (e.g. no `.gitignore` entry present), and secrets shouldn't be written into a shared project directory in the first place.
 
 Naming convention: `YYYY-MM-DD-HHMMSS-[slug].md`
 

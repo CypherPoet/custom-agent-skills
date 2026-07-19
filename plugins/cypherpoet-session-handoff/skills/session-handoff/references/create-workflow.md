@@ -89,12 +89,12 @@ Report to user:
 - Summary of captured context
 - The 🎯 Next Action line as the first thing the next session will do
 
-## Step 5: Commit the Handoff
+## Step 5: Commit the Handoff (if the repo tracks them)
 
-Once validation passes (Step 3), commit the handoff — by default it belongs in version control as a durable, shareable record:
+Whether handoffs are committed, gitignored, or left untracked is a repo/user decision this skill doesn't make. If the file is git-tracked (not ignored) and the user's convention is to commit handoffs, do so after validation passes so the secret scan runs first:
 
 ```bash
 git add .agents/handoffs/<file> && git commit -m "docs: add session handoff"
 ```
 
-Commit *after* validation so the secret scan runs first. Skip only if the user explicitly wants an ephemeral/local-only handoff. In a git worktree, commit on the working branch and let it reach the default branch through the normal PR flow rather than committing to the main checkout directly.
+In a git worktree, commit on the working branch and let it reach the default branch through the normal PR flow rather than committing to the main checkout directly.

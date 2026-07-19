@@ -3,7 +3,7 @@
 Validate a handoff document for completeness and security.
 
 Checks (in the order the verdict block evaluates them):
-- Potential secrets (BLOCKING — handoffs get committed; secrets must not ship)
+- Potential secrets (BLOCKING — handoffs are shared project artifacts; secrets must not ship)
 - 🎯 Next Action line populated (top-of-document load-bearing instruction —
   evaluated before other required sections because an unfilled Next Action
   defeats the document's primary purpose)
