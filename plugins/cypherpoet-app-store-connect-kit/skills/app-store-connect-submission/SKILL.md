@@ -25,6 +25,8 @@ description: >
 
 # App Store Connect Submission
 
+**Verified:** 2026-07-17
+
 The operational playbook for getting an Apple-platform app from **built** to
 **Submitted for Review**. It covers the console navigation, the order of operations,
 build delivery, sandbox testing, and the UI traps that aren't in Apple's happy-path docs.

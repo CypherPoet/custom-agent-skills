@@ -18,10 +18,10 @@ Pick by the requirement, not the default:
 Switch via:
 
 ```python
-bpy.context.scene.render.engine = 'CYCLES'   # or 'BLENDER_EEVEE_NEXT' (Blender 4.2+) / 'BLENDER_EEVEE'
+bpy.context.scene.render.engine = 'CYCLES'   # or 'BLENDER_EEVEE' (Eevee)
 ```
 
-Note: from Blender 4.2 onward the engine identifier for Eevee is `BLENDER_EEVEE_NEXT`. The legacy `BLENDER_EEVEE` was removed in 4.2.
+Note: through Blender 4.2–4.5 the Eevee engine identifier was `BLENDER_EEVEE_NEXT`; Blender 5.0 renamed it back to `BLENDER_EEVEE`, which is correct at this 5.1 baseline.
 
 ## GPU acceleration in Cycles
 

@@ -17,6 +17,8 @@ description: >
 
 # Consolidate Memory
 
+**Verified:** 2026-07-17
+
 Claude saves memories during conversations, but nothing ever prunes them. Over months, a project's memory directory accretes near-duplicates, references to files that have since been renamed, project facts about initiatives that have since shipped, and entries whose `description:` field has drifted away from what the body actually says. The `MEMORY.md` index can also fall out of sync — pointing at deleted files, missing entries for files that exist, or carrying one-line hooks that no longer match the underlying memory.
 
 This skill does a deliberate audit pass over the project's memory directory and proposes consolidations. It is the destructive counterpart to [`session-harvest`](https://github.com/CypherPoet/custom-agent-skills/tree/main/plugins/cypherpoet-session-harvest): where that skill *adds* memories from a conversation, this one *dedupes, repairs, rewrites, and prunes* them.
