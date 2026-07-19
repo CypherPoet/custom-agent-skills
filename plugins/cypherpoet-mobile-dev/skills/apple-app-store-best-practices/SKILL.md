@@ -1,16 +1,13 @@
 ---
 name: apple-app-store-best-practices
 description: >
-  Audit Apple platform apps (iOS, macOS, tvOS, watchOS, visionOS) against the
-  official App Store Review Guidelines, producing a prioritized risk register with
-  section citations (e.g. §3.1.1), code evidence, and remediation steps — plus
-  metadata/ASO, screenshot strategy, review management, and localization guidance.
-  Use before submitting to App Review, after a rejection, when adding IAP,
-  subscriptions, auth, UGC, or data collection, or when optimizing an App Store
-  listing. Also trigger on "App Store", "App Review", "rejection", "submission",
-  "guideline", "ASO", "keywords", or "screenshots", or any compliance check or
-  listing review for an Apple app — including quick questions like "do I need Sign
-  in with Apple?", "will this pass review?", or "how long can my subtitle be?"
+  Audit Apple-platform apps against the official App Store Review Guidelines — a
+  prioritized risk register with section citations, code evidence, and
+  remediation — plus metadata/ASO, screenshot strategy, and review management.
+  Use before submitting, after a rejection, when adding IAP, subscriptions,
+  auth, UGC, or data collection, or when optimizing a listing. Triggers on "App
+  Review", "rejection", "guideline", "ASO", and quick questions like "do I need
+  Sign in with Apple?" or "will this pass review?".
 ---
 
 # Apple App Store Best Practices

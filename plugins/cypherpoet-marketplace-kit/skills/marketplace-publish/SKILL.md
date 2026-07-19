@@ -1,6 +1,12 @@
 ---
 name: marketplace-publish
-description: Publish one or more plugins from this source repo to its plugin marketplace — both the Claude Code catalog (.claude-plugin/marketplace.json) and the Codex catalog (.agents/plugins/marketplace.json) in the marketplace repo — by opening a pull request there. Use whenever the user wants to add a new plugin to the marketplace, register/publish a plugin, push a plugin (or several) to the catalog, or update an already-listed plugin's catalog entry (its name, description, homepage, or Codex category) — phrasings like "publish the X plugin", "add X to the marketplace", "register these plugins", "list X in the toolchest", or "the marketplace entry for X is stale". Plugins live separately from the marketplace, so publishing means opening a PR on the marketplace repo. NOT needed for ordinary content edits to an already-listed plugin — those reach consumers automatically.
+description: >
+  Publish one or more of this repo's plugins to its marketplace — both the
+  Claude Code and Codex catalogs in the marketplace repo — by opening a PR
+  there. Use to add a new plugin to the marketplace or update an already-listed
+  plugin's catalog entry (name, description, homepage, Codex category). Not
+  needed for ordinary content edits to a listed plugin — those reach consumers
+  automatically.
 disable-model-invocation: true
 ---
 

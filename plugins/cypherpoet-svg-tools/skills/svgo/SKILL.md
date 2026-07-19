@@ -1,19 +1,12 @@
 ---
 name: svgo
 description: >
-  Use this skill any time the user is dealing with SVGO or with SVGs that need
-  to get smaller. Trigger when they want to shrink, minify, compress, optimize,
-  or clean up SVG files or folders — for any reason (Lighthouse, bundle size,
-  perf, icon sets, inlined icons, hero illustrations). Also trigger when SVGO
-  (or the VSCode SVGO extension, same engine) produced something broken: wrong
-  gradients, swapped colors across inlined icons, hover states gone,
-  viewBox/scaling lost, hidden elements vanishing, ID collisions. Use for
-  choosing or disabling plugins (prefixIds, cleanupIds, removeViewBox,
-  multipass), writing or debugging `svgo.config.mjs`, wiring SVGO into a build
-  (Vite, webpack, prebuild) via CLI or the Node `optimize()` API, recovering
-  when `svgo -f`/`-rf` overwrote sources in place, or comparing CLI flags.
-  Skip for: non-SVG formats (PNG/JPEG/WebP), hand-editing SVG content (colors,
-  paths, shapes), SVGR / SVG-to-React, and SVG hosting/serving unrelated to
+  Use any time the user works with SVGO or needs SVGs smaller: shrinking,
+  minifying, or cleaning up SVG files; choosing or disabling plugins (prefixIds,
+  removeViewBox, multipass); writing svgo.config.mjs; wiring SVGO into a build
+  via CLI or the Node optimize() API; or fixing SVGO-caused breakage (wrong
+  gradients, lost hover states, viewBox/scaling loss, ID collisions). Skip for
+  raster formats, hand-editing SVG content, SVGR, and SVG hosting unrelated to
   byte size.
 ---
 

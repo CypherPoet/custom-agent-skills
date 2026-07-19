@@ -1,25 +1,14 @@
 ---
 name: google-filament-mastery
 description: >
-  Use this skill whenever the user is building, debugging, or reasoning about anything
-  in Google Filament — the real-time physically-based rendering engine — in C++, on the
-  web (filament.js / WebAssembly), or on Android (Kotlin/Java). Trigger it for setting up
-  an Engine / Scene / View / Renderer / Camera and a render loop, creating renderables /
-  lights / transforms, GPU resources (VertexBuffer, IndexBuffer, Texture, MaterialInstance,
-  Skybox, IndirectLight), authoring or compiling a `.mat` material with `matc` into a
-  `.filamat`, choosing a shading model (lit, unlit, cloth, subsurface, specularGlossiness),
-  tuning PBR parameters (baseColor, metallic, roughness, reflectance, clearCoat, anisotropy),
-  lighting a scene with physically-correct units (lux / lumens / candela), image-based
-  lighting and skyboxes (`cmgen`, `iblprefilter`, IBL KTX), physically-based camera and
-  exposure, tone mapping / color grading / bloom, loading glTF/GLB (`gltfio`) or `.filamesh`
-  meshes, and the Filament command-line tools (cmgen, filamesh, mipgen, matinfo, matdbg).
-  Trigger even when the user never says "Filament" but clearly means it — e.g. "my PBR
-  scene renders black", "how do I set the sun's intensity", "convert this OBJ for my engine",
-  "why is my material washed out", "set up a Metal/Vulkan render loop on iOS", or pastes
-  Filament code. Distills the official Filament v1.72.0 documentation: the PBR/material model,
-  lighting, the imaging pipeline, the engine API, the material language, glTF, and per-binding
-  setup. This is for the GOOGLE FILAMENT engine specifically — for raw WebGL/WebGL2 use the
-  webgl-kit, and for Three.js use the threejs-kit instead.
+  Use whenever the user is building or debugging anything in Google Filament —
+  the real-time physically-based rendering engine — in C++, on the web
+  (filament.js), or on Android. Covers the Engine/Scene/View/Renderer API,
+  renderables and GPU resources, .mat/matc materials, PBR parameters and shading
+  models, physically-correct lighting and IBL, tone mapping, glTF loading, and
+  the CLI tools (cmgen, filamesh, matinfo). Trigger even when "Filament" isn't
+  named but the user pastes Filament code or works with .filamat/.filamesh
+  files. For raw WebGL use webgl-mastery; for Three.js, threejs-mastery.
 ---
 
 # Google Filament Mastery

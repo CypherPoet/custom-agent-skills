@@ -1,22 +1,15 @@
 ---
 name: apple-human-interface-guidelines
 description: >
-  Use this skill whenever the user is designing, building, or reviewing UI for any
-  Apple platform (iOS, iPadOS, macOS, tvOS, visionOS, watchOS) — choosing or
-  questioning a component (tab bar, sidebar, sheet, popover, menu, toolbar, picker,
-  widget, complication…), asking about layout, navigation, color, Dark Mode,
-  typography, SF Symbols, Liquid Glass, materials, motion, haptics, gestures,
-  accessibility, or Dynamic Type, or wanting an app to "feel native", "look like a
-  real iOS app", or "follow Apple's design guidelines". Trigger for concrete
-  questions like "tab bar or sidebar?", "minimum tap target size?", "sheet or
-  popover for this?", "standard margins on iPhone?", and for design reviews of
-  Apple-platform screens — even when the user never says "HIG" or "Human Interface
-  Guidelines". Distills the complete Apple HIG: per-component best practices, hard
-  specs (sizes, type styles, color tokens), per-platform deltas, and
-  choose-the-right-component decision tables. For App Review compliance or
-  rejection-risk audits, use apple-app-store-best-practices instead; for App Store
-  Connect submission mechanics, app-store-connect-submission; for App Store
-  screenshot dimensions and capture, apple-app-store-screenshots.
+  Use whenever the user is designing, building, or reviewing UI for any Apple
+  platform (iOS, iPadOS, macOS, tvOS, visionOS, watchOS): choosing components
+  (tab bar vs sidebar, sheet vs popover), layout, navigation, color, Dark Mode,
+  typography, SF Symbols, Liquid Glass, motion, haptics, accessibility, or
+  wanting an app to "feel native" — even when "HIG" is never said. Includes hard
+  specs and per-platform deltas. For App Review compliance use
+  apple-app-store-best-practices; for submission mechanics,
+  app-store-connect-submission; for screenshot specs,
+  apple-app-store-screenshots.
 ---
 
 # Apple Human Interface Guidelines

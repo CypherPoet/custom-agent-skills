@@ -1,20 +1,14 @@
 ---
 name: apple-app-icons
 description: >
-  Use when creating, updating, designing, auditing, or A/B-testing an Apple app
-  icon. Two jobs: making the icon *convert* in the App Store (tap-through rate —
-  design principles, an audit rubric, Product Page Optimization A/B tests, a
-  designer brief) and shipping it *correctly* across OS versions (authoring a
-  Liquid Glass Icon Composer `.icon`, wiring it into an Xcode target, adding an
-  `.appiconset` fallback for OS versions below 26). Also use when debugging icon
-  problems: off-center artwork, a thin white/bright edge border, alpha-channel
-  rejections on the 1024 marketing icon, wrong sizes, an icon that renders on iOS
-  26 but not on older versions, or one that's technically fine but reads poorly at
-  small size or vanishes against a light or dark App Store background. Triggers on
-  "app icon", "icon design", "icon audit", "icon A/B test", "tap-through rate",
-  "icon conversion", "Icon Composer", ".icon file", "Liquid Glass icon",
-  "appiconset", "AppIcon", "actool", or icon work on iOS / iPadOS / macOS /
-  watchOS.
+  Creating, designing, auditing, or A/B-testing an Apple app icon — both making
+  it convert on the App Store (design principles, audit rubric, Product Page
+  Optimization tests) and shipping it correctly (Liquid Glass Icon Composer
+  .icon files, Xcode wiring, .appiconset fallback for OS versions below 26).
+  Also for debugging icon problems: off-center artwork, edge borders,
+  alpha-channel rejections, wrong sizes, or icons that read poorly at small
+  sizes. Triggers on "app icon", "Icon Composer", ".icon", "appiconset",
+  "actool".
 ---
 
 # Apple App Icons (Icon Composer + appiconset)

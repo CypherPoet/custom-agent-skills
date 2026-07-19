@@ -1,6 +1,12 @@
 ---
 name: skill-fact-check
-description: Re-check this skills monorepo's time-sensitive facts (OS/SDK versions, device specs, external URLs, API/CLI syntax) against primary sources and open a PR with high-confidence, cited corrections — flagging anything uncertain. Use when running or configuring the scheduled fact-check routine, or to manually fact-check the repo's skills. Fans out one subagent per skill, applies only sourced edits, bumps plugin versions, and obeys repo conventions (no marketplace-publish, no catalog refresh, never edits skill descriptions or eval/workspace files). Not for general web fact-checking or non-skill content.
+description: >
+  Re-check this repo's skills' time-sensitive facts (OS/SDK versions, device
+  specs, URLs, API/CLI syntax) against primary sources and open a PR with cited,
+  high-confidence corrections. Use when running or configuring the scheduled
+  fact-check routine, or to manually fact-check the repo's skills. One subagent
+  per skill; sourced edits only; obeys repo conventions. Not for general web
+  fact-checking or non-skill content.
 ---
 
 # 🔍 Skill fact-check

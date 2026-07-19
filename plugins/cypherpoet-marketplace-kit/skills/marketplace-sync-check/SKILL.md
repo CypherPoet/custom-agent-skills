@@ -1,6 +1,11 @@
 ---
 name: marketplace-sync-check
-description: Audit whether this repo's local plugins/ match the places that index them — its published marketplace catalogs (the Claude Code .claude-plugin/marketplace.json AND the Codex .agents/plugins/marketplace.json in the marketplace repo) plus its local docs/CATALOG.md. Use whenever the user asks what's published, whether the marketplace or the catalog docs are up to date, what's missing or stale, which plugins aren't listed yet, whether docs/CATALOG.md is current, or to double-check before/after publishing — phrasings like "is everything published", "check marketplace sync", "is the catalog up to date", "what's out of date in the catalog", "did I forget to publish anything", "is docs/CATALOG.md in sync", "diff my plugins against the marketplace". This is READ-ONLY — it reports drift and never edits any file or repo.
+description: >
+  Read-only audit of whether this repo's plugins/ match the places that index
+  them: both published marketplace catalogs plus the local docs/CATALOG.md. Use
+  for "is everything published", "is the catalog up to date", "did I forget to
+  publish anything", or a pre/post-publish double-check. Reports drift; never
+  edits any file or repo.
 ---
 
 # marketplace-sync-check

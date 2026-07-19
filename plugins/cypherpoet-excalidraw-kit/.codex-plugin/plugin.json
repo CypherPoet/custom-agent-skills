@@ -1,6 +1,6 @@
 {
   "name": "cypherpoet-excalidraw-kit",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Comprehensive Excalidraw mastery: authoring .excalidraw scene files by hand (the JSON format, element model, arrow/text binding, and a diagrams-that-argue design methodology), plus the @excalidraw/excalidraw developer API (React component, initialData, the convertToExcalidrawElements skeleton API, restore, SVG/PNG/clipboard export, and Mermaid-to-Excalidraw), shipped with scripts to validate a scene, render it to PNG, and insert icon-library elements — grounded in the official Excalidraw documentation.",
   "author": {
     "name": "CypherPoet"

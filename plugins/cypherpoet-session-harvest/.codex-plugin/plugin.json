@@ -1,6 +1,6 @@
 {
   "name": "cypherpoet-session-harvest",
-  "version": "0.4.1",
+  "version": "0.4.2",
   "description": "Harvest a session's learnings into their right homes: a memory, a suggested repo edit (CLAUDE.md/AGENTS.md, docs, or a hook), or a PR that improves one of your own agent skills.",
   "author": {
     "name": "CypherPoet"

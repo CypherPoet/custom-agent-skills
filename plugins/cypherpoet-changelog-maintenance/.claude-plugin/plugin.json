@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "cypherpoet-changelog-maintenance",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Maintain a project's CHANGELOG.md in Keep-a-Changelog format.",
   "author": { "name": "CypherPoet" },
   "homepage": "https://github.com/CypherPoet/custom-agent-skills/tree/main/plugins/cypherpoet-changelog-maintenance",
