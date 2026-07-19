@@ -4,7 +4,8 @@ description: >
   Use whenever the user mentions Blender, `bpy`, a `.blend` file, or asks
   to model / sculpt / rig / animate / texture / bake / render / export
   anything in Blender — even if they don't name the skill. Pro tips,
-  `bpy` patterns, and Blender mental models covering modeling, materials,
+  `bpy` patterns, and Blender mental models covering modeling (including
+  hard-surface modeling, booleans, and topology cleanup), materials,
   rigging, geometry nodes, rendering, asset import, and export — driven
   through the official Blender MCP server or the headless CLI.
 ---
@@ -17,7 +18,7 @@ Pro tips, `bpy` patterns, and Blender mental models — primarily driven through
 
 ## Setup
 
-Requires Blender 5.1 or later with the official Blender MCP addon enabled, and the MCP server registered in Claude Code's MCP config. The server runs inside Blender; this skill assumes Claude can reach it through `get_scene_info`, `execute_python`, and `screenshot` tool calls. Reference content in this skill is written against the [Blender 5.1 Python API](https://docs.blender.org/api/5.1/).
+Requires Blender 5.1 or later with the official Blender MCP addon enabled, and the MCP server registered in Claude Code's MCP config. The server runs inside Blender; this skill assumes Claude can reach its tools — `execute_blender_code` for running `bpy` code, `get_objects_summary` / `get_object_detail_summary` for scene inspection, the screenshot and viewport-render tools, and the bundled-docs search (`search_manual_docs`, `search_api_docs`). Reference content in this skill is written against the [Blender 5.1 Python API](https://docs.blender.org/api/5.1/).
 
 If the user hasn't set it up, point them at the lab page first and don't simulate the workflow.
 
@@ -25,10 +26,10 @@ If the user hasn't set it up, point them at the lab page first and don't simulat
 
 Drive Blender like a stateful collaborator, not a fire-and-forget terminal:
 
-1. **Read** — call `get_scene_info` or run a small `execute_python` inspection script before mutating anything. Blender's scene state persists across calls and there's no preview-of-pending-edits.
+1. **Read** — call `get_objects_summary` or run a small `execute_blender_code` inspection script before mutating anything. Blender's scene state persists across calls and there's no preview-of-pending-edits.
 2. **Propose** — describe the change in one or two sentences before running code.
-3. **Execute** — `execute_python` with `bpy` code. Prefer the data API over operators (see P2).
-4. **Verify** — for visual edits, call `screenshot` and look. For data edits, re-read the relevant `bpy.data` slice. Blind edits are how scenes drift.
+3. **Execute** — `execute_blender_code` with `bpy` code. Prefer the data API over operators (see P2).
+4. **Verify** — for visual edits, take a screenshot (`get_screenshot_of_window_as_image`) and look. For data edits, re-read the relevant `bpy.data` slice. Blind edits are how scenes drift.
 5. **Iterate** — if verification fails, undo (or rebuild from the read state) and try again.
 
 See `references/mcp-workflow.md` for inspection idioms, idempotent-edit patterns, and the headless escape hatch.
@@ -41,8 +42,9 @@ Cross-cutting principles that apply across every Blender domain.
 - **P2 — Prefer the data API over operators.** `bpy.data.objects["X"].location.z = 2` is robust; `bpy.ops.transform.translate(...)` depends on context overrides that fail unpredictably under MCP. Reach for `bpy.ops` only when the operation has no data-API equivalent (export, bake, modifier-apply). → `references/bpy-essentials.md`.
 - **P3 — Mind modes and the active object.** Sculpt / edit / object mode determines which APIs work. The "active object" and "selected objects" are different concepts; many scripts break by confusing them. → `references/scene-mental-model.md`.
 - **P4 — Materials are nodes.** `mat.use_nodes = True`, then build the `node_tree`. Don't touch legacy `mat.diffuse_color`-style props — they only apply when nodes are off. Always check `node.type == 'BSDF_PRINCIPLED'` before assuming Principled BSDF; imported materials may use Diffuse BSDF or stranger shaders. → `references/materials.md`.
-- **P5 — Verify visually.** Call `screenshot` after non-trivial scene edits, especially for materials, lighting, and geometry-nodes work where the result depends on viewport evaluation.
+- **P5 — Verify visually.** Take a screenshot (`get_screenshot_of_window_as_image`, or `render_viewport_to_path` for a clean viewport render) after non-trivial scene edits, especially for materials, lighting, and geometry-nodes work where the result depends on viewport evaluation.
 - **P6 — Asset import beats hand-modeling.** PolyHaven for HDRIs and PBR textures (CC0), Sketchfab for specific models, Hyper3D Rodin or Hunyuan3D for AI generation. Hand-modeling a tree is rarely the right call when the integrations exist. → `references/assets.md`.
+- **P7 — Look it up before guessing.** The MCP server ships the Blender manual and Python API reference and exposes `search_manual_docs` / `search_api_docs` over them — offline, and matched to the running Blender's version. Check operator signatures, enum identifiers, and feature behavior there before trusting trained recall; Blender's API breaks across versions (`use_auto_smooth`, edge bevel weights, boolean solver names all changed in the 4.x–5.x line). → `references/mcp-workflow.md`.
 
 ## When to escape the MCP
 
@@ -63,6 +65,7 @@ Load only the file(s) the current task touches. If unsure, `bpy-essentials.md` a
 | Asking about… | Read |
 |---|---|
 | Modeling, batch ops, scripting idioms, depsgraph, undo, modifier budgeting | `references/bpy-essentials.md` |
+| Hard-surface modeling, modifier stacks, booleans, bevels, topology cleanup, manifold checks, shading artifacts on flat surfaces | `references/hard-surface.md` |
 | Modes, data-blocks, units, parent/child, collections | `references/scene-mental-model.md` |
 | Materials, shaders, PBR, node trees | `references/materials.md` |
 | Procedural geometry, geometry nodes, attributes, fields | `references/geometry-nodes.md` |

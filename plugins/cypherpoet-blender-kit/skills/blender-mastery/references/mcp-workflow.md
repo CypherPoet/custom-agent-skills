@@ -1,6 +1,6 @@
 # MCP Workflow
 
-How to drive Blender productively through the official MCP server. Blender is a stateful, single-user application; the MCP gives Claude three primary capabilities — `get_scene_info`, `execute_python`, and `screenshot` — plus whatever the addon's asset integrations expose. Everything else is `bpy` Python through `execute_python`.
+How to drive Blender productively through the official MCP server (the lab extension, listed as **MCP** in Preferences ‣ Extensions). Its tool surface groups into: **code execution** (`execute_blender_code`), **scene inspection** (`get_objects_summary`, `get_object_detail_summary`, `get_blendfile_summary_*`), **screenshots & renders** (`get_screenshot_of_area_as_image`, `get_screenshot_of_window_as_image` / `_as_json`, `render_thumbnail_to_path`, `render_viewport_to_path`), **bundled-docs search** (`search_manual_docs`, `search_api_docs`, `get_python_api_docs`), and **UI navigation** (`jump_to_tab_by_name`, `jump_to_view3d_object_by_name`, …). `_for_cli` variants of the execution and blendfile-summary tools exist for the background/CLI flavor of the server. Everything not covered by a dedicated tool is `bpy` Python through `execute_blender_code`.
 
 The single biggest mistake under MCP is treating it like a stateless REPL. Blender has no preview-of-pending-edits, no cheap rollback, no protection against context drift between calls. The patterns below exist to compensate.
 
@@ -8,9 +8,9 @@ The single biggest mistake under MCP is treating it like a stateless REPL. Blend
 
 ### 1. Read
 
-Before any mutation, get a compact picture of what's there. Don't dump everything — Blender scenes can have thousands of objects. Ask for what's relevant to the task.
+Before any mutation, get a compact picture of what's there. `get_objects_summary` is the cheap first look; drop to a custom inspection script for anything it doesn't cover. Don't dump everything — Blender scenes can have thousands of objects. Ask for what's relevant to the task.
 
-A reusable scene-summary snippet (paste into `execute_python`):
+A reusable scene-summary snippet (run via `execute_blender_code`):
 
 ```python
 import bpy, json
@@ -47,11 +47,11 @@ Before running code, say what you're about to do and why, in one or two sentence
 
 ### 3. Execute
 
-Run a `bpy` script via `execute_python`. Keep individual scripts short and focused — one logical change per call. Long scripts are harder to debug when something goes sideways, and you lose the chance to verify between sub-steps.
+Run a `bpy` script via `execute_blender_code`. Keep individual scripts short and focused — one logical change per call. Long scripts are harder to debug when something goes sideways, and you lose the chance to verify between sub-steps.
 
 ### 4. Verify
 
-For visual changes (materials, lighting, geometry, camera), call `screenshot`. For data-only changes (renames, property assignments, modifier additions), re-read with a targeted inspection script.
+For visual changes (materials, lighting, geometry, camera), take a screenshot (`get_screenshot_of_window_as_image`, or `get_screenshot_of_area_as_image` for one editor). For data-only changes (renames, property assignments, modifier additions), re-read with a targeted inspection script.
 
 Don't skip verification. The MCP runs Python in-process, so a script that half-completes leaves visible state in the scene that you'd otherwise miss.
 
@@ -82,6 +82,12 @@ If verification fails:
 - Prefer **rebuilding from a known-good read** over `bpy.ops.ed.undo()`. Undo under scripts is unreliable — see `errors.md`.
 - If you applied a modifier or made a destructive change, the scene may not be cleanly recoverable. Tell the user; offer to revert by reloading the .blend file (they'll need to do that themselves).
 
+## Look it up: bundled docs search
+
+The server ships the full Blender manual and Python API reference as searchable text: `search_manual_docs` and `search_api_docs` (plus `get_python_api_docs` for a whole module page). They're offline and version-matched to the running Blender — more trustworthy than trained recall for exactly the things that break between releases: operator signatures, enum identifiers, property names, feature renames (`use_auto_smooth`, edge bevel weights, and the boolean solver names all changed across 4.x–5.x).
+
+Reach for them when an operator errors with an unexpected-keyword or invalid-enum message, before writing code against an API you haven't verified this session, or when answering "how does X work" for a versioned feature. Queries are tokenized full-text with stop-words dropped — search `bevel harden normals`, not "how do I harden normals on a bevel". Re-query a promising hit with its `index` and a `context` value to widen it to the enclosing section.
+
 ## Idempotent-edit patterns
 
 Scripts that can re-run safely save you from half-completed-state hell. Some patterns:
@@ -93,7 +99,7 @@ Scripts that can re-run safely save you from half-completed-state hell. Some pat
 
 ## Persistent helpers module
 
-`execute_python` calls share one interpreter, so a module registered in `sys.modules` once
+`execute_blender_code` calls share one interpreter, so a module registered in `sys.modules` once
 is importable in every later call — build a helper library in call #1 instead of re-sending
 helper code each time:
 
@@ -178,7 +184,7 @@ When writing `script.py` for headless use, remember:
 
 ## Handling large output
 
-`execute_python` returns whatever you `print()`. If you dump a megabyte of scene JSON, the conversation gets unwieldy. Patterns:
+`execute_blender_code` returns printed output in a `stdout` field — and, the cleaner channel for structured data, any JSON-serializable dict assigned to a variable named `result` comes back as the tool result. If you dump a megabyte of scene JSON either way, the conversation gets unwieldy. Patterns:
 
 - **Slice before printing.** `print(json.dumps(out["objects"][:50], indent=2))` instead of all of them.
 - **Save to a file, then read.** Write JSON to `/tmp/scene.json`, then read it back via the MCP if needed.
@@ -190,7 +196,7 @@ Symptoms and first checks:
 
 - **Timeout.** The script ran too long. Either chunk it or escape to headless.
 - **Connection refused.** The MCP addon isn't running in Blender. Have the user check Preferences → Add-ons → Blender MCP → enabled.
-- **Script errors with no useful trace.** `execute_python` may swallow some details. Wrap risky code in `try/except` and `print(traceback.format_exc())` for visibility.
+- **Script errors with no useful trace.** `execute_blender_code` may swallow some details. Wrap risky code in `try/except` and `print(traceback.format_exc())` for visibility.
 - **Edits don't appear visible.** The depsgraph hasn't been re-evaluated. Try `bpy.context.view_layer.update()` or `bpy.context.evaluated_depsgraph_get()` before screenshotting.
 
 See `errors.md` for the full table.

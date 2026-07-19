@@ -105,7 +105,7 @@ When it doesn't: pure data inspection (counting verts, listing modifiers), setti
 
 ## Undo behavior under scripts
 
-Undo in `bpy` is unreliable when called from `execute_python`:
+Undo in `bpy` is unreliable when called from `execute_blender_code`:
 
 - `bpy.ops.ed.undo()` may not roll back script-driven changes the way it rolls back UI actions.
 - Multiple operations within one script call land as a single undo step (or zero) — there's no fine-grained history.
