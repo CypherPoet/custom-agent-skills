@@ -13,9 +13,12 @@
  */
 
 import { readFileSync, existsSync, readdirSync } from 'node:fs';
-import { resolve, basename } from 'node:path';
+import { resolve, basename, dirname, relative } from 'node:path';
 
 const root = resolve(process.argv[2] ?? '.');
+const at = (path) => resolve(root, path);
+const has = (path) => existsSync(at(path));
+
 const problems = { error: 0, warn: 0 };
 
 const report = (level, message) => {
@@ -28,10 +31,11 @@ const ok = (message) => console.log(`[OK] ${message}`);
 
 const SEMVER = /^\d+\.\d+\.\d+$/;
 const BASIC_LATIN = /^[\x20-\x7E]+$/;
+const asString = (value) => (typeof value === 'string' ? value : '');
 
 // ---------- manifest.json ----------
 
-const manifestPath = resolve(root, 'manifest.json');
+const manifestPath = at('manifest.json');
 if (!existsSync(manifestPath)) {
   error(`manifest.json not found at ${manifestPath} — it must live at the repo root.`);
   finish();
@@ -54,7 +58,13 @@ if (typeof manifest.isDesktopOnly !== 'boolean') {
   error('manifest.isDesktopOnly is required and must be a boolean (true if any Node.js/Electron API is used).');
 }
 
-const { id = '', name = '', version = '', minAppVersion = '', description = '' } = manifest;
+// Coerce to strings so a malformed (non-string) field is reported above without
+// crashing the string checks below — a bad manifest should still get a full report.
+const id = asString(manifest.id);
+const name = asString(manifest.name);
+const version = asString(manifest.version);
+const minAppVersion = asString(manifest.minAppVersion);
+const description = asString(manifest.description);
 
 // id rules
 if (id) {
@@ -63,9 +73,13 @@ if (id) {
   }
   if (/plugin$/i.test(id)) error(`manifest.id "${id}" must not end with "plugin".`);
   if (/obsidian/i.test(id)) error(`manifest.id "${id}" must not contain "obsidian".`);
+  // The id-matches-folder rule governs the vault install dir (<vault>/.obsidian/plugins/<id>),
+  // so only check it when root actually is one — not when pointed at a git checkout.
+  const insideVaultPluginsDir = basename(dirname(root)) === 'plugins'
+    && basename(dirname(dirname(root))) === '.obsidian';
   const folder = basename(root);
-  if (folder !== id) {
-    warn(`folder name "${folder}" != manifest.id "${id}" — for local dev the plugin folder must match the id, or callbacks like onExternalSettingsChange won't fire.`);
+  if (insideVaultPluginsDir && folder !== id) {
+    warn(`plugin folder "${folder}" != manifest.id "${id}" — inside a vault the folder must match the id, or callbacks like onExternalSettingsChange won't fire.`);
   }
 }
 
@@ -103,9 +117,10 @@ if ('fundingUrl' in manifest) {
   const funding = manifest.fundingUrl;
   const isUrlString = typeof funding === 'string' && funding.startsWith('https://');
   const isLabelMap = typeof funding === 'object' && funding !== null && !Array.isArray(funding)
+    && Object.keys(funding).length > 0
     && Object.values(funding).every((url) => typeof url === 'string' && url.startsWith('https://'));
   if (!isUrlString && !isLabelMap) {
-    error('manifest.fundingUrl must be an https URL string or an object mapping labels to https URLs.');
+    error('manifest.fundingUrl must be an https URL string or a non-empty object mapping labels to https URLs.');
   }
   warn('fundingUrl present — keep it only if it points at actual financial support; otherwise remove it (submission requirement).');
 }
@@ -114,7 +129,7 @@ if (problems.error === 0) ok('manifest.json passes field rules.');
 
 // ---------- versions.json ----------
 
-const versionsPath = resolve(root, 'versions.json');
+const versionsPath = at('versions.json');
 if (existsSync(versionsPath)) {
   try {
     const versions = JSON.parse(readFileSync(versionsPath, 'utf8'));
@@ -138,33 +153,44 @@ if (existsSync(versionsPath)) {
 
 // ---------- release readiness ----------
 
-if (!existsSync(resolve(root, 'LICENSE')) && !existsSync(resolve(root, 'LICENSE.md'))) {
+if (!has('LICENSE') && !has('LICENSE.md')) {
   error('LICENSE file missing at repo root — required by the developer policies.');
 }
-if (!existsSync(resolve(root, 'README.md'))) {
+if (!has('README.md')) {
   error('README.md missing at repo root — required for submission (and for network/account/payment disclosures).');
 }
 
-if (existsSync(resolve(root, 'main.js'))) {
+if (has('main.js')) {
   let gitignore = '';
-  try { gitignore = readFileSync(resolve(root, '.gitignore'), 'utf8'); } catch { /* no .gitignore */ }
-  const ignoresMainJs = gitignore.split('\n').some((line) => line.trim().replace(/^\//, '') === 'main.js');
+  try { gitignore = readFileSync(at('.gitignore'), 'utf8'); } catch { /* no .gitignore */ }
+  const ignoresMainJs = gitignore.split('\n').some((raw) => {
+    const line = raw.trim().replace(/^\//, '');
+    return line === 'main.js' || line === '*.js';
+  });
   if (!ignoresMainJs) {
     warn('main.js exists at repo root and .gitignore does not ignore it — built output belongs in release assets, not the repo.');
   }
 }
 
-const sourceFiles = existsSync(resolve(root, 'src'))
-  ? readdirSync(resolve(root, 'src')).filter((entry) => entry.endsWith('.ts'))
-  : [];
-for (const file of sourceFiles) {
-  const source = readFileSync(resolve(root, 'src', file), 'utf8');
-  if (/MyPlugin|SampleSettingTab|MyPluginSettings/.test(source)) {
-    warn(`src/${file} still contains sample-plugin placeholder names (MyPlugin/SampleSettingTab) — rename before submitting.`);
+// Leftover sample-plugin code is an automatic review flag. Scan every TypeScript
+// source, wherever it lives: root main.ts (the classic layout) and anything under
+// src/ (the current sample uses src/main.ts + src/settings.ts).
+const collectTsFiles = (dir) => {
+  if (!existsSync(dir)) return [];
+  return readdirSync(dir, { withFileTypes: true }).flatMap((entry) => {
+    const full = resolve(dir, entry.name);
+    if (entry.isDirectory()) return collectTsFiles(full);
+    return entry.name.endsWith('.ts') ? [full] : [];
+  });
+};
+const tsFiles = [...(has('main.ts') ? [at('main.ts')] : []), ...collectTsFiles(at('src'))];
+for (const file of tsFiles) {
+  if (/MyPlugin|SampleSettingTab|MyPluginSettings/.test(readFileSync(file, 'utf8'))) {
+    warn(`${relative(root, file)} still contains sample-plugin placeholder names (MyPlugin/SampleSettingTab) — rename before submitting.`);
   }
 }
 
-console.log(`\nRelease reminder: the GitHub release tag must exactly match manifest.version ("${version}"), with no "v" prefix, and attach main.js, manifest.json${existsSync(resolve(root, 'styles.css')) ? ', and styles.css' : ''}.`);
+console.log(`\nRelease reminder: the GitHub release tag must exactly match manifest.version ("${version}"), with no "v" prefix, and attach main.js, manifest.json${has('styles.css') ? ', and styles.css' : ''}.`);
 
 finish();
 
