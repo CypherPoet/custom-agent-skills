@@ -12,7 +12,7 @@ description: >
 
 # Blender Mastery
 
-**Verified:** 2026-07-17
+**Verified:** 2026-07-24
 
 Pro tips, `bpy` patterns, and Blender mental models — primarily driven through the [official Blender MCP server](https://www.blender.org/lab/mcp-server/), with a headless-CLI escape hatch for long-running work. The body of this file holds the cross-cutting plays and routing table — domain-specific depth lives in `references/` and is loaded only when relevant.
 

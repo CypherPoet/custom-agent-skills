@@ -22,7 +22,7 @@ and treat the exact numbers as a dated snapshot** — reconcile against the sour
 anyone a dimension is final.
 
 **Source of truth:** <https://developer.apple.com/help/app-store-connect/reference/app-information/screenshot-specifications>
-(specs here verified 2026-05-30).
+(specs here verified 2026-07-24).
 
 ## The rule that saves the most time: upload the largest, let Apple scale
 

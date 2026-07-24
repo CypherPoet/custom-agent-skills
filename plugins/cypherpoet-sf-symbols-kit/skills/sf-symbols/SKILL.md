@@ -11,7 +11,7 @@ description: >
 
 # SF Symbols
 
-**Verified:** 2026-07-11
+**Verified:** 2026-07-24
 
 One bundled CLI does everything: `scripts/sf_symbols.py` (paths relative to this
 skill's directory). Lookup commands need only the Python stdlib; rendering

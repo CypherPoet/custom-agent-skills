@@ -13,7 +13,7 @@ description: >
 
 # Apple App Icons (Icon Composer + appiconset)
 
-**Verified:** 2026-07-17
+**Verified:** 2026-07-24
 
 ## Overview
 
