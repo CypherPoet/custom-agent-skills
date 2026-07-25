@@ -184,7 +184,7 @@ def make_only_active(obj):
 
 ## Sources
 
-- [Blender Python API: Data Access](https://docs.blender.org/api/5.1/info_quickstart.html)
-- [Blender Python API: Context](https://docs.blender.org/api/5.1/bpy.context.html)
-- [Blender Python API: Operators](https://docs.blender.org/api/5.1/bpy.ops.html)
-- [Blender Python API: `Context.temp_override`](https://docs.blender.org/api/5.1/bpy.types.Context.html#bpy.types.Context.temp_override)
+- [Blender Python API: Data Access](https://docs.blender.org/api/5.2/info_quickstart.html)
+- [Blender Python API: Context](https://docs.blender.org/api/5.2/bpy.context.html)
+- [Blender Python API: Operators](https://docs.blender.org/api/5.2/bpy.ops.html)
+- [Blender Python API: `Context.temp_override`](https://docs.blender.org/api/5.2/bpy.types.Context.html#bpy.types.Context.temp_override)

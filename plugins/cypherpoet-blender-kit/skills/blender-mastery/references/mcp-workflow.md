@@ -55,7 +55,9 @@ For visual changes (materials, lighting, geometry, camera), take a screenshot (`
 
 Don't skip verification. The MCP runs Python in-process, so a script that half-completes leaves visible state in the scene that you'd otherwise miss.
 
-When the extension's screenshot tools misbehave (all observed on the official lab extension v1.0.0 / Blender 5.1):
+When the extension's screenshot tools misbehave (all observed on the official lab extension
+v1.0.0 / Blender 5.1, and not re-tested since — the extension versions independently of
+Blender, so treat these as symptoms to recognize rather than a current version claim):
 
 - The area-screenshot tool can fail with `Invalid response … Unterminated string` regardless of any size cap — the bridge chokes on large payloads.
 - `render_viewport_to_path`-style tools may ignore the requested output path and write to a sandboxed temp directory; the *returned* filepath in the result is the real one — copy the file out rather than assuming your path was honored.
@@ -121,9 +123,17 @@ reloads or Blender restarts — re-register after either.
 
 ## Fresh files without read_homefile
 
-`bpy.ops.wm.read_homefile()` (and in-session file opens generally) can crash Blender
-outright — SIGABRT observed on 5.1.1/macOS from both MCP calls and `--background` scripts
-(see `errors.md`). To start a clean file, never reload in-session. Instead:
+In-session file reloads are the one reliable way to lose the MCP mid-session. Two distinct
+failure modes, both measured on 5.2.0/macOS `--background`:
+
+- **`bpy.ops.wm.read_homefile(use_empty=True)` still crashes outright** — SIGABRT, exit 134.
+  (On 5.1.1 the whole family crashed; by 5.2 plain `read_homefile()` and `open_mainfile()`
+  no longer do.)
+- **Surviving the reload isn't enough.** A successful `open_mainfile()` clears
+  `bpy.app.timers` and every handler not marked `@persistent` — which is exactly what an
+  addon server is built on, so the bridge dies even though Blender lives.
+
+So the rule is unchanged, only better understood: never reload in-session. Instead:
 
 1. Headless, clean the *default* scene and save — no reload involved:
 
@@ -203,5 +213,5 @@ See `errors.md` for the full table.
 
 ## Sources
 
-- [Blender Python API Reference](https://docs.blender.org/api/5.1/) — the canonical source for `bpy` calls.
+- [Blender Python API Reference](https://docs.blender.org/api/5.2/) — the canonical source for `bpy` calls.
 - [Blender MCP Server (lab page)](https://www.blender.org/lab/mcp-server/).

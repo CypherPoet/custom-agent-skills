@@ -21,7 +21,7 @@ Switch via:
 bpy.context.scene.render.engine = 'CYCLES'   # or 'BLENDER_EEVEE' (Eevee)
 ```
 
-Note: through Blender 4.2–4.5 the Eevee engine identifier was `BLENDER_EEVEE_NEXT`; Blender 5.0 renamed it back to `BLENDER_EEVEE`, which is correct at this 5.1 baseline.
+Note: through Blender 4.2–4.5 the Eevee engine identifier was `BLENDER_EEVEE_NEXT`; Blender 5.0 renamed it back to `BLENDER_EEVEE`, which is correct at this 5.2 baseline (`BLENDER_EEVEE_NEXT` is no longer in the enum).
 
 ## GPU acceleration in Cycles
 
@@ -231,7 +231,7 @@ For baking workflows that take more than a few seconds, same — bake via headle
 
 ## Sources
 
-- [Blender Manual: Cycles](https://docs.blender.org/manual/en/5.1/render/cycles/index.html)
-- [Blender Manual: Eevee](https://docs.blender.org/manual/en/5.1/render/eevee/index.html)
-- [Blender Manual: Baking](https://docs.blender.org/manual/en/5.1/render/cycles/baking.html)
-- [Blender Python API: RenderSettings](https://docs.blender.org/api/5.1/bpy.types.RenderSettings.html)
+- [Blender Manual: Cycles](https://docs.blender.org/manual/en/5.2/render/cycles/index.html)
+- [Blender Manual: Eevee](https://docs.blender.org/manual/en/5.2/render/eevee/index.html)
+- [Blender Manual: Baking](https://docs.blender.org/manual/en/5.2/render/cycles/baking.html)
+- [Blender Python API: RenderSettings](https://docs.blender.org/api/5.2/bpy.types.RenderSettings.html)

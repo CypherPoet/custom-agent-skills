@@ -135,7 +135,7 @@ def bake_normal_from_high_to_low(low, high, image_size=2048):
 
 ## Sources
 
-- [Blender Manual: Sculpt Mode](https://docs.blender.org/manual/en/5.1/sculpt_paint/sculpting/introduction/index.html)
-- [Blender Manual: Multires Modifier](https://docs.blender.org/manual/en/5.1/modeling/modifiers/generate/multiresolution.html)
-- [Blender Manual: Remesh Modifier](https://docs.blender.org/manual/en/5.1/modeling/modifiers/generate/remesh.html)
-- [Blender Python API: Brush](https://docs.blender.org/api/5.1/bpy.types.Brush.html)
+- [Blender Manual: Sculpt Mode](https://docs.blender.org/manual/en/5.2/sculpt_paint/sculpting/introduction/index.html)
+- [Blender Manual: Multires Modifier](https://docs.blender.org/manual/en/5.2/modeling/modifiers/generate/multiresolution.html)
+- [Blender Manual: Remesh Modifier](https://docs.blender.org/manual/en/5.2/modeling/modifiers/generate/remesh.html)
+- [Blender Python API: Brush](https://docs.blender.org/api/5.2/bpy.types.Brush.html)

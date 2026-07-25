@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "cypherpoet-blender-kit",
-  "version": "0.7.1",
+  "version": "0.8.0",
   "description": "Blender mastery — modeling, materials, rigging, geometry nodes, rendering, and export via bpy, driven through the official Blender MCP server or the headless CLI.",
   "author": {
     "name": "CypherPoet"
