@@ -1,13 +1,12 @@
 ---
 name: obsidian-plugin-crafting
 description: >
-  Use whenever the work touches an Obsidian plugin — building one from scratch,
-  editing a plugin's main.ts or manifest.json, wiring the vault/editor/workspace
-  APIs, fixing eslint-plugin-obsidianmd violations, or preparing a plugin for
-  community-directory submission — even when "Obsidian" is only implied by a
-  .obsidian folder or vault context. Covers scaffold → develop → review →
-  release with current API facts (declarative settings, deferred views) that
-  post-date training data. Not for authoring notes or markdown inside a vault.
+  Use whenever work touches an Obsidian plugin — scaffolding one, editing its
+  main.ts or manifest.json, wiring the vault/editor/workspace APIs, fixing
+  eslint-plugin-obsidianmd violations, or preparing it for community-directory
+  submission — even when "Obsidian" is only implied by a .obsidian folder or
+  vault. Covers the full scaffold-to-submission lifecycle with current API facts.
+  Not for authoring notes or markdown inside a vault.
 ---
 
 # Obsidian Plugin Crafting
