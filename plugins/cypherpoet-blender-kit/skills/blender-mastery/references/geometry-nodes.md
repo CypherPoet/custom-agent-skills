@@ -139,9 +139,10 @@ for socket in nt.interface.items_tree:
 ```
 
 Stale-code trap in the other direction: the subscript route above is the 5.1 baseline, but Blender
-5.2 replaced those custom properties with real RNA properties under `mod.properties`, so
-`mod[socket.identifier] = 25.0` no longer drives the input on 5.2+. The identifier becomes an
-attribute name, so reach it dynamically with `getattr`:
+5.2 replaced those custom properties with real RNA properties under `mod.properties`. On 5.2+,
+`mod[socket.identifier] = 25.0` raises `TypeError: bpy_struct[key] = val: id properties not
+supported for this type` — it fails loudly rather than silently doing nothing. The identifier
+becomes an attribute name, so reach it dynamically with `getattr`:
 
 ```python
 # Blender 5.2+ — the RNA path is .properties.inputs.<identifier>.value
