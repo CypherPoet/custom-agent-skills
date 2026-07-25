@@ -2,7 +2,7 @@
 
 The official linter encodes most review feedback as rules; what it can't see, human reviewers check. Work in that order: lint clean first, then walk the checklist.
 
-Contents: [Setup](#setup) · [Rule catalog](#rule-catalog-v041) · [Linter-invisible pitfalls](#linter-invisible-pitfalls) · [Review checklist](#human-review-checklist)
+**Contents:** [Setup](#setup) · [Rule catalog](#rule-catalog-v041) · [Linter-invisible pitfalls](#linter-invisible-pitfalls) · [Review checklist](#human-review-checklist)
 
 ## Setup
 
@@ -103,7 +103,7 @@ Static analysis can't catch these — check them by reading the code:
 Before submitting, verify each:
 
 1. Lint passes with zero findings — warnings included, they're tomorrow's review comments.
-2. `node scripts/validate-plugin.mjs <plugin-dir>` (bundled with this skill) passes — manifest, `versions.json`, release readiness.
+2. `node scripts/validate-plugin.mjs <plugin-dir>` passes — manifest, `versions.json`, release readiness. The script ships with this skill, so `scripts/` resolves against **this skill's directory**, not the plugin repo; prefix the command with it.
 3. All sample code and placeholder names gone.
 4. No `console.log` in the shipping path (`onload` especially); log errors only.
 5. `this.app`, never the global `app`.

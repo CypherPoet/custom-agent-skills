@@ -49,6 +49,13 @@ try {
   finish();
 }
 
+// Valid JSON isn't necessarily a manifest — `null`, an array, or a bare literal
+// all parse. Bail here so the field checks below can't dereference a non-object.
+if (typeof manifest !== 'object' || manifest === null || Array.isArray(manifest)) {
+  error('manifest.json must contain a JSON object mapping manifest fields to values.');
+  finish();
+}
+
 for (const field of ['id', 'name', 'version', 'minAppVersion', 'description', 'author']) {
   if (typeof manifest[field] !== 'string' || manifest[field].length === 0) {
     error(`manifest.${field} is required and must be a non-empty string.`);
@@ -68,8 +75,10 @@ const description = asString(manifest.description);
 
 // id rules
 if (id) {
-  if (!/^[a-z0-9-]+$/.test(id)) {
-    error(`manifest.id "${id}" may only contain lowercase letters, digits, and hyphens.`);
+  // Docs/Reference/Manifest: "The ID must contain only lowercase letters and
+  // hyphens" — digits included. Some long-published plugins predate the rule.
+  if (!/^[a-z-]+$/.test(id)) {
+    error(`manifest.id "${id}" may only contain lowercase letters and hyphens — no digits, underscores, or capitals.`);
   }
   if (/plugin$/i.test(id)) error(`manifest.id "${id}" must not end with "plugin".`);
   if (/obsidian/i.test(id)) error(`manifest.id "${id}" must not contain "obsidian".`);
@@ -85,14 +94,19 @@ if (id) {
 
 // name rules
 if (name) {
-  if (!BASIC_LATIN.test(name)) error(`manifest.name "${name}" must use Basic Latin characters only (no emoji or extended Unicode).`);
   if (/obsidian|obsi-|-sidian/i.test(name)) {
     error(`manifest.name "${name}" must not contain "Obsidian" or variations.`);
   }
   if (/\bplugins?\b/i.test(name)) error(`manifest.name "${name}" must not contain the word "Plugin".`);
-  const disallowedPunctuation = name.replace(/[a-zA-Z0-9 ()+\-]/g, '');
-  if (disallowedPunctuation.length > 0) {
-    error(`manifest.name "${name}" contains disallowed punctuation "${disallowedPunctuation}" — only hyphens, "+", and parentheses are allowed.`);
+  if (!BASIC_LATIN.test(name)) {
+    error(`manifest.name "${name}" must use Basic Latin characters only (no emoji or extended Unicode).`);
+  } else {
+    // Only meaningful once the name is known to be Basic Latin — otherwise every
+    // accented letter gets reported a second time as "punctuation".
+    const disallowedPunctuation = name.replace(/[a-zA-Z0-9 ()+\-]/g, '');
+    if (disallowedPunctuation.length > 0) {
+      error(`manifest.name "${name}" contains disallowed punctuation "${disallowedPunctuation}" — only hyphens, "+", and parentheses are allowed.`);
+    }
   }
 }
 
@@ -153,7 +167,7 @@ if (existsSync(versionsPath)) {
 
 // ---------- release readiness ----------
 
-if (!has('LICENSE') && !has('LICENSE.md')) {
+if (!['LICENSE', 'LICENSE.md', 'LICENSE.txt'].some(has)) {
   error('LICENSE file missing at repo root — required by the developer policies.');
 }
 if (!has('README.md')) {
@@ -173,8 +187,9 @@ if (has('main.js')) {
 }
 
 // Leftover sample-plugin code is an automatic review flag. Scan every TypeScript
-// source, wherever it lives: root main.ts (the classic layout) and anything under
-// src/ (the current sample uses src/main.ts + src/settings.ts).
+// source, wherever it lives: the repo root (classic single-file layout, plus any
+// siblings a split left there) and everything under src/ (the current sample uses
+// src/main.ts + src/settings.ts).
 const collectTsFiles = (dir) => {
   if (!existsSync(dir)) return [];
   return readdirSync(dir, { withFileTypes: true }).flatMap((entry) => {
@@ -183,10 +198,20 @@ const collectTsFiles = (dir) => {
     return entry.name.endsWith('.ts') ? [full] : [];
   });
 };
-const tsFiles = [...(has('main.ts') ? [at('main.ts')] : []), ...collectTsFiles(at('src'))];
-for (const file of tsFiles) {
-  if (/MyPlugin|SampleSettingTab|MyPluginSettings/.test(readFileSync(file, 'utf8'))) {
-    warn(`${relative(root, file)} still contains sample-plugin placeholder names (MyPlugin/SampleSettingTab) — rename before submitting.`);
+const rootTsFiles = readdirSync(root, { withFileTypes: true })
+  .filter((entry) => entry.isFile() && entry.name.endsWith('.ts'))
+  .map((entry) => at(entry.name));
+
+// The same placeholders the linter's sample-names rule looks for.
+const SAMPLE_PLACEHOLDERS = ['MyPlugin', 'MyPluginSettings', 'SampleModal', 'SampleSettingTab'];
+
+for (const file of [...rootTsFiles, ...collectTsFiles(at('src'))]) {
+  const source = readFileSync(file, 'utf8');
+  // Word-bounded so a file holding only MyPluginSettings isn't also reported for
+  // MyPlugin — the message should name the identifiers actually present.
+  const leftovers = SAMPLE_PLACEHOLDERS.filter((placeholder) => new RegExp(`\\b${placeholder}\\b`).test(source));
+  if (leftovers.length > 0) {
+    warn(`${relative(root, file)} still contains sample-plugin placeholder names (${leftovers.join(', ')}) — rename before submitting.`);
   }
 }
 

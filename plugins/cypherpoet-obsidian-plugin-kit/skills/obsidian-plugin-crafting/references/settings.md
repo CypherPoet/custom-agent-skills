@@ -68,4 +68,4 @@ Never store API keys in `data.json` (it syncs, and it's plain text in the vault)
 - UI: `new Setting(el).addComponent((wrapper) => new SecretComponent(this.app, wrapper))` — the component manages named secrets.
 - Your settings store the secret's **name**; values live in vault-keyed local storage outside the vault files.
 
-The docs don't state a minimum app version for SecretStorage — verify against the `obsidian` typings you're compiling with before relying on it.
+The prose docs don't state a minimum app version, but the typings do: `secretStorage` and `getSecret` are `@since 1.11.4`, and the `addComponent` used above is `@since 1.11.0` — so this pattern needs `minAppVersion` ≥ **1.11.4**. That's enforced, not advisory: `no-unsupported-api` is error-severity and flags API calls newer than your declared `minAppVersion`.
