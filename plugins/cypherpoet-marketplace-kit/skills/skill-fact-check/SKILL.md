@@ -56,7 +56,7 @@ find plugins -name SKILL.md -not -path '*/evals/*' -not -path '*-workspace/*'
 
 For each `plugins/<plugin>/skills/<skill>/SKILL.md`, the unit's directory is its parent, its `unit_id` is `<plugin>/<skill>`, and its plugin manifest is `plugins/<plugin>/.claude-plugin/plugin.json`.
 
-Fact-check the `SKILL.md` body and **all** `references/**/*.md` under the unit (≈80% of volatile facts live in references). **Exclude** everything under `**/evals/` (test fixtures) and `**/*-workspace/` (regenerable scratch). Never edit YAML frontmatter `description:`.
+Fact-check the `SKILL.md` body, **all** `references/**/*.md` under the unit (≈80% of volatile facts live in references), and `evals/**` — fixtures encode the same version-sensitive premises as the docs and go stale with them, leaving an eval that contradicts the skill it grades. Evals are corrected under the same evidence gates as any other file. **Exclude** `**/*-workspace/` entirely (regenerable scratch). Never edit YAML frontmatter `description:`.
 
 ## Inputs
 
@@ -197,7 +197,7 @@ Give each subagent: the unit's `unit_dir` and `plugin_dir`, the [verification pr
 
 ## Step 3a — Subagent verification procedure (paste verbatim)
 
-> You are fact-checking ONE skill. Read its `SKILL.md` and every `references/**/*.md` under `{unit_dir}` (ignore anything under `evals/` or `*-workspace/`). Extract the **verifiable, time-sensitive** claims — versions/"latest" (iOS 27, Swift 6.x, three.js r###, Blender 5.1, Expo SDK ##), dated/"as of" stamps, specs (device pixel dimensions, symbol counts, bitrates, limits), external URLs, and API/CLI syntax (flag names, renamed properties). Ignore methodology, process steps, and design guidance — only check facts.
+> You are fact-checking ONE skill. Read its `SKILL.md`, every `references/**/*.md`, and everything under `evals/` within `{unit_dir}` (ignore `*-workspace/`). Extract the **verifiable, time-sensitive** claims — versions/"latest" (iOS 27, Swift 6.x, three.js r###, Blender 5.1, Expo SDK ##), dated/"as of" stamps, specs (device pixel dimensions, symbol counts, bitrates, limits), external URLs, and API/CLI syntax (flag names, renamed properties). Ignore methodology, process steps, and design guidance — only check facts.
 >
 > For each claim, apply this gate. A claim may be returned as `CORRECT` (an applied edit) **only if every step passes**; otherwise downgrade to a `FLAG_*` or `ERROR`.
 >
@@ -210,6 +210,7 @@ Give each subagent: the unit's `unit_dir` and `plugin_dir`, the [verification pr
 > 6. **Cite what you fix.** Every `CORRECT` claim includes `source_url` and a `source_quote` — the passage a reviewer would check the fix against. The quote must *establish* the correction; it need not contain your replacement text verbatim (a changelog can document a rename without printing your exact line). The test is whether a reviewer reading the quote would make the same edit. No evidence you can point to ⇒ not a correction — flag it.
 > 6b. **Propose the full fix the evidence supports.** A correction can be any size the evidence establishes: a token swap, a rename applied at every site in the file (one `CORRECT` claim per site, sharing the citation), a corrected code snippet, or a rewritten note whose logic was inverted. Supply exact replacement text in `new`. What makes something a correction is the evidence behind it, not the edit's size. Only when the fix is genuinely an *editorial* call — the current text isn't wrong, just incomplete or arguably framed — flag it, with your proposed wording in `note` so the human can apply it with one decision.
 > 7. **Frontmatter guard.** If a wrong fact lives in a `description:` value in `SKILL.md` YAML frontmatter, return `FLAG_DESCRIPTION_FRONTMATTER` — never edit it. (Only when the value is actually wrong; if it's correct, it's `CONFIRMED_UNCHANGED` — don't flag a frontmatter value just for being in frontmatter.)
+> 7b. **Eval semantics.** Evals are correctable like any other file, but read them for what they are so you don't manufacture findings. A negative assertion naming a removed API (`must not use mesh.use_auto_smooth`) is *asserting the removal* — it's correct, not stale: `CONFIRMED_UNCHANGED`. A version inside an eval `prompt` is scenario data (a user persona), not a claim about the world, so it isn't a stale fact — leave it alone. Real findings look like: a mechanism labelled by a version *point* when it holds over a range, an assertion naming an interpreter or SDK that no longer exists, or an `expected_output` describing behavior the vendor has since changed.
 > 8. **Fetch fallback.** For Apple developer-docs symbols, hit the docs **JSON endpoint** first — `https://developer.apple.com/tutorials/data/documentation/<framework>/<lowercased-symbol-path>.json` (e.g. `swiftui/view/statusbarhidden(_:).json`). It is not bot-walled and returns structured availability in `metadata.platforms[]` (`introducedAt` / `deprecatedAt` / deprecation `message`); a `404` means the symbol doesn't exist. For other bot-walled sources prefer the Firecrawl connector; fall back to `WebFetch`/`WebSearch`. If a source is unreachable every way, return `ERROR` for that claim (it will be flagged, not edited) — do not guess.
 >
 > Return ONLY the JSON object defined in the contract. No prose, no edited files.
@@ -222,7 +223,7 @@ For each claim with `status == "CORRECT"`, in most-overdue-unit order, apply it 
 
 - The cited `source_url` is a primary source and the `source_quote` genuinely establishes both that the old text is wrong and that `new` is right. Spot-check anything surprising or load-bearing (fetch the source, resolve the URL yourself) — the subagent did the research, but the orchestrator owns the edit.
 - `confidence == "high"` — anything lower ships as a flag with its evidence attached.
-- It's a fact correction within scope: not under `evals/` or `*-workspace/`, not a `description:` frontmatter line or a protected `plugin.json` field, and not a stylistic rewrite wearing a correction's clothes.
+- It's a fact correction within scope: not under `*-workspace/`, not a `description:` frontmatter line or a protected `plugin.json` field, and not a stylistic rewrite wearing a correction's clothes.
 
 **Size is not a gate.** A sourced multi-site rename or corrected snippet applies just like a token swap — apply each site with an exact-substring `Edit` using its `locator`. If one unit's corrections would dominate the PR (dozens of edits), give them their own commit so the diff reviews cleanly; don't downgrade them to flags for being numerous. Group edits by plugin. Track which plugins were touched (for the version bump).
 
@@ -315,7 +316,7 @@ _Flags a human already reviewed and accepted (manifest `acknowledged`) — shown
 - Never edit a `description:` frontmatter field, or `plugin.json` `name`/`description`/`homepage` (only `version`).
 - Never add the `marketplace-publish` label (fact edits don't touch the marketplace catalog surface).
 - Never refresh `docs/CATALOG.md` (component counts don't change).
-- Never edit anything under `**/evals/` or `**/*-workspace/`.
+- Never edit anything under `**/*-workspace/` (regenerable scratch — don't read it either).
 - Never open a second PR while one is open (reuse the stable branch).
 - Never re-stamp a dateline for a claim it couldn't actually verify.
 - Never let a manifest `acknowledged` entry suppress a `CORRECT` or an `ERROR` — acknowledgments silence only human-accepted `FLAG_*` findings, and an expired one (`recheck_after` in the past) must surface again.
