@@ -39,6 +39,15 @@ The classic geometry-nodes example. Distribute points on a mesh surface, then in
 ```python
 import bpy
 
+def socket_by(sockets, name, socket_type):
+    """Resolve a socket by visible name *and* data type.
+
+    Polymorphic nodes shuffle socket order between Blender versions; the
+    name+type pair survives that where a hard-coded index doesn't. See the
+    Random Value trap below.
+    """
+    return next(s for s in sockets if s.name == name and s.type == socket_type)
+
 def scatter_setup(target_obj, source_obj, density=10.0, seed=0):
     mod, nt = add_geo_nodes_modifier(target_obj, name="Scatter")
 
@@ -66,12 +75,12 @@ def scatter_setup(target_obj, source_obj, density=10.0, seed=0):
     # bounds, and signals intent — "rotate around Z by a random angle".
     random_z = nodes.new("FunctionNodeRandomValue")
     random_z.data_type = 'FLOAT'
-    random_z.inputs[2].default_value = 0.0       # Min (float socket index)
-    random_z.inputs[3].default_value = 6.283185  # Max (≈ 2π)
+    socket_by(random_z.inputs, "Min", 'VALUE').default_value = 0.0
+    socket_by(random_z.inputs, "Max", 'VALUE').default_value = 6.283185  # ≈ 2π
 
     combine = nodes.new("ShaderNodeCombineXYZ")
     # X and Y left at 0; only Z carries the random angle:
-    links.new(random_z.outputs[1], combine.inputs["Z"])  # float output
+    links.new(socket_by(random_z.outputs, "Value", 'VALUE'), combine.inputs["Z"])
 
     join = nodes.new("GeometryNodeJoinGeometry")
 
@@ -89,7 +98,8 @@ def scatter_setup(target_obj, source_obj, density=10.0, seed=0):
 Two things to know about wiring:
 
 - `GeometryNodeDistributePointsOnFaces` in 5.x has a `Mesh` input (renamed from earlier `Geometry`). When in doubt, check `node.inputs.keys()` to see the real socket names.
-- `FunctionNodeRandomValue` has output sockets keyed by data-type — indices 0 (`Value` vector), 1 (`Value` float), 2 (`Value` int), 3 (`Value` bool). Use the index matching the active `data_type`. For `FLOAT`, that's `outputs[1]`. Index access is safer than name access because the visible-name disambiguator changes across versions. For axis-isolated rotations (Z-only is the common case), prefer sampling a `FLOAT` and combining with `ShaderNodeCombineXYZ` rather than zeroing two components of a `FLOAT_VECTOR` — the intent reads cleaner and there's no risk of accidentally bleeding random values into the unwanted axes.
+- **Stale-code trap — polymorphic node socket indices moved in 5.2.** Through 5.1, `FunctionNodeRandomValue` declared *every* data-type's sockets at once and hid the inactive ones, so a `FLOAT` sample sat at `inputs[2]`/`inputs[3]` with the float output at `outputs[1]`. Blender 5.2 builds the socket list *from* the active `data_type` instead ([`3a5cd7862b`](https://projects.blender.org/blender/blender/commit/3a5cd7862bc1422188cdc7e6fb9ac3209077f479)): with `data_type='FLOAT'` the inputs are now `Min`, `Max`, `ID`, `Seed`, and there is a **single** `Value` output. Code carrying the 5.1 indices silently writes into `ID`/`Seed` and then raises `IndexError` on `outputs[1]`. Resolve by name **and** type — the `socket_by` helper above is correct on both versions. The same 5.2 rework applies to Compare, Boolean Math, and Rotate Euler.
+- For axis-isolated rotations (Z-only is the common case), prefer sampling a `FLOAT` and combining with `ShaderNodeCombineXYZ` rather than zeroing two components of a `FLOAT_VECTOR` — the intent reads cleaner and there's no risk of accidentally bleeding random values into the unwanted axes.
 
 ## Setting attributes from script
 
