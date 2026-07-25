@@ -138,6 +138,27 @@ for socket in nt.interface.items_tree:
         mod[socket.identifier] = 25.0
 ```
 
+Stale-code trap in the other direction: the subscript route above is the 5.1 baseline, but Blender
+5.2 replaced those custom properties with real RNA properties under `mod.properties`, so
+`mod[socket.identifier] = 25.0` no longer drives the input on 5.2+. The identifier becomes an
+attribute name, so reach it dynamically with `getattr`:
+
+```python
+# Blender 5.2+ — the RNA path is .properties.inputs.<identifier>.value
+getattr(mod.properties.inputs, socket.identifier).value = 25.0
+
+# Drive that input from an attribute instead of a constant:
+inp = getattr(mod.properties.inputs, socket.identifier)
+inp.type = 'ATTRIBUTE'
+inp.attribute_name = "density_attr"
+
+# Output attribute names moved to the matching outputs collection:
+getattr(mod.properties.outputs, "Socket_3").attribute_name = "result_attr"
+```
+
+Socket identifiers for the Compare and Random Value nodes also changed in 5.2 — re-read
+`nt.interface.items_tree` rather than reusing identifiers recorded against an earlier version.
+
 ## Common patterns and what they're for
 
 | Pattern | Use case |
@@ -162,3 +183,4 @@ Geometry node trees built from script can get long (hundreds of nodes for comple
 - [Blender Manual: Geometry Nodes](https://docs.blender.org/manual/en/5.1/modeling/geometry_nodes/introduction.html)
 - [Blender Python API: GeometryNodeTree](https://docs.blender.org/api/5.1/bpy.types.GeometryNodeTree.html)
 - [Blender Python API: Attribute](https://docs.blender.org/api/5.1/bpy.types.Attribute.html)
+- [5.2 Python API release notes](https://developer.blender.org/docs/release_notes/5.2/python_api/) — the modifier-properties move and the Compare / Random Value identifier changes
