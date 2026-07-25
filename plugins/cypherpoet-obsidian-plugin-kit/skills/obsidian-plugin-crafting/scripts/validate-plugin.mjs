@@ -78,7 +78,7 @@ if (id) {
   // Docs/Reference/Manifest: "The ID must contain only lowercase letters and
   // hyphens" — digits included. Some long-published plugins predate the rule.
   if (!/^[a-z-]+$/.test(id)) {
-    error(`manifest.id "${id}" may only contain lowercase letters and hyphens — no digits, underscores, or capitals.`);
+    error(`manifest.id "${id}" may only contain lowercase letters and hyphens (no digits, underscores, or capitals). Fix this before your first release — ids can't change afterward, so already-published plugins keep the id they shipped with.`);
   }
   if (/plugin$/i.test(id)) error(`manifest.id "${id}" must not end with "plugin".`);
   if (/obsidian/i.test(id)) error(`manifest.id "${id}" must not contain "obsidian".`);
