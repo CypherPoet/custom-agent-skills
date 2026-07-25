@@ -61,7 +61,7 @@ Map the feature to its API surface via the [reference table](#reference-files) a
 
 ### Review before submitting
 1. Set up the official linter and fix its findings: [`linting-and-review.md`](references/linting-and-review.md).
-2. Run the bundled preflight — `node scripts/validate-plugin.mjs <plugin-dir>` — for the manifest/`versions.json`/release checks the linter doesn't cover. `scripts/` is relative to **this skill's directory** (your harness shows the skill's location when it loads), not the plugin repo; prefix the command with it. Fix every ERROR; treat WARNs as review comments in waiting.
+2. Run the bundled preflight — `python3 scripts/validate_plugin.py <plugin-dir>` — for the manifest/`versions.json`/release checks the linter doesn't cover. `scripts/` is relative to **this skill's directory** (your harness shows the skill's location when it loads), not the plugin repo; prefix the command with it. Fix every ERROR; treat WARNs as review comments in waiting.
 3. Walk the review checklist in [`linting-and-review.md`](references/linting-and-review.md) for what neither tool can see (UI text tone, accessibility, mobile behavior).
 
 ### Release and submit
