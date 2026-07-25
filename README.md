@@ -50,6 +50,22 @@ codex plugin add cypherpoet-git-flow@cypherpoet-toolchest
 
 Claude plugin anatomy (component dirs, manifest fields, auto-discovery) follows the [Claude Code plugins reference](https://code.claude.com/docs/en/plugins-reference). This repo's specific conventions live in [`docs/PLUGIN-CONVENTIONS.md`](docs/PLUGIN-CONVENTIONS.md).
 
+## Contributing
+
+Conventions live in [`docs/PLUGIN-CONVENTIONS.md`](docs/PLUGIN-CONVENTIONS.md); [`AGENTS.md`](AGENTS.md) carries the working rules for AI agents.
+
+Maintaining this repo's marketplace catalogs uses the `cypherpoet-marketplace-kit` plugin. It's already enabled for Claude Code in [`.claude/settings.json`](.claude/settings.json); on Codex, add it once:
+
+```shell
+codex plugin add cypherpoet-marketplace-kit@cypherpoet-toolchest
+```
+
+Before opening a PR, run the repository health suite:
+
+```shell
+python3 -m unittest discover -s tests
+```
+
 ## License
 
 This project is licensed under the MIT License. See the [`LICENSE`](LICENSE) file for details.
