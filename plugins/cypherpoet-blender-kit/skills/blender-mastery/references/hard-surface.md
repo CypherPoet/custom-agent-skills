@@ -199,7 +199,7 @@ Never assume an addon; detect, then adapt: `installed = set(bpy.context.preferen
 
 | Addon | License | What it adds | Native fallback |
 |---|---|---|---|
-| [Hard Ops](https://superhivemarket.com/products/hardopsofficial) | Paid | Hard-surface workflow accelerator (vendor lists ≤5.0 as of mid-2026 — check before 5.1 use) | This file's spine |
+| [Hard Ops](https://superhivemarket.com/products/hardopsofficial) | Paid | Hard-surface workflow accelerator (vendor lists Blender 3.5–5.2 as of 2026-07) | This file's spine |
 | [Boxcutter](https://superhivemarket.com/products/boxcutter) | Paid | Draw-to-cut boolean sketching | Boolean modifier + cutters |
 | [MESHmachine](https://mesh.machin3.io/) | Paid | Unbevel/Unfuse/Unchamfer, Stashes, fillet surgery | None clean — rebuild edges manually |
 | [MACHIN3tools](https://superhivemarket.com/products/machin3tools) | Paid | Pies/workflow speedups (the name is MACHIN3tools — "Machine Tools" is a garble; no longer free) | Vanilla keymap |
