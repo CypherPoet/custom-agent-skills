@@ -72,7 +72,7 @@ claude plugin validate plugins/<plugin-name>
 
 No warnings or errors expected. Anything else means something needs a closer look — fix it before opening the PR **on this repo** (a separate publish PR happens later on the marketplace repo).
 
-That's the plugin-specific check. It doesn't replace the repo-wide PR gates — the test suite, `sync_plugins.py --check`, and `skill-structure-check` — which [`AGENTS.md`](../AGENTS.md) requires on every PR.
+That's the plugin-specific check, not the whole gate. [`AGENTS.md`](../AGENTS.md) is authoritative for the rest: the test suite before *any* PR, the sync after editing a manifest / the registry / a vendored skill's source, and `skill-structure-check` before a PR that touches skills.
 
 ## Per-Plugin README
 
@@ -132,7 +132,7 @@ Either way, one publish maintains both catalog files on the marketplace repo —
 Content and catalog metadata ship on separate tracks, and neither does the other's job:
 
 - **Content** (skills, commands, agents, scripts) reaches existing installs only when you bump the plugin's [`version`](#manifest); a *fresh* install always pulls `main`'s latest. Re-run `scripts/sync_plugins.py` after a bump so the generated `.codex-plugin` version matches.
-- **Catalog metadata** — the catalogs store their own copy of each plugin's `name`, `description`, and `homepage` (Claude) and its classification + `category` (Codex), so editing any of those requires running `marketplace-publish` again to refresh the entry.
+- **Catalog metadata** — the catalogs store their own copy of each plugin's `name`, `description`, and `homepage` (Claude) and its classification + `category` (Codex), so editing any of those needs another catalog publish through the label flow above to refresh the entry.
 
 ## Skill Conventions
 
@@ -169,4 +169,6 @@ A plugin installs via a `git-subdir` sparse-clone that fetches **only** that plu
 
 **A link from one plugin's files to a different plugin's file must be an absolute GitHub URL** — `https://github.com/CypherPoet/custom-agent-skills/blob/main/plugins/<plugin>/…` — which resolves in both contexts and matches how See Also sections already link external docs. In-plugin links (`./references/…`, `../SKILL.md`, `../assets/…`) stay relative; they ship together in the sparse-clone.
 
-The rule covers every file the sparse-clone carries. `check-skill-structure.py` enforces it on the per-plugin `README.md`, each `SKILL.md`, and each skill's `references/*.md` — a link resolving outside its own plugin is an ERROR in those. It does **not** walk plugin-level `references/`, `commands/`, or `agents/` files, so the rule holds there but nothing catches a violation; extend the checker if a plugin starts shipping them.
+The rule covers every file the sparse-clone carries. `check-skill-structure.py` enforces it on the per-plugin `README.md`, each `SKILL.md`, and each skill's `references/*.md` — a link resolving outside its own plugin is an ERROR in those.
+
+It does **not** walk plugin-level `references/`, `commands/`, or `agents/` files. That gap is live, not hypothetical: [`cypherpoet-marketplace-kit/references/marketplaces.md`](../plugins/cypherpoet-marketplace-kit/references/marketplaces.md) ships today and goes unchecked. It happens to hold no cross-plugin links, so nothing is broken — but the rule applies there with no gate behind it, and the checker should grow to cover those paths.
