@@ -315,8 +315,7 @@ _Flags a human already reviewed and accepted (manifest `acknowledged`) — shown
 - Never commit to `main`, never widen branch-push beyond `claude/`-prefixed.
 - Never apply an edit without cited primary-source evidence a reviewer can check it against.
 - Never edit a `description:` frontmatter field — it is the skill's *triggering* signal, judged by the model at routing time, so changing it changes **when the skill fires**. That's a behavior change wearing a fact-fix's clothes, and it's outside this routine's remit even when the text is genuinely wrong (hence `FLAG_DESCRIPTION_FRONTMATTER`).
-- Never edit `plugin.json` `name`/`description`/`homepage` (only `version`) — those three are the Claude catalog fields, and editing one puts the PR on the marketplace catalog surface, which needs a `marketplace-publish` run this routine can't perform (that skill is manual-only, `disable-model-invocation`).
-- Never add the `marketplace-publish` label. A version bump is **not** a catalog-surface change — per `needs_marketplace_publish.py`, "a version-only bump does NOT count: that's content, gated by the version key." Since the rule above keeps the routine off the catalog fields, no run can ever need a publish; label every one and you'd republish the catalog weekly for nothing.
+- Never edit `plugin.json` `name`/`description`/`homepage` (only `version`) — those three are the Claude catalog fields. Staying off them is what keeps every run clear of the marketplace catalog surface, so no run ever needs the `marketplace-publish` label: don't add it, and don't spend a step checking (a version-only bump never counts as a catalog change).
 - Never refresh `docs/CATALOG.md` (component counts don't change).
 - Never open a second PR while one is open (reuse the stable branch).
 - Never re-stamp a dateline for a claim it couldn't actually verify.
