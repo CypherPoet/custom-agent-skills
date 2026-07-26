@@ -4,7 +4,7 @@ Harness-neutral by default. Where a detail differs between harnesses, state it f
 
 Public collection of reusable AI agent skills, packaged as **both** Claude Code and Codex plugins and distributed through each harness's plugin marketplace. Skills use the shared agent-skills [`SKILL.md`](https://agentskills.io/) format.
 
-Composition is by **vendoring, not dependencies**: a skill shared across plugins is physically copied into each plugin that ships it, and no plugin ever references another.
+Composition is by **vendoring, not dependencies**: neither harness resolves a reference to a skill in another plugin, so a shared skill is physically copied into each plugin that ships it.
 
 ## Map
 
@@ -17,7 +17,7 @@ Composition is by **vendoring, not dependencies**: a skill shared across plugins
 ## Working In This Repo
 
 - **Never hand-edit a generated file** — any `.codex-plugin/plugin.json` or vendored skill copy. Edit the source, then re-sync.
-- Run `python3 scripts/sync_plugins.py` after editing a vendored skill's source or any `.claude-plugin/plugin.json`.
+- Run `python3 scripts/sync_plugins.py` after editing a `.claude-plugin/plugin.json`, the registry, or the source of a vendored skill.
 - **Bump a plugin's `version` whenever its content should reach installed users** — merging to `main` alone won't ship it. Re-run the sync after any bump; the health suite fails when content changed without one.
 - Run the repo-local `skill-structure-check` skill before a PR that touches skills.
 - Run `python3 -m unittest discover -s tests` before any PR; [`.github/workflows/verify.yml`](.github/workflows/verify.yml) runs the same suite on every PR and push to `main`.
