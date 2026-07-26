@@ -10,6 +10,7 @@ SKILL_WARN = 450      # soft heads-up band below the limit
 REF_TOC_FLOOR = 300   # only large reference files (skill-creator's >300-line threshold) need a Contents line
 FACT_CHECK_MANIFEST = os.path.join("docs", "automated-routines", "skill-fact-check-manifest.json")
 TIER_KEYS = ("weekly", "monthly", "never")
+PLUGIN_MD_DIRS = ("references", "commands", "agents")  # plugin-level markdown, outside skills/
 
 
 def find_repo_root(start):
@@ -145,6 +146,20 @@ def audit(plugins_dir):
                 esc = escaping_links(readme_file.read(), readme, plugin_root)
             if esc:
                 errors.append((plugin, "README.md", "cross-plugin relative link(s) — dead in a sparse-clone install, use an absolute GitHub URL: " + ", ".join(esc)))
+        # Plugin-level markdown ships in the same sparse-clone as the skills, so
+        # commands/, agents/, and a plugin-root references/ follow the same rule.
+        for sub in PLUGIN_MD_DIRS:
+            sub_dir = os.path.join(plugin_root, sub)
+            if not os.path.isdir(sub_dir):
+                continue
+            for f in sorted(os.listdir(sub_dir)):
+                if not f.endswith(".md"):
+                    continue
+                md_path = os.path.join(sub_dir, f)
+                with open(md_path, encoding="utf-8") as plugin_md:
+                    esc = escaping_links(plugin_md.read(), md_path, plugin_root)
+                if esc:
+                    errors.append((plugin, f"{sub}/{f}", "cross-plugin relative link(s) — dead in a sparse-clone install, use an absolute GitHub URL: " + ", ".join(esc)))
         skills_dir = os.path.join(plugin_root, "skills")
         if not os.path.isdir(skills_dir):
             continue

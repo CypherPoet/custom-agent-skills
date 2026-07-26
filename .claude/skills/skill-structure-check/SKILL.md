@@ -34,7 +34,7 @@ finds the repo root on its own, so the working directory doesn't matter.
 |---|---|---|
 | ERROR | `SKILL.md` over 500 lines | The always-loaded body must stay a lean router; move topical or once-needed depth to `references/`. |
 | ERROR | a `**Contents:**` link whose anchor does not resolve | The jump-line drifted from the headings it indexes. |
-| ERROR | a relative link that escapes its plugin — in a skill file or the plugin `README.md` | A sparse-clone install contains only one plugin, so cross-plugin links must be absolute GitHub URLs. |
+| ERROR | a relative link that escapes its plugin — in any markdown the sparse-clone ships: a skill file, the plugin `README.md`, or plugin-level `references/`, `commands/`, `agents/` | A sparse-clone install contains only one plugin, so cross-plugin links must be absolute GitHub URLs. |
 | ERROR | plugin-sync drift | Vendored copies, generated Codex manifests, and plugin classification must match `scripts/plugin-registry.json` — including an undeclared byte-identical copy of a declared source. |
 | WARN | `SKILL.md` 450–500 lines | The router is approaching the hard limit; plan the split. |
 | ADVISORY | a reference file over 300 lines with no `**Contents:**` jump-line | Large references need the jump-line to stay navigable without loading the whole file. Short references do not. |

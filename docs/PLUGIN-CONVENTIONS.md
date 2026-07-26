@@ -169,6 +169,4 @@ A plugin installs via a `git-subdir` sparse-clone that fetches **only** that plu
 
 **A link from one plugin's files to a different plugin's file must be an absolute GitHub URL** — `https://github.com/CypherPoet/custom-agent-skills/blob/main/plugins/<plugin>/…` — which resolves in both contexts and matches how See Also sections already link external docs. In-plugin links (`./references/…`, `../SKILL.md`, `../assets/…`) stay relative; they ship together in the sparse-clone.
 
-The rule covers every file the sparse-clone carries. `check-skill-structure.py` enforces it on the per-plugin `README.md`, each `SKILL.md`, and each skill's `references/*.md` — a link resolving outside its own plugin is an ERROR in those.
-
-It does **not** walk plugin-level `references/`, `commands/`, or `agents/` files. That gap is live, not hypothetical: [`cypherpoet-marketplace-kit/references/marketplaces.md`](../plugins/cypherpoet-marketplace-kit/references/marketplaces.md) ships today and goes unchecked. It happens to hold no cross-plugin links, so nothing is broken — but the rule applies there with no gate behind it, and the checker should grow to cover those paths.
+The rule covers every file the sparse-clone carries, and `check-skill-structure.py` enforces it across all of them: the per-plugin `README.md`, each `SKILL.md`, each skill's `references/*.md`, and plugin-level `references/`, `commands/`, and `agents/` markdown. A link resolving outside its own plugin is an ERROR.

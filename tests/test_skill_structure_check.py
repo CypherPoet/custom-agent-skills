@@ -160,6 +160,69 @@ class SkillStructureCheckTests(unittest.TestCase):
             any(error[:2] == ("bundle", "README.md") for error in errors)
         )
 
+    def test_cross_plugin_link_in_plugin_level_markdown_is_an_error(self):
+        # commands/, agents/, and a plugin-root references/ ship in the same
+        # sparse-clone as the skills, so they follow the same link rule.
+        for sub, name in (
+            ("references", "marketplaces.md"),
+            ("commands", "publish.md"),
+            ("agents", "reviewer.md"),
+        ):
+            with self.subTest(sub=sub):
+                write(
+                    self.root / f"plugins/example/{sub}/{name}",
+                    f"# {name}\n\n[Other](../../other-plugin/skills/other/SKILL.md)\n",
+                )
+                errors, _, _, _, _ = self.audit()
+                self.assertTrue(
+                    any(
+                        error[:2] == ("example", f"{sub}/{name}")
+                        and "cross-plugin relative link" in error[2]
+                        for error in errors
+                    )
+                )
+                (self.root / f"plugins/example/{sub}/{name}").unlink()
+
+    def test_in_plugin_and_absolute_plugin_level_links_pass(self):
+        write(
+            self.root / "plugins/example/references/marketplaces.md",
+            "# Marketplaces\n\n[Skill](../skills/example/SKILL.md)\n"
+            "[Sibling](https://github.com/CypherPoet/custom-agent-skills/tree/main/plugins/other-plugin)\n",
+        )
+        errors, _, _, _, _ = self.audit()
+        self.assertEqual(errors, [])
+
+    def test_fenced_cross_plugin_plugin_level_example_is_ignored(self):
+        fence = chr(96) * 3
+        write(
+            self.root / "plugins/example/references/marketplaces.md",
+            "# Marketplaces\n\n"
+            + fence
+            + "\n[Other](../../other-plugin/skills/other/SKILL.md)\n"
+            + fence
+            + "\n",
+        )
+        errors, _, _, _, _ = self.audit()
+        self.assertEqual(errors, [])
+
+    def test_plugin_level_markdown_of_plugin_without_skills_is_still_checked(self):
+        write(
+            self.root / "plugins/bundle/commands/publish.md",
+            "# Publish\n\n[Other](../../example/skills/example/SKILL.md)\n",
+        )
+        errors, _, _, _, _ = self.audit()
+        self.assertTrue(
+            any(error[:2] == ("bundle", "commands/publish.md") for error in errors)
+        )
+
+    def test_non_markdown_plugin_level_files_are_skipped(self):
+        write(
+            self.root / "plugins/example/commands/config.json",
+            '{"link": "../../other-plugin/skills/other/SKILL.md"}\n',
+        )
+        errors, _, _, _, _ = self.audit()
+        self.assertEqual(errors, [])
+
     def test_skill_over_500_lines_is_an_error(self):
         write(self.skill / "SKILL.md", "\n".join("line" for _ in range(501)))
         errors, _, _, _, _ = self.audit()
