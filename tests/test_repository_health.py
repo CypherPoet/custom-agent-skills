@@ -34,6 +34,12 @@ class RepositoryHealthTests(unittest.TestCase):
             "--strict",
         )
 
+    def test_plugin_content_changes_carry_a_version_bump(self):
+        # A plugin's version is each harness's update cache key, so content that
+        # changed vs. the merge base must ship under a fresh one. Exits 0 (with a
+        # SKIPPED notice) when there is no merge base to compare against.
+        self.run_gate(sys.executable, "scripts/check_version_bumps.py")
+
     def test_local_catalog_is_current(self):
         self.run_gate(
             sys.executable,

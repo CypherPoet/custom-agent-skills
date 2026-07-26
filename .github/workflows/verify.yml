@@ -19,7 +19,11 @@ jobs:
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v7
-      - uses: actions/setup-python@v6
+        with:
+          # The version-bump gate compares against the merge base with main; a
+          # shallow clone has none and the gate would skip instead of running.
+          fetch-depth: 0
+      - uses: actions/setup-python@v7
         with:
           python-version: "3.11"
       - name: Run tests
