@@ -1,6 +1,6 @@
 # Plugin Conventions
 
-This repo applies a handful of conventions on top of the standard plugin shape, and ships every plugin for **both Claude Code and Codex** (see [Dual-Harness Plugins](#dual-harness-plugins)). Scaffold with Claude Code's [`/plugin-dev:create-plugin`](https://github.com/anthropics/claude-plugins-official/blob/main/plugins/plugin-dev/commands/create-plugin.md) (or Codex's [`$plugin-creator`](https://github.com/openai/skills/blob/main/skills/.system/plugin-creator/SKILL.md)), then apply the deltas below. Don't commit until the staged files have been reviewed.
+This repo applies a handful of conventions on top of the standard plugin shape, and ships every plugin for **both Claude Code and Codex** (see [Dual-Harness Plugins](#dual-harness-plugins)). Scaffold with Claude Code's [`/plugin-dev:create-plugin`](https://github.com/anthropics/claude-plugins-official/blob/main/plugins/plugin-dev/commands/create-plugin.md), then apply the deltas below. Don't commit until the staged files have been reviewed.
 
 For plugin anatomy (component types, auto-discovery, `${CLAUDE_PLUGIN_ROOT}` usage, `hooks.json` shape, MCP transport fields, etc.), defer to the canonical sources:
 
