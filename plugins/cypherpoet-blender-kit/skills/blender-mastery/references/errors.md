@@ -10,7 +10,7 @@ Common failures when driving Blender via the MCP and writing `bpy` scripts. Orga
 | Connection refused / can't reach MCP | Blender MCP addon not running or wrong port | Have the user enable the addon (Preferences → Add-ons → Blender MCP) and restart Blender |
 | Socket timeout | Blender is busy (rendering, heavy compute) | Wait for current op to finish, then retry |
 | Export timeout | Export operation exceeds MCP timeout | Always use the headless CLI for exports — never expect MCP to handle them inline |
-| "Empty response from Blender", then connection refused | The script called `bpy.ops.wm.read_homefile()` / `open_mainfile()` — in-session file reloads crash Blender (SIGABRT observed on 5.1.1/macOS, GUI *and* `--background` alike), taking the MCP server down with it | Never reload or open files through the MCP. Build fresh files headless and relaunch — see `mcp-workflow.md` "Fresh files without read_homefile" |
+| "Empty response from Blender", then connection refused | The script reloaded the file in-session. `bpy.ops.wm.read_homefile(use_empty=True)` still hard-crashes (SIGABRT, exit 134 — reproduced on 5.2.0/macOS `--background`; on 5.1.1 the whole family crashed). Even where it no longer crashes, a reload drops `bpy.app.timers` and non-`@persistent` handlers — the machinery an addon server runs on — so the MCP goes down with it | Never reload or open files through the MCP. Build fresh files headless and relaunch — see `mcp-workflow.md` "Fresh files without read_homefile" |
 | Addon tracebacks on every save (e.g. a `save_post` handler error) | A broken user addon hooks save/depsgraph handlers | The save itself still succeeds — look for `Info: Saved` in the same output. Disable the addon, or pass `--factory-startup` for headless jobs so user addons never load |
 
 ## bpy runtime errors
@@ -116,5 +116,5 @@ What survives a Blender → GLTF export and what doesn't:
 
 ## Sources
 
-- [Blender Manual: GLTF 2.0 export](https://docs.blender.org/manual/en/5.1/addons/import_export/scene_gltf2.html)
-- [Blender Python API: bpy.ops](https://docs.blender.org/api/5.1/bpy.ops.html)
+- [Blender Manual: GLTF 2.0 export](https://docs.blender.org/manual/en/5.2/addons/import_export/scene_gltf2.html)
+- [Blender Python API: bpy.ops](https://docs.blender.org/api/5.2/bpy.ops.html)

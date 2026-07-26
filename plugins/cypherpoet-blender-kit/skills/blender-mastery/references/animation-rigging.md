@@ -237,8 +237,8 @@ def check_weights(obj):
 
 ## Sources
 
-- [Blender Manual: Armatures](https://docs.blender.org/manual/en/5.1/animation/armatures/introduction.html)
-- [Blender Manual: Constraints](https://docs.blender.org/manual/en/5.1/animation/constraints/index.html)
-- [Blender Manual: Drivers](https://docs.blender.org/manual/en/5.1/animation/drivers/index.html)
-- [Blender Python API: PoseBone](https://docs.blender.org/api/5.1/bpy.types.PoseBone.html)
-- [Blender Python API: NlaStrip](https://docs.blender.org/api/5.1/bpy.types.NlaStrip.html)
+- [Blender Manual: Armatures](https://docs.blender.org/manual/en/5.2/animation/armatures/introduction.html)
+- [Blender Manual: Constraints](https://docs.blender.org/manual/en/5.2/animation/constraints/index.html)
+- [Blender Manual: Drivers](https://docs.blender.org/manual/en/5.2/animation/drivers/index.html)
+- [Blender Python API: PoseBone](https://docs.blender.org/api/5.2/bpy.types.PoseBone.html)
+- [Blender Python API: NlaStrip](https://docs.blender.org/api/5.2/bpy.types.NlaStrip.html)

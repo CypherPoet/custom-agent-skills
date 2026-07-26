@@ -80,7 +80,7 @@ track.strips.new("WheelsRolling", 0, action)
 obj.animation_data.action = None        # active actions would export separately
 ```
 
-Verified on Blender 5.1: four objects with `WheelsRolling` tracks export as a single
+Verified on Blender 5.2: four objects with `WheelsRolling` tracks export as a single
 `WheelsRolling` animation with four channels. Validate without a viewer by decoding the
 GLB's JSON chunk (`animations[0].channels` → node names) — and for rotation *direction*,
 decode the first few output-accessor quaternion keys rather than eyeballing a render.
@@ -132,7 +132,10 @@ bpy.ops.wm.obj_export(
 "
 ```
 
-The newer `wm.obj_export` (in Blender 3.4+) is faster and more accurate than the older `export_scene.obj`.
+`wm.obj_export` (Blender 3.4+) is the only OBJ exporter left: the older `export_scene.obj` is
+no longer registered on 5.2, so stale scripts calling it fail. Note that `hasattr(bpy.ops.export_scene,
+"obj")` still answers `True` — `bpy.ops` fabricates attributes on demand. To test whether an
+operator really exists, call `.get_rna_type()` on it and catch the exception.
 
 ## USD — film and pro pipelines
 
@@ -211,8 +214,8 @@ For all formats, the cheapest sanity check is open-it-in-a-viewer:
 
 ## Sources
 
-- [Blender Manual: GLTF 2.0 Export](https://docs.blender.org/manual/en/5.1/addons/import_export/scene_gltf2.html)
-- [Blender Manual: FBX Export](https://docs.blender.org/manual/en/5.1/addons/import_export/scene_fbx.html)
-- [Blender Manual: OBJ Export](https://docs.blender.org/manual/en/5.1/files/import_export/obj.html)
-- [Blender Manual: USD Export](https://docs.blender.org/manual/en/5.1/files/import_export/usd.html)
+- [Blender Manual: GLTF 2.0 Export](https://docs.blender.org/manual/en/5.2/addons/scene_gltf2.html)
+- [Blender Manual: FBX Export](https://docs.blender.org/manual/en/5.2/files/import_export/fbx_legacy.html)
+- [Blender Manual: OBJ Export](https://docs.blender.org/manual/en/5.2/files/import_export/obj.html)
+- [Blender Manual: USD Export](https://docs.blender.org/manual/en/5.2/files/import_export/usd.html)
 - [glTF 2.0 specification](https://registry.khronos.org/glTF/specs/2.0/glTF-2.0.html)

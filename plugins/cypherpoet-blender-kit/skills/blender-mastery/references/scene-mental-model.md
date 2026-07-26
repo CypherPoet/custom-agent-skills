@@ -118,7 +118,7 @@ The dependency graph is what Blender uses to evaluate the scene each frame: it f
 
 ## Sources
 
-- [Blender Manual: Data System](https://docs.blender.org/manual/en/5.1/files/data_blocks.html)
-- [Blender Manual: Editors → Outliner → Collections](https://docs.blender.org/manual/en/5.1/scene_layout/collections/introduction.html)
-- [Blender Manual: Modes](https://docs.blender.org/manual/en/5.1/editors/3dview/modes.html)
-- [Blender Python API: bpy.types.Depsgraph](https://docs.blender.org/api/5.1/bpy.types.Depsgraph.html)
+- [Blender Manual: Data System](https://docs.blender.org/manual/en/5.2/files/data_blocks.html)
+- [Blender Manual: Editors → Outliner → Collections](https://docs.blender.org/manual/en/5.2/scene_layout/collections/introduction.html)
+- [Blender Manual: Modes](https://docs.blender.org/manual/en/5.2/editors/3dview/modes.html)
+- [Blender Python API: bpy.types.Depsgraph](https://docs.blender.org/api/5.2/bpy.types.Depsgraph.html)

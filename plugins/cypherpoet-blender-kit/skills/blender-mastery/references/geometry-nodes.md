@@ -132,30 +132,28 @@ A geometry-node group can expose user-facing inputs. From the modifier, set them
 # Add an input socket on the tree:
 nt.interface.new_socket("Density", in_out='INPUT', socket_type='NodeSocketFloat')
 
-# The new socket's identifier is exposed on the modifier:
+# The new socket's identifier is exposed on the modifier. The identifier is an
+# attribute name under mod.properties, so reach it dynamically with getattr:
 for socket in nt.interface.items_tree:
     if socket.in_out == 'INPUT' and socket.name == "Density":
-        mod[socket.identifier] = 25.0
-```
-
-Stale-code trap in the other direction: the subscript route above is the 5.1 baseline, but Blender
-5.2 replaced those custom properties with real RNA properties under `mod.properties`. On 5.2+,
-`mod[socket.identifier] = 25.0` raises `TypeError: bpy_struct[key] = val: id properties not
-supported for this type` — it fails loudly rather than silently doing nothing. The identifier
-becomes an attribute name, so reach it dynamically with `getattr`:
-
-```python
-# Blender 5.2+ — the RNA path is .properties.inputs.<identifier>.value
-getattr(mod.properties.inputs, socket.identifier).value = 25.0
+        getattr(mod.properties.inputs, socket.identifier).value = 25.0
 
 # Drive that input from an attribute instead of a constant:
 inp = getattr(mod.properties.inputs, socket.identifier)
 inp.type = 'ATTRIBUTE'
 inp.attribute_name = "density_attr"
 
-# Output attribute names moved to the matching outputs collection:
+# Output attribute names live in the matching outputs collection:
 getattr(mod.properties.outputs, "Socket_3").attribute_name = "result_attr"
 ```
+
+Stale-code trap: through Blender 5.1 these inputs were **custom properties**, set by
+subscripting the modifier — `mod[socket.identifier] = 25.0`, with sibling keys like
+`"<identifier>_use_attribute"` and `"<identifier>_attribute_name"`. Blender 5.2 replaced
+them with the real RNA properties above. On 5.2+ the old subscript route raises
+`TypeError: bpy_struct[key] = val: id properties not supported for this type` — it fails
+loudly rather than silently doing nothing, so stale scripts stop rather than half-work.
+If you have to support 5.1 as well, branch on `hasattr(mod, "properties")`.
 
 Socket identifiers for the Compare and Random Value nodes also changed in 5.2 — re-read
 `nt.interface.items_tree` rather than reusing identifiers recorded against an earlier version.
@@ -181,7 +179,7 @@ Geometry node trees built from script can get long (hundreds of nodes for comple
 
 ## Sources
 
-- [Blender Manual: Geometry Nodes](https://docs.blender.org/manual/en/5.1/modeling/geometry_nodes/introduction.html)
-- [Blender Python API: GeometryNodeTree](https://docs.blender.org/api/5.1/bpy.types.GeometryNodeTree.html)
-- [Blender Python API: Attribute](https://docs.blender.org/api/5.1/bpy.types.Attribute.html)
+- [Blender Manual: Geometry Nodes](https://docs.blender.org/manual/en/5.2/modeling/geometry_nodes/introduction.html)
+- [Blender Python API: GeometryNodeTree](https://docs.blender.org/api/5.2/bpy.types.GeometryNodeTree.html)
+- [Blender Python API: Attribute](https://docs.blender.org/api/5.2/bpy.types.Attribute.html)
 - [5.2 Python API release notes](https://developer.blender.org/docs/release_notes/5.2/python_api/) — the modifier-properties move and the Compare / Random Value identifier changes
