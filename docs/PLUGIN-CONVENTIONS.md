@@ -7,7 +7,7 @@ For plugin anatomy (component types, auto-discovery, `${CLAUDE_PLUGIN_ROOT}` usa
 - [Claude Code plugins reference](https://code.claude.com/docs/en/plugins-reference)
 - [`plugin-dev` toolkit](https://github.com/anthropics/claude-plugins-official/blob/main/plugins/plugin-dev/README.md) — the `/plugin-dev:create-plugin` workflow plus the seven authoring skills (plugin structure, and skill / command / agent / hook / MCP / settings development)
 - [Codex: Build skills](https://learn.chatgpt.com/docs/build-skills) / [Build plugins](https://learn.chatgpt.com/docs/build-plugins) — the Codex plugin + skill format
-- [Codex `plugin-creator`](https://github.com/openai/skills/blob/main/skills/.system/plugin-creator/SKILL.md) — the spec the **generated** Codex side must match (`.codex-plugin/plugin.json` shape, name normalization, `policy`/`category` fields). It's a spec, not a tool run here: [`scripts/sync_plugins.py`](../scripts/sync_plugins.py) produces that output.
+- [Codex `plugin-creator`](https://github.com/openai/skills/blob/main/skills/.system/plugin-creator/SKILL.md) — the spec the **generated** Codex artifacts must match. It's a spec, not a tool run here: [`scripts/sync_plugins.py`](../scripts/sync_plugins.py) writes the `.codex-plugin/plugin.json` (manifest shape, name normalization), and the publish flow writes the marketplace entry (`policy`, `category`) — see [Marketplaces](#marketplaces).
 
 ## Plugin Folder
 
@@ -21,7 +21,7 @@ Confirm these fields on the scaffolded `plugin.json` (match a sibling under `plu
 - `"$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json"`.
 - `"name"` — equals the plugin folder name.
 - `"version": "0.1.0"` for new plugins. **This is each harness's update cache key** — the version resolves from `plugin.json` first, with the `git-subdir` commit SHA only as the fallback when no version is set. So existing installs update *only* when you bump it; pushing new commits to `main` alone won't reach them. Bump per semver: PATCH for fixes, MINOR for additive changes, MAJOR for breaking changes (pre-1.0, treat MINOR as the default for anything user-visible).
-- `"description"` — one sentence ending in a period. The per-plugin README and both marketplace catalogs copy it verbatim.
+- `"description"` — one sentence ending in a period. The per-plugin README and the Claude marketplace catalog copy it verbatim (the Codex catalog entry carries no description; see [Marketplaces](#marketplaces)).
 - `"author": { "name": "CypherPoet" }` (no email field).
 - `"homepage"` — `https://github.com/CypherPoet/custom-agent-skills/tree/main/plugins/<name>`.
 - `"repository"` — `https://github.com/CypherPoet/custom-agent-skills.git`.
@@ -70,7 +70,9 @@ After scaffolding and applying the deltas, run:
 claude plugin validate plugins/<plugin-name>
 ```
 
-No warnings or errors expected. Anything else means something needs a closer look — fix it before opening the PR **on this repo** (a separate publish PR happens later on the marketplace repo via `marketplace-publish`).
+No warnings or errors expected. Anything else means something needs a closer look — fix it before opening the PR **on this repo** (a separate publish PR happens later on the marketplace repo).
+
+That's the plugin-specific check. It doesn't replace the repo-wide PR gates — the test suite, `sync_plugins.py --check`, and `skill-structure-check` — which [`AGENTS.md`](../AGENTS.md) requires on every PR.
 
 ## Per-Plugin README
 
@@ -108,7 +110,7 @@ Every plugin here is currently skills-only, so that template is the whole README
 |---|---|
 | `## Commands` | `[/<plugin-name>:<command>](commands/<command>.md)` |
 | `## Agents` | `[<agent-name>](agents/<agent-name>.md)` |
-| `## Hooks` | `` `<EventName>` ``, under a line pointing at [hooks/hooks.json](hooks/hooks.json) |
+| `## Hooks` | `` `<EventName>` ``, under a line pointing at `[hooks/hooks.json](hooks/hooks.json)` |
 | `## MCP Servers` | `` `<server-name>` `` |
 
 Include only the types the plugin actually ships. Append a row whenever a component is added — the per-plugin README is its primary index, and PR review treats a missing row as a defect.
@@ -123,7 +125,9 @@ Don't hand-edit it: the [`catalog-refresh`](../plugins/cypherpoet-marketplace-ki
 
 ## Publishing
 
-After the plugin is ready, use the `marketplace-publish` skill to open a PR on the marketplace this repo publishes to. One publish maintains both catalog files there — the Claude entry and, for dual-harness plugins, the Codex entry (see [Marketplaces](#marketplaces)). Scaffolding alone never publishes.
+Publishing is label-driven: run `marketplace-publish-check` when opening the PR and apply the `marketplace-publish` label if it reports a needed publish — merging a labelled PR publishes automatically. The `marketplace-publish` skill is the manual fallback and never self-triggers.
+
+Either way, one publish maintains both catalog files on the marketplace repo — the Claude entry and, for dual-harness plugins, the Codex entry (see [Marketplaces](#marketplaces)). Scaffolding alone never publishes.
 
 Content and catalog metadata ship on separate tracks, and neither does the other's job:
 
@@ -165,4 +169,4 @@ A plugin installs via a `git-subdir` sparse-clone that fetches **only** that plu
 
 **A link from one plugin's files to a different plugin's file must be an absolute GitHub URL** — `https://github.com/CypherPoet/custom-agent-skills/blob/main/plugins/<plugin>/…` — which resolves in both contexts and matches how See Also sections already link external docs. In-plugin links (`./references/…`, `../SKILL.md`, `../assets/…`) stay relative; they ship together in the sparse-clone.
 
-This covers everything the sparse-clone carries — `SKILL.md`, `references/*.md`, and the per-plugin `README.md`. `check-skill-structure.py` enforces it: any link that resolves outside its own plugin is an ERROR.
+The rule covers every file the sparse-clone carries. `check-skill-structure.py` enforces it on the per-plugin `README.md`, each `SKILL.md`, and each skill's `references/*.md` — a link resolving outside its own plugin is an ERROR in those. It does **not** walk plugin-level `references/`, `commands/`, or `agents/` files, so the rule holds there but nothing catches a violation; extend the checker if a plugin starts shipping them.
