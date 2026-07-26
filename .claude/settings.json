@@ -1,4 +1,9 @@
 {
+  "attribution": {
+    "commit": "",
+    "pr": "",
+    "sessionUrl": false
+  },
   "enabledPlugins": {
     "plugin-dev@claude-plugins-official": true,
     "cypherpoet-marketplace-kit@cypherpoet-toolchest": true

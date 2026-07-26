@@ -1,15 +1,19 @@
 # Plugin Conventions
 
-This repo applies a handful of conventions on top of the standard plugin shape, and ships every plugin for **both Claude Code and Codex** (see [Dual-Harness Plugins](#dual-harness-plugins)). Scaffold with Claude Code's [`/plugin-dev:create-plugin`](https://github.com/anthropics/claude-plugins-official/blob/main/plugins/plugin-dev/commands/create-plugin.md) (or Codex's `$plugin-creator`), then apply the deltas below. Don't commit until the staged files have been reviewed.
+This repo applies a handful of conventions on top of the standard plugin shape, and ships every plugin for **both Claude Code and Codex** (see [Dual-Harness Plugins](#dual-harness-plugins)). Scaffold with Claude Code's [`/plugin-dev:create-plugin`](https://github.com/anthropics/claude-plugins-official/blob/main/plugins/plugin-dev/commands/create-plugin.md) (or Codex's [`$plugin-creator`](https://github.com/openai/skills/blob/main/skills/.system/plugin-creator/SKILL.md)), then apply the deltas below. Don't commit until the staged files have been reviewed.
 
 For plugin anatomy (component types, auto-discovery, `${CLAUDE_PLUGIN_ROOT}` usage, `hooks.json` shape, MCP transport fields, etc.), defer to the canonical sources:
 
 - [Claude Code plugins reference](https://code.claude.com/docs/en/plugins-reference)
+- [`plugin-dev` toolkit](https://github.com/anthropics/claude-plugins-official/blob/main/plugins/plugin-dev/README.md) — Claude's plugin-authoring toolkit: the `/plugin-dev:create-plugin` workflow plus all seven authoring skills (the four linked below, plus command/agent/settings development)
 - [Codex: Build skills](https://learn.chatgpt.com/docs/build-skills) / [Build plugins](https://learn.chatgpt.com/docs/build-plugins) — the Codex plugin + skill format
+- [Codex `plugin-creator`](https://github.com/openai/skills/blob/main/skills/.system/plugin-creator/SKILL.md) — the `$plugin-creator` scaffolder spec: the `.codex-plugin/plugin.json` shape, name normalization, and Codex marketplace entry format
 - [`plugin-dev:plugin-structure`](https://github.com/anthropics/claude-plugins-official/tree/main/plugins/plugin-dev/skills/plugin-structure) — manifest fields, component patterns, examples
 - [`plugin-dev:skill-development`](https://github.com/anthropics/claude-plugins-official/tree/main/plugins/plugin-dev/skills/skill-development) — skill creation methodology
 - [`plugin-dev:hook-development`](https://github.com/anthropics/claude-plugins-official/tree/main/plugins/plugin-dev/skills/hook-development) — hook patterns and validators
 - [`plugin-dev:mcp-integration`](https://github.com/anthropics/claude-plugins-official/tree/main/plugins/plugin-dev/skills/mcp-integration) — MCP server integration
+
+These two toolkits play different roles here. The Claude `plugin-dev` toolkit is what you **run** to author a plugin's components. The Codex `plugin-creator` is the **spec the generated Codex side must match**, not a tool you run in this repo: [`scripts/sync_plugins.py`](../scripts/sync_plugins.py) produces every `.codex-plugin/plugin.json` and Codex catalog entry, so consult `plugin-creator` for what that output must conform to (manifest shape, name normalization, `policy`/`category` fields) rather than invoking `$plugin-creator` to generate it.
 
 ## Plugin Folder
 

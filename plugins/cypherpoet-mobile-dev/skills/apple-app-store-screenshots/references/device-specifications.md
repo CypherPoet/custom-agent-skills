@@ -5,7 +5,7 @@ and auto-scaling rules. This is the exhaustive table; the durable decision rules
 [SKILL.md](../SKILL.md).
 
 **Source:** <https://developer.apple.com/help/app-store-connect/reference/app-information/screenshot-specifications>
-**Verified:** 2026-05-30. Apple edits this table whenever new hardware ships, so re-check the
+**Verified:** 2026-07-24. Apple edits this table whenever new hardware ships, so re-check the
 source after each major iPhone/iPad release and re-stamp this date — don't trust a number here as
 final without reconciling it.
 

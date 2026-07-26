@@ -4,7 +4,7 @@ App previews are the optional autoplay videos on a product page — up to 3 per 
 durable rules live in [SKILL.md](../SKILL.md); this is the exhaustive reference.
 
 **Source:** <https://developer.apple.com/help/app-store-connect/reference/app-information/app-preview-specifications>
-**Verified:** 2026-06-19 (resolutions reconciled against the live App Store Connect Media Manager). Re-check after major hardware releases and re-stamp.
+**Verified:** 2026-07-24 against the source above. The resolutions were reconciled against the live App Store Connect Media Manager on 2026-06-19 — an authenticated console, so automated re-checks can't repeat it. Re-confirm there after major hardware releases and re-stamp.
 
 ## Requirements
 
