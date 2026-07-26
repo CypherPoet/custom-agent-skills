@@ -173,6 +173,44 @@ class VersionBumpGateTests(unittest.TestCase):
         self.assertEqual(result.returncode, 2)
         self.assertIn("manifest must be a JSON object", result.stderr)
 
+    def test_stale_local_base_does_not_hide_an_absorbed_bump(self):
+        # A local `main` left behind at an older commit would compare against a
+        # stale tip and call an absorbed version fresh. When origin/main is
+        # further along, that is the base to use.
+        baseline = git(self.repo, "rev-parse", "HEAD").stdout.strip()
+        self.feature_branch()
+        self.write_skill("feature body\n")
+        self.write_manifest(version="0.2.0")
+        commit_all(self.repo, "feature edit and bump")
+        git(self.repo, "switch", "main")
+        self.write_skill("main body\n")
+        self.write_manifest(version="0.2.0")
+        commit_all(self.repo, "main edit and bump")
+        advanced = git(self.repo, "rev-parse", "HEAD").stdout.strip()
+        git(self.repo, "update-ref", "refs/remotes/origin/main", advanced)
+        git(self.repo, "switch", "feature")
+        git(self.repo, "branch", "-f", "main", baseline)  # local main goes stale
+        result = self.run_check()
+        self.assertEqual(result.returncode, 1, result.stdout + result.stderr)
+        self.assertIn("absorbed bump", result.stdout)
+
+    def test_local_base_ahead_of_origin_is_preferred(self):
+        # The mirror case: unpushed commits on local main must not be discarded
+        # in favour of a remote-tracking ref that trails them.
+        baseline = git(self.repo, "rev-parse", "HEAD").stdout.strip()
+        git(self.repo, "update-ref", "refs/remotes/origin/main", baseline)
+        git(self.repo, "switch", "-c", "feature")
+        self.write_skill("feature body\n")
+        self.write_manifest(version="0.2.0")
+        commit_all(self.repo, "feature edit and bump")
+        git(self.repo, "switch", "main")
+        self.write_manifest(version="0.2.0")
+        commit_all(self.repo, "unpushed bump on main")
+        git(self.repo, "switch", "feature")
+        result = self.run_check()
+        self.assertEqual(result.returncode, 1, result.stdout + result.stderr)
+        self.assertIn("absorbed bump", result.stdout)
+
     def test_unresolvable_base_reports_a_skip_rather_than_a_clean_run(self):
         self.feature_branch()
         self.write_skill("edited body\n")

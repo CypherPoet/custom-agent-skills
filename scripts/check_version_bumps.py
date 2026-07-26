@@ -97,15 +97,27 @@ def as_tuple(version):
 
 
 def resolve_base(root, base):
-    """<base>, or its origin/ counterpart when only the remote-tracking ref exists.
+    """The most up-to-date view of <base>: itself or its origin/ counterpart.
 
-    A CI checkout fetches remote branches into refs/remotes/origin/* without
-    creating local branches, so a bare "main" is often unresolvable there. Falling
-    back keeps the gate running in CI instead of silently skipping."""
-    for candidate in (base, f"origin/{base}"):
-        if git(root, "rev-parse", "--verify", "--quiet", f"{candidate}^{{commit}}").returncode == 0:
-            return candidate
-    return base
+    Two reasons this is not just <base>. A CI checkout fetches remote branches
+    into refs/remotes/origin/* without creating local branches, so a bare "main"
+    is often unresolvable there. And locally, a stale `main` would hide an
+    absorbed bump outright — that check compares against the base's *current*
+    tip, so a base left behind at yesterday's commit reports a version as fresh
+    when the real base already publishes it. When both refs exist, take whichever
+    is further along; when they have diverged, the local ref wins."""
+    existing = [
+        ref
+        for ref in (base, f"origin/{base}")
+        if git(root, "rev-parse", "--verify", "--quiet", f"{ref}^{{commit}}").returncode == 0
+    ]
+    if not existing:
+        return base
+    if len(existing) == 1:
+        return existing[0]
+    local, remote = existing
+    behind = git(root, "merge-base", "--is-ancestor", local, remote).returncode == 0
+    return remote if behind else local
 
 
 def main():
