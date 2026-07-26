@@ -236,10 +236,11 @@ The subagent still researches the fact every run — an acknowledgment only chan
 
 ## Step 5 — Version bumps
 
-After editing any file under a plugin, bump that plugin's `.claude-plugin/plugin.json` `version` **once** (dedupe — a plugin touched by two skills bumps once):
+After editing a plugin's **shipped** content, bump that plugin's `.claude-plugin/plugin.json` `version` **once** (dedupe — a plugin touched by two skills bumps once):
 
 - **Applied content correction → MINOR bump** (`0.1.0 → 0.2.0`). Per `docs/PLUGIN-CONVENTIONS.md`, pre-1.0 the default bump for anything user-visible is MINOR, and a fact correction is user-visible.
 - **Dateline-only re-stamp with no content change → no version bump.** A date stamp isn't user-visible guidance; `version` is the user-update cache key, so don't churn it. (The committed date still advances the age-gate.)
+- **Eval-only correction → no version bump.** `evals/` is stripped from vendored copies and never reaches an install, so bumping for it would push an update carrying nothing the user receives.
 - Edit **only** the `version` field. Never touch `name`/`description`/`homepage`.
 
 ## Step 6 — Datelines
