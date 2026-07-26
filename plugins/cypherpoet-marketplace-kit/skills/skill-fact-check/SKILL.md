@@ -301,90 +301,39 @@ _Flags a human already reviewed and accepted (manifest `acknowledged`) — shown
 
 ## Step 8 — Auto-merge a dateline-only PR (per repo)
 
-A run that corrects nothing still opens a PR, because re-stamping datelines is what lets a re-verified unit go quiet ([Step 6](#step-6--datelines)). That PR has nothing for a reviewer to judge — [Step 5](#step-5--version-bumps) already establishes a dateline carries no user-visible guidance, which is why it earns no version bump — and left sitting it stalls the next run into the "reuse the open PR" path forever. So merge that one diff shape automatically, and only that one.
+A run that corrects nothing still opens a PR, because re-stamping datelines is what lets a re-verified unit go quiet ([Step 6](#step-6--datelines)). Nothing in it is reviewable — [Step 5](#step-5--version-bumps) already treats a dateline as carrying no user-visible guidance, which is why it earns no version bump — and left sitting it stalls the next run into [Step 2](#step-2--idempotency-check-per-repo)'s "reuse the open PR" path. Merge exactly that shape, nothing else.
 
-**Gate — all four conditions, checked in order. Any failure leaves the PR open for a human; name the failed condition in the run report.**
+Merge only when **all** of these hold; otherwise leave the PR open, and report which one blocked it:
 
-1. **Clean run.** This run applied **0** `CORRECT` claims, raised **0** new (unsuppressed) `FLAG_*`, and hit **0** `ERROR`s. An unverifiable fact is precisely what a human should see, so a single `ERROR` disqualifies the PR even when the diff itself looks clean. Manifest-suppressed `🔕` flags and `# DRIFT` lines don't disqualify.
-2. **Dateline-only diff**, proven by the script below — never by reading the diff and judging it.
-3. **CI green** — `gh pr checks <n> --repo <owner>/<repo> --watch --fail-fast` exits 0. Neither repo enables GitHub's own auto-merge, so `gh pr merge --auto` is unavailable: wait on the checks here instead.
-4. **Mergeable** — `gh pr view <n> --repo <owner>/<repo> --json mergeable,mergeStateStatus,isDraft` reports `MERGEABLE` / `CLEAN` / not draft.
+- This run applied **0** `CORRECT` claims, raised **0** new (unsuppressed) `FLAG_*`, and hit **0** `ERROR`s. An unverifiable fact is precisely what a human should see, so one `ERROR` disqualifies the PR even when the diff looks clean.
+- The pushed branch passes the check below — run it, don't eyeball the diff.
+- `gh pr checks <n> --repo <owner>/<repo> --watch --fail-fast` exits 0, and `gh pr view <n> --repo <owner>/<repo> --json mergeable,mergeStateStatus,isDraft` reports `MERGEABLE` / `CLEAN` / not draft. Neither repo enables GitHub's own auto-merge, so `gh pr merge --auto` is unavailable — wait on the checks here instead.
 
-Condition 2, run with the cwd set to the repo's clone and the branch already pushed:
+```bash
+git fetch --quiet origin main                    # compare against the freshest base
+DATE='[0-9]{4}-[0-9]{2}(-[0-9]{2})?'
+MARK="verified:?\**[[:space:]]*$DATE|synced[^:]*:[[:space:]]*$DATE|audit baseline.*\($DATE\)|as of $DATE"
+add() { git diff -U0 origin/main...HEAD | grep '^+' | grep -v '^+++' | cut -c2-; }
+del() { git diff -U0 origin/main...HEAD | grep '^-' | grep -v '^---' | cut -c2-; }
 
-```python
-import datetime, re, subprocess, sys
-
-subprocess.check_call(['git', 'fetch', '--quiet', 'origin', 'main'])   # compare against the freshest base
-raw = subprocess.check_output(['git', 'diff', 'origin/main...HEAD']).decode(errors='ignore')
-today = datetime.date.fromisoformat(
-    subprocess.check_output(['date', '-u', '+%F']).decode().strip())
-
-# The same dateline dialects Step 1 age-gates on — a marker this doesn't recognize
-# is one Step 1 can't read either, so rewriting it is a real edit, not a re-stamp.
-DATELINE = re.compile(
-    r'\*\*verified:\*\*\s*\d{4}-\d{2}-\d{2}'
-    r'|(?:last\s+)?synced\b[^\n:]{0,40}?:\s*\d{4}-\d{2}-\d{2}'
-    r'|audit baseline\b[^\n]*?\(\d{4}-\d{2}-\d{2}\)'
-    r'|\bverified\s+\d{4}-\d{2}-\d{2}'
-    r'|\bas of\s+\d{4}-\d{2}\b', re.I)
-ISO = re.compile(r'\d{4}-\d{2}(?:-\d{2})?')
-ALLOWED = re.compile(r'^plugins/[^/]+/skills/[^/]+/(SKILL\.md|references/.+\.md)$')
-
-paths, removed, added = [], [], []
-for line in raw.splitlines():
-    if line.startswith('diff --git '):
-        paths.append(line.split(' b/', 1)[-1])
-    elif line.startswith(('+++', '---', '@@')):
-        continue
-    elif line.startswith('-'):
-        removed.append(line[1:])
-    elif line.startswith('+'):
-        added.append(line[1:])
-
-norm = lambda s: ISO.sub('<DATE>', s).strip()
-fail = []
-
-for p in paths:                                    # skill prose only — no plugin.json, manifest, or docs/
-    if not ALLOWED.match(p) or '/evals/' in p or '-workspace/' in p:
-        fail.append(f'file outside the dateline surface: {p}')
-
-for label, lines in (('removed', removed), ('added', added)):
-    for s in lines:                                # blanks are the filler around a newly stamped line
-        if s.strip() and not DATELINE.search(s):
-            fail.append(f'{label} a non-dateline line: {s.strip()[:80]!r}')
-
-pool = [norm(a) for a in added if a.strip() and DATELINE.search(a)]
-for s in removed:                                  # every removal pairs with its re-stamp; Step 6 additions stand alone
-    if s.strip() and DATELINE.search(s):
-        pool.remove(norm(s)) if norm(s) in pool else fail.append(
-            f'removed a dateline with no matching re-stamp: {s.strip()[:80]!r}')
-
-old_dates = [d for s in removed for d in ISO.findall(s)]
-new_dates = [d for s in added for d in ISO.findall(s)]
-for d in new_dates:                                # forward only, never past today
-    if datetime.date.fromisoformat(d if len(d) == 10 else d + '-01') > today:
-        fail.append(f'stamped a future date: {d}')
-if old_dates and new_dates and max(new_dates) < max(old_dates):
-    fail.append(f'stamped backwards: newest {max(old_dates)} -> {max(new_dates)}')
-if not (removed or added):
-    fail.append('empty diff — nothing to merge')
-
-print('DATELINE_ONLY: PASS' if not fail else 'DATELINE_ONLY: FAIL')
-for f in fail:
-    print(' -', f)
-sys.exit(1 if fail else 0)
+{ git diff --name-only origin/main...HEAD |
+    grep -vE '^plugins/[^/]+/skills/[^/]+/(SKILL\.md|references/.+\.md)$' |
+    sed 's/^/out-of-scope file: /'
+  add | grep -v '^[[:space:]]*$' | grep -ivE "$MARK" |
+    sed 's/^/not a dateline: /'
+  comm -23 <(del | sed -E "s/$DATE/<DATE>/g" | sort) \
+           <(add | sed -E "s/$DATE/<DATE>/g" | sort) |
+    sed 's/^/not a pure re-stamp: /'
+} | grep . && echo 'HOLD for review' || echo 'DATELINE-ONLY'
 ```
 
-It is a **whitelist that fails closed**: only re-stamped datelines inside skill prose files pass, so a content correction, a version bump, a manifest edit, a deleted dateline, or a backdated/future stamp all block the merge instead of slipping through.
-
-With all four conditions met:
+The third test is the one that matters. "Every changed line mentions a date" is too weak — the inline `verified <date>` form means one table row can carry both a spec and a dateline, so a spec correction on that row would sail through. Requiring every *removed* line to reappear as an added line **identical once dates are blanked** is what pins the diff to a pure re-stamp; the first two tests just keep out-of-scope files and newly-added prose from riding along. All three print nothing ⇒ merge:
 
 ```bash
 gh pr merge <n> --repo <owner>/<repo> --squash --delete-branch
 ```
 
-`--delete-branch` can exit non-zero after the merge already succeeded; confirm with `gh pr view <n> --repo <owner>/<repo> --json state` (expect `MERGED`) rather than trusting the exit code. Report the merge in the run summary — `"dateline-only, auto-merged #N"` — so a silent merge never looks like a silent skip. A gate failure is **not** a run failure: report `"held for review: <condition>"` and move on.
+`--delete-branch` can exit non-zero after the merge already succeeded — confirm with `gh pr view <n> --json state` (expect `MERGED`) rather than trusting the exit code. Report it as `"dateline-only, auto-merged #N"` so a merge never reads as a skip. A blocked gate is **not** a run failure.
 
 ## Failure modes & guardrails
 
@@ -396,13 +345,11 @@ gh pr merge <n> --repo <owner>/<repo> --squash --delete-branch
 | Runaway PR / rate limits / usage | Research waves of ~12 with ≤6 concurrent subagents; age-gated due set. A throttled run just leaves units un-restamped → still due next week. |
 | Partial completion (orchestrator dies mid-run) | Per-plugin commits + age-gating → finished plugins persist, un-restamped units stay due, the open PR is folded into next run (Step 2). "Green run" status ≠ task success — the PR body's "Could not verify" / "Deferred" sections are the real signal. |
 | A correction would touch a protected surface | The guards in Steps 4 and below → flag instead. |
-| Auto-merge swallows a real change | [Step 8](#step-8--auto-merge-a-dateline-only-pr-per-repo)'s gate is a whitelist of one diff shape, verified by script: any non-dateline line, out-of-scope path, unmatched removal, or backwards/future stamp fails it, as does any `CORRECT`/new `FLAG_*`/`ERROR` in the run. It fails closed — the PR just stays open for a human. |
-| Dateline-only PRs pile up unmerged | Step 8 merges them, so Step 2 starts each run from `origin/main` instead of compounding onto a stale open PR. |
+| Auto-merge swallows a real change | [Step 8](#step-8--auto-merge-a-dateline-only-pr-per-repo)'s check is a whitelist verified by script — an unmatched removal, a non-dateline addition, or an out-of-scope path all block it, as does any `CORRECT`/new `FLAG_*`/`ERROR` in the run. It fails closed: the PR just stays open. |
 
 ## What this routine must NEVER do
 
-- Never commit to `main` directly, never widen branch-push beyond `claude/`-prefixed. The only automatic path into `main` is a [Step 8](#step-8--auto-merge-a-dateline-only-pr-per-repo) dateline-only merge.
-- Never auto-merge a PR carrying a content correction, a new flag, an `ERROR`, or a version bump — and never hand-wave the gate by reading the diff yourself instead of running its script.
+- Never commit to `main` directly, never widen branch-push beyond `claude/`-prefixed. The only automatic path into `main` is a [Step 8](#step-8--auto-merge-a-dateline-only-pr-per-repo) dateline-only merge — never auto-merge a PR carrying a correction, a new flag, an `ERROR`, or a version bump, and never substitute your own read of the diff for that step's check.
 - Never apply an edit without cited primary-source evidence a reviewer can check it against.
 - Never edit a `description:` frontmatter field — it is the skill's *triggering* signal, judged by the model at routing time, so changing it changes **when the skill fires**. That's a behavior change wearing a fact-fix's clothes, and it's outside this routine's remit even when the text is genuinely wrong (hence `FLAG_DESCRIPTION_FRONTMATTER`).
 - Never edit `plugin.json` `name`/`description`/`homepage` (only `version`) — those three are the Claude catalog fields. Staying off them is what keeps every run clear of the marketplace catalog surface, so no run ever needs the `marketplace-publish` label: don't add it, and don't spend a step checking (a version-only bump never counts as a catalog change).
