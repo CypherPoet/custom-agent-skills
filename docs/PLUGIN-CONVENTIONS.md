@@ -31,7 +31,7 @@ See any existing manifest under `plugins/*/.claude-plugin/plugin.json` for canon
 
 Plugins target **both** Claude Code and Codex. Each plugin is **self-contained**: install pulls only its own directory (Claude Code `git-subdir` sparse-clone; Codex marketplace fetch), so a plugin must physically ship every skill it needs. Neither harness resolves a reference to a skill in another plugin, and Codex has no plugin-to-plugin dependency mechanism — so composition is by **vendoring** (copying a skill into each plugin that ships it), never dependencies.
 
-[`scripts/plugin-registry.json`](../scripts/plugin-registry.json) is the single source of truth; [`scripts/sync_plugins.py`](../scripts/sync_plugins.py) generates every derived artifact and, with `--check`, fails on drift (the repo-local `skill-structure-check` runs this check). **After editing a vendored skill's source or any `.claude-plugin/plugin.json`, run `python3 scripts/sync_plugins.py`.** Never hand-edit a generated file.
+[`scripts/plugin-registry.json`](../scripts/plugin-registry.json) is the single source of truth; [`scripts/sync_plugins.py`](../scripts/sync_plugins.py) generates every derived artifact and, with `--check`, fails on drift (the repo-local `skill-structure-check` runs this check). **After editing a `.claude-plugin/plugin.json`, the registry, or the source of a vendored skill, run `python3 scripts/sync_plugins.py`.** Never hand-edit a generated file.
 
 ### Manifests
 
