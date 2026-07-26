@@ -40,7 +40,7 @@ Each run, re-check the time-sensitive factual claims in a repo's skills against 
 
 ## Operating constraints (non-negotiable)
 
-- **PR-only.** Work on the stable branch `claude/skill-fact-check`; open or update exactly one PR per repo. Never commit to `main`. PR review is the quality gate — everything else here exists to make that review easy, not to substitute for it.
+- **PR-only.** Work on the stable branch `claude/skill-fact-check`; open or update exactly one PR per repo. Never commit to `main`. PR review is the quality gate — everything else here exists to make that review easy, not to substitute for it. The single carve-out is a PR whose diff is *nothing but* re-stamped datelines: no guidance changed, so there is nothing to review. [Step 8](#step-8--auto-merge-a-dateline-only-pr-per-repo) merges that one shape behind a mechanical gate; every PR that touches content still waits for a human.
 - **Every applied edit is evidence-backed** — it carries a `source_url` (primary source) and a `source_quote` showing what the source establishes, so a reviewer can verify the fix without redoing the research. Evidence too thin to convince a reviewer ⇒ flag with proposed wording, don't edit.
 - **Fact corrections only.** Fix what the evidence shows is wrong — a token, a corrected code snippet, a rename applied at every site in a file, or a note whose logic is inverted — and nothing more. No stylistic edits, no restructuring, no scope creep beyond what the fact requires.
 - **Respect the protected surface** (see [What this routine must NEVER do](#what-this-routine-must-never-do)).
@@ -252,7 +252,7 @@ After editing a plugin's **shipped** content, bump that plugin's `.claude-plugin
 
 ## Step 7 — Open or update the PR (per repo)
 
-Open a PR **only if** the repo had ≥1 applied correction, ≥1 new flag, or ≥1 dateline change worth shipping. Commit **per plugin** so the PR reviews cleanly:
+Open a PR **only if** the repo had ≥1 applied correction, ≥1 new flag, or ≥1 dateline change worth shipping — then take it through [Step 8](#step-8--auto-merge-a-dateline-only-pr-per-repo), which merges it when the diff turns out to be datelines and nothing else. Commit **per plugin** so the PR reviews cleanly:
 
 ```
 🩹 fix(<skill>): <one-line fact correction> [skill-fact-check]
@@ -299,6 +299,93 @@ _Flags a human already reviewed and accepted (manifest `acknowledged`) — shown
 - <unit>, <unit>
 ```
 
+## Step 8 — Auto-merge a dateline-only PR (per repo)
+
+A run that corrects nothing still opens a PR, because re-stamping datelines is what lets a re-verified unit go quiet ([Step 6](#step-6--datelines)). That PR has nothing for a reviewer to judge — [Step 5](#step-5--version-bumps) already establishes a dateline carries no user-visible guidance, which is why it earns no version bump — and left sitting it stalls the next run into the "reuse the open PR" path forever. So merge that one diff shape automatically, and only that one.
+
+**Gate — all four conditions, checked in order. Any failure leaves the PR open for a human; name the failed condition in the run report.**
+
+1. **Clean run.** This run applied **0** `CORRECT` claims, raised **0** new (unsuppressed) `FLAG_*`, and hit **0** `ERROR`s. An unverifiable fact is precisely what a human should see, so a single `ERROR` disqualifies the PR even when the diff itself looks clean. Manifest-suppressed `🔕` flags and `# DRIFT` lines don't disqualify.
+2. **Dateline-only diff**, proven by the script below — never by reading the diff and judging it.
+3. **CI green** — `gh pr checks <n> --repo <owner>/<repo> --watch --fail-fast` exits 0. Neither repo enables GitHub's own auto-merge, so `gh pr merge --auto` is unavailable: wait on the checks here instead.
+4. **Mergeable** — `gh pr view <n> --repo <owner>/<repo> --json mergeable,mergeStateStatus,isDraft` reports `MERGEABLE` / `CLEAN` / not draft.
+
+Condition 2, run with the cwd set to the repo's clone and the branch already pushed:
+
+```python
+import datetime, re, subprocess, sys
+
+subprocess.check_call(['git', 'fetch', '--quiet', 'origin', 'main'])   # compare against the freshest base
+raw = subprocess.check_output(['git', 'diff', 'origin/main...HEAD']).decode(errors='ignore')
+today = datetime.date.fromisoformat(
+    subprocess.check_output(['date', '-u', '+%F']).decode().strip())
+
+# The same dateline dialects Step 1 age-gates on — a marker this doesn't recognize
+# is one Step 1 can't read either, so rewriting it is a real edit, not a re-stamp.
+DATELINE = re.compile(
+    r'\*\*verified:\*\*\s*\d{4}-\d{2}-\d{2}'
+    r'|(?:last\s+)?synced\b[^\n:]{0,40}?:\s*\d{4}-\d{2}-\d{2}'
+    r'|audit baseline\b[^\n]*?\(\d{4}-\d{2}-\d{2}\)'
+    r'|\bverified\s+\d{4}-\d{2}-\d{2}'
+    r'|\bas of\s+\d{4}-\d{2}\b', re.I)
+ISO = re.compile(r'\d{4}-\d{2}(?:-\d{2})?')
+ALLOWED = re.compile(r'^plugins/[^/]+/skills/[^/]+/(SKILL\.md|references/.+\.md)$')
+
+paths, removed, added = [], [], []
+for line in raw.splitlines():
+    if line.startswith('diff --git '):
+        paths.append(line.split(' b/', 1)[-1])
+    elif line.startswith(('+++', '---', '@@')):
+        continue
+    elif line.startswith('-'):
+        removed.append(line[1:])
+    elif line.startswith('+'):
+        added.append(line[1:])
+
+norm = lambda s: ISO.sub('<DATE>', s).strip()
+fail = []
+
+for p in paths:                                    # skill prose only — no plugin.json, manifest, or docs/
+    if not ALLOWED.match(p) or '/evals/' in p or '-workspace/' in p:
+        fail.append(f'file outside the dateline surface: {p}')
+
+for label, lines in (('removed', removed), ('added', added)):
+    for s in lines:                                # blanks are the filler around a newly stamped line
+        if s.strip() and not DATELINE.search(s):
+            fail.append(f'{label} a non-dateline line: {s.strip()[:80]!r}')
+
+pool = [norm(a) for a in added if a.strip() and DATELINE.search(a)]
+for s in removed:                                  # every removal pairs with its re-stamp; Step 6 additions stand alone
+    if s.strip() and DATELINE.search(s):
+        pool.remove(norm(s)) if norm(s) in pool else fail.append(
+            f'removed a dateline with no matching re-stamp: {s.strip()[:80]!r}')
+
+old_dates = [d for s in removed for d in ISO.findall(s)]
+new_dates = [d for s in added for d in ISO.findall(s)]
+for d in new_dates:                                # forward only, never past today
+    if datetime.date.fromisoformat(d if len(d) == 10 else d + '-01') > today:
+        fail.append(f'stamped a future date: {d}')
+if old_dates and new_dates and max(new_dates) < max(old_dates):
+    fail.append(f'stamped backwards: newest {max(old_dates)} -> {max(new_dates)}')
+if not (removed or added):
+    fail.append('empty diff — nothing to merge')
+
+print('DATELINE_ONLY: PASS' if not fail else 'DATELINE_ONLY: FAIL')
+for f in fail:
+    print(' -', f)
+sys.exit(1 if fail else 0)
+```
+
+It is a **whitelist that fails closed**: only re-stamped datelines inside skill prose files pass, so a content correction, a version bump, a manifest edit, a deleted dateline, or a backdated/future stamp all block the merge instead of slipping through.
+
+With all four conditions met:
+
+```bash
+gh pr merge <n> --repo <owner>/<repo> --squash --delete-branch
+```
+
+`--delete-branch` can exit non-zero after the merge already succeeded; confirm with `gh pr view <n> --repo <owner>/<repo> --json state` (expect `MERGED`) rather than trusting the exit code. Report the merge in the run summary — `"dateline-only, auto-merged #N"` — so a silent merge never looks like a silent skip. A gate failure is **not** a run failure: report `"held for review: <condition>"` and move on.
+
 ## Failure modes & guardrails
 
 | Failure | Guardrail |
@@ -309,10 +396,13 @@ _Flags a human already reviewed and accepted (manifest `acknowledged`) — shown
 | Runaway PR / rate limits / usage | Research waves of ~12 with ≤6 concurrent subagents; age-gated due set. A throttled run just leaves units un-restamped → still due next week. |
 | Partial completion (orchestrator dies mid-run) | Per-plugin commits + age-gating → finished plugins persist, un-restamped units stay due, the open PR is folded into next run (Step 2). "Green run" status ≠ task success — the PR body's "Could not verify" / "Deferred" sections are the real signal. |
 | A correction would touch a protected surface | The guards in Steps 4 and below → flag instead. |
+| Auto-merge swallows a real change | [Step 8](#step-8--auto-merge-a-dateline-only-pr-per-repo)'s gate is a whitelist of one diff shape, verified by script: any non-dateline line, out-of-scope path, unmatched removal, or backwards/future stamp fails it, as does any `CORRECT`/new `FLAG_*`/`ERROR` in the run. It fails closed — the PR just stays open for a human. |
+| Dateline-only PRs pile up unmerged | Step 8 merges them, so Step 2 starts each run from `origin/main` instead of compounding onto a stale open PR. |
 
 ## What this routine must NEVER do
 
-- Never commit to `main`, never widen branch-push beyond `claude/`-prefixed.
+- Never commit to `main` directly, never widen branch-push beyond `claude/`-prefixed. The only automatic path into `main` is a [Step 8](#step-8--auto-merge-a-dateline-only-pr-per-repo) dateline-only merge.
+- Never auto-merge a PR carrying a content correction, a new flag, an `ERROR`, or a version bump — and never hand-wave the gate by reading the diff yourself instead of running its script.
 - Never apply an edit without cited primary-source evidence a reviewer can check it against.
 - Never edit a `description:` frontmatter field — it is the skill's *triggering* signal, judged by the model at routing time, so changing it changes **when the skill fires**. That's a behavior change wearing a fact-fix's clothes, and it's outside this routine's remit even when the text is genuinely wrong (hence `FLAG_DESCRIPTION_FRONTMATTER`).
 - Never edit `plugin.json` `name`/`description`/`homepage` (only `version`) — those three are the Claude catalog fields. Staying off them is what keeps every run clear of the marketplace catalog surface, so no run ever needs the `marketplace-publish` label: don't add it, and don't spend a step checking (a version-only bump never counts as a catalog change).
