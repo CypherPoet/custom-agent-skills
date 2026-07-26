@@ -198,6 +198,6 @@ For HDRIs from PolyHaven, see `assets.md` for the integration that handles this 
 
 ## Sources
 
-- [Blender Manual: Principled BSDF](https://docs.blender.org/manual/en/5.1/render/shader_nodes/shader/principled.html)
-- [Blender Python API: ShaderNodeTree](https://docs.blender.org/api/5.1/bpy.types.ShaderNodeTree.html)
-- [Blender Python API: Material](https://docs.blender.org/api/5.1/bpy.types.Material.html)
+- [Blender Manual: Principled BSDF](https://docs.blender.org/manual/en/5.2/render/shader_nodes/shader/principled.html)
+- [Blender Python API: ShaderNodeTree](https://docs.blender.org/api/5.2/bpy.types.ShaderNodeTree.html)
+- [Blender Python API: Material](https://docs.blender.org/api/5.2/bpy.types.Material.html)

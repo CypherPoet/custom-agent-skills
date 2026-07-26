@@ -188,4 +188,4 @@ print(json.dumps(material_atlas_summary(bpy.context.active_object), indent=2))
 ## Sources
 
 - [PolyHaven licensing (CC0)](https://polyhaven.com/license)
-- [Blender Manual: Image Textures and Color Management](https://docs.blender.org/manual/en/5.1/render/color_management.html)
+- [Blender Manual: Image Textures and Color Management](https://docs.blender.org/manual/en/5.2/render/color_management/index.html)

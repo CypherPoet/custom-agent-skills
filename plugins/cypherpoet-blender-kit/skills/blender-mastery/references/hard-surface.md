@@ -1,6 +1,6 @@
 # Hard-Surface Modeling & Topology Cleanup
 
-Doctrine and executable patterns for hard-surface work: non-destructive modifier stacks, boolean workflows, normal management, and topology remediation. Each topic states its decision rule once, then the `bpy` route (primary) and — where it earns its place — a keyboard route for agents driving Blender's UI (see [Driving the UI as an agent](#driving-the-ui-as-an-agent)). API claims here are verified against Blender 5.1; workflow defaults are professional doctrine, labeled as such. Operator/context traps: `bpy-essentials.md`.
+Doctrine and executable patterns for hard-surface work: non-destructive modifier stacks, boolean workflows, normal management, and topology remediation. Each topic states its decision rule once, then the `bpy` route (primary) and — where it earns its place — a keyboard route for agents driving Blender's UI (see [Driving the UI as an agent](#driving-the-ui-as-an-agent)). API claims here are verified against Blender 5.2; workflow defaults are professional doctrine, labeled as such. Operator/context traps: `bpy-essentials.md`.
 
 ## The non-destructive spine
 
@@ -110,10 +110,10 @@ For interactive cleanup sessions, enable auto-merge so slid verts weld on contac
 
 ## Normals & shading on 4.1+/5.x
 
-**The break every stale tutorial trips over:** Blender 4.1 removed mesh-level Auto Smooth. `mesh.use_auto_smooth` no longer exists — an `AttributeError` on it marks pre-4.1 code. The 5.1 surface:
+**The break every stale tutorial trips over:** Blender 4.1 removed mesh-level Auto Smooth. `mesh.use_auto_smooth` no longer exists — an `AttributeError` on it marks pre-4.1 code. The 5.2 surface:
 
 - `Object ‣ Shade Auto Smooth` → `bpy.ops.object.shade_auto_smooth(angle=radians(30))` — adds a **"Smooth by Angle"** node-group modifier (bundled Essentials asset), pinned to stay last in the stack (`use_pin_to_last`). The non-destructive default; pairs cleanly with the spine.
-- `bpy.ops.object.shade_smooth_by_angle(...)` — one-shot write of the `sharp_edge` attribute, **no modifier**, and no menu entry on 5.1 ("Shade Smooth by Angle" as a menu item is 4.1-era naming). Use for flattened, final meshes.
+- `bpy.ops.object.shade_smooth_by_angle(...)` — one-shot write of the `sharp_edge` attribute, **no modifier**, and still no menu entry on 5.2 — the Object menu and its context menu carry `shade_auto_smooth` instead ("Shade Smooth by Angle" as a menu item is 4.1-era naming). Use for flattened, final meshes.
 - Gotcha: plain `Shade Smooth` / `Shade Flat` *remove* Smooth by Angle modifiers.
 - Edit-mode variant: `Edge ‣ Set Sharpness by Angle` (`mesh.set_sharpness_by_angle`).
 
@@ -146,7 +146,7 @@ for i, edge in enumerate(me.edges):
 
 With `limit_method='WEIGHT'`, only weighted edges fillet — tag silhouette edges at 1.0, soften interior seams at 0.3, leave the rest alone. UI routes: `Ctrl+E ‣ Edge Bevel Weight` then type a value and `Return`; or Sidebar ‣ Item ‣ Transform ‣ Edge Data ‣ Bevel Weight (labeled *Mean* Bevel Weight when several edges are selected; edge-select mode required).
 
-Stored weights go stale when upstream modifiers (Mirror, Solidify) change the topology they were tagged on. For weights that survive that, tag procedurally: a small geometry-nodes modifier placed before the Bevel can write `bevel_weight_edge` by rule (e.g. convex edges past a threshold angle) — the Bevel reads whatever the evaluated stack hands it, verified on 5.1.
+Stored weights go stale when upstream modifiers (Mirror, Solidify) change the topology they were tagged on. For weights that survive that, tag procedurally: a small geometry-nodes modifier placed before the Bevel can write `bevel_weight_edge` by rule (e.g. convex edges past a threshold angle) — the Bevel reads whatever the evaluated stack hands it, verified on 5.2.
 
 **Control loops** (doctrine): a loop slid close to a corner pinches Subdivision Surface sharp at that corner while the rest stays smooth. Scripting note: interactive `Ctrl+R` loop cut is hover-driven (see below); from `bpy`, prefer weighted bevels or `bmesh.ops.subdivide_edges` on a chosen edge ring instead of simulating the modal tool.
 
@@ -199,7 +199,7 @@ Never assume an addon; detect, then adapt: `installed = set(bpy.context.preferen
 
 | Addon | License | What it adds | Native fallback |
 |---|---|---|---|
-| [Hard Ops](https://superhivemarket.com/products/hardopsofficial) | Paid | Hard-surface workflow accelerator (vendor lists ≤5.0 as of mid-2026 — check before 5.1 use) | This file's spine |
+| [Hard Ops](https://superhivemarket.com/products/hardopsofficial) | Paid | Hard-surface workflow accelerator (vendor listed ≤5.0 as of mid-2026, not re-checked since — confirm it covers your Blender before buying) | This file's spine |
 | [Boxcutter](https://superhivemarket.com/products/boxcutter) | Paid | Draw-to-cut boolean sketching | Boolean modifier + cutters |
 | [MESHmachine](https://mesh.machin3.io/) | Paid | Unbevel/Unfuse/Unchamfer, Stashes, fillet surgery | None clean — rebuild edges manually |
 | [MACHIN3tools](https://superhivemarket.com/products/machin3tools) | Paid | Pies/workflow speedups (the name is MACHIN3tools — "Machine Tools" is a garble; no longer free) | Vanilla keymap |
@@ -213,11 +213,11 @@ Never assume an addon; detect, then adapt: `installed = set(bpy.context.preferen
 
 ## Sources
 
-- [Modifier stack introduction](https://docs.blender.org/manual/en/5.1/modeling/modifiers/introduction.html) — evaluation order, append-at-bottom, apply-out-of-order behavior
-- [Mirror](https://docs.blender.org/manual/en/5.1/modeling/modifiers/generate/mirror.html) · [Solidify](https://docs.blender.org/manual/en/5.1/modeling/modifiers/generate/solidify.html) · [Bevel](https://docs.blender.org/manual/en/5.1/modeling/modifiers/generate/bevel.html) · [Boolean](https://docs.blender.org/manual/en/5.1/modeling/modifiers/generate/booleans.html) · [Shrinkwrap](https://docs.blender.org/manual/en/5.1/modeling/modifiers/deform/shrinkwrap.html) modifier pages
-- [Weighted Normal](https://docs.blender.org/manual/en/5.1/modeling/modifiers/normals/weighted_normal.html) · [Smooth By Angle](https://docs.blender.org/manual/en/5.1/modeling/modifiers/normals/smooth_by_angle.html) · [object shading operators](https://docs.blender.org/manual/en/5.1/scene_layout/object/editing/shading.html) · [Data Transfer](https://docs.blender.org/manual/en/5.1/modeling/modifiers/modify/data_transfer.html)
-- [Attributes reference](https://docs.blender.org/manual/en/5.1/modeling/geometry_nodes/attributes_reference.html) (`bevel_weight_edge`, `custom_normal`) · [4.0 Python API release notes](https://developer.blender.org/docs/release_notes/4.0/python_api/) (bevel-weight move) · [4.1 modeling notes](https://developer.blender.org/docs/release_notes/4.1/modeling/) (Auto Smooth removal) · [4.5](https://developer.blender.org/docs/release_notes/4.5/modeling/) & [5.0 modeling notes](https://developer.blender.org/docs/release_notes/5.0/modeling/) (Manifold solver; Fast→Float)
-- [Merge](https://docs.blender.org/manual/en/5.1/modeling/meshes/editing/mesh/merge.html) · [Select All by Trait](https://docs.blender.org/manual/en/5.1/modeling/meshes/selecting/all_by_trait.html) · [Edge Data](https://docs.blender.org/manual/en/5.1/modeling/meshes/editing/edge/edge_data.html) · [sidebar Transform panel](https://docs.blender.org/manual/en/5.1/modeling/meshes/editing/mesh/transform/basic.html) · [tool settings (Auto Merge)](https://docs.blender.org/manual/en/5.1/modeling/meshes/tools/tool_settings.html)
-- [Numeric input](https://docs.blender.org/manual/en/5.1/scene_layout/object/editing/transform/control/numeric_input.html) · [axis locking](https://docs.blender.org/manual/en/5.1/scene_layout/object/editing/transform/control/axis_locking.html) · [apply transforms](https://docs.blender.org/manual/en/5.1/scene_layout/object/editing/apply.html) · [loop cut](https://docs.blender.org/manual/en/5.1/modeling/meshes/editing/edge/loopcut_slide.html) · [edge slide](https://docs.blender.org/manual/en/5.1/modeling/meshes/editing/edge/edge_slide.html)
-- [Cycles object settings](https://docs.blender.org/manual/en/5.1/render/cycles/object_settings/object_data.html) — Shadow Terminator offsets
+- [Modifier stack introduction](https://docs.blender.org/manual/en/5.2/modeling/modifiers/introduction.html) — evaluation order, append-at-bottom, apply-out-of-order behavior
+- [Mirror](https://docs.blender.org/manual/en/5.2/modeling/modifiers/generate/mirror.html) · [Solidify](https://docs.blender.org/manual/en/5.2/modeling/modifiers/generate/solidify.html) · [Bevel](https://docs.blender.org/manual/en/5.2/modeling/modifiers/generate/bevel.html) · [Boolean](https://docs.blender.org/manual/en/5.2/modeling/modifiers/generate/booleans.html) · [Shrinkwrap](https://docs.blender.org/manual/en/5.2/modeling/modifiers/deform/shrinkwrap.html) modifier pages
+- [Weighted Normal](https://docs.blender.org/manual/en/5.2/modeling/modifiers/normals/weighted_normal.html) · [Smooth By Angle](https://docs.blender.org/manual/en/5.2/modeling/modifiers/normals/smooth_by_angle.html) · [object shading operators](https://docs.blender.org/manual/en/5.2/scene_layout/object/editing/shading.html) · [Data Transfer](https://docs.blender.org/manual/en/5.2/modeling/modifiers/modify/data_transfer.html)
+- [Attributes reference](https://docs.blender.org/manual/en/5.2/modeling/geometry_nodes/attributes_reference.html) (`bevel_weight_edge`, `custom_normal`) · [4.0 Python API release notes](https://developer.blender.org/docs/release_notes/4.0/python_api/) (bevel-weight move) · [4.1 modeling notes](https://developer.blender.org/docs/release_notes/4.1/modeling/) (Auto Smooth removal) · [4.5](https://developer.blender.org/docs/release_notes/4.5/modeling/) & [5.0 modeling notes](https://developer.blender.org/docs/release_notes/5.0/modeling/) (Manifold solver; Fast→Float)
+- [Merge](https://docs.blender.org/manual/en/5.2/modeling/meshes/editing/mesh/merge.html) · [Select All by Trait](https://docs.blender.org/manual/en/5.2/modeling/meshes/selecting/all_by_trait.html) · [Edge Data](https://docs.blender.org/manual/en/5.2/modeling/meshes/editing/edge/edge_data.html) · [sidebar Transform panel](https://docs.blender.org/manual/en/5.2/modeling/meshes/editing/mesh/transform/basic.html) · [tool settings (Auto Merge)](https://docs.blender.org/manual/en/5.2/modeling/meshes/tools/tool_settings.html)
+- [Numeric input](https://docs.blender.org/manual/en/5.2/scene_layout/object/editing/transform/control/numeric_input.html) · [axis locking](https://docs.blender.org/manual/en/5.2/scene_layout/object/editing/transform/control/axis_locking.html) · [apply transforms](https://docs.blender.org/manual/en/5.2/scene_layout/object/editing/apply.html) · [loop cut](https://docs.blender.org/manual/en/5.2/modeling/meshes/editing/edge/loopcut_slide.html) · [edge slide](https://docs.blender.org/manual/en/5.2/modeling/meshes/editing/edge/edge_slide.html)
+- [Cycles object settings](https://docs.blender.org/manual/en/5.2/render/cycles/object_settings/object_data.html) — Shadow Terminator offsets
 - Addon table verified against vendor pages (extensions.blender.org, superhivemarket.com, machin3.io), 2026-07

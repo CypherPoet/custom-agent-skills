@@ -12,13 +12,13 @@ description: >
 
 # Blender Mastery
 
-**Verified:** 2026-07-24
+**Verified:** 2026-07-25
 
 Pro tips, `bpy` patterns, and Blender mental models — primarily driven through the [official Blender MCP server](https://www.blender.org/lab/mcp-server/), with a headless-CLI escape hatch for long-running work. The body of this file holds the cross-cutting plays and routing table — domain-specific depth lives in `references/` and is loaded only when relevant.
 
 ## Setup
 
-Requires Blender 5.1 or later with the official Blender MCP addon enabled, and the MCP server registered in Claude Code's MCP config. The server runs inside Blender; this skill assumes Claude can reach its tools — `execute_blender_code` for running `bpy` code, `get_objects_summary` / `get_object_detail_summary` for scene inspection, the screenshot and viewport-render tools, and the bundled-docs search (`search_manual_docs`, `search_api_docs`). Reference content in this skill is written against the [Blender 5.1 Python API](https://docs.blender.org/api/5.1/). **Blender 5.2 is the current LTS** (July 2026); the 5.2 changes that affect this skill — geometry-nodes modifier inputs moving off custom properties, and reshuffled Compare / Random Value socket identifiers — are called out in `geometry-nodes.md`. Confirm the running version with `bpy.app.version` before trusting a version-sensitive snippet.
+Requires Blender 5.2 or later with the official Blender MCP addon enabled, and the MCP server registered in Claude Code's MCP config. The server runs inside Blender; this skill assumes Claude can reach its tools — `execute_blender_code` for running `bpy` code, `get_objects_summary` / `get_object_detail_summary` for scene inspection, the screenshot and viewport-render tools, and the bundled-docs search (`search_manual_docs`, `search_api_docs`). Reference content in this skill is written against the [Blender 5.2 Python API](https://docs.blender.org/api/5.2/) — **5.2 is the current LTS** (released July 2026, supported to July 2028). Most of it applies unchanged to 4.5 LTS and 5.0–5.1; where a version genuinely diverges, the reference files carry a dated stale-code trap rather than a silent assumption. Confirm the running version with `bpy.app.version` before trusting a version-sensitive snippet.
 
 If the user hasn't set it up, point them at the lab page first and don't simulate the workflow.
 
@@ -82,6 +82,6 @@ Load only the file(s) the current task touches. If unsure, `bpy-essentials.md` a
 
 ## Primary Sources
 
-- [Blender 5.1 Python API reference](https://docs.blender.org/api/5.1/) — authoritative for `bpy` API syntax at the skill's pinned baseline; re-point alongside the pin when the baseline moves.
-- [Blender 5.1 manual](https://docs.blender.org/manual/en/5.1/) — authoritative for feature behavior and workflows at the pinned baseline.
+- [Blender 5.2 Python API reference](https://docs.blender.org/api/5.2/) — authoritative for `bpy` API syntax at the skill's pinned baseline; re-point alongside the pin when the baseline moves.
+- [Blender 5.2 manual](https://docs.blender.org/manual/en/5.2/) — authoritative for feature behavior and workflows at the pinned baseline.
 - [Blender release notes](https://developer.blender.org/docs/release_notes/) — release channel; authoritative for versions.
