@@ -215,6 +215,41 @@ class SkillStructureCheckTests(unittest.TestCase):
             any(error[:2] == ("bundle", "commands/publish.md") for error in errors)
         )
 
+    def test_nested_plugin_level_markdown_is_checked(self):
+        # os.listdir would stop at references/top.md and miss this.
+        write(
+            self.root / "plugins/example/references/nested/guide.md",
+            "# Guide\n\n[Other](../../../other-plugin/skills/other/SKILL.md)\n",
+        )
+        errors, _, _, _, _ = self.audit()
+        self.assertTrue(
+            any(
+                error[:2] == ("example", "references/nested/guide.md")
+                and "cross-plugin relative link" in error[2]
+                for error in errors
+            )
+        )
+
+    def test_markdown_outside_the_known_skill_layout_is_checked(self):
+        # scripts/README.md and evals/fixtures/*.md ship in the sparse-clone but
+        # sit in neither SKILL.md nor references/; they report under the skill.
+        for rel in ("scripts/README.md", "evals/fixtures/case.md"):
+            with self.subTest(rel=rel):
+                depth = "../" * (len(rel.split("/")) + 2)
+                write(
+                    self.skill / rel,
+                    f"# Doc\n\n[Other]({depth}other-plugin/skills/other/SKILL.md)\n",
+                )
+                errors, _, _, _, _ = self.audit()
+                self.assertTrue(
+                    any(
+                        error[:2] == ("example/example", rel)
+                        and "cross-plugin relative link" in error[2]
+                        for error in errors
+                    )
+                )
+                (self.skill / rel).unlink()
+
     def test_non_markdown_plugin_level_files_are_skipped(self):
         write(
             self.root / "plugins/example/commands/config.json",
