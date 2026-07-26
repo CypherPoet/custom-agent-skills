@@ -178,11 +178,11 @@ A run that corrects nothing still opens a PR, because re-stamping datelines is w
 
 Merge only when **all** of these hold; otherwise leave the PR open and report which one blocked it:
 
-- This run applied **0** `CORRECT` claims, raised **0** new (unsuppressed) `FLAG_*`, and hit **0** `ERROR`s. An unverifiable fact is precisely what a human should see, so one `ERROR` disqualifies the PR even when the diff looks clean.
-- `python3 scripts/check_dateline_only.py` exits 0 on the pushed branch. Run it; don't eyeball the diff.
-- `gh pr checks <n> --repo <owner>/<repo> --watch --fail-fast` exits 0, and `gh pr view <n> --repo <owner>/<repo> --json mergeable,mergeStateStatus,isDraft` reports `MERGEABLE` / `CLEAN` / not draft. Neither repo enables GitHub's own auto-merge, so `gh pr merge --auto` is unavailable — wait on the checks here instead.
+- **Nothing in the PR is waiting on a human.** This run applied **0** `CORRECT` claims and hit **0** `ERROR`s, *and* the PR body's `🚩 Flagged for human review` section is empty **as the body now stands**. Read the body; don't just count this run's findings. An unverifiable fact is precisely what a human should see, so one `ERROR` disqualifies the PR even when the diff looks clean. The body matters separately from the counters because a flag never touches the diff — no diff check can see one. A flags-only PR inherited from an earlier run (via [Step 2](#step-2--idempotency-check-per-repo)'s "no net change → leave the PR untouched" path) reports zero findings *this* run while still carrying findings nobody has read.
+- `python3 scripts/check_dateline_only.py` exits 0 on the pushed branch. Run it; don't eyeball the diff. Exit 1 is a hold, exit 2 means the gate itself couldn't run — also a hold, never a pass.
+- `timeout 900 gh pr checks <n> --repo <owner>/<repo> --watch --fail-fast` exits 0, and `gh pr view <n> --repo <owner>/<repo> --json mergeable,mergeStateStatus,isDraft` reports `MERGEABLE` / `CLEAN` / not draft. Bound that wait: a check that never reports — a workflow awaiting approval, a required status context nothing posts — leaves a bare `--watch` polling forever and hangs the run. Exit `124` means it timed out, which is a hold. Neither repo enables GitHub's own auto-merge, so `gh pr merge --auto` is unavailable; wait on the checks here instead.
 
-The script is a whitelist and it fails closed: a correction, a version bump, an out-of-scope path, a deleted dateline, or newly-added prose all block the merge. Then:
+The script is a whitelist and it fails closed: a correction, a version bump, an out-of-scope path, a deleted dateline, a renamed file, or newly-added prose all block the merge — as does the script's own failure. Then:
 
 ```bash
 gh pr merge <n> --repo <owner>/<repo> --squash --delete-branch

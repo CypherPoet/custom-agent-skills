@@ -38,9 +38,6 @@ DATELINE = re.compile('|'.join([
     r'\bas of\s+' + _D,                                 # as of <date>
 ]), re.I)
 
-_ANY_DATE = re.compile(r'\d{4}-\d{2}(?:-\d{2})?')
-
-
 def dates_in(text):
     """Every dateline date in `text`, as date objects. Month precision → the 1st."""
     out = []
@@ -52,14 +49,20 @@ def dates_in(text):
     return out
 
 
-def is_dateline(line):
-    """True when `line` carries a recognized dateline marker."""
-    return bool(DATELINE.search(line))
-
-
 def blank_dates(line):
-    """`line` with every date replaced by <DATE>, so two stamps of the same line compare equal."""
-    return _ANY_DATE.sub('<DATE>', line).strip()
+    """`line` with the date *inside each dateline marker* replaced by `<DATE>`.
+
+    Only the marker's own date. A bare content date elsewhere on the line
+    ("shipped 2026-03-01") is deliberately left alone, so that two re-stamps of
+    the same line compare equal while a correction sharing a row with a dateline
+    still reads as a change. Blanking every date-shaped token instead would hide
+    exactly the edit check_dateline_only.py exists to catch — and would also
+    chew the leading half of an unrelated numeric range (`2048-2732`).
+    """
+    def one(match):
+        raw = next((g for g in match.groups() if g), None)
+        return match.group(0).replace(raw, '<DATE>') if raw else match.group(0)
+    return DATELINE.sub(one, line)
 
 
 def in_dateline_scope(path):
