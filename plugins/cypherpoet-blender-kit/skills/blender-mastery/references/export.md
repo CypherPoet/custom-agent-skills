@@ -27,7 +27,7 @@ bpy.ops.export_scene.gltf(
     filepath='/tmp/scene.glb',
     export_format='GLB',
     use_selection=False,
-    export_apply=False,
+    export_apply=True,   # modifiers build the mesh; False exports the base cage
     export_yup=True,
     export_animations=True,
     export_optimize_animation_size=True,
@@ -42,7 +42,7 @@ bpy.ops.export_scene.gltf(
 | `export_format` | `GLB` | `GLTF_SEPARATE` if you want JSON + textures as separate files |
 | `use_selection` | `False` | `True` to export only selected objects |
 | `use_visible` | `False` | `True` to skip anything hidden (the canonical "skip hidden objects" flag — preferred over post-filtering selection) |
-| `export_apply` | `False` | `True` only if you have to (Array/Mirror modifiers can balloon file size) |
+| `export_apply` | `False` | `True` whenever modifiers build the final geometry — the default exports the **un-modified base mesh**. See the trap below |
 | `export_yup` | `True` | Leave on — most runtimes expect Y-up |
 | `export_animations` | `True` | `False` for static scenes |
 | `export_skins` | `True` | `False` if no rigs present |
@@ -52,14 +52,24 @@ bpy.ops.export_scene.gltf(
 | `export_extras` | `False` | `True` if you've stored custom properties on objects you want preserved |
 | `export_image_format` | `AUTO` | `JPEG` if you can't tolerate PNG file size |
 
-### The modifier-apply trap
+### The modifier traps — both directions
 
-`export_apply=True` bakes the modifier stack into the exported mesh. Two reasons to think twice:
+Modifiers are where exports most often go silently wrong, and the danger runs both ways.
 
-- **Array / Mirror modifiers explode size.** A 1MB mesh with an Array×50 becomes ~50MB after baking. Better: export with `export_apply=False` and replicate at runtime.
-- **Subsurf modifiers exponentially grow vertex counts.** Level 3 = 64× the polys of level 0.
+**`export_apply=False` (the default) discards the stack entirely.** The exporter writes the base mesh as if the modifiers were never there. Grooves cut by an Array, a shell from Solidify, fillets from Bevel, smoothing from Subdivision — all gone, and the result still passes a name check, a triangle budget, and a file-size check. This is the more dangerous direction, because the export *succeeds*. It also directly contradicts `hard-surface.md`'s doctrine of staying parametric until hand-off: follow that advice, export with the default, and you ship the cage.
 
-If the runtime doesn't honor modifiers, you have to bake — but consider whether the runtime should grow up first.
+**`export_apply=True` bakes the stack, which can balloon the file.** An Array×50 turns a 1 MB mesh into ~50 MB; Subdivision level 3 is 64× the polygons of level 0.
+
+Neither flag is a universal default. Decide by asking whether the modifiers *are* the final geometry:
+
+| Situation | Setting |
+|---|---|
+| Modifiers build the shape you want in the file | `True` |
+| Modifiers are viewport-only preview (e.g. a subsurf you don't want baked) | `False` |
+| The mesh has shape keys you need exported | `False` — `True` blocks morph export |
+| Heavy repetition you'd rather not bake | `True` **plus** real instancing — see below |
+
+**"Replicate at runtime" is not what `export_apply=False` does.** Turning the flag off does not convert an Array modifier into instances; it leaves no record that the array ever existed, so you get neither baked geometry nor instancing. Actual instancing is a different mechanism: restructure the repetition as linked duplicates parented to an Empty and export with `export_gpu_instances=True`, which writes `EXT_mesh_gpu_instancing`. Runtimes that support the extension (three.js, Babylon.js, model-viewer) expand it into GPU instances, cutting both file size and VRAM, and the repetition stays described *inside* the asset rather than hardcoded in application code. Blender's exporter warns that instancing may omit multiple materials per instanced mesh, so check material assignment after export.
 
 ### Named animation clips for runtimes
 
@@ -167,7 +177,8 @@ Run before any export, especially under MCP where the user can't see the viewpor
 ```python
 import bpy
 
-def pre_export_audit():
+def pre_export_audit(export_apply):
+    """Pass the export_apply value you intend to use — the modifier check depends on it."""
     issues = []
     for obj in bpy.context.scene.objects:
         if obj.type != 'MESH':
@@ -180,10 +191,17 @@ def pre_export_audit():
         # Non-applied scale?
         if any(abs(s - 1.0) > 0.001 for s in obj.scale):
             issues.append(f"{obj.name}: non-unit scale {tuple(obj.scale)}")
-        # Suspicious modifiers (Array/Mirror with high counts)
-        for mod in obj.modifiers:
-            if mod.type == 'ARRAY' and getattr(mod, 'count', 0) > 20:
-                issues.append(f"{obj.name}: Array modifier count={mod.count} — consider runtime instancing")
+        # Modifiers that won't survive the export at all (Armatures are excluded by the exporter)
+        shaping = [m for m in obj.modifiers if m.type != 'ARMATURE']
+        if shaping and not export_apply:
+            names = ", ".join(f"{m.name}({m.type})" for m in shaping)
+            issues.append(
+                f"{obj.name}: {len(shaping)} modifier(s) will be DISCARDED by export_apply=False — {names}"
+            )
+        # Modifiers that will survive but multiply the mesh
+        for mod in shaping:
+            if export_apply and mod.type == 'ARRAY' and getattr(mod, 'count', 0) > 20:
+                issues.append(f"{obj.name}: Array modifier count={mod.count} — consider EXT_mesh_gpu_instancing")
         # Materials using non-Principled shaders?
         for slot in obj.material_slots:
             if not slot.material or not slot.material.use_nodes:
