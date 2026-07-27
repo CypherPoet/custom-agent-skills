@@ -25,6 +25,28 @@ Approximate. Real numbers depend on format and mip levels.
 | Desktop web (good GPU) | 200-500 MB | 2048² – 4096² |
 | Native desktop | unlimited | original |
 
+## What one texture actually costs
+
+Pick a resolution and a format from the sections above and you have implicitly spent a fixed number of bytes. Check that number against your **file** budget before committing to it — "2048² is fine for desktop web" and "the file should come in under 5 MB" are each reasonable in isolation and can be impossible together.
+
+Block-compressed formats are content-independent in VRAM, so these are exact:
+
+| Format | Bytes/texel in VRAM | 512² | 1024² | 2048² | 4096² |
+|---|---|---|---|---|---|
+| RGBA8 (what PNG/JPEG/WebP decode to) | 4 | 1 MiB | 4 MiB | 16 MiB | 64 MiB |
+| KTX2 UASTC → BC7 / ASTC 4×4 | 1 | 256 KiB | 1 MiB | 4 MiB | 16 MiB |
+| KTX2 ETC1S → BC1 / ETC1 | 0.5 | 128 KiB | 512 KiB | 2 MiB | 8 MiB |
+
+A full mip chain adds about a third on top of every figure.
+
+On **disk**, the story splits:
+
+- **UASTC** stores those same block bytes with Zstd supercompression on top. Expect a modest reduction, not a transformative one — a 2048² UASTC map is still multiple MB in the file. Encoding with RDO enabled (`--rdo`) trades a little quality for a meaningfully better ratio.
+- **ETC1S** stores a Basis codebook plus entropy coding rather than raw blocks, so its on-disk size is much smaller than its VRAM figure and genuinely content-dependent. It is the right pick for photographic or noisy maps; avoid it for crisp lettering, logos, and hard-edged decals, where its artifacts are most visible.
+- **PNG / JPEG / WebP** are content-dependent on disk and tell you nothing about VRAM. This is the trap worth internalizing: a 2048² map that compresses to a 300 KB WebP still occupies 16 MiB of VRAM once decoded.
+
+Worked example: a model with three 2048² UASTC maps has spent ~12 MiB of VRAM and several MB of file before a single triangle is counted. If the file budget is 5 MB, the resolution has to come down, the map count has to come down, or the budget was wrong.
+
 ## Setup
 
 ```bash
