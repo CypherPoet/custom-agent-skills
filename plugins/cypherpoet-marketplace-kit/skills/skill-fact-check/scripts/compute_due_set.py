@@ -20,11 +20,10 @@ Python 3 standard library only. Exit 0 always: an empty due set is a valid answe
 import datetime
 import json
 import pathlib
-import subprocess
 import sys
 
 sys.path.insert(0, str(pathlib.Path(__file__).parent))
-from datelines import newest, in_dateline_scope  # noqa: E402
+from datelines import scan, in_dateline_scope  # noqa: E402
 
 MANIFEST = pathlib.Path('docs/automated-routines/skill-fact-check-manifest.json')
 INTERVAL = {'weekly': 7, 'monthly': 28}
@@ -52,16 +51,17 @@ def main():
         tier_of.update({unit: tier for unit in manifest.get(tier, [])})
     default_tier = manifest.get('defaults', {}).get('tier', DEFAULT_TIER)
 
-    today = datetime.date.fromisoformat(
-        subprocess.check_output(['date', '-u', '+%F']).decode().strip())
+    today = datetime.datetime.now(datetime.timezone.utc).date()
 
     all_units = units()
     due = []
+    bad_dates = []
     for unit_id, unit_dir in all_units:
         tier = tier_of.get(unit_id, default_tier)
         if tier == 'never':
             continue
-        last = newest(unit_dir)
+        last, malformed = scan(unit_dir)
+        bad_dates.extend(malformed)
         age = (today - last).days
         # An unknown or typo'd tier falls back to monthly rather than crashing.
         if age >= INTERVAL.get(tier, INTERVAL['monthly']):
@@ -82,6 +82,9 @@ def main():
               f'(later list wins — keep one)')
     for unit in sorted(unit_ids - set(listed)):
         print(f'# DRIFT untiered: {unit} not in any tier list (defaults to {default_tier})')
+    for bad in sorted(set(bad_dates)):
+        print(f'# DRIFT unparseable dateline: {bad} — not a real calendar date, '
+              f'so it does not count toward freshness')
 
 
 if __name__ == '__main__':
