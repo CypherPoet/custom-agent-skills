@@ -1,6 +1,6 @@
 # Plugin Conventions
 
-This repo applies a handful of conventions on top of the standard plugin shape, and ships every plugin for **both Claude Code and Codex** (see [Dual-Harness Plugins](#dual-harness-plugins)). Scaffold with Claude Code's [`/plugin-dev:create-plugin`](https://github.com/anthropics/claude-plugins-official/blob/main/plugins/plugin-dev/commands/create-plugin.md), then apply the deltas below. Don't commit until the staged files have been reviewed.
+This repo applies a handful of conventions on top of the standard plugin shape, and ships every plugin for **both Claude Code and Codex** (see [Dual-Harness Plugins](#dual-harness-plugins)). Scaffold with your harness's toolkit — Claude Code's [`/plugin-dev:create-plugin`](https://github.com/anthropics/claude-plugins-official/blob/main/plugins/plugin-dev/commands/create-plugin.md) or Codex's [`$plugin-creator`](https://github.com/openai/skills/blob/main/skills/.system/plugin-creator/SKILL.md) — then apply the deltas below. Don't commit until the staged files have been reviewed.
 
 For plugin anatomy (component types, auto-discovery, `${CLAUDE_PLUGIN_ROOT}` usage, `hooks.json` shape, MCP transport fields, etc.), defer to the canonical sources:
 
@@ -13,7 +13,7 @@ For plugin anatomy (component types, auto-discovery, `${CLAUDE_PLUGIN_ROOT}` usa
 - [`plugin-dev:hook-development`](https://github.com/anthropics/claude-plugins-official/tree/main/plugins/plugin-dev/skills/hook-development) — hook patterns and validators
 - [`plugin-dev:mcp-integration`](https://github.com/anthropics/claude-plugins-official/tree/main/plugins/plugin-dev/skills/mcp-integration) — MCP server integration
 
-These two toolkits play different roles here. The Claude `plugin-dev` toolkit is what you **run** to author a plugin's components. The Codex `plugin-creator` is the **spec the generated Codex side must match**, not a tool you run in this repo: [`scripts/sync_plugins.py`](../scripts/sync_plugins.py) produces every `.codex-plugin/plugin.json` and Codex catalog entry, so consult `plugin-creator` for what that output must conform to (manifest shape, name normalization, `policy`/`category` fields) rather than invoking `$plugin-creator` to generate it.
+Scaffold with whichever toolkit your harness gives you. What neither one knows is this repo's shape: a plugin's source of truth is its `.claude-plugin/plugin.json` plus an entry in [`scripts/plugin-registry.json`](../scripts/plugin-registry.json), and [`scripts/sync_plugins.py`](../scripts/sync_plugins.py) derives every `.codex-plugin/plugin.json` and Codex catalog entry from those. So a scaffolder's Codex manifest is a starting point that the sync will regenerate — `plugin-creator` doubles as the spec for what that generated output must conform to (manifest shape, name normalization, `policy`/`category` fields).
 
 ## Plugin Folder
 
@@ -22,7 +22,7 @@ These two toolkits play different roles here. The Claude `plugin-dev` toolkit is
 
 ## Manifest
 
-Use [`/plugin-dev:create-plugin`](https://github.com/anthropics/claude-plugins-official/blob/main/plugins/plugin-dev/commands/create-plugin.md) to scaffold a working `plugin.json`. Recommended defaults this repo applies on top:
+A working `plugin.json` needs the standard fields (see the [plugins reference](https://code.claude.com/docs/en/plugins-reference)); [`/plugin-dev:create-plugin`](https://github.com/anthropics/claude-plugins-official/blob/main/plugins/plugin-dev/commands/create-plugin.md) generates one in Claude Code. Recommended defaults this repo applies on top:
 
 - Set `"author": { "name": "CypherPoet" }` (no email field).
 - Set `"version": "0.1.0"` for new plugins. Bump per semver as the plugin evolves: PATCH for fixes, MINOR for additive changes, MAJOR for breaking changes (pre-1.0, treat MINOR as the default bump for anything user-visible). This is each harness's update cache key (Claude Code resolves it from `plugin.json` first, with the `git-subdir` commit SHA only as the fallback when no version is set) — so existing installs update *only* when you bump it; pushing new commits to `main` alone won't reach them.
@@ -153,7 +153,7 @@ A plugin's `version` (in `.claude-plugin/plugin.json`) is each harness's update 
 
 ## Skill Conventions
 
-For skills inside a plugin, use [`/skill-creator`](https://github.com/anthropics/skills/tree/main/skills/skill-creator) — it handles drafts, evals, description optimization, and the general skill structure conventions.
+Skills inside a plugin follow the standard [`SKILL.md`](https://agentskills.io/) format. [`skill-creator`](https://github.com/anthropics/skills/tree/main/skills/skill-creator) automates the tedious parts — drafts, evals, description optimization, and the general skill structure conventions — and is worth using wherever it's installed.
 
 The repo-local **`skill-structure-check`** skill audits skill structure across the repo. Its [`SKILL.md`](../.claude/skills/skill-structure-check/SKILL.md) is the canonical rule contract and remediation guide; the bundled Python script implements that contract. Run the skill before opening a PR that touches skills.
 
