@@ -7,7 +7,7 @@ For plugin anatomy (component types, auto-discovery, `${CLAUDE_PLUGIN_ROOT}` usa
 - [Claude Code plugins reference](https://code.claude.com/docs/en/plugins-reference)
 - [`plugin-dev` toolkit](https://github.com/anthropics/claude-plugins-official/blob/main/plugins/plugin-dev/README.md) — the `/plugin-dev:create-plugin` workflow plus the seven authoring skills (plugin structure, and skill / command / agent / hook / MCP / settings development)
 - [Codex: Build skills](https://learn.chatgpt.com/docs/build-skills) / [Build plugins](https://learn.chatgpt.com/docs/build-plugins) — the Codex plugin + skill format
-- [Codex `plugin-creator`](https://github.com/openai/skills/blob/main/skills/.system/plugin-creator/SKILL.md) — also the spec the **generated** Codex artifacts must match: [`scripts/sync_plugins.py`](../scripts/sync_plugins.py) writes the `.codex-plugin/plugin.json` (manifest shape, name normalization), and the publish flow writes the marketplace entry (`policy`, `category`) — see [Marketplaces](#marketplaces). Scaffolding with it is fine; the sync regenerates its Codex manifest either way.
+- [Codex `plugin-creator`](https://github.com/openai/skills/blob/main/skills/.system/plugin-creator/SKILL.md) — the spec the **generated** Codex artifacts must match: [`scripts/sync_plugins.py`](../scripts/sync_plugins.py) writes the `.codex-plugin/plugin.json` (manifest shape, name normalization), and the publish flow writes the marketplace entry (`policy`, `category`) — see [Marketplaces](#marketplaces).
 
 ## Plugin Folder
 
@@ -136,7 +136,7 @@ Content and catalog metadata ship on separate tracks, and neither does the other
 
 ## Skill Conventions
 
-Skills inside a plugin follow the standard [`SKILL.md`](https://agentskills.io/) format. [`skill-creator`](https://github.com/anthropics/skills/tree/main/skills/skill-creator) automates the tedious parts — drafts, evals, description optimization, and the general skill structure conventions — and is worth using wherever it's installed.
+Skills inside a plugin follow the standard [`SKILL.md`](https://agentskills.io/) format. Author them with your harness's `skill-creator` — Claude Code's [`skill-creator`](https://github.com/anthropics/skills/tree/main/skills/skill-creator) or Codex's [`skill-creator`](https://github.com/openai/skills/tree/main/skills/.system/skill-creator) — which handle drafts, evals, description optimization, and the general skill structure conventions.
 
 The repo-local **`skill-structure-check`** skill audits skill structure across the repo. Its [`SKILL.md`](../.claude/skills/skill-structure-check/SKILL.md) is the canonical rule contract and remediation guide; the bundled Python script implements that contract.
 
