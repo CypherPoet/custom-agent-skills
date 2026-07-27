@@ -23,3 +23,4 @@ Composition is by **vendoring, not dependencies**: neither harness resolves a re
 - Run `python3 -m unittest discover -s tests` before any PR; [`.github/workflows/verify.yml`](.github/workflows/verify.yml) runs the same suite on every PR and push to `main`.
 - Run `marketplace-publish-check` when opening a PR, and apply the `marketplace-publish` label if it reports a needed publish. A merged label publishes automatically — the manual-only `marketplace-publish` skill is the fallback, and never self-triggers.
 - Scaffold with whatever your harness offers — no scaffolder emits a repo-conformant plugin on its own. Finish against [`docs/PLUGIN-CONVENTIONS.md`](docs/PLUGIN-CONVENTIONS.md).
+- [`docs/PLUGIN-CONVENTIONS.md`](docs/PLUGIN-CONVENTIONS.md) holds mechanisms and rationale; this file holds the imperatives. Neither restates the other.

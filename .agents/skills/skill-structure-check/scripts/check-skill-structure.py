@@ -132,19 +132,49 @@ def tier_findings(root, units, units_with_sources):
     return advisories, True
 
 
+def link_label(path, plugin, plugin_root):
+    """Report coordinates for `path`: (label, name).
+
+    Skill files report under `plugin/skill` with a skill-relative name, so
+    `skills/x/references/y.md` stays `("plugin/x", "references/y.md")`. Everything
+    else reports under the plugin with a plugin-relative name.
+    """
+    rel = os.path.relpath(path, plugin_root)
+    parts = rel.split(os.sep)
+    if len(parts) > 2 and parts[0] == "skills":
+        return f"{plugin}/{parts[1]}", os.sep.join(parts[2:])
+    return plugin, rel
+
+
+def escaping_link_errors(plugin, plugin_root):
+    """The cross-plugin link rule over every .md the sparse-clone carries.
+
+    Walks the whole plugin rather than enumerating known locations: the rule covers
+    every shipped file, so any allowlist of directories drifts from it by
+    construction — nested references, scripts/README.md, and eval fixtures all ship
+    and all resolve their links in an installed copy.
+    """
+    found = []
+    for dirpath, dirnames, filenames in os.walk(plugin_root):
+        dirnames.sort()
+        for f in sorted(filenames):
+            if not f.endswith(".md"):
+                continue
+            path = os.path.join(dirpath, f)
+            with open(path, encoding="utf-8") as handle:
+                esc = escaping_links(handle.read(), path, plugin_root)
+            if esc:
+                label, name = link_label(path, plugin, plugin_root)
+                found.append((label, name, "cross-plugin relative link(s) — dead in a sparse-clone install, use an absolute GitHub URL: " + ", ".join(esc)))
+    return found
+
+
 def audit(plugins_dir):
     errors, warnings, missing_contents = [], [], []
     units, units_with_sources = set(), set()
     for plugin in sorted(os.listdir(plugins_dir)):
         plugin_root = os.path.join(plugins_dir, plugin)
-        # The plugin README ships in the sparse-clone install alongside the
-        # skills, so it follows the same cross-plugin link rule as skill files.
-        readme = os.path.join(plugin_root, "README.md")
-        if os.path.isfile(readme):
-            with open(readme, encoding="utf-8") as readme_file:
-                esc = escaping_links(readme_file.read(), readme, plugin_root)
-            if esc:
-                errors.append((plugin, "README.md", "cross-plugin relative link(s) — dead in a sparse-clone install, use an absolute GitHub URL: " + ", ".join(esc)))
+        errors.extend(escaping_link_errors(plugin, plugin_root))
         skills_dir = os.path.join(plugin_root, "skills")
         if not os.path.isdir(skills_dir):
             continue
@@ -169,10 +199,6 @@ def audit(plugins_dir):
             elif n >= SKILL_WARN:
                 warnings.append((label, "SKILL.md", f"{n} lines — approaching the {SKILL_OVER}-line limit"))
 
-            esc = escaping_links(skill_text, skill_md, plugin_root)
-            if esc:
-                errors.append((label, "SKILL.md", "cross-plugin relative link(s) — dead in a sparse-clone install, use an absolute GitHub URL: " + ", ".join(esc)))
-
             ref_dir = os.path.join(base, "references")
             if not os.path.isdir(ref_dir):
                 continue
@@ -183,9 +209,6 @@ def audit(plugins_dir):
                 with open(ref_path, encoding="utf-8") as reference_file:
                     text = reference_file.read()
                 rlines = len(text.splitlines())
-                esc = escaping_links(text, ref_path, plugin_root)
-                if esc:
-                    errors.append((label, f"references/{f}", "cross-plugin relative link(s) — use an absolute GitHub URL: " + ", ".join(esc)))
                 indexed = contents_anchors(text)
                 if indexed is None:
                     if rlines > REF_TOC_FLOOR:
