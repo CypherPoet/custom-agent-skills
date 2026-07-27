@@ -67,37 +67,9 @@ Every one of these is a hard stop, not a judgment call. The linked step says why
 | Let an `acknowledged` entry suppress a `CORRECT` or an `ERROR` | Suppress `FLAG_*` only ([Step 4](#step-4--reduce--apply-orchestrator)) |
 | Merge a PR the gate did not pass, or that carries an unread flag | Leave it open and report the blocker ([Step 8](#step-8--auto-merge-a-dateline-only-pr-per-repo)) |
 
-## Scope & exclusions
-
-A **unit** is one skill: its `SKILL.md`, the sibling `references/**`, and its `evals/**`. Its `unit_id` is `<plugin>/<skill>`, its directory is the `SKILL.md`'s parent, and its plugin manifest is `plugins/<plugin>/.claude-plugin/plugin.json`.
-
-Fact-check all three surfaces:
-
-- **`SKILL.md`** — the skill's own body.
-- **`references/**`** — roughly 80% of volatile facts live here.
-- **`evals/**`** — fixtures encode the same version-sensitive premises as the docs and go stale with them, leaving an eval that contradicts the skill it grades. Corrected under the same evidence gates as any other file, with the reading caveats in [`references/subagent-procedure.md`](references/subagent-procedure.md) so a fixture's scenario data isn't mistaken for a stale fact.
-
-Three exclusions, each for its own reason:
-
-- `**/*-workspace/` is regenerable scratch — never read, never edited, never counted.
-- **Evals are not units.** A fixture `SKILL.md` under `evals/` is test data, not a skill to schedule.
-- **Eval dates are not datelines.** A date inside a fixture is scenario data, not a record of when this unit was verified; counting one would falsely freshen the unit.
-
-The bundled scripts enforce all three.
-
-## Inputs
-
-- **Manifest:** `docs/automated-routines/skill-fact-check-manifest.json` in the repo being checked — maps units to a volatility tier (`weekly`, `monthly`, `never`) and carries the `acknowledged` list. Shape, tiering guidance, and acknowledgment semantics: [`references/manifest.md`](references/manifest.md).
-- **Datelines** (the freshness cursor) — when a unit's facts were last checked. [`scripts/datelines.py`](scripts/datelines.py) is the single source of truth for which forms count:
-  - *labelled* — `**Verified:** <date>` (the canonical marker this routine writes), `Last synced: <date>`, the parenthetical audit-baseline date
-  - *unlabelled* — inline `verified <date>`, `as of <month>`
-
-  Both age-gate a unit; only labelled ones can auto-merge ([Step 6](#step-6--datelines)). Bare content dates (`released …`, `Created: …`) count as neither — treating one as a dateline would mark a stale unit fresh forever.
-- **Source markers:** `**Source:**` and `**Source of truth:**` — the URL a file declares as the authority for a specific fact. Check this first.
-- **Declared source set:** a `## Primary Sources` section at the end of a unit's `SKILL.md` — the skill's own canonical verification sources, one bullet per source saying what it's authoritative for. Prefer these over free-choice research; a placeholder ("None declared yet …") means fall back to vendor-primary sources per claim.
-- **Change-signal leads:** an optional per-unit `Change-Signal Sources` block listing secondary leads (e.g. a maintainer's blog) to scan for *what* may have drifted. Leads only — confirm against a primary source, never cite one in an edit.
-
 ## Step 1 — Compute the due set
+
+**Read [`references/scope-and-inputs.md`](references/scope-and-inputs.md) first.** It defines what a unit is, the three exclusions, and every input a run reads — the manifest, the dateline forms, source markers, declared sources, and change-signal leads. Steps 1 and 3 both depend on it.
 
 A unit is **due** when its tier's interval has elapsed since its newest dateline. This is age-gated, not run-gated: the dateline *is* the cursor, so a unit skipped by a crash or a deferral stays due next time and the schedule self-heals.
 
