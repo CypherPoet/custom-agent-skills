@@ -159,7 +159,7 @@ A skill with nothing citable yet keeps the section as a placeholder — `None de
 
 ### Fact-Check Tiering
 
-When creating (or renaming/removing) a skill, classify its unit — `<plugin>/<skill>` — into a tier in [`docs/automated-routines/skill-fact-check-manifest.json`](automated-routines/skill-fact-check-manifest.json); the tier definitions live in the `skill-fact-check` skill's [Manifest reference](../plugins/cypherpoet-marketplace-kit/skills/skill-fact-check/SKILL.md#manifest-reference).
+When creating (or renaming/removing) a skill, classify its unit — `<plugin>/<skill>` — into a tier in [`docs/automated-routines/skill-fact-check-manifest.json`](automated-routines/skill-fact-check-manifest.json); the tier definitions live in the `skill-fact-check` skill's [Manifest reference](../plugins/cypherpoet-marketplace-kit/skills/skill-fact-check/references/manifest.md#tiers). A skill vendored into other plugins is a special case: [tier every copy `never`](../plugins/cypherpoet-marketplace-kit/skills/skill-fact-check/references/manifest.md#vendored-copies-are-always-never) and leave only the authoritative source researchable.
 
 Every unit is listed exactly once; an unlisted unit still safely defaults to monthly. `skill-structure-check` reports untiered, orphaned, or double-listed entries — and fact-checked units missing their [Primary Sources](#primary-sources) section — as non-failing advisories (the CI health suite runs the checker with `--strict`, where they do fail).
 

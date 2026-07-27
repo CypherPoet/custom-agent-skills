@@ -24,151 +24,88 @@ It assumes only `git`, the `gh` CLI, built-in `WebSearch`/`WebFetch`, optionally
 This skill's source lives only in `custom-agent-skills` (it ships in `cypherpoet-marketplace-kit`). A routine clones **all** its attached repos into one session — typically `custom-agent-skills` **and** `private-custom-agent-skills`. So:
 
 1. Read this procedure once, from the `custom-agent-skills` clone.
-2. Run Steps 1–7 **once per cloned repo**, each time with the working directory set to that repo's clone, so every relative path (`plugins/…`, `docs/automated-routines/skill-fact-check-manifest.json`) resolves within the repo being checked.
+2. Run Steps 1–8 **once per cloned repo**, each time with the working directory set to that repo's clone, so every relative path (`plugins/…`, the manifest) resolves within the repo being checked.
 3. Each repo carries its **own** manifest (tiers reference that repo's unit IDs) and gets its **own** branch and PR. A repo with no findings gets no PR.
 
 The private repo has no copy of this procedure — that's intentional. It's fact-checked because the routine clones it alongside the public repo; don't run a private-only routine without also cloning `custom-agent-skills`.
 
-## What this does (and guarantees)
+**Bundled files** (`scripts/`, `references/`) sit next to this file in the `custom-agent-skills` clone, and they read whichever repo the working directory points at — so a script path is always the public checkout's, while the cwd is the repo under check.
 
-Each run, re-check the time-sensitive factual claims in a repo's skills against primary sources, then open **one pull request** with:
+## What this guarantees
 
-- **Corrections** applied directly — any fix the cited evidence genuinely establishes, from a one-token version bump to a multi-site API rename or a rewritten note whose logic was inverted.
+Each run, re-check the time-sensitive factual claims in a repo's skills against primary sources, then open **one pull request** carrying:
+
+- **Corrections** applied directly — any fix the cited evidence genuinely establishes, from a one-token version bump to a multi-site API rename or a note whose logic was inverted.
 - **Flags** for anything the evidence leaves uncertain or ambiguous, or that is an editorial judgment call rather than a factual one — surfaced in the PR body **with proposed wording**, never silently edited.
 
-**The quality-control mechanism is git + PR review.** The routine never touches `main` (it pushes only to a `claude/`-prefixed branch and opens a PR a human merges), every applied edit cites the primary source a reviewer can check it against, and the PR body lays each change next to its evidence. Within that frame, use judgment: the standard for applying a correction is *"would a competent reviewer, shown this evidence, make this edit?"* — not a mechanical size or format rule. The routine also obeys this repo's plugin conventions (version bumps, no marketplace-publish, no catalog refresh).
+**Git + PR review is the quality gate.** Everything below exists to make that review easy, not to substitute for it. Three constraints hold it up:
 
-## Operating constraints (non-negotiable)
+- **The reviewer test.** The standard for applying a correction is *"would a competent reviewer, shown this evidence, make this edit?"* — not a mechanical size or format rule. Every applied edit carries a `source_url` and a `source_quote` so that reviewer can check it without redoing the research. Evidence too thin to pass the test ⇒ flag it with proposed wording; don't edit.
+- **Fact corrections only.** Fix what the evidence shows is wrong and nothing more. No stylistic edits, no restructuring, no scope creep beyond what the fact requires.
+- **PR-only.** Work on the stable branch `claude/skill-fact-check`; open or update exactly one PR per repo; never commit to `main` and never push outside a `claude/`-prefixed branch.
+  The single carve-out is a PR whose diff is *nothing but* re-stamped datelines — no guidance changed, so there is nothing to review. [Step 8](#step-8--auto-merge-a-dateline-only-pr-per-repo) merges that one shape behind a scripted gate; every PR touching content waits for a human.
 
-- **PR-only.** Work on the stable branch `claude/skill-fact-check`; open or update exactly one PR per repo. Never commit to `main`. PR review is the quality gate — everything else here exists to make that review easy, not to substitute for it.
-- **Every applied edit is evidence-backed** — it carries a `source_url` (primary source) and a `source_quote` showing what the source establishes, so a reviewer can verify the fix without redoing the research. Evidence too thin to convince a reviewer ⇒ flag with proposed wording, don't edit.
-- **Fact corrections only.** Fix what the evidence shows is wrong — a token, a corrected code snippet, a rename applied at every site in a file, or a note whose logic is inverted — and nothing more. No stylistic edits, no restructuring, no scope creep beyond what the fact requires.
-- **Respect the protected surface** (see [What this routine must NEVER do](#what-this-routine-must-never-do)).
-- **Batches, not ceilings:** research the due set most-overdue-first in waves of ~12 units per repo (fan-out limit, keeps subagent batches manageable), and keep launching waves until the due set is drained or the session genuinely runs short of budget. Anything actually deferred is listed in the PR and stays due next run (age-gating self-heals) — but deferral is the fallback for real resource pressure, not the design.
+**Batches, not ceilings.** Research the due set most-overdue-first in waves of ~12 units per repo, ≤6 subagents concurrent, and keep launching waves until the set drains or the session genuinely runs short of budget. Anything deferred is listed in the PR and stays due next run — deferral is the fallback for real resource pressure, not the design.
 
-## Scope & exclusions
+### Never
 
-A **unit** is one skill: its `SKILL.md` plus the sibling `references/**` next to it. Enumerate units (with the cwd set to the repo being checked) with:
+Every one of these is a hard stop, not a judgment call. The linked step says why.
 
-```bash
-find plugins -name SKILL.md -not -path '*/evals/*' -not -path '*-workspace/*'
-```
-
-For each `plugins/<plugin>/skills/<skill>/SKILL.md`, the unit's directory is its parent, its `unit_id` is `<plugin>/<skill>`, and its plugin manifest is `plugins/<plugin>/.claude-plugin/plugin.json`.
-
-Fact-check the `SKILL.md` body, **all** `references/**/*.md` under the unit (≈80% of volatile facts live in references), and `evals/**` — fixtures encode the same version-sensitive premises as the docs and go stale with them, leaving an eval that contradicts the skill it grades. Evals are corrected under the same evidence gates as any other file. **Exclude** `**/*-workspace/` entirely (regenerable scratch). Never edit YAML frontmatter `description:`.
-
-## Inputs
-
-- **Manifest:** `docs/automated-routines/skill-fact-check-manifest.json` (in the repo being checked) — maps units to a volatility tier (`weekly`, `monthly`, `never`); unlisted units default to `monthly`. See [Manifest reference](#manifest-reference).
-- **Acknowledged flags:** an optional `acknowledged` array in that same manifest lists flags a human already reviewed and accepted — the "not wrong / no vendor source / won't change" findings — so they stop re-appearing as new every run. Each entry pins a `unit_id` + a `locator` (unique substring of the flagged text), a human `reason`, and a `recheck_after` date (or `"never"`). Applied in [Step 4](#step-4--reduce--apply-orchestrator); shape in [Manifest reference](#manifest-reference).
-- **Datelines** (the freshness cursor). Parse every form below — all real in this repo family. Match only these explicit verification/sync labels, never bare content dates (`released …`, `Created: …`), which would falsely mark a stale unit fresh:
-  - `**Verified:** 2026-05-30` — the canonical marker this routine writes.
-  - `> Last synced: 2026-06-19` and `*Last synced with Apple HIG: 2026-06-16*` — the dominant existing form (the label may carry trailing words before the colon).
-  - `**Audit baseline:** … verified against … (2026-06-26)` — parenthetical date (e.g. the three.js audit marker).
-  - `verified 2026-05-30` (inline, e.g. "specs here verified 2026-05-30").
-  - `**(as of 2026-06)**` and `*As of 2026-06; trust the screen*` (month precision → treat as the 1st).
-- **Source markers:** `**Source:**` and `**Source of truth:**` — the URL a file declares as the authority for a specific fact. Check this first.
-- **Declared source set:** a `## Primary Sources` section at the end of a unit's `SKILL.md` — the skill's own list of canonical verification sources (one bullet per source, each saying what it's authoritative for). Prefer these over free-choice research; a placeholder section ("None declared yet …") means fall back to vendor-primary sources per claim.
-- **Change-signal leads:** an optional per-unit `Change-Signal Sources` block lists secondary leads (e.g. a maintainer's blog) to scan for *what* may have drifted since the last dateline. Leads only — confirm against a primary source (a declared one where the claim is covered), never cite one in an edit.
-- **Batch size:** `BATCH_SIZE = 12` — units per research wave, per cloned repo. A wave bound, not a per-run ceiling: waves repeat until the due set drains.
+| Never | Instead |
+|---|---|
+| Commit to `main`, or push outside a `claude/`-prefixed branch | Open a PR ([Step 7](#step-7--open-or-update-the-pr-per-repo)) |
+| Open a second PR while one is open | Reuse the stable branch ([Step 2](#step-2--idempotency-check-per-repo)) |
+| Apply an edit without cited primary-source evidence | Flag it with proposed wording ([Step 4](#step-4--reduce--apply-orchestrator)) |
+| Edit a `description:` in `SKILL.md` frontmatter | `FLAG_DESCRIPTION_FRONTMATTER` ([Step 5](#step-5--version-bumps)) |
+| Edit any `plugin.json` field but `version` | — ([Step 5](#step-5--version-bumps)) |
+| Edit a vendored skill copy | Correct its source, then re-sync ([Step 5](#step-5--version-bumps)) |
+| Edit anything under `*-workspace/`, or refresh `docs/CATALOG.md` | — ([Step 4](#step-4--reduce--apply-orchestrator)) |
+| Add the `marketplace-publish` label, or spend a step checking for it | — ([Step 5](#step-5--version-bumps)) |
+| Re-stamp a dateline for a claim it couldn't verify | Leave it stale so the unit stays due ([Step 6](#step-6--datelines)) |
+| Write a dateline into an eval fixture | Stamp the unit's own docs ([Step 6](#step-6--datelines)) |
+| Edit the manifest to silence a `# DRIFT` line | Report it for a human to re-tier ([Step 1](#step-1--compute-the-due-set)) |
+| Let an `acknowledged` entry suppress a `CORRECT` or an `ERROR` | Suppress `FLAG_*` only ([Step 4](#step-4--reduce--apply-orchestrator)) |
+| Merge a PR the gate did not pass, or that carries an unread flag | Leave it open and report the blocker ([Step 8](#step-8--auto-merge-a-dateline-only-pr-per-repo)) |
 
 ## Step 1 — Compute the due set
 
-A unit is **due** when its tier's interval has elapsed since its newest dateline. This is age-gated, not run-gated: the dateline *is* the cursor, so a unit skipped by a crash or a deferral stays due next time. Run this deterministically (don't eyeball dates), with the cwd set to the repo being checked:
+**Read [`references/scope-and-inputs.md`](references/scope-and-inputs.md) first.** It defines what a unit is, the three exclusions, and every input a run reads — the manifest, the dateline forms, source markers, declared sources, and change-signal leads. Steps 1 and 3 both depend on it.
 
-```python
-import json, re, subprocess, datetime, pathlib
+A unit is **due** when its tier's interval has elapsed since its newest dateline. This is age-gated, not run-gated: the dateline *is* the cursor, so a unit skipped by a crash or a deferral stays due next time and the schedule self-heals.
 
-today = datetime.date.fromisoformat(
-    subprocess.check_output(['date', '-u', '+%F']).decode().strip())
-m = json.loads(pathlib.Path('docs/automated-routines/skill-fact-check-manifest.json').read_text())
-tier_of = {u: 'weekly' for u in m.get('weekly', [])}
-tier_of.update({u: 'monthly' for u in m.get('monthly', [])})
-tier_of.update({u: 'never' for u in m.get('never', [])})
-default_tier = m.get('defaults', {}).get('tier', 'monthly')
+With the working directory set to the repo being checked:
 
-# Recognize every freshness-marker dialect in the repo family — but only
-# explicit verification/sync labels, never bare content dates ("released …",
-# "Created: …", "replaced … on …"), which would falsely mark a stale unit fresh.
-DATE = re.compile(
-    r'\*\*verified:\*\*\s*(?P<full>\d{4}-\d{2}-\d{2})'                      # **Verified:** YYYY-MM-DD (canonical)
-    r'|(?:last\s+)?synced\b[^\n:]{0,40}?:\s*(?P<synced>\d{4}-\d{2}-\d{2})'  # [Last ]synced[ with …]: YYYY-MM-DD
-    r'|audit baseline\b[^\n]*?\((?P<audit>\d{4}-\d{2}-\d{2})\)'             # **Audit baseline:** … (YYYY-MM-DD)
-    r'|\bverified\s+(?P<vinline>\d{4}-\d{2}-\d{2})'                         # verified YYYY-MM-DD (inline)
-    r'|\bas of\s+(?P<month>\d{4}-\d{2})', re.I)                            # as of YYYY-MM (month → 1st)
-
-def newest(unit_dir: pathlib.Path) -> datetime.date:
-    found = []
-    for p in unit_dir.rglob('*.md'):
-        if '/evals/' in str(p) or '-workspace/' in str(p):
-            continue
-        for m in DATE.finditer(p.read_text(errors='ignore')):
-            iso = m.group('full') or m.group('synced') or m.group('audit') or m.group('vinline')
-            if iso:
-                found.append(iso)
-            elif m.group('month'):
-                found.append(m.group('month') + '-01')
-    return max((datetime.date.fromisoformat(d) for d in found),
-               default=datetime.date(1970, 1, 1))
-
-INTERVAL = {'weekly': 7, 'monthly': 28}
-due = []
-skills = subprocess.check_output(
-    ['bash', '-c',
-     "find plugins -name SKILL.md -not -path '*/evals/*' -not -path '*-workspace/*'"]
-).decode().split()
-for s in skills:
-    parts = pathlib.Path(s).parts          # plugins/<plugin>/skills/<skill>/SKILL.md
-    unit_id = f"{parts[1]}/{parts[3]}"
-    tier = tier_of.get(unit_id, default_tier)
-    if tier == 'never':
-        continue
-    last = newest(pathlib.Path(s).parent)
-    age = (today - last).days
-    if age >= INTERVAL.get(tier, 28):       # unknown/typo'd tier → monthly, never crash
-        due.append((age, unit_id, str(pathlib.Path(s).parent), tier, last.isoformat()))
-
-due.sort(reverse=True)                      # most overdue first
-for row in due:
-    print(*row, sep='\t')
-print(f"# {len(due)} due — research in waves of ~12, most-overdue-first, until drained")
-
-# Manifest drift — works in every cloned repo; report, don't edit (see below)
-unit_ids = {f"{pathlib.Path(s).parts[1]}/{pathlib.Path(s).parts[3]}" for s in skills}
-listed = [u for k in ('weekly', 'monthly', 'never') for u in m.get(k, [])]
-for u in sorted(set(listed) - unit_ids):
-    print(f"# DRIFT orphaned: {u} listed in the manifest but not on disk")
-for u in sorted({u for u in listed if listed.count(u) > 1}):
-    print(f"# DRIFT double-listed: {u} in more than one tier (later list wins — keep one)")
-for u in sorted(unit_ids - set(listed)):
-    print(f"# DRIFT untiered: {u} not in any tier list (defaults to monthly)")
+```bash
+python3 scripts/compute_due_set.py
 ```
 
-Early runs surface a backlog: any unit with no *recognized* dateline reads as epoch → always due. That's expected — waves drain it most-overdue-first, and the set shrinks as the parser above picks up the freshness markers already in the files and merged PRs stamp datelines (Step 6) on the units that lack one.
+One tab-separated row per due unit, most-overdue first (`age_days  unit_id  unit_dir  tier  last_dateline`), then `#`-prefixed notes. Don't eyeball dates — the script is the authority.
 
-`# DRIFT` lines are manifest hygiene, not fact findings: never edit the manifest for them — list them in the PR body's flagged section so a human re-tiers deliberately.
+`# DRIFT` lines are manifest hygiene, not fact findings: never edit the manifest for them. List them in the PR body's flagged section so a human re-tiers deliberately.
 
 ## Step 2 — Idempotency check (per repo)
 
 One stable branch, one long-lived PR, reused every run — so repeated runs converge instead of piling up duplicate PRs.
 
 ```bash
-gh pr list --state open  --head claude/skill-fact-check --json number -q '.[0].number'   # open?
-gh pr list --state merged --head claude/skill-fact-check --json number -q '.[0].number'   # last merged?
+gh pr list --state open   --head claude/skill-fact-check --json number -q '.[0].number'
+gh pr list --state merged --head claude/skill-fact-check --json number -q '.[0].number'
 ```
 
-- **Open PR exists →** reuse it. `git fetch origin`, recreate the branch from `origin/main` (`git switch -C claude/skill-fact-check origin/main`), re-apply this run's net findings, `git push --force-with-lease`, and **rewrite** the PR body to the current state (`gh pr edit <n> --body-file -`). Do not append.
+- **Open PR exists →** reuse it. `git fetch origin`, recreate the branch from `origin/main` (`git switch -C claude/skill-fact-check origin/main`), re-apply this run's net findings, `git push --force-with-lease`, and **rewrite** the PR body to the current state (`gh pr edit <n> --body-file -`). Do not append, and do not open a second PR.
 - **No open PR, last one merged (or none) →** start fresh from `origin/main`. The merged work is already in `main` and its datelines advanced, so fewer units are due.
-- **A run that produces no net change** vs. what's already on the branch → push nothing, leave the PR untouched, log "no new findings; PR #N still current."
+- **A run producing no net change** vs. what's already on the branch → push nothing, leave the PR untouched, log "no new findings; PR #N still current." Then **still take that inherited PR through [Step 8](#step-8--auto-merge-a-dateline-only-pr-per-repo)** before moving on.
+
+That last hand-off is what keeps a mergeable PR from stranding. Step 7 only reaches Step 8 when *this* run produced something to ship, so without it a dateline-only PR that Step 8 held once — a checks timeout, a transient hold — is never gated again: every later run re-derives the same re-stamps, finds no net change, and leaves it sitting. That is exactly the stall Step 8 exists to clear.
 
 ## Step 3 — Fan out (one subagent per due unit)
 
-Deep-researching a wave of units in the orchestrator's own context would overflow it. Instead, spawn **one `Task` subagent per due unit**, in batches of **≤6 concurrent**, wave after wave until the due set is drained. The orchestrator never reads skill bodies — subagents do the reading and research and return a compact JSON result.
+Deep-researching a wave of units in the orchestrator's own context would overflow it. Spawn **one `Task` subagent per due unit**, ≤6 concurrent, wave after wave until the due set drains.
 
-Give each subagent: the unit's `unit_dir` and `plugin_dir`, the [verification procedure](#step-3a--subagent-verification-procedure-paste-verbatim) **pasted verbatim** (subagents do not inherit this file), and the JSON contract below. Subagents **propose**; they never edit files.
+- The orchestrator never reads skill bodies — subagents read and research, and return compact JSON.
+- Subagents **propose**; they cannot edit files. That is what makes an unsourced fix structurally unable to land.
 
-**Return contract (the subagent's entire final message — strict JSON, nothing else):**
+Give each subagent the unit's `unit_dir` and `plugin_dir`, the contract below, and the contents of [`references/subagent-procedure.md`](references/subagent-procedure.md) **pasted verbatim** — subagents don't inherit this file.
 
 ```json
 {
@@ -193,156 +130,155 @@ Give each subagent: the unit's `unit_dir` and `plugin_dir`, the [verification pr
 }
 ```
 
-`status` is one of: `CORRECT` (current text is wrong; `new` ≠ `old`; cite the fix), `CONFIRMED_UNCHANGED` (verified correct; `new` == `old`), `FLAG_UNCERTAIN`, `FLAG_AMBIGUOUS`, `FLAG_DESCRIPTION_FRONTMATTER`, or `ERROR` (couldn't verify). `locator` must be an **exact, unique substring** of the live file (not a line number — those drift). A fix that touches several sites (e.g. an API rename used throughout a file) is one *finding* returned as multiple `CORRECT` claims — one per site, each with its own locator, sharing the citation.
+`status` is one of:
 
-## Step 3a — Subagent verification procedure (paste verbatim)
+| Status | Means |
+|---|---|
+| `CORRECT` | The current text is wrong; `new` ≠ `old`; cite the fix |
+| `CONFIRMED_UNCHANGED` | Verified correct; `new` == `old` |
+| `FLAG_UNCERTAIN` · `FLAG_AMBIGUOUS` · `FLAG_DESCRIPTION_FRONTMATTER` | Needs a human |
+| `ERROR` | Couldn't verify |
 
-> You are fact-checking ONE skill. Read its `SKILL.md`, every `references/**/*.md`, and everything under `evals/` within `{unit_dir}` (ignore `*-workspace/`). Extract the **verifiable, time-sensitive** claims — versions/"latest" (iOS 27, Swift 6.x, three.js r###, Blender 5.1, Expo SDK ##), dated/"as of" stamps, specs (device pixel dimensions, symbol counts, bitrates, limits), external URLs, and API/CLI syntax (flag names, renamed properties). Ignore methodology, process steps, and design guidance — only check facts.
->
-> For each claim, apply this gate. A claim may be returned as `CORRECT` (an applied edit) **only if every step passes**; otherwise downgrade to a `FLAG_*` or `ERROR`.
->
-> 1. **Pick the primary source by type.** VERSION/"latest" → the vendor's own release channel (GitHub Releases/tags for the real project, Apple "What's New"/release notes, Blender release notes). SPEC → the vendor's official reference page. EXTERNAL_URL → resolve the URL itself (HTTP 200 at the same canonical content = ok; 301 to a new canonical = changed; 404/410/soft-404 = gone). API_SYNTAX → the tool's official docs or its migration/changelog for that version. **Blogs, aggregators, and forums are not primary.**
-> 2. **Honor the skill's own cited sources first.** Two declaration forms, in precedence order: (a) a per-fact `**Source:**`/`**Source of truth:** <url>` marker in the file — fetch THAT as the primary check for that fact; (b) the unit's `## Primary Sources` section in its `SKILL.md` — the skill's declared source set; when a claim falls under a declared source's stated scope (versions, specs, API syntax, …), fetch that source before choosing one on your own. Only claims covered by neither fall through to your own step-1 choice. If a declared source (either form) is unreachable or gone and you fall back to another source, the result is a **flag** (the skill's own source may be stale and needs human attention) — never a silent edit.
-> 2b. **Consult declared change-signal leads.** If the unit declares a **Change-Signal Sources** list (secondary leads such as a maintainer's blog), scan them first to *discover* what may have changed since the last dateline — but treat them as leads, never authorities. Anything they surface must still pass the both-conditions gate (step 3) against a **vendor-primary** source (per steps 1–2), and a lead URL must never appear in `source_url` for an applied edit. Blogs, aggregators, and forums remain non-primary (step 1).
-> 3. **Both-conditions gate.** The source must establish BOTH that the current text is wrong AND what the correct value is. A source that says "this changed" but not "to what" → `FLAG_UNCERTAIN`.
-> 4. **Corroborate value changes.** Before proposing a changed value, corroborate it — a second independent authoritative source, two stable locations on the vendor's own site, or direct verification (resolving the URL, hitting the documented API endpoint). If sources genuinely disagree → `FLAG_AMBIGUOUS` (return both URLs). (Re-confirming an UNCHANGED value needs only one authoritative source → `CONFIRMED_UNCHANGED`.)
-> 5. **Confidence.** `high` only if 1–4 all pass against vendor-primary sources. Anything resting on inference or a single non-vendor source → `medium`/`low` → flag, don't apply.
-> 6. **Cite what you fix.** Every `CORRECT` claim includes `source_url` and a `source_quote` — the passage a reviewer would check the fix against. The quote must *establish* the correction; it need not contain your replacement text verbatim (a changelog can document a rename without printing your exact line). The test is whether a reviewer reading the quote would make the same edit. No evidence you can point to ⇒ not a correction — flag it.
-> 6b. **Propose the full fix the evidence supports.** A correction can be any size the evidence establishes: a token swap, a rename applied at every site in the file (one `CORRECT` claim per site, sharing the citation), a corrected code snippet, or a rewritten note whose logic was inverted. Supply exact replacement text in `new`. What makes something a correction is the evidence behind it, not the edit's size. Only when the fix is genuinely an *editorial* call — the current text isn't wrong, just incomplete or arguably framed — flag it, with your proposed wording in `note` so the human can apply it with one decision.
-> 7. **Frontmatter guard.** If a wrong fact lives in a `description:` value in `SKILL.md` YAML frontmatter, return `FLAG_DESCRIPTION_FRONTMATTER` — never edit it. (Only when the value is actually wrong; if it's correct, it's `CONFIRMED_UNCHANGED` — don't flag a frontmatter value just for being in frontmatter.)
-> 7b. **Eval semantics.** Evals are correctable like any other file, but read them for what they are so you don't manufacture findings. A negative assertion naming a removed API (`must not use mesh.use_auto_smooth`) is *asserting the removal* — it's correct, not stale: `CONFIRMED_UNCHANGED`. A version inside an eval `prompt` is scenario data (a user persona), not a claim about the world, so it isn't a stale fact — leave it alone. Real findings look like: a mechanism labelled by a version *point* when it holds over a range, an assertion naming an interpreter or SDK that no longer exists, or an `expected_output` describing behavior the vendor has since changed.
-> 8. **Fetch fallback.** For Apple developer-docs symbols, hit the docs **JSON endpoint** first — `https://developer.apple.com/tutorials/data/documentation/<framework>/<lowercased-symbol-path>.json` (e.g. `swiftui/view/statusbarhidden(_:).json`). It is not bot-walled and returns structured availability in `metadata.platforms[]` (`introducedAt` / `deprecatedAt` / deprecation `message`); a `404` means the symbol doesn't exist. For other bot-walled sources prefer the Firecrawl connector; fall back to `WebFetch`/`WebSearch`. If a source is unreachable every way, return `ERROR` for that claim (it will be flagged, not edited) — do not guess.
->
-> Return ONLY the JSON object defined in the contract. No prose, no edited files.
+`locator` must be an **exact, unique substring** of the live file — not a line number, those drift. A fix touching several sites (an API rename used throughout a file) is one *finding* returned as multiple `CORRECT` claims, one per site, sharing the citation.
 
 ## Step 4 — Reduce & apply (orchestrator)
 
-Collect the subagents' JSON. The orchestrator now performs every mutation — editing authority is centralized so the guards are enforced in one place, and because subagents research while the orchestrator *reviews*: read each proposed correction the way a PR reviewer would.
+Collect the subagents' JSON. The orchestrator performs every mutation — editing authority is centralized so the guards live in one place, and because subagents research while the orchestrator *reviews*. Read each proposed correction the way a PR reviewer would.
 
-For each claim with `status == "CORRECT"`, in most-overdue-unit order, apply it when:
+Apply a `CORRECT` claim, in most-overdue-unit order, when:
 
-- The cited `source_url` is a primary source and the `source_quote` genuinely establishes both that the old text is wrong and that `new` is right. Spot-check anything surprising or load-bearing (fetch the source, resolve the URL yourself) — the subagent did the research, but the orchestrator owns the edit.
-- `confidence == "high"` — anything lower ships as a flag with its evidence attached.
-- It's a fact correction within scope: not under `*-workspace/`, not a `description:` frontmatter line or a protected `plugin.json` field, and not a stylistic rewrite wearing a correction's clothes.
+- The cited `source_url` is a primary source and the `source_quote` genuinely establishes both that the old text is wrong and that `new` is right. Spot-check anything surprising or load-bearing — fetch the source, resolve the URL yourself. The subagent did the research; the orchestrator owns the edit.
+- `confidence == "high"`. Anything lower ships as a flag with its evidence attached.
+- It's a fact correction, not a stylistic rewrite wearing a correction's clothes.
+- **The target is an editable surface.** Never apply an edit that lands on any of these — flag it instead:
+  - a `description:` value in `SKILL.md` YAML frontmatter → `FLAG_DESCRIPTION_FRONTMATTER`
+  - any `plugin.json` field other than `version`
+  - anything under `*-workspace/`
+  - a vendored skill copy — correct its authoritative source instead ([`references/manifest.md`](references/manifest.md#vendored-copies-are-always-never))
 
-**Size is not a gate.** A sourced multi-site rename or corrected snippet applies just like a token swap — apply each site with an exact-substring `Edit` using its `locator`. If one unit's corrections would dominate the PR (dozens of edits), give them their own commit so the diff reviews cleanly; don't downgrade them to flags for being numerous. Group edits by plugin. Track which plugins were touched (for the version bump).
+  [Step 5](#step-5--version-bumps) says why each surface is protected. The list belongs here too because this is where the orchestrator — the only actor that can write — decides.
 
-**Suppress acknowledged flags.** Build the manifest's `acknowledged` list once per repo, then reduce every `FLAG_*` claim against it. A flag is **acknowledged** when a live entry shares its `unit_id` and the entry's `locator` is a substring of the flag's `locator` (or, if that's empty, its `old`/`note`). For a match:
+**Size is not a gate.** A sourced multi-site rename or corrected snippet applies just like a token swap — never downgrade a correction to a flag for being numerous.
 
-- `recheck_after` is `"never"` or a future date → **drop the flag from the active `🚩 Flagged` table**, list it under `🔕 Known / acknowledged` (Step 7) instead, and exclude it from the flagged count.
+- Apply each site with an exact-substring `Edit` using its `locator`.
+- If one unit's corrections would dominate the PR, give them their own commit so the diff reviews cleanly.
+- Group edits by plugin, and track which plugins were touched — [Step 5](#step-5--version-bumps) needs that list.
+
+**Suppress acknowledged flags.** Build the manifest's `acknowledged` list once per repo, then reduce every `FLAG_*` claim against it. A flag is acknowledged when a live entry shares its `unit_id` and the entry's `locator` is a substring of the flag's `locator` (or, if that's empty, its `old`/`note`). For a match:
+
+- `recheck_after` is `"never"` or a future date → drop it from the active `🚩 Flagged` table, list it under `🔕 Known / acknowledged` instead, and exclude it from the flagged count.
 - `recheck_after` has passed → **do not suppress**; keep it flagged and annotate `(acknowledgment expired <date> — re-confirm or renew)`.
 
-The subagent still researches the fact every run — an acknowledgment only changes where its result lands, so a fact that quietly *changed* still surfaces (its `locator`/`old` shifts and no longer matches). Acknowledgments silence **only** `FLAG_*` findings: never suppress a `CORRECT` (a sourced fix) or an `ERROR` (a fact that couldn't be verified).
+Acknowledgments silence `FLAG_*` findings **only** — never a sourced `CORRECT`, never an unverifiable `ERROR`. The subagent still researches the fact every run, so a fact that quietly *changed* still surfaces: its `locator`/`old` shifts and stops matching.
 
 ## Step 5 — Version bumps
 
-After editing a plugin's **shipped** content, bump that plugin's `.claude-plugin/plugin.json` `version` **once** (dedupe — a plugin touched by two skills bumps once):
+After editing a plugin's **shipped** content, bump that plugin's `.claude-plugin/plugin.json` `version` **once** — a plugin touched by two skills bumps once:
 
 - **Applied content correction → MINOR bump** (`0.1.0 → 0.2.0`). Per `docs/PLUGIN-CONVENTIONS.md`, pre-1.0 the default bump for anything user-visible is MINOR, and a fact correction is user-visible.
-- **Dateline-only re-stamp with no content change → no version bump.** A date stamp isn't user-visible guidance; `version` is the user-update cache key, so don't churn it. (The committed date still advances the age-gate.)
-- **Eval-only correction → no version bump.** `evals/` is stripped from vendored copies and never reaches an install, so bumping for it would push an update carrying nothing the user receives.
-- Edit **only** the `version` field. Never touch `name`/`description`/`homepage`.
+- **Dateline-only re-stamp → no bump.** A date stamp isn't user-visible guidance, and `version` is the user-update cache key, so don't churn it. The committed date still advances the age-gate.
+- **Eval-only correction → no bump.** `evals/` is stripped from vendored copies and never reaches an install, so bumping for it would push an update carrying nothing the user receives.
+
+### Then regenerate
+
+```bash
+python3 scripts/sync_plugins.py
+```
+
+Run it **after the last edit and the last bump**, before committing. Skip it and the PR arrives broken, two different ways:
+
+- `.codex-plugin/plugin.json` is generated from `.claude-plugin/plugin.json`. Bump one and not the other and `sync_plugins.py --check` reports `[codex-manifest] out of sync`.
+- A corrected skill that is vendored into other plugins leaves every copy stale: `[vendor] out of sync: <copy> != <source>`.
+
+`tests/test_repository_health.py` runs that same `--check`, so either one turns the PR's checks red — and a red PR is one [Step 8](#step-8--auto-merge-a-dateline-only-pr-per-repo) will never merge and a human has to clean up. The sync is deterministic and touches only generated files, so re-running it when nothing changed is free.
+
+### Surfaces this routine leaves alone
+
+**`version` is the only `plugin.json` field it may touch.**
+
+- `name` / `description` / `homepage` are the Claude catalog fields. Staying off them keeps every run clear of the marketplace catalog surface, so **no run ever needs the `marketplace-publish` label** — don't add it, and don't spend a step checking, since a version-only bump never counts as a catalog change.
+- Component counts don't change either, so `docs/CATALOG.md` never needs refreshing.
+
+**A `description:` in `SKILL.md` YAML frontmatter is never edited.**
+
+It is the skill's *triggering* signal, judged by the model at routing time, so changing it changes **when the skill fires**. That's a behavior change wearing a fact-fix's clothes, and it's outside this routine's remit even when the text is genuinely wrong — hence `FLAG_DESCRIPTION_FRONTMATTER`.
+
+**A vendored skill copy is never edited.**
+
+Copies are generated. Correct the authoritative source and let the sync above propagate it; editing a copy directly gets the fix silently overwritten on the next sync. Every copy is tiered `never` so it is never researched in the first place — see [`references/manifest.md`](references/manifest.md#vendored-copies-are-always-never).
 
 ## Step 6 — Datelines
 
-- **`CONFIRMED_UNCHANGED`** section that carries a recognized dateline → **re-stamp** it to today's date, updating whichever marker form the unit already uses (`**Verified:**`, `Last synced:`, the audit-baseline date, etc.) — this is what lets a re-verified unit go quiet until its next interval; without it the unit re-researches every run forever. Re-stamp in place; no version bump.
-- **No recognized dateline anywhere in the unit** → stamp `**Verified:** <today>` so future runs can age-gate it (only when the unit was actually verified this run — ≥1 `CONFIRMED_UNCHANGED` or `CORRECT`; never on a pure `ERROR`). Place it right after a `**Source:**`/`**Source of truth:**` marker if one exists, otherwise as a new line directly under the unit's `SKILL.md` H1 title. This drains the backlog of units that start with no dateline (the whole private repo, plus units whose only freshness cue is a version like "As of iOS 27") and converges every unit on the canonical `**Verified:**` marker — so the age-gate stops depending on legacy dialects. No version bump (a dateline isn't user-visible guidance).
-- **`ERROR`** (couldn't verify) → **never** re-stamp; leaving the date stale correctly keeps the unit due.
-- **`CORRECT`** → the correction already bumps the version; re-stamp the section's dateline to today as part of the same edit.
+- **`CONFIRMED_UNCHANGED`** section carrying a recognized dateline → **re-stamp** it to today, in whichever marker form the unit already uses. This is what lets a re-verified unit go quiet until its next interval; without it the unit re-researches every run forever.
+- **No recognized dateline anywhere in the unit** → stamp `**Verified:** <today>`, but only when the unit was actually verified this run (≥1 `CONFIRMED_UNCHANGED` or `CORRECT`). Place it right after a `**Source:**`/`**Source of truth:**` marker if one exists, otherwise directly under the unit's `SKILL.md` H1.
+  This converges every unit on the canonical marker, so the age-gate stops depending on legacy dialects. (`never`-tier units are never researched and so never need one.)
+- **`ERROR`** → **never** re-stamp. Leaving the date stale correctly keeps the unit due.
+- **`CORRECT`** → re-stamp the section's dateline as part of the same edit; the correction already bumps the version.
+
+Re-stamping never bumps a version, and a dateline belongs in the unit's own docs — never write one into an eval fixture.
+
+**Labelled markers auto-merge; unlabelled cues hold.** `scripts/datelines.py` recognizes two kinds:
+
+- **Labelled** — the date is introduced by an explicit verification/sync label: `**Verified:**`, `Last synced:`, the audit-baseline parenthetical.
+- **Unlabelled** — the date reads as ordinary prose: inline `verified <date>`, `as of <month>`.
+
+Both count toward freshness. Only labelled ones can be re-stamped unreviewed, because "requires macOS 15.4 as of 2026-03-01" is a fact, not a stamp, and no automated check can tell which you meant.
+
+Re-stamp whichever form the unit already uses. A PR whose only change lands on an unlabelled cue just waits for a human — every unit in the family carries at least one labelled marker today, so this costs no auto-merges, and the second bullet above converges the rest on `**Verified:**` over time.
 
 ## Step 7 — Open or update the PR (per repo)
 
-Open a PR **only if** the repo had ≥1 applied correction, ≥1 new flag, or ≥1 dateline change worth shipping. Commit **per plugin** so the PR reviews cleanly:
+Open a PR **only if** the repo had ≥1 applied correction, ≥1 new flag, or ≥1 dateline change worth shipping — then take it through [Step 8](#step-8--auto-merge-a-dateline-only-pr-per-repo).
 
-```
-🩹 fix(<skill>): <one-line fact correction> [skill-fact-check]
+Commit per plugin, and use the commit, title, and body formats in [`references/pr-format.md`](references/pr-format.md). Branch `claude/skill-fact-check`; each cloned repo gets its own branch and PR via `gh pr create --repo <owner>/<repo>`.
 
-- references/<file>.md: <old> → <new>  (per <source>)
-- bump <plugin> <oldver> → <newver>
-```
+Per-plugin commits plus age-gating are what make a partial run safe: if the orchestrator dies mid-run, finished plugins persist and un-restamped units simply stay due.
 
-Match the repo's commit style (it uses gitmoji — see `cypherpoet-emoji-commits/emoji-commits`). Branch `claude/skill-fact-check`. Each cloned repo gets its **own** branch and PR via `gh pr create --repo <owner>/<repo>` / `gh pr edit --repo …`.
+## Step 8 — Auto-merge a dateline-only PR (per repo)
 
-**PR title:** `🔍 Skill fact-check: N corrections, M flagged (<repo> <YYYY-MM-DD>)`
+A run that corrects nothing still opens a PR, because re-stamping datelines is what lets a re-verified unit go quiet ([Step 6](#step-6--datelines)). Merge exactly that shape, nothing else:
 
-**PR body** (rewritten each run — current state, not a changelog):
+- Nothing in it is reviewable — [Step 5](#step-5--version-bumps) already treats a dateline as carrying no user-visible guidance.
+- Left sitting, it stalls the next run into [Step 2](#step-2--idempotency-check-per-repo)'s "reuse the open PR" path.
 
-```markdown
-Automated skill fact-check (the `skill-fact-check` skill in `cypherpoet-marketplace-kit`).
-Branch `claude/skill-fact-check`. Units due: X · checked this run: Y · deferred (budget): Z.
-Applied: A corrections (all high-confidence, sourced). Flagged: B (new) · acknowledged (suppressed): C.
+Merge only when **all** of these hold; otherwise leave the PR open and report which one blocked it:
 
-## ✅ Corrections applied (cited)
-| Plugin | File | Type | Old → New | Source | Quote |
-|---|---|---|---|---|---|
+**1. Nothing in the PR is waiting on a human.**
 
-## 🚩 Flagged for human review (NOT changed)
-_Each flag carries proposed wording where one exists, so accepting it is one decision, not a research task._
-| Plugin | File | Why | Detail + proposed fix | Source(s) |
-|---|---|---|---|---|
+This run applied **0** `CORRECT` claims and hit **0** `ERROR`s, *and* the PR body's `🚩 Flagged for human review` section is empty **as the body now stands**.
 
-## 🔕 Known / acknowledged (not re-flagged)
-_Flags a human already reviewed and accepted (manifest `acknowledged`) — shown for the record, excluded from the flagged count. An entry whose `recheck_after` has passed moves back up to 🚩._
-| Plugin | Acknowledged item | Reason | Re-check after |
-|---|---|---|---|
+- Read the body; don't just count this run's findings. A flag never touches the diff, so no diff check can see one — and a flags-only PR inherited from an earlier run (via [Step 2](#step-2--idempotency-check-per-repo)'s "no net change" path) reports zero findings *this* run while still carrying findings nobody has read.
+- One `ERROR` disqualifies the PR even when the diff looks clean. An unverifiable fact is precisely what a human should see.
 
-## 🔁 Re-verified unchanged (datelines re-stamped)
-- <unit>: <what was confirmed> (source)
+**2. The diff is nothing but re-stamped datelines.**
 
-## ⚠️ Could not verify (errors)
-- <unit/file>: <reason, e.g. host_not_allowed — is the Firecrawl connector attached?>
-
-## ⬆️ Version bumps
-- <plugin>: <old> → <new>
-
-## ⏭️ Deferred to next run (ran short of budget)
-- <unit>, <unit>
+```bash
+python3 scripts/check_dateline_only.py
 ```
 
-## Failure modes & guardrails
+- Run it; don't eyeball the diff. It gates the branch **as pushed to origin**, and prints the remote, branch, and sha range it checked — confirm that line names the PR you are about to merge.
+- Exit 0 is the only pass. Exit 1 is a hold. Exit 2 means the gate itself couldn't run — also a hold, never a pass.
 
-| Failure | Guardrail |
-|---|---|
-| Firecrawl connector missing / `host_not_allowed` 403 | Fall back to WebFetch/WebSearch; if still unreachable → `ERROR` → claim is **flagged, not edited**. Run does not fail; note it under "Could not verify" so the connector can be fixed. |
-| Subagent proposes an unsourced or wrong fix | Subagents can't write files. The orchestrator reviews every proposal against its cited evidence and spot-checks before applying — and the PR diff with citations gives the human reviewer the final check. |
-| Ambiguous / conflicting sources | `FLAG_AMBIGUOUS` with both URLs; never auto-resolved. |
-| Runaway PR / rate limits / usage | Research waves of ~12 with ≤6 concurrent subagents; age-gated due set. A throttled run just leaves units un-restamped → still due next week. |
-| Partial completion (orchestrator dies mid-run) | Per-plugin commits + age-gating → finished plugins persist, un-restamped units stay due, the open PR is folded into next run (Step 2). "Green run" status ≠ task success — the PR body's "Could not verify" / "Deferred" sections are the real signal. |
-| A correction would touch a protected surface | The guards in Steps 4 and below → flag instead. |
+**3. CI is green and the PR is actually mergeable.**
 
-## What this routine must NEVER do
-
-- Never commit to `main`, never widen branch-push beyond `claude/`-prefixed.
-- Never apply an edit without cited primary-source evidence a reviewer can check it against.
-- Never edit a `description:` frontmatter field — it is the skill's *triggering* signal, judged by the model at routing time, so changing it changes **when the skill fires**. That's a behavior change wearing a fact-fix's clothes, and it's outside this routine's remit even when the text is genuinely wrong (hence `FLAG_DESCRIPTION_FRONTMATTER`).
-- Never edit `plugin.json` `name`/`description`/`homepage` (only `version`) — those three are the Claude catalog fields. Staying off them is what keeps every run clear of the marketplace catalog surface, so no run ever needs the `marketplace-publish` label: don't add it, and don't spend a step checking (a version-only bump never counts as a catalog change).
-- Never refresh `docs/CATALOG.md` (component counts don't change).
-- Never open a second PR while one is open (reuse the stable branch).
-- Never re-stamp a dateline for a claim it couldn't actually verify.
-- Never let a manifest `acknowledged` entry suppress a `CORRECT` or an `ERROR` — acknowledgments silence only human-accepted `FLAG_*` findings, and an expired one (`recheck_after` in the past) must surface again.
-
-## Manifest reference
-
-`docs/automated-routines/skill-fact-check-manifest.json` is repo-local (lists only that repo's units). Shape:
-
-```json
-{
-  "defaults": { "tier": "monthly" },
-  "weekly":  ["<plugin>/<skill>", "..."],
-  "monthly": ["<plugin>/<skill>", "..."],
-  "never":   ["<plugin>/<skill>", "..."],
-  "acknowledged": [
-    {
-      "unit_id": "<plugin>/<skill>",
-      "locator": "unique substring of the flagged text",
-      "reason": "why this flag is accepted, not a defect",
-      "ack_date": "YYYY-MM-DD",
-      "recheck_after": "YYYY-MM-DD"
-    }
-  ]
-}
+```bash
+gh pr view <n> --repo <owner>/<repo> --json mergeable,mergeStateStatus,isDraft,statusCheckRollup
+timeout 900 gh pr checks <n> --repo <owner>/<repo> --watch --fail-fast
 ```
 
-Tiers: **weekly** (≥7 days) for fast-drifting skills (Apple OS/App Store specs, SwiftUI "what's new", SF Symbols, three.js, Blender); **never** for evergreen methodology (session handoff/harvest, emoji commits, changelog, readme badges, GDScript); **monthly** (≥28 days, the default) for everything else. To re-tier a skill, move its `unit_id` between lists — no skill change needed. A `unit_id` not in any list is `monthly`, so a manifest without an explicit `monthly` array still resolves every unit; listing monthly units explicitly makes tiering a deliberate per-skill choice, and Step 1 prints `# DRIFT` lines for untiered, orphaned, or double-listed entries.
+- `mergeable` / `mergeStateStatus` / `isDraft` must read `MERGEABLE` / `CLEAN` / not draft.
+- **Read `statusCheckRollup` before watching.** An empty rollup means this repo reports no checks at all, and `gh pr checks` then exits **1** — the same code it uses for a failing check.
+  - empty rollup → no CI to wait on; the mergeable fields alone decide
+  - non-empty rollup plus exit 1 → a real failure, hold
 
-**`acknowledged`** (optional) silences flags a human has judged acceptable — the "not wrong", "no vendor-primary source exists", or "won't change" findings that otherwise re-appear every run. Each entry pins a `unit_id` and a `locator` (a unique substring of the flagged text, same idea as a claim's locator), a human `reason`, an `ack_date`, and a `recheck_after` — a date, or `"never"` for a permanently-accepted item. [Step 4](#step-4--reduce--apply-orchestrator) routes a matching flag into the PR's `🔕 Known / acknowledged` section instead of `🚩 Flagged`; once `recheck_after` passes it resurfaces so the acceptance is re-confirmed. Prefer a dated `recheck_after` over `"never"` so a fact accepted only because it's currently undocumented resurfaces if the vendor later documents it. An acknowledgment silences a `FLAG_*` only — never a sourced `CORRECT` or an unverifiable `ERROR`.
+  Without that split, a repo with no workflow can never satisfy this condition, and its dateline-only PRs hold forever on a check that will never report.
+- **Bound the wait.** A check that never reports — a workflow awaiting approval, a required status context nothing posts — leaves a bare `--watch` polling forever and hangs the run. Exit `124` means the `timeout` fired, which is a hold. `gh` also uses exit `8` for still-pending checks.
+- Neither repo enables GitHub's own auto-merge, so `gh pr merge --auto` is unavailable; wait on the checks here instead.
+
+The script is a whitelist and it fails closed: a correction, a version bump, an out-of-scope path, a deleted dateline, a renamed file, or newly-added prose all block the merge — as does the script's own failure. Then:
+
+```bash
+gh pr merge <n> --repo <owner>/<repo> --squash --delete-branch
+```
+
+`--delete-branch` can exit non-zero after the merge already succeeded — confirm with `gh pr view <n> --json state` (expect `MERGED`) rather than trusting the exit code. Report it as `"dateline-only, auto-merged #N"` so a merge never reads as a skip. A blocked gate is **not** a run failure.
