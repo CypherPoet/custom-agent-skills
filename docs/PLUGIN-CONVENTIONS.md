@@ -72,6 +72,8 @@ claude plugin validate plugins/<plugin-name>
 
 No warnings or errors expected. Anything else means something needs a closer look — fix it before opening the PR **on this repo** (a separate publish PR happens later on the marketplace repo).
 
+This step needs Claude Code; `codex plugin` has no `validate` counterpart. On Codex, skip it — the repo's own gates cover the manifest (`sync_plugins.py --check` for drift, the health suite for JSON parse, identity, and version), and CI runs both on every PR.
+
 That's the plugin-specific check, not the whole gate. [`AGENTS.md`](../AGENTS.md) is authoritative for the rest: the test suite before *any* PR, the sync after editing a manifest / the registry / a vendored skill's source, and `skill-structure-check` before a PR that touches skills.
 
 ## Per-Plugin README
