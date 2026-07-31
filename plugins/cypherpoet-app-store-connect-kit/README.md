@@ -16,5 +16,6 @@ It is deliberately scoped to *mechanics*, and hands off the rest to siblings:
 
 ## Skills
 
-- **`app-store-connect-submission`** — step-by-step submission playbook with a
-  dated gotchas/troubleshooting table.
+| Skill | Description | Model-Invocable |
+|---|---|---|
+| [app-store-connect-submission](skills/app-store-connect-submission/SKILL.md) | Step-by-step submission playbook with a dated gotchas/troubleshooting table. | Yes |
