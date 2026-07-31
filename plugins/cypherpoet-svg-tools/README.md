@@ -16,6 +16,6 @@ Install via the [`cypherpoet-toolchest`](https://github.com/CypherPoet/cypherpoe
 
 ## Skills
 
-| Skill | Description |
-|---|---|
-| [svgo](skills/svgo/SKILL.md) | Optimize, debug, and clean up SVG files with SVGO. |
+| Skill | Description | Model-Invocable |
+|---|---|---|
+| [svgo](skills/svgo/SKILL.md) | Optimize, debug, and clean up SVG files with SVGO. | Yes |

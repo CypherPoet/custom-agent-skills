@@ -18,6 +18,6 @@ On Codex, add the same marketplace: `codex plugin marketplace add CypherPoet/cyp
 
 ## Skills
 
-| Skill | Description |
-|---|---|
-| [obsidian-plugin-crafting](skills/obsidian-plugin-crafting/SKILL.md) | Build, review, and publish Obsidian plugins — scaffold-to-submission workflows, API patterns, the full eslint-plugin-obsidianmd rule catalog, and a bundled manifest/release preflight validator. |
+| Skill | Description | Model-Invocable |
+|---|---|---|
+| [obsidian-plugin-crafting](skills/obsidian-plugin-crafting/SKILL.md) | Build, review, and publish Obsidian plugins — scaffold-to-submission workflows, API patterns, the full eslint-plugin-obsidianmd rule catalog, and a bundled manifest/release preflight validator. | Yes |

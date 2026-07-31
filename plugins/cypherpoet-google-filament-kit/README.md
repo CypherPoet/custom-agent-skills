@@ -16,9 +16,9 @@ Install via the marketplace this plugin is published to:
 
 ## Skills
 
-| Skill | Description |
-|---|---|
-| [google-filament-mastery](skills/google-filament-mastery/SKILL.md) | Working knowledge of Google Filament — the PBR material model, lighting/IBL, the material language and `matc`, the engine API, glTF loading, and C++/Web/Android setup, grounded in the official docs. |
+| Skill | Description | Model-Invocable |
+|---|---|---|
+| [google-filament-mastery](skills/google-filament-mastery/SKILL.md) | Working knowledge of Google Filament — the PBR material model, lighting/IBL, the material language and `matc`, the engine API, glTF loading, and C++/Web/Android setup, grounded in the official docs. | Yes |
 
 ## Where This Sits Among the Rendering Plugins
 

@@ -16,6 +16,6 @@ Install via the [`cypherpoet-toolchest`](https://github.com/CypherPoet/cypherpoe
 
 ## Skills
 
-| Skill | Description |
-|---|---|
-| [apple-app-icons](skills/apple-app-icons/SKILL.md) | Design an icon that earns the tap (small-size clarity, light/dark contrast, audit rubric, iOS A/B testing, designer brief), then author a Liquid Glass `.icon`, add an `.appiconset` fallback, wire both into Xcode, and debug centering / edge-frame / alpha issues. |
+| Skill | Description | Model-Invocable |
+|---|---|---|
+| [apple-app-icons](skills/apple-app-icons/SKILL.md) | Design an icon that earns the tap (small-size clarity, light/dark contrast, audit rubric, iOS A/B testing, designer brief), then author a Liquid Glass `.icon`, add an `.appiconset` fallback, wire both into Xcode, and debug centering / edge-frame / alpha issues. | Yes |

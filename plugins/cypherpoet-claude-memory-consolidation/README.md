@@ -16,6 +16,6 @@ Install via the [`cypherpoet-toolchest`](https://github.com/CypherPoet/cypherpoe
 
 ## Skills
 
-| Skill | Description |
-|---|---|
-| [claude-memory-consolidation](skills/claude-memory-consolidation/SKILL.md) | Audit and consolidate Claude's per-project auto-memory directory. |
+| Skill | Description | Model-Invocable |
+|---|---|---|
+| [claude-memory-consolidation](skills/claude-memory-consolidation/SKILL.md) | Audit and consolidate Claude's per-project auto-memory directory. | Yes |

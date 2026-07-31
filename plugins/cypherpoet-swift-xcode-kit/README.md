@@ -16,15 +16,15 @@ Install via the marketplace this plugin is published to:
 
 ## Skills
 
-| Skill | Description |
-|---|---|
-| [audit-xcode-security-settings](skills/audit-xcode-security-settings/SKILL.md) | Audit and progressively enable security-oriented Xcode build settings — Enhanced Security, compiler warnings, and static-analyzer checkers for C/C++/Objective-C/Swift. |
-| [c-bounds-safety](skills/c-bounds-safety/SKILL.md) | Guide to the C `-fbounds-safety` language extension: the language model, pointer annotations, adoption, build settings, and runtime debugging. |
-| [device-interaction](skills/device-interaction/SKILL.md) | Verify iOS app behavior on device or simulator via screenshots, UI hierarchy, and touch interactions. |
-| [swiftui-specialist](skills/swiftui-specialist/SKILL.md) | Best practices and idiomatic patterns for SwiftUI — structure, data flow, environment, modifiers, animations, and localization. |
-| [swiftui-whats-new-27](skills/swiftui-whats-new-27/SKILL.md) | New SwiftUI APIs, behaviors, and deprecations in the 2027 OS releases (iOS / macOS / watchOS / tvOS / visionOS 27). |
-| [test-modernizer](skills/test-modernizer/SKILL.md) | Modernize test suites to use Swift Testing, or migrate them from XCTest. |
-| [uikit-app-modernization](skills/uikit-app-modernization/SKILL.md) | Modernize UIKit apps for multi-window environments by replacing legacy shared-state APIs with context-appropriate alternatives. |
+| Skill | Description | Model-Invocable |
+|---|---|---|
+| [audit-xcode-security-settings](skills/audit-xcode-security-settings/SKILL.md) | Audit and progressively enable security-oriented Xcode build settings — Enhanced Security, compiler warnings, and static-analyzer checkers for C/C++/Objective-C/Swift. | Yes |
+| [c-bounds-safety](skills/c-bounds-safety/SKILL.md) | Guide to the C `-fbounds-safety` language extension: the language model, pointer annotations, adoption, build settings, and runtime debugging. | Yes |
+| [device-interaction](skills/device-interaction/SKILL.md) | Verify iOS app behavior on device or simulator via screenshots, UI hierarchy, and touch interactions. | Yes |
+| [swiftui-specialist](skills/swiftui-specialist/SKILL.md) | Best practices and idiomatic patterns for SwiftUI — structure, data flow, environment, modifiers, animations, and localization. | Yes |
+| [swiftui-whats-new-27](skills/swiftui-whats-new-27/SKILL.md) | New SwiftUI APIs, behaviors, and deprecations in the 2027 OS releases (iOS / macOS / watchOS / tvOS / visionOS 27). | Yes |
+| [test-modernizer](skills/test-modernizer/SKILL.md) | Modernize test suites to use Swift Testing, or migrate them from XCTest. | Yes |
+| [uikit-app-modernization](skills/uikit-app-modernization/SKILL.md) | Modernize UIKit apps for multi-window environments by replacing legacy shared-state APIs with context-appropriate alternatives. | Yes |
 
 ## Attribution
 

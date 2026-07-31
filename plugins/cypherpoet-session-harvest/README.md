@@ -16,7 +16,7 @@ Install via the [`cypherpoet-toolchest`](https://github.com/CypherPoet/cypherpoe
 
 ## Skills
 
-| Skill | Description |
-|---|---|
-| [session-harvest](skills/session-harvest/SKILL.md) | Pre-exit sweep of a conversation for learnings worth preserving in memory. |
-| [skill-harvest](skills/skill-harvest/SKILL.md) | Route session/project learnings into the user's own skill repos as approved PRs. |
+| Skill | Description | Model-Invocable |
+|---|---|---|
+| [session-harvest](skills/session-harvest/SKILL.md) | Pre-exit sweep of a conversation for learnings worth preserving in memory. | Yes |
+| [skill-harvest](skills/skill-harvest/SKILL.md) | Route session/project learnings into the user's own skill repos as approved PRs. | Yes |

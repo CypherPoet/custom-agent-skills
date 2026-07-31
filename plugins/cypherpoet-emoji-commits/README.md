@@ -16,6 +16,6 @@ Install via the [`cypherpoet-toolchest`](https://github.com/CypherPoet/cypherpoe
 
 ## Skills
 
-| Skill | Description |
-|---|---|
-| [emoji-commits](skills/emoji-commits/SKILL.md) | Write expressive git commit messages with Gitmoji. |
+| Skill | Description | Model-Invocable |
+|---|---|---|
+| [emoji-commits](skills/emoji-commits/SKILL.md) | Write expressive git commit messages with Gitmoji. | Yes |

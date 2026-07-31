@@ -20,10 +20,10 @@ On Codex, add the same marketplace: `codex plugin marketplace add CypherPoet/cyp
 
 ## Skills
 
-| Skill | Description |
-|---|---|
-| [catalog-refresh](skills/catalog-refresh/SKILL.md) | Regenerate the local `docs/CATALOG.md` plugin table from the manifests — the write-capable counterpart to `marketplace-sync-check`. |
-| [marketplace-publish](skills/marketplace-publish/SKILL.md) | Publish one or more plugins to a marketplace — both its Claude and Codex catalog files — by opening a PR on the marketplace repo. |
-| [marketplace-publish-check](skills/marketplace-publish-check/SKILL.md) | Read-only check of whether the current branch's changes require a `marketplace-publish` (Claude or Codex catalog surface) — drives the PR label. |
-| [marketplace-sync-check](skills/marketplace-sync-check/SKILL.md) | Read-only audit of local `plugins/` against the published marketplace catalogs (Claude + Codex) and the local `docs/CATALOG.md`. |
-| [skill-fact-check](skills/skill-fact-check/SKILL.md) | Re-check the repo family's skills' time-sensitive facts (versions, device specs, URLs, API/CLI syntax) against primary sources and open a PR with high-confidence, cited corrections — the engine behind the scheduled fact-check routine. |
+| Skill | Description | Model-Invocable |
+|---|---|---|
+| [catalog-refresh](skills/catalog-refresh/SKILL.md) | Regenerate the local `docs/CATALOG.md` plugin table from the manifests — the write-capable counterpart to `marketplace-sync-check`. | Yes |
+| [marketplace-publish](skills/marketplace-publish/SKILL.md) | Publish one or more plugins to a marketplace — both its Claude and Codex catalog files — by opening a PR on the marketplace repo. | No |
+| [marketplace-publish-check](skills/marketplace-publish-check/SKILL.md) | Read-only check of whether the current branch's changes require a `marketplace-publish` (Claude or Codex catalog surface) — drives the PR label. | Yes |
+| [marketplace-sync-check](skills/marketplace-sync-check/SKILL.md) | Read-only audit of local `plugins/` against the published marketplace catalogs (Claude + Codex) and the local `docs/CATALOG.md`. | Yes |
+| [skill-fact-check](skills/skill-fact-check/SKILL.md) | Re-check the repo family's skills' time-sensitive facts (versions, device specs, URLs, API/CLI syntax) against primary sources and open a PR with high-confidence, cited corrections — the engine behind the scheduled fact-check routine. | Yes |

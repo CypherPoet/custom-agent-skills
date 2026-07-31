@@ -101,12 +101,14 @@ On Codex, add the same marketplace: `codex plugin marketplace add CypherPoet/cyp
 
 ## Skills
 
-| Skill | Description |
-|---|---|
-| [<skill-name>](skills/<skill-name>/SKILL.md) | <one-sentence summary>. |
+| Skill | Description | Model-Invocable |
+|---|---|---|
+| [<skill-name>](skills/<skill-name>/SKILL.md) | <one-sentence summary>. | <Yes / No> |
 ````
 
-Every plugin here is currently skills-only, so that template is the whole README. A plugin that ships other component types adds a section per type, same two-column shape:
+`Model-Invocable` is `No` for a skill the agent cannot reach on its own — Claude Code's `disable-model-invocation: true`, or Codex's `policy.allow_implicit_invocation: false` in `agents/openai.yaml` — and `Yes` otherwise. A `No` row tells a reader the skill only ever fires when they invoke it by name.
+
+Every plugin here is currently skills-only, so that template is the whole README. A plugin that ships other component types adds a section per type, in a two-column shape:
 
 | Section | First column |
 |---|---|

@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "cypherpoet-emoji-commits",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Write expressive git commit messages with Gitmoji.",
   "author": { "name": "CypherPoet" },
   "homepage": "https://github.com/CypherPoet/custom-agent-skills/tree/main/plugins/cypherpoet-emoji-commits",

@@ -16,6 +16,6 @@ Install via the [`cypherpoet-toolchest`](https://github.com/CypherPoet/cypherpoe
 
 ## Skills
 
-| Skill | Description |
-|---|---|
-| [blender-mastery](skills/blender-mastery/SKILL.md) | Blender pro tips, `bpy` patterns, and mental models — modeling, materials, rigging, geometry nodes, rendering, and export — via the official Blender MCP server or the headless CLI. |
+| Skill | Description | Model-Invocable |
+|---|---|---|
+| [blender-mastery](skills/blender-mastery/SKILL.md) | Blender pro tips, `bpy` patterns, and mental models — modeling, materials, rigging, geometry nodes, rendering, and export — via the official Blender MCP server or the headless CLI. | Yes |

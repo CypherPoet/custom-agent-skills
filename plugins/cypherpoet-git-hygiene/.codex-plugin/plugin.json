@@ -1,6 +1,6 @@
 {
   "name": "cypherpoet-git-hygiene",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Keep local git state tidy: sync branches with the remote, and clean up stale branches and worktrees with per-item approval.",
   "author": {
     "name": "CypherPoet"
