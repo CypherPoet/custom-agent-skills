@@ -20,7 +20,7 @@ A marketplace repo carries **two catalog files**, one per harness: `.claude-plug
 
 Follow the procedure below with your normal tools (`gh`, `git`, `jq`); it's deliberately plain rather than a script so you can adapt to how many plugins are being published and to anything unusual in the catalog.
 
-**Manual-only on every harness.** Claude Code enforces this via the `disable-model-invocation` flag; on a harness without that flag (e.g. Codex), apply the same rule yourself — run this skill only on the user's explicit request, never proactively.
+**Manual-only on every harness.** Both mechanisms ship, so neither harness fires this skill on its own: Claude Code honors the `disable-model-invocation` frontmatter flag, and Codex — which doesn't read that field — honors `policy.allow_implicit_invocation: false` in [`agents/openai.yaml`](agents/openai.yaml), leaving explicit `$marketplace-publish` working. On a harness with neither, apply the same rule yourself — run this skill only on the user's explicit request, never proactively.
 
 ## When this is needed (and when it isn't)
 
@@ -133,3 +133,4 @@ Review and merge the PR on the marketplace repo; once merged, `/plugin install <
 - [Plugin marketplaces (Claude Code docs)](https://code.claude.com/docs/en/plugin-marketplaces) — authoritative for the Claude `marketplace.json` schema and marketplace commands.
 - [Plugins reference (Claude Code docs)](https://code.claude.com/docs/en/plugins-reference) — authoritative for plugin manifest fields.
 - [Build plugins (Codex docs)](https://learn.chatgpt.com/docs/build-plugins) — authoritative for the Codex `.agents/plugins/marketplace.json` schema (`source` types, required `policy` + `category`) and `codex plugin marketplace` commands.
+- [Build skills (Codex docs)](https://learn.chatgpt.com/docs/build-skills) — authoritative for the skill-level `agents/openai.yaml` schema, including `policy.allow_implicit_invocation`.
