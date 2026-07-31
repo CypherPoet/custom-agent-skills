@@ -20,7 +20,7 @@ A marketplace repo carries **two catalog files**, one per harness: `.claude-plug
 
 Follow the procedure below with your normal tools (`gh`, `git`, `jq`); it's deliberately plain rather than a script so you can adapt to how many plugins are being published and to anything unusual in the catalog.
 
-**Manual-only on every harness.** Claude Code enforces this via the `disable-model-invocation` flag; on a harness without that flag (e.g. Codex), apply the same rule yourself — run this skill only on the user's explicit request, never proactively.
+**Manual-only on every harness.** Claude Code enforces this via the `disable-model-invocation` frontmatter flag, Codex via `policy.allow_implicit_invocation: false` in [`agents/openai.yaml`](agents/openai.yaml). On any harness with neither, apply the same rule yourself — run this skill only on the user's explicit request, never proactively.
 
 ## When this is needed (and when it isn't)
 
