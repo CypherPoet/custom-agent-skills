@@ -16,9 +16,9 @@ Install via the marketplace this plugin is published to:
 
 ## Skills
 
-| Skill | Description |
-|---|---|
-| [apple-human-interface-guidelines](skills/apple-human-interface-guidelines/SKILL.md) | Design guidance distilled from the full Apple HIG — components, layout, platform conventions, accessibility, and hard specs for all six Apple platforms. |
+| Skill | Description | Model-Invocable |
+|---|---|---|
+| [apple-human-interface-guidelines](skills/apple-human-interface-guidelines/SKILL.md) | Design guidance distilled from the full Apple HIG — components, layout, platform conventions, accessibility, and hard specs for all six Apple platforms. | Yes |
 
 ## Where This Sits Among the Apple Plugins
 

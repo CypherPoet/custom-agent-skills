@@ -16,7 +16,7 @@ Install via the [`cypherpoet-toolchest`](https://github.com/CypherPoet/cypherpoe
 
 ## Skills
 
-| Skill | Description |
-|---|---|
-| [apple-app-store-best-practices](skills/apple-app-store-best-practices/SKILL.md) | Best practices for App Store submissions and Apple's review guidelines. |
-| [apple-app-store-screenshots](skills/apple-app-store-screenshots/SKILL.md) | Apple App Store screenshot and app preview specifications (vendored from [cypherpoet-apple-app-store-screenshots](https://github.com/CypherPoet/custom-agent-skills/tree/main/plugins/cypherpoet-apple-app-store-screenshots)). |
+| Skill | Description | Model-Invocable |
+|---|---|---|
+| [apple-app-store-best-practices](skills/apple-app-store-best-practices/SKILL.md) | Best practices for App Store submissions and Apple's review guidelines. | Yes |
+| [apple-app-store-screenshots](skills/apple-app-store-screenshots/SKILL.md) | Apple App Store screenshot and app preview specifications (vendored from [cypherpoet-apple-app-store-screenshots](https://github.com/CypherPoet/custom-agent-skills/tree/main/plugins/cypherpoet-apple-app-store-screenshots)). | Yes |

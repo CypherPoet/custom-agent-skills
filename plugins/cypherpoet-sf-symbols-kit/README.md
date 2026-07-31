@@ -16,6 +16,6 @@ Install via the marketplace this plugin is published to:
 
 ## Skills
 
-| Skill | Description |
-|---|---|
-| [sf-symbols](skills/sf-symbols/SKILL.md) | Search, inspect, and export Apple SF Symbols as clean single-path SVGs (all 9 weights, HTML gallery, batch icon sets), and author custom SF Symbols by converting SVG art into validated, importable symbol templates. |
+| Skill | Description | Model-Invocable |
+|---|---|---|
+| [sf-symbols](skills/sf-symbols/SKILL.md) | Search, inspect, and export Apple SF Symbols as clean single-path SVGs (all 9 weights, HTML gallery, batch icon sets), and author custom SF Symbols by converting SVG art into validated, importable symbol templates. | Yes |

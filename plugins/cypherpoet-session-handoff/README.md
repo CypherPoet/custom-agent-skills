@@ -16,6 +16,6 @@ Install via the [`cypherpoet-toolchest`](https://github.com/CypherPoet/cypherpoe
 
 ## Skills
 
-| Skill | Description |
-|---|---|
-| [session-handoff](skills/session-handoff/SKILL.md) | Write a structured handoff document so a fresh agent can resume long-running work. |
+| Skill | Description | Model-Invocable |
+|---|---|---|
+| [session-handoff](skills/session-handoff/SKILL.md) | Write a structured handoff document so a fresh agent can resume long-running work. | Yes |

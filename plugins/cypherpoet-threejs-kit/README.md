@@ -16,7 +16,7 @@ Install via the [`cypherpoet-toolchest`](https://github.com/CypherPoet/cypherpoe
 
 ## Skills
 
-| Skill | Description |
-|---|---|
-| [threejs-mastery](skills/threejs-mastery/SKILL.md) | Comprehensive Three.js reference covering WebGPU/WebGL rendering, shaders, animation, loaders, and post-processing. |
-| [webgl-mastery](skills/webgl-mastery/SKILL.md) | Raw WebGL2 + GLSL shader fundamentals beneath Three.js (vendored from [cypherpoet-webgl-kit](https://github.com/CypherPoet/custom-agent-skills/tree/main/plugins/cypherpoet-webgl-kit)). |
+| Skill | Description | Model-Invocable |
+|---|---|---|
+| [threejs-mastery](skills/threejs-mastery/SKILL.md) | Comprehensive Three.js reference covering WebGPU/WebGL rendering, shaders, animation, loaders, and post-processing. | Yes |
+| [webgl-mastery](skills/webgl-mastery/SKILL.md) | Raw WebGL2 + GLSL shader fundamentals beneath Three.js (vendored from [cypherpoet-webgl-kit](https://github.com/CypherPoet/custom-agent-skills/tree/main/plugins/cypherpoet-webgl-kit)). | Yes |

@@ -16,6 +16,6 @@ Install via the [`cypherpoet-toolchest`](https://github.com/CypherPoet/cypherpoe
 
 ## Skills
 
-| Skill | Description |
-|---|---|
-| [expo-snack-prototyper](skills/expo-snack-prototyper/SKILL.md) | Generate self-contained Expo Snack apps for quick UI prototyping. |
+| Skill | Description | Model-Invocable |
+|---|---|---|
+| [expo-snack-prototyper](skills/expo-snack-prototyper/SKILL.md) | Generate self-contained Expo Snack apps for quick UI prototyping. | Yes |

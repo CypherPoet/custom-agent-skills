@@ -16,6 +16,6 @@ Install via the [`cypherpoet-toolchest`](https://github.com/CypherPoet/cypherpoe
 
 ## Skills
 
-| Skill | Description |
-|---|---|
-| [changelog-maintenance](skills/changelog-maintenance/SKILL.md) | Maintain a project's `CHANGELOG.md` in Keep-a-Changelog format. |
+| Skill | Description | Model-Invocable |
+|---|---|---|
+| [changelog-maintenance](skills/changelog-maintenance/SKILL.md) | Maintain a project's `CHANGELOG.md` in Keep-a-Changelog format. | Yes |

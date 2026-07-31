@@ -16,6 +16,6 @@ Install via the [`cypherpoet-toolchest`](https://github.com/CypherPoet/cypherpoe
 
 ## Skills
 
-| Skill | Description |
-|---|---|
-| [claude-docs-search](skills/claude-docs-search/SKILL.md) | Look up answers in the official Claude Code documentation. |
+| Skill | Description | Model-Invocable |
+|---|---|---|
+| [claude-docs-search](skills/claude-docs-search/SKILL.md) | Look up answers in the official Claude Code documentation. | Yes |

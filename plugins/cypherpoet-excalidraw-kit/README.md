@@ -16,9 +16,9 @@ Install via the marketplace this plugin is published to:
 
 ## Skills
 
-| Skill | Description |
-|---|---|
-| [excalidraw-mastery](skills/excalidraw-mastery/SKILL.md) | Working knowledge of Excalidraw — the `.excalidraw` scene format and element model, a design methodology for diagrams that argue, the `@excalidraw/excalidraw` developer API, and Mermaid conversion, with bundled scripts for validating, rendering, and icon-library insertion. |
+| Skill | Description | Model-Invocable |
+|---|---|---|
+| [excalidraw-mastery](skills/excalidraw-mastery/SKILL.md) | Working knowledge of Excalidraw — the `.excalidraw` scene format and element model, a design methodology for diagrams that argue, the `@excalidraw/excalidraw` developer API, and Mermaid conversion, with bundled scripts for validating, rendering, and icon-library insertion. | Yes |
 
 ## Bundled Scripts
 

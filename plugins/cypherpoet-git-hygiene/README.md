@@ -16,7 +16,7 @@ Install via the [`cypherpoet-toolchest`](https://github.com/CypherPoet/cypherpoe
 
 ## Skills
 
-| Skill | Description |
-|---|---|
-| [remote-branch-sync](skills/remote-branch-sync/SKILL.md) | Fetch with prune and fast-forward what's safe; report divergence instead of guessing. |
-| [worktree-cleanup](skills/worktree-cleanup/SKILL.md) | Retire gone/merged branches and the worktrees attached to them, per-item approved. |
+| Skill | Description | Model-Invocable |
+|---|---|---|
+| [remote-branch-sync](skills/remote-branch-sync/SKILL.md) | Fetch with prune and fast-forward what's safe; report divergence instead of guessing. | Yes |
+| [worktree-cleanup](skills/worktree-cleanup/SKILL.md) | Retire gone/merged branches and the worktrees attached to them, per-item approved. | Yes |

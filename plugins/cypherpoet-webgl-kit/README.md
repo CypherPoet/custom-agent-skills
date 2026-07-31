@@ -16,6 +16,6 @@ Install via the [`cypherpoet-toolchest`](https://github.com/CypherPoet/cypherpoe
 
 ## Skills
 
-| Skill | Description |
-|---|---|
-| [webgl-mastery](skills/webgl-mastery/SKILL.md) | Raw WebGL2 pipeline + GLSL technique reference — context setup, shaders, buffers, transforms, textures, lighting, shader patterns, performance, and debugging. |
+| Skill | Description | Model-Invocable |
+|---|---|---|
+| [webgl-mastery](skills/webgl-mastery/SKILL.md) | Raw WebGL2 pipeline + GLSL technique reference — context setup, shaders, buffers, transforms, textures, lighting, shader patterns, performance, and debugging. | Yes |
