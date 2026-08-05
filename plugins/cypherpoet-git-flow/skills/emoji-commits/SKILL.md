@@ -18,7 +18,9 @@ Prefix every commit message with a categorized emoji from the [Gitmoji](https://
 3. **Check the repo's voice** — run `git log --oneline -15`. History wins over the reference table: match an established house prefix even when it isn't in the table (e.g. a repo that sweeps with 🧹), and note whether messages carry a scope.
 4. **Pick the emoji** — unless step 3 found an established prefix for this kind of change, map the intent to a Gitmoji from `references/gitmoji.md`.
 5. **Compose the message** — format: `<emoji> <concise message explaining the why>`, mirroring the repo's scoping when history uses one (`<emoji> <Area>: <summary>`, `<emoji> <type>(<scope>): <summary>`, …).
-6. **Present for approval** — show the proposed message and wait for confirmation. In an unattended run there is no one to ask: skip this step and commit directly.
+6. **Respect the user's authorization.** Treat an explicit request to commit—including “commit and push,” “ship it,” or `/commit`—as authorization to choose a repository-appropriate message and continue without another approval.
+   Present the message and wait only when the user asks to review or approve it, the commit scope is ambiguous, or a higher-priority instruction requires confirmation.
+   In an unattended run, commit directly.
 7. **Commit** — run `git commit -m "<emoji> <message>"`.
 
 Use the actual Unicode emoji character, not the `:shortcode:` — it's more portable across Git clients, terminals, and GitHub.
@@ -51,4 +53,3 @@ The commit both restructures the auth module and fixes a token expiry bug. Pick 
 🐛 Fix token expiry by restructuring auth module
 ```
 If the concerns are truly independent, suggest splitting into two commits instead.
-
