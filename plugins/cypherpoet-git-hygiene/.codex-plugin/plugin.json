@@ -1,6 +1,6 @@
 {
   "name": "cypherpoet-git-hygiene",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Keep local git state tidy: sync branches with the remote, and clean up stale branches and worktrees with per-item approval.",
   "author": {
     "name": "CypherPoet"
@@ -16,5 +16,21 @@
     "sync",
     "cleanup"
   ],
-  "skills": "./skills/"
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Git Hygiene",
+    "shortDescription": "Clean branches and worktrees safely",
+    "longDescription": "Keep local git state tidy: sync branches with the remote, and clean up stale branches and worktrees with per-item approval.",
+    "developerName": "CypherPoet",
+    "category": "Developer Tools",
+    "capabilities": [
+      "Interactive",
+      "Read",
+      "Write"
+    ],
+    "websiteURL": "https://github.com/CypherPoet/custom-agent-skills/tree/main/plugins/cypherpoet-git-hygiene",
+    "defaultPrompt": [
+      "Audit and clean this repository’s stale branches and worktrees."
+    ]
+  }
 }

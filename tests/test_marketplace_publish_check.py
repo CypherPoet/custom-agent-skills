@@ -55,12 +55,22 @@ class MarketplacePublishCheckTests(unittest.TestCase):
         )
 
     @staticmethod
-    def write_dual_config_at(repo, category):
+    def write_dual_config_at(repo, category, display_name="Example"):
         write_json(
             repo / "scripts/plugin-registry.json",
             {
                 "vendored_skills": [],
-                "dual_harness_plugins": {"example": {"category": category}},
+                "dual_harness_plugins": {
+                    "example": {
+                        "category": category,
+                        "interface": {
+                            "displayName": display_name,
+                            "shortDescription": "Use the example plugin",
+                            "capabilities": ["Read", "Write"],
+                            "defaultPrompt": ["Use the example plugin for this task."],
+                        },
+                    }
+                },
                 "claude_only_plugins": {},
             },
         )
@@ -68,8 +78,8 @@ class MarketplacePublishCheckTests(unittest.TestCase):
     def write_manifest(self, version, description):
         self.write_manifest_at(self.repo, version, description)
 
-    def write_dual_config(self, category):
-        self.write_dual_config_at(self.repo, category)
+    def write_dual_config(self, category, display_name="Example"):
+        self.write_dual_config_at(self.repo, category, display_name)
 
     def run_check(self):
         return run([sys.executable, str(SCRIPT), "main"], self.repo, check=False)
@@ -100,6 +110,14 @@ class MarketplacePublishCheckTests(unittest.TestCase):
         result = self.run_check()
         self.assertEqual(result.returncode, 1)
         self.assertIn("changed Codex category", result.stdout)
+
+    def test_codex_interface_change_needs_no_publish(self):
+        self.feature_branch()
+        self.write_dual_config(category="Developer Tools", display_name="Example Tools")
+        commit_all(self.repo, "interface")
+        result = self.run_check()
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertIn("No publish needed", result.stdout)
 
     def test_malformed_manifest_is_error_not_publish_signal(self):
         self.feature_branch()

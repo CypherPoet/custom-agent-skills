@@ -8,8 +8,9 @@ kinds of generated artifact and, in --check mode, fails if any has drifted:
      byte-for-byte into every plugin that ships it. Required because neither
      harness can reference a skill outside a plugin's own directory (Claude
      sparse-clones one plugin dir; Codex has no plugin-to-plugin dependencies).
-  2. Codex plugin manifests — plugins/<name>/.codex-plugin/plugin.json, mirrored
-     from the plugin's .claude-plugin/plugin.json plus "skills": "./skills/".
+  2. Codex plugin manifests — plugins/<name>/.codex-plugin/plugin.json, composed
+     from package identity in .claude-plugin/plugin.json, presentation metadata
+     in the registry, and "skills": "./skills/".
 
 It also validates that every plugin under plugins/ is classified as either
 dual-harness or Claude-only, so adding a plugin forces an explicit decision.
@@ -55,6 +56,7 @@ IGNORE_FILE_GLOBS = ("*.pyc",)
 
 # Manifest fields copied verbatim from .claude-plugin into .codex-plugin, in order.
 CODEX_MANIFEST_CARRY = ("author", "homepage", "repository", "license", "keywords")
+CODEX_CAPABILITIES = {"Interactive", "Read", "Write"}
 
 
 def _dir_ignored(name: str) -> bool:
@@ -219,7 +221,8 @@ def skill_directories(root: Path) -> list[str]:
     return found
 
 
-def build_codex_manifest(claude: dict) -> dict:
+def build_codex_manifest(claude: dict, plugin_metadata: dict) -> dict:
+    authored_interface = plugin_metadata["interface"]
     manifest = {
         "name": claude["name"],
         "version": claude["version"],
@@ -229,7 +232,84 @@ def build_codex_manifest(claude: dict) -> dict:
         if key in claude:
             manifest[key] = claude[key]
     manifest["skills"] = "./skills/"
+    manifest["interface"] = {
+        "displayName": authored_interface["displayName"],
+        "shortDescription": authored_interface["shortDescription"],
+        "longDescription": claude["description"],
+        "developerName": claude["author"]["name"],
+        "category": plugin_metadata["category"],
+        "capabilities": authored_interface["capabilities"],
+        "websiteURL": claude["homepage"],
+        "defaultPrompt": authored_interface["defaultPrompt"],
+    }
     return manifest
+
+
+def _non_empty_string(value: object) -> bool:
+    return isinstance(value, str) and bool(value.strip())
+
+
+def validate_interface_metadata(name: str, plugin_metadata: object) -> list[str]:
+    prefix = f"[config] {name}:"
+    if not isinstance(plugin_metadata, dict):
+        return [f"{prefix} dual_harness_plugins entry must be an object"]
+
+    problems: list[str] = []
+    if not _non_empty_string(plugin_metadata.get("category")):
+        problems.append(f"{prefix} dual_harness_plugins entry needs a non-empty 'category'")
+
+    interface = plugin_metadata.get("interface")
+    if not isinstance(interface, dict):
+        problems.append(f"{prefix} dual_harness_plugins entry needs an 'interface' object")
+        return problems
+
+    display_name = interface.get("displayName")
+    if not _non_empty_string(display_name):
+        problems.append(f"{prefix} interface.displayName must be a non-empty string")
+    elif len(display_name) > 30:
+        problems.append(f"{prefix} interface.displayName must be at most 30 characters")
+
+    short_description = interface.get("shortDescription")
+    if not _non_empty_string(short_description):
+        problems.append(f"{prefix} interface.shortDescription must be a non-empty string")
+    elif "\n" in short_description or "\r" in short_description:
+        problems.append(f"{prefix} interface.shortDescription must be a single line")
+    elif len(short_description) > 240:
+        problems.append(f"{prefix} interface.shortDescription must be at most 240 characters")
+
+    capabilities = interface.get("capabilities")
+    if not isinstance(capabilities, list) or not capabilities:
+        problems.append(f"{prefix} interface.capabilities must be a non-empty array")
+    elif any(capability not in CODEX_CAPABILITIES for capability in capabilities):
+        allowed = ", ".join(sorted(CODEX_CAPABILITIES))
+        problems.append(f"{prefix} interface.capabilities values must be one of: {allowed}")
+
+    default_prompt = interface.get("defaultPrompt")
+    if not isinstance(default_prompt, list) or len(default_prompt) != 1:
+        problems.append(f"{prefix} interface.defaultPrompt must contain exactly one starter prompt")
+    elif not _non_empty_string(default_prompt[0]):
+        problems.append(f"{prefix} interface.defaultPrompt[0] must be a non-empty string")
+    elif len(default_prompt[0]) > 128:
+        problems.append(f"{prefix} interface.defaultPrompt[0] must be at most 128 characters")
+
+    return problems
+
+
+def validate_claude_interface_sources(name: str, claude: dict) -> list[str]:
+    missing: list[str] = []
+    if not _non_empty_string(claude.get("description")):
+        missing.append("description")
+    author = claude.get("author")
+    if not isinstance(author, dict) or not _non_empty_string(author.get("name")):
+        missing.append("author.name")
+    if not _non_empty_string(claude.get("homepage")):
+        missing.append("homepage")
+    if not missing:
+        return []
+    return [
+        f"[codex-manifest] {name}: Claude manifest needs non-empty "
+        + ", ".join(missing)
+    ]
 
 
 def dumps(obj: dict) -> str:
@@ -324,17 +404,41 @@ def sync(root: Path, write: bool) -> list[str]:
                     problems.append(f"[vendor] undeclared byte-identical copy of {match}: {skill_dir} — declare a vendored_skills edge, delete the directory, or change its content to adopt it as authored")
 
     # 2. Codex manifests.
+    display_name_owners: dict[str, str] = {}
     for name in sorted(dual):
-        if "category" not in cfg["dual_harness_plugins"][name]:
-            problems.append(f"[config] {name}: dual_harness_plugins entry needs a 'category'")
+        plugin_metadata = cfg["dual_harness_plugins"][name]
+        if not isinstance(plugin_metadata, dict):
+            continue
+        interface = plugin_metadata.get("interface")
+        if not isinstance(interface, dict):
+            continue
+        display_name = interface.get("displayName")
+        if not _non_empty_string(display_name):
+            continue
+        previous = display_name_owners.get(display_name)
+        if previous is not None:
+            problems.append(
+                f"[config] {name}: interface.displayName duplicates {previous}: {display_name!r}"
+            )
+        else:
+            display_name_owners[display_name] = name
+
+    for name in sorted(dual):
+        plugin_metadata = cfg["dual_harness_plugins"][name]
+        interface_problems = validate_interface_metadata(name, plugin_metadata)
+        problems.extend(interface_problems)
         claude_path = root / "plugins" / name / ".claude-plugin" / "plugin.json"
         if not claude_path.exists():
             problems.append(f"[codex-manifest] missing Claude manifest for {name}")
             continue
         claude = json.loads(claude_path.read_text(encoding="utf-8"))
-        missing = [k for k in ("name", "version", "description") if k not in claude]
+        missing = [k for k in ("name", "version") if k not in claude]
         if missing:
             problems.append(f"[codex-manifest] {name}: Claude manifest missing {', '.join(missing)}")
+            continue
+        source_problems = validate_claude_interface_sources(name, claude)
+        problems.extend(source_problems)
+        if interface_problems or source_problems:
             continue
         plugin_dir = root / "plugins" / name
         unported = [k for k in ("mcpServers", "hooks", "agents", "commands") if k in claude]
@@ -349,7 +453,7 @@ def sync(root: Path, write: bool) -> list[str]:
         if unported:
             problems.append(f"[codex-manifest] {name}: Claude-only components ({', '.join(unported)}) — the generator does not carry these into .codex-plugin; port them or make the plugin Claude-only")
             continue
-        want = dumps(build_codex_manifest(claude)).encode("utf-8")
+        want = dumps(build_codex_manifest(claude, plugin_metadata)).encode("utf-8")
         codex_path = plugin_dir / ".codex-plugin" / "plugin.json"
         if write:
             codex_path.parent.mkdir(parents=True, exist_ok=True)
@@ -391,7 +495,11 @@ def main() -> int:
             print(f"\n{len(problems)} issue(s). Run: python3 scripts/sync_plugins.py", file=sys.stderr)
             return 1
         # In write mode, anything that blocked or skipped generation is still fatal.
-        fatal = [p for p in problems if p.startswith(("[config]", "[vendor]")) or "missing Claude manifest" in p or "Claude manifest missing" in p or "Claude-only components" in p]
+        fatal = [
+            problem
+            for problem in problems
+            if problem.startswith(("[config]", "[vendor]", "[codex-manifest]"))
+        ]
         if fatal:
             return 1
     print("plugin sync: checked" if args.check else "plugin sync: written", "(no issues)" if not problems else "")

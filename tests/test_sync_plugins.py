@@ -7,6 +7,7 @@ from support import (
     initialize_git_repo,
     load_module,
     write,
+    write_json,
     write_plugin_registry,
     write_plugin_manifest,
 )
@@ -44,13 +45,29 @@ class SyncPluginsTests(unittest.TestCase):
             version=version,
             description=f"{name} fixture",
             author={"name": "Test"},
+            homepage=f"https://example.com/{name}",
         )
+
+    @staticmethod
+    def interface_metadata(name):
+        return {
+            "displayName": name.title(),
+            "shortDescription": f"Use the {name} fixture",
+            "capabilities": ["Read", "Write"],
+            "defaultPrompt": [f"Use the {name} fixture for this task."],
+        }
 
     def write_config(self, vendored_skills, plugins):
         write_plugin_registry(
             self.root,
             vendored_skills,
-            {name: {"category": "Test"} for name in plugins},
+            {
+                name: {
+                    "category": "Test",
+                    "interface": self.interface_metadata(name),
+                }
+                for name in plugins
+            },
         )
 
     def commit_baseline(self):
@@ -66,11 +83,89 @@ class SyncPluginsTests(unittest.TestCase):
         self.assertTrue(
             (self.root / "plugins/bundle/.codex-plugin/plugin.json").is_file()
         )
+        codex_manifest = json.loads(
+            (self.root / "plugins/bundle/.codex-plugin/plugin.json").read_text()
+        )
+        self.assertEqual(
+            codex_manifest["interface"],
+            {
+                "displayName": "Bundle",
+                "shortDescription": "Use the bundle fixture",
+                "longDescription": "bundle fixture",
+                "developerName": "Test",
+                "category": "Test",
+                "capabilities": ["Read", "Write"],
+                "websiteURL": "https://example.com/bundle",
+                "defaultPrompt": ["Use the bundle fixture for this task."],
+            },
+        )
         self.assertEqual(
             sorted(path.name for path in (self.root / "scripts").iterdir()),
             ["plugin-registry.json"],
         )
         self.assertEqual(sync_plugins.sync(self.root, write=False), [])
+
+    def test_invalid_interface_metadata_blocks_generation(self):
+        cases = (
+            ("category", "", "non-empty 'category'"),
+            ("displayName", "", "displayName must be a non-empty string"),
+            ("displayName", "x" * 31, "displayName must be at most 30"),
+            ("shortDescription", "", "shortDescription must be a non-empty string"),
+            ("shortDescription", "two\nlines", "shortDescription must be a single line"),
+            ("shortDescription", "x" * 241, "shortDescription must be at most 240"),
+            ("capabilities", [], "capabilities must be a non-empty array"),
+            ("capabilities", ["Execute"], "capabilities values must be one of"),
+            ("defaultPrompt", [], "defaultPrompt must contain exactly one"),
+            ("defaultPrompt", ["one", "two"], "defaultPrompt must contain exactly one"),
+            ("defaultPrompt", [""], "defaultPrompt[0] must be a non-empty string"),
+            ("defaultPrompt", ["x" * 129], "defaultPrompt[0] must be at most 128"),
+        )
+        for field, value, expected in cases:
+            with self.subTest(field=field, value=value):
+                self.write_config([], ("source", "bundle"))
+                config_path = self.root / "scripts/plugin-registry.json"
+                config = json.loads(config_path.read_text())
+                metadata = config["dual_harness_plugins"]["source"]
+                if field == "category":
+                    metadata[field] = value
+                else:
+                    metadata["interface"][field] = value
+                write_json(config_path, config)
+                problems = sync_plugins.sync(self.root, write=True)
+                self.assertTrue(any(expected in problem for problem in problems), problems)
+
+    def test_missing_interface_object_blocks_generation(self):
+        self.write_config([], ("source", "bundle"))
+        config_path = self.root / "scripts/plugin-registry.json"
+        config = json.loads(config_path.read_text())
+        del config["dual_harness_plugins"]["source"]["interface"]
+        write_json(config_path, config)
+        problems = sync_plugins.sync(self.root, write=True)
+        self.assertTrue(any("needs an 'interface' object" in problem for problem in problems))
+
+    def test_duplicate_display_names_block_generation(self):
+        self.write_config([], ("source", "bundle"))
+        config_path = self.root / "scripts/plugin-registry.json"
+        config = json.loads(config_path.read_text())
+        config["dual_harness_plugins"]["bundle"]["interface"]["displayName"] = "Source"
+        write_json(config_path, config)
+        problems = sync_plugins.sync(self.root, write=True)
+        self.assertTrue(any("displayName duplicates" in problem for problem in problems))
+
+    def test_required_claude_interface_sources_block_generation(self):
+        cases = ("description", "author.name", "homepage")
+        for field in cases:
+            with self.subTest(field=field):
+                self.make_plugin("source")
+                manifest_path = self.root / "plugins/source/.claude-plugin/plugin.json"
+                manifest = json.loads(manifest_path.read_text())
+                if field == "author.name":
+                    manifest["author"] = {"name": ""}
+                else:
+                    manifest[field] = ""
+                write_json(manifest_path, manifest)
+                problems = sync_plugins.sync(self.root, write=True)
+                self.assertTrue(any(field in problem for problem in problems), problems)
 
     def test_copy_drift_is_detected_and_write_repairs_it(self):
         sync_plugins.sync(self.root, write=True)

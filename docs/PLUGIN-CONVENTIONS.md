@@ -7,7 +7,7 @@ For plugin anatomy (component types, auto-discovery, `${CLAUDE_PLUGIN_ROOT}` usa
 - [Claude Code plugins reference](https://code.claude.com/docs/en/plugins-reference)
 - [`plugin-dev` toolkit](https://github.com/anthropics/claude-plugins-official/blob/main/plugins/plugin-dev/README.md) — the `/plugin-dev:create-plugin` workflow plus the seven authoring skills (plugin structure, and skill / command / agent / hook / MCP / settings development)
 - [Codex: Build skills](https://learn.chatgpt.com/docs/build-skills) / [Build plugins](https://learn.chatgpt.com/docs/build-plugins) — the Codex plugin + skill format
-- [Codex `plugin-creator`](https://github.com/openai/skills/blob/main/skills/.system/plugin-creator/SKILL.md) — the spec the **generated** Codex artifacts must match: [`scripts/sync_plugins.py`](../scripts/sync_plugins.py) writes the `.codex-plugin/plugin.json` (manifest shape, name normalization), and the publish flow writes the marketplace entry (`policy`, `category`) — see [Marketplaces](#marketplaces).
+- [Codex `plugin-creator`](https://github.com/openai/skills/blob/main/skills/.system/plugin-creator/SKILL.md) — the spec the **generated** Codex artifacts must match: [`scripts/sync_plugins.py`](../scripts/sync_plugins.py) composes `.codex-plugin/plugin.json` from the Claude manifest and registry metadata, and the publish flow writes the marketplace entry (`policy`, `category`) — see [Marketplaces](#marketplaces).
 
 ## Plugin Folder
 
@@ -32,14 +32,17 @@ Confirm these fields on the scaffolded `plugin.json` (match a sibling under `plu
 
 Plugins target **both** Claude Code and Codex. Each plugin is **self-contained**: install pulls only its own directory (Claude Code `git-subdir` sparse-clone; Codex marketplace fetch), so a plugin must physically ship every skill it needs. Neither harness resolves a reference to a skill in another plugin, and Codex has no plugin-to-plugin dependency mechanism — so composition is by **vendoring** (copying a skill into each plugin that ships it), never dependencies.
 
-[`scripts/plugin-registry.json`](../scripts/plugin-registry.json) is the single source of truth; [`scripts/sync_plugins.py`](../scripts/sync_plugins.py) generates every derived artifact and, with `--check`, fails on drift (the repo-local `skill-structure-check` runs this check).
+[`scripts/plugin-registry.json`](../scripts/plugin-registry.json) is the source of truth for harness targeting, Codex presentation metadata, and vendoring edges. [`scripts/sync_plugins.py`](../scripts/sync_plugins.py) generates every derived artifact and, with `--check`, fails on drift (the repo-local `skill-structure-check` runs this check).
 
 ### Manifests
 
 A dual-harness plugin carries two manifests over a shared `skills/` directory:
 
-- `.claude-plugin/plugin.json` — hand-authored, the source of truth (see [Manifest](#manifest)).
-- `.codex-plugin/plugin.json` — **generated** from the Claude manifest: the same `name`/`version`/`description`/`author`/`homepage`/`repository`/`license`/`keywords`, plus `"skills": "./skills/"` (no `$schema`).
+- `.claude-plugin/plugin.json` — hand-authored source of truth for shared package identity: `name`, `version`, `description`, `author`, `homepage`, `repository`, `license`, and `keywords` (see [Manifest](#manifest)).
+- The plugin's `dual_harness_plugins` registry entry — hand-authored source of truth for Codex `category` and `interface.displayName`, `shortDescription`, `capabilities`, and `defaultPrompt`.
+- `.codex-plugin/plugin.json` — **generated** composition of both sources. Its `interface.longDescription` comes from the Claude `description`, `developerName` from `author.name`, and `websiteURL` from `homepage`; `skills` is `"./skills/"`. Do not hand-edit it.
+
+The registry requires a unique, non-empty `displayName` of at most 30 characters; a non-empty, single-line `shortDescription` of at most 240 characters; one or more capabilities chosen from `Interactive`, `Read`, and `Write`; and exactly one non-empty starter prompt of at most 128 characters. The Claude manifest must supply non-empty `description`, `author.name`, and `homepage` values for the generated interface.
 
 Dual-harness is the default. A plugin whose function is Claude-Code-specific runs on Claude only: list it in `plugin-registry.json`'s `claude_only_plugins` (with a reason) and it gets no `.codex-plugin/` manifest. Judge by skill **content**, not shape — `claude-docs-search`'s `SKILL.md` parses fine on Codex, but it searches Claude Code's own documentation, so it belongs on the list. Keep that list short; anything portable ships to both.
 
@@ -72,7 +75,7 @@ claude plugin validate plugins/<plugin-name>
 
 No warnings or errors expected. Anything else means something needs a closer look — fix it before opening the PR **on this repo** (a separate publish PR happens later on the marketplace repo).
 
-This step needs Claude Code; `codex plugin` has no `validate` counterpart. On Codex, skip it — the repo's own gates cover the manifest (`sync_plugins.py --check` for drift, the health suite for JSON parse, identity, and version), and CI runs both on every PR.
+Also run the validator shipped by Codex's `plugin-creator` skill against each generated plugin. The repository gates enforce the authored limits and composition rules; the official validator confirms that the result matches Codex's ingestion contract.
 
 That's the plugin-specific check, not the whole gate. [`AGENTS.md`](../AGENTS.md) is authoritative for the rest: the test suite before *any* PR, the sync after editing a manifest / the registry / a vendored skill's source, and `skill-structure-check` before a PR that touches skills.
 
@@ -136,7 +139,7 @@ Either way, one publish maintains both catalog files on the marketplace repo —
 Content and catalog metadata ship on separate tracks, and neither does the other's job:
 
 - **Content** (skills, commands, agents, scripts) reaches existing installs only when you bump the plugin's [`version`](#manifest); a *fresh* install always pulls `main`'s latest. Re-run `scripts/sync_plugins.py` after a bump so the generated `.codex-plugin` version matches.
-- **Catalog metadata** — the catalogs store their own copy of each plugin's `name`, `description`, and `homepage` (Claude) and its classification + `category` (Codex), so editing any of those needs another catalog publish through the label flow above to refresh the entry.
+- **Catalog metadata** — the catalogs store their own copy of each plugin's `name`, `description`, and `homepage` (Claude) and its classification + `category` (Codex), so editing any of those needs another catalog publish through the label flow above to refresh the entry. Codex `interface` metadata lives in the generated plugin manifest, so an interface-only registry change does not need a catalog publish.
 
 ## Skill Conventions
 

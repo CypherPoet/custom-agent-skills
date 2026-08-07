@@ -1,6 +1,6 @@
 {
   "name": "cypherpoet-apple-app-store-screenshots",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "Apple App Store screenshot and app preview specifications.",
   "author": {
     "name": "CypherPoet"
@@ -16,5 +16,20 @@
     "ios",
     "aso"
   ],
-  "skills": "./skills/"
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "App Store Screenshots",
+    "shortDescription": "Create compliant App Store screenshots",
+    "longDescription": "Apple App Store screenshot and app preview specifications.",
+    "developerName": "CypherPoet",
+    "category": "Developer Tools",
+    "capabilities": [
+      "Read",
+      "Write"
+    ],
+    "websiteURL": "https://github.com/CypherPoet/custom-agent-skills/tree/main/plugins/cypherpoet-apple-app-store-screenshots",
+    "defaultPrompt": [
+      "Create an App Store screenshot plan for this app."
+    ]
+  }
 }

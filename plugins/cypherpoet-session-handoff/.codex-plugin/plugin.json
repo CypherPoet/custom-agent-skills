@@ -1,6 +1,6 @@
 {
   "name": "cypherpoet-session-handoff",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "description": "Write a structured handoff document so a fresh agent can resume long-running work without losing context.",
   "author": {
     "name": "CypherPoet"
@@ -15,5 +15,20 @@
     "context",
     "workflow"
   ],
-  "skills": "./skills/"
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Session Handoff",
+    "shortDescription": "Create resumable agent handoffs",
+    "longDescription": "Write a structured handoff document so a fresh agent can resume long-running work without losing context.",
+    "developerName": "CypherPoet",
+    "category": "Productivity",
+    "capabilities": [
+      "Read",
+      "Write"
+    ],
+    "websiteURL": "https://github.com/CypherPoet/custom-agent-skills/tree/main/plugins/cypherpoet-session-handoff",
+    "defaultPrompt": [
+      "Write a handoff so another agent can resume this work."
+    ]
+  }
 }

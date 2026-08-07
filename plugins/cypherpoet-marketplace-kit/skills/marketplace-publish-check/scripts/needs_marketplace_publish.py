@@ -5,9 +5,8 @@ Diffs the *marketplace catalog surface* between a base ref (default: main) and
 HEAD, and reports the plugins whose surface changed:
   - every plugins/*/.claude-plugin/plugin.json — a plugin added or removed, or
     its name / description / homepage edited (the Claude catalog fields);
-  - scripts/plugin-registry.json — a plugin's dual-harness classification changed,
-    or any field of its dual_harness_plugins entry (the Codex catalog surface,
-    e.g. `category`) changed.
+  - scripts/plugin-registry.json — a plugin's dual-harness classification or
+    `category` changed (the Codex catalog surface).
 A version-only bump does NOT count: that's content, gated by the version key,
 and reaches installs without a catalog re-publish.
 
@@ -70,13 +69,13 @@ def plugin_name(path):
 
 
 def codex_entries(root, ref):
-    """{plugin: full dual_harness_plugins entry} from the plugin registry at <ref>.
+    """{plugin: {category}} from the plugin registry at <ref>.
 
-    Whole entries, not just `category`, so any future per-plugin field the Codex
-    catalog stores is covered without a script edit. {} when the file doesn't exist
-    at <ref> (no Codex catalog surface there — e.g. the commit that first introduces
-    it). A file that exists but is malformed raises ValueError: that's an error to
-    surface (exit 2), not a mass catalog removal."""
+    Membership captures the dual-harness classification. Only category is copied
+    into a per-plugin Codex catalog entry; interface metadata stays in the generated
+    plugin manifest and must not request a catalog publish. {} when the file doesn't
+    exist at <ref>. A malformed file raises ValueError instead of looking like a mass
+    catalog removal."""
     shown_path = PLUGIN_REGISTRY_PATH
     res = git(root, "show", f"{ref}:{shown_path}")
     if res.returncode != 0:
@@ -88,7 +87,10 @@ def codex_entries(root, ref):
         entries = json.loads(res.stdout).get("dual_harness_plugins", {})
         if not isinstance(entries, dict) or not all(isinstance(v, dict) for v in entries.values()):
             raise ValueError("dual_harness_plugins entries must be objects")
-        return entries
+        return {
+            name: {"category": metadata.get("category")}
+            for name, metadata in entries.items()
+        }
     except (json.JSONDecodeError, AttributeError, ValueError) as e:
         raise ValueError(f"{shown_path} at {ref} is malformed: {e}")
 
