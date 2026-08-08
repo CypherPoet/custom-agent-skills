@@ -98,9 +98,10 @@ const update = Fn(() => {
   pos.assign(pos.add(vel.mul(uDelta)));
 })().compute(count);
 
-const clock = new THREE.Clock();
+const timer = new THREE.Timer();
 renderer.setAnimationLoop(() => {
-  uDelta.value = clock.getDelta();
+  timer.update();
+  uDelta.value = timer.getDelta();
   renderer.compute(update);   // sync dispatch, cheap per frame once initialized
   renderer.render(scene, camera);
 });
