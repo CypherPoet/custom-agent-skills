@@ -74,9 +74,10 @@ window.addEventListener("resize", () => {
   renderer.setSize(window.innerWidth, window.innerHeight);
 });
 
-const clock = new THREE.Clock();
+const timer = new THREE.Timer();
 renderer.setAnimationLoop(() => {
-  const delta = clock.getDelta();
+  timer.update();
+  const delta = timer.getDelta();
   controls.update();
   renderer.render(scene, camera);
 });
@@ -110,7 +111,7 @@ Or read the [release notes](https://github.com/mrdoob/three.js/releases). When a
 
 [`assets/scene-template.html`](./assets/scene-template.html) pins a specific Three.js version in its importmap — treat it as a fallback, not authoritative current state. Before handing the template (or any importmap snippet) to a user, verify against the latest release: `npm view three version`, the [release feed](https://github.com/mrdoob/three.js/releases), or context7's threejs docs. If the pin is behind by more than two minor releases, bump all three pinned URLs (`three`, `three/tsl`, `three/addons/`) before producing the answer.
 
-**Audit baseline:** this skill's content was last verified against **Three.js r185** (2026-07-24). When refreshing it for a newer release, diff **r185 → current** in the [Migration Guide](https://github.com/mrdoob/three.js/wiki/Migration-Guide) and release notes instead of re-checking everything — then bump this line (release + date) as the final step of the audit.
+**Audit baseline:** this skill's content was last verified against **Three.js r185** (2026-08-08). When refreshing it for a newer release, diff **r185 → current** in the [Migration Guide](https://github.com/mrdoob/three.js/wiki/Migration-Guide) and release notes instead of re-checking everything — then bump this line (release + date) as the final step of the audit.
 
 ### Project Setup & Module Entry Points
 
@@ -133,13 +134,14 @@ See [references/textures.md#color-space](./references/textures.md#color-space--t
 
 ### Frame Delta
 
-Drive everything time-dependent with `clock.getDelta()`, not wall-clock time:
+Drive everything time-dependent with `timer.getDelta()`, not wall-clock time:
 
 ```javascript
-const clock = new THREE.Clock();
+const timer = new THREE.Timer();   // `Clock` is deprecated since r183
 
 renderer.setAnimationLoop(() => {
-  const delta = clock.getDelta();    // Seconds since last frame
+  timer.update();                    // Refresh once per frame, before reading
+  const delta = timer.getDelta();    // Seconds since last frame
   controls.update();                 // Required when damping is on
   mixer?.update(delta);              // Required for AnimationMixer
   renderer.render(scene, camera);
@@ -188,7 +190,7 @@ function onResize() {
   camera.updateProjectionMatrix();
   renderer.setSize(w, h);
   composer?.setSize(w, h);               // EffectComposer (legacy)
-  postProcessing?.setSize(w, h);         // PostProcessing (TSL)
+  postProcessing?.setSize(w, h);         // RenderPipeline (TSL)
 }
 window.addEventListener("resize", onResize);
 ```
@@ -215,7 +217,7 @@ All examples and references use `three/addons/...` — the modern alias. The old
 | Interaction | [interaction.md](./references/interaction.md) | Raycaster, controls catalog (Orbit/Fly/PointerLock/Transform/Drag), selection, screen↔world |
 | Shaders (TSL) | [shaders.md](./references/shaders.md) | TSL essentials + recipes (primary), WGSL interop, shader debugging + performance |
 | Shaders (GLSL, legacy) | [shaders-glsl.md](./references/shaders-glsl.md) | Raw-GLSL `ShaderMaterial`/`RawShaderMaterial`, `onBeforeCompile`, `ShaderChunk`, GLSL function reference |
-| Post-processing | [postprocessing.md](./references/postprocessing.md) | TSL `PostProcessing` pipeline + node passes (primary), `EffectComposer` (legacy) |
+| Post-processing | [postprocessing.md](./references/postprocessing.md) | TSL `RenderPipeline` pipeline + node passes (primary), `EffectComposer` (legacy) |
 | Compute | [compute.md](./references/compute.md) | GPU compute (WebGPU only): storage buffers, `instancedArray`/`attributeArray`, `compute()` dispatch, particles/simulation |
 | WebGPU runtime | [webgpu-runtime.md](./references/webgpu-runtime.md) | Device-loss handling and recovery, requesting device limits/features (WebGPU) |
 | Project setup | [project-setup.md](./references/project-setup.md) | Module entry points, npm/Vite bundling, TypeScript, React (r3f) |

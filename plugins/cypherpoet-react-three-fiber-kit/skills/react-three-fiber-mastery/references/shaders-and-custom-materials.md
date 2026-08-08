@@ -238,7 +238,7 @@ Output note: built-in materials end with tone mapping and output color-space con
 #include <colorspace_fragment>
 ```
 
-(Both resolve inside non-raw `ShaderMaterial`; `colorspace_fragment` was named `encodings_fragment` before three r152.)
+(Both resolve inside non-raw `ShaderMaterial`; `colorspace_fragment` was named `encodings_fragment` before three r154.)
 
 ## Effect Cookbook
 

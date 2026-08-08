@@ -91,7 +91,7 @@ npm view @react-three/drei version
 npm view three version
 ```
 
-**Audit baseline:** this skill's content was last verified against **@react-three/fiber 9.6.1, @react-three/drei 10.7.7, three 0.185.1 (r185), React 19.2** (2026-07-03). When refreshing for newer releases, diff the [fiber releases](https://github.com/pmndrs/react-three-fiber/releases) and [drei releases](https://github.com/pmndrs/drei/releases) from that baseline instead of re-checking everything — then bump this line (versions + date) as the final step of the audit.
+**Audit baseline:** this skill's content was last verified against **@react-three/fiber 9.7.0, @react-three/drei 10.7.8, three 0.185.1 (r185), React 19.2** (2026-08-08). When refreshing for newer releases, diff the [fiber releases](https://github.com/pmndrs/react-three-fiber/releases) and [drei releases](https://github.com/pmndrs/drei/releases) from that baseline instead of re-checking everything — then bump this line (versions + date) as the final step of the audit.
 
 ### Version Pairing
 

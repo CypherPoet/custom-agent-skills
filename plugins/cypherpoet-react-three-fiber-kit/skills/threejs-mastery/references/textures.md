@@ -84,7 +84,10 @@ texture.magFilter = THREE.LinearFilter;               // Smooth (default)
 texture.magFilter = THREE.NearestFilter;              // Pixelated (retro)
 
 // Anisotropic — sharpens textures at grazing angles
+// WebGLRenderer:
 texture.anisotropy = renderer.capabilities.getMaxAnisotropy();
+// WebGPURenderer: the accessor lives on the renderer itself
+texture.anisotropy = renderer.getMaxAnisotropy();
 
 // Mipmap generation (default true; disable for non-power-of-2 and data textures)
 texture.generateMipmaps = true;
@@ -260,7 +263,7 @@ const depth = renderTarget.depthTexture;
 new THREE.WebGLRenderTarget(512, 512, { samples: 4 });
 ```
 
-> Under `WebGPURenderer`, the equivalent types are `WebGPURenderTarget` / `WebGPUStorageTexture`; APIs are similar but check current docs when you need them.
+> Under `WebGPURenderer`, use the renderer-agnostic `RenderTarget` (plus `StorageTexture` for compute-writable textures). `WebGLRenderTarget` still resolves from `three/webgpu`, but `WebGLCubeRenderTarget` cannot be used with `WebGPURenderer` since r183 — use `CubeRenderTarget` instead.
 
 ## CubeCamera — Dynamic Environment Maps
 
@@ -499,7 +502,7 @@ class TexturePool {
 - **Power-of-two dimensions** (256/512/1024/2048) play nicely with mipmaps and old GPUs.
 - **Compress with KTX2/Basis** for delivery — smaller download *and* smaller GPU footprint.
 - **Atlas small textures** to reduce binds and improve batching.
-- **Anisotropy is cheap but bounded** — `renderer.capabilities.getMaxAnisotropy()` returns the device limit.
+- **Anisotropy is cheap but bounded** — `renderer.capabilities.getMaxAnisotropy()` (WebGL) / `renderer.getMaxAnisotropy()` (WebGPU) returns the device limit.
 - **Reuse textures.** Two meshes with the same `material.map` instance share GPU memory and batch better.
 - **Watch memory**: `renderer.info.memory.textures` reports live count.
 
