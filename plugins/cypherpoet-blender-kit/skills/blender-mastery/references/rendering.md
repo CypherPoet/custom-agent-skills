@@ -54,7 +54,7 @@ def bake_ao(obj, image_size=1024, samples=64, output_path=None):
     if not obj.data.uv_layers:
         bpy.ops.object.mode_set(mode='EDIT')
         bpy.ops.mesh.select_all(action='SELECT')
-        bpy.ops.uv.smart_project(angle_limit=66)
+        bpy.ops.uv.smart_project(angle_limit=1.15192)  # radians (66°); the operator's range is [0, 1.5708]
         bpy.ops.object.mode_set(mode='OBJECT')
 
     # 4. Create / find the target image.
@@ -111,7 +111,7 @@ The two parts most scripts get wrong:
 | `EMIT` | Emission pass |
 | `SHADOW` | Shadow contribution |
 
-For lightmaps (AO + GI baked into a texture for runtime), use `COMBINED` with `bpy.context.scene.cycles.use_world_indirect_lighting = True` and the appropriate pass filters.
+For lightmaps (AO + GI baked into a texture for runtime), use `COMBINED` with `bpy.context.scene.render.bake.use_pass_indirect = True` (and `use_pass_direct` / the per-contribution `use_pass_diffuse` … flags) to pick the contributions.
 
 ## Render passes (separating contributions)
 

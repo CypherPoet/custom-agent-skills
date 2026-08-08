@@ -164,7 +164,7 @@ for mat in bpy.data.materials:
 
 These work in Blender but get lost on GLTF/USD export. If you need them in the final asset, bake to texture before export:
 
-- Procedural textures (Noise, Voronoi, Musgrave, …)
+- Procedural textures (Noise, Voronoi, Wave, …)
 - Color Ramp value remapping (the *texture* exports; the remap doesn't)
 - Bump-from-noise (procedural Bump node chains)
 - Mix Shader trees beyond a single-shader Principled
