@@ -4,6 +4,12 @@ import subprocess
 import sys
 import unittest
 
+from cypherpoet_agent_skills_tooling import (
+    build_codex_manifest,
+    sync,
+    validate_codex_interface,
+)
+
 from support import ROOT, git
 
 
@@ -70,71 +76,33 @@ class RepositoryHealthTests(unittest.TestCase):
                 self.assertRegex(data.get("version", ""), r"^\d+\.\d+\.\d+$")
 
     def test_codex_interface_metadata_is_complete_and_composed(self):
+        self.assertEqual(sync(ROOT, write=False), [])
         registry = json.loads(
             (ROOT / "scripts/plugin-registry.json").read_text(encoding="utf-8")
         )
-        display_names = []
         for name, plugin_metadata in sorted(
             registry["dual_harness_plugins"].items()
         ):
             with self.subTest(plugin=name):
-                self.assertIsInstance(plugin_metadata, dict)
-                self.assertTrue(plugin_metadata.get("category", "").strip())
-                interface = plugin_metadata.get("interface")
-                self.assertIsInstance(interface, dict)
-
-                display_name = interface.get("displayName", "")
-                self.assertTrue(display_name.strip())
-                self.assertLessEqual(len(display_name), 30)
-                display_names.append(display_name)
-
-                short_description = interface.get("shortDescription", "")
-                self.assertTrue(short_description.strip())
-                self.assertLessEqual(len(short_description), 240)
-                self.assertNotIn("\n", short_description)
-                self.assertNotIn("\r", short_description)
-
-                capabilities = interface.get("capabilities")
-                self.assertTrue(capabilities)
-                self.assertTrue(
-                    set(capabilities) <= {"Interactive", "Read", "Write"}
-                )
-
-                default_prompt = interface.get("defaultPrompt")
-                self.assertEqual(len(default_prompt), 1)
-                self.assertTrue(default_prompt[0].strip())
-                self.assertLessEqual(len(default_prompt[0]), 128)
-
                 plugin_root = ROOT / "plugins" / name
                 claude = json.loads(
                     (plugin_root / ".claude-plugin/plugin.json").read_text(
                         encoding="utf-8"
                     )
                 )
-                self.assertTrue(claude.get("description", "").strip())
-                self.assertTrue(claude.get("author", {}).get("name", "").strip())
-                self.assertTrue(claude.get("homepage", "").strip())
-
                 codex = json.loads(
                     (plugin_root / ".codex-plugin/plugin.json").read_text(
                         encoding="utf-8"
                     )
                 )
+                self.assertEqual(codex, build_codex_manifest(claude, plugin_metadata))
                 self.assertEqual(
-                    codex.get("interface"),
-                    {
-                        "displayName": display_name,
-                        "shortDescription": short_description,
-                        "longDescription": claude["description"],
-                        "developerName": claude["author"]["name"],
-                        "category": plugin_metadata["category"],
-                        "capabilities": capabilities,
-                        "websiteURL": claude["homepage"],
-                        "defaultPrompt": default_prompt,
-                    },
+                    validate_codex_interface(
+                        codex["interface"],
+                        source_homepage=claude["homepage"],
+                    ),
+                    [],
                 )
-
-        self.assertEqual(len(display_names), len(set(display_names)))
 
     def test_no_tracked_file_references_the_stale_generator_name(self):
         # The generator's old name (sync + _dual_harness) must not linger; nothing tracked

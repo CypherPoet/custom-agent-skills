@@ -18,7 +18,7 @@
   "skills": "./skills/",
   "interface": {
     "displayName": "Mobile Development",
-    "shortDescription": "Prepare iOS apps for App Store review",
+    "shortDescription": "Prepare iOS apps for review",
     "longDescription": "iOS App Store publishing best practices.",
     "developerName": "CypherPoet",
     "category": "Developer Tools",

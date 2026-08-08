@@ -22,7 +22,7 @@
     "shortDescription": "Apply Apple interface guidance",
     "longDescription": "Thorough distillation of Apple's complete Human Interface Guidelines across all six platforms (iOS, iPadOS, macOS, tvOS, visionOS, watchOS) — component-by-component best practices, hard specs (tap targets, type sizes, color tokens), per-platform deltas, and choose-the-right-component decision tables, with a synced reference corpus that tracks Apple's updates.",
     "developerName": "CypherPoet",
-    "category": "Design",
+    "category": "Creativity",
     "capabilities": [
       "Read",
       "Write"

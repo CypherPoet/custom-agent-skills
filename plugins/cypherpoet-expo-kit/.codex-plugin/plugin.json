@@ -17,7 +17,7 @@
   "skills": "./skills/",
   "interface": {
     "displayName": "Expo",
-    "shortDescription": "Prototype Expo and React Native apps",
+    "shortDescription": "Prototype Expo mobile apps",
     "longDescription": "Expo / React Native prototyping.",
     "developerName": "CypherPoet",
     "category": "Developer Tools",

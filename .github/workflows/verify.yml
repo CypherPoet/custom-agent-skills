@@ -26,6 +26,8 @@ jobs:
       - uses: actions/setup-python@v7
         with:
           python-version: "3.11"
+      - name: Install repository tooling
+        run: python -m pip install -r requirements-tooling.txt
       - name: Run tests
         env:
           PYTHONDONTWRITEBYTECODE: "1"

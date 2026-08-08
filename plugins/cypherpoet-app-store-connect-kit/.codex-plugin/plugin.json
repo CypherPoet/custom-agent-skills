@@ -22,7 +22,7 @@
   "skills": "./skills/",
   "interface": {
     "displayName": "App Store Connect",
-    "shortDescription": "Submit and manage Apple app releases",
+    "shortDescription": "Manage Apple app releases",
     "longDescription": "Hands-on App Store Connect submission workflow and console navigation.",
     "developerName": "CypherPoet",
     "category": "Developer Tools",

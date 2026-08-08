@@ -105,7 +105,7 @@ class MarketplacePublishCheckTests(unittest.TestCase):
 
     def test_codex_category_change_needs_publish(self):
         self.feature_branch()
-        self.write_dual_config(category="Design")
+        self.write_dual_config(category="Creativity")
         commit_all(self.repo, "category")
         result = self.run_check()
         self.assertEqual(result.returncode, 1)
@@ -165,7 +165,7 @@ class MarketplacePublishCheckTests(unittest.TestCase):
         commit_all(repo, "pre-rename baseline")
         git(repo, "switch", "-c", "feature")
         legacy.unlink()
-        self.write_dual_config_at(repo, category="Design")
+        self.write_dual_config_at(repo, category="Creativity")
         commit_all(repo, "rename registry and change category")
         result = run([sys.executable, str(SCRIPT), "main"], repo, check=False)
         self.assertEqual(result.returncode, 1, result.stderr)

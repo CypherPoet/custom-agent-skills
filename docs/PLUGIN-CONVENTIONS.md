@@ -6,8 +6,9 @@ For plugin anatomy (component types, auto-discovery, `${CLAUDE_PLUGIN_ROOT}` usa
 
 - [Claude Code plugins reference](https://code.claude.com/docs/en/plugins-reference)
 - [`plugin-dev` toolkit](https://github.com/anthropics/claude-plugins-official/blob/main/plugins/plugin-dev/README.md) — the `/plugin-dev:create-plugin` workflow plus the seven authoring skills (plugin structure, and skill / command / agent / hook / MCP / settings development)
-- [Codex: Build skills](https://learn.chatgpt.com/docs/build-skills) / [Build plugins](https://learn.chatgpt.com/docs/build-plugins) — the Codex plugin + skill format
-- [Codex `plugin-creator`](https://github.com/openai/skills/blob/main/skills/.system/plugin-creator/SKILL.md) — the spec the **generated** Codex artifacts must match: [`scripts/sync_plugins.py`](../scripts/sync_plugins.py) composes `.codex-plugin/plugin.json` from the Claude manifest and registry metadata, and the publish flow writes the marketplace entry (`policy`, `category`) — see [Marketplaces](#marketplaces).
+- [Codex: Build skills](https://learn.chatgpt.com/docs/build-skills) / [Build plugins](https://learn.chatgpt.com/docs/build-plugins) — the Codex plugin and skill format.
+- [Codex final-directory submission contract](https://developers.openai.com/plugins/deploy/submission-errors#final-directory-submission) — the authoritative field limits and supported values enforced for the generated Codex interface.
+- [Codex `plugin-creator`](https://github.com/openai/skills/blob/main/skills/.system/plugin-creator/SKILL.md) — useful scaffolding and a local preflight helper. It is not the final-directory submission service and does not replace this repository's cross-harness validation.
 
 ## Plugin Folder
 
@@ -32,7 +33,15 @@ Confirm these fields on the scaffolded `plugin.json` (match a sibling under `plu
 
 Plugins target **both** Claude Code and Codex. Each plugin is **self-contained**: install pulls only its own directory (Claude Code `git-subdir` sparse-clone; Codex marketplace fetch), so a plugin must physically ship every skill it needs. Neither harness resolves a reference to a skill in another plugin, and Codex has no plugin-to-plugin dependency mechanism — so composition is by **vendoring** (copying a skill into each plugin that ships it), never dependencies.
 
-[`scripts/plugin-registry.json`](../scripts/plugin-registry.json) is the source of truth for harness targeting, Codex presentation metadata, and vendoring edges. [`scripts/sync_plugins.py`](../scripts/sync_plugins.py) generates every derived artifact and, with `--check`, fails on drift (the repo-local `skill-structure-check` runs this check).
+[`scripts/plugin-registry.json`](../scripts/plugin-registry.json) is the source of truth for harness targeting, Codex presentation metadata, and vendoring edges. The public [`cypherpoet-agent-skills-tooling`](../tooling/) package implements generation and validation for both this repository and the private sibling. [`scripts/sync_plugins.py`](../scripts/sync_plugins.py) is an intentionally thin compatibility launcher; it contains no repository-specific business logic.
+
+Install the repository's declared tooling before running any generator or gate:
+
+```shell
+python3 -m pip install -r requirements-tooling.txt
+```
+
+This public repository installs `./tooling` in editable mode. The private sibling uses the same command but pins the package to the exact commit identified by the immutable `agent-skills-tooling-v0.1.0` tag. The commit pin, rather than a moving branch or tag reference, makes CI and local generation reproducible. After installation, the launcher generates every derived artifact and `--check` fails on drift; the repo-local `skill-structure-check` delegates to that launcher.
 
 ### Manifests
 
@@ -42,7 +51,20 @@ A dual-harness plugin carries two manifests over a shared `skills/` directory:
 - The plugin's `dual_harness_plugins` registry entry — hand-authored source of truth for Codex `category` and `interface.displayName`, `shortDescription`, `capabilities`, and `defaultPrompt`.
 - `.codex-plugin/plugin.json` — **generated** composition of both sources. Its `interface.longDescription` comes from the Claude `description`, `developerName` from `author.name`, and `websiteURL` from `homepage`; `skills` is `"./skills/"`. Do not hand-edit it.
 
-The registry requires a unique, non-empty `displayName` of at most 30 characters; a non-empty, single-line `shortDescription` of at most 240 characters; one or more capabilities chosen from `Interactive`, `Read`, and `Write`; and exactly one non-empty starter prompt of at most 128 characters. The Claude manifest must supply non-empty `description`, `author.name`, and `homepage` values for the generated interface.
+The shared validator enforces the final Codex interface before **any** Codex manifest is written. A failure in one plugin prevents writes for every generated manifest, so an invalid registry entry cannot leave a partially updated repository.
+
+The contract for fields generated in this migration is:
+
+- `displayName` — required, single-line, no surrounding whitespace, at most 30 characters, and globally unique after NFKC Unicode normalization, whitespace folding, and case folding.
+- `shortDescription` — required, single-line, no surrounding whitespace, and at most 30 characters.
+- `longDescription` — generated from the Claude manifest's `description`; required, at most 4,000 characters, with line feeds allowed.
+- `developerName` — generated from `author.name`; required, single-line, and at most 80 characters.
+- `category` — one of `Productivity`, `Creativity`, `Developer Tools`, `Business & Operations`, `Data & Analytics`, `Communication`, `Education & Research`, `Security`, `Finance`, `Healthcare`, `Travel`, `Entertainment`, or `Other`.
+- `capabilities` — 1–20 free-form, single-line strings of at most 120 characters each. Values are unique after NFKC Unicode normalization, whitespace folding, and case folding. `Interactive`, `Read`, and `Write` are current authored values, not a closed Codex enumeration.
+- `defaultPrompt` — 1–3 single-line starter prompts, each at most 128 characters, without an app `@mention`. Values are unique after NFKC Unicode normalization and whitespace folding; comparison remains case-sensitive.
+- `websiteURL` — generated from `homepage`; an absolute HTTPS URL with a host, no credentials, supported URL characters, and at most 1,024 characters. The source `homepage` limit is 2,048 characters, but because it is copied into `websiteURL`, this repository's effective limit is 1,024.
+
+All authored and generated strings reject surrounding whitespace rather than silently rewriting it. Control characters, invisible format characters, surrogate code points, and Unicode line or paragraph separators are unsupported; `longDescription` alone permits line feeds.
 
 Dual-harness is the default. A plugin whose function is Claude-Code-specific runs on Claude only: list it in `plugin-registry.json`'s `claude_only_plugins` (with a reason) and it gets no `.codex-plugin/` manifest. Judge by skill **content**, not shape — `claude-docs-search`'s `SKILL.md` parses fine on Codex, but it searches Claude Code's own documentation, so it belongs on the list. Keep that list short; anything portable ships to both.
 
@@ -65,6 +87,8 @@ The separate [`cypherpoet-toolchest`](https://github.com/CypherPoet/cypherpoet-t
 - `.claude-plugin/marketplace.json` — the Claude Code catalog. Consumers: `/plugin marketplace add CypherPoet/cypherpoet-toolchest`.
 - `.agents/plugins/marketplace.json` — the Codex catalog (`git-subdir` entries pointing back at this repo, plus each plugin's `category` from [`scripts/plugin-registry.json`](../scripts/plugin-registry.json)). Consumers: `codex plugin marketplace add CypherPoet/cypherpoet-toolchest`.
 
+The Codex catalog's top-level `name` is `cypherpoet-toolchest`; its user-facing `interface.displayName` is `CypherPoet Toolchest`. Codex plugin titles come from each generated plugin manifest's `interface.displayName`, not from the marketplace identifier.
+
 ## Validate
 
 After scaffolding and applying the deltas, run:
@@ -75,7 +99,13 @@ claude plugin validate plugins/<plugin-name>
 
 No warnings or errors expected. Anything else means something needs a closer look — fix it before opening the PR **on this repo** (a separate publish PR happens later on the marketplace repo).
 
-Also run the validator shipped by Codex's `plugin-creator` skill against each generated plugin. The repository gates enforce the authored limits and composition rules; the official validator confirms that the result matches Codex's ingestion contract.
+Run the shared generator in check mode; it validates the complete generated interface contract and composition without writing:
+
+```shell
+python3 scripts/sync_plugins.py --check
+```
+
+The validator bundled with Codex's `plugin-creator` is a useful scaffold preflight, but it is not the official submission service. In particular, its Codex-only skill-frontmatter check rejects Claude Code's `disable-model-invocation: true`. For a manual-only dual-harness skill, retain that Claude field and separately set Codex's `policy.allow_implicit_invocation: false` in `agents/openai.yaml`; one harness's policy field must not weaken the other's behavior. Use the final-directory submission contract linked above as the authority for interface metadata.
 
 That's the plugin-specific check, not the whole gate. [`AGENTS.md`](../AGENTS.md) is authoritative for the rest: the test suite before *any* PR, the sync after editing a manifest / the registry / a vendored skill's source, and `skill-structure-check` before a PR that touches skills.
 

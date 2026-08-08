@@ -19,7 +19,7 @@
   "skills": "./skills/",
   "interface": {
     "displayName": "Three.js",
-    "shortDescription": "Build Three.js, WebGPU, and WebGL scenes",
+    "shortDescription": "Build Three.js web graphics",
     "longDescription": "Three.js / WebGPU / WebGL tooling.",
     "developerName": "CypherPoet",
     "category": "Developer Tools",

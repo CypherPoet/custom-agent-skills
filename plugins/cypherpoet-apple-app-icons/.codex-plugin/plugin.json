@@ -23,10 +23,10 @@
   "skills": "./skills/",
   "interface": {
     "displayName": "Apple App Icons",
-    "shortDescription": "Design, audit, and ship Apple app icons",
+    "shortDescription": "Design and audit Apple icons",
     "longDescription": "Apple app icons end to end: design one that converts in the App Store (tap-through, audit, A/B testing) and ship it correctly — Icon Composer Liquid Glass .icon plus an appiconset fallback for older OS versions.",
     "developerName": "CypherPoet",
-    "category": "Design",
+    "category": "Creativity",
     "capabilities": [
       "Read",
       "Write"

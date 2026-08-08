@@ -18,7 +18,7 @@
   "skills": "./skills/",
   "interface": {
     "displayName": "Marketplace Toolkit",
-    "shortDescription": "Publish and audit plugin marketplaces",
+    "shortDescription": "Publish and audit marketplaces",
     "longDescription": "Maintainer toolkit for running a plugin marketplace with Claude Code and Codex catalogs — publish plugins, audit marketplace and catalog sync, and regenerate the local catalog.",
     "developerName": "CypherPoet",
     "category": "Developer Tools",

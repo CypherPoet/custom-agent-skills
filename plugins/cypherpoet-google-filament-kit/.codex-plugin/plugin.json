@@ -19,7 +19,7 @@
   "skills": "./skills/",
   "interface": {
     "displayName": "Google Filament",
-    "shortDescription": "Build with Filament rendering APIs",
+    "shortDescription": "Build with Filament APIs",
     "longDescription": "Comprehensive working knowledge of Google Filament, the real-time physically-based rendering engine — the PBR material model and lighting/IBL, the material definition language and matc compiler, the core engine API (Engine/Scene/View/Renderer/Camera, resources, gltfio), and per-binding setup for C++, Web (JS/WASM), and Android, distilled from the official documentation with a synced reference corpus that tracks Filament releases.",
     "developerName": "CypherPoet",
     "category": "Developer Tools",

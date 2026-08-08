@@ -33,11 +33,10 @@ import subprocess
 import sys
 from pathlib import Path
 
-# Reuse the generator's own ignore predicates so "content that ships to an
-# install" has exactly one definition in this repo. Importing sync_plugins is
-# side-effect free (it guards its entry point).
-sys.path.insert(0, str(Path(__file__).resolve().parent))
-from sync_plugins import _dir_ignored, _file_ignored  # noqa: E402
+from cypherpoet_agent_skills_tooling.sync_plugins import (
+    _dir_ignored,
+    _file_ignored,
+)
 
 MANIFEST = "plugins/{plugin}/.claude-plugin/plugin.json"
 

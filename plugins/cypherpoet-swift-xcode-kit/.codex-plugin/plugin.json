@@ -19,7 +19,7 @@
   "skills": "./skills/",
   "interface": {
     "displayName": "Swift & Xcode",
-    "shortDescription": "Build, modernize, and verify Apple apps",
+    "shortDescription": "Build and verify Apple apps",
     "longDescription": "Swift and Xcode development kit: SwiftUI best practices and 2027 SDK migration, UIKit multi-window modernization, XCTest-to-Swift-Testing migration, security-hardening audits of Xcode build settings, C -fbounds-safety guidance, and on-device/simulator UI verification.",
     "developerName": "CypherPoet",
     "category": "Developer Tools",

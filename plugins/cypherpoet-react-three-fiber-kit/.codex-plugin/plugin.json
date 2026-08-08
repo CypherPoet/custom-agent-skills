@@ -19,7 +19,7 @@
   "skills": "./skills/",
   "interface": {
     "displayName": "React Three Fiber",
-    "shortDescription": "Build declarative Three.js scenes",
+    "shortDescription": "Build React Three Fiber scenes",
     "longDescription": "React Three Fiber (R3F) + drei tooling for declarative Three.js in React.",
     "developerName": "CypherPoet",
     "category": "Developer Tools",

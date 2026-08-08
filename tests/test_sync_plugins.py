@@ -1,21 +1,16 @@
 import json
 import unittest
 
+from cypherpoet_agent_skills_tooling import sync_plugins
+
 from support import (
     commit_all,
     fixture_directory,
     initialize_git_repo,
-    load_module,
     write,
     write_json,
     write_plugin_registry,
     write_plugin_manifest,
-)
-
-
-sync_plugins = load_module(
-    "sync_plugins",
-    "scripts/sync_plugins.py",
 )
 
 
@@ -63,7 +58,7 @@ class SyncPluginsTests(unittest.TestCase):
             vendored_skills,
             {
                 name: {
-                    "category": "Test",
+                    "category": "Developer Tools",
                     "interface": self.interface_metadata(name),
                 }
                 for name in plugins
@@ -93,7 +88,7 @@ class SyncPluginsTests(unittest.TestCase):
                 "shortDescription": "Use the bundle fixture",
                 "longDescription": "bundle fixture",
                 "developerName": "Test",
-                "category": "Test",
+                "category": "Developer Tools",
                 "capabilities": ["Read", "Write"],
                 "websiteURL": "https://example.com/bundle",
                 "defaultPrompt": ["Use the bundle fixture for this task."],
@@ -107,16 +102,16 @@ class SyncPluginsTests(unittest.TestCase):
 
     def test_invalid_interface_metadata_blocks_generation(self):
         cases = (
-            ("category", "", "non-empty 'category'"),
+            ("category", "", "category must be a non-empty string"),
             ("displayName", "", "displayName must be a non-empty string"),
             ("displayName", "x" * 31, "displayName must be at most 30"),
             ("shortDescription", "", "shortDescription must be a non-empty string"),
             ("shortDescription", "two\nlines", "shortDescription must be a single line"),
-            ("shortDescription", "x" * 241, "shortDescription must be at most 240"),
-            ("capabilities", [], "capabilities must be a non-empty array"),
-            ("capabilities", ["Execute"], "capabilities values must be one of"),
-            ("defaultPrompt", [], "defaultPrompt must contain exactly one"),
-            ("defaultPrompt", ["one", "two"], "defaultPrompt must contain exactly one"),
+            ("shortDescription", "x" * 31, "shortDescription must be at most 30"),
+            ("capabilities", [], "capabilities must contain between 1 and 20"),
+            ("capabilities", ["x" * 121], "capabilities[0] must be at most 120"),
+            ("defaultPrompt", [], "defaultPrompt must contain between 1 and 3"),
+            ("defaultPrompt", ["one", "two", "three", "four"], "defaultPrompt must contain between 1 and 3"),
             ("defaultPrompt", [""], "defaultPrompt[0] must be a non-empty string"),
             ("defaultPrompt", ["x" * 129], "defaultPrompt[0] must be at most 128"),
         )
@@ -131,8 +126,18 @@ class SyncPluginsTests(unittest.TestCase):
                 else:
                     metadata["interface"][field] = value
                 write_json(config_path, config)
+                manifest_paths = sorted(self.root.glob("plugins/*/.codex-plugin/plugin.json"))
+                before = {path: path.read_bytes() for path in manifest_paths}
                 problems = sync_plugins.sync(self.root, write=True)
                 self.assertTrue(any(expected in problem for problem in problems), problems)
+                self.assertEqual(
+                    {path: path.read_bytes() for path in manifest_paths},
+                    before,
+                )
+                self.assertEqual(
+                    list(self.root.glob("plugins/*/.codex-plugin/plugin.json")),
+                    manifest_paths,
+                )
 
     def test_missing_interface_object_blocks_generation(self):
         self.write_config([], ("source", "bundle"))
@@ -141,16 +146,28 @@ class SyncPluginsTests(unittest.TestCase):
         del config["dual_harness_plugins"]["source"]["interface"]
         write_json(config_path, config)
         problems = sync_plugins.sync(self.root, write=True)
-        self.assertTrue(any("needs an 'interface' object" in problem for problem in problems))
+        self.assertTrue(any("needs an interface object" in problem for problem in problems))
+        self.assertFalse(
+            (self.root / "plugins/source/.codex-plugin/plugin.json").exists()
+        )
 
     def test_duplicate_display_names_block_generation(self):
         self.write_config([], ("source", "bundle"))
         config_path = self.root / "scripts/plugin-registry.json"
         config = json.loads(config_path.read_text())
-        config["dual_harness_plugins"]["bundle"]["interface"]["displayName"] = "Source"
+        config["dual_harness_plugins"]["bundle"]["interface"]["displayName"] = "Ｓｏｕｒｃｅ"
         write_json(config_path, config)
+        self.assertFalse(
+            (self.root / "plugins/source/.codex-plugin/plugin.json").exists()
+        )
         problems = sync_plugins.sync(self.root, write=True)
         self.assertTrue(any("displayName duplicates" in problem for problem in problems))
+        self.assertFalse(
+            (self.root / "plugins/source/.codex-plugin/plugin.json").exists()
+        )
+        self.assertFalse(
+            (self.root / "plugins/bundle/.codex-plugin/plugin.json").exists()
+        )
 
     def test_required_claude_interface_sources_block_generation(self):
         cases = ("description", "author.name", "homepage")
@@ -164,8 +181,90 @@ class SyncPluginsTests(unittest.TestCase):
                 else:
                     manifest[field] = ""
                 write_json(manifest_path, manifest)
+                existing_manifest = self.root / "plugins/bundle/.codex-plugin/plugin.json"
+                before = existing_manifest.read_bytes() if existing_manifest.exists() else None
                 problems = sync_plugins.sync(self.root, write=True)
                 self.assertTrue(any(field in problem for problem in problems), problems)
+                if before is None:
+                    self.assertFalse(existing_manifest.exists())
+                else:
+                    self.assertEqual(existing_manifest.read_bytes(), before)
+
+    def test_invalid_derived_interface_values_block_all_manifests(self):
+        cases = (
+            ("description", "x" * 4001, "longDescription must be at most 4000"),
+            ("author", {"name": "x" * 81}, "developerName must be at most 80"),
+            ("homepage", "http://example.com", "websiteURL must be an absolute https URL"),
+        )
+        for field, value, expected in cases:
+            with self.subTest(field=field):
+                self.make_plugin("source")
+                manifest_path = self.root / "plugins/source/.claude-plugin/plugin.json"
+                manifest = json.loads(manifest_path.read_text())
+                manifest[field] = value
+                write_json(manifest_path, manifest)
+
+                problems = sync_plugins.sync(self.root, write=True)
+                self.assertTrue(any(expected in problem for problem in problems), problems)
+                self.assertEqual(
+                    list(self.root.glob("plugins/*/.codex-plugin/plugin.json")),
+                    [],
+                )
+
+    def test_invalid_plugin_preserves_existing_manifests_and_creates_none(self):
+        self.assertEqual(sync_plugins.sync(self.root, write=True), [])
+        source_manifest = self.root / "plugins/source/.codex-plugin/plugin.json"
+        bundle_manifest = self.root / "plugins/bundle/.codex-plugin/plugin.json"
+        source_before = source_manifest.read_bytes()
+        bundle_manifest.unlink()
+
+        config_path = self.root / "scripts/plugin-registry.json"
+        config = json.loads(config_path.read_text())
+        del config["dual_harness_plugins"]["source"]["interface"]["displayName"]
+        write_json(config_path, config)
+
+        problems = sync_plugins.sync(self.root, write=True)
+        self.assertTrue(any("displayName" in problem for problem in problems), problems)
+        self.assertEqual(source_manifest.read_bytes(), source_before)
+        self.assertFalse(bundle_manifest.exists())
+
+    def test_non_string_capability_reports_an_error_instead_of_raising(self):
+        config_path = self.root / "scripts/plugin-registry.json"
+        config = json.loads(config_path.read_text())
+        config["dual_harness_plugins"]["source"]["interface"]["capabilities"] = [
+            {"name": "Read"}
+        ]
+        write_json(config_path, config)
+
+        problems = sync_plugins.sync(self.root, write=True)
+        self.assertTrue(
+            any("capabilities[0] must be a non-empty string" in problem for problem in problems),
+            problems,
+        )
+        self.assertFalse(
+            (self.root / "plugins/source/.codex-plugin/plugin.json").exists()
+        )
+
+    def test_three_default_prompts_are_generated(self):
+        config_path = self.root / "scripts/plugin-registry.json"
+        config = json.loads(config_path.read_text())
+        prompts = ["First task.", "Second task.", "Third task."]
+        config["dual_harness_plugins"]["source"]["interface"]["defaultPrompt"] = prompts
+        write_json(config_path, config)
+
+        self.assertEqual(sync_plugins.sync(self.root, write=True), [])
+        manifest = json.loads(
+            (self.root / "plugins/source/.codex-plugin/plugin.json").read_text()
+        )
+        self.assertEqual(manifest["interface"]["defaultPrompt"], prompts)
+
+    def test_malformed_registry_reports_without_writing(self):
+        config_path = self.root / "scripts/plugin-registry.json"
+        config_path.write_text("[]\n", encoding="utf-8")
+
+        problems = sync_plugins.sync(self.root, write=True)
+        self.assertTrue(any("must contain an object" in problem for problem in problems))
+        self.assertEqual(list(self.root.glob("plugins/*/.codex-plugin/plugin.json")), [])
 
     def test_copy_drift_is_detected_and_write_repairs_it(self):
         sync_plugins.sync(self.root, write=True)

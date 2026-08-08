@@ -18,7 +18,7 @@
   "skills": "./skills/",
   "interface": {
     "displayName": "Session Handoff",
-    "shortDescription": "Create resumable agent handoffs",
+    "shortDescription": "Create resumable handoffs",
     "longDescription": "Write a structured handoff document so a fresh agent can resume long-running work without losing context.",
     "developerName": "CypherPoet",
     "category": "Productivity",

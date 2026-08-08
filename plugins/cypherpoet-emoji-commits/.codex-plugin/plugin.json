@@ -18,7 +18,7 @@
   "skills": "./skills/",
   "interface": {
     "displayName": "Emoji Commits",
-    "shortDescription": "Write expressive Gitmoji commits",
+    "shortDescription": "Write clear Gitmoji commits",
     "longDescription": "Write expressive git commit messages with Gitmoji.",
     "developerName": "CypherPoet",
     "category": "Developer Tools",

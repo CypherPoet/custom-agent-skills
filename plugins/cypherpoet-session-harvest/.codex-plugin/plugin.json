@@ -18,7 +18,7 @@
   "skills": "./skills/",
   "interface": {
     "displayName": "Session Harvest",
-    "shortDescription": "Route session learnings to durable homes",
+    "shortDescription": "Preserve session learnings",
     "longDescription": "Harvest a session's learnings into their right homes: a memory, a suggested repo edit (CLAUDE.md/AGENTS.md, docs, or a hook), or a PR that improves one of your own agent skills.",
     "developerName": "CypherPoet",
     "category": "Productivity",

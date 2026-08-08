@@ -44,16 +44,16 @@
       "category": "Developer Tools",
       "interface": {
         "displayName": "App Store Connect",
-        "shortDescription": "Submit and manage Apple app releases",
+        "shortDescription": "Manage Apple app releases",
         "capabilities": ["Interactive", "Read", "Write"],
         "defaultPrompt": ["Prepare this app for an App Store Connect submission."]
       }
     },
     "cypherpoet-apple-app-icons": {
-      "category": "Design",
+      "category": "Creativity",
       "interface": {
         "displayName": "Apple App Icons",
-        "shortDescription": "Design, audit, and ship Apple app icons",
+        "shortDescription": "Design and audit Apple icons",
         "capabilities": ["Read", "Write"],
         "defaultPrompt": ["Audit this Apple app icon and recommend improvements."]
       }
@@ -62,13 +62,13 @@
       "category": "Developer Tools",
       "interface": {
         "displayName": "App Store Screenshots",
-        "shortDescription": "Create compliant App Store screenshots",
+        "shortDescription": "Create App Store screenshots",
         "capabilities": ["Read", "Write"],
         "defaultPrompt": ["Create an App Store screenshot plan for this app."]
       }
     },
     "cypherpoet-apple-human-interface-guidelines": {
-      "category": "Design",
+      "category": "Creativity",
       "interface": {
         "displayName": "Apple HIG",
         "shortDescription": "Apply Apple interface guidance",
@@ -89,7 +89,7 @@
       "category": "Developer Tools",
       "interface": {
         "displayName": "Changelog Maintenance",
-        "shortDescription": "Maintain Keep a Changelog files",
+        "shortDescription": "Maintain project changelogs",
         "capabilities": ["Read", "Write"],
         "defaultPrompt": ["Update this project’s changelog for the current changes."]
       }
@@ -98,16 +98,16 @@
       "category": "Developer Tools",
       "interface": {
         "displayName": "Emoji Commits",
-        "shortDescription": "Write expressive Gitmoji commits",
+        "shortDescription": "Write clear Gitmoji commits",
         "capabilities": ["Read", "Write"],
         "defaultPrompt": ["Write a Gitmoji commit message for these changes."]
       }
     },
     "cypherpoet-excalidraw-kit": {
-      "category": "Design",
+      "category": "Creativity",
       "interface": {
         "displayName": "Excalidraw",
-        "shortDescription": "Create and validate Excalidraw diagrams",
+        "shortDescription": "Create Excalidraw diagrams",
         "capabilities": ["Read", "Write"],
         "defaultPrompt": ["Create an Excalidraw diagram for this system."]
       }
@@ -116,7 +116,7 @@
       "category": "Developer Tools",
       "interface": {
         "displayName": "Expo",
-        "shortDescription": "Prototype Expo and React Native apps",
+        "shortDescription": "Prototype Expo mobile apps",
         "capabilities": ["Read", "Write"],
         "defaultPrompt": ["Prototype this feature in Expo and React Native."]
       }
@@ -134,7 +134,7 @@
       "category": "Developer Tools",
       "interface": {
         "displayName": "Git Hygiene",
-        "shortDescription": "Clean branches and worktrees safely",
+        "shortDescription": "Clean Git worktrees safely",
         "capabilities": ["Interactive", "Read", "Write"],
         "defaultPrompt": ["Audit and clean this repository’s stale branches and worktrees."]
       }
@@ -143,7 +143,7 @@
       "category": "Developer Tools",
       "interface": {
         "displayName": "Google Filament",
-        "shortDescription": "Build with Filament rendering APIs",
+        "shortDescription": "Build with Filament APIs",
         "capabilities": ["Read", "Write"],
         "defaultPrompt": ["Help implement this renderer with Google Filament."]
       }
@@ -152,7 +152,7 @@
       "category": "Developer Tools",
       "interface": {
         "displayName": "Marketplace Toolkit",
-        "shortDescription": "Publish and audit plugin marketplaces",
+        "shortDescription": "Publish and audit marketplaces",
         "capabilities": ["Interactive", "Read", "Write"],
         "defaultPrompt": ["Audit this plugin marketplace and report catalog drift."]
       }
@@ -161,7 +161,7 @@
       "category": "Developer Tools",
       "interface": {
         "displayName": "Mobile Development",
-        "shortDescription": "Prepare iOS apps for App Store review",
+        "shortDescription": "Prepare iOS apps for review",
         "capabilities": ["Read", "Write"],
         "defaultPrompt": ["Review this iOS app for App Store submission risks."]
       }
@@ -170,7 +170,7 @@
       "category": "Developer Tools",
       "interface": {
         "displayName": "Obsidian Plugin Development",
-        "shortDescription": "Build and release Obsidian plugins",
+        "shortDescription": "Build Obsidian plugins",
         "capabilities": ["Read", "Write"],
         "defaultPrompt": ["Build or review this Obsidian plugin feature."]
       }
@@ -179,7 +179,7 @@
       "category": "Developer Tools",
       "interface": {
         "displayName": "React Three Fiber",
-        "shortDescription": "Build declarative Three.js scenes",
+        "shortDescription": "Build React Three Fiber scenes",
         "capabilities": ["Read", "Write"],
         "defaultPrompt": ["Implement this 3D scene with React Three Fiber."]
       }
@@ -188,7 +188,7 @@
       "category": "Productivity",
       "interface": {
         "displayName": "Session Handoff",
-        "shortDescription": "Create resumable agent handoffs",
+        "shortDescription": "Create resumable handoffs",
         "capabilities": ["Read", "Write"],
         "defaultPrompt": ["Write a handoff so another agent can resume this work."]
       }
@@ -197,22 +197,22 @@
       "category": "Productivity",
       "interface": {
         "displayName": "Session Harvest",
-        "shortDescription": "Route session learnings to durable homes",
+        "shortDescription": "Preserve session learnings",
         "capabilities": ["Read", "Write"],
         "defaultPrompt": ["Harvest the durable learnings from this session."]
       }
     },
     "cypherpoet-sf-symbols-kit": {
-      "category": "Design",
+      "category": "Creativity",
       "interface": {
         "displayName": "SF Symbols",
-        "shortDescription": "Find, export, and build SF Symbols",
+        "shortDescription": "Find and export SF Symbols",
         "capabilities": ["Read", "Write"],
         "defaultPrompt": ["Find and export the best SF Symbol for this use."]
       }
     },
     "cypherpoet-svg-tools": {
-      "category": "Design",
+      "category": "Creativity",
       "interface": {
         "displayName": "SVG Tools",
         "shortDescription": "Optimize and clean SVG assets",
@@ -224,7 +224,7 @@
       "category": "Developer Tools",
       "interface": {
         "displayName": "Swift & Xcode",
-        "shortDescription": "Build, modernize, and verify Apple apps",
+        "shortDescription": "Build and verify Apple apps",
         "capabilities": ["Interactive", "Read", "Write"],
         "defaultPrompt": ["Build or review this Swift and Xcode feature."]
       }
@@ -233,7 +233,7 @@
       "category": "Developer Tools",
       "interface": {
         "displayName": "Three.js",
-        "shortDescription": "Build Three.js, WebGPU, and WebGL scenes",
+        "shortDescription": "Build Three.js web graphics",
         "capabilities": ["Read", "Write"],
         "defaultPrompt": ["Implement this 3D experience with Three.js."]
       }

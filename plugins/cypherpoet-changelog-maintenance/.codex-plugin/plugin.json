@@ -18,7 +18,7 @@
   "skills": "./skills/",
   "interface": {
     "displayName": "Changelog Maintenance",
-    "shortDescription": "Maintain Keep a Changelog files",
+    "shortDescription": "Maintain project changelogs",
     "longDescription": "Maintain a project's CHANGELOG.md in Keep-a-Changelog format.",
     "developerName": "CypherPoet",
     "category": "Developer Tools",

@@ -41,7 +41,7 @@ If the user is only editing an already-listed plugin's instructions, tell them n
 
 ## Which marketplace
 
-Resolve this repo's `owner/repo` (`gh repo view --json nameWithOwner -q .nameWithOwner`, or a normalized `git remote get-url origin`) and look it up in the bundled registry [`references/marketplaces.md`](../../references/marketplaces.md) (at runtime, resolve that link relative to this skill's directory — it lives at the plugin root, two levels up from this SKILL.md). If there's no row for this repo, ask the user which marketplace to target — and offer to add a row so the next run resolves it automatically.
+Resolve this repo's `owner/repo` (`gh repo view --json nameWithOwner -q .nameWithOwner`, or a normalized `git remote get-url origin`) and look it up in the bundled registry [`references/marketplaces.md`](../../references/marketplaces.md) (at runtime, resolve that link relative to this skill's directory — it lives at the plugin root, two levels up from this SKILL.md). Each row supplies both the marketplace target and its user-facing Codex display name. If there's no row for this repo, ask the user for both values — and offer to add a row so the next run resolves them automatically.
 
 ## Procedure
 
@@ -72,7 +72,7 @@ The goal: **one PR on the marketplace repo** that adds or updates the chosen plu
    }
    ```
 
-   The marketplace repo's CI enforces this same entry shape mechanically: `scripts/catalog-health.mjs` there pins the contract as exported constants (`SOURCE_REPOSITORY_URL`, `SOURCE_DEFAULT_BRANCH`, `EXPECTED_CODEX_POLICY`). This skill resolves the source URL and default branch dynamically; the checker pins them — so a source-repo rename, default-branch rename, or any change to the entry shape must update those constants in the marketplace repo in the same release, or publish PRs will fail its `catalog-validation` check.
+   The marketplace repo's CI enforces this same entry shape mechanically: `scripts/catalog-health.mjs` there pins the contract as exported constants (`SOURCE_REPOSITORY_URL`, `SOURCE_DEFAULT_BRANCH`, `EXPECTED_CODEX_POLICY`, `EXPECTED_CODEX_DISPLAY_NAME`). This skill resolves the source URL, default branch, and display name dynamically; the checker pins them — so a source-repo rename, default-branch rename, display-name change, or any change to the entry shape must update those constants in the marketplace repo in the same release, or publish PRs will fail its `catalog-validation` check.
 
 2. **Clone the marketplace** shallowly to a temp dir, e.g. `gh repo clone <marketplace> /tmp/mkt-publish -- --depth 1`.
 
@@ -83,7 +83,7 @@ The goal: **one PR on the marketplace repo** that adds or updates the chosen plu
    ```
    Apply once per plugin (or fold several into one jq pass).
 
-   Apply the same merge to the Codex catalog at `.agents/plugins/marketplace.json` for every Codex entry built in step 1. If that file doesn't exist yet, create it first as `{"name": "<marketplace-name>", "plugins": []}`, where `<marketplace-name>` matches the `name` field in `.claude-plugin/marketplace.json`.
+   Apply the same merge to the Codex catalog at `.agents/plugins/marketplace.json` for every Codex entry built in step 1. If that file doesn't exist yet, create it first as `{"name": "<marketplace-name>", "interface": {"displayName": "<Codex-display-name>"}, "plugins": []}`, where `<marketplace-name>` matches the `name` field in `.claude-plugin/marketplace.json` and `<Codex-display-name>` comes from the mapping registry. If the file already exists, verify that both top-level fields match the mapping before editing plugin entries; do not silently replace an unexpected marketplace identity.
 
    **Removals.** The merge above only adds or updates — handle removals explicitly (no manifest is read; the plugin may no longer exist in the source repo):
    - A plugin **deleted from the source repo** comes out of **both** catalog files:

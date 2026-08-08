@@ -19,10 +19,10 @@
   "skills": "./skills/",
   "interface": {
     "displayName": "SF Symbols",
-    "shortDescription": "Find, export, and build SF Symbols",
+    "shortDescription": "Find and export SF Symbols",
     "longDescription": "Apple SF Symbols end to end: find the right symbol with natural language, export clean recolorable SVGs at any of the 9 weights, browse an HTML gallery, build full icon sets, and convert your own SVG art into importable custom SF Symbol templates.",
     "developerName": "CypherPoet",
-    "category": "Design",
+    "category": "Creativity",
     "capabilities": [
       "Read",
       "Write"
