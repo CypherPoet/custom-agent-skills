@@ -59,6 +59,25 @@ class RepositoryHealthTests(unittest.TestCase):
             with self.subTest(path=relative_path):
                 json.loads(full_path.read_text(encoding="utf-8"))
 
+    def test_skill_eval_inputs_are_portable(self):
+        eval_paths = sorted(ROOT.glob("plugins/*/skills/*/evals/evals.json"))
+        self.assertGreater(len(eval_paths), 0)
+        for eval_path in eval_paths:
+            skill_root = eval_path.parent.parent.resolve()
+            data = json.loads(eval_path.read_text(encoding="utf-8"))
+            for eval_case in data.get("evals", []):
+                case_label = f"{eval_path}: eval {eval_case.get('id')}"
+                prompt = eval_case.get("prompt", "")
+                with self.subTest(case=case_label):
+                    self.assertNotIn("{WS}", prompt)
+                    self.assertNotIn("{OUTPUTS}", prompt)
+                for relative_input in eval_case.get("files", []):
+                    with self.subTest(case=case_label, input=relative_input):
+                        self.assertFalse(os.path.isabs(relative_input))
+                        input_path = (skill_root / relative_input).resolve()
+                        self.assertTrue(input_path.is_relative_to(skill_root))
+                        self.assertTrue(input_path.is_file())
+
     def test_plugin_manifests_have_required_identity_and_version(self):
         manifests = sorted(ROOT.glob("plugins/*/.claude-plugin/plugin.json"))
         self.assertGreater(len(manifests), 0)

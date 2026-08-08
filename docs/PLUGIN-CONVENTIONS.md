@@ -142,6 +142,8 @@ Content and catalog metadata ship on separate tracks, and neither does the other
 
 Skills inside a plugin follow the standard [`SKILL.md`](https://agentskills.io/) format. Author them with your harness's `skill-creator` — Claude Code's [`skill-creator`](https://github.com/anthropics/skills/tree/main/skills/skill-creator) or Codex's [`skill-creator`](https://github.com/openai/skills/tree/main/skills/.system/skill-creator) — which handle drafts, evals, description optimization, and the general skill structure conventions.
 
+Keep `evals/evals.json` prompts harness-neutral and user-realistic. Declare input files through each eval's `files` list, using paths relative to the skill root. Do not make a prompt depend on runner substitutions such as `{WS}` or `{OUTPUTS}`; the evaluator supplies its output destination outside the user prompt. For a stateful case, stage the declared inputs in an isolated working directory before invoking the skill, preserving each path relative to `evals/files/`.
+
 The repo-local **`skill-structure-check`** skill audits skill structure across the repo. Its [`SKILL.md`](../.claude/skills/skill-structure-check/SKILL.md) is the canonical rule contract and remediation guide; the bundled Python script implements that contract.
 
 `*-workspace/` directories under any `skills/` folder are gitignored: they're transient eval-iteration scratch, not real skills.

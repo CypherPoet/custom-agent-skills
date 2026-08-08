@@ -1,17 +1,16 @@
 {
   "skill_name": "sf-symbols",
-  "notes": "Placeholders the eval runner substitutes per run: {OUTPUTS} = the run's outputs directory, {WS} = the transient eval workspace (a sibling sf-symbols-workspace/ dir; rendering evals need a venv there with pyobjc-framework-cocoa). Ground truth verified against the installed SF Symbols catalog on 2026-06-10: arrow.trianglehead.2.clockwise.rotate.90 introduced 2024 (iOS 18.0) with aliases arrow.2.circlepath + arrow.triangle.2.circlepath; play/pause/stop/forward/backward.fill all iOS 13.0; play.square.stack iOS 16.1. Geometry assertions compare against fresh reference exports from the catalog (exact path-data match, or ink-mask IoU >= 0.97 at the claimed weight and higher than cross-weight when formatting differs).",
   "evals": [
     {
       "id": 0,
       "name": "sync-icon-lookup-and-export",
-      "prompt": "I'm adding a sync-status indicator to our React dashboard. I want whatever Apple uses for 'syncing' — those two arrows chasing each other in a circle, like the refresh icon but more sync-y. I can never remember what it's actually called and I think Apple has a few variants. Find the right SF Symbol (the plain outline one — not filled, not inside a circle), tell me the runner-up candidates too in case I change my mind, and export the winner as an SVG at bold weight that I can recolor from CSS. Save the SVG under {OUTPUTS}. One wrinkle: our iOS team wants to reference the same symbol by name in SwiftUI and they still support iOS 16 — flag anything I should know about the symbol's name there. (If you need any python deps, there's a venv at {WS}/.venv.)",
+      "prompt": "I'm adding a sync-status indicator to our React dashboard. I want whatever Apple uses for 'syncing' — those two arrows chasing each other in a circle, like the refresh icon but more sync-y. I can never remember what it's actually called and I think Apple has a few variants. Find the right SF Symbol (the plain outline one — not filled, not inside a circle), tell me the runner-up candidates too in case I change my mind, and export the winner as sync-symbol.svg at bold weight so I can recolor it from CSS. One wrinkle: our iOS team wants to reference the same symbol by name in SwiftUI and they still support iOS 16 — flag anything I should know about the symbol's name there.",
       "expected_output": "Identifies arrow.trianglehead.2.clockwise.rotate.90 (the renamed sync symbol) or its alias arrow.triangle.2.circlepath; exports a bold-weight, currentColor SVG with authentic catalog geometry; flags that the trianglehead name is iOS 18+ and iOS 16 must use the arrow.triangle.2.circlepath alias; lists real runner-up candidates.",
       "files": [],
       "assertions": [
         "Identifies the correct sync symbol: arrow.trianglehead.2.clockwise.rotate.90 (or its legacy alias arrow.triangle.2.circlepath) as the primary recommendation — plain variant, not .fill or .circle",
-        "An exported SVG file exists in outputs and uses fill=\"currentColor\" so it is CSS-recolorable",
-        "Exported SVG geometry matches the authentic SF Symbols bold-weight outline (verified against a reference export from the catalog), not a lookalike or regular-weight render",
+        "sync-symbol.svg exists in outputs and uses fill=\"currentColor\" so it is CSS-recolorable",
+        "Exported SVG geometry matches the authentic SF Symbols bold-weight outline by exact path-data comparison or ink-mask IoU >= 0.97, and scores higher against bold than regular when formatting differs",
         "Flags the iOS 16 naming caveat: the trianglehead.* name requires iOS 18+, so iOS 16 SwiftUI must use the legacy name arrow.triangle.2.circlepath",
         "Lists plausible runner-up candidates from the real catalog (e.g. circle-enclosed/icloud variants, arrow.2.squarepath, arrow.clockwise)"
       ]
@@ -19,7 +18,7 @@
     {
       "id": 1,
       "name": "custom-logo-to-symbol-template",
-      "prompt": "Our app is called Voltlight and the logo mark lives at {WS}/evals/files/voltlight-mark.svg — a lightning bolt with a little dot badge at the top right. I want to turn it into a custom SF Symbol so it can sit in our iOS tab bar next to system symbols. Convert it into the file format Apple's SF Symbols app expects for custom symbol imports, give it a proper symbol name following Apple's naming conventions (and name the file accordingly), and verify the file is structurally valid. IMPORTANT: do NOT import anything into the SF Symbols app and do not open any GUI applications — just produce the file under {OUTPUTS} and then write out the exact steps I'd follow to (a) bring it into the SF Symbols app later and (b) use it from Xcode. (Python venv at {WS}/.venv if you need one.)",
+      "prompt": "Our app is called Voltlight, and I've attached the logo mark as voltlight-mark.svg — a lightning bolt with a little dot badge at the top right. I want to turn it into a custom SF Symbol so it can sit in our iOS tab bar next to system symbols. Convert it into the file format Apple's SF Symbols app expects for custom symbol imports, give it a proper symbol name following Apple's naming conventions (and name the file accordingly), and verify the file is structurally valid. IMPORTANT: do NOT import anything into the SF Symbols app and do not open any GUI applications — just produce the file and then write out the exact steps I'd follow to (a) bring it into the SF Symbols app later and (b) use it from Xcode.",
       "expected_output": "A valid custom-symbol template SVG (template-version note, Notes/Guides/Symbols layers, variant masters) produced from the art, with a lowercase dotted symbol name as the filename stem; structural validation performed; correct SF Symbols app + Xcode Symbol Image Set instructions; no GUI opened.",
       "files": ["evals/files/voltlight-mark.svg"],
       "assertions": [
@@ -34,7 +33,7 @@
     {
       "id": 2,
       "name": "tab-bar-design-guidance",
-      "prompt": "Design consult on our iOS app's tab bar. We currently use gear (settings), bell (notifications) and person.crop.circle (profile) at regular weight next to SF Pro semibold labels. Designer complaints: (1) the icons look spindly next to the semibold labels, and (2) the selected state feels flat — we just tint the same outline glyph blue. Questions: should selected tabs switch to the .fill variants? what symbol weight should we be pairing with semibold text? and a colleague keeps saying 'just use hierarchical rendering' for the selected state — what would that actually change here? Ground the answer in Apple's actual guidance rather than vibes, and write the final recommendation to {OUTPUTS}/answer.md.",
+      "prompt": "Design consult on our iOS app's tab bar. We currently use gear (settings), bell (notifications) and person.crop.circle (profile) at regular weight next to SF Pro semibold labels. Designer complaints: (1) the icons look spindly next to the semibold labels, and (2) the selected state feels flat — we just tint the same outline glyph blue. Questions: should selected tabs switch to the .fill variants? what symbol weight should we be pairing with semibold text? and a colleague keeps saying 'just use hierarchical rendering' for the selected state — what would that actually change here? Ground the answer in Apple's actual guidance rather than vibes, and write the final recommendation to answer.md.",
       "expected_output": "Recommendation grounded in HIG: match symbol weight to adjacent text weight (semibold, 1:1 weight mapping), use filled variants in tab bars / selected states, and explain hierarchical rendering (single tint, opacity-derived layer depths) plus its near-null effect on these mostly single-layer glyphs. Bonus signal seen in iteration 1: catching that gear.fill does not exist (gearshape migration).",
       "files": [],
       "assertions": [
@@ -48,13 +47,13 @@
     {
       "id": 3,
       "name": "media-icon-set-and-availability",
-      "prompt": "Two asks for our media-player project. (1) The web companion needs an icon set: play.fill, pause.fill, stop.fill, forward.fill, backward.fill at BOTH regular and bold weights as individual recolorable SVGs, organized sensibly under {OUTPUTS}/icons/. (2) The native iOS app still supports iOS 16.0, and a teammate also wants to add play.square.stack for the queue button. Write {OUTPUTS}/availability.md with a markdown table listing each of the six symbols' minimum iOS version, plus a one-line verdict on whether we can ship all six on iOS 16.0. (Venv with pyobjc at {WS}/.venv if you need it.)",
+      "prompt": "Two asks for our media-player project. (1) The web companion needs an icon set: play.fill, pause.fill, stop.fill, forward.fill, backward.fill at BOTH regular and bold weights as individual recolorable SVGs, organized sensibly under icons/. (2) The native iOS app still supports iOS 16.0, and a teammate also wants to add play.square.stack for the queue button. Write availability.md with a markdown table listing each of the six symbols' minimum iOS version, plus a one-line verdict on whether we can ship all six on iOS 16.0.",
       "expected_output": "10 SVG files (5 symbols x 2 weights) under icons/ with authentic catalog geometry, recolorable (currentColor); availability.md table showing the five .fill symbols at iOS 13.0 and play.square.stack at iOS 16.1, with the verdict that play.square.stack does NOT work on an iOS 16.0 deployment target.",
       "files": [],
       "assertions": [
         "All 10 icon SVGs exist (5 symbols x regular and bold weights) under icons/, organized so weight and symbol are identifiable from the paths",
         "Icon SVGs are recolorable via fill=\"currentColor\" and contain non-trivial vector path data with a viewBox",
-        "SVG outlines are authentic SF Symbols geometry (verified against reference exports from the installed catalog), distinguishable between regular and bold weights — not lookalike glyphs from another icon set",
+        "SVG outlines match installed-catalog reference exports by exact path-data comparison or ink-mask IoU >= 0.97, and each scores higher against its claimed weight than the other weight when formatting differs",
         "availability.md lists the five .fill media symbols at minimum iOS 13.0",
         "availability.md lists play.square.stack at minimum iOS 16.1 AND the verdict says it can NOT ship on an iOS 16.0 deployment target (the five .fill symbols can)"
       ]
