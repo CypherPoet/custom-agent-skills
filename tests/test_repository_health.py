@@ -1,3 +1,4 @@
+import configparser
 import json
 import os
 import subprocess
@@ -6,6 +7,7 @@ import unittest
 
 from cypherpoet_agent_skills_tooling import (
     build_codex_manifest,
+    codex_plugin_relative_path,
     sync,
     validate_codex_interface,
 )
@@ -91,7 +93,11 @@ class RepositoryHealthTests(unittest.TestCase):
                     )
                 )
                 codex = json.loads(
-                    (plugin_root / ".codex-plugin/plugin.json").read_text(
+                    (
+                        ROOT
+                        / codex_plugin_relative_path(name, plugin_metadata)
+                        / ".codex-plugin/plugin.json"
+                    ).read_text(
                         encoding="utf-8"
                     )
                 )
@@ -119,6 +125,15 @@ class RepositoryHealthTests(unittest.TestCase):
         needle = "python scripts/sync" + "_plugins.py"
         match = git(ROOT, "grep", "-l", "--fixed-strings", needle, check=False)
         self.assertEqual(match.returncode, 1, f"stale instruction in:\n{match.stdout}")
+
+    def test_tooling_install_contract_supports_the_repository_python(self):
+        configuration = configparser.ConfigParser()
+        configuration.read(ROOT / "tooling/setup.cfg", encoding="utf-8")
+        self.assertEqual(configuration["options"]["python_requires"], ">=3.9")
+        self.assertEqual(
+            (ROOT / "requirements-tooling.txt").read_text(encoding="utf-8"),
+            "./tooling\n",
+        )
 
 
 if __name__ == "__main__":

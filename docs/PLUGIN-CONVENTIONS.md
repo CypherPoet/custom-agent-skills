@@ -18,7 +18,7 @@ Plugin metadata has two authored sources and one generated result:
 |---|---|---|---|
 | `plugins/<name>/.claude-plugin/plugin.json` | Yes | Shared package identity, including the name, version, description, author, URLs, license, and keywords. | Bump the version when shipped output changes, then run the sync. |
 | [`scripts/plugin-registry.json`](../scripts/plugin-registry.json) | Yes | Harness targeting, Codex presentation metadata, and vendoring relationships. | Bump affected versions, run the sync, and check [Publishing](#publishing). |
-| `plugins/<name>/.codex-plugin/plugin.json` | No | The complete Codex manifest generated from the two authored sources. | Edit an authored source instead. |
+| `plugins/<name>/.codex-plugin/plugin.json` or `codex-plugins/<name>/.codex-plugin/plugin.json` | No | The complete Codex manifest generated from the two authored sources. | Edit an authored source instead. |
 
 The generator performs this composition:
 
@@ -26,7 +26,9 @@ The generator performs this composition:
 Claude manifest + registry entry -> sync_plugins.py -> Codex manifest
 ```
 
-The generated Codex manifest repeats values from its sources because an installed plugin must be self-contained. This repetition does not create a second source of truth. Do not read metadata back from the generated manifest or edit that manifest by hand.
+The generated Codex manifest repeats values from its sources because an installed plugin must be self-contained. This repetition does not create a second source of truth. Do not read metadata back from generated output or edit it by hand.
+
+Most Codex manifests stay inside the authored plugin directory. If Claude-only package metadata would make that directory invalid on Codex, set `"codexProjection": true` on the registry entry. The sync then creates a complete Codex package at `codex-plugins/<name>` and the Codex marketplace points there. The authored package under `plugins/<name>` remains the Claude source of truth.
 
 The generator derives values only when they have the same meaning on both harnesses. It derives `longDescription`, `developerName`, and `websiteURL` from the Claude manifest. Friendly titles, short card copy, categories, capabilities, and starter prompts require author judgment, so they are authored once in the registry.
 
@@ -44,7 +46,7 @@ Confirm these fields on the scaffolded `plugin.json` (match a sibling under `plu
 - `"$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json"`.
 - `"name"` — equals the plugin folder name.
 - `"version": "0.1.0"` for new plugins. Both harnesses use this value as the update cache key. Pushing to `main` does not update an existing installation. Use PATCH for fixes, MINOR for additive changes, and MAJOR for breaking changes. Before 1.0, use MINOR by default for a user-visible change.
-- `"description"` — one sentence ending in a period. The per-plugin README and Claude marketplace catalog copy it verbatim. The Codex catalog entry has no description. See [Marketplaces](#marketplaces).
+- `"description"` — one sentence ending in a period, using supported text and at most 1,024 characters. Line feeds are allowed. The per-plugin README and Claude marketplace catalog copy it verbatim. The Codex catalog entry has no description. See [Marketplaces](#marketplaces).
 - `"author": { "name": "CypherPoet" }` (no email field).
 - `"homepage"` — `https://github.com/CypherPoet/custom-agent-skills/tree/main/plugins/<name>`.
 - `"repository"` — `https://github.com/CypherPoet/custom-agent-skills.git`.
@@ -65,11 +67,13 @@ Install the repository's declared tooling before running any generator or gate:
 python3 -m pip install -r requirements-tooling.txt
 ```
 
-This repository installs `./tooling` in editable mode. The private sibling pins the same package to the exact commit for the `agent-skills-tooling-v0.1.0` release. An exact commit keeps local and CI results reproducible.
+The tooling supports Python 3.9 and later. This repository installs a local wheel from `./tooling`; reinstall after changing the tooling source. The private sibling pins the same package to the exact commit for the `agent-skills-tooling-v0.1.1` release. An exact commit keeps local and CI results reproducible.
 
 ### Manifests
 
-The [source table](#start-here) defines how the manifest is composed. The generator also sets `skills` to `"./skills/"`. It validates all final interfaces before it writes any Codex manifest. One invalid plugin therefore prevents every manifest write instead of leaving a partial update.
+The [source table](#start-here) defines how the manifest is composed. The generator also sets `skills` to `"./skills/"`. It validates all final interfaces before it writes any Codex manifest or projection. One invalid plugin therefore prevents every generated package write instead of leaving a partial update.
+
+A Codex projection is exceptional generated output, not another authored plugin. The generator copies the authored package, replaces its Codex manifest, and removes Claude's `disable-model-invocation` field only after it verifies the matching Codex skill policy is `allow_implicit_invocation: false`.
 
 #### Codex Interface Contract
 
@@ -104,7 +108,7 @@ A **curated bundle** is a plugin that vendors several skills, such as `git-flow`
 The separate [`cypherpoet-toolchest`](https://github.com/CypherPoet/cypherpoet-toolchest) marketplace repo carries **two catalog files**, maintained together by the `marketplace-publish` flow (see [Publishing](#publishing)):
 
 - `.claude-plugin/marketplace.json` — the Claude Code catalog. Consumers: `/plugin marketplace add CypherPoet/cypherpoet-toolchest`.
-- `.agents/plugins/marketplace.json` — the Codex catalog (`git-subdir` entries pointing back at this repo, plus each plugin's `category` from [`scripts/plugin-registry.json`](../scripts/plugin-registry.json)). Consumers: `codex plugin marketplace add CypherPoet/cypherpoet-toolchest`.
+- `.agents/plugins/marketplace.json` — the Codex catalog (`git-subdir` entries pointing at `plugins/<name>` or a generated `codex-plugins/<name>` projection, plus each plugin's `category` from [`scripts/plugin-registry.json`](../scripts/plugin-registry.json)). Consumers: `codex plugin marketplace add CypherPoet/cypherpoet-toolchest`.
 
 The Codex catalog's top-level `name` is `cypherpoet-toolchest`. Its user-facing `interface.displayName` is `CypherPoet Toolchest`. Each plugin title comes from its generated `interface.displayName`.
 
@@ -119,7 +123,7 @@ python3 scripts/sync_plugins.py --check
 
 The first command validates the authored Claude manifest. The second validates the generated Codex manifest and reports generation drift without writing files. Resolve every warning or error before you open a PR.
 
-Codex's bundled `plugin-creator` validator is a useful scaffold check, not the final submission service. It can reject Claude Code's `disable-model-invocation: true` when it inspects a shared skill. Do not weaken one harness to satisfy the other. For a manual-only skill, keep that Claude field and set Codex's `policy.allow_implicit_invocation: false` in `agents/openai.yaml`.
+Codex's bundled `plugin-creator` validator is a useful scaffold check, not the final submission service. For a manual-only skill, keep Claude Code's `disable-model-invocation: true`, set Codex's `policy.allow_implicit_invocation: false` in `agents/openai.yaml`, and enable `codexProjection` for its plugin. Run the Codex validator against `codex-plugins/<name>`, not the authored Claude package. This preserves both harness controls and produces validator-clean Codex input.
 
 Use the [final-directory submission contract](https://developers.openai.com/plugins/deploy/submission-errors#final-directory-submission) for Codex interface limits. [`AGENTS.md`](../AGENTS.md) defines the complete repository gate, including tests and `skill-structure-check`.
 
@@ -183,6 +187,7 @@ Plugin updates and marketplace updates are separate operations:
 | Shipped content or a generated manifest value | Bump the plugin version and run the sync. Existing installations use the version as their update key. |
 | Codex `displayName`, `shortDescription`, `capabilities`, or `defaultPrompt` | Bump the version and run the sync. No catalog publication is required. |
 | Codex `category` | Bump the version, run the sync, and publish the marketplace because the Codex catalog also stores the category. |
+| Add or remove `codexProjection` | Bump the version, run the sync, and publish the marketplace because the Codex source path changes. |
 | Catalog identity or marketplace presentation | Publish the marketplace. If the same edit changes a plugin manifest, also follow the version rule above. |
 
 A fresh installation always fetches the latest content from `main`, but an existing installation updates only after a version bump.

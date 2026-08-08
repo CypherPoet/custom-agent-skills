@@ -9,7 +9,7 @@ Composition is by **vendoring, not dependencies**: neither harness resolves a re
 ## Map
 
 - [`docs/PLUGIN-CONVENTIONS.md`](docs/PLUGIN-CONVENTIONS.md) — **source of truth** for how plugins and skills are built here.
-- [`scripts/plugin-registry.json`](scripts/plugin-registry.json) — harness targeting, Codex interface metadata, and skill-sharing edges.
+- [`scripts/plugin-registry.json`](scripts/plugin-registry.json) — harness targeting, Codex interface and projection metadata, and skill-sharing edges.
 - [`tooling/`](tooling/) — shared generator and Codex interface validator package used by both source repositories.
 - [`scripts/sync_plugins.py`](scripts/sync_plugins.py) — thin compatibility launcher for the shared package.
 - [`docs/CATALOG.md`](docs/CATALOG.md) — generated cross-plugin index.
@@ -17,8 +17,8 @@ Composition is by **vendoring, not dependencies**: neither harness resolves a re
 
 ## Working In This Repo
 
-- **Never hand-edit a generated file** — any `.codex-plugin/plugin.json` or vendored skill copy. Edit the source, then re-sync.
-- Run `python3 -m pip install -r requirements-tooling.txt` after checkout and whenever the tooling pin changes.
+- **Never hand-edit generated output** — any `.codex-plugin/plugin.json`, `codex-plugins/` projection, or vendored skill copy. Edit the source, then re-sync.
+- Run `python3 -m pip install -r requirements-tooling.txt` after checkout and whenever the local tooling source changes.
 - Run `python3 scripts/sync_plugins.py` after editing a `.claude-plugin/plugin.json`, the registry, or the source of a vendored skill.
 - **Bump a plugin's `version` whenever its content should reach installed users** — merging to `main` alone won't ship it. Re-run the sync after any bump; the health suite fails when content changed without one.
 - Run the repo-local `skill-structure-check` skill before a PR that touches skills.

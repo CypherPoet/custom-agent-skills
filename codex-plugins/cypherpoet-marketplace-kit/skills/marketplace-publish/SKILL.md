@@ -7,7 +7,6 @@ description: >
   plugin's catalog entry (name, description, homepage, Codex category). Not
   needed for ordinary content edits to a listed plugin — those reach consumers
   automatically.
-disable-model-invocation: true
 ---
 
 # marketplace-publish

@@ -24,6 +24,7 @@ from urllib.parse import urlsplit
 
 REGISTRY = Path("scripts") / "plugin-registry.json"
 LEGACY_REGISTRY = Path("scripts") / "dual-harness.json"
+CODEX_PROJECTIONS = Path("codex-plugins")
 
 IGNORE_DIR_NAMES = {"__pycache__", "evals", ".git"}
 IGNORE_DIR_GLOBS = ("*-workspace",)
@@ -48,6 +49,7 @@ SUPPORTED_CODEX_CATEGORIES = {
 }
 DISPLAY_NAME_MAX_LENGTH = 30
 SHORT_DESCRIPTION_MAX_LENGTH = 30
+PLUGIN_DESCRIPTION_MAX_LENGTH = 1024
 LONG_DESCRIPTION_MAX_LENGTH = 4000
 DEVELOPER_NAME_MAX_LENGTH = 80
 CAPABILITY_MAX_COUNT = 20
@@ -60,6 +62,17 @@ WEBSITE_URL_MAX_LENGTH = 1024
 _UNSUPPORTED_TEXT_CATEGORIES = {"Cf", "Cs", "Zl", "Zp"}
 _UNSUPPORTED_URL_CHARACTERS = set(' <>"{}|\\^`')
 _APP_MENTION = re.compile(r"(?<!\S)@\S+")
+_CLAUDE_INVOCATION_FIELD = re.compile(
+    r"^(disable-model-invocation|disable_model_invocation):[ \t]*"
+    r"(true|false|yes|no|on|off|1|0)[ \t]*(?:#.*)?(?:\r?\n)?$",
+    re.IGNORECASE,
+)
+_CLAUDE_INVOCATION_FIELD_PREFIX = re.compile(
+    r"^(disable-model-invocation|disable_model_invocation):",
+    re.IGNORECASE,
+)
+_YAML_FALSE_VALUES = {"false", "no", "off", "0"}
+_YAML_TRUE_VALUES = {"true", "yes", "on", "1"}
 
 
 def _dir_ignored(name: str) -> bool:
@@ -267,6 +280,13 @@ def build_codex_manifest(claude_manifest: dict, plugin_metadata: dict) -> dict:
         "defaultPrompt": authored_interface["defaultPrompt"],
     }
     return manifest
+
+
+def codex_plugin_relative_path(name: str, plugin_metadata: dict) -> Path:
+    """Return the catalog/install root for one generated Codex plugin."""
+    if plugin_metadata.get("codexProjection") is True:
+        return CODEX_PROJECTIONS / name
+    return Path("plugins") / name
 
 
 def _normalized_uniqueness_key(value: str, *, casefold: bool) -> str:
@@ -486,6 +506,9 @@ def validate_interface_metadata(name: str, plugin_metadata: object) -> list[str]
     prefix = f"[config] {name}: "
     if not isinstance(plugin_metadata, dict):
         return [f"{prefix}dual_harness_plugins entry must be an object"]
+    codex_projection = plugin_metadata.get("codexProjection", False)
+    if not isinstance(codex_projection, bool):
+        return [f"{prefix}codexProjection must be a boolean when provided"]
     interface = plugin_metadata.get("interface")
     if not isinstance(interface, dict):
         return [f"{prefix}dual_harness_plugins entry needs an interface object"]
@@ -552,10 +575,19 @@ def _read_json_object(path: Path, label: str) -> tuple[dict | None, list[str]]:
 def _validate_claude_manifest_shape(name: str, claude_manifest: dict) -> list[str]:
     prefix = f"[codex-manifest] {name}: "
     problems: list[str] = []
-    for field in ("name", "version", "description", "homepage"):
+    for field in ("name", "version", "homepage"):
         value = claude_manifest.get(field)
         if not isinstance(value, str) or not value.strip():
             problems.append(f"{prefix}Claude manifest needs non-empty {field}")
+    problems.extend(
+        f"{prefix}{problem}"
+        for problem in _validate_text(
+            claude_manifest.get("description"),
+            "Claude manifest description",
+            maximum_length=PLUGIN_DESCRIPTION_MAX_LENGTH,
+            allow_line_feed=True,
+        )
+    )
     if isinstance(claude_manifest.get("name"), str) and claude_manifest["name"] != name:
         problems.append(f"{prefix}Claude manifest name must equal the plugin directory name")
     author = claude_manifest.get("author")
@@ -584,11 +616,151 @@ def _unported_components(plugin_directory: Path, claude_manifest: dict) -> list[
     return unported
 
 
+def _strip_claude_invocation_field(
+    skill_manifest: bytes,
+    label: str,
+) -> tuple[bytes | None, bool, list[str]]:
+    """Remove Claude-only invocation metadata from one Codex projection."""
+    try:
+        text = skill_manifest.decode("utf-8")
+    except UnicodeDecodeError as error:
+        return None, False, [
+            f"[codex-projection] {label}: SKILL.md is not UTF-8: {error}"
+        ]
+    if not text.startswith("---\n"):
+        return None, False, [
+            f"[codex-projection] {label}: SKILL.md must start with YAML frontmatter"
+        ]
+
+    lines = text.splitlines(keepends=True)
+    frontmatter_end = next(
+        (
+            index
+            for index, line in enumerate(lines[1:], start=1)
+            if line.rstrip("\r\n") == "---"
+        ),
+        None,
+    )
+    if frontmatter_end is None:
+        return None, False, [
+            f"[codex-projection] {label}: SKILL.md frontmatter is not closed"
+        ]
+
+    matches: list[tuple[int, bool]] = []
+    problems: list[str] = []
+    for index in range(1, frontmatter_end):
+        line = lines[index]
+        match = _CLAUDE_INVOCATION_FIELD.fullmatch(line)
+        if match is not None:
+            value = match.group(2).lower()
+            matches.append((index, value in _YAML_TRUE_VALUES))
+        elif _CLAUDE_INVOCATION_FIELD_PREFIX.match(line):
+            problems.append(
+                f"[codex-projection] {label}: Claude invocation field must use "
+                "a YAML boolean"
+            )
+    if len(matches) > 1:
+        problems.append(
+            f"[codex-projection] {label}: Claude invocation field is duplicated"
+        )
+    if problems:
+        return None, False, problems
+    if not matches:
+        return skill_manifest, False, []
+
+    index, manual_only = matches[0]
+    del lines[index]
+    return "".join(lines).encode("utf-8"), manual_only, []
+
+
+def _codex_policy_disables_implicit_invocation(agent_manifest: bytes) -> bool:
+    try:
+        text = agent_manifest.decode("utf-8")
+    except UnicodeDecodeError:
+        return False
+
+    section: str | None = None
+    for line in text.splitlines():
+        if line and not line[0].isspace():
+            match = re.match(r"^([A-Za-z0-9_-]+):(?:\s*(?:#.*)?)?$", line)
+            section = match.group(1) if match is not None else None
+            continue
+        if section != "policy":
+            continue
+        match = re.match(
+            r"^[ \t]+allow_implicit_invocation:[ \t]*"
+            r"(true|false|yes|no|on|off|1|0)[ \t]*(?:#.*)?$",
+            line,
+            re.IGNORECASE,
+        )
+        if match is not None:
+            return match.group(1).lower() in _YAML_FALSE_VALUES
+    return False
+
+
+def _prepare_codex_projection(
+    root: Path,
+    name: str,
+    plugin_directory: Path,
+    manifest_bytes: bytes,
+    visible: set[str] | None,
+) -> tuple[dict[str, bytes] | None, list[str]]:
+    plugin_relative = plugin_directory.relative_to(root).as_posix()
+    source_tree = read_tree(
+        plugin_directory,
+        _base_visible(visible, plugin_relative),
+    )
+    projected_tree = {
+        path: data
+        for path, data in source_tree.items()
+        if not path.startswith(".claude-plugin/")
+        and path != ".codex-plugin/plugin.json"
+    }
+    projected_tree[".codex-plugin/plugin.json"] = manifest_bytes
+
+    manual_only_skills: list[str] = []
+    problems: list[str] = []
+    for path in sorted(projected_tree):
+        parts = Path(path).parts
+        if len(parts) != 3 or parts[0] != "skills" or parts[2] != "SKILL.md":
+            continue
+        transformed, manual_only, transform_problems = _strip_claude_invocation_field(
+            projected_tree[path],
+            f"{name}/{parts[1]}",
+        )
+        problems.extend(transform_problems)
+        if transformed is None:
+            continue
+        projected_tree[path] = transformed
+        if manual_only:
+            manual_only_skills.append(parts[1])
+
+    if not manual_only_skills and not problems:
+        problems.append(
+            f"[codex-projection] {name}: codexProjection requires at least one "
+            "Claude-only disable-model-invocation field"
+        )
+    for skill_name in manual_only_skills:
+        agent_path = f"skills/{skill_name}/agents/openai.yaml"
+        agent_manifest = projected_tree.get(agent_path)
+        if agent_manifest is None or not _codex_policy_disables_implicit_invocation(
+            agent_manifest
+        ):
+            problems.append(
+                f"[codex-projection] {name}/{skill_name}: removing Claude's manual-only "
+                "field requires policy.allow_implicit_invocation: false in "
+                "agents/openai.yaml"
+            )
+    return (projected_tree if not problems else None), problems
+
+
 def _prepare_codex_manifests(
     root: Path,
     dual_plugins: dict,
-) -> tuple[dict[Path, bytes], list[str]]:
+    visible: set[str] | None,
+) -> tuple[dict[Path, bytes], dict[Path, dict[str, bytes]], list[str]]:
     desired: dict[Path, bytes] = {}
+    desired_projections: dict[Path, dict[str, bytes]] = {}
     problems: list[str] = []
 
     display_name_owners: dict[str, str] = {}
@@ -648,10 +820,21 @@ def _prepare_codex_manifests(
         )
         if interface_problems:
             continue
-        desired[plugin_directory / ".codex-plugin" / "plugin.json"] = dumps(
-            manifest
-        ).encode("utf-8")
-    return desired, problems
+        manifest_bytes = dumps(manifest).encode("utf-8")
+        if plugin_metadata.get("codexProjection") is True:
+            projection, projection_problems = _prepare_codex_projection(
+                root,
+                name,
+                plugin_directory,
+                manifest_bytes,
+                visible,
+            )
+            problems.extend(projection_problems)
+            if projection is not None:
+                desired_projections[root / CODEX_PROJECTIONS / name] = projection
+        else:
+            desired[plugin_directory / ".codex-plugin" / "plugin.json"] = manifest_bytes
+    return desired, desired_projections, problems
 
 
 def _base_visible(visible: set[str] | None, base_relative: str) -> set[str] | None:
@@ -750,10 +933,13 @@ def _sync_vendored_skills(
 def _apply_codex_manifest_plan(
     root: Path,
     desired_manifests: dict[Path, bytes],
+    desired_projections: dict[Path, dict[str, bytes]],
+    projected_plugins: set[str],
     claude_only_plugins: set[str],
     existing_plugins: set[str],
     *,
     write: bool,
+    visible: set[str] | None,
 ) -> list[str]:
     problems: list[str] = []
     for path, desired_bytes in sorted(desired_manifests.items()):
@@ -765,6 +951,66 @@ def _apply_codex_manifest_plan(
                 f"[codex-manifest] out of sync: {path.relative_to(root)} "
                 "(run: python3 scripts/sync_plugins.py)"
             )
+
+    for path, desired_tree in sorted(desired_projections.items()):
+        relative_path = path.relative_to(root).as_posix()
+        if write:
+            write_tree(desired_tree, path)
+        elif read_tree(path, _base_visible(visible, relative_path)) != desired_tree:
+            problems.append(
+                f"[codex-projection] out of sync: {relative_path} "
+                "(run: python3 scripts/sync_plugins.py)"
+            )
+
+    for name in sorted(projected_plugins & existing_plugins):
+        stale_manifest = (
+            root / "plugins" / name / ".codex-plugin" / "plugin.json"
+        )
+        if not stale_manifest.exists() and not stale_manifest.is_symlink():
+            continue
+        relative_path = stale_manifest.relative_to(root).as_posix()
+        if not write:
+            problems.append(
+                f"[codex-projection] stale in-place Codex manifest: {relative_path} "
+                "(run: python3 scripts/sync_plugins.py)"
+            )
+        elif stale_manifest.is_symlink() or not stale_manifest.is_file():
+            problems.append(
+                f"[codex-projection] refusing to remove non-file generated path: {relative_path}"
+            )
+        else:
+            stale_manifest.unlink()
+            try:
+                stale_manifest.parent.rmdir()
+            except OSError:
+                pass
+
+    projections_root = root / CODEX_PROJECTIONS
+    existing_projection_names = (
+        {
+            path.name
+            for path in projections_root.iterdir()
+            if path.is_dir() or path.is_symlink()
+        }
+        if projections_root.is_dir()
+        else set()
+    )
+    for name in sorted(existing_projection_names - projected_plugins):
+        stale = projections_root / name
+        relative_path = stale.relative_to(root).as_posix()
+        if not write:
+            problems.append(
+                f"[codex-projection] stale generated projection: {relative_path} "
+                "(run: python3 scripts/sync_plugins.py)"
+            )
+        elif stale.is_symlink() or not stale.is_dir() or not git_clean_under(
+            root, relative_path
+        ):
+            problems.append(
+                f"[codex-projection] refusing to remove modified generated path: {relative_path}"
+            )
+        else:
+            shutil.rmtree(stale)
 
     for name in sorted(claude_only_plugins & existing_plugins):
         stale = root / "plugins" / name / ".codex-plugin"
@@ -810,13 +1056,16 @@ def sync(root: Path, write: bool) -> list[str]:
             "dual_harness_plugins or claude_only_plugins"
         )
 
-    desired_manifests, manifest_problems = _prepare_codex_manifests(
-        root,
-        dual_plugins,
+    visible = repo_visible_files(root)
+    desired_manifests, desired_projections, manifest_problems = (
+        _prepare_codex_manifests(
+            root,
+            dual_plugins,
+            visible,
+        )
     )
     problems.extend(manifest_problems)
 
-    visible = repo_visible_files(root)
     vendor_write = write and not problems
     vendor_problems = _sync_vendored_skills(
         root,
@@ -831,9 +1080,17 @@ def sync(root: Path, write: bool) -> list[str]:
             _apply_codex_manifest_plan(
                 root,
                 desired_manifests,
+                desired_projections,
+                {
+                    name
+                    for name, metadata in dual_plugins.items()
+                    if isinstance(metadata, dict)
+                    and metadata.get("codexProjection") is True
+                },
                 claude_only_plugins,
                 existing_plugins,
                 write=write,
+                visible=visible,
             )
         )
     return problems

@@ -100,6 +100,99 @@ class SyncPluginsTests(unittest.TestCase):
         )
         self.assertEqual(sync_plugins.sync(self.root, write=False), [])
 
+    def test_codex_projection_strips_claude_only_manual_invocation_metadata(self):
+        self.assertEqual(sync_plugins.sync(self.root, write=True), [])
+        self.assertTrue(
+            (self.root / "plugins/source/.codex-plugin/plugin.json").is_file()
+        )
+        write(
+            self.root / "plugins/source/skills/shared/SKILL.md",
+            "---\n"
+            "name: shared\n"
+            "description: Shared fixture.\n"
+            "disable-model-invocation: true\n"
+            "---\n",
+        )
+        write(
+            self.root / "plugins/source/skills/shared/agents/openai.yaml",
+            "interface:\n"
+            "  display_name: Shared\n"
+            "  short_description: Use the shared fixture\n"
+            "policy:\n"
+            "  allow_implicit_invocation: false\n",
+        )
+        config_path = self.root / "scripts/plugin-registry.json"
+        config = json.loads(config_path.read_text())
+        config["dual_harness_plugins"]["source"]["codexProjection"] = True
+        write_json(config_path, config)
+
+        self.assertEqual(sync_plugins.sync(self.root, write=True), [])
+        projected_root = self.root / "codex-plugins/source"
+        projected_skill = (
+            projected_root / "skills/shared/SKILL.md"
+        ).read_text(encoding="utf-8")
+        self.assertNotIn("disable-model-invocation", projected_skill)
+        self.assertIn(
+            "allow_implicit_invocation: false",
+            (
+                projected_root / "skills/shared/agents/openai.yaml"
+            ).read_text(encoding="utf-8"),
+        )
+        self.assertTrue((projected_root / ".codex-plugin/plugin.json").is_file())
+        self.assertFalse(
+            (self.root / "plugins/source/.codex-plugin/plugin.json").exists()
+        )
+        self.assertEqual(
+            sync_plugins.codex_plugin_relative_path(
+                "source",
+                config["dual_harness_plugins"]["source"],
+            ).as_posix(),
+            "codex-plugins/source",
+        )
+        self.assertEqual(sync_plugins.sync(self.root, write=False), [])
+
+    def test_codex_projection_requires_matching_codex_manual_only_policy(self):
+        write(
+            self.root / "plugins/source/skills/shared/SKILL.md",
+            "---\n"
+            "name: shared\n"
+            "description: Shared fixture.\n"
+            "disable-model-invocation: true\n"
+            "---\n",
+        )
+        config_path = self.root / "scripts/plugin-registry.json"
+        config = json.loads(config_path.read_text())
+        config["dual_harness_plugins"]["source"]["codexProjection"] = True
+        write_json(config_path, config)
+
+        problems = sync_plugins.sync(self.root, write=True)
+        self.assertTrue(
+            any(
+                "requires policy.allow_implicit_invocation: false" in problem
+                for problem in problems
+            ),
+            problems,
+        )
+        self.assertFalse((self.root / "codex-plugins/source").exists())
+        self.assertFalse(
+            (self.root / "plugins/bundle/.codex-plugin/plugin.json").exists()
+        )
+
+    def test_codex_projection_must_be_boolean(self):
+        config_path = self.root / "scripts/plugin-registry.json"
+        config = json.loads(config_path.read_text())
+        config["dual_harness_plugins"]["source"]["codexProjection"] = "yes"
+        write_json(config_path, config)
+
+        problems = sync_plugins.sync(self.root, write=True)
+        self.assertTrue(
+            any("codexProjection must be a boolean" in problem for problem in problems)
+        )
+        self.assertEqual(
+            list(self.root.glob("plugins/*/.codex-plugin/plugin.json")),
+            [],
+        )
+
     def test_invalid_interface_metadata_blocks_generation(self):
         cases = (
             ("category", "", "category must be a non-empty string"),
@@ -192,7 +285,16 @@ class SyncPluginsTests(unittest.TestCase):
 
     def test_invalid_derived_interface_values_block_all_manifests(self):
         cases = (
-            ("description", "x" * 4001, "longDescription must be at most 4000"),
+            (
+                "description",
+                "x" * 1025,
+                "Claude manifest description must be at most 1024",
+            ),
+            (
+                "description",
+                "valid\u2028invalid",
+                "Claude manifest description contains unsupported text",
+            ),
             ("author", {"name": "x" * 81}, "developerName must be at most 80"),
             ("homepage", "http://example.com", "websiteURL must be an absolute https URL"),
         )
@@ -210,6 +312,15 @@ class SyncPluginsTests(unittest.TestCase):
                     list(self.root.glob("plugins/*/.codex-plugin/plugin.json")),
                     [],
                 )
+
+    def test_claude_manifest_description_allows_line_feeds(self):
+        self.make_plugin("source")
+        manifest_path = self.root / "plugins/source/.claude-plugin/plugin.json"
+        manifest = json.loads(manifest_path.read_text())
+        manifest["description"] = "First paragraph.\nSecond paragraph."
+        write_json(manifest_path, manifest)
+
+        self.assertEqual(sync_plugins.sync(self.root, write=True), [])
 
     def test_invalid_plugin_preserves_existing_manifests_and_creates_none(self):
         self.assertEqual(sync_plugins.sync(self.root, write=True), [])

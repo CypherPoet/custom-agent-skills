@@ -23,6 +23,8 @@ class MarketplacePublishContractTests(unittest.TestCase):
             '"interface": {"displayName": "<Codex-display-name>"}',
             procedure,
         )
+        self.assertIn('"codexProjection": true', procedure)
+        self.assertIn('"path": "<codex-source-root>/<plugin>"', procedure)
 
 
 if __name__ == "__main__":
