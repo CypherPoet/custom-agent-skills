@@ -9,7 +9,7 @@ Composition is by **vendoring, not dependencies**: neither harness resolves a re
 ## Map
 
 - [`docs/PLUGIN-CONVENTIONS.md`](docs/PLUGIN-CONVENTIONS.md) — **source of truth** for how plugins and skills are built here.
-- [`scripts/plugin-registry.json`](scripts/plugin-registry.json) — harness targeting, Codex categories, skill-sharing edges.
+- [`scripts/plugin-registry.json`](scripts/plugin-registry.json) — harness targeting, Codex interface metadata, and skill-sharing edges.
 - [`tooling/`](tooling/) — shared generator and Codex interface validator package used by both source repositories.
 - [`scripts/sync_plugins.py`](scripts/sync_plugins.py) — thin compatibility launcher for the shared package.
 - [`docs/CATALOG.md`](docs/CATALOG.md) — generated cross-plugin index.
