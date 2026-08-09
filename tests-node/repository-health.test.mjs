@@ -87,6 +87,14 @@ test("the package exposes the frozen 0.1.0 Node contract", () => {
   );
   assert.equal(packageJson.engines.node, ">=24");
   assert.equal(packageJson.bin["cypherpoet-plugin-sync"], "tooling/dist/cli.js");
+  assert.equal(
+    packageJson.bin["cypherpoet-plugin-version-check"],
+    "tooling/dist/version-bumps-cli.js",
+  );
+  assert.equal(
+    packageJson.bin["cypherpoet-skill-structure-check"],
+    "tooling/dist/skill-structure-cli.js",
+  );
   assert.equal(packageJson.dependencies.yaml, "^2.9.0");
   assert.equal(packageJson.scripts.prepare, undefined);
   assert.equal(packageJson.scripts.postinstall, undefined);

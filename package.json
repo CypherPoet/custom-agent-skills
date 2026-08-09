@@ -9,7 +9,9 @@
     "node": ">=24"
   },
   "bin": {
-    "cypherpoet-plugin-sync": "tooling/dist/cli.js"
+    "cypherpoet-plugin-sync": "tooling/dist/cli.js",
+    "cypherpoet-plugin-version-check": "tooling/dist/version-bumps-cli.js",
+    "cypherpoet-skill-structure-check": "tooling/dist/skill-structure-cli.js"
   },
   "exports": {
     ".": "./tooling/dist/index.js"
