@@ -92,6 +92,10 @@ test("the package exposes the frozen 0.1.0 Node contract", () => {
     "tooling/dist/version-bumps-cli.js",
   );
   assert.equal(
+    packageJson.bin["cypherpoet-repository-test"],
+    "tooling/dist/test-runner-cli.js",
+  );
+  assert.equal(
     packageJson.bin["cypherpoet-skill-structure-check"],
     "tooling/dist/skill-structure-cli.js",
   );

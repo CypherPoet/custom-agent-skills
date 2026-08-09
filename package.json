@@ -11,6 +11,7 @@
   "bin": {
     "cypherpoet-plugin-sync": "tooling/dist/cli.js",
     "cypherpoet-plugin-version-check": "tooling/dist/version-bumps-cli.js",
+    "cypherpoet-repository-test": "tooling/dist/test-runner-cli.js",
     "cypherpoet-skill-structure-check": "tooling/dist/skill-structure-cli.js"
   },
   "exports": {
@@ -27,7 +28,7 @@
     "structure:check": "node tooling/dist/skill-structure-cli.js --strict",
     "sync": "node tooling/dist/cli.js",
     "sync:check": "node tooling/dist/cli.js --check",
-    "test": "node tooling/scripts/run-tests.mjs",
+    "test": "node tooling/dist/test-runner-cli.js --build-check tooling/scripts/check-build.mjs",
     "versions:check": "node tooling/dist/version-bumps-cli.js"
   },
   "dependencies": {
