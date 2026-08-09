@@ -201,4 +201,3 @@ export function runVersionBumpCheck(
   );
   return 1;
 }
-

@@ -67,4 +67,3 @@ export function commitAll(root, message = "fixture") {
   git(root, "add", "-A");
   git(root, "commit", "-m", message);
 }
-

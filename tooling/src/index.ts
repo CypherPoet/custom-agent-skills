@@ -14,4 +14,3 @@ export {
   fileIgnored,
 } from "./file-tree.js";
 export * from "./constants.js";
-
