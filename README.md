@@ -10,11 +10,13 @@ A curated collection of reusable AI agent skills, packaged as Claude Code and Co
 
 ## Prerequisites
 
-Contributors need Python 3.11 or later. Install the repository tooling after checkout and whenever the local [`tooling/`](tooling/) source changes:
+Contributors need Node.js and npm. The supported Node.js version is declared in [`package.json`](package.json) and enforced in CI. Install the locked dependencies after checkout:
 
 ```shell
-python3.11 -m pip install -r requirements-tooling.txt
+npm ci
 ```
+
+The full test suite also needs Python 3 because some plugins contain Python programs. The test runner detects `python3`, `python`, and the Windows `py -3` launcher; set `PYTHON` only when none of those names selects the correct interpreter.
 
 ## Repository Structure
 
@@ -25,10 +27,11 @@ python3.11 -m pip install -r requirements-tooling.txt
 │   ├── CATALOG.md            # Cross-plugin index
 │   ├── PLUGIN-CONVENTIONS.md # Plugin architecture and contributor workflow
 │   └── automated-routines/   # Maintenance routine configuration
-├── tooling/                  # Shared generator and validator package
-├── requirements-tooling.txt  # Contributor tooling dependencies
-├── scripts/                  # Plugin registry and repository gates
-├── tests/                    # Repository health suite
+├── tooling/                  # TypeScript source, compiled package, and package tests
+├── package.json              # Contributor commands and dependency contract
+├── scripts/                  # Plugin registry
+├── tests-node/               # Repository health tests
+├── tests/                    # Tests for plugin-owned Python programs
 ├── .github/                  # CI (Verify workflow)
 ├── .agents/skills/           # Codex maintainer skills
 └── .claude/                  # Claude Code maintainer config and skills
@@ -45,7 +48,7 @@ Marketplace maintenance uses the [`cypherpoet-marketplace-kit`](plugins/cypherpo
 Before opening a PR, run the repository health suite:
 
 ```shell
-python3.11 -m unittest discover -s tests
+npm test
 ```
 
 ## License

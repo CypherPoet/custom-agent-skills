@@ -23,7 +23,7 @@ Plugin metadata has two authored sources and one generated result:
 The generator performs this composition:
 
 ```text
-Claude manifest + registry entry -> cypherpoet-sync-plugins -> Codex manifest
+Claude manifest + registry entry -> npm run sync -> Codex manifest
 ```
 
 The generated Codex manifest repeats values from its sources because an installed plugin must be self-contained. This repetition does not create a second source of truth. Do not read metadata back from generated output or edit it by hand.
@@ -59,7 +59,7 @@ Portable plugins target **both** Claude Code and Codex. Each plugin is self-cont
 
 If a plugin is useful only on Claude Code, list it under `claude_only_plugins` in the registry and give a reason. Judge the plugin by its purpose, not whether its files parse on Codex. Keep this exception list short.
 
-The shared [`cypherpoet-agent-skills-tooling`](../tooling/) package generates and validates plugins for this repository and the private sibling. Complete the developer setup in the README's [Prerequisites](../README.md#prerequisites) before running it. The public repository installs its local package; the private sibling pins the same package to an exact public commit.
+The [`@cypherpoet/plugin-sync`](../package.json) package generates and validates plugins for this repository and the private sibling. Its TypeScript source and committed JavaScript output live under [`tooling/`](../tooling/). The public repository runs its local package. The private sibling installs the same package from an exact public commit. Complete the developer setup in the README's [Prerequisites](../README.md#prerequisites) before running it.
 
 ### Manifests
 
@@ -71,12 +71,12 @@ Every portable plugin supports both Claude Code and Codex. The normal layout is 
 
 The [source table](#start-here) defines how the generator composes the Codex manifest. The generator also sets `skills` to `"./skills/"` and validates every final interface before writing anything. If one plugin is invalid, it writes no generated packages.
 
-`cypherpoet-marketplace-kit` is the only current exception to the normal directory layout. One of its skills must be invoked manually, and the two harnesses store that rule in different files:
+`cypherpoet-marketplace-kit` is the only current exception to the normal directory layout. It still supports both harnesses, but one of its skills must be invoked manually and the two harnesses store that rule in different files:
 
 - Claude Code reads `disable-model-invocation: true` from the authored `SKILL.md`.
 - Codex reads `policy.allow_implicit_invocation: false` from `agents/openai.yaml` and rejects Claude's `disable-model-invocation` field.
 
-For this exception, `"codexProjection": true` tells the generator to copy the same plugin to `codex-plugins/<name>` and omit only the incompatible Claude field. Before writing the copy, the generator confirms that the Codex policy still requires manual invocation. The copy is generated output for the same dual-harness plugin, not a separate plugin or source of truth.
+For this exception, `"codexProjection": true` tells the generator to create a second install directory at `codex-plugins/<name>` and omit only the incompatible Claude field from that generated copy. The setting does **not** enable Codex support; every entry under `dual_harness_plugins` already supports Codex. Before writing the copy, the generator confirms that the Codex policy still requires manual invocation. The marketplace points Codex at the generated directory and Claude Code at the normal directory. Both represent the same plugin and use the same authored sources.
 
 #### Codex Interface Contract
 
@@ -121,7 +121,7 @@ Run both plugin-specific checks:
 
 ```shell
 claude plugin validate plugins/<plugin-name>
-cypherpoet-sync-plugins --check
+npm run sync:check
 ```
 
 The first command validates the authored Claude manifest. The second validates the generated Codex manifest and reports generation drift without writing files. Resolve every warning or error before you open a PR.

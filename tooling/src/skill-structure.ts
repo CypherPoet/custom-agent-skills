@@ -1,0 +1,427 @@
+import {
+  existsSync,
+  readFileSync,
+  readdirSync,
+  statSync,
+} from "node:fs";
+import { dirname, join, normalize, relative, resolve, sep } from "node:path";
+
+import { synchronizePlugins } from "./sync.js";
+
+export const SKILL_LINE_LIMIT = 500;
+export const SKILL_LINE_WARNING = 450;
+export const REFERENCE_CONTENTS_THRESHOLD = 300;
+export const FACT_CHECK_MANIFEST = "docs/automated-routines/skill-fact-check-manifest.json";
+const tierKeys = ["weekly", "monthly", "never"] as const;
+
+export type StructureFinding = readonly [label: string, location: string, message: string];
+
+export interface StructureAudit {
+  errors: StructureFinding[];
+  warnings: StructureFinding[];
+  missingContents: Array<readonly [label: string, file: string]>;
+  units: Set<string>;
+  unitsWithSources: Set<string>;
+}
+
+interface GateOutput {
+  stdout(message: string): void;
+  stderr(message: string): void;
+}
+
+const defaultOutput: GateOutput = {
+  stdout: (message) => console.log(message),
+  stderr: (message) => console.error(message),
+};
+
+function lineCount(text: string): number {
+  if (text.length === 0) {
+    return 0;
+  }
+  const count = text.split(/\r\n|\r|\n/u).length;
+  return /(?:\r\n|\r|\n)$/u.test(text) ? count - 1 : count;
+}
+
+export function findStructureRepositoryRoot(start: string): string | undefined {
+  let candidate = resolve(start);
+  for (;;) {
+    const plugins = join(candidate, "plugins");
+    if (existsSync(plugins) && statSync(plugins).isDirectory()) {
+      return candidate;
+    }
+    const parent = dirname(candidate);
+    if (parent === candidate) {
+      return undefined;
+    }
+    candidate = parent;
+  }
+}
+
+export function githubHeadingAnchor(heading: string): string {
+  return heading
+    .toLocaleLowerCase("und")
+    .replace(/[^\p{L}\p{N}_\s-]/gu, "")
+    .trim()
+    .replace(/ /gu, "-");
+}
+
+export function stripCodeFences(text: string): string {
+  const output: string[] = [];
+  let insideFence = false;
+  for (const line of text.split(/\r?\n/u)) {
+    if (line.trimStart().startsWith("```")) {
+      insideFence = !insideFence;
+    } else if (!insideFence) {
+      output.push(line);
+    }
+  }
+  return output.join("\n");
+}
+
+export function headingAnchors(text: string): Set<string> {
+  const seen = new Map<string, number>();
+  const valid = new Set<string>();
+  for (const line of stripCodeFences(text).split(/\r?\n/u)) {
+    const match = /^#{1,6}\s+(.*)$/u.exec(line);
+    if (match?.[1] === undefined) {
+      continue;
+    }
+    const anchor = githubHeadingAnchor(match[1].trim());
+    const occurrence = seen.get(anchor) ?? 0;
+    valid.add(occurrence === 0 ? anchor : `${anchor}-${occurrence}`);
+    seen.set(anchor, occurrence + 1);
+  }
+  return valid;
+}
+
+export function contentsAnchors(text: string): string[] | undefined {
+  const jumpLine = /^\*\*Contents:\*\*.*$/mu.exec(stripCodeFences(text))?.[0];
+  if (jumpLine === undefined) {
+    return undefined;
+  }
+  const anchors = Array.from(jumpLine.matchAll(/\[[^\]]*\]\(#([^)]+)\)/gu), (match) => match[1])
+    .filter((value): value is string => value !== undefined);
+  return anchors.length > 0 ? anchors : undefined;
+}
+
+export function escapingLinks(text: string, markdownPath: string, pluginRoot: string): string[] {
+  const bad: string[] = [];
+  const root = resolve(pluginRoot);
+  for (const match of stripCodeFences(text).matchAll(/\]\(([^)]+)\)/gu)) {
+    const raw = match[1];
+    if (raw === undefined) {
+      continue;
+    }
+    let target = raw.split(/\s/u)[0]?.trim() ?? "";
+    if (
+      target.startsWith("http://") ||
+      target.startsWith("https://") ||
+      target.startsWith("mailto:") ||
+      target.startsWith("#") ||
+      target.startsWith("<")
+    ) {
+      continue;
+    }
+    target = target.split("#", 1)[0] ?? "";
+    if (target.length === 0) {
+      continue;
+    }
+    const resolvedTarget = normalize(resolve(dirname(markdownPath), target));
+    if (resolvedTarget !== root && !resolvedTarget.startsWith(`${root}${sep}`)) {
+      if (!bad.includes(target)) {
+        bad.push(target);
+      }
+    }
+  }
+  return bad;
+}
+
+function markdownFiles(root: string): string[] {
+  const found: string[] = [];
+  const visit = (directory: string): void => {
+    for (const entry of readdirSync(directory, { withFileTypes: true }).sort((left, right) =>
+      left.name.localeCompare(right.name, "en"),
+    )) {
+      const path = join(directory, entry.name);
+      if (entry.isDirectory()) {
+        visit(path);
+      } else if (entry.isFile() && entry.name.endsWith(".md")) {
+        found.push(path);
+      }
+    }
+  };
+  visit(root);
+  return found;
+}
+
+function findingLabel(path: string, plugin: string, pluginRoot: string): readonly [string, string] {
+  const relativePath = relative(pluginRoot, path);
+  const parts = relativePath.split(sep);
+  if (parts.length > 2 && parts[0] === "skills" && parts[1] !== undefined) {
+    return [`${plugin}/${parts[1]}`, parts.slice(2).join("/")];
+  }
+  return [plugin, parts.join("/")];
+}
+
+function escapingLinkErrors(plugin: string, pluginRoot: string): StructureFinding[] {
+  const findings: StructureFinding[] = [];
+  for (const path of markdownFiles(pluginRoot)) {
+    const links = escapingLinks(readFileSync(path, "utf8"), path, pluginRoot);
+    if (links.length > 0) {
+      const [label, location] = findingLabel(path, plugin, pluginRoot);
+      findings.push([
+        label,
+        location,
+        "cross-plugin relative link(s) — dead in a sparse-clone install, use an absolute GitHub URL: " +
+          links.join(", "),
+      ]);
+    }
+  }
+  return findings;
+}
+
+export function auditSkillStructure(pluginsDirectory: string): StructureAudit {
+  const errors: StructureFinding[] = [];
+  const warnings: StructureFinding[] = [];
+  const missingContents: Array<readonly [string, string]> = [];
+  const units = new Set<string>();
+  const unitsWithSources = new Set<string>();
+
+  for (const pluginEntry of readdirSync(pluginsDirectory, { withFileTypes: true }).sort((left, right) =>
+    left.name.localeCompare(right.name, "en"),
+  )) {
+    if (!pluginEntry.isDirectory()) {
+      continue;
+    }
+    const plugin = pluginEntry.name;
+    const pluginRoot = join(pluginsDirectory, plugin);
+    errors.push(...escapingLinkErrors(plugin, pluginRoot));
+    const skillsDirectory = join(pluginRoot, "skills");
+    if (!existsSync(skillsDirectory) || !statSync(skillsDirectory).isDirectory()) {
+      continue;
+    }
+
+    for (const skillEntry of readdirSync(skillsDirectory, { withFileTypes: true }).sort((left, right) =>
+      left.name.localeCompare(right.name, "en"),
+    )) {
+      if (!skillEntry.isDirectory()) {
+        continue;
+      }
+      const skill = skillEntry.name;
+      const skillRoot = join(skillsDirectory, skill);
+      const skillManifest = join(skillRoot, "SKILL.md");
+      if (!existsSync(skillManifest)) {
+        continue;
+      }
+      const label = `${plugin}/${skill}`;
+      const skillText = readFileSync(skillManifest, "utf8");
+      if (!skill.endsWith("-workspace")) {
+        units.add(label);
+        if (/^## Primary Sources$/mu.test(skillText)) {
+          unitsWithSources.add(label);
+        }
+      }
+      const skillLines = lineCount(skillText);
+      if (skillLines > SKILL_LINE_LIMIT) {
+        errors.push([
+          label,
+          "SKILL.md",
+          `${skillLines} lines (>${SKILL_LINE_LIMIT}) — split depth into references/ files`,
+        ]);
+      } else if (skillLines >= SKILL_LINE_WARNING) {
+        warnings.push([
+          label,
+          "SKILL.md",
+          `${skillLines} lines — approaching the ${SKILL_LINE_LIMIT}-line limit`,
+        ]);
+      }
+
+      const referencesDirectory = join(skillRoot, "references");
+      if (!existsSync(referencesDirectory) || !statSync(referencesDirectory).isDirectory()) {
+        continue;
+      }
+      for (const referenceEntry of readdirSync(referencesDirectory, { withFileTypes: true }).sort(
+        (left, right) => left.name.localeCompare(right.name, "en"),
+      )) {
+        if (!referenceEntry.isFile() || !referenceEntry.name.endsWith(".md")) {
+          continue;
+        }
+        const referenceText = readFileSync(join(referencesDirectory, referenceEntry.name), "utf8");
+        const anchors = contentsAnchors(referenceText);
+        if (anchors === undefined) {
+          const referenceLines = lineCount(referenceText);
+          if (referenceLines > REFERENCE_CONTENTS_THRESHOLD) {
+            missingContents.push([label, `${referenceEntry.name} (${referenceLines} lines)`]);
+          }
+          continue;
+        }
+        const validAnchors = headingAnchors(referenceText);
+        const broken = anchors.filter((anchor) => !validAnchors.has(anchor));
+        if (broken.length > 0) {
+          errors.push([
+            label,
+            `references/${referenceEntry.name}`,
+            `stale Contents anchors: ${broken.map((anchor) => `#${anchor}`).join(", ")}`,
+          ]);
+        }
+      }
+    }
+  }
+  return { errors, warnings, missingContents, units, unitsWithSources };
+}
+
+export function factCheckTierFindings(
+  root: string,
+  units: ReadonlySet<string>,
+  unitsWithSources: ReadonlySet<string>,
+): { advisories: string[]; checked: boolean } {
+  const path = resolve(root, FACT_CHECK_MANIFEST);
+  if (!existsSync(path)) {
+    return { advisories: [], checked: false };
+  }
+
+  let manifest: unknown;
+  try {
+    manifest = JSON.parse(readFileSync(path, "utf8"));
+    if (
+      typeof manifest !== "object" ||
+      manifest === null ||
+      Array.isArray(manifest) ||
+      !tierKeys.every((key) => {
+        const value = (manifest as Record<string, unknown>)[key] ?? [];
+        return Array.isArray(value);
+      })
+    ) {
+      throw new Error("expected a JSON object whose tier keys hold arrays");
+    }
+  } catch (error) {
+    return {
+      advisories: [`could not read ${FACT_CHECK_MANIFEST}: ${String(error)}`],
+      checked: true,
+    };
+  }
+
+  const object = manifest as Record<string, unknown>;
+  const listed = tierKeys.flatMap((key) => {
+    const value = object[key] ?? [];
+    return Array.isArray(value) ? value.filter((entry): entry is string => typeof entry === "string") : [];
+  });
+  const neverValue = object.never ?? [];
+  const never = new Set(
+    Array.isArray(neverValue)
+      ? neverValue.filter((entry): entry is string => typeof entry === "string")
+      : [],
+  );
+  const advisories: string[] = [];
+  for (const unit of Array.from(units).filter((value) => !listed.includes(value)).sort()) {
+    advisories.push(
+      `${unit}: not in any tier list — add it to weekly/monthly/never (defaults to monthly meanwhile)`,
+    );
+  }
+  for (const unit of Array.from(new Set(listed)).filter((value) => !units.has(value)).sort()) {
+    advisories.push(
+      `${unit}: listed in the manifest but no such unit exists — remove or rename the entry`,
+    );
+  }
+  for (const unit of Array.from(new Set(listed)).filter(
+    (value) => listed.filter((entry) => entry === value).length > 1,
+  ).sort()) {
+    advisories.push(
+      `${unit}: in more than one tier list — keep exactly one ` +
+        "(the fact-check resolver silently lets the later list win)",
+    );
+  }
+  for (const unit of Array.from(units).filter(
+    (value) => !never.has(value) && !unitsWithSources.has(value),
+  ).sort()) {
+    advisories.push(
+      `${unit}: fact-checked unit without a ## Primary Sources section — add one ` +
+        "(placeholder ok; see docs/PLUGIN-CONVENTIONS.md → Primary Sources)",
+    );
+  }
+  return { advisories, checked: true };
+}
+
+function renderFindings(rows: readonly StructureFinding[], kind: string, output: GateOutput): void {
+  let current: string | undefined;
+  for (const [label, location, message] of rows) {
+    if (label !== current) {
+      output.stdout(`  ${label}`);
+      current = label;
+    }
+    output.stdout(`    [${kind}] ${location}: ${message}`);
+  }
+}
+
+export function runSkillStructureCheck(
+  rootPath: string,
+  strict: boolean,
+  output: GateOutput = defaultOutput,
+): number {
+  const root = findStructureRepositoryRoot(rootPath);
+  if (root === undefined) {
+    output.stderr("error: could not find the repo root (no plugins/ directory above the current path).");
+    return 2;
+  }
+  const audit = auditSkillStructure(resolve(root, "plugins"));
+  const tiers = factCheckTierFindings(root, audit.units, audit.unitsWithSources);
+  for (const message of synchronizePlugins(root, false)) {
+    audit.errors.push(["dual-harness", "sync", message]);
+  }
+
+  if (
+    audit.errors.length === 0 &&
+    audit.warnings.length === 0 &&
+    audit.missingContents.length === 0 &&
+    tiers.advisories.length === 0
+  ) {
+    const tierNote = tiers.checked ? ", and the fact-check manifest is drift-free" : "";
+    output.stdout(
+      `OK — every SKILL.md is lean, large reference files are indexed, ` +
+        `all Contents anchors resolve${tierNote}.`,
+    );
+    return 0;
+  }
+
+  if (audit.errors.length > 0) {
+    output.stdout(`${audit.errors.length} ERROR(s):`);
+    renderFindings(audit.errors, "ERROR", output);
+  }
+  if (audit.warnings.length > 0) {
+    output.stdout(`${audit.warnings.length} WARNING(s):`);
+    renderFindings(audit.warnings, "WARN", output);
+  }
+  if (audit.missingContents.length > 0) {
+    const bySkill = new Map<string, string[]>();
+    for (const [label, file] of audit.missingContents) {
+      const files = bySkill.get(label) ?? [];
+      files.push(file);
+      bySkill.set(label, files);
+    }
+    output.stdout(
+      `ADVISORY — ${audit.missingContents.length} large reference file(s) across ` +
+        `${bySkill.size} skill(s) lack a **Contents:** jump-line (non-failing):`,
+    );
+    for (const [label, files] of Array.from(bySkill.entries()).sort(([left], [right]) =>
+      left.localeCompare(right, "en"),
+    )) {
+      output.stdout(`  ${label}: ${files.join(", ")}`);
+    }
+  }
+  if (tiers.advisories.length > 0) {
+    output.stdout(`ADVISORY — fact-check manifest drift in ${FACT_CHECK_MANIFEST} (non-failing):`);
+    for (const advisory of tiers.advisories) {
+      output.stdout(`  ${advisory}`);
+    }
+  }
+  output.stdout("\nRules and remediation: .claude/skills/skill-structure-check/SKILL.md");
+  if (audit.errors.length > 0) {
+    return 1;
+  }
+  return strict &&
+    (audit.warnings.length > 0 ||
+      audit.missingContents.length > 0 ||
+      tiers.advisories.length > 0)
+    ? 1
+    : 0;
+}

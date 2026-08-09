@@ -1,5 +1,5 @@
 {
-  "_comment": "The plugin registry: harness targeting, Codex presentation metadata, and skill-sharing (vendoring) edges. Run cypherpoet-sync-plugins (write mode is the default) to regenerate every derived artifact; use --check to fail on drift. Never hand-edit generated files: any .codex-plugin/plugin.json or vendored skill copy. Categories also feed Codex catalog entries in the cypherpoet-toolchest marketplace repo; interface metadata stays in generated plugin manifests.",
+  "_comment": "The plugin registry: harness targeting, Codex presentation metadata, and skill-sharing (vendoring) edges. Run npm run sync to regenerate every derived artifact; run npm run sync:check to fail on drift. Never hand-edit generated files: any .codex-plugin/plugin.json or vendored skill copy. Categories also feed Codex catalog entries in the cypherpoet-toolchest marketplace repo; interface metadata stays in generated plugin manifests.",
   "vendored_skills": [
     {
       "source": "plugins/cypherpoet-webgl-kit/skills/webgl-mastery",

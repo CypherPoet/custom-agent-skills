@@ -1,0 +1,38 @@
+{
+  "name": "@cypherpoet/plugin-sync",
+  "version": "0.1.0",
+  "description": "Generates and validates Codex packages and vendored skills for CypherPoet dual-harness plugin repositories.",
+  "private": true,
+  "type": "module",
+  "license": "MIT",
+  "engines": {
+    "node": ">=24"
+  },
+  "bin": {
+    "cypherpoet-plugin-sync": "tooling/dist/cli.js"
+  },
+  "exports": {
+    ".": "./tooling/dist/index.js"
+  },
+  "files": [
+    "tooling/dist/",
+    "LICENSE",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsc --project tooling/tsconfig.json",
+    "build:check": "node tooling/scripts/check-build.mjs",
+    "structure:check": "node tooling/dist/skill-structure-cli.js --strict",
+    "sync": "node tooling/dist/cli.js",
+    "sync:check": "node tooling/dist/cli.js --check",
+    "test": "node tooling/scripts/run-tests.mjs",
+    "versions:check": "node tooling/dist/version-bumps-cli.js"
+  },
+  "dependencies": {
+    "yaml": "^2.9.0"
+  },
+  "devDependencies": {
+    "@types/node": "^26.2.0",
+    "typescript": "^7.0.2"
+  }
+}

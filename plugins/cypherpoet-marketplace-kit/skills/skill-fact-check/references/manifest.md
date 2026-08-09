@@ -34,7 +34,7 @@ Re-tier by moving a `unit_id` between lists; the skill itself doesn't change. A 
 
 A skill shared across plugins is **vendored** — physically copied into each plugin that ships it, per the `vendored_skills` edges in `scripts/plugin-registry.json`. Copies are generated files. Tier every copy `never` and leave only the authoritative source researchable:
 
-- Correcting a copy hand-edits a generated file. `cypherpoet-sync-plugins` rewrites it wholesale from the source on the next run, so the correction is silently discarded — the research happened, the citation was sound, and the fix is simply gone.
+- Correcting a copy hand-edits a generated file. `npm run sync` rewrites it wholesale from the source on the next run, so the correction is silently discarded — the research happened, the citation was sound, and the fix is simply gone.
 - Correcting the source and re-syncing propagates the same fix to every copy for free, which is why one `never` entry per copy is all this takes.
 - Researching a copy also pays for the identical deep-research wave two or three times over.
 

@@ -182,15 +182,15 @@ After editing a plugin's **shipped** content, bump that plugin's `.claude-plugin
 ### Then regenerate
 
 ```bash
-cypherpoet-sync-plugins
+npm run sync
 ```
 
 Run it **after the last edit and the last bump**, before committing. Skip it and the PR arrives broken, two different ways:
 
-- `.codex-plugin/plugin.json` is generated from `.claude-plugin/plugin.json`. Bump one and not the other and `sync_plugins.py --check` reports `[codex-manifest] out of sync`.
+- `.codex-plugin/plugin.json` is generated from `.claude-plugin/plugin.json`. Bump one and not the other and `npm run sync:check` reports `[codex-manifest] out of sync`.
 - A corrected skill that is vendored into other plugins leaves every copy stale: `[vendor] out of sync: <copy> != <source>`.
 
-`tests/test_repository_health.py` runs that same `--check`, so either one turns the PR's checks red — and a red PR is one [Step 8](#step-8--auto-merge-a-dateline-only-pr-per-repo) will never merge and a human has to clean up. The sync is deterministic and touches only generated files, so re-running it when nothing changed is free.
+The repository health suite runs that same check, so either one turns the PR's checks red — and a red PR is one [Step 8](#step-8--auto-merge-a-dateline-only-pr-per-repo) will never merge and a human has to clean up. The sync is deterministic and touches only generated files, so re-running it when nothing changed is free.
 
 ### Surfaces this routine leaves alone
 

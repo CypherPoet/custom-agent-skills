@@ -13,20 +13,18 @@ description: >
 
 # Skill Structure Check
 
-Keep this file as the canonical rule contract and remediation guide. The bundled
-[script](scripts/check-skill-structure.py) implements these rules and points back
-here instead of restating them.
+Keep this file as the canonical rule contract and remediation guide. The shared
+repository tooling implements these rules instead of restating them in a second
+skill-specific script.
 
 ## Run It
 
 ```shell
-python3.11 .claude/skills/skill-structure-check/scripts/check-skill-structure.py
+npm run structure:check
 ```
 
-Report-only — it never modifies files. Exits `1` if there are any ERRORs, `0`
-otherwise; with `--strict` (how the CI health suite runs it) WARNINGs and
-ADVISORYs fail too. Run it before opening a PR that adds or edits a skill. It
-finds the repo root on its own, so the working directory doesn't matter.
+This command is report-only and uses strict mode: ERRORs, WARNINGs, and
+ADVISORYs all fail. Run it before opening a PR that adds or edits a skill.
 
 ## What It Checks
 
@@ -65,7 +63,7 @@ a single line, placed after the file's introduction,
 - **Oversized `SKILL.md`** — extract topical sections into `references/<topic>.md` and leave a routing table in the body. `cypherpoet-threejs-kit` and `cypherpoet-mobile-dev` are worked examples; follow `skill-creator`'s progressive-disclosure guidance.
 - **Missing or stale Contents index** — add or repair the jump-line per [The Contents Index Format](#the-contents-index-format).
 - **Escaping relative link** — use an absolute GitHub URL for another plugin; keep links within the current plugin relative.
-- **Plugin-sync drift** — edit the authoritative source or registry, then run `cypherpoet-sync-plugins`. Never hand-edit a vendored copy or a `.codex-plugin/plugin.json`. A retired copy is removed automatically when git shows it clean; otherwise the sync refuses and tells you why.
+- **Plugin-sync drift** — edit the authoritative source or registry, then run `npm run sync`. Never hand-edit a vendored copy or a `.codex-plugin/plugin.json`. A retired copy is removed automatically when git shows it clean; otherwise the sync refuses and tells you why.
 - **Fact-check drift** — place each `<plugin>/<skill>` unit in exactly one tier, remove or rename orphaned entries, and add `## Primary Sources` to every fact-checked unit. Tier definitions live in the `skill-fact-check` skill's `references/manifest.md`, which is also where the rule that every vendored copy is tiered `never` lives.
 
-Thresholds are implementation constants in the script. Change the rule here first, then update the implementation and tests in the same change.
+Thresholds are implementation constants in `tooling/src/skill-structure.ts`. Change the rule here first, then update the implementation and tests in the same change.

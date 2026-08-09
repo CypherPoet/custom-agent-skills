@@ -1,6 +1,8 @@
 import unittest
+import subprocess
+import sys
 
-from support import fixture_directory, load_module, write, write_json
+from support import ROOT, fixture_directory, load_module, write, write_json
 
 
 catalog_refresh = load_module(
@@ -68,6 +70,21 @@ class CatalogRefreshTests(unittest.TestCase):
         self.assertIn("| new | new | new |", updated)
         self.assertNotIn("| old | old | old |", updated)
         self.assertTrue(updated.endswith("Keep me.\n"))
+
+    def test_repository_catalog_is_current(self):
+        result = subprocess.run(
+            [
+                sys.executable,
+                ROOT
+                / "plugins/cypherpoet-marketplace-kit/skills/catalog-refresh/"
+                "scripts/refresh_catalog.py",
+                "--check",
+            ],
+            cwd=ROOT,
+            capture_output=True,
+            text=True,
+        )
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
 
 
 if __name__ == "__main__":

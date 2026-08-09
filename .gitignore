@@ -30,8 +30,6 @@ node_modules/
 *.tmp
 __pycache__/
 *.pyc
-/tooling/build/
-/tooling/src/*.egg-info/
 
 # Skill development workspaces (created by /skill-creator for eval iterations)
 **/skills/*-workspace/
