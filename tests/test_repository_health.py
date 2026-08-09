@@ -128,7 +128,7 @@ class RepositoryHealthTests(unittest.TestCase):
     def test_tooling_install_contract_uses_python_3_11_and_the_shared_cli(self):
         configuration = configparser.ConfigParser()
         configuration.read(ROOT / "tooling/setup.cfg", encoding="utf-8")
-        self.assertEqual(configuration["metadata"]["version"], "0.2.0")
+        self.assertEqual(configuration["metadata"]["version"], "0.1.0")
         self.assertEqual(configuration["options"]["python_requires"], ">=3.11")
         self.assertEqual(
             configuration["options"]["install_requires"].split(),
