@@ -222,26 +222,18 @@ def audit(plugins_dir):
 
 
 def dual_harness_drift(root):
-    """Plugin sync drift as ERROR strings; [] when the tooling is absent (portable
-    to repos without it) or everything is in sync. Delegates to scripts/sync_plugins.py
-    so the vendored-copy / Codex-manifest generators have one source of truth."""
-    scripts_dir = os.path.join(root, "scripts")
-    if not (
-        os.path.isfile(os.path.join(scripts_dir, "plugin-registry.json"))
-        and os.path.isfile(os.path.join(scripts_dir, "sync_plugins.py"))
-    ):
+    """Return plugin-sync errors, or [] when this repo has no plugin registry."""
+    registry_path = os.path.join(root, "scripts", "plugin-registry.json")
+    if not os.path.isfile(registry_path):
         return []
-    sys.path.insert(0, scripts_dir)
     try:
-        import sync_plugins
         from pathlib import Path
 
-        return sync_plugins.sync(Path(root), write=False)
+        from cypherpoet_agent_skills_tooling import sync
+
+        return sync(Path(root), write=False)
     except Exception as e:  # never let the guard's own failure mask a clean structure run
         return [f"dual-harness check could not run: {e}"]
-    finally:
-        if scripts_dir in sys.path:
-            sys.path.remove(scripts_dir)
 
 
 def render(rows, kind):

@@ -119,21 +119,40 @@ class RepositoryHealthTests(unittest.TestCase):
         match = git(ROOT, "grep", "-l", "--fixed-strings", needle, check=False)
         self.assertEqual(match.returncode, 1, f"stale reference in:\n{match.stdout}")
 
-    def test_no_tracked_file_instructs_bare_python_for_the_sync(self):
-        # The sync must always be invoked as python3 (macOS ships no bare
-        # `python`). Split the needle so this file never matches itself.
-        needle = "python scripts/sync" + "_plugins.py"
+    def test_removed_repository_sync_launcher_is_not_referenced(self):
+        needle = "scripts/sync" + "_plugins.py"
         match = git(ROOT, "grep", "-l", "--fixed-strings", needle, check=False)
         self.assertEqual(match.returncode, 1, f"stale instruction in:\n{match.stdout}")
+        self.assertFalse((ROOT / "scripts" / "sync_plugins.py").exists())
 
-    def test_tooling_install_contract_supports_the_repository_python(self):
+    def test_tooling_install_contract_uses_python_3_11_and_the_shared_cli(self):
         configuration = configparser.ConfigParser()
         configuration.read(ROOT / "tooling/setup.cfg", encoding="utf-8")
-        self.assertEqual(configuration["options"]["python_requires"], ">=3.9")
+        self.assertEqual(configuration["metadata"]["version"], "0.2.0")
+        self.assertEqual(configuration["options"]["python_requires"], ">=3.11")
+        self.assertEqual(
+            configuration["options"]["install_requires"].split(),
+            ["PyYAML>=6.0,<7"],
+        )
+        self.assertEqual(
+            configuration["options.entry_points"]["console_scripts"].strip(),
+            "cypherpoet-sync-plugins = "
+            "cypherpoet_agent_skills_tooling.sync_plugins:console_main",
+        )
         self.assertEqual(
             (ROOT / "requirements-tooling.txt").read_text(encoding="utf-8"),
             "./tooling\n",
         )
+
+    def test_readme_keeps_installation_in_plugin_documents(self):
+        readme = (ROOT / "README.md").read_text(encoding="utf-8")
+        self.assertIn("## Prerequisites", readme)
+        self.assertIn("Python 3.11 or later", readme)
+        self.assertIn(
+            "python3.11 -m pip install -r requirements-tooling.txt",
+            readme,
+        )
+        self.assertNotIn("## Installation", readme)
 
 
 if __name__ == "__main__":

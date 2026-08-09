@@ -20,7 +20,7 @@ here instead of restating them.
 ## Run It
 
 ```shell
-python3 .claude/skills/skill-structure-check/scripts/check-skill-structure.py
+python3.11 .claude/skills/skill-structure-check/scripts/check-skill-structure.py
 ```
 
 Report-only — it never modifies files. Exits `1` if there are any ERRORs, `0`
@@ -65,7 +65,7 @@ a single line, placed after the file's introduction,
 - **Oversized `SKILL.md`** — extract topical sections into `references/<topic>.md` and leave a routing table in the body. `cypherpoet-threejs-kit` and `cypherpoet-mobile-dev` are worked examples; follow `skill-creator`'s progressive-disclosure guidance.
 - **Missing or stale Contents index** — add or repair the jump-line per [The Contents Index Format](#the-contents-index-format).
 - **Escaping relative link** — use an absolute GitHub URL for another plugin; keep links within the current plugin relative.
-- **Plugin-sync drift** — edit the authoritative source or registry, then run `python3 scripts/sync_plugins.py`. Never hand-edit a vendored copy or a `.codex-plugin/plugin.json`. A retired copy is removed automatically when git shows it clean; otherwise the sync refuses and tells you why.
+- **Plugin-sync drift** — edit the authoritative source or registry, then run `cypherpoet-sync-plugins`. Never hand-edit a vendored copy or a `.codex-plugin/plugin.json`. A retired copy is removed automatically when git shows it clean; otherwise the sync refuses and tells you why.
 - **Fact-check drift** — place each `<plugin>/<skill>` unit in exactly one tier, remove or rename orphaned entries, and add `## Primary Sources` to every fact-checked unit. Tier definitions live in the `skill-fact-check` skill's `references/manifest.md`, which is also where the rule that every vendored copy is tiered `never` lives.
 
 Thresholds are implementation constants in the script. Change the rule here first, then update the implementation and tests in the same change.

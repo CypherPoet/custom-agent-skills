@@ -8,29 +8,13 @@ A curated collection of reusable AI agent skills, packaged as Claude Code and Co
 
 **[Browse the Plugin Catalog &rarr;](docs/CATALOG.md)**
 
-## Installation
+## Prerequisites
 
-This repo publishes its plugins for both **Claude Code** and **Codex** via the [`cypherpoet-toolchest`](https://github.com/CypherPoet/cypherpoet-toolchest) marketplace — one repo carrying both harness catalogs.
-
-**Claude Code:**
+Contributors need Python 3.11 or later. Install the repository tooling after checkout and whenever the local [`tooling/`](tooling/) source changes:
 
 ```shell
-# Subscribe to the marketplace once
-/plugin marketplace add CypherPoet/cypherpoet-toolchest
-
-# Install whichever plugins you want
-/plugin install cypherpoet-git-flow@cypherpoet-toolchest
-/plugin install cypherpoet-blender-kit@cypherpoet-toolchest
-# ...etc
+python3.11 -m pip install -r requirements-tooling.txt
 ```
-
-**Codex** (same marketplace repo — it carries both harness catalogs):
-
-```shell
-codex plugin marketplace add CypherPoet/cypherpoet-toolchest
-codex plugin add cypherpoet-git-flow@cypherpoet-toolchest
-```
-
 
 ## Repository Structure
 
@@ -41,7 +25,9 @@ codex plugin add cypherpoet-git-flow@cypherpoet-toolchest
 │   ├── CATALOG.md            # Cross-plugin index
 │   ├── PLUGIN-CONVENTIONS.md # Plugin architecture and contributor workflow
 │   └── automated-routines/   # Maintenance routine configuration
-├── scripts/                  # Plugin registry and sync generator
+├── tooling/                  # Shared generator and validator package
+├── requirements-tooling.txt  # Contributor tooling dependencies
+├── scripts/                  # Plugin registry and repository gates
 ├── tests/                    # Repository health suite
 ├── .github/                  # CI (Verify workflow)
 ├── .agents/skills/           # Codex maintainer skills
@@ -54,16 +40,12 @@ Claude plugin anatomy (component dirs, manifest fields, auto-discovery) follows 
 
 Conventions live in [`docs/PLUGIN-CONVENTIONS.md`](docs/PLUGIN-CONVENTIONS.md); [`AGENTS.md`](AGENTS.md) carries the working rules for AI agents.
 
-Maintaining this repo's marketplace catalogs uses the `cypherpoet-marketplace-kit` plugin. It's already enabled for Claude Code in [`.claude/settings.json`](.claude/settings.json); on Codex, add it once:
-
-```shell
-codex plugin add cypherpoet-marketplace-kit@cypherpoet-toolchest
-```
+Marketplace maintenance uses the [`cypherpoet-marketplace-kit`](plugins/cypherpoet-marketplace-kit/README.md) plugin.
 
 Before opening a PR, run the repository health suite:
 
 ```shell
-python3 -m unittest discover -s tests
+python3.11 -m unittest discover -s tests
 ```
 
 ## License

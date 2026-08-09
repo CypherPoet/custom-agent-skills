@@ -38,7 +38,7 @@ If the user is only editing an already-listed plugin's instructions, tell them n
 
 - `gh` is authenticated (`gh auth status`) with write access to the marketplace repo.
 - Each plugin to publish exists at `plugins/<name>/.claude-plugin/plugin.json`. If a plugin doesn't exist yet, scaffold it with Claude Code's [`/plugin-dev:create-plugin`](https://github.com/anthropics/claude-plugins-official/blob/main/plugins/plugin-dev/commands/create-plugin.md) or Codex's `$plugin-creator`, then confirm it's well-formed — `claude plugin validate plugins/<name>` where the `claude` CLI exists; otherwise check the manifest parses and carries `name`, `version`, and `description`. **Removals differ by cause**: a plugin **deleted** from the source repo has no manifest to read — skip this check and step 1 for it; step 3's removal commands are its whole path. A plugin **reclassified Claude-only** still exists and still has its manifest: only its Codex entry is removed (step 3), and if the same change also edited its `name`/`description`/`homepage`, run steps 1–3 for its Claude entry as usual — don't let the reclassification swallow a concurrent Claude-catalog update.
-- Run `python3 scripts/sync_plugins.py --check` in a dual-harness source repo. This verifies any generated `codex-plugins/<name>` projection before its catalog path is published.
+- Run `cypherpoet-sync-plugins --check` in a dual-harness source repo. This verifies any generated `codex-plugins/<name>` projection before its catalog path is published.
 
 ## Which marketplace
 

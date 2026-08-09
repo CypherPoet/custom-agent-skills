@@ -21,6 +21,8 @@ from pathlib import Path
 from typing import Sequence
 from urllib.parse import urlsplit
 
+import yaml
+
 
 REGISTRY = Path("scripts") / "plugin-registry.json"
 LEGACY_REGISTRY = Path("scripts") / "dual-harness.json"
@@ -71,7 +73,6 @@ _CLAUDE_INVOCATION_FIELD_PREFIX = re.compile(
     r"^(disable-model-invocation|disable_model_invocation):",
     re.IGNORECASE,
 )
-_YAML_FALSE_VALUES = {"false", "no", "off", "0"}
 _YAML_TRUE_VALUES = {"true", "yes", "on", "1"}
 
 
@@ -673,29 +674,54 @@ def _strip_claude_invocation_field(
     return "".join(lines).encode("utf-8"), manual_only, []
 
 
-def _codex_policy_disables_implicit_invocation(agent_manifest: bytes) -> bool:
+class _UniqueKeySafeLoader(yaml.SafeLoader):
+    """Load YAML while rejecting duplicate mapping keys."""
+
+    def construct_mapping(self, node, deep=False):
+        self.flatten_mapping(node)
+        mapping = {}
+        for key_node, value_node in node.value:
+            key = self.construct_object(key_node, deep=deep)
+            try:
+                duplicate = key in mapping
+            except TypeError as error:
+                raise yaml.constructor.ConstructorError(
+                    "while constructing a mapping",
+                    node.start_mark,
+                    "found an unhashable mapping key",
+                    key_node.start_mark,
+                ) from error
+            if duplicate:
+                raise yaml.constructor.ConstructorError(
+                    "while constructing a mapping",
+                    node.start_mark,
+                    f"found duplicate key {key!r}",
+                    key_node.start_mark,
+                )
+            mapping[key] = self.construct_object(value_node, deep=deep)
+        return mapping
+
+
+def _codex_manual_only_policy_problem(agent_manifest: bytes) -> str | None:
     try:
         text = agent_manifest.decode("utf-8")
     except UnicodeDecodeError:
-        return False
+        return "agents/openai.yaml must be UTF-8"
 
-    section: str | None = None
-    for line in text.splitlines():
-        if line and not line[0].isspace():
-            match = re.match(r"^([A-Za-z0-9_-]+):(?:\s*(?:#.*)?)?$", line)
-            section = match.group(1) if match is not None else None
-            continue
-        if section != "policy":
-            continue
-        match = re.match(
-            r"^[ \t]+allow_implicit_invocation:[ \t]*"
-            r"(true|false|yes|no|on|off|1|0)[ \t]*(?:#.*)?$",
-            line,
-            re.IGNORECASE,
-        )
-        if match is not None:
-            return match.group(1).lower() in _YAML_FALSE_VALUES
-    return False
+    try:
+        configuration = yaml.load(text, Loader=_UniqueKeySafeLoader)
+    except yaml.YAMLError as error:
+        detail = getattr(error, "problem", None) or "YAML parsing failed"
+        return f"agents/openai.yaml is invalid: {detail}"
+    if not isinstance(configuration, dict):
+        return "agents/openai.yaml must contain a mapping"
+
+    policy = configuration.get("policy")
+    if not isinstance(policy, dict):
+        return "agents/openai.yaml must contain a policy mapping"
+    if policy.get("allow_implicit_invocation") is not False:
+        return "policy.allow_implicit_invocation must be the boolean false"
+    return None
 
 
 def _prepare_codex_projection(
@@ -743,13 +769,16 @@ def _prepare_codex_projection(
     for skill_name in manual_only_skills:
         agent_path = f"skills/{skill_name}/agents/openai.yaml"
         agent_manifest = projected_tree.get(agent_path)
-        if agent_manifest is None or not _codex_policy_disables_implicit_invocation(
-            agent_manifest
-        ):
+        policy_problem = (
+            "agents/openai.yaml is missing"
+            if agent_manifest is None
+            else _codex_manual_only_policy_problem(agent_manifest)
+        )
+        if policy_problem is not None:
             problems.append(
                 f"[codex-projection] {name}/{skill_name}: removing Claude's manual-only "
                 "field requires policy.allow_implicit_invocation: false in "
-                "agents/openai.yaml"
+                f"agents/openai.yaml ({policy_problem})"
             )
     return (projected_tree if not problems else None), problems
 
@@ -873,7 +902,7 @@ def _sync_vendored_skills(
             problems.append(
                 f"[vendor] stale generated copy: {target} "
                 f"(edge removed from {REGISTRY.as_posix()}; run: "
-                "python3 scripts/sync_plugins.py)"
+                "cypherpoet-sync-plugins)"
             )
             continue
         if (
@@ -905,7 +934,7 @@ def _sync_vendored_skills(
         elif tree(target) != source_tree:
             problems.append(
                 f"[vendor] out of sync: {target} != {source} "
-                "(run: python3 scripts/sync_plugins.py)"
+                "(run: cypherpoet-sync-plugins)"
             )
 
     source_digests = {
@@ -949,7 +978,7 @@ def _apply_codex_manifest_plan(
         elif not path.exists() or path.read_bytes() != desired_bytes:
             problems.append(
                 f"[codex-manifest] out of sync: {path.relative_to(root)} "
-                "(run: python3 scripts/sync_plugins.py)"
+                "(run: cypherpoet-sync-plugins)"
             )
 
     for path, desired_tree in sorted(desired_projections.items()):
@@ -959,7 +988,7 @@ def _apply_codex_manifest_plan(
         elif read_tree(path, _base_visible(visible, relative_path)) != desired_tree:
             problems.append(
                 f"[codex-projection] out of sync: {relative_path} "
-                "(run: python3 scripts/sync_plugins.py)"
+                "(run: cypherpoet-sync-plugins)"
             )
 
     for name in sorted(projected_plugins & existing_plugins):
@@ -972,7 +1001,7 @@ def _apply_codex_manifest_plan(
         if not write:
             problems.append(
                 f"[codex-projection] stale in-place Codex manifest: {relative_path} "
-                "(run: python3 scripts/sync_plugins.py)"
+                "(run: cypherpoet-sync-plugins)"
             )
         elif stale_manifest.is_symlink() or not stale_manifest.is_file():
             problems.append(
@@ -1001,7 +1030,7 @@ def _apply_codex_manifest_plan(
         if not write:
             problems.append(
                 f"[codex-projection] stale generated projection: {relative_path} "
-                "(run: python3 scripts/sync_plugins.py)"
+                "(run: cypherpoet-sync-plugins)"
             )
         elif stale.is_symlink() or not stale.is_dir() or not git_clean_under(
             root, relative_path
@@ -1021,7 +1050,7 @@ def _apply_codex_manifest_plan(
         else:
             problems.append(
                 f"[codex-manifest] stale .codex-plugin/ for Claude-only plugin {name} "
-                "(run: python3 scripts/sync_plugins.py)"
+                "(run: cypherpoet-sync-plugins)"
             )
     return problems
 
@@ -1105,11 +1134,7 @@ def find_root(start: Path) -> Path:
     )
 
 
-def main(
-    arguments: Sequence[str] | None = None,
-    *,
-    default_root: Path | None = None,
-) -> int:
+def main(arguments: Sequence[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--check", action="store_true", help="verify only; exit 1 on drift")
     parser.add_argument("--root", type=Path, help="repository root (defaults to the current repo)")
@@ -1117,8 +1142,6 @@ def main(
 
     if parsed_arguments.root is not None:
         root = find_root(parsed_arguments.root.resolve())
-    elif default_root is not None:
-        root = find_root(default_root.resolve())
     else:
         root = find_root(Path.cwd().resolve())
     problems = sync(root, write=not parsed_arguments.check)
@@ -1128,7 +1151,7 @@ def main(
             print(problem, file=sys.stderr)
         if parsed_arguments.check:
             print(
-                f"\n{len(problems)} issue(s). Run: python3 scripts/sync_plugins.py",
+                f"\n{len(problems)} issue(s). Run: cypherpoet-sync-plugins",
                 file=sys.stderr,
             )
         return 1

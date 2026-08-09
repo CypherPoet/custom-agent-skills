@@ -178,6 +178,38 @@ class SyncPluginsTests(unittest.TestCase):
             (self.root / "plugins/bundle/.codex-plugin/plugin.json").exists()
         )
 
+    def test_codex_projection_rejects_duplicate_invocation_policy(self):
+        write(
+            self.root / "plugins/source/skills/shared/SKILL.md",
+            "---\n"
+            "name: shared\n"
+            "description: Shared fixture.\n"
+            "disable-model-invocation: true\n"
+            "---\n",
+        )
+        config_path = self.root / "scripts/plugin-registry.json"
+        config = json.loads(config_path.read_text())
+        config["dual_harness_plugins"]["source"]["codexProjection"] = True
+        write_json(config_path, config)
+
+        for second_value in ("false", "true"):
+            with self.subTest(second_value=second_value):
+                write(
+                    self.root / "plugins/source/skills/shared/agents/openai.yaml",
+                    "policy:\n"
+                    "  allow_implicit_invocation: false\n"
+                    f"  allow_implicit_invocation: {second_value}\n",
+                )
+                problems = sync_plugins.sync(self.root, write=True)
+                self.assertTrue(
+                    any("found duplicate key" in problem for problem in problems),
+                    problems,
+                )
+                self.assertFalse((self.root / "codex-plugins/source").exists())
+                self.assertFalse(
+                    (self.root / "plugins/bundle/.codex-plugin/plugin.json").exists()
+                )
+
     def test_codex_projection_must_be_boolean(self):
         config_path = self.root / "scripts/plugin-registry.json"
         config = json.loads(config_path.read_text())

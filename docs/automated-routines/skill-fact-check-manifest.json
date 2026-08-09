@@ -1,5 +1,5 @@
 {
-  "_comment": "Volatility tiers for the skill-fact-check routine. Methodology lives in the skill at plugins/cypherpoet-marketplace-kit/skills/skill-fact-check/SKILL.md. unit_id = <plugin>/<skill>. Every unit is listed explicitly — check-skill-structure.py advises when one is missing; an unlisted unit still safely defaults to monthly. Re-tier by moving a unit_id between the lists. Vendored skill copies (a skill generated into a plugin that isn't its author — see scripts/plugin-registry.json) are tiered 'never': the routine corrects the authoritative source, and scripts/sync_plugins.py propagates the fix to every copy.",
+  "_comment": "Volatility tiers for the skill-fact-check routine. Methodology lives in the skill at plugins/cypherpoet-marketplace-kit/skills/skill-fact-check/SKILL.md. unit_id = <plugin>/<skill>. Every unit is listed explicitly — check-skill-structure.py advises when one is missing; an unlisted unit still safely defaults to monthly. Re-tier by moving a unit_id between the lists. Vendored skill copies (a skill generated into a plugin that isn't its author — see scripts/plugin-registry.json) are tiered 'never': the routine corrects the authoritative source, and cypherpoet-sync-plugins propagates the fix to every copy.",
   "repo": "custom-agent-skills",
   "defaults": { "tier": "monthly" },
   "weekly": [

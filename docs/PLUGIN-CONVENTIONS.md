@@ -59,21 +59,18 @@ Portable plugins target **both** Claude Code and Codex. Each plugin is self-cont
 
 If a plugin is useful only on Claude Code, list it under `claude_only_plugins` in the registry and give a reason. Judge the plugin by its purpose, not whether its files parse on Codex. Keep this exception list short.
 
-The shared [`cypherpoet-agent-skills-tooling`](../tooling/) package generates and validates plugins for this repository and the private sibling. [`scripts/sync_plugins.py`](../scripts/sync_plugins.py) is only a compatibility launcher.
-
-Install the repository's declared tooling before running any generator or gate:
-
-```shell
-python3 -m pip install -r requirements-tooling.txt
-```
-
-The tooling supports Python 3.9 and later. This repository installs a local wheel from `./tooling`; reinstall after changing the tooling source. The private sibling pins the same package to the exact commit for the `agent-skills-tooling-v0.1.1` release. An exact commit keeps local and CI results reproducible.
+The shared [`cypherpoet-agent-skills-tooling`](../tooling/) package generates and validates plugins for this repository and the private sibling. Complete the developer setup in the README's [Prerequisites](../README.md#prerequisites) before running it. The public repository installs its local package; the private sibling pins the same package to an exact public commit.
 
 ### Manifests
 
 The [source table](#start-here) defines how the manifest is composed. The generator also sets `skills` to `"./skills/"`. It validates all final interfaces before it writes any Codex manifest or projection. One invalid plugin therefore prevents every generated package write instead of leaving a partial update.
 
-A Codex projection is exceptional generated output, not another authored plugin. The generator copies the authored package, replaces its Codex manifest, and removes Claude's `disable-model-invocation` field only after it verifies the matching Codex skill policy is `allow_implicit_invocation: false`.
+A Codex projection is needed only when Claude and Codex cannot use the same package directory. The current case is a manual-only skill, which the two harnesses express differently:
+
+- The authored Claude package keeps `disable-model-invocation: true` in `SKILL.md`.
+- The generated Codex package keeps `policy.allow_implicit_invocation: false` in `agents/openai.yaml` and omits the Claude-only field that Codex rejects.
+
+Before it generates that Codex package, the tooling parses the complete Codex policy and confirms the manual-only setting. Each package therefore keeps its harness's own invocation control.
 
 #### Codex Interface Contract
 
@@ -118,7 +115,7 @@ Run both plugin-specific checks:
 
 ```shell
 claude plugin validate plugins/<plugin-name>
-python3 scripts/sync_plugins.py --check
+cypherpoet-sync-plugins --check
 ```
 
 The first command validates the authored Claude manifest. The second validates the generated Codex manifest and reports generation drift without writing files. Resolve every warning or error before you open a PR.

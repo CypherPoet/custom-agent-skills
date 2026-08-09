@@ -180,7 +180,7 @@ def main():
         print(f"  {plugin:<{width}}  ({reason})")
     print(
         "\nBump each plugin's version in .claude-plugin/plugin.json, then re-run"
-        "\n`python3 scripts/sync_plugins.py` so the Codex manifest matches."
+        "\n`cypherpoet-sync-plugins` so the Codex manifest matches."
     )
     return 1
 

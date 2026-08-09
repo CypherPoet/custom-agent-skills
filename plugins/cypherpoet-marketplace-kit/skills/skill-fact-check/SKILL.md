@@ -182,7 +182,7 @@ After editing a plugin's **shipped** content, bump that plugin's `.claude-plugin
 ### Then regenerate
 
 ```bash
-python3 scripts/sync_plugins.py
+cypherpoet-sync-plugins
 ```
 
 Run it **after the last edit and the last bump**, before committing. Skip it and the PR arrives broken, two different ways:
