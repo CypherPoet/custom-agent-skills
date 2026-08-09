@@ -9,14 +9,14 @@ Composition is by **vendoring, not dependencies**: neither harness resolves a re
 ## Map
 
 - [`docs/PLUGIN-CONVENTIONS.md`](docs/PLUGIN-CONVENTIONS.md) — **source of truth** for how plugins and skills are built here.
-- [`scripts/plugin-registry.json`](scripts/plugin-registry.json) — harness targeting, Codex interface and projection metadata, and skill-sharing edges.
+- [`scripts/plugin-registry.json`](scripts/plugin-registry.json) — harness targeting, Codex interface metadata, generated Codex package routing, and skill-sharing edges.
 - [`tooling/`](tooling/) — shared generator and Codex interface validator package used by both source repositories.
 - [`docs/CATALOG.md`](docs/CATALOG.md) — generated cross-plugin index.
 - [`docs/automated-routines/skill-fact-check-manifest.json`](docs/automated-routines/skill-fact-check-manifest.json) — per-skill fact-check volatility tiers.
 
 ## Working In This Repo
 
-- **Never hand-edit generated output** — any `.codex-plugin/plugin.json`, `codex-plugins/` projection, or vendored skill copy. Edit the source, then re-sync.
+- **Never hand-edit generated output** — any `.codex-plugin/plugin.json`, generated `codex-plugins/` package, or vendored skill copy. Edit the source, then re-sync.
 - Complete the developer prerequisites in [`README.md`](README.md) after checkout and whenever the local tooling source changes.
 - Run `cypherpoet-sync-plugins` after editing a `.claude-plugin/plugin.json`, the registry, or the source of a vendored skill.
 - **Bump a plugin's `version` whenever its content should reach installed users** — merging to `main` alone won't ship it. Re-run the sync after any bump; the health suite fails when content changed without one.

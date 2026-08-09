@@ -23,12 +23,12 @@ Plugin metadata has two authored sources and one generated result:
 The generator performs this composition:
 
 ```text
-Claude manifest + registry entry -> sync_plugins.py -> Codex manifest
+Claude manifest + registry entry -> cypherpoet-sync-plugins -> Codex manifest
 ```
 
 The generated Codex manifest repeats values from its sources because an installed plugin must be self-contained. This repetition does not create a second source of truth. Do not read metadata back from generated output or edit it by hand.
 
-Most Codex manifests stay inside the authored plugin directory. If Claude-only package metadata would make that directory invalid on Codex, set `"codexProjection": true` on the registry entry. The sync then creates a complete Codex package at `codex-plugins/<name>` and the Codex marketplace points there. The authored package under `plugins/<name>` remains the Claude source of truth.
+By default, each plugin supports both harnesses from `plugins/<name>`: Claude Code reads `.claude-plugin/plugin.json`, Codex reads the generated `.codex-plugin/plugin.json`, and both use the same `skills/` directory. No registry flag is required. The one exception that needs a separate generated package for Codex is explained under [Manifests](#manifests).
 
 The generator derives values only when they have the same meaning on both harnesses. It derives `longDescription`, `developerName`, and `websiteURL` from the Claude manifest. Friendly titles, short card copy, categories, capabilities, and starter prompts require author judgment, so they are authored once in the registry.
 
@@ -63,14 +63,20 @@ The shared [`cypherpoet-agent-skills-tooling`](../tooling/) package generates an
 
 ### Manifests
 
-The [source table](#start-here) defines how the manifest is composed. The generator also sets `skills` to `"./skills/"`. It validates all final interfaces before it writes any Codex manifest or projection. One invalid plugin therefore prevents every generated package write instead of leaving a partial update.
+Every portable plugin supports both Claude Code and Codex. The normal layout is one plugin directory with two harness manifests and one shared skill tree:
 
-A Codex projection is needed only when Claude and Codex cannot use the same package directory. The current case is a manual-only skill, which the two harnesses express differently:
+- Claude Code reads the authored `.claude-plugin/plugin.json`.
+- Codex reads the generated `.codex-plugin/plugin.json`.
+- Both harnesses use the same `skills/` directory.
 
-- The authored Claude package keeps `disable-model-invocation: true` in `SKILL.md`.
-- The generated Codex package keeps `policy.allow_implicit_invocation: false` in `agents/openai.yaml` and omits the Claude-only field that Codex rejects.
+The [source table](#start-here) defines how the generator composes the Codex manifest. The generator also sets `skills` to `"./skills/"` and validates every final interface before writing anything. If one plugin is invalid, it writes no generated packages.
 
-Before it generates that Codex package, the tooling parses the complete Codex policy and confirms the manual-only setting. Each package therefore keeps its harness's own invocation control.
+`cypherpoet-marketplace-kit` is the only current exception to the normal directory layout. One of its skills must be invoked manually, and the two harnesses store that rule in different files:
+
+- Claude Code reads `disable-model-invocation: true` from the authored `SKILL.md`.
+- Codex reads `policy.allow_implicit_invocation: false` from `agents/openai.yaml` and rejects Claude's `disable-model-invocation` field.
+
+For this exception, `"codexProjection": true` tells the generator to copy the same plugin to `codex-plugins/<name>` and omit only the incompatible Claude field. Before writing the copy, the generator confirms that the Codex policy still requires manual invocation. The copy is generated output for the same dual-harness plugin, not a separate plugin or source of truth.
 
 #### Codex Interface Contract
 
@@ -105,7 +111,7 @@ A **curated bundle** is a plugin that vendors several skills, such as `git-flow`
 The separate [`cypherpoet-toolchest`](https://github.com/CypherPoet/cypherpoet-toolchest) marketplace repo carries **two catalog files**, maintained together by the `marketplace-publish` flow (see [Publishing](#publishing)):
 
 - `.claude-plugin/marketplace.json` — the Claude Code catalog. Consumers: `/plugin marketplace add CypherPoet/cypherpoet-toolchest`.
-- `.agents/plugins/marketplace.json` — the Codex catalog (`git-subdir` entries pointing at `plugins/<name>` or a generated `codex-plugins/<name>` projection, plus each plugin's `category` from [`scripts/plugin-registry.json`](../scripts/plugin-registry.json)). Consumers: `codex plugin marketplace add CypherPoet/cypherpoet-toolchest`.
+- `.agents/plugins/marketplace.json` — the Codex catalog (`git-subdir` entries pointing at the normal `plugins/<name>` directory or an exceptional generated package under `codex-plugins/<name>`, plus each plugin's `category` from [`scripts/plugin-registry.json`](../scripts/plugin-registry.json)). Consumers: `codex plugin marketplace add CypherPoet/cypherpoet-toolchest`.
 
 The Codex catalog's top-level `name` is `cypherpoet-toolchest`. Its user-facing `interface.displayName` is `CypherPoet Toolchest`. Each plugin title comes from its generated `interface.displayName`.
 
@@ -120,7 +126,7 @@ cypherpoet-sync-plugins --check
 
 The first command validates the authored Claude manifest. The second validates the generated Codex manifest and reports generation drift without writing files. Resolve every warning or error before you open a PR.
 
-Codex's bundled `plugin-creator` validator is a useful scaffold check, not the final submission service. For a manual-only skill, keep Claude Code's `disable-model-invocation: true`, set Codex's `policy.allow_implicit_invocation: false` in `agents/openai.yaml`, and enable `codexProjection` for its plugin. Run the Codex validator against `codex-plugins/<name>`, not the authored Claude package. This preserves both harness controls and produces validator-clean Codex input.
+Codex's bundled `plugin-creator` validator is a useful scaffold check, not the final submission service. For a manual-only skill, keep Claude Code's `disable-model-invocation: true`, set Codex's `policy.allow_implicit_invocation: false` in `agents/openai.yaml`, and set `"codexProjection": true` to generate the separate package for Codex. Run the Codex validator against `codex-plugins/<name>`, not the authored package under `plugins/<name>`. This preserves both harness controls and produces validator-clean Codex input.
 
 Use the [final-directory submission contract](https://developers.openai.com/plugins/deploy/submission-errors#final-directory-submission) for Codex interface limits. [`AGENTS.md`](../AGENTS.md) defines the complete repository gate, including tests and `skill-structure-check`.
 
@@ -184,7 +190,7 @@ Plugin updates and marketplace updates are separate operations:
 | Shipped content or a generated manifest value | Bump the plugin version and run the sync. Existing installations use the version as their update key. |
 | Codex `displayName`, `shortDescription`, `capabilities`, or `defaultPrompt` | Bump the version and run the sync. No catalog publication is required. |
 | Codex `category` | Bump the version, run the sync, and publish the marketplace because the Codex catalog also stores the category. |
-| Add or remove `codexProjection` | Bump the version, run the sync, and publish the marketplace because the Codex source path changes. |
+| Add or remove a separate Codex package (`codexProjection`) | Bump the version, run the sync, and publish the marketplace because the Codex source path changes. |
 | Catalog identity or marketplace presentation | Publish the marketplace. If the same edit changes a plugin manifest, also follow the version rule above. |
 
 A fresh installation always fetches the latest content from `main`, but an existing installation updates only after a version bump.
