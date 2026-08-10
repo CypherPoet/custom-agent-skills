@@ -1,42 +1,36 @@
 ---
 name: marketplace-publish-check
-description: Read-only check of whether the current branch's changes require a marketplace-publish — a plugin added or removed, a plugin's name/description/homepage edited, or its dual-harness classification / Codex category changed in scripts/plugin-registry.json (a version-only bump does not count). Run it when opening a PR to decide whether to apply the `marketplace-publish` label, so a needed catalog publish isn't forgotten after merge. Prints the affected plugins; exits non-zero when a publish is needed.
+description: Read-only check of whether the current branch changes fields stored in a Claude or Codex marketplace catalog. Use when opening a source PR to decide whether to apply the marketplace-publish label. Version-only and plugin-card-only changes do not count.
 ---
 
 # marketplace-publish-check
 
-**Verified:** 2026-07-11
+Report whether the current branch changes the marketplace catalog surface. Platform support comes from manifest presence; there is no separate harness classification.
 
-Report whether the changes on the current branch touch the **marketplace catalog surface** — the parts of a plugin the marketplace's catalog files actually store: its presence (added/removed) and its `name` / `description` / `homepage` (the Claude `.claude-plugin/marketplace.json`), plus its dual-harness classification and Codex `category` from `scripts/plugin-registry.json` (the Codex `.agents/plugins/marketplace.json`). When they do, a `marketplace-publish` is needed after merge; when they don't (a plain content edit or a version-only bump), it isn't.
+The catalogs store these plugin fields:
 
-Like the kit's other read-only skills, this one is **model-invokable on purpose** — and it's specifically meant to run automatically at PR-creation to drive the `marketplace-publish` label (only `marketplace-publish` itself, the skill that pushes to the marketplace repo, is manual-only). It never writes, pushes, or publishes — it only reports.
+- Claude: manifest presence, `name`, `description`, and `homepage`.
+- Codex: manifest presence, `name`, and `interface.category`.
 
-## When this matters
+Other Codex interface fields live in the plugin manifest itself. Changing `displayName`, descriptions, capabilities, prompts, colors, or assets requires a plugin version bump but not marketplace publication.
 
-- Opening a PR that adds or removes a `plugins/<name>/` plugin, edits a manifest's `name`/`description`/`homepage`, or changes a plugin's classification or `category` in `scripts/plugin-registry.json`.
-- Deciding whether a PR should carry the `marketplace-publish` label (which gates the post-merge publish step / routine).
+## Run the Check
 
-A version-only bump does **not** count — content reaches installs via the `version` key, not a catalog re-publish (see `docs/PLUGIN-CONVENTIONS.md` → Publishing). Neither do plain skill/command/doc edits.
-
-This is the **marketplace** surface only. Component-count changes that affect `docs/CATALOG.md` are a separate concern handled by `catalog-refresh`.
-
-## Run the check
-
-With your working directory anywhere in the source repo, run the bundled script (`scripts/` is relative to **this skill's directory** — your harness shows the skill's location when it loads; prefix the command with it):
+From anywhere in the source repository, run this skill's bundled script:
 
 ```shell
 python3 scripts/needs_marketplace_publish.py [base-ref]
 ```
 
-`base-ref` defaults to `main`. The script locates the repo root via git, diffs every `plugins/*/.claude-plugin/plugin.json` plus `scripts/plugin-registry.json` between the base and `HEAD`, and compares only the catalog fields — so a manifest that changed for an unrelated reason (a version bump) is correctly ignored. Stdlib only; no `jq`, no network.
+`base-ref` defaults to `main`. The script compares both platform manifests at the merge base and `HEAD`, so it does not attribute later base-branch changes to the feature branch. It uses only the Python standard library and performs no writes or network requests.
 
-- **Exit 1** — a publish is needed. It lists the affected plugins and why: `added` / `removed` / `changed <fields>` for the Claude catalog fields, and `added to the Codex catalog surface` / `left the Codex catalog surface` / `changed Codex <fields>` for classification or `plugin-registry.json` entry changes (a plugin with several reasons joins them with `;`). Apply the `marketplace-publish` label to the PR.
-- **Exit 0** — no catalog-surface change; no label, no publish.
+- Exit `1`: one or more catalog entries need publication. Apply the `marketplace-publish` label.
+- Exit `0`: no catalog-stored field changed.
+- Exit `2`: a manifest or Git comparison could not be read safely; fix that error instead of treating it as publication.
 
-## After labeling
-
-The `marketplace-publish` label flags the PR so that, once merged, the catalog gets refreshed via the `marketplace-publish` skill (or a label-gated publish routine, if configured). This skill only **detects and reports** — it never runs the publish itself.
+The skill is model-invokable because it only reports. The `marketplace-publish` skill remains manual-only.
 
 ## Primary Sources
 
-- [Plugin marketplaces (Claude Code docs)](https://code.claude.com/docs/en/plugin-marketplaces) — authoritative for which manifest fields the marketplace catalog copies.
+- [Plugin marketplaces](https://code.claude.com/docs/en/plugin-marketplaces) — Claude marketplace schema and behavior.
+- [Codex plugin format](https://developers.openai.com/plugins/build/plugins/) — Codex plugin and marketplace packaging.

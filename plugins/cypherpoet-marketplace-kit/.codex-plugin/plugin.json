@@ -1,6 +1,6 @@
 {
   "name": "cypherpoet-marketplace-kit",
-  "version": "0.15.0",
+  "version": "0.16.1",
   "description": "Maintainer toolkit for running a plugin marketplace with Claude Code and Codex catalogs — publish plugins, audit marketplace and catalog sync, and regenerate the local catalog.",
   "author": {
     "name": "CypherPoet"
@@ -15,5 +15,21 @@
     "plugin-publishing",
     "maintenance"
   ],
-  "skills": "./skills/"
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Marketplace Toolkit",
+    "shortDescription": "Publish and audit marketplaces",
+    "longDescription": "Maintainer toolkit for running a plugin marketplace with Claude Code and Codex catalogs — publish plugins, audit marketplace and catalog sync, and regenerate the local catalog.",
+    "developerName": "CypherPoet",
+    "category": "Developer Tools",
+    "capabilities": [
+      "Interactive",
+      "Read",
+      "Write"
+    ],
+    "websiteURL": "https://github.com/CypherPoet/custom-agent-skills/tree/main/plugins/cypherpoet-marketplace-kit",
+    "defaultPrompt": [
+      "Audit this plugin marketplace and report catalog drift."
+    ]
+  }
 }

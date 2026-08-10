@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "cypherpoet-obsidian-plugin-kit",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Comprehensive Obsidian plugin development: scaffolding from the official sample-plugin template, the vault/editor/workspace APIs, lifecycle and memory safety, settings tabs (classic and the 1.13 declarative API), mobile and pop-out support, eslint-plugin-obsidianmd review, and community-directory submission — grounded in the official Obsidian developer docs, with a dependency-free manifest/release preflight validator.",
   "author": { "name": "CypherPoet" },
   "homepage": "https://github.com/CypherPoet/custom-agent-skills/tree/main/plugins/cypherpoet-obsidian-plugin-kit",

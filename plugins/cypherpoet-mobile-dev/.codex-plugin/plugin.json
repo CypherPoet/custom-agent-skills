@@ -1,6 +1,6 @@
 {
   "name": "cypherpoet-mobile-dev",
-  "version": "0.8.0",
+  "version": "0.9.0",
   "description": "iOS App Store publishing best practices.",
   "author": {
     "name": "CypherPoet"
@@ -15,5 +15,20 @@
     "apple",
     "publishing"
   ],
-  "skills": "./skills/"
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Mobile Development",
+    "shortDescription": "Prepare iOS apps for review",
+    "longDescription": "iOS App Store publishing best practices.",
+    "developerName": "CypherPoet",
+    "category": "Developer Tools",
+    "capabilities": [
+      "Read",
+      "Write"
+    ],
+    "websiteURL": "https://github.com/CypherPoet/custom-agent-skills/tree/main/plugins/cypherpoet-mobile-dev",
+    "defaultPrompt": [
+      "Review this iOS app for App Store submission risks."
+    ]
+  }
 }

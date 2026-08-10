@@ -1,6 +1,6 @@
 {
   "name": "cypherpoet-svg-tools",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "SVG optimization and cleanup.",
   "author": {
     "name": "CypherPoet"
@@ -14,5 +14,20 @@
     "svgo",
     "optimization"
   ],
-  "skills": "./skills/"
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "SVG Tools",
+    "shortDescription": "Optimize and clean SVG assets",
+    "longDescription": "SVG optimization and cleanup.",
+    "developerName": "CypherPoet",
+    "category": "Creativity",
+    "capabilities": [
+      "Read",
+      "Write"
+    ],
+    "websiteURL": "https://github.com/CypherPoet/custom-agent-skills/tree/main/plugins/cypherpoet-svg-tools",
+    "defaultPrompt": [
+      "Optimize and clean these SVG assets."
+    ]
+  }
 }

@@ -173,24 +173,21 @@ Acknowledgments silence `FLAG_*` findings **only** — never a sourced `CORRECT`
 
 ## Step 5 — Version bumps
 
-After editing a plugin's **shipped** content, bump that plugin's `.claude-plugin/plugin.json` `version` **once** — a plugin touched by two skills bumps once:
+After editing a plugin's **shipped** content, bump every platform manifest that plugin supports to the same version — a plugin touched by two skills still bumps once:
 
 - **Applied content correction → MINOR bump** (`0.1.0 → 0.2.0`). Per `docs/PLUGIN-CONVENTIONS.md`, pre-1.0 the default bump for anything user-visible is MINOR, and a fact correction is user-visible.
 - **Dateline-only re-stamp → no bump.** A date stamp isn't user-visible guidance, and `version` is the user-update cache key, so don't churn it. The committed date still advances the age-gate.
 - **Eval-only correction → no bump.** `evals/` is stripped from vendored copies and never reaches an install, so bumping for it would push an update carrying nothing the user receives.
 
-### Then regenerate
+### Then synchronize vendored copies
 
 ```bash
-python3 scripts/sync_plugins.py
+npm run sync
 ```
 
-Run it **after the last edit and the last bump**, before committing. Skip it and the PR arrives broken, two different ways:
+Run it **after the last edit and the last bump**, before committing. A corrected skill that is vendored into other plugins otherwise leaves every generated copy stale: `[vendor] out of sync: <copy> != <source>`.
 
-- `.codex-plugin/plugin.json` is generated from `.claude-plugin/plugin.json`. Bump one and not the other and `sync_plugins.py --check` reports `[codex-manifest] out of sync`.
-- A corrected skill that is vendored into other plugins leaves every copy stale: `[vendor] out of sync: <copy> != <source>`.
-
-`tests/test_repository_health.py` runs that same `--check`, so either one turns the PR's checks red — and a red PR is one [Step 8](#step-8--auto-merge-a-dateline-only-pr-per-repo) will never merge and a human has to clean up. The sync is deterministic and touches only generated files, so re-running it when nothing changed is free.
+The repository health suite runs that same check, so drift turns the PR's checks red. The sync is deterministic and touches only vendored targets, so re-running it when nothing changed is free.
 
 ### Surfaces this routine leaves alone
 

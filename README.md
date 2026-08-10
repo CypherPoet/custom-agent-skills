@@ -8,29 +8,15 @@ A curated collection of reusable AI agent skills, packaged as Claude Code and Co
 
 **[Browse the Plugin Catalog &rarr;](docs/CATALOG.md)**
 
-## Installation
+## Prerequisites
 
-This repo publishes its plugins for both **Claude Code** and **Codex** via the [`cypherpoet-toolchest`](https://github.com/CypherPoet/cypherpoet-toolchest) marketplace — one repo carrying both harness catalogs.
-
-**Claude Code:**
+Contributors need Node.js and npm. The supported Node.js version is declared in [`package.json`](package.json) and enforced in CI. Install the locked dependencies after checkout:
 
 ```shell
-# Subscribe to the marketplace once
-/plugin marketplace add CypherPoet/cypherpoet-toolchest
-
-# Install whichever plugins you want
-/plugin install cypherpoet-git-flow@cypherpoet-toolchest
-/plugin install cypherpoet-blender-kit@cypherpoet-toolchest
-# ...etc
+npm ci
 ```
 
-**Codex** (same marketplace repo — it carries both harness catalogs):
-
-```shell
-codex plugin marketplace add CypherPoet/cypherpoet-toolchest
-codex plugin add cypherpoet-git-flow@cypherpoet-toolchest
-```
-
+The full test suite also needs Python 3 because some plugins contain Python programs. The test runner detects `python3`, `python`, and the Windows `py -3` launcher; set `PYTHON` only when none of those names selects the correct interpreter.
 
 ## Repository Structure
 
@@ -41,8 +27,11 @@ codex plugin add cypherpoet-git-flow@cypherpoet-toolchest
 │   ├── CATALOG.md            # Cross-plugin index
 │   ├── PLUGIN-CONVENTIONS.md # Plugin architecture and contributor workflow
 │   └── automated-routines/   # Maintenance routine configuration
-├── scripts/                  # Plugin registry and sync generator
-├── tests/                    # Repository health suite
+├── tooling/                  # Shared vendoring and repository checks
+├── vendored-skills.json      # Authoritative skill-copy relationships
+├── package.json              # Contributor commands and dependency contract
+├── tests-node/               # Repository health tests
+├── tests/                    # Tests for plugin-owned Python programs
 ├── .github/                  # CI (Verify workflow)
 ├── .agents/skills/           # Codex maintainer skills
 └── .claude/                  # Claude Code maintainer config and skills
@@ -54,17 +43,15 @@ Claude plugin anatomy (component dirs, manifest fields, auto-discovery) follows 
 
 Conventions live in [`docs/PLUGIN-CONVENTIONS.md`](docs/PLUGIN-CONVENTIONS.md); [`AGENTS.md`](AGENTS.md) carries the working rules for AI agents.
 
-Maintaining this repo's marketplace catalogs uses the `cypherpoet-marketplace-kit` plugin. It's already enabled for Claude Code in [`.claude/settings.json`](.claude/settings.json); on Codex, add it once:
-
-```shell
-codex plugin add cypherpoet-marketplace-kit@cypherpoet-toolchest
-```
+Marketplace maintenance uses the [`cypherpoet-marketplace-kit`](plugins/cypherpoet-marketplace-kit/README.md) plugin.
 
 Before opening a PR, run the repository health suite:
 
 ```shell
-python3 -m unittest discover -s tests
+npm test
 ```
+
+For focused checks, use `npm run validate:claude` for Claude's official strict validator and `npm run sync:check` for vendored-copy consistency.
 
 ## License
 
