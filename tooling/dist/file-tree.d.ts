@@ -1,0 +1,22 @@
+import { type SpawnSyncReturns } from "node:child_process";
+import { type FileTree, type VendoredSkillsConfiguration } from "./types.js";
+export declare function directoryIgnored(name: string): boolean;
+export declare function fileIgnored(name: string): boolean;
+export declare function runGit(root: string, arguments_: readonly string[]): SpawnSyncReturns<Buffer> | undefined;
+export declare function gitText(root: string, arguments_: readonly string[]): string | undefined;
+export declare function repositoryVisibleFiles(root: string): Set<string> | undefined;
+export declare function readTree(base: string, visible?: ReadonlySet<string>): FileTree;
+export declare function writeTree(files: ReadonlyMap<string, Buffer>, destination: string): void;
+export declare function fileTreesEqual(left: ReadonlyMap<string, Buffer>, right: ReadonlyMap<string, Buffer>): boolean;
+export declare function treeDigest(files: ReadonlyMap<string, Buffer>): string;
+export declare function validSkillPath(value: unknown): value is string;
+export declare function desiredVendorTargets(configuration: VendoredSkillsConfiguration): {
+    desired: Map<string, string>;
+    problems: string[];
+};
+export declare function previousVendorTargets(root: string): Set<string>;
+export declare function gitCleanUnder(root: string, relativePath: string): boolean;
+export declare function skillDirectories(root: string): string[];
+export declare function baseVisibleFiles(visible: ReadonlySet<string> | undefined, baseRelative: string): Set<string> | undefined;
+export declare function pathIsSymbolicLink(path: string): boolean;
+export declare function pathExistsOrIsSymbolicLink(path: string): boolean;

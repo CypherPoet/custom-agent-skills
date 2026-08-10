@@ -1,6 +1,6 @@
 {
   "name": "cypherpoet-session-harvest",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "description": "Harvest a session's learnings into their right homes: a memory, a suggested repo edit (CLAUDE.md/AGENTS.md, docs, or a hook), or a PR that improves one of your own agent skills.",
   "author": {
     "name": "CypherPoet"
@@ -15,5 +15,20 @@
     "harvest",
     "learnings"
   ],
-  "skills": "./skills/"
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Session Harvest",
+    "shortDescription": "Preserve session learnings",
+    "longDescription": "Harvest a session's learnings into their right homes: a memory, a suggested repo edit (CLAUDE.md/AGENTS.md, docs, or a hook), or a PR that improves one of your own agent skills.",
+    "developerName": "CypherPoet",
+    "category": "Productivity",
+    "capabilities": [
+      "Read",
+      "Write"
+    ],
+    "websiteURL": "https://github.com/CypherPoet/custom-agent-skills/tree/main/plugins/cypherpoet-session-harvest",
+    "defaultPrompt": [
+      "Harvest the durable learnings from this session."
+    ]
+  }
 }

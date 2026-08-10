@@ -1,6 +1,6 @@
 {
   "name": "cypherpoet-excalidraw-kit",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Comprehensive Excalidraw mastery: authoring .excalidraw scene files by hand (the JSON format, element model, arrow/text binding, and a diagrams-that-argue design methodology), plus the @excalidraw/excalidraw developer API (React component, initialData, the convertToExcalidrawElements skeleton API, restore, SVG/PNG/clipboard export, and Mermaid-to-Excalidraw), shipped with scripts to validate a scene, render it to PNG, and insert icon-library elements — grounded in the official Excalidraw documentation.",
   "author": {
     "name": "CypherPoet"
@@ -16,5 +16,20 @@
     "whiteboard",
     "svg"
   ],
-  "skills": "./skills/"
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Excalidraw",
+    "shortDescription": "Create Excalidraw diagrams",
+    "longDescription": "Comprehensive Excalidraw mastery: authoring .excalidraw scene files by hand (the JSON format, element model, arrow/text binding, and a diagrams-that-argue design methodology), plus the @excalidraw/excalidraw developer API (React component, initialData, the convertToExcalidrawElements skeleton API, restore, SVG/PNG/clipboard export, and Mermaid-to-Excalidraw), shipped with scripts to validate a scene, render it to PNG, and insert icon-library elements — grounded in the official Excalidraw documentation.",
+    "developerName": "CypherPoet",
+    "category": "Creativity",
+    "capabilities": [
+      "Read",
+      "Write"
+    ],
+    "websiteURL": "https://github.com/CypherPoet/custom-agent-skills/tree/main/plugins/cypherpoet-excalidraw-kit",
+    "defaultPrompt": [
+      "Create an Excalidraw diagram for this system."
+    ]
+  }
 }

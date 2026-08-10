@@ -1,6 +1,6 @@
 {
   "name": "cypherpoet-expo-kit",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "Expo / React Native prototyping.",
   "author": {
     "name": "CypherPoet"
@@ -14,5 +14,20 @@
     "react-native",
     "prototyping"
   ],
-  "skills": "./skills/"
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Expo",
+    "shortDescription": "Prototype Expo mobile apps",
+    "longDescription": "Expo / React Native prototyping.",
+    "developerName": "CypherPoet",
+    "category": "Developer Tools",
+    "capabilities": [
+      "Read",
+      "Write"
+    ],
+    "websiteURL": "https://github.com/CypherPoet/custom-agent-skills/tree/main/plugins/cypherpoet-expo-kit",
+    "defaultPrompt": [
+      "Prototype this feature in Expo and React Native."
+    ]
+  }
 }

@@ -31,7 +31,7 @@ python3 scripts/refresh_catalog.py --check
 python3 scripts/refresh_catalog.py
 ```
 
-The script finds the repo root via git, walks every `plugins/*/.claude-plugin/plugin.json`, derives each plugin's `description` (verbatim from the manifest) and `Components` count, sorts by name, and replaces **only** the markdown table — the intro line and `## Installing` section are left untouched. Component counting (the order skills → commands → agents → hooks → MCP servers, singular vs plural, dropping zeros) follows `docs/PLUGIN-CONVENTIONS.md` → Top-Level Catalog.
+The script finds the repo root via git and walks every directory under `plugins/`. It reads the Claude manifest when present and otherwise reads the Codex manifest, so Claude-only, Codex-only, and multi-platform plugins all appear once. It derives the `description` and `Components` count, sorts by name, and replaces **only** the markdown table — the intro line and `## Installing` section are left untouched. Component counts use this order: skills, commands, agents, hooks, then MCP servers. Zero counts are omitted, and labels use the correct singular or plural form.
 
 It's idempotent: on an already-current catalog it prints `already in sync` and writes nothing. A manifest with no `description` is reported as a warning (the catalog can't ship a blank cell) — populate it and re-run.
 

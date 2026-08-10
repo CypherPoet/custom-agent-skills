@@ -1,0 +1,41 @@
+{
+  "name": "@cypherpoet/plugin-sync",
+  "version": "0.1.0",
+  "description": "Synchronizes vendored skills and checks CypherPoet plugin repositories.",
+  "private": true,
+  "type": "module",
+  "license": "MIT",
+  "engines": {
+    "node": ">=24"
+  },
+  "bin": {
+    "cypherpoet-plugin-sync": "tooling/dist/cli.js",
+    "cypherpoet-plugin-version-check": "tooling/dist/version-bumps-cli.js",
+    "cypherpoet-repository-test": "tooling/dist/test-runner-cli.js",
+    "cypherpoet-skill-structure-check": "tooling/dist/skill-structure-cli.js",
+    "cypherpoet-validate-claude-plugins": "tooling/dist/claude-plugin-validation-cli.js"
+  },
+  "exports": {
+    ".": "./tooling/dist/index.js"
+  },
+  "files": [
+    "tooling/dist/",
+    "LICENSE",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsc --project tooling/tsconfig.json",
+    "build:check": "node tooling/verify-generated-build.mjs",
+    "structure:check": "node tooling/dist/skill-structure-cli.js --strict",
+    "sync": "node tooling/dist/cli.js",
+    "sync:check": "node tooling/dist/cli.js --check",
+    "test": "node tooling/dist/test-runner-cli.js --build-check tooling/verify-generated-build.mjs",
+    "validate:claude": "node tooling/dist/claude-plugin-validation-cli.js",
+    "versions:check": "node tooling/dist/version-bumps-cli.js"
+  },
+  "devDependencies": {
+    "@anthropic-ai/claude-code": "2.1.226",
+    "@types/node": "^26.2.0",
+    "typescript": "^7.0.2"
+  }
+}

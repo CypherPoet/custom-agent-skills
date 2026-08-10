@@ -1,6 +1,6 @@
 {
   "name": "cypherpoet-react-three-fiber-kit",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "description": "React Three Fiber (R3F) + drei tooling for declarative Three.js in React.",
   "author": {
     "name": "CypherPoet"
@@ -16,5 +16,20 @@
     "drei",
     "webgl"
   ],
-  "skills": "./skills/"
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "React Three Fiber",
+    "shortDescription": "Build React Three Fiber scenes",
+    "longDescription": "React Three Fiber (R3F) + drei tooling for declarative Three.js in React.",
+    "developerName": "CypherPoet",
+    "category": "Developer Tools",
+    "capabilities": [
+      "Read",
+      "Write"
+    ],
+    "websiteURL": "https://github.com/CypherPoet/custom-agent-skills/tree/main/plugins/cypherpoet-react-three-fiber-kit",
+    "defaultPrompt": [
+      "Implement this 3D scene with React Three Fiber."
+    ]
+  }
 }
