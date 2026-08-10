@@ -8,11 +8,7 @@ import {
 import { join } from "node:path";
 import test from "node:test";
 
-import {
-  codexPackageRelativePath,
-  stripClaudeInvocationField,
-  synchronizePlugins,
-} from "../dist/index.js";
+import { synchronizePlugins } from "../dist/index.js";
 import {
   commitAll,
   initializeGitRepository,
@@ -110,227 +106,54 @@ test("sync writes vendored skills and complete Codex manifests", (t) => {
   assert.deepEqual(synchronizePlugins(root, false), []);
 });
 
-test("missing optional skills and separate-package fields use repository defaults", (t) => {
+test("missing optional skills uses the repository default", (t) => {
   const root = fixture(t);
-  const registry = configuration(root);
   const manifest = JSON.parse(
     readFileSync(join(root, "plugins/source/.claude-plugin/plugin.json"), "utf8"),
   );
   assert.equal(Object.hasOwn(manifest, "skills"), false);
-  assert.equal(Object.hasOwn(registry.dual_harness_plugins.source, "separateCodexPackage"), false);
   assert.deepEqual(synchronizePlugins(root, true), []);
   assert.ok(existsSync(join(root, "plugins/source/.codex-plugin/plugin.json")));
-  assert.equal(
-    codexPackageRelativePath("source", registry.dual_harness_plugins.source),
-    "plugins/source",
-  );
 });
 
-test("a separate Codex package removes only Claude's manual invocation field", (t) => {
+test("sync ignores Claude-only invocation frontmatter and preserves vendored bytes", (t) => {
   const root = fixture(t);
-  assert.deepEqual(synchronizePlugins(root, true), []);
+  const skillManifest =
+    "---\r\nname: shared\r\ndescription: Shared fixture.\r\n" +
+    "disable-model-invocation: true\r\n---\r\n\r\n# Shared\r\n";
   writeText(
     join(root, "plugins/source/skills/shared/SKILL.md"),
-    "---\nname: shared\ndescription: Shared fixture.\ndisable-model-invocation: true\n---\n",
+    skillManifest,
   );
   writeText(
     join(root, "plugins/source/skills/shared/agents/openai.yaml"),
     "interface:\n  display_name: Shared\n  short_description: Use the shared fixture\n" +
       "policy:\n  allow_implicit_invocation: false\n",
   );
-  const registry = configuration(root);
-  registry.dual_harness_plugins.source.separateCodexPackage = true;
-  writeCurrentConfiguration(root, registry);
 
   assert.deepEqual(synchronizePlugins(root, true), []);
-  const packageRoot = join(root, "codex-plugins/source");
-  assert.doesNotMatch(readFileSync(join(packageRoot, "skills/shared/SKILL.md"), "utf8"), /disable-model-invocation/u);
-  assert.match(
-    readFileSync(join(packageRoot, "skills/shared/agents/openai.yaml"), "utf8"),
-    /allow_implicit_invocation: false/u,
-  );
-  assert.ok(existsSync(join(packageRoot, ".codex-plugin/plugin.json")));
-  assert.ok(!existsSync(join(root, "plugins/source/.codex-plugin/plugin.json")));
   assert.equal(
-    codexPackageRelativePath("source", registry.dual_harness_plugins.source),
-    "codex-plugins/source",
+    readFileSync(join(root, "plugins/source/skills/shared/SKILL.md"), "utf8"),
+    skillManifest,
   );
-  assert.deepEqual(synchronizePlugins(root, false), []);
-});
-
-test("a separate Codex package uses vendored content planned for the same sync", (t) => {
-  const root = fixture(t);
-  const authoredSkill =
-    "---\nname: shared\ndescription: Shared fixture.\ndisable-model-invocation: true\n---\n\n# New\n";
-  writeText(join(root, "plugins/source/skills/shared/SKILL.md"), authoredSkill);
-  writeText(
-    join(root, "plugins/source/skills/shared/agents/openai.yaml"),
-    "policy:\n  allow_implicit_invocation: false\n",
-  );
-  writeText(
-    join(root, "plugins/bundle/skills/shared/SKILL.md"),
-    "---\nname: shared\ndescription: Stale fixture.\n---\n\n# Old\n",
-  );
-  const registry = configuration(root);
-  registry.dual_harness_plugins.bundle.separateCodexPackage = true;
-  writeCurrentConfiguration(root, registry);
-
-  assert.deepEqual(synchronizePlugins(root, true), []);
   assert.equal(
     readFileSync(join(root, "plugins/bundle/skills/shared/SKILL.md"), "utf8"),
-    authoredSkill,
+    skillManifest,
   );
-  const generatedSkill = readFileSync(
-    join(root, "codex-plugins/bundle/skills/shared/SKILL.md"),
-    "utf8",
-  );
-  assert.doesNotMatch(generatedSkill, /disable-model-invocation/u);
-  assert.match(generatedSkill, /# New/u);
+  assert.ok(existsSync(join(root, "plugins/source/.codex-plugin/plugin.json")));
+  assert.ok(existsSync(join(root, "plugins/bundle/.codex-plugin/plugin.json")));
   assert.deepEqual(synchronizePlugins(root, false), []);
 });
 
-test("manual-only Codex packages require one unambiguous false policy", async (t) => {
-  for (const [agentYaml, expected] of [
-    [undefined, "requires policy.allow_implicit_invocation: false"],
-    ["policy:\n  allow_implicit_invocation: true\n", "boolean false"],
-    [
-      "policy:\n  allow_implicit_invocation: false\n  allow_implicit_invocation: true\n",
-      "found duplicate key",
-    ],
-  ]) {
-    await t.test(expected, (caseContext) => {
-      const root = fixture(caseContext);
-      writeText(
-        join(root, "plugins/source/skills/shared/SKILL.md"),
-        "---\nname: shared\ndescription: Shared fixture.\ndisable-model-invocation: true\n---\n",
-      );
-      if (agentYaml !== undefined) {
-        writeText(join(root, "plugins/source/skills/shared/agents/openai.yaml"), agentYaml);
-      }
-      const registry = configuration(root);
-      registry.dual_harness_plugins.source.separateCodexPackage = true;
-      writeCurrentConfiguration(root, registry);
-
-      const problems = synchronizePlugins(root, true);
-      assert.ok(problems.some((problem) => problem.includes(expected)), problems.join("\n"));
-      assert.ok(!existsSync(join(root, "codex-plugins/source")));
-      assert.ok(!existsSync(join(root, "plugins/bundle/.codex-plugin/plugin.json")));
-    });
-  }
-});
-
-test("Claude invocation frontmatter accepts LF and CRLF without rewriting other bytes", () => {
-  for (const newline of ["\n", "\r\n"]) {
-    const source = [
-      "---",
-      "name: shared",
-      "description: Café fixture. # retained",
-      "disable-model-invocation: true # Claude-only",
-      "metadata:",
-      "  nested: retained",
-      "---",
-      "",
-      "# Shared",
-      "",
-    ].join(newline);
-    const expected = source.replace(
-      `disable-model-invocation: true # Claude-only${newline}`,
-      "",
-    );
-    const result = stripClaudeInvocationField(Buffer.from(source, "utf8"), "fixture/shared");
-    assert.deepEqual(result.problems, []);
-    assert.equal(result.manualOnly, true);
-    assert.deepEqual(result.transformed, Buffer.from(expected, "utf8"));
-  }
-});
-
-test("Claude invocation frontmatter requires the official top-level Boolean", async (t) => {
-  for (const [field, expected] of [
-    ['disable-model-invocation: "true"', "must use the YAML boolean true or false"],
-    ["disable-model-invocation: yes", "must use the YAML boolean true or false"],
-    ["disable-model-invocation: on", "must use the YAML boolean true or false"],
-    ["disable-model-invocation: 1", "must use the YAML boolean true or false"],
-    ["disable_model_invocation: true", "separateCodexPackage requires at least one"],
-    ["nested:\n  disable-model-invocation: true", "separateCodexPackage requires at least one"],
-    [
-      "disable-model-invocation: true\ndisable-model-invocation: false",
-      "found duplicate key",
-    ],
-  ]) {
-    await t.test(field.replaceAll("\n", " / "), (caseContext) => {
-      const root = fixture(caseContext);
-      writeText(
-        join(root, "plugins/source/skills/shared/SKILL.md"),
-        `---\nname: shared\ndescription: Shared fixture.\n${field}\n---\n`,
-      );
-      writeText(
-        join(root, "plugins/source/skills/shared/agents/openai.yaml"),
-        "policy:\n  allow_implicit_invocation: false\n",
-      );
-      const registry = configuration(root);
-      registry.dual_harness_plugins.source.separateCodexPackage = true;
-      writeCurrentConfiguration(root, registry);
-
-      const problems = synchronizePlugins(root, true);
-      assert.ok(problems.some((problem) => problem.includes(expected)), problems.join("\n"));
-      assert.ok(!existsSync(join(root, "codex-plugins/source")));
-      assert.ok(!existsSync(join(root, "plugins/bundle/.codex-plugin/plugin.json")));
-    });
-  }
-});
-
-test("separate Codex packages require an exact false policy value", async (t) => {
-  for (const [value, expected] of [
-    ['"false"', "boolean false"],
-    ["yes", "boolean false"],
-    ["on", "boolean false"],
-    ["1", "boolean false"],
-  ]) {
-    await t.test(value, (caseContext) => {
-      const root = fixture(caseContext);
-      writeText(
-        join(root, "plugins/source/skills/shared/SKILL.md"),
-        "---\nname: shared\ndescription: Shared fixture.\ndisable-model-invocation: true\n---\n",
-      );
-      writeText(
-        join(root, "plugins/source/skills/shared/agents/openai.yaml"),
-        `policy:\n  allow_implicit_invocation: ${value}\n`,
-      );
-      const registry = configuration(root);
-      registry.dual_harness_plugins.source.separateCodexPackage = true;
-      writeCurrentConfiguration(root, registry);
-
-      const problems = synchronizePlugins(root, true);
-      assert.ok(problems.some((problem) => problem.includes(expected)), problems.join("\n"));
-      assert.ok(!existsSync(join(root, "codex-plugins/source")));
-    });
-  }
-});
-
-test("explicit null values do not inherit optional defaults", async (t) => {
-  await t.test("separateCodexPackage", (caseContext) => {
-    const root = fixture(caseContext);
-    const registry = configuration(root);
-    registry.dual_harness_plugins.source.separateCodexPackage = null;
-    writeCurrentConfiguration(root, registry);
-    const problems = synchronizePlugins(root, true);
-    assert.ok(
-      problems.some((problem) => problem.includes("separateCodexPackage must be a boolean")),
-      problems.join("\n"),
-    );
-    assert.ok(!existsSync(join(root, "plugins/bundle/.codex-plugin/plugin.json")));
-  });
-
-  await t.test("skills", (caseContext) => {
-    const root = fixture(caseContext);
-    const manifestPath = join(root, "plugins/source/.claude-plugin/plugin.json");
-    const manifest = JSON.parse(readFileSync(manifestPath, "utf8"));
-    manifest.skills = null;
-    writeJson(manifestPath, manifest);
-    const problems = synchronizePlugins(root, true);
-    assert.ok(problems.some((problem) => problem.includes("skills (custom path)")));
-    assert.ok(!existsSync(join(root, "plugins/bundle/.codex-plugin/plugin.json")));
-  });
+test("explicit null skills do not inherit the optional default", (t) => {
+  const root = fixture(t);
+  const manifestPath = join(root, "plugins/source/.claude-plugin/plugin.json");
+  const manifest = JSON.parse(readFileSync(manifestPath, "utf8"));
+  manifest.skills = null;
+  writeJson(manifestPath, manifest);
+  const problems = synchronizePlugins(root, true);
+  assert.ok(problems.some((problem) => problem.includes("skills (custom path)")));
+  assert.ok(!existsSync(join(root, "plugins/bundle/.codex-plugin/plugin.json")));
 });
 
 test("invalid authored metadata blocks every generated write", async (t) => {

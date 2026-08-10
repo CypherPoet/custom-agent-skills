@@ -77,25 +77,6 @@ test("shipped content requires a fresh forward version bump", async (t) => {
   });
 });
 
-test("separate Codex package changes require a version bump", (t) => {
-  const root = fixture(t);
-  writeText(
-    join(root, "codex-plugins/example/skills/demo/SKILL.md"),
-    "baseline generated body\n",
-  );
-  commitAll(root, "add generated Codex package");
-  git(root, "switch", "-c", "feature");
-  writeText(
-    join(root, "codex-plugins/example/skills/demo/SKILL.md"),
-    "edited generated body\n",
-  );
-  commitAll(root, "edit generated Codex package");
-
-  const result = captureCheck(root);
-  assert.equal(result.status, 1);
-  assert.match(result.stdout, /content changed, version still 0\.1\.0/u);
-});
-
 test("a version already published on the base branch is rejected", async (t) => {
   await t.test("parallel identical bumps", (caseContext) => {
     const root = fixture(caseContext);

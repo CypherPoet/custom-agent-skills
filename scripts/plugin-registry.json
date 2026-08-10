@@ -150,7 +150,6 @@
     },
     "cypherpoet-marketplace-kit": {
       "category": "Developer Tools",
-      "separateCodexPackage": true,
       "interface": {
         "displayName": "Marketplace Toolkit",
         "shortDescription": "Publish and audit marketplaces",

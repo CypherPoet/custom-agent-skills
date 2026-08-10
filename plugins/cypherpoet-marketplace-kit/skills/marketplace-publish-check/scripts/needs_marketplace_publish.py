@@ -71,11 +71,11 @@ def plugin_name(path):
 def codex_entries(root, ref):
     """Codex catalog fields derived from the plugin registry at <ref>.
 
-    Membership captures the dual-harness classification. Category and the source
-    path selected by separateCodexPackage are copied into a per-plugin Codex catalog
-    entry; interface metadata stays in the generated plugin manifest and must not
-    request a catalog publish. {} when the file doesn't exist at <ref>. A malformed
-    file raises ValueError instead of looking like a mass catalog removal."""
+    Membership captures the dual-harness classification. Category is copied into
+    a per-plugin Codex catalog entry; interface metadata stays in the generated
+    plugin manifest and must not request a catalog publish. {} when the file doesn't
+    exist at <ref>. A malformed file raises ValueError instead of looking like a
+    mass catalog removal."""
     shown_path = PLUGIN_REGISTRY_PATH
     res = git(root, "show", f"{ref}:{shown_path}")
     if res.returncode != 0:
@@ -87,19 +87,10 @@ def codex_entries(root, ref):
         entries = json.loads(res.stdout).get("dual_harness_plugins", {})
         if not isinstance(entries, dict) or not all(isinstance(v, dict) for v in entries.values()):
             raise ValueError("dual_harness_plugins entries must be objects")
-        result = {}
-        for name, metadata in entries.items():
-            separate_codex_package = metadata.get("separateCodexPackage", False)
-            if not isinstance(separate_codex_package, bool):
-                raise ValueError(
-                    f"dual_harness_plugins.{name}.separateCodexPackage must be a boolean"
-                )
-            source_root = "codex-plugins" if separate_codex_package else "plugins"
-            result[name] = {
-                "category": metadata.get("category"),
-                "sourcePath": f"{source_root}/{name}",
-            }
-        return result
+        return {
+            name: {"category": metadata.get("category")}
+            for name, metadata in entries.items()
+        }
     except (json.JSONDecodeError, AttributeError, ValueError) as e:
         raise ValueError(f"{shown_path} at {ref} is malformed: {e}")
 

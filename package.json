@@ -1,7 +1,7 @@
 {
   "name": "@cypherpoet/plugin-sync",
   "version": "0.1.0",
-  "description": "Generates Codex plugin packages and checks CypherPoet repository consistency.",
+  "description": "Generates Codex plugin manifests and checks CypherPoet repository consistency.",
   "private": true,
   "type": "module",
   "license": "MIT",
@@ -32,9 +32,6 @@
     "test": "node tooling/dist/test-runner-cli.js --build-check tooling/scripts/check-build.mjs",
     "validate:claude": "node tooling/dist/claude-plugin-validation-cli.js",
     "versions:check": "node tooling/dist/version-bumps-cli.js"
-  },
-  "dependencies": {
-    "yaml": "^2.9.0"
   },
   "devDependencies": {
     "@anthropic-ai/claude-code": "2.1.226",

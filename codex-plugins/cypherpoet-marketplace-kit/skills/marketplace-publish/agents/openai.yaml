@@ -1,6 +1,0 @@
-interface:
-  display_name: "Marketplace Publish"
-  short_description: "Publish plugins to a marketplace catalog"
-  default_prompt: "Use $marketplace-publish to publish this plugin to the marketplace catalog."
-policy:
-  allow_implicit_invocation: false

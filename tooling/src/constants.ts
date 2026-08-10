@@ -1,6 +1,5 @@
 export const REGISTRY = "scripts/plugin-registry.json";
 export const LEGACY_REGISTRY = "scripts/dual-harness.json";
-export const CODEX_PACKAGES_DIRECTORY = "codex-plugins";
 export const SYNC_COMMAND = "cypherpoet-plugin-sync";
 
 export const IGNORED_DIRECTORY_NAMES = new Set(["__pycache__", "evals", ".git"]);

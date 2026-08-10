@@ -1,6 +1,5 @@
 export declare const REGISTRY = "scripts/plugin-registry.json";
 export declare const LEGACY_REGISTRY = "scripts/dual-harness.json";
-export declare const CODEX_PACKAGES_DIRECTORY = "codex-plugins";
 export declare const SYNC_COMMAND = "cypherpoet-plugin-sync";
 export declare const IGNORED_DIRECTORY_NAMES: Set<string>;
 export declare const CODEX_MANIFEST_CARRY: readonly ["author", "homepage", "repository", "license", "keywords"];

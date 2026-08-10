@@ -6,7 +6,6 @@ import test from "node:test";
 
 import {
   buildCodexManifest,
-  codexPackageRelativePath,
   synchronizePlugins,
   validateGeneratedCodexInterface,
 } from "../tooling/dist/index.js";
@@ -63,10 +62,7 @@ test("every Codex interface is composed from the two authored sources", () => {
       readFileSync(resolve(pluginRoot, ".claude-plugin/plugin.json"), "utf8"),
     );
     const codexManifest = JSON.parse(
-      readFileSync(
-        resolve(root, codexPackageRelativePath(name, metadata), ".codex-plugin/plugin.json"),
-        "utf8",
-      ),
+      readFileSync(resolve(pluginRoot, ".codex-plugin/plugin.json"), "utf8"),
     );
     assert.deepEqual(codexManifest, buildCodexManifest(claudeManifest, metadata), name);
     assert.deepEqual(
@@ -83,7 +79,7 @@ test("the package exposes the frozen 0.1.0 Node contract", () => {
   assert.equal(packageJson.version, "0.1.0");
   assert.equal(
     packageJson.description,
-    "Generates Codex plugin packages and checks CypherPoet repository consistency.",
+    "Generates Codex plugin manifests and checks CypherPoet repository consistency.",
   );
   assert.equal(packageJson.engines.node, ">=24");
   assert.equal(packageJson.bin["cypherpoet-plugin-sync"], "tooling/dist/cli.js");
@@ -103,7 +99,7 @@ test("the package exposes the frozen 0.1.0 Node contract", () => {
     packageJson.bin["cypherpoet-validate-claude-plugins"],
     "tooling/dist/claude-plugin-validation-cli.js",
   );
-  assert.equal(packageJson.dependencies.yaml, "^2.9.0");
+  assert.equal(packageJson.dependencies, undefined);
   assert.equal(packageJson.devDependencies["@anthropic-ai/claude-code"], "2.1.226");
   assert.equal(packageJson.scripts.prepare, undefined);
   assert.equal(packageJson.scripts.postinstall, undefined);

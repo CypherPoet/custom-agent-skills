@@ -23,8 +23,7 @@ class MarketplacePublishContractTests(unittest.TestCase):
             '"interface": {"displayName": "<Codex-display-name>"}',
             procedure,
         )
-        self.assertIn('"separateCodexPackage": true', procedure)
-        self.assertIn('"path": "<codex-source-root>/<plugin>"', procedure)
+        self.assertIn('"path": "plugins/<plugin>"', procedure)
 
 
 if __name__ == "__main__":

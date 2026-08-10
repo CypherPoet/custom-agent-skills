@@ -7,7 +7,7 @@ This guide covers the choices made by this repository. Use the platform document
 - [Codex: Build skills](https://learn.chatgpt.com/docs/build-skills) and [Build plugins](https://learn.chatgpt.com/docs/build-plugins)
 - [Codex final-directory submission rules](https://developers.openai.com/plugins/deploy/submission-errors#final-directory-submission)
 
-The [`@cypherpoet/plugin-sync` README](../tooling/README.md) explains generation, validation ownership, and the exceptional separate-package behavior. This document stays focused on authoring.
+The [`@cypherpoet/plugin-sync` README](../tooling/README.md) explains generation and validation ownership. This document stays focused on authoring.
 
 ## Authoring Workflow
 
@@ -19,7 +19,7 @@ The [`@cypherpoet/plugin-sync` README](../tooling/README.md) explains generation
 6. Update the plugin README and generated top-level catalog when applicable.
 7. Run `npm test` before opening a pull request.
 
-Do not edit a generated `.codex-plugin/plugin.json`, a generated `codex-plugins/` package, or a vendored skill copy. Change its authored source and run the sync.
+Do not edit a generated `.codex-plugin/plugin.json` or a vendored skill copy. Change its authored source and run the sync.
 
 ## Metadata Sources
 
@@ -28,7 +28,7 @@ Plugin metadata has two authored sources:
 | Authored Path | What It Owns |
 |---|---|
 | `plugins/<name>/.claude-plugin/plugin.json` | Shared name, version, description, author, homepage, repository, license, and keywords. |
-| `scripts/plugin-registry.json` | Harness classification, Codex display name, short description, category, capabilities, starter prompts, separate-package selection, and vendoring. |
+| `scripts/plugin-registry.json` | Harness classification, Codex display name, short description, category, capabilities, starter prompts, and vendoring. |
 
 The generated Codex manifest combines them. Its repeated values make an installed plugin self-contained; they are not another source of truth.
 
@@ -57,7 +57,7 @@ Portable plugins belong under `dual_harness_plugins`. A normal dual-harness plug
 
 Use `claude_only_plugins` only when the plugin's purpose is specific to Claude Code. Record a reason and judge support by what the plugin does, not whether another harness can parse its files.
 
-Rarely, both harnesses support a plugin but cannot install the same bytes. Set `"separateCodexPackage": true` to generate `codex-plugins/<name>` for Codex. This flag changes the install directory; it does not enable Codex support. See [Separate Codex Packages](../tooling/README.md#separate-codex-packages) for the current manual-invocation case and its safety checks.
+Harness-specific skill metadata can coexist in the shared package. Keep Claude Code fields in `SKILL.md` and Codex fields in `agents/openai.yaml`; the sync does not reinterpret or remove either harness's fields.
 
 ## Codex Interface Metadata
 
@@ -102,7 +102,7 @@ npm run structure:check
 npm run versions:check
 ```
 
-`validate:claude` runs the pinned official Claude validator in strict mode against every authored plugin. `sync:check` checks generated Codex packages and repository consistency; it is not a complete platform validator. Codex's bundled Python helper is a release-only preflight until Codex provides a stable local validation command.
+`validate:claude` runs the pinned official Claude validator in strict mode against every authored plugin. `sync:check` checks generated Codex manifests and repository consistency; it is not a complete platform validator. Codex's bundled helper is not a repository gate; the local submission preflight follows the published contract.
 
 Before a pull request, run the combined gate:
 
@@ -128,7 +128,7 @@ List every shipped skill, including vendored skills:
 
 ## Marketplace Publishing
 
-The [`cypherpoet-toolchest`](https://github.com/CypherPoet/cypherpoet-toolchest) repository has one catalog per harness. The Claude catalog points to the authored plugin directory. The Codex catalog points to the normal plugin directory or its separate Codex package and stores the registry category.
+The [`cypherpoet-toolchest`](https://github.com/CypherPoet/cypherpoet-toolchest) repository has one catalog per harness. Both catalogs point to the authored plugin directory; the Codex catalog also stores the registry category.
 
 Use this decision table:
 
@@ -137,7 +137,6 @@ Use this decision table:
 | Shipped content or generated manifest value | Bump the plugin version and run the sync. |
 | Codex display name, short description, capabilities, or starter prompts | Bump the version and run the sync. No catalog publication is needed. |
 | Codex category | Bump the version, run the sync, and publish the marketplace. |
-| Add or remove `separateCodexPackage` | Bump the version, run the sync, and publish because the Codex source path changes. |
 | Catalog identity or marketplace presentation | Publish the marketplace; also bump a plugin when its manifest changed. |
 
 Run `marketplace-publish-check` when opening a source pull request. Apply the `marketplace-publish` label only when it requests publication. The manual-only `marketplace-publish` skill is the fallback.

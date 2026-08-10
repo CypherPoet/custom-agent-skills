@@ -17,11 +17,6 @@ export {
   validateAuthoredClaudePlugins,
 } from "./claude-plugin-validation.js";
 export {
-  codexPackageRelativePath,
-  codexManualOnlyPolicyProblem,
-  stripClaudeInvocationField,
-} from "./separate-codex-package.js";
-export {
   directoryIgnored,
   fileIgnored,
 } from "./file-tree.js";

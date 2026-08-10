@@ -4,9 +4,7 @@ import {
   readFileSync,
   readdirSync,
   rmSync,
-  rmdirSync,
   statSync,
-  unlinkSync,
   writeFileSync,
 } from "node:fs";
 import { dirname, join, relative, resolve } from "node:path";
@@ -23,23 +21,12 @@ import {
   validateAuthoredRegistryInterface,
   validateGeneratedCodexInterface,
 } from "./codex-submission-preflight.js";
+import { REGISTRY, SYNC_COMMAND } from "./constants.js";
 import {
-  CODEX_PACKAGES_DIRECTORY,
-  REGISTRY,
-  SYNC_COMMAND,
-} from "./constants.js";
-import {
-  baseVisibleFiles,
-  fileTreesEqual,
-  gitCleanUnder,
   pathExistsOrIsSymbolicLink,
-  pathIsSymbolicLink,
-  readTree,
   repositoryVisibleFiles,
-  writeTree,
 } from "./file-tree.js";
-import { prepareSeparateCodexPackage } from "./separate-codex-package.js";
-import { isJsonObject, type FileTree, type PluginRegistry } from "./types.js";
+import { isJsonObject, type PluginRegistry } from "./types.js";
 import {
   applyVendoredSkillsPlan,
   prepareVendoredSkillsPlan,
@@ -47,7 +34,6 @@ import {
 
 interface CodexPlan {
   manifests: Map<string, Buffer>;
-  packages: Map<string, FileTree>;
   problems: string[];
 }
 
@@ -88,44 +74,11 @@ function loadConfiguration(root: string): {
     : { problems };
 }
 
-function pluginTreeWithPlannedVendoring(
-  root: string,
-  pluginDirectory: string,
-  visible: ReadonlySet<string> | undefined,
-  vendoredTargetTrees: ReadonlyMap<string, FileTree>,
-): FileTree {
-  const pluginRelative = relative(root, pluginDirectory).split("\\").join("/");
-  const sourceTree = readTree(
-    pluginDirectory,
-    baseVisibleFiles(visible, pluginRelative),
-  );
-  const pluginPrefix = `${pluginRelative}/`;
-  for (const [target, targetTree] of vendoredTargetTrees) {
-    if (!target.startsWith(pluginPrefix)) {
-      continue;
-    }
-    const relativeTarget = target.slice(pluginPrefix.length);
-    const relativeTargetPrefix = `${relativeTarget}/`;
-    for (const path of sourceTree.keys()) {
-      if (path === relativeTarget || path.startsWith(relativeTargetPrefix)) {
-        sourceTree.delete(path);
-      }
-    }
-    for (const [path, data] of targetTree) {
-      sourceTree.set(`${relativeTarget}/${path}`, data);
-    }
-  }
-  return sourceTree;
-}
-
 function prepareCodexPlan(
   root: string,
   dualPlugins: Record<string, unknown>,
-  visible: ReadonlySet<string> | undefined,
-  vendoredTargetTrees: ReadonlyMap<string, FileTree>,
 ): CodexPlan {
   const manifests = new Map<string, Buffer>();
-  const packages = new Map<string, FileTree>();
   const problems: string[] = [];
 
   const displayNameOwners = new Map<string, string>();
@@ -197,38 +150,20 @@ function prepareCodexPlan(
       continue;
     }
 
-    const manifestBytes = formatCodexManifest(manifest);
-    if (pluginMetadata.separateCodexPackage === true) {
-      const sourceTree = pluginTreeWithPlannedVendoring(
-        root,
-        pluginDirectory,
-        visible,
-        vendoredTargetTrees,
-      );
-      const prepared = prepareSeparateCodexPackage(
-        name,
-        sourceTree,
-        manifestBytes,
-      );
-      problems.push(...prepared.problems);
-      if (prepared.packageTree !== undefined) {
-        packages.set(resolve(root, CODEX_PACKAGES_DIRECTORY, name), prepared.packageTree);
-      }
-    } else {
-      manifests.set(resolve(pluginDirectory, ".codex-plugin", "plugin.json"), manifestBytes);
-    }
+    manifests.set(
+      resolve(pluginDirectory, ".codex-plugin", "plugin.json"),
+      formatCodexManifest(manifest),
+    );
   }
-  return { manifests, packages, problems };
+  return { manifests, problems };
 }
 
 function applyCodexPlan(
   root: string,
   plan: CodexPlan,
-  separatePackagePlugins: ReadonlySet<string>,
   claudeOnlyPlugins: ReadonlySet<string>,
   existingPlugins: ReadonlySet<string>,
   write: boolean,
-  visible: ReadonlySet<string> | undefined,
 ): string[] {
   const problems: string[] = [];
   for (const [path, desiredBytes] of Array.from(plan.manifests.entries()).sort(([left], [right]) =>
@@ -241,71 +176,6 @@ function applyCodexPlan(
       problems.push(
         `[codex-manifest] out of sync: ${relative(root, path)} (run: ${SYNC_COMMAND})`,
       );
-    }
-  }
-
-  for (const [path, desiredTree] of Array.from(plan.packages.entries()).sort(([left], [right]) =>
-    left.localeCompare(right, "en"),
-  )) {
-    const relativePath = relative(root, path).split("\\").join("/");
-    if (write) {
-      writeTree(desiredTree, path);
-    } else if (
-      !fileTreesEqual(readTree(path, baseVisibleFiles(visible, relativePath)), desiredTree)
-    ) {
-      problems.push(`[codex-package] out of sync: ${relativePath} (run: ${SYNC_COMMAND})`);
-    }
-  }
-
-  for (const name of Array.from(separatePackagePlugins)
-    .filter((value) => existingPlugins.has(value))
-    .sort()) {
-    const staleManifest = resolve(root, "plugins", name, ".codex-plugin", "plugin.json");
-    if (!pathExistsOrIsSymbolicLink(staleManifest)) {
-      continue;
-    }
-    const relativePath = relative(root, staleManifest).split("\\").join("/");
-    if (!write) {
-      problems.push(
-        `[codex-package] stale in-place Codex manifest: ${relativePath} (run: ${SYNC_COMMAND})`,
-      );
-    } else if (pathIsSymbolicLink(staleManifest) || !statSync(staleManifest).isFile()) {
-      problems.push(`[codex-package] refusing to remove non-file generated path: ${relativePath}`);
-    } else {
-      unlinkSync(staleManifest);
-      try {
-        rmdirSync(dirname(staleManifest));
-      } catch {
-        // The directory may contain non-generated files.
-      }
-    }
-  }
-
-  const packagesRoot = resolve(root, CODEX_PACKAGES_DIRECTORY);
-  const existingPackageNames = existsSync(packagesRoot)
-    ? new Set(
-        readdirSync(packagesRoot, { withFileTypes: true })
-          .filter((entry) => entry.isDirectory() || entry.isSymbolicLink())
-          .map((entry) => entry.name),
-      )
-    : new Set<string>();
-  for (const name of Array.from(existingPackageNames)
-    .filter((value) => !separatePackagePlugins.has(value))
-    .sort()) {
-    const stale = resolve(packagesRoot, name);
-    const relativePath = relative(root, stale).split("\\").join("/");
-    if (!write) {
-      problems.push(
-        `[codex-package] stale generated package: ${relativePath} (run: ${SYNC_COMMAND})`,
-      );
-    } else if (
-      pathIsSymbolicLink(stale) ||
-      !statSync(stale).isDirectory() ||
-      !gitCleanUnder(root, relativePath)
-    ) {
-      problems.push(`[codex-package] refusing to remove modified generated path: ${relativePath}`);
-    } else {
-      rmSync(stale, { recursive: true });
     }
   }
 
@@ -372,18 +242,10 @@ export function synchronizePlugins(rootPath: string, write: boolean): string[] {
   const vendorPlan = prepareVendoredSkillsPlan(root, configuration, write, visible);
   problems.push(...vendorPlan.problems);
 
-  const plan = prepareCodexPlan(root, dualPlugins, visible, vendorPlan.targetTrees);
+  const plan = prepareCodexPlan(root, dualPlugins);
   problems.push(...plan.problems);
 
   if ((write && problems.length === 0) || (!write && plan.problems.length === 0)) {
-    const separatePackagePlugins = new Set(
-      Object.entries(dualPlugins)
-        .filter(
-          ([, metadata]) =>
-            isJsonObject(metadata) && metadata.separateCodexPackage === true,
-        )
-        .map(([name]) => name),
-    );
     if (write) {
       applyVendoredSkillsPlan(root, vendorPlan);
     }
@@ -391,11 +253,9 @@ export function synchronizePlugins(rootPath: string, write: boolean): string[] {
       ...applyCodexPlan(
         root,
         plan,
-        separatePackagePlugins,
         claudeOnlyPlugins,
         existingPlugins,
         write,
-        visible,
       ),
     );
   }

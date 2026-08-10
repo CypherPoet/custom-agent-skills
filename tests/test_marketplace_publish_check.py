@@ -59,7 +59,6 @@ class MarketplacePublishCheckTests(unittest.TestCase):
         repo,
         category,
         display_name="Example",
-        separate_codex_package=False,
     ):
         write_json(
             repo / "scripts/plugin-registry.json",
@@ -68,11 +67,6 @@ class MarketplacePublishCheckTests(unittest.TestCase):
                 "dual_harness_plugins": {
                     "example": {
                         "category": category,
-                        **(
-                            {"separateCodexPackage": True}
-                            if separate_codex_package
-                            else {}
-                        ),
                         "interface": {
                             "displayName": display_name,
                             "shortDescription": "Use the example plugin",
@@ -92,13 +86,11 @@ class MarketplacePublishCheckTests(unittest.TestCase):
         self,
         category,
         display_name="Example",
-        separate_codex_package=False,
     ):
         self.write_dual_config_at(
             self.repo,
             category,
             display_name,
-            separate_codex_package,
         )
 
     def run_check(self):
@@ -138,28 +130,6 @@ class MarketplacePublishCheckTests(unittest.TestCase):
         result = self.run_check()
         self.assertEqual(result.returncode, 0, result.stderr)
         self.assertIn("No publish needed", result.stdout)
-
-    def test_separate_codex_package_change_needs_publish(self):
-        self.feature_branch()
-        self.write_dual_config(
-            category="Developer Tools",
-            separate_codex_package=True,
-        )
-        commit_all(self.repo, "Separate Codex package")
-        result = self.run_check()
-        self.assertEqual(result.returncode, 1)
-        self.assertIn("changed Codex sourcePath", result.stdout)
-
-    def test_null_separate_codex_package_is_malformed(self):
-        self.feature_branch()
-        registry_path = self.repo / "scripts/plugin-registry.json"
-        registry = json.loads(registry_path.read_text())
-        registry["dual_harness_plugins"]["example"]["separateCodexPackage"] = None
-        write_json(registry_path, registry)
-        commit_all(self.repo, "Malformed separate package setting")
-        result = self.run_check()
-        self.assertEqual(result.returncode, 2)
-        self.assertIn("separateCodexPackage must be a boolean", result.stderr)
 
     def test_malformed_manifest_is_error_not_publish_signal(self):
         self.feature_branch()
