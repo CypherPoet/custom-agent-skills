@@ -54,7 +54,11 @@ def claude_signature(value):
 
 
 def historical_codex_category(root, ref, name):
-    for registry_path in ("plugin-registry.json", "scripts/plugin-registry.json"):
+    for registry_path in (
+        "plugin-registry.json",
+        "scripts/plugin-registry.json",
+        "scripts/dual-harness.json",
+    ):
         registry = manifest(root, ref, registry_path)
         if registry is None:
             continue

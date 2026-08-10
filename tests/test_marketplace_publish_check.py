@@ -108,13 +108,17 @@ class MarketplacePublishCheckTests(unittest.TestCase):
         self.assertEqual(result.returncode, 0, result.stderr)
         self.assertIn("No publish needed", result.stdout)
 
-    def write_historical_codex_baseline(self, category):
+    def write_historical_codex_baseline(
+        self,
+        category,
+        registry_path="scripts/plugin-registry.json",
+    ):
         path = self.repo / "plugins/example/.codex-plugin/plugin.json"
         manifest = json.loads(path.read_text(encoding="utf-8"))
         del manifest["interface"]
         write_json(path, manifest)
         write_json(
-            self.repo / "scripts/plugin-registry.json",
+            self.repo / registry_path,
             {
                 "dual_harness_plugins": {
                     "example": {"category": category},
@@ -140,6 +144,17 @@ class MarketplacePublishCheckTests(unittest.TestCase):
         result = self.run_check()
         self.assertEqual(result.returncode, 1, result.stderr)
         self.assertIn("changed Codex category", result.stdout)
+
+    def test_legacy_dual_harness_registry_category_is_supported(self):
+        self.write_historical_codex_baseline(
+            "Developer Tools",
+            registry_path="scripts/dual-harness.json",
+        )
+        self.write_codex_manifest_at(self.repo, category="Developer Tools")
+        commit_all(self.repo, "author Codex interface")
+        result = self.run_check()
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertIn("No publish needed", result.stdout)
 
     def test_added_and_removed_codex_support_need_publish(self):
         self.feature_branch()
