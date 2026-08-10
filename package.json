@@ -25,11 +25,11 @@
   ],
   "scripts": {
     "build": "tsc --project tooling/tsconfig.json",
-    "build:check": "node tooling/scripts/check-build.mjs",
+    "build:check": "node tooling/verify-generated-build.mjs",
     "structure:check": "node tooling/dist/skill-structure-cli.js --strict",
     "sync": "node tooling/dist/cli.js",
     "sync:check": "node tooling/dist/cli.js --check",
-    "test": "node tooling/dist/test-runner-cli.js --build-check tooling/scripts/check-build.mjs",
+    "test": "node tooling/dist/test-runner-cli.js --build-check tooling/verify-generated-build.mjs",
     "validate:claude": "node tooling/dist/claude-plugin-validation-cli.js",
     "versions:check": "node tooling/dist/version-bumps-cli.js"
   },

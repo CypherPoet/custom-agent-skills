@@ -32,7 +32,7 @@ export function writePluginManifest(root, name, fields = {}) {
 }
 
 export function writePluginRegistry(root, vendoredSkills, dualPlugins, claudeOnly = {}) {
-  writeJson(join(root, "scripts/plugin-registry.json"), {
+  writeJson(join(root, "plugin-registry.json"), {
     vendored_skills: vendoredSkills,
     dual_harness_plugins: dualPlugins,
     claude_only_plugins: claudeOnly,

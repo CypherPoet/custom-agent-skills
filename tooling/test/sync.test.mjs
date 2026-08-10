@@ -2,7 +2,6 @@ import assert from "node:assert/strict";
 import {
   existsSync,
   readFileSync,
-  readdirSync,
   unlinkSync,
 } from "node:fs";
 import { join } from "node:path";
@@ -75,11 +74,11 @@ function fixture(testContext) {
 }
 
 function configuration(root) {
-  return JSON.parse(readFileSync(join(root, "scripts/plugin-registry.json"), "utf8"));
+  return JSON.parse(readFileSync(join(root, "plugin-registry.json"), "utf8"));
 }
 
 function writeCurrentConfiguration(root, value) {
-  writeJson(join(root, "scripts/plugin-registry.json"), value);
+  writeJson(join(root, "plugin-registry.json"), value);
 }
 
 test("sync writes vendored skills and complete Codex manifests", (t) => {
@@ -102,7 +101,8 @@ test("sync writes vendored skills and complete Codex manifests", (t) => {
     websiteURL: "https://example.com/bundle",
     defaultPrompt: ["Use the bundle fixture for this task."],
   });
-  assert.deepEqual(readdirSync(join(root, "scripts")), ["plugin-registry.json"]);
+  assert.ok(existsSync(join(root, "plugin-registry.json")));
+  assert.equal(existsSync(join(root, "scripts")), false);
   assert.deepEqual(synchronizePlugins(root, false), []);
 });
 
@@ -240,7 +240,7 @@ test("one to three starter prompts are emitted unchanged", (t) => {
 
 test("malformed registry input reports without writing", (t) => {
   const root = fixture(t);
-  writeText(join(root, "scripts/plugin-registry.json"), "[]\n");
+  writeText(join(root, "plugin-registry.json"), "[]\n");
   const problems = synchronizePlugins(root, true);
   assert.ok(problems.some((problem) => problem.includes("must contain an object")));
   assert.ok(!existsSync(join(root, "plugins/source/.codex-plugin/plugin.json")));

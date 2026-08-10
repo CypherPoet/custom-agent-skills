@@ -5,7 +5,7 @@ Diffs the *marketplace catalog surface* between a base ref (default: main) and
 HEAD, and reports the plugins whose surface changed:
   - every plugins/*/.claude-plugin/plugin.json — a plugin added or removed, or
     its name / description / homepage edited (the Claude catalog fields);
-  - scripts/plugin-registry.json — a plugin's dual-harness classification or
+  - plugin-registry.json — a plugin's dual-harness classification or
     `category` changed (the Codex catalog surface).
 A version-only bump does NOT count: that's content, gated by the version key,
 and reaches installs without a catalog re-publish.
@@ -16,7 +16,7 @@ that landed on the base after this branch forked are never attributed to it.
 Use it when opening a PR to decide whether to apply the `marketplace-publish`
 label. Stdlib only — no jq, no network. Exit status is 1 when a publish is
 needed (something actionable), else 0; 2 on error (including a malformed
-scripts/plugin-registry.json or plugin manifest — never silently treated as a
+plugin-registry.json or plugin manifest — never silently treated as a
 catalog removal).
 
 Usage: python3 .../needs_marketplace_publish.py [base-ref]   # base-ref defaults to "main"
@@ -31,10 +31,13 @@ from pathlib import Path
 CATALOG_FIELDS = ("name", "description", "homepage")
 MANIFEST_GLOB = "plugins/*/.claude-plugin/plugin.json"
 # The config whose classification + categories the Codex catalog stores.
-PLUGIN_REGISTRY_PATH = "scripts/plugin-registry.json"
-# The registry was named dual-harness.json before 2026-07; reading refs that
-# predate the rename must keep working.
-LEGACY_REGISTRY_PATH = "scripts/dual-harness.json"
+PLUGIN_REGISTRY_PATH = "plugin-registry.json"
+# Historical base commits used these locations. Marketplace comparison must
+# still read them when a branch crosses either rename boundary.
+HISTORICAL_REGISTRY_PATHS = (
+    "scripts/plugin-registry.json",
+    "scripts/dual-harness.json",
+)
 
 
 def git(root, *args):
@@ -76,12 +79,11 @@ def codex_entries(root, ref):
     plugin manifest and must not request a catalog publish. {} when the file doesn't
     exist at <ref>. A malformed file raises ValueError instead of looking like a
     mass catalog removal."""
-    shown_path = PLUGIN_REGISTRY_PATH
-    res = git(root, "show", f"{ref}:{shown_path}")
-    if res.returncode != 0:
-        shown_path = LEGACY_REGISTRY_PATH
+    for shown_path in (PLUGIN_REGISTRY_PATH, *HISTORICAL_REGISTRY_PATHS):
         res = git(root, "show", f"{ref}:{shown_path}")
-    if res.returncode != 0:
+        if res.returncode == 0:
+            break
+    else:
         return {}
     try:
         entries = json.loads(res.stdout).get("dual_harness_plugins", {})

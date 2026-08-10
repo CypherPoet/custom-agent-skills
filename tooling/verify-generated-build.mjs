@@ -8,7 +8,7 @@ import {
 import { join, relative, resolve } from "node:path";
 import { tmpdir } from "node:os";
 
-const repositoryRoot = resolve(import.meta.dirname, "../..");
+const repositoryRoot = resolve(import.meta.dirname, "..");
 const expectedDirectory = resolve(repositoryRoot, "tooling/dist");
 const temporaryRoot = mkdtempSync(join(tmpdir(), "cypherpoet-plugin-sync-build-"));
 const actualDirectory = resolve(temporaryRoot, "dist");

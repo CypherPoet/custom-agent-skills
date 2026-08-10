@@ -28,8 +28,8 @@ The full test suite also needs Python 3 because some plugins contain Python prog
 │   ├── PLUGIN-CONVENTIONS.md # Plugin architecture and contributor workflow
 │   └── automated-routines/   # Maintenance routine configuration
 ├── tooling/                  # Shared generator, repository checks, and their documentation
+├── plugin-registry.json      # Plugin classification, Codex presentation, and vendoring
 ├── package.json              # Contributor commands and dependency contract
-├── scripts/                  # Plugin registry
 ├── tests-node/               # Repository health tests
 ├── tests/                    # Tests for plugin-owned Python programs
 ├── .github/                  # CI (Verify workflow)

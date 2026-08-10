@@ -13,7 +13,7 @@ The [`@cypherpoet/plugin-sync` README](../tooling/README.md) explains generation
 
 1. Scaffold with the authoring tools available in Claude Code or Codex.
 2. Put the plugin under `plugins/<name>` and author its Claude manifest and skills there.
-3. Classify the plugin and add its Codex card metadata in [`scripts/plugin-registry.json`](../scripts/plugin-registry.json).
+3. Classify the plugin and add its Codex card metadata in [`plugin-registry.json`](../plugin-registry.json).
 4. Add any skill-sharing relationships under `vendored_skills` in the registry.
 5. Run `npm run sync` to generate the Codex manifest and vendored copies.
 6. Update the plugin README and generated top-level catalog when applicable.
@@ -28,7 +28,7 @@ Plugin metadata has two authored sources:
 | Authored Path | What It Owns |
 |---|---|
 | `plugins/<name>/.claude-plugin/plugin.json` | Shared name, version, description, author, homepage, repository, license, and keywords. |
-| `scripts/plugin-registry.json` | Harness classification, Codex display name, short description, category, capabilities, starter prompts, and vendoring. |
+| `plugin-registry.json` | Harness classification, Codex display name, short description, category, capabilities, starter prompts, and vendoring. |
 
 The generated Codex manifest combines them. Its repeated values make an installed plugin self-contained; they are not another source of truth.
 

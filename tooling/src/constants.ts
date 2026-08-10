@@ -1,4 +1,4 @@
-export const REGISTRY = "scripts/plugin-registry.json";
+export const REGISTRY = "plugin-registry.json";
 export const LEGACY_REGISTRY = "scripts/dual-harness.json";
 export const SYNC_COMMAND = "cypherpoet-plugin-sync";
 

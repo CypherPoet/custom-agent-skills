@@ -33,7 +33,7 @@ ADVISORYs all fail. Run it before opening a PR that adds or edits a skill.
 | ERROR | `SKILL.md` over 500 lines | The always-loaded body must stay a lean router; move topical or once-needed depth to `references/`. |
 | ERROR | a `**Contents:**` link whose anchor does not resolve | The jump-line drifted from the headings it indexes. |
 | ERROR | a relative link that escapes its plugin — in **any** `.md` under that plugin, at any depth | A sparse-clone install contains only one plugin, so cross-plugin links must be absolute GitHub URLs. The check walks the whole plugin rather than listing known locations, so it can't drift from the rule. |
-| ERROR | plugin-sync drift | Vendored copies, generated Codex manifests, and plugin classification must match `scripts/plugin-registry.json` — including an undeclared byte-identical copy of a declared source. |
+| ERROR | plugin-sync drift | Vendored copies, generated Codex manifests, and plugin classification must match `plugin-registry.json` — including an undeclared byte-identical copy of a declared source. |
 | WARN | `SKILL.md` 450–500 lines | The router is approaching the hard limit; plan the split. |
 | ADVISORY | a reference file over 300 lines with no `**Contents:**` jump-line | Large references need the jump-line to stay navigable without loading the whole file. Short references do not. |
 | ADVISORY | fact-check manifest drift | Every real skill unit must appear exactly once in weekly/monthly/never; listed units must exist; every non-never unit must declare `## Primary Sources`. Skipped when the repo has no manifest. |

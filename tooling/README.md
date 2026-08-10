@@ -7,7 +7,7 @@
 | Path | Role |
 |---|---|
 | `plugins/<name>/.claude-plugin/plugin.json` | Authored package identity shared by both harnesses. |
-| `scripts/plugin-registry.json` | Authored harness classification, Codex card metadata, and vendoring relationships. |
+| `plugin-registry.json` | Authored harness classification, Codex card metadata, and vendoring relationships. |
 | `plugins/<name>/skills/` | Authored skill content, except for copies declared as vendored. |
 | `plugins/<name>/.codex-plugin/plugin.json` | Generated Codex manifest for the shared package. |
 | Declared vendoring targets | Generated copies of their source skill. |

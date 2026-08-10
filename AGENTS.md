@@ -9,14 +9,14 @@ Composition is by **vendoring, not dependencies**: neither harness resolves a re
 ## Map
 
 - [`docs/PLUGIN-CONVENTIONS.md`](docs/PLUGIN-CONVENTIONS.md) — **source of truth** for the plugin authoring workflow and repository choices.
-- [`scripts/plugin-registry.json`](scripts/plugin-registry.json) — harness targeting, Codex interface metadata, and skill-sharing edges.
+- [`plugin-registry.json`](plugin-registry.json) — harness targeting, Codex interface metadata, and skill-sharing edges.
 - [`tooling/README.md`](tooling/README.md) — generator inputs and outputs and validation ownership for the shared [`@cypherpoet/plugin-sync`](package.json) package.
 - [`docs/CATALOG.md`](docs/CATALOG.md) — generated cross-plugin index.
 - [`docs/automated-routines/skill-fact-check-manifest.json`](docs/automated-routines/skill-fact-check-manifest.json) — per-skill fact-check volatility tiers.
 
 ## Working In This Repo
 
-- **Edit authored sources, not generated output.** Shared package metadata lives in `.claude-plugin/plugin.json`; supported Codex interface metadata lives in `scripts/plugin-registry.json`. `npm run sync` replaces `.codex-plugin/plugin.json` and vendored skill copies.
+- **Edit authored sources, not generated output.** Shared package metadata lives in `.claude-plugin/plugin.json`; supported Codex interface metadata lives in `plugin-registry.json`. `npm run sync` replaces `.codex-plugin/plugin.json` and vendored skill copies.
 - Run `npm run sync` after editing a `.claude-plugin/plugin.json`, the registry, or the source of a vendored skill.
 - Run `npm run validate:claude` for the pinned official strict Claude validation without the rest of the repository suite.
 - **Bump a plugin's `version` whenever its content should reach installed users** — merging to `main` alone won't ship it. Re-run the sync after any bump; the health suite fails when content changed without one.

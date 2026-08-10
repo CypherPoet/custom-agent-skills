@@ -61,7 +61,7 @@ class MarketplacePublishCheckTests(unittest.TestCase):
         display_name="Example",
     ):
         write_json(
-            repo / "scripts/plugin-registry.json",
+            repo / "plugin-registry.json",
             {
                 "vendored_skills": [],
                 "dual_harness_plugins": {
@@ -142,7 +142,7 @@ class MarketplacePublishCheckTests(unittest.TestCase):
 
     def test_malformed_dual_harness_config_is_error_not_removal(self):
         self.feature_branch()
-        (self.repo / "scripts/plugin-registry.json").write_text("[]\n", encoding="utf-8")
+        (self.repo / "plugin-registry.json").write_text("[]\n", encoding="utf-8")
         commit_all(self.repo, "malformed config")
         result = self.run_check()
         self.assertEqual(result.returncode, 2)
@@ -171,14 +171,34 @@ class MarketplacePublishCheckTests(unittest.TestCase):
         initialize_git_repo(repo)
         self.write_manifest_at(repo, version="0.1.0", description="Fixture plugin")
         legacy = repo / "scripts/dual-harness.json"
-        registry = repo / "scripts/plugin-registry.json"
+        registry = repo / "plugin-registry.json"
         self.write_dual_config_at(repo, category="Developer Tools")
+        legacy.parent.mkdir(parents=True, exist_ok=True)
         registry.rename(legacy)
         commit_all(repo, "pre-rename baseline")
         git(repo, "switch", "-c", "feature")
         legacy.unlink()
         self.write_dual_config_at(repo, category="Creativity")
         commit_all(repo, "rename registry and change category")
+        result = run([sys.executable, str(SCRIPT), "main"], repo, check=False)
+        self.assertEqual(result.returncode, 1, result.stderr)
+        self.assertIn("changed Codex category", result.stdout)
+
+    def test_registry_move_to_root_reads_previous_path_at_base(self):
+        repo = fixture_directory(self) / "previous-path"
+        repo.mkdir()
+        initialize_git_repo(repo)
+        self.write_manifest_at(repo, version="0.1.0", description="Fixture plugin")
+        current = repo / "plugin-registry.json"
+        previous = repo / "scripts/plugin-registry.json"
+        self.write_dual_config_at(repo, category="Developer Tools")
+        previous.parent.mkdir(parents=True, exist_ok=True)
+        current.rename(previous)
+        commit_all(repo, "pre-move baseline")
+        git(repo, "switch", "-c", "feature")
+        previous.unlink()
+        self.write_dual_config_at(repo, category="Creativity")
+        commit_all(repo, "move registry and change category")
         result = run([sys.executable, str(SCRIPT), "main"], repo, check=False)
         self.assertEqual(result.returncode, 1, result.stderr)
         self.assertIn("changed Codex category", result.stdout)

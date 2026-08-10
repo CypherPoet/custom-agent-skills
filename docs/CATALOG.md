@@ -46,4 +46,4 @@ codex plugin marketplace add CypherPoet/cypherpoet-toolchest
 codex plugin add <plugin-name>@cypherpoet-toolchest
 ```
 
-A few plugins are Claude Code only (the `claude-*` plugins) — see [`scripts/plugin-registry.json`](../scripts/plugin-registry.json).
+A few plugins are Claude Code only (the `claude-*` plugins) — see [`plugin-registry.json`](../plugin-registry.json).

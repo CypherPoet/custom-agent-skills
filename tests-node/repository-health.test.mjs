@@ -55,7 +55,7 @@ test("Claude manifests own valid package identity and versions", () => {
 });
 
 test("every Codex interface is composed from the two authored sources", () => {
-  const registry = JSON.parse(readFileSync(resolve(root, "scripts/plugin-registry.json"), "utf8"));
+  const registry = JSON.parse(readFileSync(resolve(root, "plugin-registry.json"), "utf8"));
   for (const [name, metadata] of Object.entries(registry.dual_harness_plugins)) {
     const pluginRoot = resolve(root, "plugins", name);
     const claudeManifest = JSON.parse(
