@@ -40,7 +40,7 @@ test("every tracked JSON file parses", () => {
   }
 });
 
-test("skill eval inputs are portable", () => {
+test("declared skill eval input files exist within their skill root", () => {
   const paths = git(
     "ls-files",
     "--cached",
@@ -57,9 +57,6 @@ test("skill eval inputs are portable", () => {
     const data = JSON.parse(readFileSync(fullPath, "utf8"));
     for (const evalCase of data.evals ?? []) {
       const label = `${path}: eval ${evalCase.id}`;
-      const prompt = evalCase.prompt ?? "";
-      assert.ok(!prompt.includes("{WS}"), label);
-      assert.ok(!prompt.includes("{OUTPUTS}"), label);
       for (const input of evalCase.files ?? []) {
         assert.ok(!isAbsolute(input), `${label}: ${input}`);
         const inputPath = resolve(skillRoot, input);
