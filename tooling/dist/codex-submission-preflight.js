@@ -158,6 +158,9 @@ export function validateAuthoredRegistryInterface(name, pluginMetadata) {
         return [`${prefix}dual_harness_plugins entry must be an object`];
     }
     const problems = [];
+    if (Object.hasOwn(pluginMetadata, "codexProjection")) {
+        problems.push("codexProjection is not supported; use separateCodexPackage");
+    }
     if (Object.hasOwn(pluginMetadata, "separateCodexPackage")) {
         if (typeof pluginMetadata.separateCodexPackage !== "boolean") {
             problems.push("separateCodexPackage must be a boolean when provided");

@@ -155,6 +155,12 @@ test("authored registry validation checks only authored fields", () => {
       separateCodexPackage: null,
     }).some((problem) => problem.includes("separateCodexPackage must be a boolean")),
   );
+  assert.ok(
+    validateAuthoredRegistryInterface("example", {
+      ...metadata,
+      codexProjection: true,
+    }).some((problem) => problem.includes("codexProjection is not supported")),
+  );
 });
 
 test("the interface must be an object", () => {
