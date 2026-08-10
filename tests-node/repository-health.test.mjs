@@ -115,3 +115,12 @@ test("the README keeps installation instructions with each plugin", () => {
   assert.match(readme, /npm ci/u);
   assert.doesNotMatch(readme, /^## Installation$/mu);
 });
+
+test("Codex scaffold preflight is documented as non-authoritative", () => {
+  for (const path of ["docs/PLUGIN-CONVENTIONS.md", "tooling/README.md"]) {
+    const documentation = readFileSync(join(root, path), "utf8");
+    assert.match(documentation, /local `plugin-creator` scaffold preflight/u, path);
+    assert.match(documentation, /non-authoritative/u, path);
+    assert.doesNotMatch(documentation, /Codex(?:'s)? bundled (?:helper|validator)/u, path);
+  }
+});
