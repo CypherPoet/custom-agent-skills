@@ -1,7 +1,5 @@
-import { relative } from "node:path";
 import { isMap, isScalar, parseDocument } from "yaml";
 import { CODEX_PACKAGES_DIRECTORY } from "./constants.js";
-import { baseVisibleFiles, readTree } from "./file-tree.js";
 import { isJsonObject } from "./types.js";
 const decoder = new TextDecoder("utf-8", { fatal: true, ignoreBOM: true });
 const invocationFieldName = "disable-model-invocation";
@@ -152,9 +150,7 @@ export function codexPackageRelativePath(name, pluginMetadata) {
         ? `${CODEX_PACKAGES_DIRECTORY}/${name}`
         : `plugins/${name}`;
 }
-export function prepareSeparateCodexPackage(root, name, pluginDirectory, manifestBytes, visible) {
-    const pluginRelative = relative(root, pluginDirectory).split("\\").join("/");
-    const sourceTree = readTree(pluginDirectory, baseVisibleFiles(visible, pluginRelative));
+export function prepareSeparateCodexPackage(name, sourceTree, manifestBytes) {
     const packageTree = new Map(Array.from(sourceTree).filter(([path]) => !path.startsWith(".claude-plugin/") && path !== ".codex-plugin/plugin.json"));
     packageTree.set(".codex-plugin/plugin.json", manifestBytes);
     const manualOnlySkills = [];

@@ -2,10 +2,12 @@ import { rmSync, statSync } from "node:fs";
 import { resolve } from "node:path";
 import { REGISTRY, SYNC_COMMAND } from "./constants.js";
 import { baseVisibleFiles, desiredVendorTargets, fileTreesEqual, gitCleanUnder, pathExistsOrIsSymbolicLink, pathIsSymbolicLink, previousVendorTargets, readTree, skillDirectories, treeDigest, writeTree, } from "./file-tree.js";
-export function synchronizeVendoredSkills(root, configuration, write, visible) {
+export function prepareVendoredSkillsPlan(root, configuration, write, visible) {
     const { desired: desiredTargets, problems } = desiredVendorTargets(configuration);
+    const targetTrees = new Map();
+    const retiredTargets = [];
     if (problems.length > 0) {
-        return problems;
+        return { targetTrees, retiredTargets, problems };
     }
     const tree = (relativePath) => readTree(resolve(root, relativePath), baseVisibleFiles(visible, relativePath));
     const handled = new Set(desiredTargets.keys());
@@ -29,7 +31,7 @@ export function synchronizeVendoredSkills(root, configuration, write, visible) {
                 "(commit or move that work first, or delete the directory yourself to adopt it)");
             continue;
         }
-        rmSync(destination, { recursive: true });
+        retiredTargets.push(target);
     }
     const sourceTrees = new Map();
     for (const [target, source] of Array.from(desiredTargets.entries()).sort(([left], [right]) => left.localeCompare(right, "en"))) {
@@ -43,10 +45,8 @@ export function synchronizeVendoredSkills(root, configuration, write, visible) {
             problems.push(`[vendor] source has no vendorable files: ${source}`);
             continue;
         }
-        if (write) {
-            writeTree(sourceTree, resolve(root, target));
-        }
-        else if (!fileTreesEqual(tree(target), sourceTree)) {
+        targetTrees.set(target, sourceTree);
+        if (!write && !fileTreesEqual(tree(target), sourceTree)) {
             problems.push(`[vendor] out of sync: ${target} != ${source} (run: ${SYNC_COMMAND})`);
         }
     }
@@ -72,6 +72,14 @@ export function synchronizeVendoredSkills(root, configuration, write, visible) {
             }
         }
     }
-    return problems;
+    return { targetTrees, retiredTargets, problems };
+}
+export function applyVendoredSkillsPlan(root, plan) {
+    for (const target of plan.retiredTargets) {
+        rmSync(resolve(root, target), { recursive: true });
+    }
+    for (const [target, sourceTree] of plan.targetTrees) {
+        writeTree(sourceTree, resolve(root, target));
+    }
 }
 //# sourceMappingURL=vendored-skills.js.map

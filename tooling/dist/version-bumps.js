@@ -1,5 +1,6 @@
 import { resolve } from "node:path";
 import { spawnSync } from "node:child_process";
+import { CODEX_PACKAGES_DIRECTORY } from "./constants.js";
 import { directoryIgnored, fileIgnored } from "./file-tree.js";
 const manifestTemplate = "plugins/{plugin}/.claude-plugin/plugin.json";
 const defaultOutput = {
@@ -19,7 +20,8 @@ function git(root, arguments_) {
 }
 export function shippedPluginForPath(relativePath) {
     const parts = relativePath.split("/");
-    if (parts.length < 3 || parts[0] !== "plugins") {
+    if (parts.length < 3 ||
+        (parts[0] !== "plugins" && parts[0] !== CODEX_PACKAGES_DIRECTORY)) {
         return undefined;
     }
     if (parts.slice(2, -1).some(directoryIgnored)) {
@@ -105,6 +107,7 @@ export function runVersionBumpCheck(rootPath, baseArgument = "main", output = de
         `${base}...HEAD`,
         "--",
         "plugins/",
+        `${CODEX_PACKAGES_DIRECTORY}/`,
     ]);
     if (diff.status !== 0) {
         output.stderr(`ERROR: could not diff ${base}...HEAD (${diff.stderr.trim()})`);

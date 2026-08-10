@@ -40,7 +40,10 @@ import {
 } from "./file-tree.js";
 import { prepareSeparateCodexPackage } from "./separate-codex-package.js";
 import { isJsonObject, type FileTree, type PluginRegistry } from "./types.js";
-import { synchronizeVendoredSkills } from "./vendored-skills.js";
+import {
+  applyVendoredSkillsPlan,
+  prepareVendoredSkillsPlan,
+} from "./vendored-skills.js";
 
 interface CodexPlan {
   manifests: Map<string, Buffer>;
@@ -85,10 +88,41 @@ function loadConfiguration(root: string): {
     : { problems };
 }
 
+function pluginTreeWithPlannedVendoring(
+  root: string,
+  pluginDirectory: string,
+  visible: ReadonlySet<string> | undefined,
+  vendoredTargetTrees: ReadonlyMap<string, FileTree>,
+): FileTree {
+  const pluginRelative = relative(root, pluginDirectory).split("\\").join("/");
+  const sourceTree = readTree(
+    pluginDirectory,
+    baseVisibleFiles(visible, pluginRelative),
+  );
+  const pluginPrefix = `${pluginRelative}/`;
+  for (const [target, targetTree] of vendoredTargetTrees) {
+    if (!target.startsWith(pluginPrefix)) {
+      continue;
+    }
+    const relativeTarget = target.slice(pluginPrefix.length);
+    const relativeTargetPrefix = `${relativeTarget}/`;
+    for (const path of sourceTree.keys()) {
+      if (path === relativeTarget || path.startsWith(relativeTargetPrefix)) {
+        sourceTree.delete(path);
+      }
+    }
+    for (const [path, data] of targetTree) {
+      sourceTree.set(`${relativeTarget}/${path}`, data);
+    }
+  }
+  return sourceTree;
+}
+
 function prepareCodexPlan(
   root: string,
   dualPlugins: Record<string, unknown>,
   visible: ReadonlySet<string> | undefined,
+  vendoredTargetTrees: ReadonlyMap<string, FileTree>,
 ): CodexPlan {
   const manifests = new Map<string, Buffer>();
   const packages = new Map<string, FileTree>();
@@ -165,12 +199,16 @@ function prepareCodexPlan(
 
     const manifestBytes = formatCodexManifest(manifest);
     if (pluginMetadata.separateCodexPackage === true) {
-      const prepared = prepareSeparateCodexPackage(
+      const sourceTree = pluginTreeWithPlannedVendoring(
         root,
-        name,
         pluginDirectory,
-        manifestBytes,
         visible,
+        vendoredTargetTrees,
+      );
+      const prepared = prepareSeparateCodexPackage(
+        name,
+        sourceTree,
+        manifestBytes,
       );
       problems.push(...prepared.problems);
       if (prepared.packageTree !== undefined) {
@@ -331,18 +369,13 @@ export function synchronizePlugins(rootPath: string, write: boolean): string[] {
   }
 
   const visible = repositoryVisibleFiles(root);
-  const plan = prepareCodexPlan(root, dualPlugins, visible);
+  const vendorPlan = prepareVendoredSkillsPlan(root, configuration, write, visible);
+  problems.push(...vendorPlan.problems);
+
+  const plan = prepareCodexPlan(root, dualPlugins, visible, vendorPlan.targetTrees);
   problems.push(...plan.problems);
 
-  const vendorProblems = synchronizeVendoredSkills(
-    root,
-    configuration,
-    write && problems.length === 0,
-    visible,
-  );
-  problems.push(...vendorProblems);
-
-  if (plan.problems.length === 0 && (!write || problems.length === 0)) {
+  if ((write && problems.length === 0) || (!write && plan.problems.length === 0)) {
     const separatePackagePlugins = new Set(
       Object.entries(dualPlugins)
         .filter(
@@ -351,6 +384,9 @@ export function synchronizePlugins(rootPath: string, write: boolean): string[] {
         )
         .map(([name]) => name),
     );
+    if (write) {
+      applyVendoredSkillsPlan(root, vendorPlan);
+    }
     problems.push(
       ...applyCodexPlan(
         root,

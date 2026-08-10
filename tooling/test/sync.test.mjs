@@ -158,6 +158,37 @@ test("a separate Codex package removes only Claude's manual invocation field", (
   assert.deepEqual(synchronizePlugins(root, false), []);
 });
 
+test("a separate Codex package uses vendored content planned for the same sync", (t) => {
+  const root = fixture(t);
+  const authoredSkill =
+    "---\nname: shared\ndescription: Shared fixture.\ndisable-model-invocation: true\n---\n\n# New\n";
+  writeText(join(root, "plugins/source/skills/shared/SKILL.md"), authoredSkill);
+  writeText(
+    join(root, "plugins/source/skills/shared/agents/openai.yaml"),
+    "policy:\n  allow_implicit_invocation: false\n",
+  );
+  writeText(
+    join(root, "plugins/bundle/skills/shared/SKILL.md"),
+    "---\nname: shared\ndescription: Stale fixture.\n---\n\n# Old\n",
+  );
+  const registry = configuration(root);
+  registry.dual_harness_plugins.bundle.separateCodexPackage = true;
+  writeCurrentConfiguration(root, registry);
+
+  assert.deepEqual(synchronizePlugins(root, true), []);
+  assert.equal(
+    readFileSync(join(root, "plugins/bundle/skills/shared/SKILL.md"), "utf8"),
+    authoredSkill,
+  );
+  const generatedSkill = readFileSync(
+    join(root, "codex-plugins/bundle/skills/shared/SKILL.md"),
+    "utf8",
+  );
+  assert.doesNotMatch(generatedSkill, /disable-model-invocation/u);
+  assert.match(generatedSkill, /# New/u);
+  assert.deepEqual(synchronizePlugins(root, false), []);
+});
+
 test("manual-only Codex packages require one unambiguous false policy", async (t) => {
   for (const [agentYaml, expected] of [
     [undefined, "requires policy.allow_implicit_invocation: false"],
@@ -402,6 +433,28 @@ test("vendored drift is detected and repaired", (t) => {
   assert.ok(synchronizePlugins(root, false).some((problem) => problem.includes("out of sync")));
   assert.deepEqual(synchronizePlugins(root, true), []);
   assert.deepEqual(synchronizePlugins(root, false), []);
+});
+
+test("vendoring validates every source before writing any target", (t) => {
+  const root = fixture(t);
+  const existingTarget =
+    "---\nname: shared\ndescription: Preserve this until the plan is valid.\n---\n";
+  writeText(join(root, "plugins/bundle/skills/shared/SKILL.md"), existingTarget);
+  const registry = configuration(root);
+  registry.vendored_skills.push({
+    source: "plugins/source/skills/missing",
+    targets: ["plugins/bundle/skills/missing"],
+  });
+  writeCurrentConfiguration(root, registry);
+
+  const problems = synchronizePlugins(root, true);
+  assert.ok(problems.some((problem) => problem.includes("source missing")), problems.join("\n"));
+  assert.equal(
+    readFileSync(join(root, "plugins/bundle/skills/shared/SKILL.md"), "utf8"),
+    existingTarget,
+  );
+  assert.ok(!existsSync(join(root, "plugins/source/.codex-plugin/plugin.json")));
+  assert.ok(!existsSync(join(root, "plugins/bundle/.codex-plugin/plugin.json")));
 });
 
 test("retiring a vendored edge deletes clean content but preserves local work", async (t) => {

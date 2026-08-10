@@ -17,15 +17,23 @@ import {
 } from "./file-tree.js";
 import type { FileTree, PluginRegistry } from "./types.js";
 
-export function synchronizeVendoredSkills(
+export interface VendoredSkillsPlan {
+  targetTrees: Map<string, FileTree>;
+  retiredTargets: string[];
+  problems: string[];
+}
+
+export function prepareVendoredSkillsPlan(
   root: string,
   configuration: PluginRegistry,
   write: boolean,
   visible: ReadonlySet<string> | undefined,
-): string[] {
+): VendoredSkillsPlan {
   const { desired: desiredTargets, problems } = desiredVendorTargets(configuration);
+  const targetTrees = new Map<string, FileTree>();
+  const retiredTargets: string[] = [];
   if (problems.length > 0) {
-    return problems;
+    return { targetTrees, retiredTargets, problems };
   }
 
   const tree = (relativePath: string): FileTree =>
@@ -57,7 +65,7 @@ export function synchronizeVendoredSkills(
       );
       continue;
     }
-    rmSync(destination, { recursive: true });
+    retiredTargets.push(target);
   }
 
   const sourceTrees = new Map<string, FileTree>();
@@ -74,9 +82,8 @@ export function synchronizeVendoredSkills(
       problems.push(`[vendor] source has no vendorable files: ${source}`);
       continue;
     }
-    if (write) {
-      writeTree(sourceTree, resolve(root, target));
-    } else if (!fileTreesEqual(tree(target), sourceTree)) {
+    targetTrees.set(target, sourceTree);
+    if (!write && !fileTreesEqual(tree(target), sourceTree)) {
       problems.push(`[vendor] out of sync: ${target} != ${source} (run: ${SYNC_COMMAND})`);
     }
   }
@@ -105,5 +112,14 @@ export function synchronizeVendoredSkills(
       }
     }
   }
-  return problems;
+  return { targetTrees, retiredTargets, problems };
+}
+
+export function applyVendoredSkillsPlan(root: string, plan: VendoredSkillsPlan): void {
+  for (const target of plan.retiredTargets) {
+    rmSync(resolve(root, target), { recursive: true });
+  }
+  for (const [target, sourceTree] of plan.targetTrees) {
+    writeTree(sourceTree, resolve(root, target));
+  }
 }

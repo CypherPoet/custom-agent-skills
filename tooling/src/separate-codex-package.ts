@@ -1,9 +1,6 @@
-import { relative, resolve } from "node:path";
-
 import { isMap, isScalar, parseDocument } from "yaml";
 
 import { CODEX_PACKAGES_DIRECTORY } from "./constants.js";
-import { baseVisibleFiles, readTree } from "./file-tree.js";
 import { isJsonObject, type FileTree } from "./types.js";
 
 const decoder = new TextDecoder("utf-8", { fatal: true, ignoreBOM: true });
@@ -187,14 +184,10 @@ export function codexPackageRelativePath(name: string, pluginMetadata: unknown):
 }
 
 export function prepareSeparateCodexPackage(
-  root: string,
   name: string,
-  pluginDirectory: string,
+  sourceTree: ReadonlyMap<string, Buffer>,
   manifestBytes: Buffer,
-  visible: ReadonlySet<string> | undefined,
 ): { packageTree?: FileTree; problems: string[] } {
-  const pluginRelative = relative(root, pluginDirectory).split("\\").join("/");
-  const sourceTree = readTree(pluginDirectory, baseVisibleFiles(visible, pluginRelative));
   const packageTree: FileTree = new Map(
     Array.from(sourceTree).filter(
       ([path]) => !path.startsWith(".claude-plugin/") && path !== ".codex-plugin/plugin.json",
