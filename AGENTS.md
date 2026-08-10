@@ -16,7 +16,7 @@ Composition is by **vendoring, not dependencies**: neither harness resolves a re
 
 ## Working In This Repo
 
-- **Never hand-edit generated output** — any `.codex-plugin/plugin.json` or vendored skill copy. Edit the source, then re-sync.
+- **Edit authored sources, not generated output.** Shared package metadata lives in `.claude-plugin/plugin.json`; supported Codex interface metadata lives in `scripts/plugin-registry.json`. `npm run sync` replaces `.codex-plugin/plugin.json` and vendored skill copies.
 - Run `npm run sync` after editing a `.claude-plugin/plugin.json`, the registry, or the source of a vendored skill.
 - Run `npm run validate:claude` for the pinned official strict Claude validation without the rest of the repository suite.
 - **Bump a plugin's `version` whenever its content should reach installed users** — merging to `main` alone won't ship it. Re-run the sync after any bump; the health suite fails when content changed without one.
