@@ -101,7 +101,7 @@ The goal: **one PR on the marketplace repo** that adds or updates the chosen plu
 
    If the marketplace generates its **Plugins** table from the catalog — the table is wrapped in `<!-- BEGIN/END:PLUGINS-TABLE -->` markers and the repo ships `scripts/sync-readme-table.mjs` — regenerate it now so the README reflects the new entries: `(cd /tmp/mkt-publish && node scripts/sync-readme-table.mjs)`. Skip this for catalogs without that script. The staged commit in step 6 picks up the regenerated `README.md` alongside the catalog files.
 
-4. **Validate the marketplace manifest.** Run `claude plugin validate --strict /tmp/mkt-publish` to confirm the updated Claude manifest still passes schema checks. If the repository's pinned validator is unavailable, stop and install its locked dependencies; JSON parsing is not a substitute for the platform validator. (The Codex catalog has no stable local validation command — the `jq empty` parse check in step 3 is its repository gate; `codex plugin marketplace add` on the merged repo is the runtime proof.)
+4. **Validate the marketplace manifest.** Run `(cd /tmp/mkt-publish && npm ci && npm run validate:claude)` to install and execute the marketplace's lockfile-pinned strict Claude validator. Do not substitute a globally installed `claude` command or a JSON parse check. (The Codex catalog has no stable local validation command — the `jq empty` parse check in step 3 is its repository gate; `codex plugin marketplace add` on the merged repo is the runtime proof.)
 
 5. **Show the diff and confirm.** Stage the publish's files explicitly, then review the staged diff — a first Codex publish creates `.agents/plugins/marketplace.json` as an *untracked* file, which plain `git diff` (and `commit -am`) silently skip:
    ```bash

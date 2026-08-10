@@ -124,6 +124,40 @@ function validateSubmissionStringList(
   return problems;
 }
 
+function validateOptionalSubmissionStringList(
+  value: unknown,
+  field: string,
+  options: SubmissionListOptions,
+): string[] {
+  return value === undefined ? [] : validateSubmissionStringList(value, field, options);
+}
+
+function validateOptionalDefaultPrompt(value: unknown): string[] {
+  if (value === undefined) {
+    return [];
+  }
+  if (typeof value !== "string" && !Array.isArray(value)) {
+    return ["interface.defaultPrompt must be a string or an array"];
+  }
+
+  const prompts = typeof value === "string" ? [value] : value;
+  return [
+    ...validateSubmissionStringList(prompts, "interface.defaultPrompt", {
+      maximumCount: DEFAULT_PROMPT_MAX_COUNT,
+      maximumItemLength: DEFAULT_PROMPT_MAX_LENGTH,
+      rejectAppMentions: true,
+    }),
+    ...duplicateListProblems(prompts, "interface.defaultPrompt", false),
+  ];
+}
+
+function validateRequiredRepositoryList(value: unknown, field: string): string[] {
+  if (!Array.isArray(value)) {
+    return [`${field} must be an array under repository policy`];
+  }
+  return value.length === 0 ? [`${field} must contain at least 1 entry`] : [];
+}
+
 function duplicateListProblems(
   value: unknown,
   field: string,
@@ -201,7 +235,7 @@ export function validateCodexSubmissionInterface(interfaceValue: unknown): strin
   }
 
   problems.push(
-    ...validateSubmissionStringList(
+    ...validateOptionalSubmissionStringList(
       pluginInterface.capabilities,
       "interface.capabilities",
       {
@@ -209,21 +243,17 @@ export function validateCodexSubmissionInterface(interfaceValue: unknown): strin
         maximumItemLength: CAPABILITY_MAX_LENGTH,
       },
     ),
-    ...validateSubmissionStringList(
-      pluginInterface.defaultPrompt,
-      "interface.defaultPrompt",
-      {
-        maximumCount: DEFAULT_PROMPT_MAX_COUNT,
-        maximumItemLength: DEFAULT_PROMPT_MAX_LENGTH,
-        rejectAppMentions: true,
-      },
-    ),
-    ...validateSubmissionUrl(
-      pluginInterface.websiteURL,
-      "interface.websiteURL",
-      WEBSITE_URL_MAX_LENGTH,
-    ),
+    ...validateOptionalDefaultPrompt(pluginInterface.defaultPrompt),
   );
+  if (pluginInterface.websiteURL !== undefined) {
+    problems.push(
+      ...validateSubmissionUrl(
+        pluginInterface.websiteURL,
+        "interface.websiteURL",
+        WEBSITE_URL_MAX_LENGTH,
+      ),
+    );
+  }
   return problems;
 }
 
@@ -236,18 +266,18 @@ export function validateRepositoryInterfacePolicy(
     return [];
   }
   const pluginInterface = interfaceValue as CodexInterface;
-  const problems: string[] = [];
-  if (Array.isArray(pluginInterface.capabilities) && pluginInterface.capabilities.length === 0) {
-    problems.push("interface.capabilities must contain at least 1 entry");
-  }
-  if (Array.isArray(pluginInterface.defaultPrompt) && pluginInterface.defaultPrompt.length === 0) {
-    problems.push("interface.defaultPrompt must contain at least 1 entry");
-  }
-  problems.push(
+  const problems = [
+    ...validateRequiredRepositoryList(
+      pluginInterface.capabilities,
+      "interface.capabilities",
+    ),
+    ...validateRequiredRepositoryList(
+      pluginInterface.defaultPrompt,
+      "interface.defaultPrompt",
+    ),
     ...duplicateListProblems(pluginInterface.capabilities, "interface.capabilities", true),
-    ...duplicateListProblems(pluginInterface.defaultPrompt, "interface.defaultPrompt", false),
     ...validateSubmissionUrl(sourceHomepage, "source homepage", SOURCE_HOMEPAGE_MAX_LENGTH),
-  );
+  ];
   if (pluginInterface.websiteURL !== sourceHomepage) {
     problems.push("interface.websiteURL must equal the source homepage");
   }

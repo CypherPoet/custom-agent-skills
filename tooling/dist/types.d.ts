@@ -11,8 +11,8 @@ export interface CodexInterface extends JsonObject {
     longDescription: unknown;
     developerName: unknown;
     category: unknown;
-    capabilities: unknown;
-    websiteURL: unknown;
-    defaultPrompt: unknown;
+    capabilities?: unknown;
+    websiteURL?: unknown;
+    defaultPrompt?: unknown;
 }
 export declare function isJsonObject(value: unknown): value is JsonObject;

@@ -82,6 +82,32 @@ function validateSubmissionStringList(value, field, options) {
     });
     return problems;
 }
+function validateOptionalSubmissionStringList(value, field, options) {
+    return value === undefined ? [] : validateSubmissionStringList(value, field, options);
+}
+function validateOptionalDefaultPrompt(value) {
+    if (value === undefined) {
+        return [];
+    }
+    if (typeof value !== "string" && !Array.isArray(value)) {
+        return ["interface.defaultPrompt must be a string or an array"];
+    }
+    const prompts = typeof value === "string" ? [value] : value;
+    return [
+        ...validateSubmissionStringList(prompts, "interface.defaultPrompt", {
+            maximumCount: DEFAULT_PROMPT_MAX_COUNT,
+            maximumItemLength: DEFAULT_PROMPT_MAX_LENGTH,
+            rejectAppMentions: true,
+        }),
+        ...duplicateListProblems(prompts, "interface.defaultPrompt", false),
+    ];
+}
+function validateRequiredRepositoryList(value, field) {
+    if (!Array.isArray(value)) {
+        return [`${field} must be an array under repository policy`];
+    }
+    return value.length === 0 ? [`${field} must contain at least 1 entry`] : [];
+}
 function duplicateListProblems(value, field, ignoreCase) {
     if (!Array.isArray(value)) {
         return [];
@@ -117,14 +143,13 @@ export function validateCodexSubmissionInterface(interfaceValue) {
         !SUPPORTED_CODEX_CATEGORIES.has(pluginInterface.category)) {
         problems.push(`interface.category must be one of: ${Array.from(SUPPORTED_CODEX_CATEGORIES).sort().join(", ")}`);
     }
-    problems.push(...validateSubmissionStringList(pluginInterface.capabilities, "interface.capabilities", {
+    problems.push(...validateOptionalSubmissionStringList(pluginInterface.capabilities, "interface.capabilities", {
         maximumCount: CAPABILITY_MAX_COUNT,
         maximumItemLength: CAPABILITY_MAX_LENGTH,
-    }), ...validateSubmissionStringList(pluginInterface.defaultPrompt, "interface.defaultPrompt", {
-        maximumCount: DEFAULT_PROMPT_MAX_COUNT,
-        maximumItemLength: DEFAULT_PROMPT_MAX_LENGTH,
-        rejectAppMentions: true,
-    }), ...validateSubmissionUrl(pluginInterface.websiteURL, "interface.websiteURL", WEBSITE_URL_MAX_LENGTH));
+    }), ...validateOptionalDefaultPrompt(pluginInterface.defaultPrompt));
+    if (pluginInterface.websiteURL !== undefined) {
+        problems.push(...validateSubmissionUrl(pluginInterface.websiteURL, "interface.websiteURL", WEBSITE_URL_MAX_LENGTH));
+    }
     return problems;
 }
 /** CypherPoet authoring choices layered on top of Codex's submission contract. */
@@ -133,14 +158,12 @@ export function validateRepositoryInterfacePolicy(interfaceValue, sourceHomepage
         return [];
     }
     const pluginInterface = interfaceValue;
-    const problems = [];
-    if (Array.isArray(pluginInterface.capabilities) && pluginInterface.capabilities.length === 0) {
-        problems.push("interface.capabilities must contain at least 1 entry");
-    }
-    if (Array.isArray(pluginInterface.defaultPrompt) && pluginInterface.defaultPrompt.length === 0) {
-        problems.push("interface.defaultPrompt must contain at least 1 entry");
-    }
-    problems.push(...duplicateListProblems(pluginInterface.capabilities, "interface.capabilities", true), ...duplicateListProblems(pluginInterface.defaultPrompt, "interface.defaultPrompt", false), ...validateSubmissionUrl(sourceHomepage, "source homepage", SOURCE_HOMEPAGE_MAX_LENGTH));
+    const problems = [
+        ...validateRequiredRepositoryList(pluginInterface.capabilities, "interface.capabilities"),
+        ...validateRequiredRepositoryList(pluginInterface.defaultPrompt, "interface.defaultPrompt"),
+        ...duplicateListProblems(pluginInterface.capabilities, "interface.capabilities", true),
+        ...validateSubmissionUrl(sourceHomepage, "source homepage", SOURCE_HOMEPAGE_MAX_LENGTH),
+    ];
     if (pluginInterface.websiteURL !== sourceHomepage) {
         problems.push("interface.websiteURL must equal the source homepage");
     }

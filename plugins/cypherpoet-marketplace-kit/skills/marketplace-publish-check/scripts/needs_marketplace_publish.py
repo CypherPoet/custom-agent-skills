@@ -5,8 +5,8 @@ Diffs the *marketplace catalog surface* between a base ref (default: main) and
 HEAD, and reports the plugins whose surface changed:
   - every plugins/*/.claude-plugin/plugin.json — a plugin added or removed, or
     its name / description / homepage edited (the Claude catalog fields);
-  - scripts/plugin-registry.json — a plugin's dual-harness classification,
-    `category`, or generated Codex source path changed (the Codex catalog surface).
+  - scripts/plugin-registry.json — a plugin's dual-harness classification or
+    `category` changed (the Codex catalog surface).
 A version-only bump does NOT count: that's content, gated by the version key,
 and reaches installs without a catalog re-publish.
 

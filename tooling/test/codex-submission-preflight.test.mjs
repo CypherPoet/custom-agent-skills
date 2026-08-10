@@ -66,7 +66,7 @@ test("developer names and categories enforce the Codex submission contract", () 
   assertInvalid("category", "Developer Tools ", "surrounding whitespace");
 });
 
-test("Codex submission lists are free-form and bounded", () => {
+test("Codex submission lists enforce prompt rules and bounds", () => {
   assert.deepEqual(
     validateCodexSubmissionInterface({
       ...validInterface,
@@ -74,7 +74,15 @@ test("Codex submission lists are free-form and bounded", () => {
     }),
     [],
   );
+  assert.deepEqual(
+    validateCodexSubmissionInterface({
+      ...validInterface,
+      defaultPrompt: "Build an example workflow for this task.",
+    }),
+    [],
+  );
   for (const [field, value, expected] of [
+    ["capabilities", null, "must be an array"],
     ["capabilities", Array.from({ length: 21 }, (_, index) => `Capability ${index}`), "at most 20"],
     ["capabilities", ["x".repeat(121)], "at most 120"],
     ["capabilities", [" Read"], "surrounding whitespace"],
@@ -84,19 +92,21 @@ test("Codex submission lists are free-form and bounded", () => {
     ["defaultPrompt", [" Build it."], "surrounding whitespace"],
     ["defaultPrompt", ["Ask @Linear to create an issue."], "must not contain an app @mention"],
     ["defaultPrompt", [{ prompt: "Build it." }], "must be a non-empty string"],
+    ["defaultPrompt", null, "string or an array"],
+    ["defaultPrompt", ["Build it.", "Build  it."], "duplicates"],
+    ["defaultPrompt", ["Ａudit it.", "Audit it."], "duplicates"],
   ]) {
     assertInvalid(field, value, expected);
   }
 });
 
-test("repository policy requires populated unique capabilities and prompts", () => {
+test("repository policy requires populated arrays and unique capabilities", () => {
   for (const [field, value, expected] of [
     ["capabilities", [], "at least 1"],
     ["capabilities", ["Read", "read"], "duplicates"],
     ["capabilities", ["Read", "Ｒｅａｄ"], "duplicates"],
     ["defaultPrompt", [], "at least 1"],
-    ["defaultPrompt", ["Build it.", "Build  it."], "duplicates"],
-    ["defaultPrompt", ["Ａudit it.", "Audit it."], "duplicates"],
+    ["defaultPrompt", "Build it.", "array under repository policy"],
   ]) {
     assertInvalid(field, value, expected);
   }
@@ -114,8 +124,31 @@ test("repository policy requires populated unique capabilities and prompts", () 
   );
 });
 
+test("Codex optional interface fields remain repository requirements", () => {
+  for (const [field, repositoryProblem] of [
+    ["capabilities", "array under repository policy"],
+    ["defaultPrompt", "array under repository policy"],
+    ["websiteURL", "must equal the source homepage"],
+  ]) {
+    const interfaceValue = structuredClone(validInterface);
+    delete interfaceValue[field];
+    assert.deepEqual(
+      validateCodexSubmissionInterface(interfaceValue),
+      [],
+      `${field} should be optional in the Codex submission layer`,
+    );
+    assert.ok(
+      validateGeneratedCodexInterface(interfaceValue, validInterface.websiteURL).some((problem) =>
+        problem.includes(repositoryProblem),
+      ),
+      `${field} should remain a repository requirement`,
+    );
+  }
+});
+
 test("website submission rules and repository composition are separate", () => {
   for (const [value, expected] of [
+    [null, "must be a non-empty string"],
     ["http://example.com", "absolute https URL"],
     ["https:///missing-host", "absolute https URL"],
     ["https://user:secret@example.com", "must not contain credentials"],
