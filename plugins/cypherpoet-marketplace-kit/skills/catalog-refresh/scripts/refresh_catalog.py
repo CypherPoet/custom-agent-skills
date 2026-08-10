@@ -98,14 +98,34 @@ def cell(text):
     return text.replace("|", "\\|").strip()
 
 
+def platform_manifest(plugin_directory):
+    for relative_path in (
+        ".claude-plugin/plugin.json",
+        ".codex-plugin/plugin.json",
+    ):
+        candidate = plugin_directory / relative_path
+        if candidate.is_file():
+            return candidate
+    return None
+
+
 def build_rows(root):
     entries, problems = [], []
-    for manifest in (root / "plugins").glob("*/.claude-plugin/plugin.json"):
-        pdir = manifest.parent.parent
+    for pdir in sorted(
+        (path for path in (root / "plugins").iterdir() if path.is_dir()),
+        key=lambda path: path.name,
+    ):
+        manifest = platform_manifest(pdir)
+        if manifest is None:
+            problems.append(f"{pdir.name}: no Claude or Codex plugin manifest")
+            continue
         try:
             data = json.loads(manifest.read_text(encoding="utf-8"))
-        except ValueError as exc:
+        except (OSError, ValueError) as exc:
             problems.append(f"{pdir.name}: invalid plugin.json ({exc})")
+            continue
+        if not isinstance(data, dict):
+            problems.append(f"{pdir.name}: plugin.json must contain an object")
             continue
         name = data.get("name") or pdir.name
         desc = (data.get("description") or "").strip()

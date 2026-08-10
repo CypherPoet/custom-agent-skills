@@ -123,7 +123,10 @@ export function treeDigest(files) {
     return digest.digest("hex");
 }
 export function validSkillPath(value) {
-    if (typeof value !== "string" || value.length === 0 || isAbsolute(value)) {
+    if (typeof value !== "string" ||
+        value.length === 0 ||
+        value.includes("\\") ||
+        isAbsolute(value)) {
         return false;
     }
     const parts = value.split("/");
@@ -179,8 +182,11 @@ export function desiredVendorTargets(configuration) {
     }
     return { desired, problems };
 }
-export function previousVendorTargets(root) {
-    const text = gitText(root, ["show", `HEAD:${VENDORED_SKILLS_CONFIGURATION}`]);
+function vendorTargetsAt(root, reference) {
+    const text = gitText(root, [
+        "show",
+        `${reference}:${VENDORED_SKILLS_CONFIGURATION}`,
+    ]);
     if (text === undefined) {
         return new Set();
     }
@@ -195,6 +201,25 @@ export function previousVendorTargets(root) {
         return new Set();
     }
     return new Set(desiredVendorTargets(configuration).desired.keys());
+}
+function vendoringComparisonBase(root) {
+    for (const reference of ["origin/main", "main"]) {
+        const mergeBase = gitText(root, ["merge-base", reference, "HEAD"])?.trim();
+        if (mergeBase) {
+            return mergeBase;
+        }
+    }
+    return gitText(root, ["rev-parse", "HEAD^"])?.trim() || undefined;
+}
+export function previousVendorTargets(root) {
+    const targets = vendorTargetsAt(root, "HEAD");
+    const comparisonBase = vendoringComparisonBase(root);
+    if (comparisonBase !== undefined) {
+        for (const target of vendorTargetsAt(root, comparisonBase)) {
+            targets.add(target);
+        }
+    }
+    return targets;
 }
 export function gitCleanUnder(root, relativePath) {
     const result = runGit(root, ["status", "--porcelain", "--", relativePath]);

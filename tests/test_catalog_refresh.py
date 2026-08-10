@@ -53,6 +53,45 @@ class CatalogRefreshTests(unittest.TestCase):
         _, problems = catalog_refresh.build_rows(self.root)
         self.assertEqual(problems, ["example: manifest has no description"])
 
+    def test_codex_only_plugin_is_included(self):
+        write_json(
+            self.root / "plugins/codex-only/.codex-plugin/plugin.json",
+            {"name": "codex-only", "description": "Codex only"},
+        )
+        rows, problems = catalog_refresh.build_rows(self.root)
+        self.assertEqual(problems, [])
+        self.assertEqual(
+            rows,
+            [
+                "| [codex-only](../plugins/codex-only/README.md) | "
+                "Codex only | — |"
+            ],
+        )
+
+    def test_claude_manifest_is_preferred_when_both_exist(self):
+        plugin = self.root / "plugins/example"
+        write_json(
+            plugin / ".claude-plugin/plugin.json",
+            {"name": "example", "description": "Claude description"},
+        )
+        write_json(
+            plugin / ".codex-plugin/plugin.json",
+            {"name": "example", "description": "Codex description"},
+        )
+        rows, problems = catalog_refresh.build_rows(self.root)
+        self.assertEqual(problems, [])
+        self.assertIn("Claude description", rows[0])
+        self.assertNotIn("Codex description", rows[0])
+
+    def test_plugin_without_a_platform_manifest_is_reported(self):
+        write(self.root / "plugins/example/README.md", "# Example\n")
+        rows, problems = catalog_refresh.build_rows(self.root)
+        self.assertEqual(rows, [])
+        self.assertEqual(
+            problems,
+            ["example: no Claude or Codex plugin manifest"],
+        )
+
     def test_replace_table_preserves_surrounding_prose_and_final_newline(self):
         original = (
             "# Catalog\n\n"

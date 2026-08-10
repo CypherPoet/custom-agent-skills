@@ -6,6 +6,7 @@ import test from "node:test";
 import { synchronizeVendoredSkills } from "../dist/index.js";
 import {
   commitAll,
+  git,
   initializeGitRepository,
   temporaryDirectory,
   writeCodexPluginManifest,
@@ -88,6 +89,20 @@ test("malformed configuration reports without writing", (t) => {
   assert.equal(existsSync(target), false);
 });
 
+test("vendoring rejects backslash path separators", (t) => {
+  const root = fixture(t);
+  writeVendoredSkillsConfiguration(root, [
+    {
+      source: "plugins/source/skills/shared",
+      targets: ["plugins/bundle/skills/..\\..\\..\\..\\victim"],
+    },
+  ]);
+
+  const problems = synchronizeVendoredSkills(root, true);
+  assert.ok(problems.some((problem) => problem.includes("invalid target path")));
+  assert.equal(existsSync(join(root, "victim")), false);
+});
+
 test("vendored drift is detected and repaired", (t) => {
   const root = fixture(t);
   assert.deepEqual(synchronizeVendoredSkills(root, true), []);
@@ -151,6 +166,26 @@ test("retiring an edge removes clean output and preserves local work", async (t)
       assert.ok(existsSync(join(root, localPath)));
     });
   }
+});
+
+test("committed edge retirement is compared with the branch base", (t) => {
+  const root = fixture(t);
+  assert.deepEqual(synchronizeVendoredSkills(root, true), []);
+  initializeGitRepository(root);
+  commitAll(root, "baseline");
+  git(root, "switch", "-c", "feature");
+  writeVendoredSkillsConfiguration(root, []);
+  commitAll(root, "remove vendoring edge");
+  writeText(join(root, "README.md"), "follow-up\n");
+  commitAll(root, "follow-up change");
+
+  assert.ok(
+    synchronizeVendoredSkills(root, false).some((problem) =>
+      problem.includes("stale generated copy"),
+    ),
+  );
+  assert.deepEqual(synchronizeVendoredSkills(root, true), []);
+  assert.equal(existsSync(join(root, "plugins/bundle/skills/shared")), false);
 });
 
 test("gitignored source files are never vendored", (t) => {
