@@ -1,17 +1,3 @@
-export declare const REGISTRY = "plugin-registry.json";
-export declare const LEGACY_REGISTRY = "scripts/dual-harness.json";
+export declare const VENDORED_SKILLS_CONFIGURATION = "vendored-skills.json";
 export declare const SYNC_COMMAND = "cypherpoet-plugin-sync";
 export declare const IGNORED_DIRECTORY_NAMES: Set<string>;
-export declare const CODEX_MANIFEST_CARRY: readonly ["author", "homepage", "repository", "license", "keywords"];
-export declare const SUPPORTED_CODEX_CATEGORIES: Set<string>;
-export declare const DISPLAY_NAME_MAX_LENGTH = 30;
-export declare const SHORT_DESCRIPTION_MAX_LENGTH = 30;
-export declare const PLUGIN_DESCRIPTION_MAX_LENGTH = 1024;
-export declare const LONG_DESCRIPTION_MAX_LENGTH = 4000;
-export declare const DEVELOPER_NAME_MAX_LENGTH = 80;
-export declare const CAPABILITY_MAX_COUNT = 20;
-export declare const CAPABILITY_MAX_LENGTH = 120;
-export declare const DEFAULT_PROMPT_MAX_COUNT = 3;
-export declare const DEFAULT_PROMPT_MAX_LENGTH = 128;
-export declare const SOURCE_HOMEPAGE_MAX_LENGTH = 2048;
-export declare const WEBSITE_URL_MAX_LENGTH = 1024;

@@ -31,11 +31,17 @@ export function writePluginManifest(root, name, fields = {}) {
   });
 }
 
-export function writePluginRegistry(root, vendoredSkills, dualPlugins, claudeOnly = {}) {
-  writeJson(join(root, "plugin-registry.json"), {
-    vendored_skills: vendoredSkills,
-    dual_harness_plugins: dualPlugins,
-    claude_only_plugins: claudeOnly,
+export function writeCodexPluginManifest(root, name, fields = {}) {
+  writeJson(join(root, `plugins/${name}/.codex-plugin/plugin.json`), {
+    name,
+    ...fields,
+  });
+}
+
+export function writeVendoredSkillsConfiguration(root, skills) {
+  writeJson(join(root, "vendored-skills.json"), {
+    _comment: "Each source is authoritative; targets are generated copies.",
+    skills,
   });
 }
 

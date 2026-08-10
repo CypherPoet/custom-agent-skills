@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import { resolve } from "node:path";
 import { SYNC_COMMAND } from "./constants.js";
-import { findRepositoryRoot, synchronizePlugins } from "./sync.js";
+import { findRepositoryRoot, synchronizeVendoredSkills } from "./sync.js";
 const defaultOutput = {
     stdout: (message) => console.log(message),
     stderr: (message) => console.error(message),
@@ -45,7 +45,7 @@ export function runCli(arguments_, output = defaultOutput) {
         output.stderr(error instanceof Error ? error.message : String(error));
         return 1;
     }
-    const problems = synchronizePlugins(root, !check);
+    const problems = synchronizeVendoredSkills(root, !check);
     if (problems.length > 0) {
         for (const problem of problems) {
             output.stderr(problem);

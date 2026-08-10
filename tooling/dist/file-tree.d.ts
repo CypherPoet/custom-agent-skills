@@ -1,5 +1,5 @@
 import { type SpawnSyncReturns } from "node:child_process";
-import { type FileTree, type PluginRegistry } from "./types.js";
+import { type FileTree, type VendoredSkillsConfiguration } from "./types.js";
 export declare function directoryIgnored(name: string): boolean;
 export declare function fileIgnored(name: string): boolean;
 export declare function runGit(root: string, arguments_: readonly string[]): SpawnSyncReturns<Buffer> | undefined;
@@ -10,7 +10,7 @@ export declare function writeTree(files: ReadonlyMap<string, Buffer>, destinatio
 export declare function fileTreesEqual(left: ReadonlyMap<string, Buffer>, right: ReadonlyMap<string, Buffer>): boolean;
 export declare function treeDigest(files: ReadonlyMap<string, Buffer>): string;
 export declare function validSkillPath(value: unknown): value is string;
-export declare function desiredVendorTargets(configuration: PluginRegistry): {
+export declare function desiredVendorTargets(configuration: VendoredSkillsConfiguration): {
     desired: Map<string, string>;
     problems: string[];
 };

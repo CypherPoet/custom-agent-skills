@@ -1,0 +1,42 @@
+{
+  "_comment": "Each source is authoritative; targets are generated copies.",
+  "skills": [
+    {
+      "source": "plugins/cypherpoet-webgl-kit/skills/webgl-mastery",
+      "targets": [
+        "plugins/cypherpoet-threejs-kit/skills/webgl-mastery",
+        "plugins/cypherpoet-react-three-fiber-kit/skills/webgl-mastery"
+      ]
+    },
+    {
+      "source": "plugins/cypherpoet-threejs-kit/skills/threejs-mastery",
+      "targets": [
+        "plugins/cypherpoet-react-three-fiber-kit/skills/threejs-mastery"
+      ]
+    },
+    {
+      "source": "plugins/cypherpoet-apple-app-store-screenshots/skills/apple-app-store-screenshots",
+      "targets": [
+        "plugins/cypherpoet-mobile-dev/skills/apple-app-store-screenshots"
+      ]
+    },
+    {
+      "source": "plugins/cypherpoet-emoji-commits/skills/emoji-commits",
+      "targets": [
+        "plugins/cypherpoet-git-flow/skills/emoji-commits"
+      ]
+    },
+    {
+      "source": "plugins/cypherpoet-changelog-maintenance/skills/changelog-maintenance",
+      "targets": [
+        "plugins/cypherpoet-git-flow/skills/changelog-maintenance"
+      ]
+    },
+    {
+      "source": ".claude/skills/skill-structure-check",
+      "targets": [
+        ".agents/skills/skill-structure-check"
+      ]
+    }
+  ]
+}

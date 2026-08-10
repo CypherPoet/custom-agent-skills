@@ -1,7 +1,7 @@
 import { rmSync, statSync } from "node:fs";
 import { resolve } from "node:path";
 
-import { REGISTRY, SYNC_COMMAND } from "./constants.js";
+import { SYNC_COMMAND, VENDORED_SKILLS_CONFIGURATION } from "./constants.js";
 import {
   baseVisibleFiles,
   desiredVendorTargets,
@@ -15,7 +15,7 @@ import {
   treeDigest,
   writeTree,
 } from "./file-tree.js";
-import type { FileTree, PluginRegistry } from "./types.js";
+import type { FileTree, VendoredSkillsConfiguration } from "./types.js";
 
 export interface VendoredSkillsPlan {
   targetTrees: Map<string, FileTree>;
@@ -25,7 +25,7 @@ export interface VendoredSkillsPlan {
 
 export function prepareVendoredSkillsPlan(
   root: string,
-  configuration: PluginRegistry,
+  configuration: VendoredSkillsConfiguration,
   write: boolean,
   visible: ReadonlySet<string> | undefined,
 ): VendoredSkillsPlan {
@@ -50,7 +50,8 @@ export function prepareVendoredSkillsPlan(
     }
     if (!write) {
       problems.push(
-        `[vendor] stale generated copy: ${target} (edge removed from ${REGISTRY}; run: ${SYNC_COMMAND})`,
+        `[vendor] stale generated copy: ${target} ` +
+          `(edge removed from ${VENDORED_SKILLS_CONFIGURATION}; run: ${SYNC_COMMAND})`,
       );
       continue;
     }
@@ -107,7 +108,7 @@ export function prepareVendoredSkillsPlan(
       if (matchingSource !== undefined) {
         problems.push(
           `[vendor] undeclared byte-identical copy of ${matchingSource}: ${skillDirectory} — ` +
-            "declare a vendored_skills edge, delete the directory, or change its content to adopt it as authored",
+            "declare a vendored skill edge, delete the directory, or change its content to adopt it as authored",
         );
       }
     }

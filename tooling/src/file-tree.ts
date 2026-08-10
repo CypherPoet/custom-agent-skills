@@ -14,10 +14,9 @@ import { spawnSync, type SpawnSyncReturns } from "node:child_process";
 
 import {
   IGNORED_DIRECTORY_NAMES,
-  LEGACY_REGISTRY,
-  REGISTRY,
+  VENDORED_SKILLS_CONFIGURATION,
 } from "./constants.js";
-import { isJsonObject, type FileTree, type PluginRegistry } from "./types.js";
+import { isJsonObject, type FileTree, type VendoredSkillsConfiguration } from "./types.js";
 
 function toPosixPath(value: string): string {
   return value.split(sep).join("/");
@@ -188,13 +187,13 @@ export function validSkillPath(value: unknown): value is string {
 }
 
 export function desiredVendorTargets(
-  configuration: PluginRegistry,
+  configuration: VendoredSkillsConfiguration,
 ): { desired: Map<string, string>; problems: string[] } {
   const desired = new Map<string, string>();
   const problems: string[] = [];
-  configuration.vendored_skills.forEach((edge, index) => {
+  configuration.skills.forEach((edge, index) => {
     if (!isJsonObject(edge)) {
-      problems.push(`[vendor] vendored_skills[${index}] must be an object`);
+      problems.push(`[vendor] skills[${index}] must be an object`);
       return;
     }
     const source = edge.source;
@@ -239,28 +238,22 @@ export function desiredVendorTargets(
 }
 
 export function previousVendorTargets(root: string): Set<string> {
-  for (const candidate of [REGISTRY, LEGACY_REGISTRY]) {
-    const text = gitText(root, ["show", `HEAD:${candidate}`]);
-    if (text === undefined) {
-      continue;
-    }
-    let configuration: unknown;
-    try {
-      configuration = JSON.parse(text);
-    } catch {
-      return new Set();
-    }
-    if (
-      !isJsonObject(configuration) ||
-      !Array.isArray(configuration.vendored_skills) ||
-      !isJsonObject(configuration.dual_harness_plugins) ||
-      !isJsonObject(configuration.claude_only_plugins)
-    ) {
-      return new Set();
-    }
-    return new Set(desiredVendorTargets(configuration as PluginRegistry).desired.keys());
+  const text = gitText(root, ["show", `HEAD:${VENDORED_SKILLS_CONFIGURATION}`]);
+  if (text === undefined) {
+    return new Set();
   }
-  return new Set();
+  let configuration: unknown;
+  try {
+    configuration = JSON.parse(text);
+  } catch {
+    return new Set();
+  }
+  if (!isJsonObject(configuration) || !Array.isArray(configuration.skills)) {
+    return new Set();
+  }
+  return new Set(
+    desiredVendorTargets(configuration as VendoredSkillsConfiguration).desired.keys(),
+  );
 }
 
 export function gitCleanUnder(root: string, relativePath: string): boolean {

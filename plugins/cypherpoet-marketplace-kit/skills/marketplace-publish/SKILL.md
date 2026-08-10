@@ -16,7 +16,7 @@ disable-model-invocation: true
 
 Publish one plugin from this source repo to a marketplace **catalog** by opening a pull request on the marketplace repo. Works for a single plugin or a set, in one PR. Runs on your local `gh` credentials — no GitHub Actions, no tokens.
 
-A marketplace repo carries **two catalog files**, one per harness: `.claude-plugin/marketplace.json` (Claude Code) and `.agents/plugins/marketplace.json` (Codex). One publish run keeps both in step — a dual-harness plugin gets an entry in each; a Claude-only plugin gets a Claude entry alone.
+A marketplace repo carries **two catalog files**, one per platform: `.claude-plugin/marketplace.json` (Claude Code) and `.agents/plugins/marketplace.json` (Codex). A publish run updates each catalog for which the plugin has a corresponding source manifest.
 
 Follow the procedure below with your normal tools (`gh`, `git`, `jq`); it's deliberately plain rather than a script so you can adapt to how many plugins are being published and to anything unusual in the catalog.
 
@@ -30,15 +30,16 @@ A marketplace's **catalog** only needs a change when you:
 - **add** a new plugin to it,
 - **remove** one,
 - **change a plugin's catalog metadata** — its `name`, `description`, or homepage, or
-- **change a plugin's harness classification or Codex `category`** in the source repo's `plugin-registry.json` (these drive the Codex catalog entry).
+- **add or remove a platform manifest**, or
+- **change Codex `name` or `interface.category`** in `.codex-plugin/plugin.json`.
 
 If the user is only editing an already-listed plugin's instructions, tell them no publish is needed.
 
 ## Before you start
 
 - `gh` is authenticated (`gh auth status`) with write access to the marketplace repo.
-- Each plugin to publish exists at `plugins/<name>/.claude-plugin/plugin.json`. If a plugin doesn't exist yet, scaffold it with Claude Code's [`/plugin-dev:create-plugin`](https://github.com/anthropics/claude-plugins-official/blob/main/plugins/plugin-dev/commands/create-plugin.md) or Codex's `$plugin-creator`, then confirm it's well-formed — `claude plugin validate plugins/<name>` where the `claude` CLI exists; otherwise check the manifest parses and carries `name`, `version`, and `description`. **Removals differ by cause**: a plugin **deleted** from the source repo has no manifest to read — skip this check and step 1 for it; step 3's removal commands are its whole path. A plugin **reclassified Claude-only** still exists and still has its manifest: only its Codex entry is removed (step 3), and if the same change also edited its `name`/`description`/`homepage`, run steps 1–3 for its Claude entry as usual — don't let the reclassification swallow a concurrent Claude-catalog update.
-- Run `npm run sync:check` in a dual-harness source repo. This verifies the generated Codex manifest and vendored skills before the plugin path is published.
+- Each plugin to publish has `.claude-plugin/plugin.json`, `.codex-plugin/plugin.json`, or both. Validate each present manifest with its platform tooling. A deleted platform manifest means remove only that platform's catalog entry; deleting the whole plugin removes both.
+- Run `npm run sync:check` in the source repo to verify vendored skills before publication.
 
 ## Which marketplace
 
@@ -46,9 +47,9 @@ Resolve this repo's `owner/repo` (`gh repo view --json nameWithOwner -q .nameWit
 
 ## Procedure
 
-The goal: **one PR on the marketplace repo** that adds or updates the chosen plugins' entries in both catalog files — `.claude-plugin/marketplace.json` (Claude Code) and `.agents/plugins/marketplace.json` (Codex).
+The goal: **one PR on the marketplace repo** that reconciles the chosen plugins in the applicable catalog files.
 
-1. **Build each entry.** For every plugin being published, read its `plugins/<name>/.claude-plugin/plugin.json` for `name`, `description`, and `homepage`. Form the Claude catalog entry (the source `url` is *this* repo, and Claude always installs the authored package under `plugins/`):
+1. **Build each entry.** If `plugins/<name>/.claude-plugin/plugin.json` exists, read its `name`, `description`, and `homepage`. Form the Claude catalog entry:
    ```json
    {
      "name": "<plugin>",
@@ -63,13 +64,13 @@ The goal: **one PR on the marketplace repo** that adds or updates the chosen plu
 
    To resolve `<owner>/<this-repo>` for the fallback, prefer `gh repo view --json nameWithOwner -q .nameWithOwner` on the source repo — it returns the canonical `owner/repo` regardless of remote protocol. If you fall back to `git remote get-url origin`, normalize the output: HTTPS form `https://github.com/<owner>/<repo>.git` and SSH form `git@github.com:<owner>/<repo>.git` both reduce to `<owner>/<repo>` after stripping the prefix and trailing `.git`. Never interpolate the raw remote string into the URL — an SSH origin produces a broken link like `https://github.com/git@github.com:<owner>/<repo>.git/tree/main/...`.
 
-   **Codex catalog entry.** Read the source repo's `plugin-registry.json`: a plugin listed under `dual_harness_plugins` also gets a Codex entry, carrying that plugin's `category` from the same file; a plugin under `claude_only_plugins` — or any plugin in a repo with no `plugin-registry.json` — is Claude-only, so skip its Codex entry and publish to the Claude catalog alone. Codex installs the same `plugins/<plugin>` directory as Claude Code and reads its own manifest and skill metadata there. The Codex entry (`policy` is constant; for `ref`, resolve the source repo's default branch — `gh repo view <owner>/<this-repo> --json defaultBranchRef -q .defaultBranchRef.name` — rather than assuming `main`):
+   **Codex catalog entry.** If `plugins/<name>/.codex-plugin/plugin.json` exists, read its `name` and `interface.category`. Codex installs the same plugin directory and reads that authored manifest. The entry uses constant policy; resolve `ref` from the source repository's default branch instead of assuming `main`:
    ```json
    {
      "name": "<plugin>",
      "source": { "source": "git-subdir", "url": "https://github.com/<owner>/<this-repo>.git", "path": "plugins/<plugin>", "ref": "<default-branch>" },
      "policy": { "installation": "AVAILABLE", "authentication": "ON_INSTALL" },
-     "category": "<from plugin-registry.json>"
+     "category": "<from .codex-plugin/plugin.json interface.category>"
    }
    ```
 
@@ -86,15 +87,14 @@ The goal: **one PR on the marketplace repo** that adds or updates the chosen plu
 
    Apply the same merge to the Codex catalog at `.agents/plugins/marketplace.json` for every Codex entry built in step 1. If that file doesn't exist yet, create it first as `{"name": "<marketplace-name>", "interface": {"displayName": "<Codex-display-name>"}, "plugins": []}`, where `<marketplace-name>` matches the `name` field in `.claude-plugin/marketplace.json` and `<Codex-display-name>` comes from the mapping registry. If the file already exists, verify that both top-level fields match the mapping before editing plugin entries; do not silently replace an unexpected marketplace identity.
 
-   **Removals.** The merge above only adds or updates — handle removals explicitly (no manifest is read; the plugin may no longer exist in the source repo):
-   - A plugin **deleted from the source repo** comes out of **both** catalog files:
+   **Removals.** The merge above only adds or updates. Remove an entry when its corresponding source manifest no longer exists. A plugin deleted from the source repo comes out of both files:
      ```bash
      jq --arg n "<plugin>" '.plugins = ((.plugins // []) | map(select(.name != $n)))' \
        .claude-plugin/marketplace.json > tmp && mv tmp .claude-plugin/marketplace.json
      jq --arg n "<plugin>" '.plugins = ((.plugins // []) | map(select(.name != $n)))' \
        .agents/plugins/marketplace.json > tmp && mv tmp .agents/plugins/marketplace.json
      ```
-   - A plugin **reclassified from `dual_harness_plugins` to `claude_only_plugins`** comes out of the **Codex catalog only** (run just the second command) — its Claude entry stays published.
+   If only one platform manifest was removed, run only that platform's removal command; the other catalog entry remains published.
    - If `.agents/plugins/marketplace.json` doesn't exist (a marketplace that has never published Codex entries), skip the Codex removal command — don't create the file just to delete from it.
 
    Confirm both files still parse (`jq empty`).

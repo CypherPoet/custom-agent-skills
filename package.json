@@ -1,7 +1,7 @@
 {
   "name": "@cypherpoet/plugin-sync",
   "version": "0.1.0",
-  "description": "Generates Codex plugin manifests and checks CypherPoet repository consistency.",
+  "description": "Synchronizes vendored skills and checks CypherPoet plugin repositories.",
   "private": true,
   "type": "module",
   "license": "MIT",

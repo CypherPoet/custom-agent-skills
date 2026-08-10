@@ -1,17 +1,10 @@
 export {
   findRepositoryRoot,
-  synchronizePlugins,
+  synchronizeVendoredSkills,
 } from "./sync.js";
 export {
-  buildCodexManifest,
-} from "./codex-manifest.js";
-export {
-  normalizedUniquenessKey,
-  validateAuthoredRegistryInterface,
-  validateCodexSubmissionInterface,
-  validateGeneratedCodexInterface,
-  validateRepositoryInterfacePolicy,
-} from "./codex-submission-preflight.js";
+  auditPluginManifests,
+} from "./plugin-manifests.js";
 export {
   authoredClaudePluginPaths,
   validateAuthoredClaudePlugins,

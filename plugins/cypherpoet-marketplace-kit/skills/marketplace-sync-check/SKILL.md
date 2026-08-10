@@ -41,10 +41,11 @@ The two surfaces drift independently and are *not* reconciled the same way:
 
    When comparing `homepage`, mirror `marketplace-publish`'s fallback rule: if the local manifest has no `homepage` (or it's empty), derive the expected fallback `https://github.com/<owner>/<this-repo>/tree/<default-branch>/plugins/<name>` (resolving the source repo's default branch, as `marketplace-publish` does) and compare against *that* instead of treating the field as a mismatch. This keeps the two skills symmetric — a plugin published with the fallback URL stays in sync until the manifest itself changes.
 
-5. **Compare the Codex catalog** against the source repo's `plugin-registry.json` classification (if the repo has no such file, every plugin is Claude-only and the Codex catalog should list none of them). Only plugins under `dual_harness_plugins` belong in the Codex file; expected entry fields are the `git-subdir` source pointing at this repo **with `ref` set to the source repo's resolved default branch** (`marketplace-publish` writes it — an expected entry has a `ref`, so don't flag every published entry as CHANGED for carrying one), the `category` from `plugin-registry.json`, and the constant `policy` (`installation: AVAILABLE`, `authentication: ON_INSTALL`). The canonical entry shape lives in `marketplace-publish` step 1 — keep the two skills in step, and note the marketplace repo's `scripts/catalog-health.mjs` enforces the same shape in its CI via pinned constants, so shape changes must land there too. Report the same buckets:
-   - **NEW** — a `dual_harness_plugins` plugin already in the *Claude* catalog but missing from the Codex catalog (an unpublished plugin missing from both is one `NEW`, not two).
-   - **CHANGED** — listed, but the `category`, `source`, or `policy` differs from what `plugin-registry.json` + this repo imply (a missing or wrong `policy.installation`/`policy.authentication` counts — Codex documents both as required).
-   - **REMOVED** — a Codex entry whose plugin is gone from `plugins/` *or* is now classified `claude_only_plugins`. Note which of the two causes applies — the remediation differs (see [Reporting](#reporting)).
+5. **Compare the Codex catalog** independently against local `plugins/*/.codex-plugin/plugin.json`. Manifest presence declares Codex support. Expected entries use the `git-subdir` source pointing at the shared plugin directory, the source repository's resolved default branch, `interface.category` from the Codex manifest, and the constant policy (`installation: AVAILABLE`, `authentication: ON_INSTALL`). Report:
+   - **NEW** — a Codex manifest exists locally but the plugin is not published in the Codex catalog. This is expected until someone chooses to publish it.
+   - **CHANGED** — the catalog `name`, `category`, source, or policy differs from the authored Codex manifest and repository contract.
+   - **REMOVED** — a Codex catalog entry exists but its source Codex manifest no longer does. Remove only the Codex entry when the Claude manifest remains.
+   - **invalid** — the Codex manifest does not parse or lacks the data needed to build an entry.
 
 ## Local catalog (`docs/CATALOG.md`)
 
@@ -66,7 +67,7 @@ The manifest is the source of truth for `description` (the row should match it v
 
 Present both surfaces plainly, each clearly labelled, and stop. Then hand off — don't fix anything yourself:
 
-- **Marketplace** (either catalog) `NEW`/`CHANGED` → `marketplace-publish <name>` (one run reconciles both harness catalogs). `REMOVED` → route by cause, per `marketplace-publish`'s removal rules: a plugin **deleted** from the repo comes out of **both** catalog files, while one merely **reclassified to `claude_only_plugins`** comes out of the **Codex catalog only** — its still-valid Claude entry stays published. `NEW` is expected for anything not yet deliberately published, so don't frame it as a mistake.
+- **Marketplace** (either catalog) `NEW`/`CHANGED` → `marketplace-publish <name>`. `REMOVED` → remove the entry only from the platform whose manifest disappeared; deleting the whole plugin removes both. `NEW` is expected for anything not yet deliberately published, so do not frame it as a mistake.
 - **`docs/CATALOG.md`** missing / stale / orphan rows → regenerate the table with the `catalog-refresh` skill (or fix by hand) and commit it — a normal docs change. **Not** `marketplace-publish`; the local catalog isn't the marketplace.
 
 **Do not modify anything** unless the user explicitly asks.

@@ -1,7 +1,12 @@
 import { resolve } from "node:path";
 import { spawnSync } from "node:child_process";
 import { directoryIgnored, fileIgnored } from "./file-tree.js";
-const manifestTemplate = "plugins/{plugin}/.claude-plugin/plugin.json";
+import { parsePluginVersion } from "./plugin-manifests.js";
+import { isJsonObject } from "./types.js";
+const manifestPaths = [
+    ["Claude", "plugins/{plugin}/.claude-plugin/plugin.json"],
+    ["Codex", "plugins/{plugin}/.codex-plugin/plugin.json"],
+];
 const defaultOutput = {
     stdout: (message) => console.log(message),
     stderr: (message) => console.error(message),
@@ -28,18 +33,6 @@ export function shippedPluginForPath(relativePath) {
     const filename = parts.at(-1);
     return filename !== undefined && !fileIgnored(filename) ? parts[1] : undefined;
 }
-export function parseSemanticVersion(version) {
-    if (typeof version !== "string" || !/^\d+\.\d+\.\d+$/u.test(version)) {
-        return undefined;
-    }
-    const fields = version.split(".").map(Number);
-    const major = fields[0];
-    const minor = fields[1];
-    const patch = fields[2];
-    return major === undefined || minor === undefined || patch === undefined
-        ? undefined
-        : [major, minor, patch];
-}
 function versionGreaterThan(left, right) {
     for (let index = 0; index < 3; index += 1) {
         const leftField = left[index];
@@ -50,23 +43,40 @@ function versionGreaterThan(left, right) {
     }
     return false;
 }
-function versionAt(root, reference, plugin) {
-    const path = manifestTemplate.replace("{plugin}", plugin);
-    const result = git(root, ["show", `${reference}:${path}`]);
-    if (result.status !== 0) {
+function pluginVersionAt(root, reference, plugin) {
+    const versions = [];
+    for (const [harness, template] of manifestPaths) {
+        const path = template.replace("{plugin}", plugin);
+        const result = git(root, ["show", `${reference}:${path}`]);
+        if (result.status !== 0) {
+            continue;
+        }
+        let manifest;
+        try {
+            manifest = JSON.parse(result.stdout);
+        }
+        catch (error) {
+            throw new Error(`${path} at ${reference} is malformed: ${String(error)}`);
+        }
+        if (!isJsonObject(manifest)) {
+            throw new Error(`${path} at ${reference} is malformed: manifest must be a JSON object`);
+        }
+        versions.push({ harness, version: manifest.version });
+    }
+    if (versions.length === 0) {
         return undefined;
     }
-    let value;
-    try {
-        value = JSON.parse(result.stdout);
+    const first = versions[0];
+    if (first === undefined) {
+        return undefined;
     }
-    catch (error) {
-        throw new Error(`${path} at ${reference} is malformed: ${String(error)}`);
+    for (const entry of versions.slice(1)) {
+        if (entry.version !== first.version) {
+            throw new Error(`plugins/${plugin} at ${reference} has mismatched manifest versions: ` +
+                versions.map(({ harness, version }) => `${harness}=${JSON.stringify(version)}`).join(", "));
+        }
     }
-    if (typeof value !== "object" || value === null || Array.isArray(value)) {
-        throw new Error(`${path} at ${reference} is malformed: manifest must be a JSON object`);
-    }
-    return value.version;
+    return first.version;
 }
 function resolveBase(root, base) {
     const candidates = [base, `origin/${base}`].filter((reference) => git(root, ["rev-parse", "--verify", "--quiet", `${reference}^{commit}`]).status === 0);
@@ -123,14 +133,14 @@ export function runVersionBumpCheck(rootPath, baseArgument = "main", output = de
     const problems = [];
     try {
         for (const plugin of Array.from(touched.keys()).sort()) {
-            const before = versionAt(root, mergeBase, plugin);
-            const head = versionAt(root, "HEAD", plugin);
+            const before = pluginVersionAt(root, mergeBase, plugin);
+            const head = pluginVersionAt(root, "HEAD", plugin);
             if (before === undefined || head === undefined) {
                 continue;
             }
-            const tip = versionAt(root, base, plugin);
-            const beforeParts = parseSemanticVersion(before);
-            const headParts = parseSemanticVersion(head);
+            const tip = pluginVersionAt(root, base, plugin);
+            const beforeParts = parsePluginVersion(before);
+            const headParts = parsePluginVersion(head);
             if (headParts === undefined) {
                 problems.push({ plugin, reason: `version ${JSON.stringify(head)} is not major.minor.patch` });
             }
@@ -159,8 +169,7 @@ export function runVersionBumpCheck(rootPath, baseArgument = "main", output = de
     for (const { plugin, reason } of problems) {
         output.stdout(`  ${plugin.padEnd(width)}  (${reason})`);
     }
-    output.stdout("\nBump each plugin's version in .claude-plugin/plugin.json, then re-run\n" +
-        "`npm run sync` so the Codex manifest matches.");
+    output.stdout("\nBump the version in every platform manifest that the plugin supports, then re-run the check.");
     return 1;
 }
 //# sourceMappingURL=version-bumps.js.map

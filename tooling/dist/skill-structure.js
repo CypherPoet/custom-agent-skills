@@ -1,6 +1,6 @@
 import { existsSync, readFileSync, readdirSync, statSync, } from "node:fs";
 import { dirname, join, normalize, relative, resolve, sep } from "node:path";
-import { synchronizePlugins } from "./sync.js";
+import { synchronizeVendoredSkills } from "./sync.js";
 export const SKILL_LINE_LIMIT = 500;
 export const SKILL_LINE_WARNING = 450;
 export const REFERENCE_CONTENTS_THRESHOLD = 300;
@@ -293,8 +293,8 @@ export function runSkillStructureCheck(rootPath, strict, output = defaultOutput)
     }
     const audit = auditSkillStructure(resolve(root, "plugins"));
     const tiers = factCheckTierFindings(root, audit.units, audit.unitsWithSources);
-    for (const message of synchronizePlugins(root, false)) {
-        audit.errors.push(["dual-harness", "sync", message]);
+    for (const message of synchronizeVendoredSkills(root, false)) {
+        audit.errors.push(["vendoring", "sync", message]);
     }
     if (audit.errors.length === 0 &&
         audit.warnings.length === 0 &&

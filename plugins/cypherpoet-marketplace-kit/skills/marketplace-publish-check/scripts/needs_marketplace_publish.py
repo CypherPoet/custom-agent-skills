@@ -1,25 +1,9 @@
 #!/usr/bin/env python3
-"""Read-only check: does the current branch require a marketplace-publish?
+"""Report source changes that require marketplace catalog publication.
 
-Diffs the *marketplace catalog surface* between a base ref (default: main) and
-HEAD, and reports the plugins whose surface changed:
-  - every plugins/*/.claude-plugin/plugin.json — a plugin added or removed, or
-    its name / description / homepage edited (the Claude catalog fields);
-  - plugin-registry.json — a plugin's dual-harness classification or
-    `category` changed (the Codex catalog surface).
-A version-only bump does NOT count: that's content, gated by the version key,
-and reaches installs without a catalog re-publish.
-
-Both snapshots are taken at the merge base of the base ref and HEAD, so changes
-that landed on the base after this branch forked are never attributed to it.
-
-Use it when opening a PR to decide whether to apply the `marketplace-publish`
-label. Stdlib only — no jq, no network. Exit status is 1 when a publish is
-needed (something actionable), else 0; 2 on error (including a malformed
-plugin-registry.json or plugin manifest — never silently treated as a
-catalog removal).
-
-Usage: python3 .../needs_marketplace_publish.py [base-ref]   # base-ref defaults to "main"
+Claude and Codex support are declared by their respective plugin manifests.
+Only fields copied into a marketplace catalog count here; version and other
+plugin-card changes ship with plugin content and do not require catalog edits.
 """
 
 import json
@@ -27,140 +11,146 @@ import subprocess
 import sys
 from pathlib import Path
 
-# The manifest fields the Claude marketplace catalog (marketplace.json) actually stores.
-CATALOG_FIELDS = ("name", "description", "homepage")
-MANIFEST_GLOB = "plugins/*/.claude-plugin/plugin.json"
-# The config whose classification + categories the Codex catalog stores.
-PLUGIN_REGISTRY_PATH = "plugin-registry.json"
-# Historical base commits used these locations. Marketplace comparison must
-# still read them when a branch crosses either rename boundary.
-HISTORICAL_REGISTRY_PATHS = (
-    "scripts/plugin-registry.json",
-    "scripts/dual-harness.json",
-)
+
+CLAUDE_CATALOG_FIELDS = ("name", "description", "homepage")
+CLAUDE_MANIFEST_GLOB = "plugins/*/.claude-plugin/plugin.json"
+CODEX_MANIFEST_GLOB = "plugins/*/.codex-plugin/plugin.json"
 
 
 def git(root, *args):
-    return subprocess.run(["git", "-C", str(root), *args], capture_output=True, text=True, encoding="utf-8")
+    return subprocess.run(
+        ["git", "-C", str(root), *args],
+        capture_output=True,
+        text=True,
+        encoding="utf-8",
+    )
 
 
 def repo_root():
-    res = subprocess.run(["git", "rev-parse", "--show-toplevel"], capture_output=True, text=True, encoding="utf-8")
-    return Path(res.stdout.strip()) if res.returncode == 0 else Path.cwd()
+    result = subprocess.run(
+        ["git", "rev-parse", "--show-toplevel"],
+        capture_output=True,
+        text=True,
+        encoding="utf-8",
+    )
+    return Path(result.stdout.strip()) if result.returncode == 0 else Path.cwd()
 
 
-def signature(root, ref, path):
-    """The catalog fields of <path> at <ref>, or None if the file is absent there.
-
-    A file that exists but is malformed raises ValueError: that's an error to
-    surface (exit 2), never silently read as an addition or removal."""
-    res = git(root, "show", f"{ref}:{path}")
-    if res.returncode != 0:
+def manifest(root, ref, path):
+    result = git(root, "show", f"{ref}:{path}")
+    if result.returncode != 0:
         return None
     try:
-        data = json.loads(res.stdout)
-    except json.JSONDecodeError as e:
-        raise ValueError(f"{path} at {ref} is malformed: {e}")
-    if not isinstance(data, dict):
+        value = json.loads(result.stdout)
+    except json.JSONDecodeError as error:
+        raise ValueError(f"{path} at {ref} is malformed: {error}") from error
+    if not isinstance(value, dict):
         raise ValueError(f"{path} at {ref} is malformed: manifest must be a JSON object")
-    return {k: data.get(k) for k in CATALOG_FIELDS}
+    return value
+
+
+def claude_signature(value):
+    return {field: value.get(field) for field in CLAUDE_CATALOG_FIELDS}
+
+
+def codex_signature(value):
+    interface = value.get("interface")
+    if not isinstance(interface, dict):
+        raise ValueError("Codex manifest interface must be a JSON object")
+    return {"name": value.get("name"), "category": interface.get("category")}
 
 
 def plugin_name(path):
-    # path is plugins/<name>/.claude-plugin/plugin.json
     return Path(path).parts[1]
 
 
-def codex_entries(root, ref):
-    """Codex catalog fields derived from the plugin registry at <ref>.
-
-    Membership captures the dual-harness classification. Category is copied into
-    a per-plugin Codex catalog entry; interface metadata stays in the generated
-    plugin manifest and must not request a catalog publish. {} when the file doesn't
-    exist at <ref>. A malformed file raises ValueError instead of looking like a
-    mass catalog removal."""
-    for shown_path in (PLUGIN_REGISTRY_PATH, *HISTORICAL_REGISTRY_PATHS):
-        res = git(root, "show", f"{ref}:{shown_path}")
-        if res.returncode == 0:
-            break
-    else:
-        return {}
-    try:
-        entries = json.loads(res.stdout).get("dual_harness_plugins", {})
-        if not isinstance(entries, dict) or not all(isinstance(v, dict) for v in entries.values()):
-            raise ValueError("dual_harness_plugins entries must be objects")
-        return {
-            name: {"category": metadata.get("category")}
-            for name, metadata in entries.items()
-        }
-    except (json.JSONDecodeError, AttributeError, ValueError) as e:
-        raise ValueError(f"{shown_path} at {ref} is malformed: {e}")
-
-
 def merge_base(root, base):
-    """SHA of the merge base of <base> and HEAD; falls back to <base> when unresolvable."""
-    res = git(root, "merge-base", base, "HEAD")
-    sha = res.stdout.strip()
-    return sha if res.returncode == 0 and sha else base
+    result = git(root, "merge-base", base, "HEAD")
+    sha = result.stdout.strip()
+    return sha if result.returncode == 0 and sha else base
+
+
+def changed_paths(root, base):
+    result = git(
+        root,
+        "diff",
+        "--name-only",
+        "--no-renames",
+        "--diff-filter=AMD",
+        f"{base}...HEAD",
+        "--",
+        CLAUDE_MANIFEST_GLOB,
+        CODEX_MANIFEST_GLOB,
+    )
+    if result.returncode != 0:
+        raise RuntimeError(f"could not diff {base}...HEAD ({result.stderr.strip()})")
+    return [line for line in result.stdout.splitlines() if line.strip()]
 
 
 def main():
     base = sys.argv[1] if len(sys.argv) > 1 else "main"
     root = repo_root()
-    # Snapshot "before" at the merge base, not the base tip — the diff below already uses
-    # merge-base semantics (base...HEAD), so reading file contents at the tip would blame
-    # this branch for changes that landed on the base after it forked.
-    mb = merge_base(root, base)
-
-    # --no-renames: git's rename detection would report a renamed plugin as a single
-    # R pair that --diff-filter=AMD silently drops, hiding a remove+add surface change.
-    diff = git(root, "diff", "--name-only", "--no-renames", "--diff-filter=AMD", f"{base}...HEAD", "--", MANIFEST_GLOB)
-    if diff.returncode != 0:
-        print(f"ERROR: could not diff {base}...HEAD ({diff.stderr.strip()})", file=sys.stderr)
-        return 2
-
+    before_ref = merge_base(root, base)
     reasons_by_plugin = {}
 
     def flag(name, reason):
         reasons_by_plugin.setdefault(name, []).append(reason)
 
     try:
-        for path in (line for line in diff.stdout.splitlines() if line.strip()):
-            before = signature(root, mb, path)
-            after = signature(root, "HEAD", path)
+        paths = changed_paths(root, base)
+        for path in paths:
+            before_manifest = manifest(root, before_ref, path)
+            after_manifest = manifest(root, "HEAD", path)
+            is_codex = "/.codex-plugin/" in path
+            signature = codex_signature if is_codex else claude_signature
+            before = None if before_manifest is None else signature(before_manifest)
+            after = None if after_manifest is None else signature(after_manifest)
             if before == after:
-                continue  # manifest touched, but catalog fields unchanged (e.g. a version-only bump)
-            if before is None:
-                reason = "added"
+                continue
+
+            if is_codex:
+                if before is None:
+                    reason = "added to the Codex catalog surface"
+                elif after is None:
+                    reason = "left the Codex catalog surface"
+                else:
+                    changed = sorted(
+                        field for field in set(before) | set(after)
+                        if before.get(field) != after.get(field)
+                    )
+                    reason = "changed Codex " + ", ".join(changed)
+            elif before is None:
+                reason = "added to the Claude catalog surface"
             elif after is None:
-                reason = "removed"
+                reason = "left the Claude catalog surface"
             else:
-                reason = "changed " + ", ".join(k for k in CATALOG_FIELDS if before.get(k) != after.get(k))
+                changed = [
+                    field for field in CLAUDE_CATALOG_FIELDS
+                    if before.get(field) != after.get(field)
+                ]
+                reason = "changed Claude " + ", ".join(changed)
             flag(plugin_name(path), reason)
-
-        before_codex = codex_entries(root, mb)
-        after_codex = codex_entries(root, "HEAD")
-    except ValueError as e:
-        print(f"ERROR: {e}", file=sys.stderr)
+    except (RuntimeError, ValueError) as error:
+        print(f"ERROR: {error}", file=sys.stderr)
         return 2
-    for name in set(before_codex) | set(after_codex):
-        if name not in before_codex:
-            flag(name, "added to the Codex catalog surface")
-        elif name not in after_codex:
-            flag(name, "left the Codex catalog surface")
-        elif before_codex[name] != after_codex[name]:
-            b, a = before_codex[name], after_codex[name]
-            changed = sorted(k for k in set(b) | set(a) if b.get(k) != a.get(k))
-            flag(name, "changed Codex " + ", ".join(changed))
 
-    affected = sorted((name, "; ".join(reasons)) for name, reasons in reasons_by_plugin.items())
+    affected = sorted(
+        (name, "; ".join(reasons))
+        for name, reasons in reasons_by_plugin.items()
+    )
     if not affected:
-        print(f"marketplace-publish-check — no catalog-surface change vs {base}. No publish needed.")
+        print(
+            f"marketplace-publish-check — no catalog-surface change vs {base}. "
+            "No publish needed."
+        )
         return 0
 
     plural = "plugin" if len(affected) == 1 else "plugins"
     verb = "needs" if len(affected) == 1 else "need"
-    print(f"marketplace-publish-check — {len(affected)} {plural} {verb} a marketplace-publish vs {base}:\n")
+    print(
+        f"marketplace-publish-check — {len(affected)} {plural} {verb} "
+        f"a marketplace-publish vs {base}:\n"
+    )
     width = max(len(name) for name, _ in affected)
     for name, reason in affected:
         print(f"  {name:<{width}}  ({reason})")

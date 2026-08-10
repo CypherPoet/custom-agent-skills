@@ -3,7 +3,7 @@
 import { resolve } from "node:path";
 
 import { SYNC_COMMAND } from "./constants.js";
-import { findRepositoryRoot, synchronizePlugins } from "./sync.js";
+import { findRepositoryRoot, synchronizeVendoredSkills } from "./sync.js";
 
 interface CliOutput {
   stdout(message: string): void;
@@ -53,7 +53,7 @@ export function runCli(arguments_: readonly string[], output: CliOutput = defaul
     return 1;
   }
 
-  const problems = synchronizePlugins(root, !check);
+  const problems = synchronizeVendoredSkills(root, !check);
   if (problems.length > 0) {
     for (const problem of problems) {
       output.stderr(problem);

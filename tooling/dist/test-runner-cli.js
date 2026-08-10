@@ -3,8 +3,9 @@ import { spawnSync } from "node:child_process";
 import { existsSync, readdirSync } from "node:fs";
 import { resolve } from "node:path";
 import { validateAuthoredClaudePlugins } from "./claude-plugin-validation.js";
+import { auditPluginManifests } from "./plugin-manifests.js";
 import { runSkillStructureCheck } from "./skill-structure.js";
-import { findRepositoryRoot, synchronizePlugins } from "./sync.js";
+import { findRepositoryRoot, synchronizeVendoredSkills } from "./sync.js";
 import { runVersionBumpCheck } from "./version-bumps.js";
 function run(root, command, arguments_, environment = process.env) {
     const result = spawnSync(command, arguments_, {
@@ -72,7 +73,7 @@ function main(arguments_) {
             return buildStatus;
         }
     }
-    const syncProblems = synchronizePlugins(root, false);
+    const syncProblems = synchronizeVendoredSkills(root, false);
     if (syncProblems.length > 0) {
         for (const problem of syncProblems) {
             console.error(problem);
@@ -80,6 +81,14 @@ function main(arguments_) {
         return 1;
     }
     console.log("plugin sync: checked (no issues)");
+    const manifestAudit = auditPluginManifests(root);
+    if (manifestAudit.problems.length > 0) {
+        for (const problem of manifestAudit.problems) {
+            console.error(problem);
+        }
+        return 1;
+    }
+    console.log("plugin manifests: checked (no issues)");
     const structureStatus = runSkillStructureCheck(root, true);
     if (structureStatus !== 0) {
         return structureStatus;

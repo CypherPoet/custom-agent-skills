@@ -9,17 +9,17 @@ Composition is by **vendoring, not dependencies**: neither harness resolves a re
 ## Map
 
 - [`docs/PLUGIN-CONVENTIONS.md`](docs/PLUGIN-CONVENTIONS.md) — **source of truth** for the plugin authoring workflow and repository choices.
-- [`plugin-registry.json`](plugin-registry.json) — harness targeting, Codex interface metadata, and skill-sharing edges.
-- [`tooling/README.md`](tooling/README.md) — generator inputs and outputs and validation ownership for the shared [`@cypherpoet/plugin-sync`](package.json) package.
+- [`vendored-skills.json`](vendored-skills.json) — authoritative sources and generated targets for shared skills.
+- [`tooling/README.md`](tooling/README.md) — vendoring, manifest checks, and validation ownership for the shared [`@cypherpoet/plugin-sync`](package.json) package.
 - [`docs/CATALOG.md`](docs/CATALOG.md) — generated cross-plugin index.
 - [`docs/automated-routines/skill-fact-check-manifest.json`](docs/automated-routines/skill-fact-check-manifest.json) — per-skill fact-check volatility tiers.
 
 ## Working In This Repo
 
-- **Edit authored sources, not generated output.** Shared package metadata lives in `.claude-plugin/plugin.json`; supported Codex interface metadata lives in `plugin-registry.json`. `npm run sync` replaces `.codex-plugin/plugin.json` and vendored skill copies.
-- Run `npm run sync` after editing a `.claude-plugin/plugin.json`, the registry, or the source of a vendored skill.
+- Platform manifests are authored files. Edit `.claude-plugin/plugin.json` or `.codex-plugin/plugin.json` directly for the platform it configures.
+- Run `npm run sync` after editing [`vendored-skills.json`](vendored-skills.json) or the source of a vendored skill. Never hand-edit a vendored target.
 - Run `npm run validate:claude` for the pinned official strict Claude validation without the rest of the repository suite.
-- **Bump a plugin's `version` whenever its content should reach installed users** — merging to `main` alone won't ship it. Re-run the sync after any bump; the health suite fails when content changed without one.
+- **Bump every supported manifest to the same version whenever a plugin's shipped content changes** — merging to `main` alone will not update existing installations.
 - Run `npm run structure:check` before a PR that touches skills.
 - Run `npm test` before any PR; [`.github/workflows/verify.yml`](.github/workflows/verify.yml) runs the same suite on every PR and push to `main`.
 - Run `marketplace-publish-check` when opening a PR, and apply the `marketplace-publish` label if it reports a needed publish. A merged label publishes automatically — the manual-only `marketplace-publish` skill is the fallback, and never self-triggers.

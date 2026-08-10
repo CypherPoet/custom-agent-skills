@@ -50,17 +50,6 @@ def write_plugin_manifest(root, name, **fields):
     )
 
 
-def write_plugin_registry(root, vendored_skills, dual_plugins, claude_only=None):
-    write_json(
-        root / "plugin-registry.json",
-        {
-            "vendored_skills": vendored_skills,
-            "dual_harness_plugins": dual_plugins,
-            "claude_only_plugins": claude_only or {},
-        },
-    )
-
-
 def run(command, cwd, check=True, env=None):
     return subprocess.run(
         command,

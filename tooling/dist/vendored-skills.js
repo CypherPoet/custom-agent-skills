@@ -1,6 +1,6 @@
 import { rmSync, statSync } from "node:fs";
 import { resolve } from "node:path";
-import { REGISTRY, SYNC_COMMAND } from "./constants.js";
+import { SYNC_COMMAND, VENDORED_SKILLS_CONFIGURATION } from "./constants.js";
 import { baseVisibleFiles, desiredVendorTargets, fileTreesEqual, gitCleanUnder, pathExistsOrIsSymbolicLink, pathIsSymbolicLink, previousVendorTargets, readTree, skillDirectories, treeDigest, writeTree, } from "./file-tree.js";
 export function prepareVendoredSkillsPlan(root, configuration, write, visible) {
     const { desired: desiredTargets, problems } = desiredVendorTargets(configuration);
@@ -21,7 +21,8 @@ export function prepareVendoredSkillsPlan(root, configuration, write, visible) {
             continue;
         }
         if (!write) {
-            problems.push(`[vendor] stale generated copy: ${target} (edge removed from ${REGISTRY}; run: ${SYNC_COMMAND})`);
+            problems.push(`[vendor] stale generated copy: ${target} ` +
+                `(edge removed from ${VENDORED_SKILLS_CONFIGURATION}; run: ${SYNC_COMMAND})`);
             continue;
         }
         if (pathIsSymbolicLink(destination) ||
@@ -68,7 +69,7 @@ export function prepareVendoredSkillsPlan(root, configuration, write, visible) {
             const matchingSource = sourceDigests.get(treeDigest(files));
             if (matchingSource !== undefined) {
                 problems.push(`[vendor] undeclared byte-identical copy of ${matchingSource}: ${skillDirectory} — ` +
-                    "declare a vendored_skills edge, delete the directory, or change its content to adopt it as authored");
+                    "declare a vendored skill edge, delete the directory, or change its content to adopt it as authored");
             }
         }
     }

@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { rmSync } from "node:fs";
+import { readFileSync, rmSync } from "node:fs";
 import { join } from "node:path";
 import test from "node:test";
 
@@ -13,12 +13,14 @@ import {
   writeText,
 } from "./support.mjs";
 
-function writeManifest(root, version, name = "example") {
-  writeJson(join(root, `plugins/${name}/.claude-plugin/plugin.json`), {
-    name,
-    version,
-    description: "Fixture plugin",
-  });
+function writeManifest(root, version, name = "example", harnesses = ["claude", "codex"]) {
+  for (const harness of harnesses) {
+    writeJson(join(root, `plugins/${name}/.${harness}-plugin/plugin.json`), {
+      name,
+      version,
+      description: "Fixture plugin",
+    });
+  }
 }
 
 function writeSkill(root, body, name = "example") {
@@ -150,6 +152,86 @@ test("malformed manifests are errors, never silent passes", (t) => {
   const result = captureCheck(root);
   assert.equal(result.status, 2);
   assert.match(result.stderr, /manifest must be a JSON object/u);
+});
+
+test("platform-specific manifest changes require the shared version bump", async (t) => {
+  await t.test("missing bump", (caseContext) => {
+    const root = fixture(caseContext);
+    git(root, "switch", "-c", "feature");
+    const path = join(root, "plugins/example/.codex-plugin/plugin.json");
+    const manifest = JSON.parse(readFileSync(path, "utf8"));
+    manifest.interface = { displayName: "Example" };
+    writeJson(path, manifest);
+    commitAll(root, "edit Codex metadata");
+    assert.equal(captureCheck(root).status, 1);
+  });
+
+  await t.test("matching bump", (caseContext) => {
+    const root = fixture(caseContext);
+    git(root, "switch", "-c", "feature");
+    const path = join(root, "plugins/example/.codex-plugin/plugin.json");
+    const manifest = JSON.parse(readFileSync(path, "utf8"));
+    manifest.interface = { displayName: "Example" };
+    writeJson(path, manifest);
+    writeManifest(root, "0.2.0");
+    commitAll(root, "edit Codex metadata and bump");
+    assert.equal(captureCheck(root).status, 0);
+  });
+});
+
+test("single-platform plugins use their sole manifest version", async (t) => {
+  for (const harness of ["claude", "codex"]) {
+    await t.test(harness, (caseContext) => {
+      const root = temporaryDirectory(caseContext);
+      initializeGitRepository(root);
+      writeManifest(root, "0.1.0", "example", [harness]);
+      writeSkill(root, "baseline body\n");
+      commitAll(root, "baseline");
+      git(root, "switch", "-c", "feature");
+      writeSkill(root, "edited body\n");
+      writeManifest(root, "0.2.0", "example", [harness]);
+      commitAll(root, "edit and bump");
+      assert.equal(captureCheck(root).status, 0);
+    });
+  }
+});
+
+test("adding or removing platform support requires a fresh shared version", async (t) => {
+  await t.test("add support", (caseContext) => {
+    const root = temporaryDirectory(caseContext);
+    initializeGitRepository(root);
+    writeManifest(root, "0.1.0", "example", ["claude"]);
+    writeSkill(root, "baseline body\n");
+    commitAll(root, "baseline");
+    git(root, "switch", "-c", "feature");
+    writeManifest(root, "0.1.0", "example", ["codex"]);
+    commitAll(root, "add Codex support");
+    assert.equal(captureCheck(root).status, 1);
+    writeManifest(root, "0.2.0");
+    commitAll(root, "bump shared version");
+    assert.equal(captureCheck(root).status, 0);
+  });
+
+  await t.test("remove support", (caseContext) => {
+    const root = fixture(caseContext);
+    git(root, "switch", "-c", "feature");
+    rmSync(join(root, "plugins/example/.codex-plugin"), { recursive: true });
+    commitAll(root, "remove Codex support");
+    assert.equal(captureCheck(root).status, 1);
+    writeManifest(root, "0.2.0", "example", ["claude"]);
+    commitAll(root, "bump remaining manifest");
+    assert.equal(captureCheck(root).status, 0);
+  });
+});
+
+test("mismatched multi-platform versions are errors", (t) => {
+  const root = fixture(t);
+  git(root, "switch", "-c", "feature");
+  writeManifest(root, "0.2.0", "example", ["claude"]);
+  commitAll(root, "mismatch versions");
+  const result = captureCheck(root);
+  assert.equal(result.status, 2);
+  assert.match(result.stderr, /mismatched manifest versions/u);
 });
 
 test("the freshest reachable base ref detects absorbed bumps", async (t) => {

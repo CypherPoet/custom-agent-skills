@@ -1,13 +1,12 @@
 import assert from "node:assert/strict";
-import { existsSync, readFileSync, readdirSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { join, resolve } from "node:path";
 import { spawnSync } from "node:child_process";
 import test from "node:test";
 
 import {
-  buildCodexManifest,
-  synchronizePlugins,
-  validateGeneratedCodexInterface,
+  auditPluginManifests,
+  synchronizeVendoredSkills,
 } from "../tooling/dist/index.js";
 import { runSkillStructureCheck } from "../tooling/dist/skill-structure.js";
 import { runVersionBumpCheck } from "../tooling/dist/version-bumps.js";
@@ -21,8 +20,9 @@ function git(...arguments_) {
   return result.stdout;
 }
 
-test("all generated packages and repository gates are clean", () => {
-  assert.deepEqual(synchronizePlugins(root, false), []);
+test("all generated vendored skills and repository gates are clean", () => {
+  assert.deepEqual(synchronizeVendoredSkills(root, false), []);
+  assert.deepEqual(auditPluginManifests(root).problems, []);
   assert.equal(runSkillStructureCheck(root, true, discardOutput), 0);
   assert.equal(runVersionBumpCheck(root, "main", discardOutput), 0);
 });
@@ -40,37 +40,11 @@ test("every tracked JSON file parses", () => {
   }
 });
 
-test("Claude manifests own valid package identity and versions", () => {
-  const pluginNames = readdirSync(resolve(root, "plugins"), { withFileTypes: true })
-    .filter((entry) => entry.isDirectory())
-    .map((entry) => entry.name);
-  assert.ok(pluginNames.length > 0);
-  for (const name of pluginNames) {
-    const path = resolve(root, "plugins", name, ".claude-plugin", "plugin.json");
-    const manifest = JSON.parse(readFileSync(path, "utf8"));
-    assert.equal(manifest.name, name, path);
-    assert.ok(manifest.description, path);
-    assert.match(manifest.version ?? "", /^\d+\.\d+\.\d+$/u, path);
-  }
-});
-
-test("every Codex interface is composed from the two authored sources", () => {
-  const registry = JSON.parse(readFileSync(resolve(root, "plugin-registry.json"), "utf8"));
-  for (const [name, metadata] of Object.entries(registry.dual_harness_plugins)) {
-    const pluginRoot = resolve(root, "plugins", name);
-    const claudeManifest = JSON.parse(
-      readFileSync(resolve(pluginRoot, ".claude-plugin/plugin.json"), "utf8"),
-    );
-    const codexManifest = JSON.parse(
-      readFileSync(resolve(pluginRoot, ".codex-plugin/plugin.json"), "utf8"),
-    );
-    assert.deepEqual(codexManifest, buildCodexManifest(claudeManifest, metadata), name);
-    assert.deepEqual(
-      validateGeneratedCodexInterface(codexManifest.interface, claudeManifest.homepage),
-      [],
-      name,
-    );
-  }
+test("manifest presence declares platform support", () => {
+  const audit = auditPluginManifests(root);
+  assert.deepEqual(audit.problems, []);
+  assert.equal(audit.plugins.filter(({ claude }) => claude !== undefined).length, 25);
+  assert.equal(audit.plugins.filter(({ codex }) => codex !== undefined).length, 23);
 });
 
 test("the package exposes the frozen 0.1.0 Node contract", () => {
@@ -79,7 +53,7 @@ test("the package exposes the frozen 0.1.0 Node contract", () => {
   assert.equal(packageJson.version, "0.1.0");
   assert.equal(
     packageJson.description,
-    "Generates Codex plugin manifests and checks CypherPoet repository consistency.",
+    "Synchronizes vendored skills and checks CypherPoet plugin repositories.",
   );
   assert.equal(packageJson.engines.node, ">=24");
   assert.equal(packageJson.bin["cypherpoet-plugin-sync"], "tooling/dist/cli.js");
@@ -116,6 +90,9 @@ test("the retired Python tooling contract has no files or tracked references", (
     "tooling/setup.py",
     "tooling/pyproject.toml",
     "tooling/src/cypherpoet_agent_skills_" + "tooling",
+    "tooling/src/codex-" + "manifest.ts",
+    "tooling/src/codex-submission-" + "preflight.ts",
+    "plugin-" + "registry.json",
   ]) {
     assert.ok(!existsSync(resolve(root, path)), path);
   }
