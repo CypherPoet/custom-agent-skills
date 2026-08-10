@@ -31,7 +31,7 @@ The package supplies checks that both source repositories share:
 - `npm run structure:check` checks skill size, links, reference indexes, fact-check classification, and vendored-copy drift.
 - `npm run validate:claude` invokes Claude Code's pinned official strict validator.
 
-These are repository invariants, not substitutes for platform schemas. Codex's bundled validator remains a release-review check until Codex provides a stable local command suitable for CI.
+These are repository invariants, not substitutes for platform schemas. Codex does not currently provide a stable repository validation command suitable for CI. The optional local `plugin-creator` scaffold preflight is non-authoritative release-review evidence, not a platform schema or repository gate.
 
 ## Package Structure
 

@@ -82,7 +82,7 @@ npm run versions:check
 
 `validate:claude` runs Claude Code's pinned official validator in strict mode. `sync:check` checks only vendored copies. Repository health checks manifest discovery, names, versions, and shared-version consistency.
 
-Codex does not currently expose a stable repository validation command. During release review, run Codex's bundled validator against every plugin that has `.codex-plugin/plugin.json`; do not duplicate its platform schema in repository tooling.
+Codex does not currently expose a stable repository validation command. The optional local `plugin-creator` scaffold preflight can provide packaging feedback during release review, but it is non-authoritative, does not define Codex's submission contract, and is not a repository gate. Do not duplicate the platform schema in repository tooling.
 
 Before a pull request, run the combined gate:
 
