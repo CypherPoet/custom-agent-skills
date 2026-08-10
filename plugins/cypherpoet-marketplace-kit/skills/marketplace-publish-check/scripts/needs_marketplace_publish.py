@@ -53,11 +53,31 @@ def claude_signature(value):
     return {field: value.get(field) for field in CLAUDE_CATALOG_FIELDS}
 
 
-def codex_signature(value):
+def historical_codex_category(root, ref, name):
+    for registry_path in ("plugin-registry.json", "scripts/plugin-registry.json"):
+        registry = manifest(root, ref, registry_path)
+        if registry is None:
+            continue
+        plugins = registry.get("dual_harness_plugins")
+        metadata = plugins.get(name) if isinstance(plugins, dict) else None
+        category = metadata.get("category") if isinstance(metadata, dict) else None
+        if isinstance(category, str) and category:
+            return category
+    raise ValueError(
+        f"Codex manifest for {name} at {ref} has no interface.category and "
+        "no historical registry category"
+    )
+
+
+def codex_signature(root, ref, path, value):
     interface = value.get("interface")
     if not isinstance(interface, dict):
-        raise ValueError("Codex manifest interface must be a JSON object")
-    return {"name": value.get("name"), "category": interface.get("category")}
+        if ref == "HEAD":
+            raise ValueError("Codex manifest interface must be a JSON object")
+        category = historical_codex_category(root, ref, plugin_name(path))
+    else:
+        category = interface.get("category")
+    return {"name": value.get("name"), "category": category}
 
 
 def plugin_name(path):
@@ -102,9 +122,20 @@ def main():
             before_manifest = manifest(root, before_ref, path)
             after_manifest = manifest(root, "HEAD", path)
             is_codex = "/.codex-plugin/" in path
-            signature = codex_signature if is_codex else claude_signature
-            before = None if before_manifest is None else signature(before_manifest)
-            after = None if after_manifest is None else signature(after_manifest)
+            if is_codex:
+                before = (
+                    None
+                    if before_manifest is None
+                    else codex_signature(root, before_ref, path, before_manifest)
+                )
+                after = (
+                    None
+                    if after_manifest is None
+                    else codex_signature(root, "HEAD", path, after_manifest)
+                )
+            else:
+                before = None if before_manifest is None else claude_signature(before_manifest)
+                after = None if after_manifest is None else claude_signature(after_manifest)
             if before == after:
                 continue
 
