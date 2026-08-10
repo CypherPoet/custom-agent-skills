@@ -4,6 +4,7 @@ import { spawnSync } from "node:child_process";
 import { existsSync, readdirSync } from "node:fs";
 import { resolve } from "node:path";
 
+import { validateAuthoredClaudePlugins } from "./claude-plugin-validation.js";
 import { runSkillStructureCheck } from "./skill-structure.js";
 import { findRepositoryRoot, synchronizePlugins } from "./sync.js";
 import { runVersionBumpCheck } from "./version-bumps.js";
@@ -104,6 +105,14 @@ function main(arguments_: readonly string[]): number {
   if (versionStatus !== 0) {
     return versionStatus;
   }
+  const claudeValidationProblems = validateAuthoredClaudePlugins(root);
+  if (claudeValidationProblems.length > 0) {
+    for (const problem of claudeValidationProblems) {
+      console.error(problem);
+    }
+    return 1;
+  }
+  console.log("Claude plugins: strict validation passed");
 
   const nodeTests = [
     ...testFiles(resolve(root, "tooling/test")),

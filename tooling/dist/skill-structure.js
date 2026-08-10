@@ -231,16 +231,23 @@ export function factCheckTierFindings(root, units, unitsWithSources) {
         return { advisories: [], checked: false };
     }
     let manifest;
+    const tierValues = new Map();
     try {
-        manifest = JSON.parse(readFileSync(path, "utf8"));
-        if (typeof manifest !== "object" ||
-            manifest === null ||
-            Array.isArray(manifest) ||
-            !tierKeys.every((key) => {
-                const value = manifest[key] ?? [];
-                return Array.isArray(value);
-            })) {
-            throw new Error("expected a JSON object whose tier keys hold arrays");
+        const parsed = JSON.parse(readFileSync(path, "utf8"));
+        if (typeof parsed !== "object" || parsed === null || Array.isArray(parsed)) {
+            throw new Error("expected a JSON object");
+        }
+        manifest = parsed;
+        for (const key of tierKeys) {
+            if (!Object.hasOwn(manifest, key)) {
+                tierValues.set(key, []);
+                continue;
+            }
+            const value = manifest[key];
+            if (!Array.isArray(value) || !value.every((entry) => typeof entry === "string")) {
+                throw new Error(`${key} must be an array of strings when provided`);
+            }
+            tierValues.set(key, value);
         }
     }
     catch (error) {
@@ -249,15 +256,8 @@ export function factCheckTierFindings(root, units, unitsWithSources) {
             checked: true,
         };
     }
-    const object = manifest;
-    const listed = tierKeys.flatMap((key) => {
-        const value = object[key] ?? [];
-        return Array.isArray(value) ? value.filter((entry) => typeof entry === "string") : [];
-    });
-    const neverValue = object.never ?? [];
-    const never = new Set(Array.isArray(neverValue)
-        ? neverValue.filter((entry) => typeof entry === "string")
-        : []);
+    const listed = tierKeys.flatMap((key) => tierValues.get(key) ?? []);
+    const never = new Set(tierValues.get("never") ?? []);
     const advisories = [];
     for (const unit of Array.from(units).filter((value) => !listed.includes(value)).sort()) {
         advisories.push(`${unit}: not in any tier list — add it to weekly/monthly/never (defaults to monthly meanwhile)`);

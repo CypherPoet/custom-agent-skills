@@ -8,9 +8,9 @@ Composition is by **vendoring, not dependencies**: neither harness resolves a re
 
 ## Map
 
-- [`docs/PLUGIN-CONVENTIONS.md`](docs/PLUGIN-CONVENTIONS.md) — **source of truth** for how plugins and skills are built here.
+- [`docs/PLUGIN-CONVENTIONS.md`](docs/PLUGIN-CONVENTIONS.md) — **source of truth** for the plugin authoring workflow and repository choices.
 - [`scripts/plugin-registry.json`](scripts/plugin-registry.json) — harness targeting, Codex interface metadata, generated Codex package routing, and skill-sharing edges.
-- [`tooling/`](tooling/) — TypeScript source, compiled output, and tests for the shared [`@cypherpoet/plugin-sync`](package.json) package used by both source repositories.
+- [`tooling/README.md`](tooling/README.md) — generator inputs and outputs, validation ownership, and separate Codex package behavior for the shared [`@cypherpoet/plugin-sync`](package.json) package.
 - [`docs/CATALOG.md`](docs/CATALOG.md) — generated cross-plugin index.
 - [`docs/automated-routines/skill-fact-check-manifest.json`](docs/automated-routines/skill-fact-check-manifest.json) — per-skill fact-check volatility tiers.
 
@@ -19,6 +19,7 @@ Composition is by **vendoring, not dependencies**: neither harness resolves a re
 - **Never hand-edit generated output** — any `.codex-plugin/plugin.json`, generated `codex-plugins/` package, or vendored skill copy. Edit the source, then re-sync.
 - Complete the developer prerequisites in [`README.md`](README.md) after checkout.
 - Run `npm run sync` after editing a `.claude-plugin/plugin.json`, the registry, or the source of a vendored skill.
+- Run `npm run validate:claude` for the pinned official strict Claude validation without the rest of the repository suite.
 - **Bump a plugin's `version` whenever its content should reach installed users** — merging to `main` alone won't ship it. Re-run the sync after any bump; the health suite fails when content changed without one.
 - Run `npm run structure:check` before a PR that touches skills.
 - Run `npm test` before any PR; [`.github/workflows/verify.yml`](.github/workflows/verify.yml) runs the same suite on every PR and push to `main`.

@@ -9,7 +9,8 @@ import { join } from "node:path";
 import test from "node:test";
 
 import {
-  codexPluginRelativePath,
+  codexPackageRelativePath,
+  stripClaudeInvocationField,
   synchronizePlugins,
 } from "../dist/index.js";
 import {
@@ -109,7 +110,23 @@ test("sync writes vendored skills and complete Codex manifests", (t) => {
   assert.deepEqual(synchronizePlugins(root, false), []);
 });
 
-test("a Codex-only package removes only Claude's manual invocation field", (t) => {
+test("missing optional skills and separate-package fields use repository defaults", (t) => {
+  const root = fixture(t);
+  const registry = configuration(root);
+  const manifest = JSON.parse(
+    readFileSync(join(root, "plugins/source/.claude-plugin/plugin.json"), "utf8"),
+  );
+  assert.equal(Object.hasOwn(manifest, "skills"), false);
+  assert.equal(Object.hasOwn(registry.dual_harness_plugins.source, "separateCodexPackage"), false);
+  assert.deepEqual(synchronizePlugins(root, true), []);
+  assert.ok(existsSync(join(root, "plugins/source/.codex-plugin/plugin.json")));
+  assert.equal(
+    codexPackageRelativePath("source", registry.dual_harness_plugins.source),
+    "plugins/source",
+  );
+});
+
+test("a separate Codex package removes only Claude's manual invocation field", (t) => {
   const root = fixture(t);
   assert.deepEqual(synchronizePlugins(root, true), []);
   writeText(
@@ -122,7 +139,7 @@ test("a Codex-only package removes only Claude's manual invocation field", (t) =
       "policy:\n  allow_implicit_invocation: false\n",
   );
   const registry = configuration(root);
-  registry.dual_harness_plugins.source.codexProjection = true;
+  registry.dual_harness_plugins.source.separateCodexPackage = true;
   writeCurrentConfiguration(root, registry);
 
   assert.deepEqual(synchronizePlugins(root, true), []);
@@ -134,7 +151,10 @@ test("a Codex-only package removes only Claude's manual invocation field", (t) =
   );
   assert.ok(existsSync(join(packageRoot, ".codex-plugin/plugin.json")));
   assert.ok(!existsSync(join(root, "plugins/source/.codex-plugin/plugin.json")));
-  assert.equal(codexPluginRelativePath("source", registry.dual_harness_plugins.source), "codex-plugins/source");
+  assert.equal(
+    codexPackageRelativePath("source", registry.dual_harness_plugins.source),
+    "codex-plugins/source",
+  );
   assert.deepEqual(synchronizePlugins(root, false), []);
 });
 
@@ -157,7 +177,7 @@ test("manual-only Codex packages require one unambiguous false policy", async (t
         writeText(join(root, "plugins/source/skills/shared/agents/openai.yaml"), agentYaml);
       }
       const registry = configuration(root);
-      registry.dual_harness_plugins.source.codexProjection = true;
+      registry.dual_harness_plugins.source.separateCodexPackage = true;
       writeCurrentConfiguration(root, registry);
 
       const problems = synchronizePlugins(root, true);
@@ -168,6 +188,120 @@ test("manual-only Codex packages require one unambiguous false policy", async (t
   }
 });
 
+test("Claude invocation frontmatter accepts LF and CRLF without rewriting other bytes", () => {
+  for (const newline of ["\n", "\r\n"]) {
+    const source = [
+      "---",
+      "name: shared",
+      "description: Café fixture. # retained",
+      "disable-model-invocation: true # Claude-only",
+      "metadata:",
+      "  nested: retained",
+      "---",
+      "",
+      "# Shared",
+      "",
+    ].join(newline);
+    const expected = source.replace(
+      `disable-model-invocation: true # Claude-only${newline}`,
+      "",
+    );
+    const result = stripClaudeInvocationField(Buffer.from(source, "utf8"), "fixture/shared");
+    assert.deepEqual(result.problems, []);
+    assert.equal(result.manualOnly, true);
+    assert.deepEqual(result.transformed, Buffer.from(expected, "utf8"));
+  }
+});
+
+test("Claude invocation frontmatter requires the official top-level Boolean", async (t) => {
+  for (const [field, expected] of [
+    ['disable-model-invocation: "true"', "must use the YAML boolean true or false"],
+    ["disable-model-invocation: yes", "must use the YAML boolean true or false"],
+    ["disable-model-invocation: on", "must use the YAML boolean true or false"],
+    ["disable-model-invocation: 1", "must use the YAML boolean true or false"],
+    ["disable_model_invocation: true", "separateCodexPackage requires at least one"],
+    ["nested:\n  disable-model-invocation: true", "separateCodexPackage requires at least one"],
+    [
+      "disable-model-invocation: true\ndisable-model-invocation: false",
+      "found duplicate key",
+    ],
+  ]) {
+    await t.test(field.replaceAll("\n", " / "), (caseContext) => {
+      const root = fixture(caseContext);
+      writeText(
+        join(root, "plugins/source/skills/shared/SKILL.md"),
+        `---\nname: shared\ndescription: Shared fixture.\n${field}\n---\n`,
+      );
+      writeText(
+        join(root, "plugins/source/skills/shared/agents/openai.yaml"),
+        "policy:\n  allow_implicit_invocation: false\n",
+      );
+      const registry = configuration(root);
+      registry.dual_harness_plugins.source.separateCodexPackage = true;
+      writeCurrentConfiguration(root, registry);
+
+      const problems = synchronizePlugins(root, true);
+      assert.ok(problems.some((problem) => problem.includes(expected)), problems.join("\n"));
+      assert.ok(!existsSync(join(root, "codex-plugins/source")));
+      assert.ok(!existsSync(join(root, "plugins/bundle/.codex-plugin/plugin.json")));
+    });
+  }
+});
+
+test("separate Codex packages require an exact false policy value", async (t) => {
+  for (const [value, expected] of [
+    ['"false"', "boolean false"],
+    ["yes", "boolean false"],
+    ["on", "boolean false"],
+    ["1", "boolean false"],
+  ]) {
+    await t.test(value, (caseContext) => {
+      const root = fixture(caseContext);
+      writeText(
+        join(root, "plugins/source/skills/shared/SKILL.md"),
+        "---\nname: shared\ndescription: Shared fixture.\ndisable-model-invocation: true\n---\n",
+      );
+      writeText(
+        join(root, "plugins/source/skills/shared/agents/openai.yaml"),
+        `policy:\n  allow_implicit_invocation: ${value}\n`,
+      );
+      const registry = configuration(root);
+      registry.dual_harness_plugins.source.separateCodexPackage = true;
+      writeCurrentConfiguration(root, registry);
+
+      const problems = synchronizePlugins(root, true);
+      assert.ok(problems.some((problem) => problem.includes(expected)), problems.join("\n"));
+      assert.ok(!existsSync(join(root, "codex-plugins/source")));
+    });
+  }
+});
+
+test("explicit null values do not inherit optional defaults", async (t) => {
+  await t.test("separateCodexPackage", (caseContext) => {
+    const root = fixture(caseContext);
+    const registry = configuration(root);
+    registry.dual_harness_plugins.source.separateCodexPackage = null;
+    writeCurrentConfiguration(root, registry);
+    const problems = synchronizePlugins(root, true);
+    assert.ok(
+      problems.some((problem) => problem.includes("separateCodexPackage must be a boolean")),
+      problems.join("\n"),
+    );
+    assert.ok(!existsSync(join(root, "plugins/bundle/.codex-plugin/plugin.json")));
+  });
+
+  await t.test("skills", (caseContext) => {
+    const root = fixture(caseContext);
+    const manifestPath = join(root, "plugins/source/.claude-plugin/plugin.json");
+    const manifest = JSON.parse(readFileSync(manifestPath, "utf8"));
+    manifest.skills = null;
+    writeJson(manifestPath, manifest);
+    const problems = synchronizePlugins(root, true);
+    assert.ok(problems.some((problem) => problem.includes("skills (custom path)")));
+    assert.ok(!existsSync(join(root, "plugins/bundle/.codex-plugin/plugin.json")));
+  });
+});
+
 test("invalid authored metadata blocks every generated write", async (t) => {
   const cases = [
     ["category", "", "category must be a non-empty string"],
@@ -175,10 +309,10 @@ test("invalid authored metadata blocks every generated write", async (t) => {
     ["displayName", "x".repeat(31), "displayName must be at most 30"],
     ["displayName", "two\nlines", "displayName must be a single line"],
     ["shortDescription", "x".repeat(31), "shortDescription must be at most 30"],
-    ["capabilities", [], "capabilities must contain between 1 and 20"],
+    ["capabilities", [], "capabilities must contain at least 1"],
     ["capabilities", [{ name: "Read" }], "capabilities[0] must be a non-empty string"],
-    ["defaultPrompt", [], "defaultPrompt must contain between 1 and 3"],
-    ["defaultPrompt", ["one", "two", "three", "four"], "defaultPrompt must contain between 1 and 3"],
+    ["defaultPrompt", [], "defaultPrompt must contain at least 1"],
+    ["defaultPrompt", ["one", "two", "three", "four"], "defaultPrompt must contain at most 3"],
   ];
   for (const [field, value, expected] of cases) {
     await t.test(`${field}: ${expected}`, (caseContext) => {

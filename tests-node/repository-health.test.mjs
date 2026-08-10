@@ -6,9 +6,9 @@ import test from "node:test";
 
 import {
   buildCodexManifest,
-  codexPluginRelativePath,
+  codexPackageRelativePath,
   synchronizePlugins,
-  validateCodexInterface,
+  validateGeneratedCodexInterface,
 } from "../tooling/dist/index.js";
 import { runSkillStructureCheck } from "../tooling/dist/skill-structure.js";
 import { runVersionBumpCheck } from "../tooling/dist/version-bumps.js";
@@ -64,13 +64,13 @@ test("every Codex interface is composed from the two authored sources", () => {
     );
     const codexManifest = JSON.parse(
       readFileSync(
-        resolve(root, codexPluginRelativePath(name, metadata), ".codex-plugin/plugin.json"),
+        resolve(root, codexPackageRelativePath(name, metadata), ".codex-plugin/plugin.json"),
         "utf8",
       ),
     );
     assert.deepEqual(codexManifest, buildCodexManifest(claudeManifest, metadata), name);
     assert.deepEqual(
-      validateCodexInterface(codexManifest.interface, { sourceHomepage: claudeManifest.homepage }),
+      validateGeneratedCodexInterface(codexManifest.interface, claudeManifest.homepage),
       [],
       name,
     );
@@ -83,7 +83,7 @@ test("the package exposes the frozen 0.1.0 Node contract", () => {
   assert.equal(packageJson.version, "0.1.0");
   assert.equal(
     packageJson.description,
-    "Generates and validates Codex packages and vendored skills for CypherPoet dual-harness plugin repositories.",
+    "Generates Codex plugin packages and checks CypherPoet repository consistency.",
   );
   assert.equal(packageJson.engines.node, ">=24");
   assert.equal(packageJson.bin["cypherpoet-plugin-sync"], "tooling/dist/cli.js");
@@ -99,7 +99,12 @@ test("the package exposes the frozen 0.1.0 Node contract", () => {
     packageJson.bin["cypherpoet-skill-structure-check"],
     "tooling/dist/skill-structure-cli.js",
   );
+  assert.equal(
+    packageJson.bin["cypherpoet-validate-claude-plugins"],
+    "tooling/dist/claude-plugin-validation-cli.js",
+  );
   assert.equal(packageJson.dependencies.yaml, "^2.9.0");
+  assert.equal(packageJson.devDependencies["@anthropic-ai/claude-code"], "2.1.226");
   assert.equal(packageJson.scripts.prepare, undefined);
   assert.equal(packageJson.scripts.postinstall, undefined);
   assert.ok(existsSync(resolve(root, "package-lock.json")));

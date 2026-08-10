@@ -1,222 +1,155 @@
 # Plugin Conventions
 
-This document defines the repository-specific rules for plugins that ship on both Claude Code and Codex. It does not restate general plugin anatomy. Start with Claude Code's [`/plugin-dev:create-plugin`](https://github.com/anthropics/claude-plugins-official/blob/main/plugins/plugin-dev/commands/create-plugin.md) or Codex's [`$plugin-creator`](https://github.com/openai/skills/blob/main/skills/.system/plugin-creator/SKILL.md), then apply the rules below.
-
-Use these sources for component types, discovery, hooks, MCP configuration, and other harness-level behavior:
+This guide covers the choices made by this repository. Use the platform documentation for general plugin fields and component behavior:
 
 - [Claude Code plugins reference](https://code.claude.com/docs/en/plugins-reference)
-- [`plugin-dev` toolkit](https://github.com/anthropics/claude-plugins-official/blob/main/plugins/plugin-dev/README.md) — the `/plugin-dev:create-plugin` workflow plus the seven authoring skills (plugin structure, and skill / command / agent / hook / MCP / settings development)
-- [Codex: Build skills](https://learn.chatgpt.com/docs/build-skills) / [Build plugins](https://learn.chatgpt.com/docs/build-plugins) — the Codex plugin and skill format.
-- [Codex final-directory submission contract](https://developers.openai.com/plugins/deploy/submission-errors#final-directory-submission) — the authoritative field limits and supported values enforced for the generated Codex interface.
-- [Codex `plugin-creator`](https://github.com/openai/skills/blob/main/skills/.system/plugin-creator/SKILL.md) — useful scaffolding and a local preflight helper. It is not the final-directory submission service and does not replace this repository's cross-harness validation.
+- [Claude Code `plugin-dev` toolkit](https://github.com/anthropics/claude-plugins-official/blob/main/plugins/plugin-dev/README.md)
+- [Codex: Build skills](https://learn.chatgpt.com/docs/build-skills) and [Build plugins](https://learn.chatgpt.com/docs/build-plugins)
+- [Codex final-directory submission rules](https://developers.openai.com/plugins/deploy/submission-errors#final-directory-submission)
 
-## Start Here
+The [`@cypherpoet/plugin-sync` README](../tooling/README.md) explains generation, validation ownership, and the exceptional separate-package behavior. This document stays focused on authoring.
 
-Plugin metadata has two authored sources and one generated result:
+## Authoring Workflow
 
-| Path | Edit It? | What It Owns | After an Edit |
-|---|---|---|---|
-| `plugins/<name>/.claude-plugin/plugin.json` | Yes | Shared package identity, including the name, version, description, author, URLs, license, and keywords. | Bump the version when shipped output changes, then run the sync. |
-| [`scripts/plugin-registry.json`](../scripts/plugin-registry.json) | Yes | Harness targeting, Codex presentation metadata, and vendoring relationships. | Bump affected versions, run the sync, and check [Publishing](#publishing). |
-| `plugins/<name>/.codex-plugin/plugin.json` or `codex-plugins/<name>/.codex-plugin/plugin.json` | No | The complete Codex manifest generated from the two authored sources. | Edit an authored source instead. |
+1. Scaffold with the authoring tools available in Claude Code or Codex.
+2. Put the plugin under `plugins/<name>` and author its Claude manifest and skills there.
+3. Classify the plugin and add its Codex card metadata in [`scripts/plugin-registry.json`](../scripts/plugin-registry.json).
+4. Add any skill-sharing relationships under `vendored_skills` in the registry.
+5. Run `npm run sync` to generate the Codex manifest and vendored copies.
+6. Update the plugin README and generated top-level catalog when applicable.
+7. Run `npm test` before opening a pull request.
 
-The generator performs this composition:
+Do not edit a generated `.codex-plugin/plugin.json`, a generated `codex-plugins/` package, or a vendored skill copy. Change its authored source and run the sync.
 
-```text
-Claude manifest + registry entry -> npm run sync -> Codex manifest
-```
+## Metadata Sources
 
-The generated Codex manifest repeats values from its sources because an installed plugin must be self-contained. This repetition does not create a second source of truth. Do not read metadata back from generated output or edit it by hand.
+Plugin metadata has two authored sources:
 
-By default, each plugin supports both harnesses from `plugins/<name>`: Claude Code reads `.claude-plugin/plugin.json`, Codex reads the generated `.codex-plugin/plugin.json`, and both use the same `skills/` directory. No registry flag is required. The one exception that needs a separate generated package for Codex is explained under [Manifests](#manifests).
-
-The generator derives values only when they have the same meaning on both harnesses. It derives `longDescription`, `developerName`, and `websiteURL` from the Claude manifest. Friendly titles, short card copy, categories, capabilities, and starter prompts require author judgment, so they are authored once in the registry.
-
-For skill content, edit the skill in its owner plugin. Then bump every affected plugin version and run the sync. For marketplace listings, use the [publishing flow](#publishing).
-
-## Plugin Folder
-
-- Folder name, conventionally `cypherpoet-<theme>` (kebab-case). Use a `-kit` suffix for single-topic kits (e.g., `cypherpoet-blender-kit`).
-- The folder name must equal the manifest `name` field.
-
-## Manifest
-
-Confirm these fields on the scaffolded `plugin.json` (match a sibling under `plugins/*/.claude-plugin/plugin.json`):
-
-- `"$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json"`.
-- `"name"` — equals the plugin folder name.
-- `"version": "0.1.0"` for new plugins. Both harnesses use this value as the update cache key. Pushing to `main` does not update an existing installation. Use PATCH for fixes, MINOR for additive changes, and MAJOR for breaking changes. Before 1.0, use MINOR by default for a user-visible change.
-- `"description"` — one sentence ending in a period, using supported text and at most 1,024 characters. Line feeds are allowed. The per-plugin README and Claude marketplace catalog copy it verbatim. The Codex catalog entry has no description. See [Marketplaces](#marketplaces).
-- `"author": { "name": "CypherPoet" }` (no email field).
-- `"homepage"` — `https://github.com/CypherPoet/custom-agent-skills/tree/main/plugins/<name>`.
-- `"repository"` — `https://github.com/CypherPoet/custom-agent-skills.git`.
-- `"license": "MIT"`.
-- `"keywords"` — 4–6 lowercase kebab-case tags, leading with `"claude-code"` and the plugin's domain (`git`, `blender`, `svg`, …).
-
-## Dual-Harness Plugins
-
-Portable plugins target **both** Claude Code and Codex. Each plugin is self-contained because an installation fetches only that plugin's directory. If a plugin needs a skill from another plugin, it must [vendor](#vendoring) a copy.
-
-If a plugin is useful only on Claude Code, list it under `claude_only_plugins` in the registry and give a reason. Judge the plugin by its purpose, not whether its files parse on Codex. Keep this exception list short.
-
-The [`@cypherpoet/plugin-sync`](../package.json) package generates and validates plugins for this repository and the private sibling. Its TypeScript source and committed JavaScript output live under [`tooling/`](../tooling/). The public repository runs its local package. The private sibling installs the same package from an exact public commit. Complete the developer setup in the README's [Prerequisites](../README.md#prerequisites) before running it.
-
-### Manifests
-
-Every portable plugin supports both Claude Code and Codex. The normal layout is one plugin directory with two harness manifests and one shared skill tree:
-
-- Claude Code reads the authored `.claude-plugin/plugin.json`.
-- Codex reads the generated `.codex-plugin/plugin.json`.
-- Both harnesses use the same `skills/` directory.
-
-The [source table](#start-here) defines how the generator composes the Codex manifest. The generator also sets `skills` to `"./skills/"` and validates every final interface before writing anything. If one plugin is invalid, it writes no generated packages.
-
-`cypherpoet-marketplace-kit` is the only current exception to the normal directory layout. It still supports both harnesses, but one of its skills must be invoked manually and the two harnesses store that rule in different files:
-
-- Claude Code reads `disable-model-invocation: true` from the authored `SKILL.md`.
-- Codex reads `policy.allow_implicit_invocation: false` from `agents/openai.yaml` and rejects Claude's `disable-model-invocation` field.
-
-For this exception, `"codexProjection": true` tells the generator to create a second install directory at `codex-plugins/<name>` and omit only the incompatible Claude field from that generated copy. The setting does **not** enable Codex support; every entry under `dual_harness_plugins` already supports Codex. Before writing the copy, the generator confirms that the Codex policy still requires manual invocation. The marketplace points Codex at the generated directory and Claude Code at the normal directory. Both represent the same plugin and use the same authored sources.
-
-#### Codex Interface Contract
-
-| Field | Contract |
+| Authored Path | What It Owns |
 |---|---|
-| `displayName` | Required, one line, at most 30 characters, and globally unique after Unicode and whitespace normalization. |
-| `shortDescription` | Required, one line, and at most 30 characters. |
-| `longDescription` | Derived from `description`; required and at most 4,000 characters. Line feeds are allowed. |
-| `developerName` | Derived from `author.name`; required, one line, and at most 80 characters. |
-| `category` | Must be `Productivity`, `Creativity`, `Developer Tools`, `Business & Operations`, `Data & Analytics`, `Communication`, `Education & Research`, `Security`, `Finance`, `Healthcare`, `Travel`, `Entertainment`, or `Other`. |
-| `capabilities` | 1–20 unique, free-form strings. Each value is one line and at most 120 characters. `Interactive`, `Read`, and `Write` are current choices, not a closed enumeration. |
-| `defaultPrompt` | 1–3 unique starter prompts. Each prompt is one line, at most 128 characters, and has no app `@mention`. |
-| `websiteURL` | Derived from `homepage`; must be an absolute HTTPS URL with a host, no credentials, supported URL characters, and at most 1,024 characters. The source `homepage` can contain 2,048 characters, but this derived field makes 1,024 the effective repository limit. |
+| `plugins/<name>/.claude-plugin/plugin.json` | Shared name, version, description, author, homepage, repository, license, and keywords. |
+| `scripts/plugin-registry.json` | Harness classification, Codex display name, short description, category, capabilities, starter prompts, separate-package selection, and vendoring. |
 
-All strings reject surrounding whitespace and unsupported control or invisible characters. Normalized uniqueness checks use NFKC Unicode normalization and folded whitespace. They ignore case for display names and capabilities, but starter-prompt comparison remains case-sensitive. Only `longDescription` permits line feeds.
+The generated Codex manifest combines them. Its repeated values make an installed plugin self-contained; they are not another source of truth.
 
-### Vendoring
+Friendly card metadata belongs in the registry because it requires author judgment. The generator derives `longDescription`, `developerName`, and `websiteURL` from the shared Claude manifest because those values have the same meaning on both harnesses.
 
-When a plugin needs a skill authored elsewhere, copy that skill into the plugin. This copy is a **vendored skill**. Declare the relationship under `vendored_skills` in `plugin-registry.json`, then run the sync.
+## Plugin Manifest
 
-- The skill is authored **once**, in its owner plugin. Every target is a byte-identical generated copy (minus dev-only `evals/` and `*-workspace/`). Edit the source, never a copy.
-- Targets vendor from the **original source**, never from another vendored copy.
-- Removing an edge retires the copy on the next sync. The generator deletes a clean copy and refuses to delete a modified copy.
-- A byte-identical, unregistered copy is an error. To adopt a retired copy as authored, keep it and change its content.
-- A vendored copy ships inside a different plugin, so any link it makes to *another* plugin must be an absolute GitHub URL ([Cross-Plugin Links](#cross-plugin-links)).
-- Vendored copies are tiered `never` in the [fact-check manifest](#fact-check-tiering): the routine corrects the authoritative source, and the sync propagates the fix.
+The plugin folder name must equal the manifest `name`. Use a `cypherpoet-<theme>` name and reserve `-kit` for a focused toolkit.
 
-A **curated bundle** is a plugin that vendors several skills, such as `git-flow`. Keep a bundle only when all members support the same harnesses. Otherwise, use the standalone plugins.
+Author these Claude manifest values consistently with sibling plugins:
 
-### Marketplaces
+- `"$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json"`
+- `"version": "0.1.0"` for a new plugin
+- A one-sentence `description` ending in a period
+- `"author": { "name": "CypherPoet" }`
+- `"homepage": "https://github.com/CypherPoet/custom-agent-skills/tree/main/plugins/<name>"`
+- `"repository": "https://github.com/CypherPoet/custom-agent-skills.git"`
+- `"license": "MIT"`
+- Four to six lowercase keywords, beginning with `claude-code` and the plugin domain
 
-The separate [`cypherpoet-toolchest`](https://github.com/CypherPoet/cypherpoet-toolchest) marketplace repo carries **two catalog files**, maintained together by the `marketplace-publish` flow (see [Publishing](#publishing)):
+Both harnesses use `version` as an update key. Use PATCH for fixes, MINOR for additive changes, and MAJOR for breaking changes. Before 1.0, use MINOR by default for a user-visible change. A merge to `main` does not update an existing installation without a version bump.
 
-- `.claude-plugin/marketplace.json` — the Claude Code catalog. Consumers: `/plugin marketplace add CypherPoet/cypherpoet-toolchest`.
-- `.agents/plugins/marketplace.json` — the Codex catalog (`git-subdir` entries pointing at the normal `plugins/<name>` directory or an exceptional generated package under `codex-plugins/<name>`, plus each plugin's `category` from [`scripts/plugin-registry.json`](../scripts/plugin-registry.json)). Consumers: `codex plugin marketplace add CypherPoet/cypherpoet-toolchest`.
+## Harness Support
 
-The Codex catalog's top-level `name` is `cypherpoet-toolchest`. Its user-facing `interface.displayName` is `CypherPoet Toolchest`. Each plugin title comes from its generated `interface.displayName`.
+Portable plugins belong under `dual_harness_plugins`. A normal dual-harness plugin uses one directory: Claude Code reads the authored `.claude-plugin/plugin.json`, Codex reads the generated `.codex-plugin/plugin.json`, and both read the same skills.
 
-## Validate
+Use `claude_only_plugins` only when the plugin's purpose is specific to Claude Code. Record a reason and judge support by what the plugin does, not whether another harness can parse its files.
 
-Run both plugin-specific checks:
+Rarely, both harnesses support a plugin but cannot install the same bytes. Set `"separateCodexPackage": true` to generate `codex-plugins/<name>` for Codex. This flag changes the install directory; it does not enable Codex support. See [Separate Codex Packages](../tooling/README.md#separate-codex-packages) for the current manual-invocation case and its safety checks.
+
+## Codex Interface Metadata
+
+Author `displayName`, `shortDescription`, `capabilities`, and `defaultPrompt` under the registry entry's `interface` object. Author `category` beside it.
+
+The generator checks Codex's documented submission rules and these additional repository choices:
+
+- Every plugin has at least one capability and one starter prompt.
+- Capabilities and starter prompts are unique after normalization.
+- Display names are unique across the repository after normalization.
+- The shared homepage is HTTPS and becomes the Codex website URL.
+
+See the [official Codex submission rules](https://developers.openai.com/plugins/deploy/submission-errors#final-directory-submission) for platform limits. See [Validation Ownership](../tooling/README.md#validation-ownership) for which checker owns each rule.
+
+## Vendoring
+
+Each installed plugin is self-contained. If one plugin ships a skill owned by another, declare a `source` and its `targets` under `vendored_skills`, then run `npm run sync`.
+
+- Edit the source skill, never a generated target.
+- Vendor from the original source, not another vendored copy.
+- The sync removes a retired clean copy and refuses to remove a modified copy.
+- An undeclared byte-identical copy is an error.
+- Use absolute GitHub URLs for links that leave the installed plugin.
+- Put vendored copies in the fact-check tier `never`; research and correct their source.
+
+A curated bundle, such as `git-flow`, is an ordinary plugin that vendors several skills. Keep a bundle only when its members support the same harnesses.
+
+## Validation
+
+Install the locked dependencies once after checkout:
 
 ```shell
-claude plugin validate plugins/<plugin-name>
-npm run sync:check
+npm ci
 ```
 
-The first command validates the authored Claude manifest. The second validates the generated Codex manifest and reports generation drift without writing files. Resolve every warning or error before you open a PR.
+Use these focused commands while authoring:
 
-Codex's bundled `plugin-creator` validator is a useful scaffold check, not the final submission service. For a manual-only skill, keep Claude Code's `disable-model-invocation: true`, set Codex's `policy.allow_implicit_invocation: false` in `agents/openai.yaml`, and set `"codexProjection": true` to generate the separate package for Codex. Run the Codex validator against `codex-plugins/<name>`, not the authored package under `plugins/<name>`. This preserves both harness controls and produces validator-clean Codex input.
+```shell
+npm run validate:claude
+npm run sync:check
+npm run structure:check
+npm run versions:check
+```
 
-Use the [final-directory submission contract](https://developers.openai.com/plugins/deploy/submission-errors#final-directory-submission) for Codex interface limits. [`AGENTS.md`](../AGENTS.md) defines the complete repository gate, including tests and `skill-structure-check`.
+`validate:claude` runs the pinned official Claude validator in strict mode against every authored plugin. `sync:check` checks generated Codex packages and repository consistency; it is not a complete platform validator. Codex's bundled Python helper is a release-only preflight until Codex provides a stable local validation command.
+
+Before a pull request, run the combined gate:
+
+```shell
+npm test
+```
 
 ## Per-Plugin README
 
-Each plugin ships a `README.md` at its root. The name `CATALOG.md` is reserved for the top-level catalog. `/plugin-dev:create-plugin` generates a README template. Add the installation commands and component tables shown below.
+Each plugin has a `README.md`; `CATALOG.md` is reserved for the repository-wide catalog. Copy the manifest description and include installation commands for both harnesses.
 
-````markdown
-# <plugin-name>
+List every shipped skill, including vendored skills:
 
-<one-sentence description, identical to the manifest description, ending in a period>
-
-## Installation
-
-Install via the [`cypherpoet-toolchest`](https://github.com/CypherPoet/cypherpoet-toolchest) marketplace:
-
-```shell
-# Skip if you've already added this marketplace
-/plugin marketplace add CypherPoet/cypherpoet-toolchest
-
-# Install this plugin
-/plugin install <plugin-name>@cypherpoet-toolchest
-```
-
-On Codex, add the same marketplace: `codex plugin marketplace add CypherPoet/cypherpoet-toolchest`, then `codex plugin add <plugin-name>@cypherpoet-toolchest`.
-
+```markdown
 ## Skills
 
 | Skill | Description | Model-Invocable |
 |---|---|---|
 | [<skill-name>](skills/<skill-name>/SKILL.md) | <one-sentence summary>. | <Yes / No> |
-````
+```
 
-`Model-Invocable` is `No` for a skill the agent cannot reach on its own — Claude Code's `disable-model-invocation: true`, or Codex's `policy.allow_implicit_invocation: false` in `agents/openai.yaml` — and `Yes` otherwise. A `No` row tells a reader the skill only ever fires when they invoke it by name.
+`Model-Invocable` is `No` when Claude Code has `disable-model-invocation: true` or Codex has `policy.allow_implicit_invocation: false`. Add similar component tables only for commands, agents, hooks, or MCP servers the plugin actually ships.
 
-Every plugin here is currently skills-only, so that template is the whole README. A plugin that ships other component types adds a section per type, in a two-column shape:
+## Marketplace Publishing
 
-| Section | First column |
-|---|---|
-| `## Commands` | `[/<plugin-name>:<command>](commands/<command>.md)` |
-| `## Agents` | `[<agent-name>](agents/<agent-name>.md)` |
-| `## Hooks` | `` `<EventName>` ``, under a line pointing at `[hooks/hooks.json](hooks/hooks.json)` |
-| `## MCP Servers` | `` `<server-name>` `` |
+The [`cypherpoet-toolchest`](https://github.com/CypherPoet/cypherpoet-toolchest) repository has one catalog per harness. The Claude catalog points to the authored plugin directory. The Codex catalog points to the normal plugin directory or its separate Codex package and stores the registry category.
 
-Include only the types the plugin actually ships. Append a row whenever a component is added — the per-plugin README is its primary index, and PR review treats a missing row as a defect.
-
-A plugin's `## Skills` table lists every shipped skill, including [vendored skills](#vendoring). Refresh the table when the sync adds or removes a skill.
-
-## Top-Level Catalog
-
-Every plugin gets a row in [CATALOG.md](CATALOG.md). Use text such as `5 skills`, `1 skill`, or `2 commands, 1 hook` in the `Components` column. Order component types as skills, commands, agents, hooks, and MCP servers. Omit zero values.
-
-Do not edit the catalog by hand. The [`catalog-refresh`](../plugins/cypherpoet-marketplace-kit/skills/catalog-refresh/SKILL.md) skill regenerates it, and `marketplace-sync-check` reports drift.
-
-## Publishing
-
-Plugin updates and marketplace updates are separate operations:
+Use this decision table:
 
 | Change | Required Action |
 |---|---|
-| Shipped content or a generated manifest value | Bump the plugin version and run the sync. Existing installations use the version as their update key. |
-| Codex `displayName`, `shortDescription`, `capabilities`, or `defaultPrompt` | Bump the version and run the sync. No catalog publication is required. |
-| Codex `category` | Bump the version, run the sync, and publish the marketplace because the Codex catalog also stores the category. |
-| Add or remove a separate Codex package (`codexProjection`) | Bump the version, run the sync, and publish the marketplace because the Codex source path changes. |
-| Catalog identity or marketplace presentation | Publish the marketplace. If the same edit changes a plugin manifest, also follow the version rule above. |
+| Shipped content or generated manifest value | Bump the plugin version and run the sync. |
+| Codex display name, short description, capabilities, or starter prompts | Bump the version and run the sync. No catalog publication is needed. |
+| Codex category | Bump the version, run the sync, and publish the marketplace. |
+| Add or remove `separateCodexPackage` | Bump the version, run the sync, and publish because the Codex source path changes. |
+| Catalog identity or marketplace presentation | Publish the marketplace; also bump a plugin when its manifest changed. |
 
-A fresh installation always fetches the latest content from `main`, but an existing installation updates only after a version bump.
+Run `marketplace-publish-check` when opening a source pull request. Apply the `marketplace-publish` label only when it requests publication. The manual-only `marketplace-publish` skill is the fallback.
 
-Marketplace publishing is label-driven. Run `marketplace-publish-check` when you open the source PR. If it reports a required publish, apply the `marketplace-publish` label. Merging the labelled PR updates both marketplace catalog files. The manual-only `marketplace-publish` skill is the fallback. Scaffolding alone never publishes.
+## Catalog and Skill Maintenance
 
-## Skill Conventions
+Do not hand-edit [`CATALOG.md`](CATALOG.md). The `catalog-refresh` skill regenerates it, and `marketplace-sync-check` reports drift.
 
-Skills use the standard [`SKILL.md`](https://agentskills.io/) format. Author them with Claude Code's [`skill-creator`](https://github.com/anthropics/skills/tree/main/skills/skill-creator) or Codex's [`skill-creator`](https://github.com/openai/skills/tree/main/skills/.system/skill-creator).
+Skills use the shared [`SKILL.md`](https://agentskills.io/) format. The repository's [`skill-structure-check`](../.claude/skills/skill-structure-check/SKILL.md) documents structure and remediation.
 
-The repo-local [`skill-structure-check`](../.claude/skills/skill-structure-check/SKILL.md) is the rule contract and remediation guide for repository structure. `*-workspace/` directories under `skills/` are transient evaluation scratch and are not shipped.
+Every fact-checked skill ends with a `## Primary Sources` section. Use vendor-primary sources and state what each source controls. If none is available yet, use: `None declared yet — the fact-check routine falls back to vendor-primary sources per claim.`
 
-### Primary Sources
+When a skill is created, renamed, or removed, update its `<plugin>/<skill>` entry in the [fact-check manifest](automated-routines/skill-fact-check-manifest.json). Each unit appears exactly once. `*-workspace/` and `evals/` are development-only and do not ship.
 
-Every fact-checked skill ends with a `## Primary Sources` section. Use one vendor-primary source per bullet and state what each source controls, such as versions, specifications, or API syntax. Do not use blogs, aggregators, or forums as primary sources.
-
-If no source is available yet, keep this placeholder: `None declared yet — the fact-check routine falls back to vendor-primary sources per claim.` The [`skill-fact-check`](../plugins/cypherpoet-marketplace-kit/skills/skill-fact-check/SKILL.md) procedure defines how the routine uses this section and any per-fact source markers.
-
-### Fact-Check Tiering
-
-When you create, rename, or remove a skill, update its `<plugin>/<skill>` entry in the [`skill-fact-check` manifest](automated-routines/skill-fact-check-manifest.json). The [tier reference](../plugins/cypherpoet-marketplace-kit/skills/skill-fact-check/references/manifest.md#tiers) defines each tier. List every vendored copy as `never` and keep only the authoritative source researchable.
-
-Each unit must appear exactly once. The strict structure check fails for missing, orphaned, or duplicate entries and for fact-checked skills without [Primary Sources](#primary-sources).
-
-### Cross-Plugin Links
-
-An installation contains only one plugin directory. A relative link into a sibling plugin therefore works in this monorepo but fails after installation.
-
-Use an absolute GitHub URL for every cross-plugin link. Keep links within the same plugin relative. `skill-structure-check` applies this rule to every Markdown file under a plugin.
+Keep links inside one plugin relative. Use an absolute GitHub URL for every cross-plugin link because an installation contains only one plugin directory.

@@ -72,7 +72,7 @@ def codex_entries(root, ref):
     """Codex catalog fields derived from the plugin registry at <ref>.
 
     Membership captures the dual-harness classification. Category and the source
-    path selected by codexProjection are copied into a per-plugin Codex catalog
+    path selected by separateCodexPackage are copied into a per-plugin Codex catalog
     entry; interface metadata stays in the generated plugin manifest and must not
     request a catalog publish. {} when the file doesn't exist at <ref>. A malformed
     file raises ValueError instead of looking like a mass catalog removal."""
@@ -89,12 +89,12 @@ def codex_entries(root, ref):
             raise ValueError("dual_harness_plugins entries must be objects")
         result = {}
         for name, metadata in entries.items():
-            codex_projection = metadata.get("codexProjection", False)
-            if not isinstance(codex_projection, bool):
+            separate_codex_package = metadata.get("separateCodexPackage", False)
+            if not isinstance(separate_codex_package, bool):
                 raise ValueError(
-                    f"dual_harness_plugins.{name}.codexProjection must be a boolean"
+                    f"dual_harness_plugins.{name}.separateCodexPackage must be a boolean"
                 )
-            source_root = "codex-plugins" if codex_projection else "plugins"
+            source_root = "codex-plugins" if separate_codex_package else "plugins"
             result[name] = {
                 "category": metadata.get("category"),
                 "sourcePath": f"{source_root}/{name}",

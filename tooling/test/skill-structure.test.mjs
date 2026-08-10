@@ -182,3 +182,33 @@ test("fact-check tiers report missing, duplicate, orphaned, and unsourced units"
   assert.match(rendered, /plugin\/current: in more than one tier/u);
   assert.match(rendered, /plugin\/unsourced: fact-checked unit without/u);
 });
+
+test("fact-check tiers reject explicit null and non-string members", async (t) => {
+  for (const manifest of [
+    { weekly: null, monthly: [], never: [] },
+    { weekly: ["plugin/current", 1], monthly: [], never: [] },
+  ]) {
+    await t.test(JSON.stringify(manifest), (caseContext) => {
+      const { root } = fixture(caseContext);
+      writeText(join(root, FACT_CHECK_MANIFEST), `${JSON.stringify(manifest)}\n`);
+      const result = factCheckTierFindings(
+        root,
+        new Set(["plugin/current"]),
+        new Set(["plugin/current"]),
+      );
+      assert.equal(result.checked, true);
+      assert.match(result.advisories.join("\n"), /weekly must be an array of strings/u);
+    });
+  }
+});
+
+test("missing fact-check tier properties default to empty arrays", (t) => {
+  const { root } = fixture(t);
+  writeText(join(root, FACT_CHECK_MANIFEST), '{"weekly":["plugin/current"]}\n');
+  const result = factCheckTierFindings(
+    root,
+    new Set(["plugin/current"]),
+    new Set(["plugin/current"]),
+  );
+  assert.deepEqual(result.advisories, []);
+});

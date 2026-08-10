@@ -27,7 +27,7 @@ The full test suite also needs Python 3 because some plugins contain Python prog
 │   ├── CATALOG.md            # Cross-plugin index
 │   ├── PLUGIN-CONVENTIONS.md # Plugin architecture and contributor workflow
 │   └── automated-routines/   # Maintenance routine configuration
-├── tooling/                  # TypeScript source, compiled package, and package tests
+├── tooling/                  # Shared generator, repository checks, and their documentation
 ├── package.json              # Contributor commands and dependency contract
 ├── scripts/                  # Plugin registry
 ├── tests-node/               # Repository health tests
@@ -50,6 +50,8 @@ Before opening a PR, run the repository health suite:
 ```shell
 npm test
 ```
+
+For focused checks, use `npm run validate:claude` for Claude's official strict validator and `npm run sync:check` for generated-file and repository consistency.
 
 ## License
 

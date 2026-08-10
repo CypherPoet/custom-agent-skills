@@ -280,19 +280,24 @@ export function factCheckTierFindings(
     return { advisories: [], checked: false };
   }
 
-  let manifest: unknown;
+  let manifest: Record<string, unknown>;
+  const tierValues = new Map<(typeof tierKeys)[number], string[]>();
   try {
-    manifest = JSON.parse(readFileSync(path, "utf8"));
-    if (
-      typeof manifest !== "object" ||
-      manifest === null ||
-      Array.isArray(manifest) ||
-      !tierKeys.every((key) => {
-        const value = (manifest as Record<string, unknown>)[key] ?? [];
-        return Array.isArray(value);
-      })
-    ) {
-      throw new Error("expected a JSON object whose tier keys hold arrays");
+    const parsed: unknown = JSON.parse(readFileSync(path, "utf8"));
+    if (typeof parsed !== "object" || parsed === null || Array.isArray(parsed)) {
+      throw new Error("expected a JSON object");
+    }
+    manifest = parsed as Record<string, unknown>;
+    for (const key of tierKeys) {
+      if (!Object.hasOwn(manifest, key)) {
+        tierValues.set(key, []);
+        continue;
+      }
+      const value = manifest[key];
+      if (!Array.isArray(value) || !value.every((entry) => typeof entry === "string")) {
+        throw new Error(`${key} must be an array of strings when provided`);
+      }
+      tierValues.set(key, value);
     }
   } catch (error) {
     return {
@@ -301,17 +306,8 @@ export function factCheckTierFindings(
     };
   }
 
-  const object = manifest as Record<string, unknown>;
-  const listed = tierKeys.flatMap((key) => {
-    const value = object[key] ?? [];
-    return Array.isArray(value) ? value.filter((entry): entry is string => typeof entry === "string") : [];
-  });
-  const neverValue = object.never ?? [];
-  const never = new Set(
-    Array.isArray(neverValue)
-      ? neverValue.filter((entry): entry is string => typeof entry === "string")
-      : [],
-  );
+  const listed = tierKeys.flatMap((key) => tierValues.get(key) ?? []);
+  const never = new Set(tierValues.get("never") ?? []);
   const advisories: string[] = [];
   for (const unit of Array.from(units).filter((value) => !listed.includes(value)).sort()) {
     advisories.push(
