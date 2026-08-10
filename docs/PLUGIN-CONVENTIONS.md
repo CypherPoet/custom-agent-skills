@@ -113,6 +113,4 @@ Do not hand-edit [`CATALOG.md`](CATALOG.md). The `catalog-refresh` skill regener
 
 Skills use the shared [`SKILL.md`](https://agentskills.io/) format. The repository's [`skill-structure-check`](../.claude/skills/skill-structure-check/SKILL.md) documents structure and remediation.
 
-Keep `evals/evals.json` prompts harness-neutral and user-realistic. Declare input files through each eval's `files` list, using paths relative to the skill root. Do not make a prompt depend on runner substitutions such as `{WS}` or `{OUTPUTS}`; the evaluator supplies its output destination outside the user prompt. For a stateful case, stage the declared inputs in an isolated working directory before invoking the skill, preserving each path relative to `evals/files/`.
-
 Every fact-checked skill ends with a `## Primary Sources` section. When a skill is created, renamed, or removed, update its `<plugin>/<skill>` entry in the [fact-check manifest](automated-routines/skill-fact-check-manifest.json). Each unit appears exactly once. Development-only `*-workspace/` and `evals/` directories do not ship.
