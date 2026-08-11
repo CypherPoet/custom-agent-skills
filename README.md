@@ -27,9 +27,12 @@ The full test suite also needs Python 3 because some plugins contain Python prog
 │   ├── CATALOG.md            # Cross-plugin index
 │   ├── PLUGIN-CONVENTIONS.md # Plugin architecture and contributor workflow
 │   └── automated-routines/   # Maintenance routine configuration
-├── tooling/                  # Shared vendoring and repository checks
+├── tooling/
+│   ├── src/                  # Authoritative plugin-sync TypeScript
+│   ├── test/                 # Package behavior tests
+│   └── dist/                 # Committed build for Git-tag consumers
 ├── vendored-skills.json      # Authoritative skill-copy relationships
-├── package.json              # Contributor commands and dependency contract
+├── package.json              # plugin-sync manifest and contributor commands
 ├── tests-node/               # Repository health tests
 ├── tests/                    # Tests for plugin-owned Python programs
 ├── .github/                  # CI (Verify workflow)
@@ -38,6 +41,16 @@ The full test suite also needs Python 3 because some plugins contain Python prog
 ```
 
 Claude plugin anatomy (component dirs, manifest fields, auto-discovery) follows the [Claude Code plugins reference](https://code.claude.com/docs/en/plugins-reference). This repo's specific conventions live in [`docs/PLUGIN-CONVENTIONS.md`](docs/PLUGIN-CONVENTIONS.md).
+
+## Architecture
+
+This repository has two deliverables: the Claude Code and Codex plugins under `plugins/`, and the `@cypherpoet/plugin-sync` Node package. The package is marked `private` to prevent registry publishing and supplies vendoring and shared checks to this repository and its private sibling. The plugins ship through their marketplaces; the Node package ships from immutable `plugin-sync-v*` Git tags.
+
+`package.json` is the Node package boundary: it defines the package metadata, public library export, command-line binaries, and contributor scripts. `tooling/` is that package's implementation directory, not another nested package.
+
+The authoritative TypeScript lives in [`tooling/src/`](tooling/src/). Files ending in `-cli.ts` are thin command adapters; the domain modules hold the behavior, and [`index.ts`](tooling/src/index.ts) defines the public library surface. For example, `npm run sync`, `npm run sync:check`, and the installed `cypherpoet-plugin-sync` binary enter through [`plugin-sync-cli.ts`](tooling/src/plugin-sync-cli.ts), which delegates vendoring to [`sync.ts`](tooling/src/sync.ts) and [`vendored-skills.ts`](tooling/src/vendored-skills.ts). TypeScript compiles into the committed [`tooling/dist/`](tooling/dist/) tree so a repository pinned to a package tag does not need to build it.
+
+See [`tooling/README.md`](tooling/README.md) for the command map, authored-versus-generated file ownership, validation boundaries, and release workflow.
 
 ## Contributing
 

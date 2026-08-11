@@ -9,7 +9,7 @@ const defaultOutput = {
 function usage() {
     return `Usage: ${SYNC_COMMAND} [--check] [--root <path>]`;
 }
-export function runCli(arguments_, output = defaultOutput) {
+export function runPluginSyncCli(arguments_, output = defaultOutput) {
     let check = false;
     let rootArgument;
     for (let index = 0; index < arguments_.length; index += 1) {
@@ -58,5 +58,5 @@ export function runCli(arguments_, output = defaultOutput) {
     output.stdout(`plugin sync: ${check ? "checked" : "written"} (no issues)`);
     return 0;
 }
-process.exitCode = runCli(process.argv.slice(2));
-//# sourceMappingURL=cli.js.map
+process.exitCode = runPluginSyncCli(process.argv.slice(2));
+//# sourceMappingURL=plugin-sync-cli.js.map

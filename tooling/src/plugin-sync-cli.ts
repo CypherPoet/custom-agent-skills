@@ -5,12 +5,12 @@ import { resolve } from "node:path";
 import { SYNC_COMMAND } from "./constants.js";
 import { findRepositoryRoot, synchronizeVendoredSkills } from "./sync.js";
 
-interface CliOutput {
+interface PluginSyncCliOutput {
   stdout(message: string): void;
   stderr(message: string): void;
 }
 
-const defaultOutput: CliOutput = {
+const defaultOutput: PluginSyncCliOutput = {
   stdout: (message) => console.log(message),
   stderr: (message) => console.error(message),
 };
@@ -19,7 +19,10 @@ function usage(): string {
   return `Usage: ${SYNC_COMMAND} [--check] [--root <path>]`;
 }
 
-export function runCli(arguments_: readonly string[], output: CliOutput = defaultOutput): number {
+export function runPluginSyncCli(
+  arguments_: readonly string[],
+  output: PluginSyncCliOutput = defaultOutput,
+): number {
   let check = false;
   let rootArgument: string | undefined;
   for (let index = 0; index < arguments_.length; index += 1) {
@@ -67,4 +70,4 @@ export function runCli(arguments_: readonly string[], output: CliOutput = defaul
   return 0;
 }
 
-process.exitCode = runCli(process.argv.slice(2));
+process.exitCode = runPluginSyncCli(process.argv.slice(2));

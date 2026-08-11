@@ -21,6 +21,16 @@ npm run sync:check
 
 `sync` applies a complete valid vendoring plan. `sync:check` reports drift without writing. Invalid sources or relationships block every target write.
 
+## Command Surface
+
+| Repository Command | Installed Binary | TypeScript Adapter |
+|---|---|---|
+| `npm run sync` / `npm run sync:check` | `cypherpoet-plugin-sync` | [`src/plugin-sync-cli.ts`](src/plugin-sync-cli.ts) |
+| `npm run versions:check` | `cypherpoet-plugin-version-check` | [`src/version-bumps-cli.ts`](src/version-bumps-cli.ts) |
+| `npm test` | `cypherpoet-repository-test` | [`src/test-runner-cli.ts`](src/test-runner-cli.ts) |
+| `npm run structure:check` | `cypherpoet-skill-structure-check` | [`src/skill-structure-cli.ts`](src/skill-structure-cli.ts) |
+| `npm run validate:claude` | `cypherpoet-validate-claude-plugins` | [`src/claude-plugin-validation-cli.ts`](src/claude-plugin-validation-cli.ts) |
+
 ## Repository Checks
 
 The package supplies checks that both source repositories share:
@@ -33,17 +43,23 @@ The package supplies checks that both source repositories share:
 
 These are repository invariants, not substitutes for platform schemas. Codex does not currently provide a stable repository validation command suitable for CI. The optional local `plugin-creator` scaffold preflight is non-authoritative release-review evidence, not a platform schema or repository gate.
 
-## Package Structure
+## Architecture
 
-| Module | Responsibility |
+| Path | Responsibility |
 |---|---|
-| `src/sync.ts` | Load the vendoring configuration and apply a valid plan. |
-| `src/vendored-skills.ts` | Plan vendored copies, drift, and safe retirement. |
-| `src/plugin-manifests.ts` | Discover authored manifests and check shared repository invariants. |
-| `src/version-bumps.ts` | Enforce one fresh version across every supported manifest. |
-| `src/claude-plugin-validation.ts` | Invoke Claude Code's official strict validator. |
+| [`../package.json`](../package.json) | Package boundary: metadata, public export, binary names, and repository scripts. |
+| [`src/index.ts`](src/index.ts) | Public library surface for repository checks used without a command-line process. |
+| [`src/plugin-sync-cli.ts`](src/plugin-sync-cli.ts) | Vendoring command adapter for `cypherpoet-plugin-sync`. |
+| `src/*-cli.ts` | Other named command adapters; argument parsing and process exit status only. |
+| [`src/sync.ts`](src/sync.ts) | Load the vendoring configuration, locate the repository, and coordinate a valid plan. |
+| [`src/vendored-skills.ts`](src/vendored-skills.ts) | Plan vendored copies, drift, and safe retirement. |
+| [`src/plugin-manifests.ts`](src/plugin-manifests.ts) | Discover authored manifests and check shared repository invariants. |
+| [`src/version-bumps.ts`](src/version-bumps.ts) | Enforce one fresh version across every supported manifest. |
+| [`src/claude-plugin-validation.ts`](src/claude-plugin-validation.ts) | Invoke Claude Code's official strict validator. |
+| [`test/`](test/) | Package behavior tests against temporary repository fixtures. |
+| [`dist/`](dist/) | Generated JavaScript, declarations, and source maps consumed by Git-tag installations. |
 
-TypeScript is authoritative. Compiled files under `dist/` are committed so Git-tag consumers do not need to build the package.
+The root package manifest maps each binary to a matching named adapter in `dist/`. Each adapter delegates to a domain module; adapters do not contain the package implementation. TypeScript under `src/` is authoritative, while compiled files under `dist/` are committed so Git-tag consumers do not need to build the package.
 
 ## Development and Release
 
@@ -54,4 +70,4 @@ npm run build
 npm test
 ```
 
-`npm run build:check` verifies that committed JavaScript and declarations match the TypeScript source. Version `0.2.0` adds the Codex combined skill-identity length check. Tag the reviewed merge commit as `plugin-sync-v0.2.0`; downstream repositories should pin that immutable tag and its resolved commit.
+`npm run build:check` verifies that committed JavaScript and declarations match the TypeScript source. Version `0.2.1` gives the vendoring binary a purpose-named `plugin-sync-cli` entry point without changing its installed command. Tag the reviewed merge commit as `plugin-sync-v0.2.1`; downstream repositories should pin that immutable tag and its resolved commit.
