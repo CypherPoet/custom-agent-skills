@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
+  "name": "threejs-kit",
+  "displayName": "Three.js",
+  "version": "0.11.0",
+  "description": "Three.js / WebGPU / WebGL tooling.",
+  "author": {
+    "name": "CypherPoet"
+  },
+  "homepage": "https://github.com/CypherPoet/custom-agent-skills/tree/main/plugins/threejs-kit",
+  "repository": "https://github.com/CypherPoet/custom-agent-skills.git",
+  "license": "MIT",
+  "keywords": [
+    "claude-code",
+    "threejs",
+    "webgl",
+    "webgl2",
+    "webgpu",
+    "graphics"
+  ]
+}

@@ -84,3 +84,57 @@ test("multi-platform manifests share one version", (t) => {
     auditPluginManifests(root).problems.some((problem) => problem.includes("versions must match")),
   );
 });
+
+test("Codex skill identities allow 64 characters and reject 65", (t) => {
+  const root = temporaryDirectory(t);
+  writeCodexPluginManifest(root, "p", fields());
+  writeText(
+    join(root, "plugins/p/skills/passing-folder/SKILL.md"),
+    `---\nname: ${"a".repeat(62)}\ndescription: Passing fixture\n---\n\nPass.\n`,
+  );
+  writeText(
+    join(root, "plugins/p/skills/failing-folder/SKILL.md"),
+    `---\nname: ${"b".repeat(63)}\ndescription: Failing fixture\n---\n\nFail.\n`,
+  );
+
+  const problems = auditPluginManifests(root).problems;
+  assert.equal(problems.length, 1);
+  assert.match(problems[0], /Codex skill identity/u);
+  assert.ok(problems[0].includes(`p:${"b".repeat(63)}`));
+});
+
+test("Codex identity length uses the skill frontmatter name, not its folder", (t) => {
+  const root = temporaryDirectory(t);
+  writeCodexPluginManifest(root, "frontmatter-check", fields());
+  writeText(
+    join(root, `plugins/frontmatter-check/skills/${"folder-".repeat(12)}/SKILL.md`),
+    "---\nname: short\ndescription: Folder-independent fixture\n---\n\nPass.\n",
+  );
+
+  assert.deepEqual(auditPluginManifests(root).problems, []);
+});
+
+test("Claude-only plugins are not subject to the Codex identity limit", (t) => {
+  const root = temporaryDirectory(t);
+  const pluginName = `claude-${"p".repeat(40)}`;
+  writePluginManifest(root, pluginName, fields());
+  writeText(
+    join(root, `plugins/${pluginName}/skills/example/SKILL.md`),
+    `---\nname: ${"s".repeat(40)}\ndescription: Claude-only fixture\n---\n\nPass.\n`,
+  );
+
+  assert.deepEqual(auditPluginManifests(root).problems, []);
+});
+
+test("manifest audit does not enforce a plugin naming style", (t) => {
+  const root = temporaryDirectory(t);
+  for (const pluginName of ["plain", "focused-kit", "cypherpoet-legacy"]) {
+    writeCodexPluginManifest(root, pluginName, fields());
+    writeText(
+      join(root, `plugins/${pluginName}/skills/example/SKILL.md`),
+      "---\nname: example\ndescription: Naming fixture\n---\n\nPass.\n",
+    );
+  }
+
+  assert.deepEqual(auditPluginManifests(root).problems, []);
+});

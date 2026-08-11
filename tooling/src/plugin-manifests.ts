@@ -15,6 +15,8 @@ export interface PluginManifestAudit {
   problems: string[];
 }
 
+const CODEX_SKILL_IDENTITY_MAXIMUM_LENGTH = 64;
+
 export function parsePluginVersion(
   value: unknown,
 ): readonly [major: number, minor: number, patch: number] | undefined {
@@ -62,6 +64,77 @@ function validateManifest(
   }
   if (parsePluginVersion(manifest.version) === undefined) {
     problems.push(`${label} version must use major.minor.patch`);
+  }
+  return problems;
+}
+
+function readSkillFrontmatterName(path: string): string | undefined {
+  let text: string;
+  try {
+    text = readFileSync(path, "utf8");
+  } catch {
+    return undefined;
+  }
+
+  const frontmatter = text.match(
+    /^---[ \t]*\r?\n([\s\S]*?)\r?\n---(?:[ \t]*\r?\n|[ \t]*$)/u,
+  );
+  const nameMatch = frontmatter?.[1]?.match(/^name:[ \t]*(.*?)[ \t]*$/mu);
+  if (nameMatch?.[1] === undefined) {
+    return undefined;
+  }
+
+  const value = nameMatch[1];
+  if (value.startsWith('"') && value.endsWith('"')) {
+    try {
+      const parsed: unknown = JSON.parse(value);
+      return typeof parsed === "string" && parsed.length > 0 ? parsed : undefined;
+    } catch {
+      return undefined;
+    }
+  }
+  if (value.startsWith("'") && value.endsWith("'")) {
+    const parsed = value.slice(1, -1).replaceAll("''", "'");
+    return parsed.length > 0 ? parsed : undefined;
+  }
+
+  const parsed = value.replace(/[ \t]+#.*$/u, "").trim();
+  return parsed.length > 0 ? parsed : undefined;
+}
+
+function validateCodexSkillIdentities(plugin: PluginManifestSet): string[] {
+  if (plugin.codex === undefined) {
+    return [];
+  }
+
+  const skillsDirectory = join(plugin.directory, "skills");
+  if (!existsSync(skillsDirectory) || !statSync(skillsDirectory).isDirectory()) {
+    return [];
+  }
+
+  const pluginName =
+    typeof plugin.codex.name === "string" ? plugin.codex.name : plugin.name;
+  const problems: string[] = [];
+  for (const entry of readdirSync(skillsDirectory, { withFileTypes: true }).sort((left, right) =>
+    left.name.localeCompare(right.name, "en"),
+  )) {
+    if (!entry.isDirectory()) {
+      continue;
+    }
+    const skillName = readSkillFrontmatterName(
+      join(skillsDirectory, entry.name, "SKILL.md"),
+    );
+    if (skillName === undefined) {
+      continue;
+    }
+
+    const identity = `${pluginName}:${skillName}`;
+    if ([...identity].length > CODEX_SKILL_IDENTITY_MAXIMUM_LENGTH) {
+      problems.push(
+        `[manifest] ${plugin.name} Codex skill identity ${JSON.stringify(identity)} ` +
+          `must be ${CODEX_SKILL_IDENTITY_MAXIMUM_LENGTH} characters or fewer`,
+      );
+    }
   }
   return problems;
 }
@@ -122,6 +195,7 @@ export function auditPluginManifests(rootPath: string): PluginManifestAudit {
           `${JSON.stringify(plugin.claude.version)} != ${JSON.stringify(plugin.codex.version)}`,
       );
     }
+    problems.push(...validateCodexSkillIdentities(plugin));
     plugins.push(plugin);
   }
   return { plugins, problems };

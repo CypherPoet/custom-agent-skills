@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
+  "name": "obsidian-plugin-kit",
+  "displayName": "Obsidian Plugin Development",
+  "version": "0.4.0",
+  "description": "Comprehensive Obsidian plugin development: scaffolding from the official sample-plugin template, the vault/editor/workspace APIs, lifecycle and memory safety, settings tabs (classic and the 1.13 declarative API), mobile and pop-out support, eslint-plugin-obsidianmd review, and community-directory submission — grounded in the official Obsidian developer docs, with a dependency-free manifest/release preflight validator.",
+  "author": { "name": "CypherPoet" },
+  "homepage": "https://github.com/CypherPoet/custom-agent-skills/tree/main/plugins/obsidian-plugin-kit",
+  "repository": "https://github.com/CypherPoet/custom-agent-skills.git",
+  "license": "MIT",
+  "keywords": [
+    "claude-code",
+    "obsidian",
+    "obsidian-plugin",
+    "typescript",
+    "plugin-development",
+    "eslint"
+  ]
+}

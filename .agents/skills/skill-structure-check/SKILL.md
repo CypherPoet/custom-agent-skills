@@ -59,7 +59,7 @@ a single line, placed after the file's introduction,
 
 ## Acting on Findings
 
-- **Oversized `SKILL.md`** — extract topical sections into `references/<topic>.md` and leave a routing table in the body. `cypherpoet-threejs-kit` and `cypherpoet-mobile-dev` are worked examples; follow `skill-creator`'s progressive-disclosure guidance.
+- **Oversized `SKILL.md`** — extract topical sections into `references/<topic>.md` and leave a routing table in the body. `threejs-kit` and `mobile-dev` are worked examples; follow `skill-creator`'s progressive-disclosure guidance.
 - **Missing or stale Contents index** — add or repair the jump-line per [The Contents Index Format](#the-contents-index-format).
 - **Escaping relative link** — use an absolute GitHub URL for another plugin; keep links within the current plugin relative.
 - **Vendoring drift** — edit the authoritative source or `vendored-skills.json`, then run `npm run sync`. Never hand-edit a vendored target. A retired copy is removed automatically when git shows it clean; otherwise the sync refuses and tells you why.

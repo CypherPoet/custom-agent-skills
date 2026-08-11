@@ -7,7 +7,7 @@ from support import ROOT, fixture_directory, load_module, write, write_json
 
 catalog_refresh = load_module(
     "catalog_refresh",
-    "plugins/cypherpoet-marketplace-kit/skills/catalog-refresh/scripts/refresh_catalog.py",
+    "plugins/marketplace-kit/skills/catalog-refresh/scripts/refresh_catalog.py",
 )
 
 
@@ -115,7 +115,7 @@ class CatalogRefreshTests(unittest.TestCase):
             [
                 sys.executable,
                 ROOT
-                / "plugins/cypherpoet-marketplace-kit/skills/catalog-refresh/"
+                / "plugins/marketplace-kit/skills/catalog-refresh/"
                 "scripts/refresh_catalog.py",
                 "--check",
             ],

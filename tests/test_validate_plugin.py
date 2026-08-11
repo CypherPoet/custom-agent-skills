@@ -13,7 +13,7 @@ from support import fixture_directory, load_module, write, write_json
 
 validate_plugin = load_module(
     "validate_plugin",
-    "plugins/cypherpoet-obsidian-plugin-kit/skills/obsidian-plugin-crafting/scripts/validate_plugin.py",
+    "plugins/obsidian-plugin-kit/skills/obsidian-plugin-crafting/scripts/validate_plugin.py",
 )
 
 

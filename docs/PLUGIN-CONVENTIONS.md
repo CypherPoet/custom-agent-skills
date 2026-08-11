@@ -40,9 +40,8 @@ Use `0.1.0` for a new plugin. Use PATCH for fixes, MINOR for additive changes, a
 
 All manifests for one plugin share a release version. When shipped content or either platform manifest changes, bump every manifest that plugin supports to the same new version. A merge to `main` does not update an existing installation without that bump.
 
-Descriptions and other presentation fields may differ because each platform owns its own manifest contract. Repository values remain consistent with sibling plugins:
+Descriptions and other presentation fields may differ because each platform owns its own manifest contract. Repository metadata uses these shared values:
 
-- Plugin names use `cypherpoet-<theme>`; reserve `-kit` for focused toolkits.
 - Author name is `CypherPoet`.
 - Homepages point to the plugin under this repository's `main` branch.
 - Repository URL is `https://github.com/CypherPoet/custom-agent-skills.git`.
@@ -80,7 +79,7 @@ npm run structure:check
 npm run versions:check
 ```
 
-`validate:claude` runs Claude Code's pinned official validator in strict mode. `sync:check` checks only vendored copies. Repository health checks manifest discovery, names, versions, and shared-version consistency.
+`validate:claude` runs Claude Code's pinned official validator in strict mode. `sync:check` checks only vendored copies. Repository health checks manifest discovery, names, versions, shared-version consistency, and Codex's 64-character combined `plugin-name:skill-name` limit. The combined identity uses the skill frontmatter `name`; Claude-only plugins are outside that Codex limit.
 
 Codex does not currently expose a stable repository validation command. The optional local `plugin-creator` scaffold preflight can provide packaging feedback during release review, but it is non-authoritative, does not define Codex's submission contract, and is not a repository gate. Do not duplicate the platform schema in repository tooling.
 

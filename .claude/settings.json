@@ -6,6 +6,6 @@
   },
   "enabledPlugins": {
     "plugin-dev@claude-plugins-official": true,
-    "cypherpoet-marketplace-kit@cypherpoet-toolchest": true
+    "marketplace-kit@cypherpoet-toolchest": true
   }
 }

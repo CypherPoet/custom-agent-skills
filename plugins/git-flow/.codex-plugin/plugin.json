@@ -1,0 +1,34 @@
+{
+  "name": "git-flow",
+  "version": "0.6.0",
+  "description": "Bundle of git commit and changelog hygiene plugins: emoji commits and changelog maintenance.",
+  "author": {
+    "name": "CypherPoet"
+  },
+  "homepage": "https://github.com/CypherPoet/custom-agent-skills/tree/main/plugins/git-flow",
+  "repository": "https://github.com/CypherPoet/custom-agent-skills.git",
+  "license": "MIT",
+  "keywords": [
+    "claude-code",
+    "git",
+    "commits",
+    "changelog",
+    "bundle"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Git Flow",
+    "shortDescription": "Manage commits and changelogs",
+    "longDescription": "Bundle of git commit and changelog hygiene plugins: emoji commits and changelog maintenance.",
+    "developerName": "CypherPoet",
+    "category": "Developer Tools",
+    "capabilities": [
+      "Read",
+      "Write"
+    ],
+    "websiteURL": "https://github.com/CypherPoet/custom-agent-skills/tree/main/plugins/git-flow",
+    "defaultPrompt": [
+      "Prepare an atomic commit and changelog entry for these changes."
+    ]
+  }
+}

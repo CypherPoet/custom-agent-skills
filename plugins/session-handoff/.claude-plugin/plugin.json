@@ -1,0 +1,12 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
+  "name": "session-handoff",
+  "displayName": "Session Handoff",
+  "version": "0.7.0",
+  "description": "Write a structured handoff document so a fresh agent can resume long-running work without losing context.",
+  "author": { "name": "CypherPoet" },
+  "homepage": "https://github.com/CypherPoet/custom-agent-skills/tree/main/plugins/session-handoff",
+  "repository": "https://github.com/CypherPoet/custom-agent-skills.git",
+  "license": "MIT",
+  "keywords": ["claude-code", "session", "handoff", "context", "workflow"]
+}
