@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
+  "name": "app-store-connect-kit",
+  "displayName": "App Store Connect",
+  "version": "0.5.0",
+  "description": "Hands-on App Store Connect submission workflow and console navigation.",
+  "author": { "name": "CypherPoet" },
+  "homepage": "https://github.com/CypherPoet/custom-agent-skills/tree/main/plugins/app-store-connect-kit",
+  "repository": "https://github.com/CypherPoet/custom-agent-skills.git",
+  "license": "MIT",
+  "keywords": [
+    "claude-code",
+    "ios",
+    "apple",
+    "app-store",
+    "app-store-connect",
+    "xcode-cloud",
+    "submission",
+    "sandbox",
+    "testflight"
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
+  "name": "git-flow",
+  "displayName": "Git Flow",
+  "version": "0.6.0",
+  "description": "Bundle of git commit and changelog hygiene plugins: emoji commits and changelog maintenance.",
+  "author": { "name": "CypherPoet" },
+  "homepage": "https://github.com/CypherPoet/custom-agent-skills/tree/main/plugins/git-flow",
+  "repository": "https://github.com/CypherPoet/custom-agent-skills.git",
+  "license": "MIT",
+  "keywords": ["claude-code", "git", "commits", "changelog", "bundle"]
+}

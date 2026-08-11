@@ -1,0 +1,12 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
+  "name": "git-hygiene",
+  "displayName": "Git Hygiene",
+  "version": "0.4.0",
+  "description": "Keep local git state tidy: sync branches with the remote, and clean up stale branches and worktrees with per-item approval.",
+  "author": { "name": "CypherPoet" },
+  "homepage": "https://github.com/CypherPoet/custom-agent-skills/tree/main/plugins/git-hygiene",
+  "repository": "https://github.com/CypherPoet/custom-agent-skills.git",
+  "license": "MIT",
+  "keywords": ["claude-code", "git", "branches", "worktrees", "sync", "cleanup"]
+}

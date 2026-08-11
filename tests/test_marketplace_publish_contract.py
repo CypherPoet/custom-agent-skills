@@ -7,7 +7,7 @@ class MarketplacePublishContractTests(unittest.TestCase):
     def test_mapping_registry_carries_codex_display_names(self):
         mappings = (
             ROOT
-            / "plugins/cypherpoet-marketplace-kit/references/marketplaces.md"
+            / "plugins/marketplace-kit/references/marketplaces.md"
         ).read_text(encoding="utf-8")
         self.assertIn("CypherPoet Toolchest`", mappings)
         self.assertIn("CypherPoet Toolchest Private`", mappings)
@@ -16,7 +16,7 @@ class MarketplacePublishContractTests(unittest.TestCase):
     def test_publish_procedure_seeds_and_pins_marketplace_display_name(self):
         procedure = (
             ROOT
-            / "plugins/cypherpoet-marketplace-kit/skills/marketplace-publish/SKILL.md"
+            / "plugins/marketplace-kit/skills/marketplace-publish/SKILL.md"
         ).read_text(encoding="utf-8")
         self.assertIn("EXPECTED_CODEX_DISPLAY_NAME", procedure)
         self.assertIn(

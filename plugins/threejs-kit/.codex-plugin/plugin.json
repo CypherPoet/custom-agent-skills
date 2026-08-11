@@ -1,0 +1,35 @@
+{
+  "name": "threejs-kit",
+  "version": "0.11.0",
+  "description": "Three.js / WebGPU / WebGL tooling.",
+  "author": {
+    "name": "CypherPoet"
+  },
+  "homepage": "https://github.com/CypherPoet/custom-agent-skills/tree/main/plugins/threejs-kit",
+  "repository": "https://github.com/CypherPoet/custom-agent-skills.git",
+  "license": "MIT",
+  "keywords": [
+    "claude-code",
+    "threejs",
+    "webgl",
+    "webgl2",
+    "webgpu",
+    "graphics"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Three.js",
+    "shortDescription": "Build Three.js web graphics",
+    "longDescription": "Three.js / WebGPU / WebGL tooling.",
+    "developerName": "CypherPoet",
+    "category": "Developer Tools",
+    "capabilities": [
+      "Read",
+      "Write"
+    ],
+    "websiteURL": "https://github.com/CypherPoet/custom-agent-skills/tree/main/plugins/threejs-kit",
+    "defaultPrompt": [
+      "Implement this 3D experience with Three.js."
+    ]
+  }
+}

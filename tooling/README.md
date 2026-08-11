@@ -25,7 +25,7 @@ npm run sync:check
 
 The package supplies checks that both source repositories share:
 
-- `auditPluginManifests(root)` discovers platform support, requires at least one manifest per plugin, checks each name against its directory, validates `major.minor.patch`, and requires equal versions when both manifests exist.
+- `auditPluginManifests(root)` discovers platform support, requires at least one manifest per plugin, checks each name against its directory, validates `major.minor.patch`, requires equal versions when both manifests exist, and rejects Codex `plugin-name:skill-name` identities longer than 64 characters. The identity uses the skill frontmatter `name`; Claude-only plugins are not subject to the Codex limit.
 - `synchronizeVendoredSkills(root, write)` validates and synchronizes declared skill copies.
 - `npm run versions:check` requires a fresh shared plugin version for shipped changes.
 - `npm run structure:check` checks skill size, links, reference indexes, fact-check classification, and vendored-copy drift.
@@ -54,4 +54,4 @@ npm run build
 npm test
 ```
 
-`npm run build:check` verifies that committed JavaScript and declarations match the TypeScript source. Keep the package at `0.1.0` until the reviewed public commit is merged and tagged `plugin-sync-v0.1.0`.
+`npm run build:check` verifies that committed JavaScript and declarations match the TypeScript source. Version `0.2.0` adds the Codex combined skill-identity length check. Tag the reviewed merge commit as `plugin-sync-v0.2.0`; downstream repositories should pin that immutable tag and its resolved commit.

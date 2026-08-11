@@ -43,7 +43,7 @@ Claude plugin anatomy (component dirs, manifest fields, auto-discovery) follows 
 
 Conventions live in [`docs/PLUGIN-CONVENTIONS.md`](docs/PLUGIN-CONVENTIONS.md); [`AGENTS.md`](AGENTS.md) carries the working rules for AI agents.
 
-Marketplace maintenance uses the [`cypherpoet-marketplace-kit`](plugins/cypherpoet-marketplace-kit/README.md) plugin.
+Marketplace maintenance uses the [`marketplace-kit`](plugins/marketplace-kit/README.md) plugin.
 
 Before opening a PR, run the repository health suite:
 

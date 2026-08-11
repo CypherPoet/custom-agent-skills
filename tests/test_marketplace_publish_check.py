@@ -9,7 +9,7 @@ from support import ROOT, commit_all, fixture_directory, git, initialize_git_rep
 
 
 SCRIPT = ROOT / (
-    "plugins/cypherpoet-marketplace-kit/skills/"
+    "plugins/marketplace-kit/skills/"
     "marketplace-publish-check/scripts/needs_marketplace_publish.py"
 )
 
