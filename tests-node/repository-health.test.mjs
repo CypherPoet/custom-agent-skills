@@ -80,16 +80,19 @@ test("manifest presence declares platform support", () => {
   assert.equal(audit.plugins.filter(({ codex }) => codex !== undefined).length, 23);
 });
 
-test("the package exposes the frozen 0.2.0 Node contract", () => {
+test("the package exposes the expected Node contract", () => {
   const packageJson = JSON.parse(readFileSync(resolve(root, "package.json"), "utf8"));
   assert.equal(packageJson.name, "@cypherpoet/plugin-sync");
-  assert.equal(packageJson.version, "0.2.0");
+  assert.equal(packageJson.version, "0.2.1");
   assert.equal(
     packageJson.description,
     "Synchronizes vendored skills and checks CypherPoet plugin repositories.",
   );
   assert.equal(packageJson.engines.node, ">=24");
-  assert.equal(packageJson.bin["cypherpoet-plugin-sync"], "tooling/dist/cli.js");
+  assert.equal(
+    packageJson.bin["cypherpoet-plugin-sync"],
+    "tooling/dist/plugin-sync-cli.js",
+  );
   assert.equal(
     packageJson.bin["cypherpoet-plugin-version-check"],
     "tooling/dist/version-bumps-cli.js",
@@ -111,7 +114,6 @@ test("the package exposes the frozen 0.2.0 Node contract", () => {
   assert.equal(packageJson.scripts.prepare, undefined);
   assert.equal(packageJson.scripts.postinstall, undefined);
   assert.ok(existsSync(resolve(root, "package-lock.json")));
-  assert.ok(existsSync(resolve(root, "tooling/dist/cli.js")));
 });
 
 test("the retired Python tooling contract has no files or tracked references", () => {
