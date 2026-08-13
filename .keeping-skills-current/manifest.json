@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "scheduler": "none",
+  "scheduler": "agentPlatform",
   "delivery": {
     "strategy": "githubPullRequest",
     "branchName": "automation/keeping-skills-current",
