@@ -532,12 +532,12 @@ def host_is_public(hostname: str) -> bool:
     lowered = hostname.rstrip(".").lower()
     if lowered == "localhost" or lowered.endswith(".localhost") or lowered.endswith(".local"):
         return False
-    labels = lowered.split(".")
-    if labels and all(NUMERIC_HOST_LABEL_PATTERN.fullmatch(label) for label in labels):
-        return False
     try:
         address = ipaddress.ip_address(lowered)
     except ValueError:
+        labels = lowered.split(".")
+        if labels and all(NUMERIC_HOST_LABEL_PATTERN.fullmatch(label) for label in labels):
+            return False
         return "." in lowered
     return address.is_global
 

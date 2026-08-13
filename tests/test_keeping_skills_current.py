@@ -401,6 +401,14 @@ class KeepingSkillsCurrentTests(unittest.TestCase):
             ),
             "https://[2606:4700:4700::1111]/docs/",
         )
+        self.assertEqual(
+            HELPER_MODULE.normalize_source_url(
+                "https://8.8.8.8/docs/",
+                "source URL",
+                False,
+            ),
+            "https://8.8.8.8/docs/",
+        )
 
     def test_preflight_rejects_invalid_git_refs_and_active_manifests_inside_skills(self):
         for branch_name in ("review~1", "review^next", "topic.lock", "HEAD", "@{-1}"):
