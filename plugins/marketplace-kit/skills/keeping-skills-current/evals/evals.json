@@ -56,6 +56,20 @@
       "prompt": "Use $keeping-skills-current to review every configured skill that is currently due for review, without asking questions. Treat the supplied git-state-dirty-owned-worktree.json as the fetched Git and local worktree state for this behavioral fixture.",
       "expected_output": "Inspects the existing owned worktree before relying on the detached preview. Because a managed functional file has an uncommitted change, it does not report that nothing is due from committed refs and does not discard, overwrite, stash, commit, or move the work. It stops for interactive reconciliation.",
       "files": ["evals/fixtures/github-project/.keeping-skills-current/manifest.json", "evals/fixtures/github-project/plugins/example/skills/example/SKILL.md", "evals/fixtures/github-project/git-state-dirty-owned-worktree.json"]
+    },
+    {
+      "id": 9,
+      "eval_name": "github-delivery-recreates-local-branch-from-remote",
+      "prompt": "Use $keeping-skills-current to review every configured skill that is currently due for review, without asking questions. Treat the supplied git-state-remote-only-due.json as the fetched Git and pull-request state for this behavioral fixture.",
+      "expected_output": "Uses the fetched owned tip for preview and due selection. Because the owned branch exists remotely but not locally, it creates the local stable branch from the fetched owned tip before attaching its isolated worktree. It does not incorrectly start from the default tip or require a preexisting local ref.",
+      "files": ["evals/fixtures/github-project/.keeping-skills-current/manifest.json", "evals/fixtures/github-project/plugins/example/skills/example/SKILL.md", "evals/fixtures/github-project/git-state-remote-only-due.json"]
+    },
+    {
+      "id": 10,
+      "eval_name": "github-delivery-local-ahead-no-due-needs-reconciliation",
+      "prompt": "Use $keeping-skills-current to review every configured skill that is currently due for review, without asking questions. Treat the supplied git-state-local-ahead-no-due.json as the fetched Git and pull-request state for this behavioral fixture.",
+      "expected_output": "Recognizes the local owned commits as pending delivery even though their committed state makes the due set empty. It does not take the ordinary no-due exit, discard commits, force-push, or claim delivery succeeded. It stops with explicit reconciliation guidance so an interactive run can verify a durable workflow-owned report before finishing delivery.",
+      "files": ["evals/fixtures/github-project/.keeping-skills-current/manifest.json", "evals/fixtures/github-project/plugins/example/skills/example/SKILL.md", "evals/fixtures/github-project/git-state-local-ahead-no-due.json"]
     }
   ]
 }

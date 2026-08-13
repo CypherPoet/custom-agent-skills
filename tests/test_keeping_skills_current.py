@@ -95,19 +95,47 @@ class KeepingSkillsCurrentTests(unittest.TestCase):
             "Create a disposable detached worktree from the selected preview tip"
         )
         no_due_exit = procedure.index(
-            "If nothing is selected and no relevant owned-worktree edits require reconciliation"
+            "If nothing is selected, no relevant owned-worktree edits require reconciliation"
         )
         branch_setup = procedure.index(
             "Otherwise establish or reuse the marked stable-branch worktree"
         )
         fast_forward = procedure.index(
-            "fast-forward a behind local branch to the fetched tip"
+            "Fast-forward a behind local branch to the fetched owned tip"
         )
         self.assertLess(default_preview, detached_preview)
         self.assertLess(inspect_owned_worktree, detached_preview)
         self.assertLess(detached_preview, no_due_exit)
         self.assertLess(no_due_exit, branch_setup)
         self.assertLess(branch_setup, fast_forward)
+
+    def test_github_delivery_recreates_missing_local_branch_from_fetched_owned_tip(self):
+        delivery = (SKILL_ROOT / "references/delivery.md").read_text(encoding="utf-8")
+        fetched_preview = delivery.index(
+            "Use the newer owned tip when one is a linear descendant"
+        )
+        create_local = delivery.index(
+            "create it from the fetched owned tip if that tip exists"
+        )
+        fallback_default = delivery.index(
+            "or from the fetched default tip when no owned branch exists anywhere"
+        )
+        self.assertLess(fetched_preview, create_local)
+        self.assertLess(create_local, fallback_default)
+
+    def test_github_delivery_does_not_hide_local_ahead_commits_as_no_due(self):
+        delivery = (SKILL_ROOT / "references/delivery.md").read_text(encoding="utf-8")
+        local_ahead = delivery.index(
+            "Record a local-ahead relationship as pending delivery or reconciliation"
+        )
+        no_due_condition = delivery.index(
+            "and the local owned tip is not ahead"
+        )
+        reconcile = delivery.index(
+            "stop with explicit pending-delivery reconciliation guidance"
+        )
+        self.assertLess(local_ahead, no_due_condition)
+        self.assertLess(no_due_condition, reconcile)
 
     def test_github_delivery_refuses_no_due_with_relevant_owned_worktree_edits(self):
         delivery = (SKILL_ROOT / "references/delivery.md").read_text(encoding="utf-8")
@@ -118,7 +146,7 @@ class KeepingSkillsCurrentTests(unittest.TestCase):
             "A no-question run must stop for reconciliation"
         )
         no_due_exit = delivery.index(
-            "If nothing is due and no relevant owned-worktree edits require reconciliation"
+            "If nothing is due, no relevant owned-worktree edits require reconciliation"
         )
         self.assertLess(inspect_worktree, stop_for_reconciliation)
         self.assertLess(stop_for_reconciliation, no_due_exit)
