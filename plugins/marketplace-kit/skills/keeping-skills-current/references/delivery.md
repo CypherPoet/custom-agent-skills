@@ -12,13 +12,15 @@ Create the report only after the first actual review. Preserve it unchanged when
 
 Require a Git worktree, GitHub remote, authenticated compatible GitHub client, permission to push and open pull requests, and no conflicting unowned branch or pull request. Derive the default branch from the repository and store only the stable `branchName`.
 
-Use one stable branch and at most one open pull request per project. Mark both as workflow-owned. Complete this branch setup before authoritative preflight, due calculation, or skill selection so review state on an open branch remains authoritative. At the start of a run:
+Use one stable branch and at most one open pull request per project. Mark both as workflow-owned. Inspect the authoritative owned state before selection, but do not move the owned branch merely to discover that nothing is due. At the start of a run:
 
-1. Fetch the default branch and inspect the owned branch and pull request.
-2. Establish the owned branch in an isolated worktree and use that worktree as the project root for the remainder of the run.
-3. Incorporate the latest default branch without rewriting history or force-pushing.
-4. Treat human commits on the owned branch as preexisting work. Review their resulting content but do not automatically modify the same files during a no-question run.
-5. Stop on synchronization conflicts, unexpected branch movement, uncertain ownership, or an unmarked artifact.
+1. Fetch the default and owned remote refs without checking out or moving the local owned branch. Inspect the owned pull request and validate its marker.
+2. Compare any local owned tip with the fetched tip. Use the newer owned tip when one is a linear descendant; stop on divergence or uncertain ownership. When no owned tip exists, use the fetched default tip as the preview base. Record a local-ahead relationship as pending delivery or reconciliation; committed local state is not eligible for the no-due exit merely because its fingerprints are fresh.
+3. Inspect any existing owned worktree before the no-due optimization. If uncommitted changes touch the locator, active manifest, or a managed skill's functional files, committed refs do not represent the complete review state. A no-question run must stop for reconciliation instead of reporting that nothing is due; an interactive run may reconcile the work without discarding it.
+4. Create a disposable detached worktree from the preview base. Incorporate the fetched default branch only in the disposable worktree when the preview began from an owned tip, then run preflight and due selection there.
+5. If nothing is due, no relevant owned-worktree edits require reconciliation, and the local owned tip is not ahead, delete the disposable worktree and make no owned-branch, manifest, report, commit, push, or pull-request change. If the local owned tip is ahead, do not report `No skills are due.` or strand its commits: stop with explicit pending-delivery reconciliation guidance. An interactive run may verify and finish a durable workflow-owned pending delivery; never infer or reconstruct missing report content.
+6. If work is selected, establish the stable branch in its isolated worktree. When the local branch is absent, create it from the fetched owned tip if that tip exists, or from the fetched default tip when no owned branch exists anywhere. Otherwise fast-forward a behind local branch to the fetched owned tip, preserve local-ahead commits as preexisting work, stop on divergence, and incorporate the fetched default without rewriting history or force-pushing.
+7. Repeat authoritative preflight and selection from the established branch before research. Treat human commits as preexisting work and do not automatically modify the same files during a no-question run.
 
 Commit each skill transaction separately, including its state and authorized edits or supporting artifacts. Build all commits locally, push once after the complete run, then update the pull-request body immediately. Never expose a half-reported remote run.
 

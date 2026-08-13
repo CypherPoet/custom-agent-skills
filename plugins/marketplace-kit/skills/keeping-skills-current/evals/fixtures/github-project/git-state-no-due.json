@@ -1,0 +1,18 @@
+{
+  "fixtureVersion": 1,
+  "defaultBranch": {
+    "name": "main",
+    "fetchedTip": "1111111111111111111111111111111111111111"
+  },
+  "ownedBranch": {
+    "name": "automation/keeping-skills-current",
+    "localTip": "2222222222222222222222222222222222222222",
+    "fetchedTip": "3333333333333333333333333333333333333333",
+    "relationship": "localBehindFetched",
+    "dueSelection": "none"
+  },
+  "pullRequest": {
+    "state": "open",
+    "ownershipMarker": "keeping-skills-current:github-project"
+  }
+}

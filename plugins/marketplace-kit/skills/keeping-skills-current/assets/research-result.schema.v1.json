@@ -249,6 +249,10 @@
       },
       "type": "array"
     },
+    "inputFingerprint": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "type": "string"
+    },
     "projectIdentity": {
       "minLength": 1,
       "type": "string"
@@ -374,6 +378,7 @@
     "projectIdentity",
     "skillId",
     "skillPath",
+    "inputFingerprint",
     "reviewedAt",
     "status",
     "sourceOutcomes",
