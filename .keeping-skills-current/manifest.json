@@ -195,7 +195,13 @@
         }
       },
       "deferredFindings": [],
-      "declinedFindings": []
+      "declinedFindings": [],
+      "state": {
+        "lastAttemptedReview": "2026-08-13T09:38:24Z",
+        "lastAttemptStatus": "completed",
+        "lastCompletedReview": "2026-08-13T09:38:24Z",
+        "inputFingerprint": "sha256:a11fa0e34bb8f2480712075ad25c7d1295842448881183f14e01806b7ca9f7a0"
+      }
     },
     "audit-xcode-security-settings": {
       "path": "plugins/swift-xcode-kit/skills/audit-xcode-security-settings",
