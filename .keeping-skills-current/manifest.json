@@ -66,7 +66,13 @@
         }
       },
       "deferredFindings": [],
-      "declinedFindings": []
+      "declinedFindings": [],
+      "state": {
+        "lastAttemptedReview": "2026-08-13T09:38:24Z",
+        "lastAttemptStatus": "completed",
+        "lastCompletedReview": "2026-08-13T09:38:24Z",
+        "inputFingerprint": "sha256:8f448e458ca2290df0d95210ec83f6137eedb981af7b7a282de7e5bb1c07ab1f"
+      }
     },
     "apple-app-store-best-practices": {
       "path": "plugins/mobile-dev/skills/apple-app-store-best-practices",
