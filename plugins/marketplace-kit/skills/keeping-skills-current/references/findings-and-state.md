@@ -87,7 +87,7 @@ A changed fingerprint immediately invalidates retained current-state presentatio
 
 ## Report Contract
 
-Begin with a compact project run summary containing completion status, review time, reviewed skill IDs, and source retrieval status with successful and attempted page counts. Follow it with one per-skill status table. Distinguish `Reviewed this run` from retained results for unselected skills.
+Begin with a compact project run summary containing completion status, review time, reviewed skill IDs, and source retrieval status with successful and attempted page counts. Follow it with one per-skill status table. Distinguish `Reviewed this run` from retained results for unselected skills. Always list configured source-less records as `Draft — skipped (no configured sources)` with zero sources, even when runnable skills were reviewed. Never include those drafts in reviewed IDs or synthesize review results or state for them.
 
 Use these project-wide headings when any active finding exists:
 

@@ -1123,6 +1123,56 @@ class KeepingSkillsCurrentTests(unittest.TestCase):
         self.assertIn("Human introduction.", rerendered)
         self.assertIn("\nNo findings.\n", rerendered)
 
+    def test_report_lists_source_less_drafts_without_result_or_state(self):
+        draft_path = "plugins/example/skills/draft"
+        write(
+            self.project / draft_path / "SKILL.md",
+            "---\nname: draft\ndescription: Draft.\n---\n\n# Draft\n",
+        )
+        draft_record = skill_record()
+        draft_record["path"] = draft_path
+        self.configure(
+            manifest(
+                {
+                    "draft": draft_record,
+                    "example": skill_record(
+                        sources={"example-documentation": source()}
+                    ),
+                }
+            )
+        )
+        result_path = self.project / "result.json"
+        report_path = self.project / "report.md"
+        write_json(result_path, self.valid_result())
+
+        self.run_helper(
+            "render-report",
+            "--project-root",
+            str(self.project),
+            "--input",
+            str(result_path),
+            "--output",
+            str(report_path),
+        )
+
+        rendered = report_path.read_text()
+        self.assertIn("- Reviewed skills: `example`", rendered)
+        self.assertIn(
+            "- Skipped drafts: `draft` (no configured sources)", rendered
+        )
+        draft_row = "| `draft` | Draft — skipped (no configured sources) | 0 |"
+        example_row = "| `example` | completed — reviewed this run | 1 |"
+        self.assertIn(draft_row, rendered)
+        self.assertIn(example_row, rendered)
+        self.assertLess(rendered.index(draft_row), rendered.index(example_row))
+
+        payload = HELPER_MODULE.existing_report_payload(rendered, self.project.name)
+        self.assertEqual(set(payload["skills"]), {"example"})
+        configured = json.loads(
+            (self.project / ".keeping-skills-current/manifest.json").read_text()
+        )
+        self.assertNotIn("state", configured["skills"]["draft"])
+
     def test_report_preserves_unselected_results_and_marks_changed_inputs_stale(self):
         second_path = "plugins/example/skills/second"
         write(
