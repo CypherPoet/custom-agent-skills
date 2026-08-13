@@ -166,7 +166,13 @@
         }
       },
       "deferredFindings": [],
-      "declinedFindings": []
+      "declinedFindings": [],
+      "state": {
+        "lastAttemptedReview": "2026-08-13T09:38:24Z",
+        "lastAttemptStatus": "completed",
+        "lastCompletedReview": "2026-08-13T09:38:24Z",
+        "inputFingerprint": "sha256:9ea7c20f7604f4caeb7fb5f993b5c4953469014e15616f6bb54cca13f6d6dab4"
+      }
     },
     "apple-human-interface-guidelines": {
       "path": "plugins/apple-hig/skills/apple-human-interface-guidelines",
