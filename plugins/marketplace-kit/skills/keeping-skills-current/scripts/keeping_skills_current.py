@@ -1817,11 +1817,16 @@ def render_report(
     current_results = report_skill_results(result)
     reviewed_ids = {item["skillId"] for item in current_results}
     reviewed_skills = ", ".join(f"`{skill_id}`" for skill_id in sorted(reviewed_ids))
+    draft_ids = {
+        skill_id
+        for skill_id, skill in configuration.manifest["skills"].items()
+        if not skill["sources"]
+    }
+    skipped_drafts = ", ".join(
+        f"`{skill_id}` (no configured sources)" for skill_id in sorted(draft_ids)
+    )
     review_state_fingerprint = report_state_fingerprint(payload)
     payload_marker = encoded_report_payload(payload)
-    retained_results = [
-        payload["skills"][skill_id] for skill_id in sorted(payload["skills"])
-    ]
     lines = [
         f'<!-- keeping-skills-current:start project="{project}" reportVersion="{REPORT_VERSION}" reviewStateFingerprint="{review_state_fingerprint}" -->',
         "# Keeping Skills Current",
@@ -1830,13 +1835,25 @@ def render_report(
         "",
         f"- Review time: `{reviewed_at}`",
         f"- Reviewed skills: {reviewed_skills}",
-        "",
-        "| Skill | Status | Sources |",
-        "|---|---|---:|",
     ]
+    if skipped_drafts:
+        lines.append(f"- Skipped drafts: {skipped_drafts}")
+    lines.extend(
+        [
+            "",
+            "| Skill | Status | Sources |",
+            "|---|---|---:|",
+        ]
+    )
     all_findings: list[dict[str, Any]] = []
     all_failures: list[dict[str, Any]] = []
-    for envelope in retained_results:
+    for skill_id in sorted(set(payload["skills"]) | draft_ids):
+        if skill_id in draft_ids:
+            lines.append(
+                f"| `{skill_id}` | Draft — skipped (no configured sources) | 0 |"
+            )
+            continue
+        envelope = payload["skills"][skill_id]
         item = envelope["result"]
         current_fingerprint, _ = skill_fingerprint(configuration, item["skillId"])
         stale = envelope["inputFingerprint"] != current_fingerprint
