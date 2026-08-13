@@ -54,7 +54,7 @@ Require attempted timestamp and status together. Permit `completed` and `incompl
 
 Advance `lastCompletedReview` only after every configured source and functional file was processed, the complete result validated, and report delivery succeeded. Corrections, improvement suggestions, human decisions, 404/410 findings, and disabled post-edit validation are completed outcomes. Any retrieval, processing, structured-output, edit-validation, or delivery failure leaves completed state unchanged.
 
-Fingerprint the final reviewed file state: corrected files after validated applied corrections, or unchanged files in report-only mode. Do not advance completed state after reverted corrections.
+Fingerprint the final reviewed file state: corrected files after validated applied corrections, or unchanged files in report-only mode. Carry that fingerprint in the validated research result, report payload, and completed state. A mismatch at either delivery step invalidates the result. Do not advance completed state after reverted corrections.
 
 ## Due Calculation
 
@@ -87,7 +87,7 @@ A changed fingerprint immediately invalidates retained current-state presentatio
 
 ## Report Contract
 
-Begin with a compact project run summary containing completion status, review time, reviewed skill IDs, and source retrieval status with successful and attempted page counts. Follow it with one per-skill status table. Distinguish `Reviewed this run` from retained results for unselected skills.
+Begin with a compact project run summary containing completion status, review time, reviewed skill IDs, and source retrieval status with successful and attempted page counts. Follow it with one per-skill status table. Distinguish `Reviewed this run` from retained results for unselected skills. Always list configured source-less records as `Draft — skipped (no configured sources)` with zero sources, even when runnable skills were reviewed. Never include those drafts in reviewed IDs or synthesize review results or state for them.
 
 Use these project-wide headings when any active finding exists:
 

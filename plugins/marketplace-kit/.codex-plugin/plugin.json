@@ -1,6 +1,6 @@
 {
   "name": "marketplace-kit",
-  "version": "0.18.1",
+  "version": "0.19.1",
   "description": "Maintainer toolkit for running a plugin marketplace with Claude Code and Codex catalogs — publish plugins, audit marketplace and catalog sync, and regenerate the local catalog.",
   "author": {
     "name": "CypherPoet"

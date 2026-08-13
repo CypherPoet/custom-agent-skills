@@ -23,6 +23,8 @@ For `crawl`:
 
 Respect robots, authentication, and publisher restrictions. A tool that cannot honor the configured boundary exactly is unavailable for that source. Prefer Firecrawl when it can enforce the contract, but keep provider identity out of configuration.
 
+Manifest loading performs only deterministic hostname checks: it rejects private or non-global IP literals, localhost names, local-only names, and single-label hosts without resolving DNS. Immediately before every request, the retriever must resolve the hostname and reject the request if any resolved address is not global. Repeat that check for every redirect hop. A DNS failure is a retrieval failure, not malformed configuration.
+
 Permit HTML, Markdown, plain text, JSON, XML, and PDF when the retriever can convert them reliably to text. Treat executables, archives, audio, video, and opaque binaries as unsupported.
 
 Share an ephemeral retrieval result across skills only when canonical URL, strategy, path boundaries, and limits match completely. Apply reasoning independently per skill and delete the shared result after the run.
@@ -45,9 +47,13 @@ If retrieved evidence says nothing relevant about part of the skill, do nothing:
 
 ## Structured Result
 
-Produce one JSON object conforming to `assets/research-result.schema.v1.json`. Include:
+Use the same `assets/research-result.schema.v1.json` contract in two passes. Before mutation, produce a provisional object and validate it with `render-report --validate-only --provisional` against the unchanged reviewed inputs. Keep unapplied corrections `proposed`, set validation to `notApplicable`, and include the current fingerprint. This pass must reject malformed source outcomes, evidence, findings, targets, proposed actions, or locators that do not occur in the target file before they can authorize an edit. A provisional result containing a correction cannot authorize mutation when any configured source or processing stage failed or the review status is incomplete.
 
-- Project and skill identity, reviewed timestamp, and `completed` or `incomplete` status.
+The provisional command returns a `provisionalFingerprint` over the result fields that must remain fixed after mutation. When `correctionStrategy` is `applyHighConfidenceCorrections`, retain that value in ephemeral run state and pass it to the final command as `--provisional-fingerprint`. Do not persist it in the manifest or report.
+
+After edits and post-edit checks finish, update that object only with the final input fingerprint, edit dispositions, validation outcomes, and completed or incomplete status, then validate it again before report rendering or state changes. The final pass binds project and skill identity, review time, source outcomes, failures, finding details, and evidence to the validated provisional result; adding, removing, or materially changing any of them fails validation. Include:
+
+- Project and skill identity, the final reviewed `inputFingerprint`, reviewed timestamp, and `completed` or `incomplete` status.
 - Every configured source's root URL, retrieval status, successful and attempted page counts, limit-reached flag, and any failure stage.
 - Findings with category, target file, exactly one durable `currentText` or `anchorText`, summary, configured source snapshots, evidence-page URLs, concise evidence, and proposed action.
 - Edit disposition when relevant: `applied`, `proposed`, `revertedAfterValidationFailure`, or `notApplicable`.
@@ -55,7 +61,9 @@ Produce one JSON object conforming to `assets/research-result.schema.v1.json`. I
 
 Keep quoted evidence to the smallest excerpt that establishes the conclusion, normally one sentence and no more than 25 words from a source per finding. Paraphrase remaining context.
 
-Reject malformed or inconsistent output before mutation. In particular, reject completed results containing failed retrievals, corrections without supporting configured sources, automatic improvement edits, identity edits, or applied edits when the project strategy is report-only.
+Calculate the final fingerprint after all authorized edits and validation finish, then put that exact value in the final structured result. Reject the result if files or fingerprinted configuration change before report rendering or state application. In report-only and no-edit runs, the provisional and final fingerprints are identical.
+
+Reject malformed or inconsistent output before mutation. In particular, reject completed results containing failed retrievals, evidence whose source IDs differ from the finding's source snapshots, cited sources without evidence, corrections without supporting configured sources, automatic improvement edits, identity edits, applied edits after any source or processing failure, aggregate validation that conceals a failed check, or applied edits when the project strategy is report-only.
 
 ## Edits and Validation
 

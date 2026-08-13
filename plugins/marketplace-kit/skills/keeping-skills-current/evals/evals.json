@@ -12,7 +12,7 @@
       "id": 2,
       "eval_name": "run-all-configured-sources-only",
       "prompt": "Use $keeping-skills-current to run all configured skills in this fixture project. One source is a bounded documentation crawl and the skill contains several unrelated factual claims.",
-      "expected_output": "Retrieves only the configured page/crawl evidence, reasons from the evidence toward relevant skill changes, does not enumerate or certify every claim, does not perform unrestricted search, validates structured research output, and renders all agreed finding categories when any finding exists.",
+      "expected_output": "Retrieves only the configured page/crawl evidence, reasons from the evidence toward relevant skill changes, does not enumerate or certify every claim, and does not perform unrestricted search. It validates a complete correction-bearing provisional result against unchanged inputs before any edit, binds the final result to the returned provisional fingerprint, validates the final input fingerprint after edits and checks, and renders all agreed finding categories when any finding exists.",
       "files": ["evals/fixtures/project/.keeping-skills-current/manifest.json", "evals/fixtures/project/plugins/example/skills/example/SKILL.md"]
     },
     {
@@ -31,10 +31,45 @@
     },
     {
       "id": 5,
-      "eval_name": "github-delivery-owned-branch-state",
-      "prompt": "Use $keeping-skills-current to review every configured skill that is currently due for review, without asking questions. The default branch has an older manifest state, while the marked automation branch and pull request contain the latest completed reviews.",
-      "expected_output": "Uses preliminary configuration only to identify GitHub delivery, validates and establishes the marked automation branch in an isolated worktree, incorporates the latest default branch without rewriting history, then runs authoritative preflight and due selection from the owned branch state. It does not repeat reviews merely because the default branch lacks the open pull request's state.",
-      "files": ["evals/fixtures/project/.keeping-skills-current/manifest.json", "evals/fixtures/project/plugins/example/skills/example/SKILL.md"]
+      "eval_name": "github-delivery-no-due-is-non-mutating",
+      "prompt": "Use $keeping-skills-current to review every configured skill that is currently due for review, without asking questions. Treat the supplied git-state-no-due.json as the fetched Git and pull-request state for this behavioral fixture.",
+      "expected_output": "Recognizes GitHub pull-request delivery, validates the marked pull request, compares the local and fetched owned tips without moving the local branch, and previews the fetched owned state plus the latest default branch in a disposable detached worktree. Because no skill is due, it reports that result, removes the preview, and makes no owned-branch, manifest, report, commit, push, or pull-request change.",
+      "files": ["evals/fixtures/github-project/.keeping-skills-current/manifest.json", "evals/fixtures/github-project/plugins/example/skills/example/SKILL.md", "evals/fixtures/github-project/git-state-no-due.json"]
+    },
+    {
+      "id": 6,
+      "eval_name": "github-delivery-fast-forwards-reused-worktree",
+      "prompt": "Use $keeping-skills-current to review every configured skill that is currently due for review, without asking questions. Treat the supplied git-state-due.json as the fetched Git and pull-request state for this behavioral fixture.",
+      "expected_output": "Uses the fetched owned tip for detached due selection. After the fixture selects a due skill, it fast-forwards the behind local owned branch to that fetched tip, incorporates the latest default branch without rewriting history, and repeats authoritative preflight and due selection before research. It stops instead of merging if the tips diverge.",
+      "files": ["evals/fixtures/github-project/.keeping-skills-current/manifest.json", "evals/fixtures/github-project/plugins/example/skills/example/SKILL.md", "evals/fixtures/github-project/git-state-due.json"]
+    },
+    {
+      "id": 7,
+      "eval_name": "github-delivery-first-run-uses-default-tip",
+      "prompt": "Use $keeping-skills-current to review every configured skill that is currently due for review, without asking questions. Treat the supplied git-state-first-run.json as the fetched Git state for this behavioral fixture.",
+      "expected_output": "Recognizes that no owned branch or pull request exists, uses the fetched default tip as the disposable preview base, and creates the marked stable branch from that default tip only after a skill is selected. It never requires a nonexistent owned tip and does not move a branch merely to calculate the due set.",
+      "files": ["evals/fixtures/github-project/.keeping-skills-current/manifest.json", "evals/fixtures/github-project/plugins/example/skills/example/SKILL.md", "evals/fixtures/github-project/git-state-first-run.json"]
+    },
+    {
+      "id": 8,
+      "eval_name": "github-delivery-dirty-owned-worktree-blocks-no-due-exit",
+      "prompt": "Use $keeping-skills-current to review every configured skill that is currently due for review, without asking questions. Treat the supplied git-state-dirty-owned-worktree.json as the fetched Git and local worktree state for this behavioral fixture.",
+      "expected_output": "Inspects the existing owned worktree before relying on the detached preview. Because a managed functional file has an uncommitted change, it does not report that nothing is due from committed refs and does not discard, overwrite, stash, commit, or move the work. It stops for interactive reconciliation.",
+      "files": ["evals/fixtures/github-project/.keeping-skills-current/manifest.json", "evals/fixtures/github-project/plugins/example/skills/example/SKILL.md", "evals/fixtures/github-project/git-state-dirty-owned-worktree.json"]
+    },
+    {
+      "id": 9,
+      "eval_name": "github-delivery-recreates-local-branch-from-remote",
+      "prompt": "Use $keeping-skills-current to review every configured skill that is currently due for review, without asking questions. Treat the supplied git-state-remote-only-due.json as the fetched Git and pull-request state for this behavioral fixture.",
+      "expected_output": "Uses the fetched owned tip for preview and due selection. Because the owned branch exists remotely but not locally, it creates the local stable branch from the fetched owned tip before attaching its isolated worktree. It does not incorrectly start from the default tip or require a preexisting local ref.",
+      "files": ["evals/fixtures/github-project/.keeping-skills-current/manifest.json", "evals/fixtures/github-project/plugins/example/skills/example/SKILL.md", "evals/fixtures/github-project/git-state-remote-only-due.json"]
+    },
+    {
+      "id": 10,
+      "eval_name": "github-delivery-local-ahead-no-due-needs-reconciliation",
+      "prompt": "Use $keeping-skills-current to review every configured skill that is currently due for review, without asking questions. Treat the supplied git-state-local-ahead-no-due.json as the fetched Git and pull-request state for this behavioral fixture.",
+      "expected_output": "Recognizes the local owned commits as pending delivery even though their committed state makes the due set empty. It does not take the ordinary no-due exit, discard commits, force-push, or claim delivery succeeded. It stops with explicit reconciliation guidance so an interactive run can verify a durable workflow-owned report before finishing delivery.",
+      "files": ["evals/fixtures/github-project/.keeping-skills-current/manifest.json", "evals/fixtures/github-project/plugins/example/skills/example/SKILL.md", "evals/fixtures/github-project/git-state-local-ahead-no-due.json"]
     }
   ]
 }
