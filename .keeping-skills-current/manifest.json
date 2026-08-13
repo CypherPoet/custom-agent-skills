@@ -922,7 +922,13 @@
         }
       },
       "deferredFindings": [],
-      "declinedFindings": []
+      "declinedFindings": [],
+      "state": {
+        "lastAttemptedReview": "2026-08-13T09:38:24Z",
+        "lastAttemptStatus": "completed",
+        "lastCompletedReview": "2026-08-13T09:38:24Z",
+        "inputFingerprint": "sha256:80ffbe0aceb568b8456f3f5d861e99febd97ece686a54895d887a7f4c422296a"
+      }
     },
     "webgl-mastery": {
       "path": "plugins/webgl-kit/skills/webgl-mastery",
