@@ -84,21 +84,43 @@ class KeepingSkillsCurrentTests(unittest.TestCase):
 
     def test_github_delivery_previews_due_state_before_mutating_owned_branch(self):
         procedure = (SKILL_ROOT / "SKILL.md").read_text(encoding="utf-8")
+        default_preview = procedure.index(
+            "use the fetched default tip when no owned tip exists"
+        )
+        inspect_owned_worktree = procedure.index(
+            "Inspect any existing owned worktree before previewing"
+        )
         detached_preview = procedure.index(
-            "Create a disposable detached worktree from that tip"
+            "Create a disposable detached worktree from the selected preview tip"
         )
         no_due_exit = procedure.index(
-            "If nothing is selected, remove any preview worktree"
+            "If nothing is selected and no relevant owned-worktree edits require reconciliation"
         )
         branch_setup = procedure.index(
             "Otherwise establish or reuse the marked stable-branch worktree"
         )
         fast_forward = procedure.index(
-            "fast-forward it to the fetched owned tip when it is behind"
+            "fast-forward a behind local branch to the fetched tip"
         )
+        self.assertLess(default_preview, detached_preview)
+        self.assertLess(inspect_owned_worktree, detached_preview)
         self.assertLess(detached_preview, no_due_exit)
         self.assertLess(no_due_exit, branch_setup)
         self.assertLess(branch_setup, fast_forward)
+
+    def test_github_delivery_refuses_no_due_with_relevant_owned_worktree_edits(self):
+        delivery = (SKILL_ROOT / "references/delivery.md").read_text(encoding="utf-8")
+        inspect_worktree = delivery.index(
+            "Inspect any existing owned worktree before the no-due optimization"
+        )
+        stop_for_reconciliation = delivery.index(
+            "A no-question run must stop for reconciliation"
+        )
+        no_due_exit = delivery.index(
+            "If nothing is due and no relevant owned-worktree edits require reconciliation"
+        )
+        self.assertLess(inspect_worktree, stop_for_reconciliation)
+        self.assertLess(stop_for_reconciliation, no_due_exit)
 
     def test_run_procedure_validates_provisional_and_final_results(self):
         procedure = (SKILL_ROOT / "SKILL.md").read_text(encoding="utf-8")
@@ -1109,6 +1131,89 @@ class KeepingSkillsCurrentTests(unittest.TestCase):
             (self.project / ".keeping-skills-current/manifest.json").read_text()
         )
         self.assertNotIn("state", unchanged["skills"]["example"])
+
+    def test_apply_state_validates_current_fingerprint_only_for_selected_skill(self):
+        write(
+            self.project / "plugins/example/skills/second/SKILL.md",
+            "---\nname: second\ndescription: Second.\n---\n\n# Second\n\nCurrent guidance.\n",
+        )
+        self.configure(
+            manifest(
+                {
+                    "example": skill_record(
+                        schedule={"recurrence": "interval", "intervalDays": 28},
+                        sources={"example-documentation": source()},
+                    ),
+                    "second": {
+                        **skill_record(
+                            schedule={"recurrence": "interval", "intervalDays": 28},
+                            sources={"second-documentation": source()},
+                        ),
+                        "path": "plugins/example/skills/second",
+                    },
+                }
+            )
+        )
+        example_result = self.valid_result()
+        second_result = self.valid_result(
+            skill_id="second",
+            skill_path="plugins/example/skills/second",
+        )
+        report_input = {
+            "projectIdentity": self.project.name,
+            "reviewedAt": "2026-08-13T23:00:00Z",
+            "skillResults": [example_result, second_result],
+        }
+        result_path = self.project / "results.json"
+        report_path = self.project / "report.md"
+        write_json(result_path, report_input)
+        self.run_helper(
+            "render-report",
+            "--project-root",
+            str(self.project),
+            "--input",
+            str(result_path),
+            "--output",
+            str(report_path),
+        )
+        write(
+            self.project / "plugins/example/skills/second/SKILL.md",
+            "---\nname: second\ndescription: Second.\n---\n\n# Second\n\nChanged after review.\n",
+        )
+
+        all_skills = self.run_helper(
+            "apply-state",
+            "--project-root",
+            str(self.project),
+            "--input",
+            str(result_path),
+            "--delivered-report",
+            str(report_path),
+            check=False,
+        )
+        self.assertEqual(all_skills.returncode, 2)
+        self.assertIn("does not match the current reviewed files", all_skills.stderr)
+
+        self.run_helper(
+            "apply-state",
+            "--project-root",
+            str(self.project),
+            "--input",
+            str(result_path),
+            "--delivered-report",
+            str(report_path),
+            "--skill-id",
+            "example",
+        )
+
+        configured = json.loads(
+            (self.project / ".keeping-skills-current/manifest.json").read_text()
+        )
+        self.assertEqual(
+            configured["skills"]["example"]["state"]["lastAttemptStatus"],
+            "completed",
+        )
+        self.assertNotIn("state", configured["skills"]["second"])
 
     def test_incomplete_attempt_preserves_prior_completed_state(self):
         self.configured_manifest("interval")

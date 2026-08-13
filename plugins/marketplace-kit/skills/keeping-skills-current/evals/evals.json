@@ -42,6 +42,20 @@
       "prompt": "Use $keeping-skills-current to review every configured skill that is currently due for review, without asking questions. Treat the supplied git-state-due.json as the fetched Git and pull-request state for this behavioral fixture.",
       "expected_output": "Uses the fetched owned tip for detached due selection. After the fixture selects a due skill, it fast-forwards the behind local owned branch to that fetched tip, incorporates the latest default branch without rewriting history, and repeats authoritative preflight and due selection before research. It stops instead of merging if the tips diverge.",
       "files": ["evals/fixtures/github-project/.keeping-skills-current/manifest.json", "evals/fixtures/github-project/plugins/example/skills/example/SKILL.md", "evals/fixtures/github-project/git-state-due.json"]
+    },
+    {
+      "id": 7,
+      "eval_name": "github-delivery-first-run-uses-default-tip",
+      "prompt": "Use $keeping-skills-current to review every configured skill that is currently due for review, without asking questions. Treat the supplied git-state-first-run.json as the fetched Git state for this behavioral fixture.",
+      "expected_output": "Recognizes that no owned branch or pull request exists, uses the fetched default tip as the disposable preview base, and creates the marked stable branch from that default tip only after a skill is selected. It never requires a nonexistent owned tip and does not move a branch merely to calculate the due set.",
+      "files": ["evals/fixtures/github-project/.keeping-skills-current/manifest.json", "evals/fixtures/github-project/plugins/example/skills/example/SKILL.md", "evals/fixtures/github-project/git-state-first-run.json"]
+    },
+    {
+      "id": 8,
+      "eval_name": "github-delivery-dirty-owned-worktree-blocks-no-due-exit",
+      "prompt": "Use $keeping-skills-current to review every configured skill that is currently due for review, without asking questions. Treat the supplied git-state-dirty-owned-worktree.json as the fetched Git and local worktree state for this behavioral fixture.",
+      "expected_output": "Inspects the existing owned worktree before relying on the detached preview. Because a managed functional file has an uncommitted change, it does not report that nothing is due from committed refs and does not discard, overwrite, stash, commit, or move the work. It stops for interactive reconciliation.",
+      "files": ["evals/fixtures/github-project/.keeping-skills-current/manifest.json", "evals/fixtures/github-project/plugins/example/skills/example/SKILL.md", "evals/fixtures/github-project/git-state-dirty-owned-worktree.json"]
     }
   ]
 }

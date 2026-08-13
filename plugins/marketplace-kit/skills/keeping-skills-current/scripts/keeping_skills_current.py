@@ -1278,6 +1278,7 @@ def validate_research_result(
     value: Any,
     configuration: ProjectConfiguration,
     expected_skill_id: str | None = None,
+    require_current_fingerprint: bool = True,
 ) -> dict[str, Any]:
     result = require_object(value, "research result")
     allowed = {
@@ -1319,11 +1320,12 @@ def validate_research_result(
     )
     if not FINGERPRINT_PATTERN.fullmatch(input_fingerprint):
         raise ContractError("research result.inputFingerprint is invalid")
-    current_fingerprint, _ = skill_fingerprint(configuration, skill_id)
-    if input_fingerprint != current_fingerprint:
-        raise ContractError(
-            "research result.inputFingerprint does not match the current reviewed files and configuration"
-        )
+    if require_current_fingerprint:
+        current_fingerprint, _ = skill_fingerprint(configuration, skill_id)
+        if input_fingerprint != current_fingerprint:
+            raise ContractError(
+                "research result.inputFingerprint does not match the current reviewed files and configuration"
+            )
     parse_utc(result["reviewedAt"], "research result.reviewedAt")
     status = result["status"]
     if status not in {"completed", "incomplete"}:
@@ -1976,10 +1978,26 @@ def load_json_file(path: str, location: str) -> Any:
         raise ContractError(f"could not read {location}: {error}") from error
 
 
-def normalize_report_input(raw: Any, configuration: ProjectConfiguration) -> dict[str, Any]:
+def normalize_report_input(
+    raw: Any,
+    configuration: ProjectConfiguration,
+    current_fingerprint_skill_ids: set[str] | None = None,
+) -> dict[str, Any]:
     report = require_object(raw, "report input")
     if "skillResults" not in report:
-        return validate_research_result(report, configuration)
+        skill_id = report.get("skillId")
+        require_current_fingerprint = (
+            current_fingerprint_skill_ids is None
+            or (
+                isinstance(skill_id, str)
+                and skill_id in current_fingerprint_skill_ids
+            )
+        )
+        return validate_research_result(
+            report,
+            configuration,
+            require_current_fingerprint=require_current_fingerprint,
+        )
     allowed = {"projectIdentity", "reviewedAt", "skillResults"}
     reject_unknown(report, allowed, "report input")
     require_keys(report, {"projectIdentity", "reviewedAt", "skillResults"}, "report input")
@@ -1990,9 +2008,24 @@ def normalize_report_input(raw: Any, configuration: ProjectConfiguration) -> dic
     skill_results = report["skillResults"]
     if not isinstance(skill_results, list) or not skill_results:
         raise ContractError("report input.skillResults must be a nonempty array")
-    normalized_results = [
-        validate_research_result(item, configuration) for item in skill_results
-    ]
+    normalized_results = []
+    for item in skill_results:
+        item_object = require_object(item, "report input skill result")
+        skill_id = item_object.get("skillId")
+        require_current_fingerprint = (
+            current_fingerprint_skill_ids is None
+            or (
+                isinstance(skill_id, str)
+                and skill_id in current_fingerprint_skill_ids
+            )
+        )
+        normalized_results.append(
+            validate_research_result(
+                item_object,
+                configuration,
+                require_current_fingerprint=require_current_fingerprint,
+            )
+        )
     ids = [item["skillId"] for item in normalized_results]
     if len(ids) != len(set(ids)):
         raise ContractError("report input contains duplicate skill results")
@@ -2123,8 +2156,13 @@ def main(arguments: Sequence[str] | None = None) -> int:
                 {"skillId": args.skill_id, "inputFingerprint": fingerprint, "files": files}
             )
         elif args.command == "apply-state":
+            current_fingerprint_skill_ids = (
+                {args.skill_id} if args.skill_id is not None else None
+            )
             report_input = normalize_report_input(
-                load_json_file(args.input, "--input"), configuration
+                load_json_file(args.input, "--input"),
+                configuration,
+                current_fingerprint_skill_ids,
             )
             results = report_skill_results(report_input)
             delivered = Path(args.delivered_report).read_text(encoding="utf-8")
