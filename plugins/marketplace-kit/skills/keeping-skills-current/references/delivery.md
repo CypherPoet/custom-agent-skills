@@ -12,12 +12,13 @@ Create the report only after the first actual review. Preserve it unchanged when
 
 Require a Git worktree, GitHub remote, authenticated compatible GitHub client, permission to push and open pull requests, and no conflicting unowned branch or pull request. Derive the default branch from the repository and store only the stable `branchName`.
 
-Use one stable branch and at most one open pull request per project. Mark both as workflow-owned. At the start of a run:
+Use one stable branch and at most one open pull request per project. Mark both as workflow-owned. Complete this branch setup before authoritative preflight, due calculation, or skill selection so review state on an open branch remains authoritative. At the start of a run:
 
 1. Fetch the default branch and inspect the owned branch and pull request.
-2. Incorporate the latest default branch without rewriting history or force-pushing.
-3. Treat human commits on the owned branch as preexisting work. Review their resulting content but do not automatically modify the same files during a no-question run.
-4. Stop on synchronization conflicts, unexpected branch movement, uncertain ownership, or an unmarked artifact.
+2. Establish the owned branch in an isolated worktree and use that worktree as the project root for the remainder of the run.
+3. Incorporate the latest default branch without rewriting history or force-pushing.
+4. Treat human commits on the owned branch as preexisting work. Review their resulting content but do not automatically modify the same files during a no-question run.
+5. Stop on synchronization conflicts, unexpected branch movement, uncertain ownership, or an unmarked artifact.
 
 Commit each skill transaction separately, including its state and authorized edits or supporting artifacts. Build all commits locally, push once after the complete run, then update the pull-request body immediately. Never expose a half-reported remote run.
 

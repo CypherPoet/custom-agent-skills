@@ -75,6 +75,14 @@ class KeepingSkillsCurrentTests(unittest.TestCase):
     def configure(self, value):
         write_json(self.project / ".keeping-skills-current/manifest.json", value)
 
+    def test_github_delivery_establishes_owned_branch_before_due_selection(self):
+        procedure = (SKILL_ROOT / "SKILL.md").read_text(encoding="utf-8")
+        branch_setup = procedure.index(
+            "establish the marked stable branch as the working state before selecting skills"
+        )
+        due_selection = procedure.index("Use `due-set` there for `run due`")
+        self.assertLess(branch_setup, due_selection)
+
     def configured_manifest(self, recurrence="manual"):
         schedule = {"recurrence": recurrence}
         if recurrence == "interval":
