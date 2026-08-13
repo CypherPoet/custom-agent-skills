@@ -5,7 +5,7 @@ and auto-scaling rules. This is the exhaustive table; the durable decision rules
 [SKILL.md](../SKILL.md).
 
 **Source:** <https://developer.apple.com/help/app-store-connect/reference/app-information/screenshot-specifications>
-**Verified:** 2026-07-24. Apple edits this table whenever new hardware ships, so re-check the
+Apple edits this table whenever new hardware ships, so re-check the
 source after each major iPhone/iPad release and re-stamp this date — don't trust a number here as
 final without reconciling it.
 
@@ -46,7 +46,7 @@ Upload the **13" display** and the smaller iPad classes are generated for you.
 
 | Display class | Accepted portrait sizes (px) | Example devices | If omitted |
 |---|---|---|---|
-| **13"** (required) | 2064×2752 · 2048×2732 | iPad Pro (M5/M4), iPad Pro (6th–1st gen), iPad Air (M4/M3/M2) | — (canonical) |
+| **13"** (required) | 2064×2752 · 2048×2732 | iPad Pro (M5/M4), iPad Pro (6th–3rd gen, 1st gen), iPad Air (M4/M3/M2) | — (canonical) |
 | 12.9" | 2048×2732 | iPad Pro (2nd gen) | scaled from 13" |
 | 11" | 1488×2266 · 1668×2420 · 1668×2388 · 1640×2360 | iPad Pro (M5/M4, 4th–1st gen), iPad Air (M4–M2, 5th/4th gen), iPad (A16, 10th gen), iPad mini (A17 Pro, 6th gen) | scaled from 13" |
 | 10.5" | 1668×2224 | iPad Pro 10.5", iPad Air (3rd gen), iPad (9th–7th gen) | scaled from 12.9" |

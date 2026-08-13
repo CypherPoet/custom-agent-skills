@@ -11,8 +11,6 @@ description: >
 
 # SF Symbols
 
-**Verified:** 2026-07-24
-
 One bundled CLI does everything: `scripts/sf_symbols.py` (paths relative to this
 skill's directory). Lookup commands need only the Python stdlib; rendering
 commands need macOS + PyObjC and import it lazily.
@@ -132,9 +130,3 @@ symbols may not be used as app icons, logos, or trademarks, and some symbols
 representing Apple features/devices have usage restrictions (the `info` command
 and the SF Symbols app flag these contexts). Custom symbols made from the
 user's own art carry no such restriction.
-
-## Primary Sources
-
-- [SF Symbols (Apple Developer)](https://developer.apple.com/sf-symbols/) — authoritative for the SF Symbols app version and symbol count.
-- [HIG: SF Symbols](https://developer.apple.com/design/human-interface-guidelines/sf-symbols) — authoritative for usage and rendering-mode guidance.
-- [Configuring and displaying symbol images in your UI](https://developer.apple.com/documentation/uikit/configuring-and-displaying-symbol-images-in-your-ui) — authoritative for symbol API syntax.

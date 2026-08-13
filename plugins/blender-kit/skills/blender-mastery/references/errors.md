@@ -7,7 +7,7 @@ Common failures when driving Blender via the MCP and writing `bpy` scripts. Orga
 | Error | Cause | Fix |
 |---|---|---|
 | Script execution timeout | Python script ran longer than the MCP allows (~15–30s) | Split into smaller scripts, reduce iteration count, or escape to headless CLI (see `mcp-workflow.md`) |
-| Connection refused / can't reach MCP | Blender MCP addon not running or wrong port | Have the user enable the addon (Preferences → Add-ons → Blender MCP) and restart Blender |
+| Connection refused / can't reach MCP | Blender MCP addon not running or wrong port | Have the user enable the addon (Preferences → Add-ons → MCP) and restart Blender |
 | Socket timeout | Blender is busy (rendering, heavy compute) | Wait for current op to finish, then retry |
 | Export timeout | Export operation exceeds MCP timeout | Always use the headless CLI for exports — never expect MCP to handle them inline |
 | "Empty response from Blender", then connection refused | The script reloaded the file in-session. `bpy.ops.wm.read_homefile(use_empty=True)` still hard-crashes (SIGABRT, exit 134 — reproduced on 5.2.0/macOS `--background`; on 5.1.1 the whole family crashed). Even where it no longer crashes, a reload drops `bpy.app.timers` and non-`@persistent` handlers — the machinery an addon server runs on — so the MCP goes down with it | Never reload or open files through the MCP. Build fresh files headless and relaunch — see `mcp-workflow.md` "Fresh files without read_homefile" |
@@ -32,7 +32,7 @@ Common failures when driving Blender via the MCP and writing `bpy` scripts. Orga
 | Operator runs on the wrong object | Active object isn't what the script assumed | Set `bpy.context.view_layer.objects.active = obj` and `obj.select_set(True)` before the operator |
 | `bpy.ops.object.mode_set` fails | Active object's type can't enter that mode (e.g. trying edit mode with no active mesh) | Set an appropriate active object first |
 | Edit-mode changes don't persist | Forgot to `bmesh.update_edit_mesh(obj.data)` | Call update before exiting edit mode |
-| Sculpt brush has no effect | Sculpt mode entered but no brush is active | `bpy.context.tool_settings.sculpt.brush = bpy.data.brushes['Draw']` |
+| Sculpt brush has no effect | Sculpt mode entered but no brush is active | `Paint.brush` is read-only since brushes became assets — activate one with `bpy.ops.brush.asset_activate(asset_library_type='ESSENTIALS', relative_asset_identifier=…)`. See `sculpting.md` |
 
 ## Material / node tree gotchas
 
@@ -111,10 +111,10 @@ What survives a Blender → GLTF export and what doesn't:
 |---|---|---|
 | Bake produces black image | UV map missing, or no Image Texture node selected on the active material | Verify UVs unwrapped; create+select an Image Texture node before baking |
 | Cycles render is incredibly slow | GPU not enabled, or device fallback to CPU | `bpy.context.preferences.addons['cycles'].preferences.compute_device_type = 'CUDA'` (or `OPTIX`/`METAL`/`HIP`) |
-| Eevee reflections look wrong | No light probes baked / cube map missing | Add Reflection Cubemap, bake indirect lighting |
+| Eevee reflections look wrong | No Sphere light probe covering the area | Add a **Sphere** light probe — EEVEE's probe types are Sphere / Plane / Volume; Reflection Cubemaps are pre-4.2 naming. Sphere probes update dynamically; only **Volume** probes need baking |
 | Render comes out completely black | No light source, or world background at zero | Add a Sun light or HDRI; check `bpy.data.worlds["World"].use_nodes` |
 
 ## Sources
 
-- [Blender Manual: GLTF 2.0 export](https://docs.blender.org/manual/en/5.2/addons/import_export/scene_gltf2.html)
+- [Blender Manual: GLTF 2.0 export](https://docs.blender.org/manual/en/5.2/addons/scene_gltf2.html)
 - [Blender Python API: bpy.ops](https://docs.blender.org/api/5.2/bpy.ops.html)

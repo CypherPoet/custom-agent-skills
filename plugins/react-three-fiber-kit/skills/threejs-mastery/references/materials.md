@@ -370,7 +370,7 @@ const material = new THREE.ShaderMaterial({
 });
 
 // Drive a uniform from the render loop
-material.uniforms.time.value = clock.getElapsedTime();
+material.uniforms.time.value = timer.getElapsed();
 ```
 
 ### Built-in GLSL Uniforms / Attributes
@@ -434,7 +434,7 @@ material.onBeforeCompile = (shader) => {
 
 // In the render loop
 if (material.userData.shader) {
-  material.userData.shader.uniforms.time.value = clock.getElapsedTime();
+  material.userData.shader.uniforms.time.value = timer.getElapsed();
 }
 ```
 

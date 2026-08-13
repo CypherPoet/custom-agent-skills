@@ -4,8 +4,6 @@ name: test-modernizer
 ---
 # Test Modernizer
 
-**Verified:** 2026-07-11
-
 Apply when: user asks to modernize, update, migrate, supercharge, or convert their tests.
 XCTest should be migrated to Swift Testing when possible, existing Swift Testing tests should be evaluated to see if they could be better structured adopting newer features.
 
@@ -246,8 +244,3 @@ improve readability, e.g. `@Test func `Authenticate, fetch summary, then check c
 - For suites with shared mutable state between tests, add `@Suite(.serialized)` and consider using `actor` or `class` instead of `struct`.
 - Do not use underscore-prefixed symbols such as `#_sourceLocation`; only use public API. For source locations, always use
   the full `SourceLocation(fileID:filePath:line:column:)` initializer.
-
-## Primary Sources
-
-- [Swift Testing documentation](https://developer.apple.com/documentation/testing) — authoritative for `@Test`/`#expect`/`#require` API syntax.
-- [swiftlang/swift-testing](https://github.com/swiftlang/swift-testing) — the source and release channel.

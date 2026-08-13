@@ -10,8 +10,6 @@ description: >
 
 # marketplace-sync-check
 
-**Verified:** 2026-07-11
-
 Report drift between this source repo's local `plugins/` and the places that index them: the **published marketplace catalogs** (Claude `.claude-plugin/marketplace.json` and Codex `.agents/plugins/marketplace.json`, both in the marketplace repo) and the **local catalog** (`docs/CATALOG.md`, in this repo). **Read-only** — never edit a catalog, never commit, never open a PR. Just report what's out of sync and point at the right fix for each gap.
 
 This is a plain procedure to run with your normal tools (`gh`, `jq`) — adapt as needed.
@@ -71,8 +69,3 @@ Present both surfaces plainly, each clearly labelled, and stop. Then hand off �
 - **`docs/CATALOG.md`** missing / stale / orphan rows → regenerate the table with the `catalog-refresh` skill (or fix by hand) and commit it — a normal docs change. **Not** `marketplace-publish`; the local catalog isn't the marketplace.
 
 **Do not modify anything** unless the user explicitly asks.
-
-## Primary Sources
-
-- [Plugin marketplaces (Claude Code docs)](https://code.claude.com/docs/en/plugin-marketplaces) — authoritative for the Claude `marketplace.json` schema and semantics.
-- [Build plugins (Codex docs)](https://learn.chatgpt.com/docs/build-plugins) — authoritative for the Codex `.agents/plugins/marketplace.json` schema (`source` types, required `policy` + `category`).

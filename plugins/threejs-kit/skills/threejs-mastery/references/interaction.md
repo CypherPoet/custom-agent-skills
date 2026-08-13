@@ -172,7 +172,8 @@ controls.dragToLook = true;
 
 // Drive with delta — FlyControls accumulates motion per frame
 renderer.setAnimationLoop(() => {
-  controls.update(clock.getDelta());
+  timer.update();
+  controls.update(timer.getDelta());
   renderer.render(scene, camera);
 });
 ```
@@ -195,7 +196,8 @@ controls.dampingFactor = 0.1;        // r184+ — smooths look/movement
 
 // Needs the per-frame delta, like FlyControls
 renderer.setAnimationLoop(() => {
-  controls.update(clock.getDelta());
+  timer.update();
+  controls.update(timer.getDelta());
   renderer.render(scene, camera);
 });
 ```
@@ -269,7 +271,7 @@ controls.maxPolarAngle     = Math.PI / 2;
 import { TransformControls } from "three/addons/controls/TransformControls.js";
 
 const gizmo = new TransformControls(camera, renderer.domElement);
-scene.add(gizmo);
+scene.add(gizmo.getHelper());   // TransformControls is not an Object3D — add its helper
 gizmo.attach(selectedMesh);
 
 gizmo.setMode("translate");        // 'translate' | 'rotate' | 'scale'

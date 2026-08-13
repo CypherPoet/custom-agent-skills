@@ -13,15 +13,13 @@ description: >
 
 # Apple App Icons (Icon Composer + appiconset)
 
-**Verified:** 2026-07-24
-
 ## Overview
 
 An app icon has two jobs: **earn the tap** in the App Store (a design / conversion problem) and **ship correctly** across every OS version and appearance (an engineering problem). This skill covers both — settle the design first, then build and wire the assets.
 
 Modern Apple app icons come in two formats that coexist:
 
-- **`.icon`** — an Icon Composer bundle (iOS/iPadOS/macOS/watchOS **26+**). One source, rendered by the system into every size, the per-platform shape (squircle, circle), and the **Default / Dark / Clear** appearance variants. This is the Liquid Glass icon.
+- **`.icon`** — an Icon Composer bundle (iOS/iPadOS/macOS/watchOS **26+**). One source, rendered by the system into every size, the per-platform shape (squircle, circle), and the **Default / Dark / Clear / Tinted** appearance variants. This is the Liquid Glass icon.
 - **`.appiconset`** — the classic asset-catalog icon set (one PNG per idiom/size/scale). The fallback for **OS versions below 26**, which can't read `.icon`.
 
 You usually ship **both**, named the same (`AppIcon`), and let the build system pick per OS version. Drop the appiconset only if your deployment target is 26+.
@@ -158,7 +156,7 @@ Expect Liquid Glass layer renditions plus `AppIcon … UIAppearanceAny` / `…Da
 
 ## Generation script
 
-`scripts/generate-app-icons.py` (Pillow; paths relative to this skill's directory) cleans one source and emits the **`.appiconset`** fallback. Author the Liquid Glass `.icon` itself in **Icon Composer** — its material and Default / Dark / Clear appearance variants can't be produced by a script.
+`scripts/generate-app-icons.py` (Pillow; paths relative to this skill's directory) cleans one source and emits the **`.appiconset`** fallback. Author the Liquid Glass `.icon` itself in **Icon Composer** — its material and Default / Dark / Clear / Tinted appearance variants can't be produced by a script.
 
 ```shell
 python3 scripts/generate-app-icons.py \
@@ -180,8 +178,3 @@ python3 scripts/generate-app-icons.py \
 - **Raising the deployment target just to use the `.icon`** → unnecessary, and it drops users. Ship both instead.
 - **Flat icon looks dead in Tinted/Clear** → a single full-bleed layer has nothing for the system to separate. Split the emblem onto its own transparent layer over a background layer; verify on device (those appearances render at runtime).
 - **Wanted a dark icon on the App Store listing** → the listing icon is the build's *default* appearance — there's no separate upload, and making it dark also makes dark the Home Screen default. Pick which look is your default and design both appearances to that.
-
-## Primary Sources
-
-- [HIG: App icons](https://developer.apple.com/design/human-interface-guidelines/app-icons) — authoritative for sizes, appearances (dark/tinted/clear), and per-platform shape rules.
-- [Creating your app icon using Icon Composer](https://developer.apple.com/documentation/xcode/creating-your-app-icon-using-icon-composer) — authoritative for the `.icon` format and Icon Composer workflow.

@@ -13,7 +13,7 @@ description: >
 
 # Google Filament Mastery
 
-*Distilled from the official [Filament documentation](https://google.github.io/filament/) and the `google/filament` source at tag **v1.72.0** (released 2026-06-17). Last synced: 2026-07-17.*
+*Distilled from the official [Filament documentation](https://google.github.io/filament/) and the `google/filament` source at tag **v1.72.0** (released 2026-06-17).*
 
 Working knowledge of [Google Filament](https://github.com/google/filament) — a real-time **physically-based** rendering engine for C++ (desktop/iOS), the web (WebAssembly over WebGL2), and Android. Use this to write correct, idiomatic Filament code, author and compile materials, light scenes with real photometric units, load assets, and explain the rendering model — grounded in the docs, not training-data guesses.
 
@@ -86,9 +86,3 @@ A few things the upstream v1.72.0 docs leave incomplete — don't fill them with
 - The **subsurface** material model and **area lights** are `[TODO]` placeholders in the official docs; their properties are named but not fully specified, and there is no area-light `LightManager::Type`. Say so rather than inventing an API.
 - `matc`'s documented `--api` values are `opengl`, `vulkan`, `all` — the CLI docs don't list `metal` even though the engine renders with Metal (the `filamat` `TargetApi::ALL` covers it).
 - Filament versions move fast; if exact current behavior matters, verify against the installed version's headers.
-
-## Primary Sources
-
-- [Filament releases](https://github.com/google/filament/releases) — release channel; authoritative for versions.
-- [Filament documentation](https://google.github.io/filament/) — official docs hub (Materials guide, tooling); authoritative for material syntax and engine facts.
-- [google/filament](https://github.com/google/filament) — the source itself; the fallback authority when the docs lag the headers.

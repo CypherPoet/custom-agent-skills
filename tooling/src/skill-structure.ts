@@ -11,8 +11,6 @@ import { synchronizeVendoredSkills } from "./sync.js";
 export const SKILL_LINE_LIMIT = 500;
 export const SKILL_LINE_WARNING = 450;
 export const REFERENCE_CONTENTS_THRESHOLD = 300;
-export const FACT_CHECK_MANIFEST = "docs/automated-routines/skill-fact-check-manifest.json";
-const tierKeys = ["weekly", "monthly", "never"] as const;
 
 export type StructureFinding = readonly [label: string, location: string, message: string];
 
@@ -20,8 +18,6 @@ export interface StructureAudit {
   errors: StructureFinding[];
   warnings: StructureFinding[];
   missingContents: Array<readonly [label: string, file: string]>;
-  units: Set<string>;
-  unitsWithSources: Set<string>;
 }
 
 interface GateOutput {
@@ -184,8 +180,6 @@ export function auditSkillStructure(pluginsDirectory: string): StructureAudit {
   const errors: StructureFinding[] = [];
   const warnings: StructureFinding[] = [];
   const missingContents: Array<readonly [string, string]> = [];
-  const units = new Set<string>();
-  const unitsWithSources = new Set<string>();
 
   for (const pluginEntry of readdirSync(pluginsDirectory, { withFileTypes: true }).sort((left, right) =>
     left.name.localeCompare(right.name, "en"),
@@ -215,12 +209,6 @@ export function auditSkillStructure(pluginsDirectory: string): StructureAudit {
       }
       const label = `${plugin}/${skill}`;
       const skillText = readFileSync(skillManifest, "utf8");
-      if (!skill.endsWith("-workspace")) {
-        units.add(label);
-        if (/^## Primary Sources$/mu.test(skillText)) {
-          unitsWithSources.add(label);
-        }
-      }
       const skillLines = lineCount(skillText);
       if (skillLines > SKILL_LINE_LIMIT) {
         errors.push([
@@ -267,75 +255,7 @@ export function auditSkillStructure(pluginsDirectory: string): StructureAudit {
       }
     }
   }
-  return { errors, warnings, missingContents, units, unitsWithSources };
-}
-
-export function factCheckTierFindings(
-  root: string,
-  units: ReadonlySet<string>,
-  unitsWithSources: ReadonlySet<string>,
-): { advisories: string[]; checked: boolean } {
-  const path = resolve(root, FACT_CHECK_MANIFEST);
-  if (!existsSync(path)) {
-    return { advisories: [], checked: false };
-  }
-
-  let manifest: Record<string, unknown>;
-  const tierValues = new Map<(typeof tierKeys)[number], string[]>();
-  try {
-    const parsed: unknown = JSON.parse(readFileSync(path, "utf8"));
-    if (typeof parsed !== "object" || parsed === null || Array.isArray(parsed)) {
-      throw new Error("expected a JSON object");
-    }
-    manifest = parsed as Record<string, unknown>;
-    for (const key of tierKeys) {
-      if (!Object.hasOwn(manifest, key)) {
-        tierValues.set(key, []);
-        continue;
-      }
-      const value = manifest[key];
-      if (!Array.isArray(value) || !value.every((entry) => typeof entry === "string")) {
-        throw new Error(`${key} must be an array of strings when provided`);
-      }
-      tierValues.set(key, value);
-    }
-  } catch (error) {
-    return {
-      advisories: [`could not read ${FACT_CHECK_MANIFEST}: ${String(error)}`],
-      checked: true,
-    };
-  }
-
-  const listed = tierKeys.flatMap((key) => tierValues.get(key) ?? []);
-  const never = new Set(tierValues.get("never") ?? []);
-  const advisories: string[] = [];
-  for (const unit of Array.from(units).filter((value) => !listed.includes(value)).sort()) {
-    advisories.push(
-      `${unit}: not in any tier list — add it to weekly/monthly/never (defaults to monthly meanwhile)`,
-    );
-  }
-  for (const unit of Array.from(new Set(listed)).filter((value) => !units.has(value)).sort()) {
-    advisories.push(
-      `${unit}: listed in the manifest but no such unit exists — remove or rename the entry`,
-    );
-  }
-  for (const unit of Array.from(new Set(listed)).filter(
-    (value) => listed.filter((entry) => entry === value).length > 1,
-  ).sort()) {
-    advisories.push(
-      `${unit}: in more than one tier list — keep exactly one ` +
-        "(the fact-check resolver silently lets the later list win)",
-    );
-  }
-  for (const unit of Array.from(units).filter(
-    (value) => !never.has(value) && !unitsWithSources.has(value),
-  ).sort()) {
-    advisories.push(
-      `${unit}: fact-checked unit without a ## Primary Sources section — add one ` +
-        "(placeholder ok; see docs/PLUGIN-CONVENTIONS.md → Primary Sources)",
-    );
-  }
-  return { advisories, checked: true };
+  return { errors, warnings, missingContents };
 }
 
 function renderFindings(rows: readonly StructureFinding[], kind: string, output: GateOutput): void {
@@ -360,7 +280,6 @@ export function runSkillStructureCheck(
     return 2;
   }
   const audit = auditSkillStructure(resolve(root, "plugins"));
-  const tiers = factCheckTierFindings(root, audit.units, audit.unitsWithSources);
   for (const message of synchronizeVendoredSkills(root, false)) {
     audit.errors.push(["vendoring", "sync", message]);
   }
@@ -368,13 +287,11 @@ export function runSkillStructureCheck(
   if (
     audit.errors.length === 0 &&
     audit.warnings.length === 0 &&
-    audit.missingContents.length === 0 &&
-    tiers.advisories.length === 0
+    audit.missingContents.length === 0
   ) {
-    const tierNote = tiers.checked ? ", and the fact-check manifest is drift-free" : "";
     output.stdout(
       `OK — every SKILL.md is lean, large reference files are indexed, ` +
-        `all Contents anchors resolve${tierNote}.`,
+        `and all Contents anchors resolve.`,
     );
     return 0;
   }
@@ -404,20 +321,12 @@ export function runSkillStructureCheck(
       output.stdout(`  ${label}: ${files.join(", ")}`);
     }
   }
-  if (tiers.advisories.length > 0) {
-    output.stdout(`ADVISORY — fact-check manifest drift in ${FACT_CHECK_MANIFEST} (non-failing):`);
-    for (const advisory of tiers.advisories) {
-      output.stdout(`  ${advisory}`);
-    }
-  }
   output.stdout("\nRules and remediation: .claude/skills/skill-structure-check/SKILL.md");
   if (audit.errors.length > 0) {
     return 1;
   }
   return strict &&
-    (audit.warnings.length > 0 ||
-      audit.missingContents.length > 0 ||
-      tiers.advisories.length > 0)
+    (audit.warnings.length > 0 || audit.missingContents.length > 0)
     ? 1
     : 0;
 }

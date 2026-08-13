@@ -29,8 +29,3 @@ python3 scripts/needs_marketplace_publish.py [base-ref]
 - Exit `2`: a manifest or Git comparison could not be read safely; fix that error instead of treating it as publication.
 
 The skill is model-invokable because it only reports. The `marketplace-publish` skill remains manual-only.
-
-## Primary Sources
-
-- [Plugin marketplaces](https://code.claude.com/docs/en/plugin-marketplaces) — Claude marketplace schema and behavior.
-- [Codex plugin format](https://developers.openai.com/plugins/build/plugins/) — Codex plugin and marketplace packaging.

@@ -11,8 +11,6 @@ description: >
 
 # Obsidian Plugin Crafting
 
-**Verified:** 2026-07-24
-
 *Grounded in the official [Obsidian developer docs](https://docs.obsidian.md/) (source repo fetched 2026-07-23), the [obsidian-sample-plugin](https://github.com/obsidianmd/obsidian-sample-plugin) template, and [`eslint-plugin-obsidianmd`](https://github.com/obsidianmd/eslint-plugin) v0.4.1. Structure inspired by the community [gapmiss/obsidian-plugin-skill](https://github.com/gapmiss/obsidian-plugin-skill) (MIT).*
 
 Working knowledge for building Obsidian plugins that pass automated and human review the first time. Use it to scaffold correctly, reach for the right API instead of a workaround, and ship through the community directory — grounded in the docs above, not training-data guesses.
@@ -69,14 +67,6 @@ Create a GitHub release whose **tag exactly matches `manifest.json` `version` (n
 
 ## Accuracy Notes
 
-- **Obsidian 1.13 features are marked "insider build" in the docs as of the Verified date** — the declarative settings API and settings-window behavior may have since reached public release. When `minAppVersion` decisions hinge on it, check the [Obsidian changelog](https://obsidian.md/changelog/).
+- **Obsidian 1.13 features were marked "insider build" in the docs snapshot fetched 2026-07-23** — the declarative settings API and settings-window behavior may have since reached public release. When `minAppVersion` decisions hinge on it, check the [Obsidian changelog](https://obsidian.md/changelog/).
 - **`eslint-plugin-obsidianmd` is v0.4.1 here** (npm, 2026-07-02). The rule catalog grows between minor versions — when a rule id isn't in [`linting-and-review.md`](references/linting-and-review.md), trust the installed package's README over this corpus.
 - **The `obsidian` typings package is 1.13.1** (npm, 2026-06-09); the sample plugin pins `"obsidian": "latest"`.
-
-## Primary Sources
-
-- [Obsidian developer docs](https://docs.obsidian.md/) ([source repo](https://github.com/obsidianmd/obsidian-developer-docs)) — official; authoritative for API usage, guidelines, policies, and submission requirements.
-- [obsidian-sample-plugin](https://github.com/obsidianmd/obsidian-sample-plugin) — official template; authoritative for scaffold tooling and build configuration.
-- [eslint-plugin-obsidianmd on npm](https://registry.npmjs.org/eslint-plugin-obsidianmd) / [GitHub](https://github.com/obsidianmd/eslint-plugin) — official linter; authoritative for rule ids, versions, and configs.
-- [obsidian on npm](https://registry.npmjs.org/obsidian) — official typings; authoritative for API-typings versions.
-- [Obsidian changelog](https://obsidian.md/changelog/) — authoritative for app release status.

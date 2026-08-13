@@ -1,0 +1,11 @@
+{
+  "schemaVersion": 1,
+  "scheduler": "none",
+  "delivery": {
+    "strategy": "localReport",
+    "reportPath": ".keeping-skills-current/report.md"
+  },
+  "correctionStrategy": "reportOnly",
+  "changeValidation": "enabled",
+  "skills": {}
+}

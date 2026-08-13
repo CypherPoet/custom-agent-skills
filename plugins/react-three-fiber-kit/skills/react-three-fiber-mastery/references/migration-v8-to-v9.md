@@ -9,17 +9,17 @@ The complete `@react-three/fiber` v8 → v9 migration: version and peer-dependen
 ## Version Requirements
 
 - **v9 requires React 19.** The peer range is `react >=19 <19.3` (same for `react-dom`). The upper cap exists because React minors can change the internal reconciler protocol — React 19.2 did.
-- **fiber 9.5.0+ bundles its own reconciler**, so one fiber release spans React 19.0–19.2. Practical rule: skip the intermediate releases and install the latest 9.6.x directly. Pairing fiber 9.0–9.4 with React 19.2 produces reconciler-internals crashes.
+- **fiber 9.5.0+ bundles its own reconciler**, so one fiber release spans React 19.0–19.2. Practical rule: skip the intermediate releases and install the latest 9.7.x directly. Pairing fiber 9.0–9.4 with React 19.2 produces reconciler-internals crashes.
 - **The v8 line is frozen.** Last publish: 8.18.0 on 2025-02-19 — the same day 9.0.0 shipped. There is no maintenance branch. A project pinned to React 18 stays on fiber 8.18.0 + drei 9 permanently; every new feature and fix lands in v9 only.
 - three peers are open-ended (`three >=0.156` for fiber, `>=0.159` for drei), so upgrade three to current (0.185.x) in the same pass.
 
 ## Ecosystem Pairing
 
-Verified against the npm registry (2026-07-03):
+Verified against the npm registry (2026-08-08):
 
 | Package | Current major | react peer | fiber peer | three peer |
 |---|---|---|---|---|
-| @react-three/fiber | 9.6.x | >=19 <19.3 | — | >=0.156 |
+| @react-three/fiber | 9.7.x | >=19 <19.3 | — | >=0.156 |
 | @react-three/drei | 10.7.x | ^19 | ^9.0.0 | >=0.159 |
 | @react-three/postprocessing | 3.0.x | ^19.0 | ^9.0.0 | >=0.156.0 |
 | @react-three/rapier | 2.2.x | ^19 | ^9.0.4 | >=0.159.0 |
@@ -298,9 +298,9 @@ Treat the uniform *set* as fixed at construction (standard three.js shader pract
 
 These are not fiber changes, but they land in the same upgrade window and produce the most confusing symptoms.
 
-### three r151+: uv2 → uv1
+### three r151/r152: UV channels and uv2 → uv1
 
-three r151 renamed the second UV attribute `uv2` → `uv1`, and maps now select their UV set via `texture.channel` (default `0` = the base `uv`, `1` = `uv1`) rather than auto-reading a second set:
+three **r151** stopped `aoMap`/`lightMap` from auto-reading a second UV set — maps now select their UV set via `texture.channel` (default `0` = the base `uv`, `1` = the second set) — and **r152** renamed the second UV attribute `uv2` → `uv1`:
 
 ```jsx
 // Legacy (three < r151): aoMap auto-read the `uv2` attribute
@@ -389,7 +389,7 @@ Teach and write v9 as current: `state.gl` is correct today, `state.renderer` doe
 | Mistake | Fix |
 |---|---|
 | `npm install @react-three/fiber@9` on a React 18 app fails with `ERESOLVE` (peer `react >=19 <19.3`) | Upgrade React to 19 first. A project staying on React 18 remains on the frozen legacy line: fiber 8.18.0 + drei 9. |
-| Upgraded to React 19.2 but fiber crashes with reconciler-internals errors | fiber 9.0–9.4 targets React 19.0–19.1 only; install 9.5+ (bundles its own reconciler; 9.6.x is current). |
+| Upgraded to React 19.2 but fiber crashes with reconciler-internals errors | fiber 9.0–9.4 targets React 19.0–19.1 only; install 9.5+ (bundles its own reconciler; 9.7.x is current). |
 | drei 10 won't install / breaks on a fiber 8 project | drei 10 hard-requires fiber ^9 + react ^19; fiber 8 stays with drei 9. |
 | Geometry from `<bufferAttribute count array itemSize />` renders nothing after upgrade | v9 builds attributes from constructor args: `<bufferAttribute attach="attributes-position" args={[array, itemSize]} />`. |
 | Color textures look washed out or too dark in custom shaders after upgrade | v9 no longer force-annotates texture props as sRGB; set `texture.colorSpace = THREE.SRGBColorSpace` on color maps fed to custom materials. Data textures stay linear — leave them. |
@@ -397,7 +397,7 @@ Teach and write v9 as current: `state.gl` is correct today, `state.renderer` doe
 | TS: `no exported member 'MeshProps'` / `'Object3DNode'` / `'Props'` | `ThreeElements["mesh"]` for element props, `ThreeElement<typeof X>` for custom elements, `CanvasProps` for Canvas. |
 | Custom element JSX types stopped resolving despite a `JSX.IntrinsicElements` augmentation | React 19 dropped the global JSX namespace; augment `interface ThreeElements` via `declare module "@react-three/fiber"`, or use factory `extend`. |
 | Effects inside `<Canvas>` suddenly double-invoke in dev after upgrading | Expected: v9 inherits the app-level `<StrictMode>` into the scene. Remove any duplicate `<StrictMode>` inside `<Canvas>` and fix non-idempotent effects. |
-| `aoMap`/`lightMap` silently has no effect on current three | Maps default to channel 0 (the base `uv`); for a separate AO set, author `uv1` and set `material.aoMap.channel = 1` (renamed from `uv2` in three r151). |
+| `aoMap`/`lightMap` silently has no effect on current three | Maps default to channel 0 (the base `uv`); for a separate AO set, author `uv1` and set `material.aoMap.channel = 1` (renamed from `uv2` in three r152). |
 | Imports from `three/examples/jsm/...` fail to resolve | Use `three/addons/...` (or the drei wrapper). |
 | zustand v5: `useStore(selector, shallow)` type error | Wrap the selector: `useStore(useShallow(selector))` from `zustand/react/shallow`. |
 | zustand v5: `store.subscribe(selector, cb)` fires with the whole state | Selector-based subscribe requires the `subscribeWithSelector` middleware. |

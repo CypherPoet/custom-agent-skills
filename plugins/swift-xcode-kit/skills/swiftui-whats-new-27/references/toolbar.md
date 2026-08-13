@@ -1,7 +1,7 @@
 # Toolbar
 **SDK Version:** 27.0 and later
 
-If the user's deployment target is below iOS 27 / macOS 27 / watchOS 27 / visionOS 27, the new APIs in this reference (`visibilityPriority(_:)`, `ToolbarOverflowMenu` and its `toolbarOverflowMenu` modifier, `.topBarPinnedTrailing`, `toolbarMinimizeBehavior(_:for:)`, `toolbarMinimizationSafeAreaAdjustment(_:for:)`, `contentMarginsRemoved(_:)`, `ToolbarPlacement.statusBar`, and `EmptyView` as toolbar content) require availability gating. The `ForEach` toolbar conformance back-deploys to iOS 16 / macOS 13 / watchOS 9 / tvOS 16 / visionOS 1 when built with the 2027 SDK and does not need gating. See "Deployment target below SDK 27" below for the gating shape to use.
+If the user's deployment target is below iOS 27 / macOS 27 / watchOS 27 / visionOS 27, the new APIs in this reference (`visibilityPriority(_:)`, `ToolbarOverflowMenu` and its `toolbarOverflowMenu` modifier, `.topBarPinnedTrailing`, `toolbarMinimizationBehavior(_:for:)`, `toolbarMinimizationSafeAreaAdjustment(_:for:)`, `contentMarginsRemoved(_:)`, `ToolbarPlacement.statusBar`, and `EmptyView` as toolbar content) require availability gating. The `ForEach` toolbar conformance back-deploys to iOS 16 / macOS 13 / watchOS 9 / tvOS 16 / visionOS 1 when built with the 2027 SDK and does not need gating. See "Deployment target below SDK 27" below for the gating shape to use.
 
 When a toolbar has more items than fit the available width (a narrow window, a resized app, or iPhone), the system moves the overflow into a trailing overflow menu. The 2027 SDKs add modifiers to control what stays in the bar, what overflows, and what is pinned, to minimize a bar as the person scrolls, and to adjust toolbar content margins and status-bar visibility. `ForEach` and `EmptyView` also work inside a `toolbar` builder now.
 
@@ -53,13 +53,13 @@ A `ToolbarItem` placed with `.topBarPinnedTrailing` stays in the trailing positi
 
 ## Minimize on scroll
 
-`toolbarMinimizeBehavior(_:for:)` minimizes a bar as the person scrolls. It takes one of `ToolbarMinimizeBehavior.automatic` (the system decides), `.onScrollDown`, `.onScrollUp`, or `.never`. The companion `toolbarMinimizationSafeAreaAdjustment(_:for:)` controls whether content's safe area shrinks to follow the bar as it minimizes, with `.automatic`, `.enabled`, or `.disabled`.
+`toolbarMinimizationBehavior(_:for:)` minimizes a bar as the person scrolls. It takes one of `ToolbarMinimizationBehavior.automatic` (the system decides), `.onScrollDown`, `.onScrollUp`, or `.never`. The companion `toolbarMinimizationSafeAreaAdjustment(_:for:)` controls whether content's safe area shrinks to follow the bar as it minimizes, with `.automatic`, `.enabled`, or `.disabled`.
 
 ```swift
 ScrollView {
     StickerListView()
 }
-.toolbarMinimizeBehavior(.onScrollDown, for: .navigationBar)  // or .automatic, .onScrollUp, .never
+.toolbarMinimizationBehavior(.onScrollDown, for: .navigationBar)  // or .automatic, .onScrollUp, .never
 ```
 
 **Availability:** iOS 27, macOS 27, watchOS 27, tvOS 27, visionOS 27. `.onScrollDown` / `.onScrollUp` / `.never` and `.enabled` / `.disabled` are iOS only; other platforms use `.automatic`.
@@ -135,7 +135,7 @@ Use this shape (or `@available(iOS 27, *)` on an enclosing declaration) whenever
 | `init(lowerThan:)` / `init(higherThan:)` | 27 | 27 | n/a | n/a | n/a |
 | `ToolbarOverflowMenu` / `toolbarOverflowMenu` | 27 | n/a | n/a | n/a | 27 |
 | `.topBarPinnedTrailing` | 27 | n/a | n/a | n/a | 27 |
-| `toolbarMinimizeBehavior(_:for:)`, `.automatic` | 27 | 27 | 27 | 27 | 27 |
+| `toolbarMinimizationBehavior(_:for:)`, `.automatic` | 27 | 27 | 27 | 27 | 27 |
 | `.onScrollDown` / `.onScrollUp` / `.never` | 27 | n/a | n/a | n/a | n/a |
 | `toolbarMinimizationSafeAreaAdjustment(_:for:)`, `.automatic` | 27 | 27 | 27 | 27 | 27 |
 | `.enabled` / `.disabled` (safe-area adjustment) | 27 | n/a | n/a | n/a | n/a |

@@ -1,6 +1,6 @@
 {
   "name": "svg-tools",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "description": "SVG optimization and cleanup.",
   "author": {
     "name": "CypherPoet"

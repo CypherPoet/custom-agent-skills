@@ -14,7 +14,7 @@ These live in the **Developer portal** and ASC's **Business** module, and gate e
 | Task | Where | Why it matters |
 |------|-------|----------------|
 | Sign the **Paid Apps Agreement** + finish **tax forms** and **banking** | ASC → Business → Agreements, Tax, and Banking | **Mandatory even for a free app if it has any paid IAP.** Until the agreement is *Active*, the IAP won't load in Sandbox **or** review. This is the single most common pipeline failure. |
-| Enroll in the **Small Business Program** (if eligible) | [developer.apple.com/app-store/small-business-program](https://developer.apple.com/app-store/small-business-program/) | 15% (vs 30%) commission while annual proceeds are under the threshold. Takes ~15 days to take effect; enroll early. |
+| Enroll in the **Small Business Program** (if eligible) | [developer.apple.com/app-store/small-business-program](https://developer.apple.com/app-store/small-business-program/) | 15% (vs 30%) commission while annual proceeds are under the threshold. Adjusted proceeds start **15 days after the end of the fiscal month** in which enrollment is approved (approved Feb 10 → adjusted from Mar 14), so enroll early. |
 | Register an **explicit App ID** | Developer portal → Certificates, Identifiers & Profiles → **Identifiers** | The New App dialog's Bundle ID dropdown reads from here. Use an **explicit** ID (`com.you.YourApp`), not a wildcard. ⚠️ It's the **Identifiers** sub-tab — *not* the Certificates landing page you may hit first. |
 
 **On the "Register an App ID" page — enable nothing you don't need.** Leave capabilities unchecked
@@ -66,12 +66,12 @@ After **Create**, Apple assigns a read-only numeric **Apple ID** (distinct from 
 | **Primary Category** / Subcategories | Pick the best fit (up to two subcategories). |
 | **Content Rights** | Declare whether it contains third-party content. |
 | **License Agreement** | Leave default → Apple's Standard EULA is your Terms of Use, unless you have your own. |
-| **Age Rating** | Run the questionnaire honestly. Apple replaced the old scheme on 2025-07-24 with **4+, 9+, 13+, 16+, 18+**. It now runs ~**7 steps**: In-App Controls + Capabilities (Yes/No: Parental Controls, Age Assurance, Unrestricted Web Access, User-Generated Content, Messaging, Advertising), then frequency-scaled theme sections (Mature Themes · Medical/Wellness · Sexuality · Violence · Chance-Based Activities), ending with the **calculated rating** to confirm. A fixed-price IAP is **not** gambling (no loot boxes / randomized rewards). |
+| **Age Rating** | Run the questionnaire honestly. Apple replaced the old scheme on 2025-07-24 with **4+, 9+, 13+, 16+, 18+**. It now runs ~**7 steps**: In-App Controls + Capabilities (Yes/No: Parental Controls, Age Assurance, Unrestricted Web Access, User-Generated Content, Social Media, Social Media Disabled for Users Under 13, Messaging and Chat, Advertising), then frequency-scaled theme sections (Mature Themes · Medical/Wellness · Sexuality · Violence · Chance-Based Activities), ending with the **calculated rating** to confirm. A fixed-price IAP is **not** gambling (no loot boxes / randomized rewards). |
 
 > ⚠️ The **Privacy Policy URL is not on this page anymore** — Apple moved it to **App Privacy** (step 3).
 
 > ⚠️ **EU Digital Services Act — trader status.** App Information includes a **trader status** declaration.
-> Any app that earns money in the EU (a paid app **or** a paid IAP) must declare the developer a **trader**
+> **Every** app on the EU App Store must have a trader status declared or it's removed until one is provided. Any app that earns money in the EU (a paid app **or** a paid IAP) is a **trader**
 > and complete verification — legal name, address, phone, email, shown **publicly** on the EU product page.
 > Use **Get Started**; until it's verified the app is **unavailable across the EU App Store**. Apple's
 > requirements here shift — confirm via the page's **Learn More**.
@@ -142,8 +142,10 @@ Get the IAP to **Ready to Submit** (it sits at *Missing Metadata* until price + 
 + review screenshot are all present).
 
 > 🔴 **First-launch trap:** a brand-new app's **first IAP must be submitted *with* the app version** — it
-> can't be reviewed standalone. You attach it on the version page (step 8). Only after that first IAP is
-> approved can later IAPs ship without a new app version.
+> can't be reviewed standalone. You attach it on the version page (step 8). The rule is **per type**: your first consumable, your first
+> non-consumable, your first auto-renewable subscription, and your first non-renewing subscription each
+> need their own new app version; once the first item of a type is approved, later items of that type
+> ship without one.
 
 ---
 

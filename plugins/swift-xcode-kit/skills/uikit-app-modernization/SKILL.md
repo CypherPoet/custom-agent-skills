@@ -4,8 +4,6 @@ name: uikit-app-modernization
 ---
 # UIKit App Modernization Skill
 
-**Verified:** 2026-07-11
-
 ## Purpose
 
 Modernize UIKit apps to behave correctly on modern iOS by:
@@ -126,8 +124,3 @@ Apply every task in this registry to the codebase unless the developer's request
 | userInterfaceOrientation modernization | [orientation-task.md](references/orientation-task.md) | Replace layout-related orientation checks with size classes or window bounds |
 | Scene lifecycle migration | [scene-lifecycle-task.md](references/scene-lifecycle-task.md) | Migrate AppDelegate to SceneDelegate |
 | Safe Area Insets | [safe-area-task.md](references/safe-area-task.md) | Replace hard coded values for insets with safe area references and ensure that existing references work with asymetric safe areas |
-
-## Primary Sources
-
-- [UIKit documentation](https://developer.apple.com/documentation/uikit) — authoritative for API availability and deprecations.
-- [Transitioning to the UIKit scene-based life cycle](https://developer.apple.com/documentation/uikit/transitioning-to-the-uikit-scene-based-life-cycle) — authoritative for the scene-lifecycle migration (supersedes technote TN3187, which now redirects here).

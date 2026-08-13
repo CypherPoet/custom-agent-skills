@@ -103,8 +103,8 @@ speed = seq.strips.new_effect(
     length=video.frame_final_duration,
     input1=video,
 )
-speed.use_default_fade = False
-speed.speed_factor = 0.5  # half-speed
+speed.speed_control = 'MULTIPLY'  # speed_factor is ignored under the default 'STRETCH'
+speed.speed_factor = 0.5          # half-speed
 ```
 
 ## Render output settings (VSE)

@@ -6,7 +6,7 @@ The official linter encodes most review feedback as rules; what it can't see, hu
 
 ## Setup
 
-The npm package is **`eslint-plugin-obsidianmd`** (repo: [obsidianmd/eslint-plugin](https://github.com/obsidianmd/eslint-plugin)); v0.4.1 as of the Verified date. Peer deps: `eslint >= 9.19.0`, `typescript-eslint ^8.35.1`. The sample plugin already wires it up; adding it to an older project (flat config, ESLint 9):
+The npm package is **`eslint-plugin-obsidianmd`** (repo: [obsidianmd/eslint-plugin](https://github.com/obsidianmd/eslint-plugin)); the fetched 2026-07-23 corpus used v0.4.1. Peer deps: `eslint >= 9.19.0`, `typescript-eslint ^8.35.1`. The sample plugin already wires it up; adding it to an older project (flat config, ESLint 9):
 
 ```js
 // eslint.config.mjs

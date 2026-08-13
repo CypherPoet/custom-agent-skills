@@ -147,7 +147,7 @@ const helper = new THREE.CameraHelper(dirLight.shadow.camera);
 scene.add(helper);
 ```
 
-> **WebGPURenderer (r184+):** shadow quality improved, so these bias values can over-bias and cause peter-panning. Under WebGPU, start with `bias = 0` (and a small `normalBias`), then add bias only if acne actually appears.
+> **WebGPURenderer (r183+):** shadow quality improved, so these bias values can over-bias and cause peter-panning. Under WebGPU, start with `bias = 0` (and a small `normalBias`), then add bias only if acne actually appears.
 
 ### PointLight / SpotLight Shadows
 
@@ -182,20 +182,12 @@ spotLight.shadow.focus = 1;
 
 ### Contact Shadows
 
-Fast fake shadows for grounded objects. Add-on from `three/addons`:
-
-```javascript
-import { ContactShadows } from "three/addons/objects/ContactShadows.js";
-
-const contactShadows = new ContactShadows({
-  resolution: 512,
-  blur: 2,
-  opacity: 0.5,
-  scale: 10,
-  position: [0, 0, 0],
-});
-scene.add(contactShadows);
-```
+Fast fake shadows for grounded objects. **Three.js core ships no `ContactShadows`
+add-on** — that class belongs to drei (react-three-fiber). On plain Three.js, roll
+your own: render the casters from directly overhead into a render target with an
+overriding dark material, blur it, and map it onto a ground plane; or bake the blob
+offline and use a `CanvasTexture`/image on a transparent plane. For the React stack,
+use drei's `<ContactShadows>` via the sibling `react-three-fiber-mastery` skill.
 
 ## Light Helpers
 
@@ -350,7 +342,7 @@ otherMesh.layers.disable(1);
 |---------|-----|
 | Per-light `castShadow = true` but no visible shadows | Set `renderer.shadowMap.enabled = true` once on the renderer; verify both casting meshes (`castShadow`) and receiving surfaces (`receiveShadow`). |
 | Shadows look low-resolution or jagged | Shrink the shadow camera frustum so it tightly bounds shadow casters; bump `mapSize` only if that's not enough. |
-| Shadow acne (stripes on lit surfaces) | Tune `shadow.bias` (small negative, e.g. `-0.0001`) and `shadow.normalBias` (~`0.02`). Under `WebGPURenderer` (r184+) shadows improved — try `bias = 0` first; the old values can over-bias. |
+| Shadow acne (stripes on lit surfaces) | Tune `shadow.bias` (small negative, e.g. `-0.0001`) and `shadow.normalBias` (~`0.02`). Under `WebGPURenderer` (r183+) shadows improved — try `bias = 0` first; the old values can over-bias. |
 | Peter-panning (objects look detached from their shadows) | Reduce `normalBias`. The two biases trade off; tune both. |
 | RectAreaLight has no effect | Call `RectAreaLightUniformsLib.init()` once at startup, and only use it with `MeshStandardMaterial`/`MeshPhysicalMaterial`. |
 | HDR environment loaded but reflections look noisy | Run the HDR through `PMREMGenerator.fromEquirectangular()` before assigning to `scene.environment`. |

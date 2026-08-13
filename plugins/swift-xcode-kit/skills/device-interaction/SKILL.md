@@ -4,8 +4,6 @@ name: device-interaction
 ---
 # Device Interaction
 
-**Verified:** 2026-07-11
-
 TRIGGER when: user asks to verify/test/check if the app works on device, after implementing a UI-affecting feature that needs device verification, user says "does it work", "test this", "check on device", user reports UI doesn't work as expected, need to debug touch/interaction issues.
 DO NOT TRIGGER when: user asks about unit tests only, build-only requests without device testing, code review without device testing, simulator configuration questions, changes that don't affect UI (e.g. comments, refactors, non-UI logic).
 
@@ -133,7 +131,3 @@ When verifying, distinguish between these categories:
 - If tap target unclear, re-read hierarchy data for correct center coordinates.
 - You can inspect runtime logs to troubleshoot. If you suspect timing bugs, suggest to the main agent that temporarily adding `print` statements in the relevant code may help diagnose the issue.
 - Report issues back to the main agent with details and suggestions.
-
-## Primary Sources
-
-None declared yet — the fact-check routine falls back to vendor-primary sources per claim. Add entries as `- [Name](url) — what it's authoritative for.`

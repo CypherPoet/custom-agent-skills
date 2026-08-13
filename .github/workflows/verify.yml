@@ -34,3 +34,21 @@ jobs:
         run: npm ci
       - name: Run tests
         run: npm test
+
+  keeping-skills-current:
+    name: Keeping Skills Current Helper (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - macos-latest
+          - ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.11"
+      - name: Run portable helper tests
+        run: python3 -m unittest discover -s tests -p 'test_keeping_skills_current.py'

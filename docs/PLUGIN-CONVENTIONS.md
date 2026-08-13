@@ -58,7 +58,6 @@ Each installed plugin is self-contained. If it ships a skill owned elsewhere, ad
 - The sync removes a retired clean copy and refuses to remove a modified copy.
 - An undeclared byte-identical copy is an error.
 - Use absolute GitHub URLs for links that leave the installed plugin.
-- Put vendored copies in the fact-check tier `never`; research and correct their source.
 
 A curated bundle, such as `git-flow`, is an ordinary plugin that vendors several skills.
 
@@ -112,4 +111,4 @@ Do not hand-edit [`CATALOG.md`](CATALOG.md). The `catalog-refresh` skill regener
 
 Skills use the shared [`SKILL.md`](https://agentskills.io/) format. The repository's [`skill-structure-check`](../.claude/skills/skill-structure-check/SKILL.md) documents structure and remediation.
 
-Every fact-checked skill ends with a `## Primary Sources` section. When a skill is created, renamed, or removed, update its `<plugin>/<skill>` entry in the [fact-check manifest](automated-routines/skill-fact-check-manifest.json). Each unit appears exactly once. Development-only `*-workspace/` and `evals/` directories do not ship.
+Project-managed source reviews are configured in [`.keeping-skills-current/manifest.json`](../.keeping-skills-current/manifest.json). Research sources and schedules belong there rather than in required skill-body sections. Unlisted skills are outside that workflow. Development-only `*-workspace/` and `evals/` directories do not ship.

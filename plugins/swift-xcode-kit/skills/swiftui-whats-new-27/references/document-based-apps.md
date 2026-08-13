@@ -106,7 +106,7 @@ final class TextDocument: ReadableDocument, WritableDocument {
     func writer(
         configuration: sending DocumentWriteConfiguration
     ) -> sending FileWrapperDocumentWriter<String> {
-        FileWrapperDocumentWriter(configuration) { snapshot in
+        FileWrapperDocumentWriter(configuration) { snapshot, _ in
             FileWrapper(regularFileWithContents: Data(snapshot.utf8))
         }
     }
@@ -144,7 +144,7 @@ struct MyTextApp: App {
 
 A package is a directory the system shows as a single item. Packages let you read and write **incrementally**: load only what's needed, write only what changed.
 
-The `FileWrapperDocumentWriter` closure takes a **single argument**, the snapshot.  To write incrementally, **hold onto the `FileWrapper` from the last read or save** on the document and reuse its unchanged children. Carry an `isChanged` flag on each page so the writer can skip serialization entirely for pages whose bytes are still in sync with disk; the save touches only the pages the person actually edited.
+The `FileWrapperDocumentWriter` closure takes **two arguments**: the snapshot, and — when available — the `FileWrapper` from the document's last read or write. To write incrementally, reuse the unchanged children of that second (`previous`) wrapper; you do not need to carry it on the document yourself. Carry an `isChanged` flag on each page so the writer can skip serialization entirely for pages whose bytes are still in sync with disk; the save touches only the pages the person actually edited.
 
 For incremental read, perform on-demand read via a `FileCoordinator`, provided by `URLDocumentConfiguration`.
 
@@ -230,8 +230,8 @@ extension NotebookDocument {
     func writer(
         configuration: sending DocumentWriteConfiguration
     ) -> sending FileWrapperDocumentWriter<NotebookSnapshot> {
-        FileWrapperDocumentWriter(configuration) { snapshot in
-            let directory = snapshot.fileWrapper
+        FileWrapperDocumentWriter(configuration) { snapshot, previous in
+            let directory = previous
                 ?? FileWrapper(directoryWithFileWrappers: [:])
 
             // Replace metadata in place unconditionally since it is small.
@@ -325,7 +325,7 @@ Use a custom `DocumentReader` / `DocumentWriter` only when the `FileWrapper` con
 - direct URL access for AVFoundation, PDFKit, Core Image, or any C library that takes file paths,
 - a very large package where converting every child to `Data` to diff is too costly; a custom writer can compare snapshots directly via `previous`.
 
-`read` and `write` are **`nonisolated`** and run in the background; `read` returns a `sending` snapshot, `write` consumes one.
+`read` and `write` are **`@concurrent`** and run in the background; `read` returns a `sending` snapshot, `write` consumes one.
 
 ```swift
 import CoreImage
@@ -347,7 +347,8 @@ final class ImageDocument: ReadableDocument, WritableDocument {
     }
 
     struct Reader: DocumentReader {
-        nonisolated func read(
+        @concurrent
+        func read(
             from source: URL, progress: consuming Subprogress
         ) async throws -> sending ImageSnapshot {
             guard let image = CIImage(contentsOf: source) else {
@@ -360,7 +361,8 @@ final class ImageDocument: ReadableDocument, WritableDocument {
     struct Writer: DocumentWriter {
         let context: CIContext
       
-        nonisolated func write(
+        @concurrent
+        func write(
             content: sending ImageSnapshot, to destination: URL,
             previous: sending ImageSnapshot?, progress: consuming Subprogress
         ) async throws {
@@ -406,7 +408,8 @@ struct MediaSnapshot { var payload: Data }
 
 extension MediaDocument {
     struct Writer: DocumentWriter {
-        nonisolated func write(
+        @concurrent
+        func write(
             content: sending MediaSnapshot, to destination: URL,
             previous: sending MediaSnapshot?, progress: consuming Subprogress
         ) async throws {
@@ -439,7 +442,7 @@ extension MediaDocument {
 
 ## Coordinated disk access outside read/write
 
-SwiftUI coordinates file access for `read` and `write` automatically. To touch the file URL at any other time (e.g. reading one sub-file of a package on a tap), gate the access with the configuration's file coordinator so other processes coordinating on the same URL can synchronize. `URLDocumentConfiguration.fileURL` is readable from any thread (it's `nonisolated(unsafe)`); the coordinator provides the read/write synchronization.
+SwiftUI coordinates file access for `read` and `write` automatically. To touch the file URL at any other time (e.g. reading one sub-file of a package on a tap), gate the access with the configuration's file coordinator so other processes coordinating on the same URL can synchronize. `URLDocumentConfiguration` is a `@MainActor` class, so read `configuration.fileURL` and call `makeFileCoordinator()` on the main actor; the coordinator provides the read/write synchronization.
 
 ```swift
 let coordinator = document.configuration.makeFileCoordinator()
@@ -505,9 +508,9 @@ Use `fileExporter` with a `WritableDocument`:
 ## Concurrency contract (common agent pitfalls)
 
 - **`reader(configuration:)` / `writer(configuration:)`** are synchronous factories. They return `sending` reader/writer values and run on the caller.
-- **`read(from:progress:)` / `write(content:to:previous:progress:)`** are `nonisolated` and run **in the background**. Mark them `nonisolated` exactly as shown. Do all heavy I/O and serialization here.
+- **`read(from:progress:)` / `write(content:to:previous:progress:)`** are `@concurrent` and run **in the background**. Mark them `@concurrent` exactly as shown. Do all heavy I/O and serialization here.
 - **`snapshot(contentType:)` / `apply(snapshot:previous:)`** are **`@MainActor`** and `async`. Keep them cheap.
-- **`URLDocumentConfiguration` is `@MainActor @Observable` but `Sendable`,** with `fileURL` / `lastContentModificationDate` exposed as `nonisolated(unsafe)`. Inside `read` / `write`, prefer the `source: URL` / `destination: URL` parameter the framework hands you; that's the URL for *this* operation, while `configuration.fileURL` reflects current state and may have moved (Save As, rename) by the time you read it.
+- **`URLDocumentConfiguration` is a `@MainActor final class` that is `Observable` and `Sendable`,** with `fileURL` / `lastContentModificationDate` as `@MainActor` `{ get set }` properties — read them on the main actor, not from inside `read` / `write`. Inside `read` / `write`, prefer the `source: URL` / `destination: URL` parameter the framework hands you; that's the URL for *this* operation, while `configuration.fileURL` reflects current state and may have moved (Save As, rename) by the time you read it.
 - Snapshots cross actor boundaries, hence the `sending` annotations. Either make the snapshot `Sendable`, or construct it fresh inside `snapshot(contentType:)` and don't retain it elsewhere.
 - Keep snapshot types, reader types, and writer types at **internal** access (the default). Protocol-required methods expose these types in their signatures, so marking them `private` or `fileprivate` causes "must be declared fileprivate because its type uses a private type" compile errors.
 - The `makeDocument` / `makeReadableDocument` closures are `async` and run on the main actor; `await` inside them to do off-main setup.
@@ -518,15 +521,15 @@ Use `fileExporter` with a `WritableDocument`:
 | --- | --- |
 | `ReadableDocument` | Read-only document. `AnyObject`. Requires `readableContentTypes`, `reader(configuration:)`, `apply(snapshot:previous:)`. |
 | `WritableDocument` | Adds saving (independent of `ReadableDocument`). Requires `writableContentTypes`, `writer(configuration:)`, `snapshot(contentType:)`. `AnyObject`. `DocumentGroup`'s read-write init requires `Document: ReadableDocument & WritableDocument`. |
-| `DocumentReader` | `nonisolated func read(from:progress:) async throws -> sending Snapshot`. |
-| `DocumentWriter` | `nonisolated func write(content:to:previous:progress:) async throws`. |
+| `DocumentReader` | `@concurrent func read(from:progress:) async throws -> sending Snapshot`. |
+| `DocumentWriter` | `@concurrent func write(content:to:previous:progress:) async throws`. |
 | `FileWrapperDocumentReader<Snapshot>` | Convenience reader (recommended); closure `(FileWrapper) async throws -> sending Snapshot`. |
-| `FileWrapperDocumentWriter<Snapshot>` | Convenience writer (recommended); **single-argument** closure `(Snapshot) async throws -> FileWrapper`. No `previous` parameter; retain the prior `FileWrapper` yourself for incremental package writes. |
-| `URLDocumentConfiguration` | `@MainActor @Observable`, `Sendable`. `fileURL: URL?` / `lastContentModificationDate: Date?` (both `nonisolated(unsafe)`); `makeFileCoordinator() -> NSFileCoordinator`; `creationSource: DocumentCreationSource?` (iOS/visionOS only). |
+| `FileWrapperDocumentWriter<Snapshot>` | Convenience writer (recommended); **two-argument** closure `(Snapshot, FileWrapper?) async throws -> FileWrapper`. The second argument is the `FileWrapper` from the document's last read or write — reuse its unchanged children for incremental package writes, or ignore it (`{ snapshot, _ in }`) for flat files. |
+| `URLDocumentConfiguration` | `@MainActor final class`, `Observable`, `Sendable`. `fileURL: URL?` / `lastContentModificationDate: Date?` (both `@MainActor`, `get set`); `makeFileCoordinator() -> NSFileCoordinator`; `creationSource: DocumentCreationSource?` (iOS/visionOS only). |
 | `DocumentReadConfiguration` / `DocumentWriteConfiguration` | Value configs exposing `contentType: UTType`. |
 | `DocumentCreationContext` | `creationSource: DocumentCreationSource?`: which `NewDocumentButton` created the document. |
 | `Subprogress` (Foundation) | `~Copyable` progress currency for custom `read`/`write`. Consume once: `start(totalCount:) -> ProgressManager`. |
 | `ProgressManager` (Foundation) | `complete(count:)` drives `fractionCompleted`. Auxiliary `totalByteCount`/`completedByteCount` (`UInt64`), `totalFileCount`/`completedFileCount` (`Int`). |
 | `DocumentGroup` | Scene. `init(editor:makeDocument:)` (read-write) / `init(viewer:makeReadableDocument:)` (read-only). |
 | `DocumentGroupLaunchScene` | iOS branded launch scene hosting `NewDocumentButton`s. |
-| `View.fileExporter(isPresented:document:contentType:defaultFilename:onCompletion:)` | Export a `WritableDocument`. |
+| `View.fileExporter(isPresented:document:contentType:defaultFilename:onCompletion:onCancellation:)` | Export a `WritableDocument`. `contentType`, `defaultFilename`, and `onCancellation` all default to `nil`. The older `…onCompletion:`-only overload is deprecated at 27.0 and takes a `FileDocument`, not a `WritableDocument`. |

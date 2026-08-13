@@ -4,8 +4,6 @@ description: Use when the user requests a visual prototype, styling exploration,
 ---
 # Expo Snack Prototyper
 
-**Verified:** 2026-07-17
-
 When the user needs to visually verify a complex layout, animation, or rendering trick (like combining SVGs, gradients, and shadows) before implementing it into the main codebase, you should generate an **Expo Snack ready prototype**.
 
 Expo Snack requires specific boilerplate and constraints to run smoothly without a local simulator.
@@ -34,9 +32,3 @@ Expo Snack supports common Expo libraries automatically. You may freely use:
 
 ### 5. Delivery Format
 When delivering the code to the user, wrap it in a single markdown code block with the language set to `tsx` or `jsx`. Precede the block with instructions directing the user to copy/paste the block directly into [snack.expo.dev](https://snack.expo.dev/).
-
-## Primary Sources
-
-- [Expo Snack](https://snack.expo.dev/) — the runtime itself; authoritative for supported SDK versions and Snack behavior.
-- [Expo changelog](https://expo.dev/changelog) — release channel; authoritative for SDK releases.
-- [Expo documentation](https://docs.expo.dev/) — authoritative for API syntax and SDK package facts.
