@@ -577,7 +577,13 @@
         }
       },
       "deferredFindings": [],
-      "declinedFindings": []
+      "declinedFindings": [],
+      "state": {
+        "lastAttemptedReview": "2026-08-13T09:38:24Z",
+        "lastAttemptStatus": "completed",
+        "lastCompletedReview": "2026-08-13T09:38:24Z",
+        "inputFingerprint": "sha256:f2ea482fef44044fb389e3c87dac3d74c130d75464eae184c4e25378efcb4346"
+      }
     },
     "obsidian-plugin-crafting": {
       "path": "plugins/obsidian-plugin-kit/skills/obsidian-plugin-crafting",
