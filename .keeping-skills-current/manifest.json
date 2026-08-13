@@ -352,7 +352,13 @@
         }
       },
       "deferredFindings": [],
-      "declinedFindings": []
+      "declinedFindings": [],
+      "state": {
+        "lastAttemptedReview": "2026-08-13T09:38:24Z",
+        "lastAttemptStatus": "completed",
+        "lastCompletedReview": "2026-08-13T09:38:24Z",
+        "inputFingerprint": "sha256:696f67c78cccfe089f67c8b9961c9e55e5e029cc7209bfa4b25fd78448009b33"
+      }
     },
     "device-interaction": {
       "path": "plugins/swift-xcode-kit/skills/device-interaction",
