@@ -101,7 +101,13 @@
         }
       },
       "deferredFindings": [],
-      "declinedFindings": []
+      "declinedFindings": [],
+      "state": {
+        "lastAttemptedReview": "2026-08-13T09:38:24Z",
+        "lastAttemptStatus": "completed",
+        "lastCompletedReview": "2026-08-13T09:38:24Z",
+        "inputFingerprint": "sha256:5cf2b3ce30c7ffb97f8337c85151ab20dc383adfa1952340797d16650aaf18f0"
+      }
     },
     "apple-app-store-screenshots": {
       "path": "plugins/apple-app-store-screenshots/skills/apple-app-store-screenshots",
