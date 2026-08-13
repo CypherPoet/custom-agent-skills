@@ -28,6 +28,13 @@
       "prompt": "Use $keeping-skills-current to review every configured skill that is currently due for review, without asking questions, in this project.",
       "expected_output": "Processes only due interval skills, never opens configuration dialogs, treats unresolved choices as findings or failures, does nothing when no skills are due, and never broadens configured retrieval boundaries.",
       "files": ["evals/fixtures/project/.keeping-skills-current/manifest.json", "evals/fixtures/project/plugins/example/skills/example/SKILL.md"]
+    },
+    {
+      "id": 5,
+      "eval_name": "github-delivery-owned-branch-state",
+      "prompt": "Use $keeping-skills-current to review every configured skill that is currently due for review, without asking questions. The default branch has an older manifest state, while the marked automation branch and pull request contain the latest completed reviews.",
+      "expected_output": "Uses preliminary configuration only to identify GitHub delivery, validates and establishes the marked automation branch in an isolated worktree, incorporates the latest default branch without rewriting history, then runs authoritative preflight and due selection from the owned branch state. It does not repeat reviews merely because the default branch lacks the open pull request's state.",
+      "files": ["evals/fixtures/project/.keeping-skills-current/manifest.json", "evals/fixtures/project/plugins/example/skills/example/SKILL.md"]
     }
   ]
 }
