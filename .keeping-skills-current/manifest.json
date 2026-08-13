@@ -306,7 +306,13 @@
         }
       },
       "deferredFindings": [],
-      "declinedFindings": []
+      "declinedFindings": [],
+      "state": {
+        "lastAttemptedReview": "2026-08-13T09:38:24Z",
+        "lastAttemptStatus": "completed",
+        "lastCompletedReview": "2026-08-13T09:38:24Z",
+        "inputFingerprint": "sha256:db24ee4e4b87e71869d6f5c93a2344f66a2da283ac07a9897c86412dc7f5dcea"
+      }
     },
     "claude-docs-search": {
       "path": "plugins/claude-docs-search/skills/claude-docs-search",
