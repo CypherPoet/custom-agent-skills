@@ -402,7 +402,13 @@
         }
       },
       "deferredFindings": [],
-      "declinedFindings": []
+      "declinedFindings": [],
+      "state": {
+        "lastAttemptedReview": "2026-08-13T09:38:24Z",
+        "lastAttemptStatus": "completed",
+        "lastCompletedReview": "2026-08-13T09:38:24Z",
+        "inputFingerprint": "sha256:6bbe45f64ff80f7f7bfafd26f03a5f362e738f79b3981d4de36f84c56c1943be"
+      }
     },
     "expo-snack-prototyper": {
       "path": "plugins/expo-kit/skills/expo-snack-prototyper",
