@@ -519,7 +519,13 @@
         }
       },
       "deferredFindings": [],
-      "declinedFindings": []
+      "declinedFindings": [],
+      "state": {
+        "lastAttemptedReview": "2026-08-13T09:38:24Z",
+        "lastAttemptStatus": "completed",
+        "lastCompletedReview": "2026-08-13T09:38:24Z",
+        "inputFingerprint": "sha256:ece4d526c98378c39a14e8f73a5c4a18baa218c89c6774ecf4ccf35fc877bcb6"
+      }
     },
     "marketplace-publish-check": {
       "path": "plugins/marketplace-kit/skills/marketplace-publish-check",
