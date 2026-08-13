@@ -329,7 +329,13 @@
         }
       },
       "deferredFindings": [],
-      "declinedFindings": []
+      "declinedFindings": [],
+      "state": {
+        "lastAttemptedReview": "2026-08-13T09:38:24Z",
+        "lastAttemptStatus": "completed",
+        "lastCompletedReview": "2026-08-13T09:38:24Z",
+        "inputFingerprint": "sha256:1f1997010bab7d851e5a8acf8908a79003aac0606d8765e54b848dc0dc9ce6f4"
+      }
     },
     "claude-memory-consolidation": {
       "path": "plugins/claude-memory-consolidation/skills/claude-memory-consolidation",
