@@ -283,7 +283,13 @@
         }
       },
       "deferredFindings": [],
-      "declinedFindings": []
+      "declinedFindings": [],
+      "state": {
+        "lastAttemptedReview": "2026-08-13T09:38:24Z",
+        "lastAttemptStatus": "completed",
+        "lastCompletedReview": "2026-08-13T09:38:24Z",
+        "inputFingerprint": "sha256:5bb1a9ba579594ca40fb3eeaaa6da99ffdcc7a0a4befb5b20dbbc0f0cf7ca5ee"
+      }
     },
     "c-bounds-safety": {
       "path": "plugins/swift-xcode-kit/skills/c-bounds-safety",
