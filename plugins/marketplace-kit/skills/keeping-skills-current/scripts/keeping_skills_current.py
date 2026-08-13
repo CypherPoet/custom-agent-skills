@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+import base64
 import dataclasses
 import datetime as datetime_module
 import hashlib
@@ -373,6 +374,85 @@ def research_result_schema() -> dict[str, Any]:
     schema["$id"] = "https://cypherpoet.dev/schemas/keeping-skills-current/research-result.v1.json"
     schema["title"] = "Keeping Skills Current Research Result"
     return schema
+
+
+def validate_against_model(value: Any, schema: Mapping[str, Any], location: str) -> None:
+    if "oneOf" in schema:
+        matches = 0
+        for alternative in schema["oneOf"]:
+            try:
+                validate_against_model(value, alternative, location)
+            except ContractError:
+                continue
+            matches += 1
+        if matches != 1:
+            raise ContractError(f"{location} must match exactly one supported shape")
+        return
+    if "const" in schema and value != schema["const"]:
+        raise ContractError(f"{location} must equal {schema['const']!r}")
+    if "enum" in schema and value not in schema["enum"]:
+        raise ContractError(f"{location} contains an unsupported value")
+    expected_type = schema.get("type")
+    type_matches = {
+        "object": isinstance(value, dict),
+        "array": isinstance(value, list),
+        "string": isinstance(value, str),
+        "integer": isinstance(value, int) and not isinstance(value, bool),
+        "boolean": isinstance(value, bool),
+    }
+    if expected_type is not None and not type_matches.get(expected_type, False):
+        raise ContractError(f"{location} must be {expected_type}")
+    if isinstance(value, dict):
+        required = schema.get("required", [])
+        missing = [key for key in required if key not in value]
+        if missing:
+            raise ContractError(f"{location} is missing required field(s): {', '.join(missing)}")
+        property_name_schema = schema.get("propertyNames")
+        if property_name_schema is not None:
+            for key in value:
+                validate_against_model(key, property_name_schema, f"{location} key")
+        properties = schema.get("properties", {})
+        additional = schema.get("additionalProperties", True)
+        for key, child in value.items():
+            child_schema = properties.get(key)
+            if child_schema is None:
+                if additional is False:
+                    raise ContractError(f"{location} contains unknown field: {key}")
+                if isinstance(additional, dict):
+                    child_schema = additional
+            if child_schema is not None:
+                validate_against_model(child, child_schema, f"{location}.{key}")
+        if len(value) < schema.get("minProperties", 0):
+            raise ContractError(f"{location} contains too few properties")
+    if isinstance(value, list):
+        if len(value) < schema.get("minItems", 0):
+            raise ContractError(f"{location} contains too few items")
+        if schema.get("uniqueItems"):
+            canonical_items = [canonical_json(item) for item in value]
+            if len(canonical_items) != len(set(canonical_items)):
+                raise ContractError(f"{location} must contain unique items")
+        item_schema = schema.get("items")
+        if item_schema is not None:
+            for index, item in enumerate(value):
+                validate_against_model(item, item_schema, f"{location}[{index}]")
+    if isinstance(value, str):
+        if len(value) < schema.get("minLength", 0):
+            raise ContractError(f"{location} is too short")
+        pattern = schema.get("pattern")
+        if pattern is not None and re.search(pattern, value) is None:
+            raise ContractError(f"{location} does not match its required pattern")
+    if isinstance(value, int) and not isinstance(value, bool):
+        if "minimum" in schema and value < schema["minimum"]:
+            raise ContractError(f"{location} is below its minimum")
+        if "maximum" in schema and value > schema["maximum"]:
+            raise ContractError(f"{location} exceeds its maximum")
+    if "not" in schema:
+        try:
+            validate_against_model(value, schema["not"], location)
+        except ContractError:
+            pass
+        else:
+            raise ContractError(f"{location} matches a forbidden shape")
 
 
 def require_object(value: Any, location: str) -> dict[str, Any]:
@@ -804,7 +884,7 @@ def validate_manifest(raw: Any, root: Path) -> dict[str, Any]:
     elif "fallbackReportPath" in delivery:
         workflow_paths.append(delivery["fallbackReportPath"])
     ensure_outside_skills(workflow_paths, [skill["path"] for skill in skills.values()])
-    return {
+    normalized_manifest = {
         "schemaVersion": SCHEMA_VERSION,
         "scheduler": scheduler,
         "delivery": delivery,
@@ -812,6 +892,8 @@ def validate_manifest(raw: Any, root: Path) -> dict[str, Any]:
         "changeValidation": change_validation,
         "skills": skills,
     }
+    validate_against_model(normalized_manifest, manifest_schema(), "manifest")
+    return normalized_manifest
 
 
 def resolve_project_root(explicit: str | None) -> Path:
@@ -1403,7 +1485,7 @@ def validate_research_result(
             )
     if reverted_findings and validation_status != "failed":
         raise ContractError("reverted corrections require failed validation")
-    return {
+    normalized_result = {
         "schemaVersion": SCHEMA_VERSION,
         "projectIdentity": provided_project_identity,
         "skillId": skill_id,
@@ -1415,6 +1497,12 @@ def validate_research_result(
         "failures": failures,
         "validation": {"status": validation_status, "checks": normalized_checks},
     }
+    validate_against_model(
+        normalized_result,
+        research_result_schema(),
+        "research result",
+    )
+    return normalized_result
 
 
 def render_finding(finding: Mapping[str, Any]) -> list[str]:
@@ -1439,37 +1527,162 @@ def render_finding(finding: Mapping[str, Any]) -> list[str]:
     disposition = finding.get("editDisposition")
     if disposition and disposition != "notApplicable":
         lines.append(f"  - Disposition: `{disposition}`")
+    if finding.get("stale"):
+        lines.append(
+            "  - Currentness: Based on an earlier configuration or skill revision; a new review is due."
+        )
     return lines
 
 
-def report_state_fingerprint(skill_results: Sequence[Mapping[str, Any]]) -> str:
-    state_payload = canonical_json(
-        [
-            {
-                "skillId": item["skillId"],
-                "status": item["status"],
-                "reviewedAt": item["reviewedAt"],
-            }
-            for item in skill_results
-        ]
+def report_state_fingerprint(payload: Mapping[str, Any]) -> str:
+    serialized = canonical_json(payload)
+    return "sha256:" + hashlib.sha256(serialized.encode("utf-8")).hexdigest()
+
+
+def encoded_report_payload(payload: Mapping[str, Any]) -> str:
+    encoded = base64.urlsafe_b64encode(canonical_json(payload).encode("utf-8"))
+    return encoded.decode("ascii").rstrip("=")
+
+
+def decoded_report_payload(encoded: str) -> dict[str, Any]:
+    padding = "=" * (-len(encoded) % 4)
+    try:
+        raw = base64.urlsafe_b64decode(encoded + padding)
+        value = json.loads(raw.decode("utf-8"))
+    except (ValueError, UnicodeError, json.JSONDecodeError) as error:
+        raise ContractError("existing report contains an unreadable result payload") from error
+    payload = require_object(value, "report payload")
+    reject_unknown(payload, {"version", "projectIdentity", "skills"}, "report payload")
+    require_keys(payload, {"version", "projectIdentity", "skills"}, "report payload")
+    if payload["version"] != REPORT_VERSION:
+        raise ContractError("existing report payload version is unsupported")
+    require_string(payload["projectIdentity"], "report payload.projectIdentity")
+    skills = require_object(payload["skills"], "report payload.skills")
+    for skill_id, raw_envelope in skills.items():
+        if not ID_PATTERN.fullmatch(skill_id):
+            raise ContractError("existing report payload contains an invalid skill ID")
+        envelope = require_object(raw_envelope, f"report payload.skills.{skill_id}")
+        reject_unknown(
+            envelope,
+            {"inputFingerprint", "result"},
+            f"report payload.skills.{skill_id}",
+        )
+        require_keys(
+            envelope,
+            {"inputFingerprint", "result"},
+            f"report payload.skills.{skill_id}",
+        )
+        if not FINGERPRINT_PATTERN.fullmatch(
+            require_string(envelope["inputFingerprint"], "report payload inputFingerprint")
+        ):
+            raise ContractError("existing report payload contains an invalid input fingerprint")
+        result = require_object(envelope["result"], "report payload result")
+        if result.get("skillId") != skill_id:
+            raise ContractError("existing report payload skill identity is inconsistent")
+        if result.get("projectIdentity") != payload["projectIdentity"]:
+            raise ContractError("existing report payload project identity is inconsistent")
+        validate_against_model(
+            result,
+            research_result_schema(),
+            f"report payload.skills.{skill_id}.result",
+        )
+    return payload
+
+
+def existing_report_payload(existing: str, project: str) -> dict[str, Any]:
+    if not existing or "keeping-skills-current:" not in existing:
+        return {"version": REPORT_VERSION, "projectIdentity": project, "skills": {}}
+    regions = list(REPORT_PATTERN.finditer(existing))
+    fingerprints = REPORT_FINGERPRINT_PATTERN.findall(existing)
+    payloads = REPORT_PAYLOAD_PATTERN.findall(existing)
+    if len(regions) != 1 or len(fingerprints) != 1 or len(payloads) != 1:
+        raise ContractError("existing report has missing, duplicated, or malformed ownership markers")
+    payload = decoded_report_payload(payloads[0])
+    if payload["projectIdentity"] != project:
+        raise ContractError("existing report belongs to another project")
+    if fingerprints[0] != report_state_fingerprint(payload):
+        raise ContractError("existing report payload does not match its ownership fingerprint")
+    return payload
+
+
+def build_report_payload(
+    configuration: ProjectConfiguration,
+    current_results: Sequence[Mapping[str, Any]],
+    existing: str,
+) -> dict[str, Any]:
+    project = project_identity(configuration.root)
+    payload = existing_report_payload(existing, project)
+    retained = {
+        skill_id: envelope
+        for skill_id, envelope in payload["skills"].items()
+        if skill_id in configuration.manifest["skills"]
+    }
+    for result in current_results:
+        fingerprint, _ = skill_fingerprint(configuration, result["skillId"])
+        retained[result["skillId"]] = {
+            "inputFingerprint": fingerprint,
+            "result": result,
+        }
+    return {
+        "version": REPORT_VERSION,
+        "projectIdentity": project,
+        "skills": {skill_id: retained[skill_id] for skill_id in sorted(retained)},
+    }
+
+
+def decision_key(details: Mapping[str, Any]) -> str:
+    return canonical_json(
+        {
+            "category": details["category"],
+            "target": details["target"],
+            "sources": details["sources"],
+            "proposedAction": details["proposedAction"],
+        }
     )
-    return "sha256:" + hashlib.sha256(state_payload.encode("utf-8")).hexdigest()
 
 
-def render_report(result: Mapping[str, Any], review_state_fingerprint: str) -> str:
+def configured_decisions(
+    configuration: ProjectConfiguration,
+    now: datetime_module.datetime,
+) -> list[dict[str, Any]]:
+    output: list[dict[str, Any]] = []
+    for skill_id, skill in configuration.manifest["skills"].items():
+        for key, kind in (("deferredFindings", "deferred"), ("declinedFindings", "declined")):
+            for decision in skill[key]:
+                suppressing = kind == "declined" or parse_utc(
+                    decision["revisitAfter"], "revisitAfter"
+                ) > now
+                output.append(
+                    {
+                        "skillId": skill_id,
+                        "kind": kind,
+                        "suppressing": suppressing,
+                        **decision,
+                    }
+                )
+    return output
+
+
+def render_report(
+    configuration: ProjectConfiguration,
+    result: Mapping[str, Any],
+    payload: Mapping[str, Any],
+) -> str:
     project = result["projectIdentity"]
     reviewed_at = result.get("reviewedAt", "")
-    skill_results = result.get("skillResults")
-    if skill_results is None:
-        skill_results = [result]
-    if not review_state_fingerprint:
-        review_state_fingerprint = report_state_fingerprint(skill_results)
-    reviewed_skills = ", ".join(f"`{item['skillId']}`" for item in skill_results)
+    current_results = report_skill_results(result)
+    reviewed_ids = {item["skillId"] for item in current_results}
+    reviewed_skills = ", ".join(f"`{skill_id}`" for skill_id in sorted(reviewed_ids))
+    review_state_fingerprint = report_state_fingerprint(payload)
+    payload_marker = encoded_report_payload(payload)
+    retained_results = [
+        payload["skills"][skill_id] for skill_id in sorted(payload["skills"])
+    ]
     lines = [
         f'<!-- keeping-skills-current:start project="{project}" reportVersion="{REPORT_VERSION}" reviewStateFingerprint="{review_state_fingerprint}" -->',
         "# Keeping Skills Current",
         "",
-        f"Configured-source review {'completed' if all(item['status'] == 'completed' for item in skill_results) else 'incomplete'}.",
+        f"Configured-source review {'completed' if all(item['status'] == 'completed' for item in current_results) else 'incomplete'}.",
         "",
         f"- Review time: `{reviewed_at}`",
         f"- Reviewed skills: {reviewed_skills}",
@@ -1479,8 +1692,17 @@ def render_report(result: Mapping[str, Any], review_state_fingerprint: str) -> s
     ]
     all_findings: list[dict[str, Any]] = []
     all_failures: list[dict[str, Any]] = []
-    for item in skill_results:
-        lines.append(f"| `{item['skillId']}` | {item['status']} | {len(item['sourceOutcomes'])} |")
+    for envelope in retained_results:
+        item = envelope["result"]
+        current_fingerprint, _ = skill_fingerprint(configuration, item["skillId"])
+        stale = envelope["inputFingerprint"] != current_fingerprint
+        if item["skillId"] in reviewed_ids:
+            display_status = f"{item['status']} — reviewed this run"
+        elif stale:
+            display_status = f"{item['status']} — retained; new review due"
+        else:
+            display_status = f"{item['status']} — retained from {item['reviewedAt']}"
+        lines.append(f"| `{item['skillId']}` | {display_status} | {len(item['sourceOutcomes'])} |")
         for source in item["sourceOutcomes"]:
             lines.append(
                 f"| ↳ `{source['sourceId']}` | {source['status']} | {source['successfulPages']}/{source['attemptedPages']} pages |"
@@ -1488,11 +1710,23 @@ def render_report(result: Mapping[str, Any], review_state_fingerprint: str) -> s
         for finding in item["findings"]:
             enriched = dict(finding)
             enriched["skillId"] = item["skillId"]
+            enriched["stale"] = stale
             all_findings.append(enriched)
         for failure in item["failures"]:
             all_failures.append({"skillId": item["skillId"], **failure})
-    deferred = result.get("deferredAndDeclinedFindings", [])
-    if not all_findings and not all_failures and not deferred:
+    now = parse_utc(reviewed_at, "report input.reviewedAt")
+    decisions = configured_decisions(configuration, now)
+    suppressing_keys = {
+        (decision["skillId"], decision_key(decision["details"]))
+        for decision in decisions
+        if decision["suppressing"]
+    }
+    active_findings = [
+        finding
+        for finding in all_findings
+        if (finding["skillId"], decision_key(finding["details"])) not in suppressing_keys
+    ]
+    if not active_findings and not all_failures and not decisions:
         lines.extend(["", "No findings."])
     else:
         categories = [
@@ -1502,7 +1736,9 @@ def render_report(result: Mapping[str, Any], review_state_fingerprint: str) -> s
         ]
         for category, heading in categories:
             lines.extend(["", heading, ""])
-            matching = [item for item in all_findings if item["details"]["category"] == category]
+            matching = [
+                item for item in active_findings if item["details"]["category"] == category
+            ]
             if not matching:
                 lines.append("No findings.")
             for finding in matching:
@@ -1512,11 +1748,22 @@ def render_report(result: Mapping[str, Any], review_state_fingerprint: str) -> s
             lines.append("No findings.")
         for failure in all_failures:
             lines.append(f"- `{failure['skillId']}` — **{failure['stage']}**: {failure['reason']}")
-        if deferred:
+        if decisions:
             lines.extend(["", "## 🗃️ Deferred and Declined Findings", ""])
-            for decision in deferred:
-                lines.append(f"- **{decision['details']['summary']}** — {decision['reason']}")
-    lines.extend(["", "<!-- keeping-skills-current:end -->", ""])
+            for decision in decisions:
+                state = "active" if decision["suppressing"] else "inactive — revisit date passed"
+                lines.append(
+                    f"- `{decision['skillId']}` — **{decision['kind']} ({state})**: "
+                    f"{decision['details']['summary']} — {decision['reason']}"
+                )
+    lines.extend(
+        [
+            "",
+            f"<!-- keeping-skills-current:payload {payload_marker} -->",
+            "<!-- keeping-skills-current:end -->",
+            "",
+        ]
+    )
     return "\n".join(lines)
 
 
@@ -1526,6 +1773,9 @@ REPORT_PATTERN = re.compile(
 )
 REPORT_FINGERPRINT_PATTERN = re.compile(
     r'<!-- keeping-skills-current:start\b[^>]*\breviewStateFingerprint="(sha256:[0-9a-f]{64})"[^>]*-->'
+)
+REPORT_PAYLOAD_PATTERN = re.compile(
+    r"<!-- keeping-skills-current:payload ([A-Za-z0-9_-]+) -->"
 )
 
 
@@ -1685,12 +1935,7 @@ def normalize_report_input(raw: Any, configuration: ProjectConfiguration) -> dic
     report = require_object(raw, "report input")
     if "skillResults" not in report:
         return validate_research_result(report, configuration)
-    allowed = {
-        "projectIdentity",
-        "reviewedAt",
-        "skillResults",
-        "deferredAndDeclinedFindings",
-    }
+    allowed = {"projectIdentity", "reviewedAt", "skillResults"}
     reject_unknown(report, allowed, "report input")
     require_keys(report, {"projectIdentity", "reviewedAt", "skillResults"}, "report input")
     project = require_string(report["projectIdentity"], "report input.projectIdentity")
@@ -1706,17 +1951,11 @@ def normalize_report_input(raw: Any, configuration: ProjectConfiguration) -> dic
     ids = [item["skillId"] for item in normalized_results]
     if len(ids) != len(set(ids)):
         raise ContractError("report input contains duplicate skill results")
-    normalized = {
+    return {
         "projectIdentity": project,
         "reviewedAt": report["reviewedAt"],
         "skillResults": normalized_results,
     }
-    if "deferredAndDeclinedFindings" in report:
-        decisions = report["deferredAndDeclinedFindings"]
-        if not isinstance(decisions, list):
-            raise ContractError("report input.deferredAndDeclinedFindings must be an array")
-        normalized["deferredAndDeclinedFindings"] = decisions
-    return normalized
 
 
 def report_skill_results(report_input: Mapping[str, Any]) -> list[dict[str, Any]]:
@@ -1753,7 +1992,6 @@ def configure_parser() -> argparse.ArgumentParser:
     report.add_argument("--input", required=True)
     report.add_argument("--existing-report")
     report.add_argument("--output")
-    report.add_argument("--review-state-fingerprint", default="")
     report.add_argument("--validate-only", action="store_true")
     migration = subparsers.add_parser("migrate-legacy")
     migration.add_argument("--project-root")
@@ -1844,14 +2082,30 @@ def main(arguments: Sequence[str] | None = None) -> int:
                 load_json_file(args.input, "--input"), configuration
             )
             results = report_skill_results(report_input)
-            expected_report_fingerprint = report_state_fingerprint(results)
             delivered = Path(args.delivered_report).read_text(encoding="utf-8")
-            marker_matches = REPORT_FINGERPRINT_PATTERN.findall(delivered)
-            if marker_matches != [expected_report_fingerprint]:
-                raise ContractError("delivered report marker does not match the validated research result")
             selected = [item for item in results if args.skill_id is None or item["skillId"] == args.skill_id]
             if not selected:
                 raise ContractError("--skill-id does not identify a result in --input")
+            delivered_payload = existing_report_payload(
+                delivered,
+                project_identity(configuration.root),
+            )
+            for result in selected:
+                envelope = delivered_payload["skills"].get(result["skillId"])
+                if envelope is None or canonical_json(envelope["result"]) != canonical_json(result):
+                    raise ContractError(
+                        "delivered report does not contain the validated current result for "
+                        f"{result['skillId']}"
+                    )
+                current_fingerprint, _ = skill_fingerprint(
+                    configuration,
+                    result["skillId"],
+                )
+                if envelope["inputFingerprint"] != current_fingerprint:
+                    raise ContractError(
+                        "delivered report input fingerprint is stale for "
+                        f"{result['skillId']}"
+                    )
             updated: dict[str, Any] = {}
             for result in selected:
                 skill_id = result["skillId"]
@@ -1885,13 +2139,18 @@ def main(arguments: Sequence[str] | None = None) -> int:
             report_input = normalize_report_input(
                 load_json_file(args.input, "--input"), configuration
             )
-            owned = render_report(report_input, args.review_state_fingerprint)
-            if args.validate_only:
-                write_json_output({"valid": True})
-                return 0
             existing = ""
             if args.existing_report:
                 existing = Path(args.existing_report).read_text(encoding="utf-8")
+            payload = build_report_payload(
+                configuration,
+                report_skill_results(report_input),
+                existing,
+            )
+            owned = render_report(configuration, report_input, payload)
+            if args.validate_only:
+                write_json_output({"valid": True})
+                return 0
             rendered = merge_report(existing, owned)
             if args.output:
                 atomic_write(Path(args.output), rendered)

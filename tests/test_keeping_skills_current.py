@@ -90,13 +90,23 @@ class KeepingSkillsCurrentTests(unittest.TestCase):
         self.configure(value)
         return value
 
-    def valid_result(self, *, status="completed", findings=None, failures=None, validation=None):
+    def valid_result(
+        self,
+        *,
+        skill_id="example",
+        skill_path="plugins/example/skills/example",
+        reviewed_at="2026-08-13T23:00:00Z",
+        status="completed",
+        findings=None,
+        failures=None,
+        validation=None,
+    ):
         return {
             "schemaVersion": 1,
             "projectIdentity": self.project.name,
-            "skillId": "example",
-            "skillPath": "plugins/example/skills/example",
-            "reviewedAt": "2026-08-13T23:00:00Z",
+            "skillId": skill_id,
+            "skillPath": skill_path,
+            "reviewedAt": reviewed_at,
             "status": status,
             "sourceOutcomes": [
                 {
@@ -528,6 +538,137 @@ class KeepingSkillsCurrentTests(unittest.TestCase):
         self.assertIn("Human introduction.", rerendered)
         self.assertIn("\nNo findings.\n", rerendered)
 
+    def test_report_preserves_unselected_results_and_marks_changed_inputs_stale(self):
+        second_path = "plugins/example/skills/second"
+        write(
+            self.project / second_path / "SKILL.md",
+            "---\nname: second\ndescription: Second.\n---\n\n# Second\n",
+        )
+        second_record = skill_record(sources={"example-documentation": source()})
+        second_record["path"] = second_path
+        self.configure(
+            manifest(
+                {
+                    "example": skill_record(
+                        sources={"example-documentation": source()}
+                    ),
+                    "second": second_record,
+                }
+            )
+        )
+        result_path = self.project / "result.json"
+        report_path = self.project / "report.md"
+        write_json(result_path, self.valid_result(findings=[self.correction_finding()]))
+        self.run_helper(
+            "render-report",
+            "--project-root",
+            str(self.project),
+            "--input",
+            str(result_path),
+            "--output",
+            str(report_path),
+        )
+
+        write_json(
+            result_path,
+            self.valid_result(
+                skill_id="second",
+                skill_path=second_path,
+                reviewed_at="2026-08-14T23:00:00Z",
+            ),
+        )
+        self.run_helper(
+            "render-report",
+            "--project-root",
+            str(self.project),
+            "--input",
+            str(result_path),
+            "--existing-report",
+            str(report_path),
+            "--output",
+            str(report_path),
+        )
+        retained = report_path.read_text()
+        self.assertIn("The current guidance is obsolete.", retained)
+        self.assertIn("`example` | completed — retained from", retained)
+        self.assertIn("`second` | completed — reviewed this run", retained)
+
+        write(
+            self.project / "plugins/example/skills/example/SKILL.md",
+            "---\nname: example\ndescription: Example.\n---\n\n# Example\n\nChanged guidance.\n",
+        )
+        self.run_helper(
+            "render-report",
+            "--project-root",
+            str(self.project),
+            "--input",
+            str(result_path),
+            "--existing-report",
+            str(report_path),
+            "--output",
+            str(report_path),
+        )
+        stale = report_path.read_text()
+        self.assertIn("`example` | completed — retained; new review due", stale)
+        self.assertIn("Based on an earlier configuration or skill revision", stale)
+
+    def test_decisions_suppress_matching_findings_until_a_deferral_expires(self):
+        finding = self.correction_finding()
+        configured = manifest(
+            {
+                "example": skill_record(
+                    sources={"example-documentation": source()}
+                )
+            }
+        )
+        configured["skills"]["example"]["deferredFindings"] = [
+            {
+                "details": finding["details"],
+                "reason": "Wait for the next release cycle.",
+                "decidedAt": "2026-08-01T00:00:00Z",
+                "revisitAfter": "2026-09-01T00:00:00Z",
+            }
+        ]
+        self.configure(configured)
+        result_path = self.project / "result.json"
+        report_path = self.project / "report.md"
+        write_json(result_path, self.valid_result(findings=[finding]))
+        self.run_helper(
+            "render-report",
+            "--project-root",
+            str(self.project),
+            "--input",
+            str(result_path),
+            "--output",
+            str(report_path),
+        )
+        active = report_path.read_text()
+        self.assertIn("## 🗃️ Deferred and Declined Findings", active)
+        self.assertIn("deferred (active)", active)
+        corrections = active.split("## 🛠 Corrections", 1)[1].split(
+            "## 💡 Improvement Suggestions", 1
+        )[0]
+        self.assertIn("No findings.", corrections)
+
+        configured["skills"]["example"]["deferredFindings"][0][
+            "revisitAfter"
+        ] = "2026-08-02T00:00:00Z"
+        self.configure(configured)
+        self.run_helper(
+            "render-report",
+            "--project-root",
+            str(self.project),
+            "--input",
+            str(result_path),
+            "--existing-report",
+            str(report_path),
+            "--output",
+            str(report_path),
+        )
+        expired = report_path.read_text()
+        self.assertIn("The current guidance is obsolete.", expired)
+        self.assertIn("inactive — revisit date passed", expired)
+
     def test_completed_state_requires_valid_result_and_matching_delivered_report(self):
         self.configured_manifest("interval")
         result_path = self.project / "result.json"
@@ -574,6 +715,64 @@ class KeepingSkillsCurrentTests(unittest.TestCase):
             (self.project / ".keeping-skills-current/manifest.json").read_text()
         )
         self.assertEqual(after["skills"]["example"]["state"], state)
+
+    def test_state_rejects_tampered_reports_and_stale_review_inputs(self):
+        self.configured_manifest("interval")
+        result_path = self.project / "result.json"
+        report_path = self.project / "report.md"
+        write_json(result_path, self.valid_result())
+        self.run_helper(
+            "render-report",
+            "--project-root",
+            str(self.project),
+            "--input",
+            str(result_path),
+            "--output",
+            str(report_path),
+        )
+        original = report_path.read_text()
+        write(
+            report_path,
+            original.replace(
+                'reviewStateFingerprint="sha256:',
+                'reviewStateFingerprint="sha256:0',
+                1,
+            ),
+        )
+        tampered = self.run_helper(
+            "apply-state",
+            "--project-root",
+            str(self.project),
+            "--input",
+            str(result_path),
+            "--delivered-report",
+            str(report_path),
+            check=False,
+        )
+        self.assertEqual(tampered.returncode, 2)
+        self.assertIn("ownership markers", tampered.stderr)
+
+        write(report_path, original)
+        write(
+            self.project / "plugins/example/skills/example/SKILL.md",
+            "---\nname: example\ndescription: Example.\n---\n\n# Example\n\nChanged after review.\n",
+        )
+        stale = self.run_helper(
+            "apply-state",
+            "--project-root",
+            str(self.project),
+            "--input",
+            str(result_path),
+            "--delivered-report",
+            str(report_path),
+            check=False,
+        )
+        self.assertEqual(stale.returncode, 2)
+        self.assertIn("input fingerprint is stale", stale.stderr)
+        unchanged = json.loads(
+            (self.project / ".keeping-skills-current/manifest.json").read_text()
+        )
+        self.assertNotIn("state", unchanged["skills"]["example"])
 
     def test_incomplete_attempt_preserves_prior_completed_state(self):
         self.configured_manifest("interval")

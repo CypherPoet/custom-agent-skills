@@ -109,7 +109,8 @@ Bound the region with:
 ```markdown
 <!-- keeping-skills-current:start project="<identity>" reportVersion="1" reviewStateFingerprint="sha256:..." -->
 ...
+<!-- keeping-skills-current:payload <encoded-current-state-results> -->
 <!-- keeping-skills-current:end -->
 ```
 
-Preserve human text outside the region. Missing, duplicated, malformed, or inconsistent markers require interactive reconciliation. Before trusting completed freshness, compare the marker fingerprint with the relevant manifest review state; recover a clearly owned interrupted run by reviewing affected skills again, never by reconstructing missing findings.
+The encoded payload is workflow-owned state for retaining unselected results and verifying delivery; it is not a source cache. Preserve human text outside the region. Missing, duplicated, malformed, or inconsistent markers require interactive reconciliation. Before advancing completed state, require the delivered payload to contain the validated current result and current input fingerprint. Recover a clearly owned interrupted run by reviewing affected skills again, never by reconstructing missing findings.
