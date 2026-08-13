@@ -122,7 +122,8 @@ Commands emit structured JSON on standard output, diagnostics on standard error,
 - `status` — return read-only project and per-skill state.
 - `due-set` — return due interval records in deterministic order. Use `--now` for tests and `--force-failed` only for an explicit manual retry.
 - `fingerprint --skill-id <id>` — calculate the final review-input fingerprint and list functional files. Put this value in the structured research result after edits and validation finish.
-- `render-report --input <result.json> [--existing-report <path>] [--output <path>]` — validate selected results, retain unselected current-state results, and render or atomically update an owned Markdown region.
+- `render-report --input <result.json> --validate-only --provisional` — validate the pre-edit result and exact target locators against unchanged reviewed files.
+- `render-report --input <result.json> [--existing-report <path>] [--output <path>]` — validate final selected results, retain unselected current-state results, and render or atomically update an owned Markdown region.
 - `apply-state --input <result.json> --delivered-report <path> [--skill-id <id>]` — validate the research result, its current input fingerprint, and its matching delivered report payload, then atomically update only review state.
 - `migrate-legacy --legacy-manifest <path> [--write]` — create a version-1 proposal or, after interactive confirmation, write it. Never call unattended.
 - `cleanup-legacy [--write]` — preview or remove updater-only `## Primary Sources` sections and standalone `**Verified:**` markers from configured skills after their sources are represented in the manifest.

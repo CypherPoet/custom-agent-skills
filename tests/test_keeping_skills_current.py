@@ -69,7 +69,7 @@ class KeepingSkillsCurrentTests(unittest.TestCase):
             "---\nname: example\ndescription: Example.\n---\n\n# Example\n\nCurrent guidance.\n",
         )
 
-    def run_helper(self, *arguments, check=True, input_text=None):
+    def run_helper(self, *arguments, check=True, input_text=None, environment=None):
         return subprocess.run(
             [str(HELPER_PYTHON), str(HELPER), *arguments],
             cwd=self.project,
@@ -77,6 +77,7 @@ class KeepingSkillsCurrentTests(unittest.TestCase):
             capture_output=True,
             text=True,
             check=check,
+            env=environment,
         )
 
     def configure(self, value):
@@ -124,7 +125,7 @@ class KeepingSkillsCurrentTests(unittest.TestCase):
 
     def test_run_procedure_validates_provisional_and_final_results(self):
         procedure = (SKILL_ROOT / "SKILL.md").read_text(encoding="utf-8")
-        provisional = procedure.index("Validate the provisional object before it can affect files")
+        provisional = procedure.index("Validate the provisional object with")
         apply_edits = procedure.index("Apply a correction only when")
         final = procedure.index("validate it again")
         render = procedure.index("Then render and publish the current report")
@@ -351,6 +352,8 @@ class KeepingSkillsCurrentTests(unittest.TestCase):
     def test_source_contract_rejects_private_hosts_and_start_pages_outside_crawl(self):
         for configured_source, message in (
             (source("https://127.0.0.1/docs/"), "public host"),
+            (source("https://127.1/docs/"), "public host"),
+            (source("https://2130706433/docs/"), "public host"),
             (
                 {
                     "url": "https://example.com/reference/",
@@ -439,6 +442,51 @@ class KeepingSkillsCurrentTests(unittest.TestCase):
                 )
                 self.assertEqual(result.returncode, 2)
                 self.assertIn("must remain outside managed skill", result.stderr)
+
+        symlink_target = self.project / "plugins/example/skills/example/references"
+        symlink_parent = self.project / "config-link"
+        symlink_parent.symlink_to(symlink_target, target_is_directory=True)
+        write_json(symlink_target / "manifest.json", manifest({"example": skill_record()}))
+        symlinked_parent = self.run_helper(
+            "preflight",
+            "--project-root",
+            str(self.project),
+            "--manifest",
+            "config-link/manifest.json",
+            check=False,
+        )
+        self.assertEqual(symlinked_parent.returncode, 2)
+        self.assertIn("must remain outside managed skill", symlinked_parent.stderr)
+
+    def test_status_reports_unavailable_git_without_rejecting_configuration(self):
+        self.configure(
+            manifest(
+                delivery={
+                    "strategy": "githubPullRequest",
+                    "branchName": "automation/keeping-skills-current",
+                    "autoMergeStrategy": "none",
+                }
+            )
+        )
+        environment = {**os.environ, "PATH": str(self.project / "missing-bin")}
+
+        status = self.run_helper(
+            "status",
+            "--project-root",
+            str(self.project),
+            environment=environment,
+        )
+        self.assertFalse(json.loads(status.stdout)["capabilities"]["gitAvailable"])
+        mutation = self.run_helper(
+            "preflight",
+            "--project-root",
+            str(self.project),
+            "--mutation",
+            check=False,
+            environment=environment,
+        )
+        self.assertEqual(mutation.returncode, 2)
+        self.assertIn("requires Git before mutation", mutation.stderr)
 
     def test_locator_override_and_redundant_default_are_supported(self):
         write_json(self.project / "configuration/review.json", manifest())
@@ -679,6 +727,63 @@ class KeepingSkillsCurrentTests(unittest.TestCase):
         )
         self.assertEqual(stale_result.returncode, 2)
         self.assertIn("does not match the current reviewed files", stale_result.stderr)
+
+    def test_provisional_result_requires_locator_in_unchanged_target(self):
+        self.configured_manifest()
+        result_path = self.project / "result.json"
+        finding = self.correction_finding()
+        finding["details"]["target"]["currentText"] = "Guidance that is not present."
+        write_json(result_path, self.valid_result(findings=[finding]))
+
+        invalid_locator = self.run_helper(
+            "render-report",
+            "--project-root",
+            str(self.project),
+            "--input",
+            str(result_path),
+            "--validate-only",
+            "--provisional",
+            check=False,
+        )
+
+        self.assertEqual(invalid_locator.returncode, 2)
+        self.assertIn("does not match the unchanged reviewed file", invalid_locator.stderr)
+
+        finding["details"]["target"]["currentText"] = "Current guidance."
+        write_json(result_path, self.valid_result(findings=[finding]))
+        valid_locator = self.run_helper(
+            "render-report",
+            "--project-root",
+            str(self.project),
+            "--input",
+            str(result_path),
+            "--validate-only",
+            "--provisional",
+        )
+        self.assertTrue(json.loads(valid_locator.stdout)["valid"])
+
+    def test_render_report_rechecks_current_result_fingerprint(self):
+        self.configured_manifest()
+        configuration = HELPER_MODULE.load_configuration(str(self.project), None)
+        result = HELPER_MODULE.validate_research_result(
+            self.valid_result(),
+            configuration,
+        )
+        payload = HELPER_MODULE.build_report_payload(
+            configuration,
+            [result],
+            "",
+        )
+        write(
+            self.project / "plugins/example/skills/example/SKILL.md",
+            "---\nname: example\ndescription: Example.\n---\n\n# Example\n\nChanged during rendering.\n",
+        )
+
+        with self.assertRaisesRegex(
+            HELPER_MODULE.ContractError,
+            "review inputs changed before report publication",
+        ):
+            HELPER_MODULE.render_report(configuration, result, payload)
 
     def test_research_result_rejects_applied_edits_after_failures_or_failed_checks(self):
         configured = self.configured_manifest()

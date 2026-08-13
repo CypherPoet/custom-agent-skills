@@ -27,6 +27,7 @@ LOCATOR_PATH = ".keeping-skills-current/config.json"
 REPORT_VERSION = 1
 ID_PATTERN = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
 FINGERPRINT_PATTERN = re.compile(r"^sha256:[0-9a-f]{64}$")
+NUMERIC_HOST_LABEL_PATTERN = re.compile(r"^(?:[0-9]+|0x[0-9a-f]+)$", re.IGNORECASE)
 UTC_TIMESTAMP_PATTERN = re.compile(
     r"^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?Z$"
 )
@@ -531,6 +532,9 @@ def host_is_public(hostname: str) -> bool:
     lowered = hostname.rstrip(".").lower()
     if lowered == "localhost" or lowered.endswith(".localhost") or lowered.endswith(".local"):
         return False
+    labels = lowered.split(".")
+    if labels and all(NUMERIC_HOST_LABEL_PATTERN.fullmatch(label) for label in labels):
+        return False
     try:
         address = ipaddress.ip_address(lowered)
     except ValueError:
@@ -750,6 +754,35 @@ def validate_sources(value: Any, root: Path, location: str) -> dict[str, Any]:
     return output
 
 
+def git_branch_name_is_safe(branch: str) -> bool:
+    if branch in {"@", "HEAD"} or branch.startswith("-") or branch.endswith("/"):
+        return False
+    if "//" in branch or ".." in branch or "@{" in branch:
+        return False
+    if re.search(r"[\x00-\x20\x7f~^:?*\[\\]", branch):
+        return False
+    for component in branch.split("/"):
+        if not component or component.startswith("."):
+            return False
+        if component.endswith(".") or component.endswith(".lock"):
+            return False
+    return True
+
+
+def check_git_branch_capability(branch: str) -> tuple[bool, bool]:
+    try:
+        result = subprocess.run(
+            ["git", "check-ref-format", "--branch", branch],
+            capture_output=True,
+            text=True,
+            check=False,
+            timeout=5,
+        )
+    except (OSError, subprocess.TimeoutExpired):
+        return False, False
+    return True, result.returncode == 0
+
+
 def validate_delivery(value: Any, root: Path) -> dict[str, Any]:
     delivery = require_object(value, "delivery")
     strategy = delivery.get("strategy")
@@ -768,16 +801,7 @@ def validate_delivery(value: Any, root: Path) -> dict[str, Any]:
     reject_unknown(delivery, allowed, "delivery")
     require_keys(delivery, {"strategy", "branchName", "autoMergeStrategy"}, "delivery")
     branch = require_string(delivery["branchName"], "delivery.branchName")
-    try:
-        branch_check = subprocess.run(
-            ["git", "check-ref-format", "--branch", branch],
-            capture_output=True,
-            text=True,
-            check=False,
-        )
-    except OSError as error:
-        raise ContractError("githubPullRequest delivery requires Git for branch validation") from error
-    if branch.startswith("-") or "@{" in branch or branch_check.returncode != 0:
+    if not git_branch_name_is_safe(branch):
         raise ContractError("delivery.branchName is not a safe Git branch name")
     auto_merge = delivery["autoMergeStrategy"]
     if auto_merge not in {"none", "stateOnly"}:
@@ -794,13 +818,31 @@ def validate_delivery(value: Any, root: Path) -> dict[str, Any]:
     return result
 
 
-def ensure_outside_skills(paths: Sequence[str], skill_paths: Sequence[str]) -> None:
+def ensure_outside_skills(
+    paths: Sequence[str],
+    skill_paths: Sequence[str],
+    root: Path | None = None,
+) -> None:
     for path in paths:
         candidate = PurePosixPath(path)
         for skill_path in skill_paths:
             skill = PurePosixPath(skill_path)
             if candidate == skill or skill in candidate.parents:
                 raise ContractError(f"workflow path {path} must remain outside managed skill {skill_path}")
+            if root is not None:
+                resolved_candidate = (
+                    root / Path(*candidate.parts)
+                ).resolve(strict=False)
+                resolved_skill = (
+                    root / Path(*skill.parts)
+                ).resolve(strict=False)
+                if (
+                    resolved_candidate == resolved_skill
+                    or resolved_skill in resolved_candidate.parents
+                ):
+                    raise ContractError(
+                        f"workflow path {path} must remain outside managed skill {skill_path}"
+                    )
 
 
 def target_belongs_to_skill(target_path: str, skill_path: str) -> bool:
@@ -891,7 +933,11 @@ def validate_manifest(raw: Any, root: Path) -> dict[str, Any]:
         workflow_paths.append(delivery["reportPath"])
     elif "fallbackReportPath" in delivery:
         workflow_paths.append(delivery["fallbackReportPath"])
-    ensure_outside_skills(workflow_paths, [skill["path"] for skill in skills.values()])
+    ensure_outside_skills(
+        workflow_paths,
+        [skill["path"] for skill in skills.values()],
+        root,
+    )
     normalized_manifest = {
         "schemaVersion": SCHEMA_VERSION,
         "scheduler": scheduler,
@@ -960,6 +1006,7 @@ def load_configuration(root_argument: str | None, manifest_argument: str | None)
     ensure_outside_skills(
         [relative_path],
         [skill["path"] for skill in manifest["skills"].values()],
+        root,
     )
     if relative_path != DEFAULT_MANIFEST_PATH and (root / DEFAULT_MANIFEST_PATH).exists():
         warnings += (
@@ -1182,6 +1229,18 @@ def preflight_output(configuration: ProjectConfiguration, mutation: bool) -> dic
     warnings = list(configuration.warnings)
     if mutation and any(message.startswith("inactive default") for message in warnings):
         raise ContractError(warnings[-1])
+    capabilities: dict[str, Any] = {}
+    delivery = configuration.manifest["delivery"]
+    if delivery["strategy"] == "githubPullRequest":
+        git_available, branch_valid = check_git_branch_capability(
+            delivery["branchName"]
+        )
+        capabilities["gitAvailable"] = git_available
+        capabilities["gitBranchValid"] = branch_valid if git_available else None
+        if git_available and not branch_valid:
+            raise ContractError("delivery.branchName is not a safe Git branch name")
+        if mutation and not git_available:
+            raise ContractError("githubPullRequest delivery requires Git before mutation")
     skills: dict[str, Any] = {}
     for skill_id, skill in configuration.manifest["skills"].items():
         skill_root = configuration.root / Path(*PurePosixPath(skill["path"]).parts)
@@ -1205,6 +1264,7 @@ def preflight_output(configuration: ProjectConfiguration, mutation: bool) -> dic
         "projectIdentity": project_identity(configuration.root),
         "manifestPath": configuration.manifest_relative_path,
         "warnings": warnings,
+        "capabilities": capabilities,
         "manifest": configuration.manifest,
         "skills": skills,
     }
@@ -1274,11 +1334,25 @@ def validate_evidence(value: Any, configured_sources: Mapping[str, Any], locatio
     }
 
 
+def require_target_locator(root: Path, target: Mapping[str, Any], location: str) -> None:
+    path = root / Path(*PurePosixPath(target["filePath"]).parts)
+    try:
+        content = path.read_text(encoding="utf-8")
+    except (OSError, UnicodeError) as error:
+        raise ContractError(f"{location} could not be read from the reviewed file") from error
+    locator_key = "currentText" if "currentText" in target else "anchorText"
+    if target[locator_key] not in content:
+        raise ContractError(
+            f"{location}.{locator_key} does not match the unchanged reviewed file"
+        )
+
+
 def validate_research_result(
     value: Any,
     configuration: ProjectConfiguration,
     expected_skill_id: str | None = None,
     require_current_fingerprint: bool = True,
+    provisional: bool = False,
 ) -> dict[str, Any]:
     result = require_object(value, "research result")
     allowed = {
@@ -1426,6 +1500,12 @@ def validate_research_result(
                 raise ContractError(f"{location}.details source snapshot differs from configuration")
         if details["target"]["filePath"] not in functional_file_paths:
             raise ContractError(f"{location}.details target is outside the skill's functional files")
+        if provisional:
+            require_target_locator(
+                configuration.root,
+                details["target"],
+                f"{location}.details.target",
+            )
         evidence_raw = finding["evidence"]
         if not isinstance(evidence_raw, list) or not evidence_raw:
             raise ContractError(f"{location}.evidence must be a nonempty array")
@@ -1455,6 +1535,10 @@ def validate_research_result(
             raise ContractError(f"{location} applies an edit to a non-correction finding")
         if configuration.manifest["correctionStrategy"] == "reportOnly" and disposition == "applied":
             raise ContractError(f"{location} applies an edit while correctionStrategy is reportOnly")
+        if provisional and details["category"] == "correction" and disposition != "proposed":
+            raise ContractError(
+                f"{location} must keep a provisional correction proposed before mutation"
+            )
         findings.append({"details": details, "evidence": evidence, "editDisposition": disposition})
     failures_raw = result["failures"]
     if not isinstance(failures_raw, list):
@@ -1476,6 +1560,10 @@ def validate_research_result(
     validation_status = validation["status"]
     if validation_status not in {"passed", "failed", "skipped", "notApplicable"}:
         raise ContractError("research result.validation.status is invalid")
+    if provisional and validation_status != "notApplicable":
+        raise ContractError(
+            "a provisional research result must use notApplicable validation"
+        )
     if not isinstance(validation["checks"], list):
         raise ContractError("research result.validation.checks must be an array")
     normalized_checks: list[dict[str, str]] = []
@@ -1743,6 +1831,11 @@ def render_report(
         item = envelope["result"]
         current_fingerprint, _ = skill_fingerprint(configuration, item["skillId"])
         stale = envelope["inputFingerprint"] != current_fingerprint
+        if item["skillId"] in reviewed_ids and stale:
+            raise ContractError(
+                "review inputs changed before report publication for "
+                f"{item['skillId']}"
+            )
         if item["skillId"] in reviewed_ids:
             display_status = f"{item['status']} — reviewed this run"
         elif stale:
@@ -1982,6 +2075,7 @@ def normalize_report_input(
     raw: Any,
     configuration: ProjectConfiguration,
     current_fingerprint_skill_ids: set[str] | None = None,
+    provisional: bool = False,
 ) -> dict[str, Any]:
     report = require_object(raw, "report input")
     if "skillResults" not in report:
@@ -1997,6 +2091,7 @@ def normalize_report_input(
             report,
             configuration,
             require_current_fingerprint=require_current_fingerprint,
+            provisional=provisional,
         )
     allowed = {"projectIdentity", "reviewedAt", "skillResults"}
     reject_unknown(report, allowed, "report input")
@@ -2024,6 +2119,7 @@ def normalize_report_input(
                 item_object,
                 configuration,
                 require_current_fingerprint=require_current_fingerprint,
+                provisional=provisional,
             )
         )
     ids = [item["skillId"] for item in normalized_results]
@@ -2071,6 +2167,7 @@ def configure_parser() -> argparse.ArgumentParser:
     report.add_argument("--existing-report")
     report.add_argument("--output")
     report.add_argument("--validate-only", action="store_true")
+    report.add_argument("--provisional", action="store_true")
     migration = subparsers.add_parser("migrate-legacy")
     migration.add_argument("--project-root")
     migration.add_argument("--legacy-manifest", required=True)
@@ -2218,8 +2315,12 @@ def main(arguments: Sequence[str] | None = None) -> int:
             )
             write_json_output({"updated": updated})
         elif args.command == "render-report":
+            if args.provisional and not args.validate_only:
+                raise ContractError("--provisional requires --validate-only")
             report_input = normalize_report_input(
-                load_json_file(args.input, "--input"), configuration
+                load_json_file(args.input, "--input"),
+                configuration,
+                provisional=args.provisional,
             )
             existing = ""
             if args.existing_report:

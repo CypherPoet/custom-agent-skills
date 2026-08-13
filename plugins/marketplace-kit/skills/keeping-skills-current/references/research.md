@@ -47,7 +47,7 @@ If retrieved evidence says nothing relevant about part of the skill, do nothing:
 
 ## Structured Result
 
-Use the same `assets/research-result.schema.v1.json` contract in two passes. Before mutation, produce and validate a provisional object against the unchanged reviewed inputs. Keep unapplied corrections `proposed`, set validation to `notApplicable`, and include the current fingerprint. This pass must reject malformed source outcomes, evidence, findings, targets, or proposed actions before they can authorize an edit.
+Use the same `assets/research-result.schema.v1.json` contract in two passes. Before mutation, produce a provisional object and validate it with `render-report --validate-only --provisional` against the unchanged reviewed inputs. Keep unapplied corrections `proposed`, set validation to `notApplicable`, and include the current fingerprint. This pass must reject malformed source outcomes, evidence, findings, targets, proposed actions, or locators that do not occur in the target file before they can authorize an edit.
 
 After edits and post-edit checks finish, update that object with the final fingerprint, edit dispositions, validation outcomes, and completed or incomplete status, then validate it again before report rendering or state changes. Include:
 
