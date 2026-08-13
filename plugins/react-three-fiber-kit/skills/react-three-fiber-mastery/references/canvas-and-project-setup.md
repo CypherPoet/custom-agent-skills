@@ -13,7 +13,7 @@ npm install @react-three/drei        # optional but near-universal helper librar
 
 | Fiber major | React | Status |
 |---|---|---|
-| `@react-three/fiber@9` (9.6.x) | React 19 (peer `>=19 <19.3`) | **Current** |
+| `@react-three/fiber@9` (9.7.x) | React 19 (peer `>=19 <19.3`) | **Current** |
 | `@react-three/fiber@8` | React 18 | Frozen — last release 8.18.0 (2025-02-19), no maintenance line |
 
 Version rules that decide whether an install works at all:
@@ -21,8 +21,8 @@ Version rules that decide whether an install works at all:
 - **fiber@9 ↔ react@19, fiber@8 ↔ react@18.** No cross-pairing.
 - The `<19.3` upper cap exists because React 19.2 changed reconciler internals; fiber 9.5.0+ bundles its own reconciler to span React 19.0–19.2. Keep fiber current when bumping React patch minors.
 - **drei@10 hard-requires fiber ^9 + react ^19.** drei 10 cannot be used with fiber 8 / React 18.
-- three: fiber 9.6.x accepts `three >=0.156` (open-ended); drei 10.7.x requires `>=0.159`.
-- Verified current stack (2026-07): react 19.2.x · @react-three/fiber 9.6.x · @react-three/drei 10.7.x · three 0.185.x.
+- three: fiber 9.7.x accepts `three >=0.156` (open-ended); drei 10.7.x requires `>=0.159`.
+- Verified current stack (2026-08): react 19.2.x · @react-three/fiber 9.7.x · @react-three/drei 10.7.x · three 0.185.x.
 
 ## Minimal App
 

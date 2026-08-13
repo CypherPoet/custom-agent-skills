@@ -1,0 +1,813 @@
+{
+  "schemaVersion": 1,
+  "scheduler": "none",
+  "delivery": {
+    "strategy": "githubPullRequest",
+    "branchName": "automation/keeping-skills-current",
+    "autoMergeStrategy": "none",
+    "fallbackReportPath": ".keeping-skills-current/report.md"
+  },
+  "correctionStrategy": "reportOnly",
+  "changeValidation": "enabled",
+  "skills": {
+    "app-store-connect-submission": {
+      "path": "plugins/app-store-connect-kit/skills/app-store-connect-submission",
+      "schedule": {
+        "recurrence": "interval",
+        "intervalDays": 7
+      },
+      "sources": {
+        "app-store-connect-api-documentation": {
+          "url": "https://developer.apple.com/documentation/appstoreconnectapi",
+          "retrieval": {
+            "strategy": "page"
+          }
+        },
+        "app-store-connect-help": {
+          "url": "https://developer.apple.com/help/app-store-connect/",
+          "retrieval": {
+            "strategy": "crawl",
+            "includePaths": [
+              "/help/app-store-connect/"
+            ],
+            "excludePaths": [],
+            "maxDepth": 2,
+            "maxPages": 25
+          }
+        }
+      },
+      "deferredFindings": [],
+      "declinedFindings": []
+    },
+    "apple-app-icons": {
+      "path": "plugins/apple-app-icons/skills/apple-app-icons",
+      "schedule": {
+        "recurrence": "interval",
+        "intervalDays": 7
+      },
+      "sources": {
+        "creating-your-app-icon-using-icon-composer": {
+          "url": "https://developer.apple.com/documentation/xcode/creating-your-app-icon-using-icon-composer",
+          "retrieval": {
+            "strategy": "page"
+          }
+        },
+        "hig-app-icons": {
+          "url": "https://developer.apple.com/design/human-interface-guidelines/app-icons",
+          "retrieval": {
+            "strategy": "page"
+          }
+        }
+      },
+      "deferredFindings": [],
+      "declinedFindings": []
+    },
+    "apple-app-store-best-practices": {
+      "path": "plugins/mobile-dev/skills/apple-app-store-best-practices",
+      "schedule": {
+        "recurrence": "interval",
+        "intervalDays": 28
+      },
+      "sources": {
+        "age-ratings-values-and-definitions": {
+          "url": "https://developer.apple.com/help/app-store-connect/reference/app-information/age-ratings-values-and-definitions",
+          "retrieval": {
+            "strategy": "page"
+          }
+        },
+        "app-review-guidelines": {
+          "url": "https://developer.apple.com/app-store/review/guidelines/",
+          "retrieval": {
+            "strategy": "page"
+          }
+        },
+        "upcoming-requirements-apple-developer-news": {
+          "url": "https://developer.apple.com/news/upcoming-requirements/",
+          "retrieval": {
+            "strategy": "page"
+          }
+        }
+      },
+      "deferredFindings": [],
+      "declinedFindings": []
+    },
+    "apple-app-store-screenshots": {
+      "path": "plugins/apple-app-store-screenshots/skills/apple-app-store-screenshots",
+      "schedule": {
+        "recurrence": "interval",
+        "intervalDays": 7
+      },
+      "sources": {
+        "app-preview-specifications": {
+          "url": "https://developer.apple.com/help/app-store-connect/reference/app-information/app-preview-specifications",
+          "retrieval": {
+            "strategy": "page"
+          }
+        },
+        "fastlane-deliver-docs": {
+          "url": "https://docs.fastlane.tools/actions/deliver/",
+          "retrieval": {
+            "strategy": "crawl",
+            "includePaths": [
+              "/actions/deliver/"
+            ],
+            "excludePaths": [],
+            "maxDepth": 2,
+            "maxPages": 25
+          }
+        },
+        "fastlane-frameit-docs": {
+          "url": "https://docs.fastlane.tools/actions/frameit/",
+          "retrieval": {
+            "strategy": "crawl",
+            "includePaths": [
+              "/actions/frameit/"
+            ],
+            "excludePaths": [],
+            "maxDepth": 2,
+            "maxPages": 25
+          }
+        },
+        "fastlane-snapshot-docs": {
+          "url": "https://docs.fastlane.tools/actions/snapshot/",
+          "retrieval": {
+            "strategy": "crawl",
+            "includePaths": [
+              "/actions/snapshot/"
+            ],
+            "excludePaths": [],
+            "maxDepth": 2,
+            "maxPages": 25
+          }
+        },
+        "screenshot-specifications": {
+          "url": "https://developer.apple.com/help/app-store-connect/reference/app-information/screenshot-specifications",
+          "retrieval": {
+            "strategy": "page"
+          }
+        }
+      },
+      "deferredFindings": [],
+      "declinedFindings": []
+    },
+    "apple-human-interface-guidelines": {
+      "path": "plugins/apple-hig/skills/apple-human-interface-guidelines",
+      "schedule": {
+        "recurrence": "interval",
+        "intervalDays": 28
+      },
+      "sources": {
+        "human-interface-guidelines": {
+          "url": "https://developer.apple.com/design/human-interface-guidelines",
+          "retrieval": {
+            "strategy": "page"
+          }
+        },
+        "what-s-new-apple-design": {
+          "url": "https://developer.apple.com/design/whats-new/",
+          "retrieval": {
+            "strategy": "page"
+          }
+        }
+      },
+      "deferredFindings": [],
+      "declinedFindings": []
+    },
+    "audit-xcode-security-settings": {
+      "path": "plugins/swift-xcode-kit/skills/audit-xcode-security-settings",
+      "schedule": {
+        "recurrence": "interval",
+        "intervalDays": 28
+      },
+      "sources": {
+        "adopting-type-aware-memory-allocation": {
+          "url": "https://developer.apple.com/documentation/xcode/adopting-type-aware-memory-allocation",
+          "retrieval": {
+            "strategy": "page"
+          }
+        },
+        "conforming-to-mach-ipc-security-restrictions": {
+          "url": "https://developer.apple.com/documentation/xcode/conforming-to-mach-ipc-security-restrictions",
+          "retrieval": {
+            "strategy": "page"
+          }
+        },
+        "improving-control-flow-integrity-with-pointer-authentication": {
+          "url": "https://developer.apple.com/documentation/apple-silicon/improving-control-flow-integrity-with-pointer-authentication",
+          "retrieval": {
+            "strategy": "page"
+          }
+        },
+        "libc-hardening-modes": {
+          "url": "https://libcxx.llvm.org/Hardening.html",
+          "retrieval": {
+            "strategy": "page"
+          }
+        }
+      },
+      "deferredFindings": [],
+      "declinedFindings": []
+    },
+    "blender-mastery": {
+      "path": "plugins/blender-kit/skills/blender-mastery",
+      "schedule": {
+        "recurrence": "interval",
+        "intervalDays": 7
+      },
+      "sources": {
+        "blender-5-2-manual": {
+          "url": "https://docs.blender.org/manual/en/5.2/",
+          "retrieval": {
+            "strategy": "crawl",
+            "includePaths": [
+              "/manual/en/5.2/"
+            ],
+            "excludePaths": [],
+            "maxDepth": 2,
+            "maxPages": 25
+          }
+        },
+        "blender-5-2-python-api-reference": {
+          "url": "https://docs.blender.org/api/5.2/",
+          "retrieval": {
+            "strategy": "crawl",
+            "includePaths": [
+              "/api/5.2/"
+            ],
+            "excludePaths": [],
+            "maxDepth": 2,
+            "maxPages": 25
+          }
+        },
+        "blender-release-notes": {
+          "url": "https://developer.blender.org/docs/release_notes/",
+          "retrieval": {
+            "strategy": "page"
+          }
+        }
+      },
+      "deferredFindings": [],
+      "declinedFindings": []
+    },
+    "c-bounds-safety": {
+      "path": "plugins/swift-xcode-kit/skills/c-bounds-safety",
+      "schedule": {
+        "recurrence": "interval",
+        "intervalDays": 28
+      },
+      "sources": {
+        "clang-fbounds-safety": {
+          "url": "https://clang.llvm.org/docs/BoundsSafety.html",
+          "retrieval": {
+            "strategy": "page"
+          }
+        }
+      },
+      "deferredFindings": [],
+      "declinedFindings": []
+    },
+    "claude-docs-search": {
+      "path": "plugins/claude-docs-search/skills/claude-docs-search",
+      "schedule": {
+        "recurrence": "interval",
+        "intervalDays": 28
+      },
+      "sources": {
+        "claude-code-docs-map": {
+          "url": "https://code.claude.com/docs/en/claude_code_docs_map.md",
+          "retrieval": {
+            "strategy": "page"
+          }
+        }
+      },
+      "deferredFindings": [],
+      "declinedFindings": []
+    },
+    "claude-memory-consolidation": {
+      "path": "plugins/claude-memory-consolidation/skills/claude-memory-consolidation",
+      "schedule": {
+        "recurrence": "interval",
+        "intervalDays": 28
+      },
+      "sources": {
+        "claude-code-memory-documentation": {
+          "url": "https://code.claude.com/docs/en/memory",
+          "retrieval": {
+            "strategy": "page"
+          }
+        }
+      },
+      "deferredFindings": [],
+      "declinedFindings": []
+    },
+    "device-interaction": {
+      "path": "plugins/swift-xcode-kit/skills/device-interaction",
+      "schedule": {
+        "recurrence": "manual"
+      },
+      "sources": {},
+      "deferredFindings": [],
+      "declinedFindings": []
+    },
+    "excalidraw-mastery": {
+      "path": "plugins/excalidraw-kit/skills/excalidraw-mastery",
+      "schedule": {
+        "recurrence": "interval",
+        "intervalDays": 28
+      },
+      "sources": {
+        "excalidraw-developer-documentation": {
+          "url": "https://docs.excalidraw.com/",
+          "retrieval": {
+            "strategy": "crawl",
+            "includePaths": [
+              "/"
+            ],
+            "excludePaths": [],
+            "maxDepth": 2,
+            "maxPages": 25
+          }
+        },
+        "excalidraw-package-registry": {
+          "url": "https://registry.npmjs.org/%40excalidraw%2Fexcalidraw",
+          "retrieval": {
+            "strategy": "page"
+          }
+        },
+        "excalidraw-releases": {
+          "url": "https://github.com/excalidraw/excalidraw/releases",
+          "retrieval": {
+            "strategy": "page"
+          }
+        }
+      },
+      "deferredFindings": [],
+      "declinedFindings": []
+    },
+    "expo-snack-prototyper": {
+      "path": "plugins/expo-kit/skills/expo-snack-prototyper",
+      "schedule": {
+        "recurrence": "interval",
+        "intervalDays": 28
+      },
+      "sources": {
+        "expo-changelog": {
+          "url": "https://expo.dev/changelog",
+          "retrieval": {
+            "strategy": "page"
+          }
+        },
+        "expo-documentation": {
+          "url": "https://docs.expo.dev/",
+          "retrieval": {
+            "strategy": "crawl",
+            "includePaths": [
+              "/"
+            ],
+            "excludePaths": [],
+            "maxDepth": 2,
+            "maxPages": 25
+          }
+        },
+        "expo-snack": {
+          "url": "https://snack.expo.dev/",
+          "retrieval": {
+            "strategy": "page"
+          }
+        }
+      },
+      "deferredFindings": [],
+      "declinedFindings": []
+    },
+    "google-filament-mastery": {
+      "path": "plugins/google-filament-kit/skills/google-filament-mastery",
+      "schedule": {
+        "recurrence": "interval",
+        "intervalDays": 28
+      },
+      "sources": {
+        "filament-documentation": {
+          "url": "https://google.github.io/filament/",
+          "retrieval": {
+            "strategy": "crawl",
+            "includePaths": [
+              "/filament/"
+            ],
+            "excludePaths": [],
+            "maxDepth": 2,
+            "maxPages": 25
+          }
+        },
+        "filament-releases": {
+          "url": "https://github.com/google/filament/releases",
+          "retrieval": {
+            "strategy": "page"
+          }
+        },
+        "google-filament-repository": {
+          "url": "https://github.com/google/filament",
+          "retrieval": {
+            "strategy": "page"
+          }
+        }
+      },
+      "deferredFindings": [],
+      "declinedFindings": []
+    },
+    "marketplace-publish": {
+      "path": "plugins/marketplace-kit/skills/marketplace-publish",
+      "schedule": {
+        "recurrence": "interval",
+        "intervalDays": 28
+      },
+      "sources": {
+        "build-plugins-codex-docs": {
+          "url": "https://developers.openai.com/plugins/build/plugins",
+          "retrieval": {
+            "strategy": "page"
+          }
+        },
+        "plugin-marketplaces-claude-code-docs": {
+          "url": "https://code.claude.com/docs/en/plugin-marketplaces",
+          "retrieval": {
+            "strategy": "page"
+          }
+        },
+        "plugins-reference-claude-code-docs": {
+          "url": "https://code.claude.com/docs/en/plugins-reference",
+          "retrieval": {
+            "strategy": "page"
+          }
+        }
+      },
+      "deferredFindings": [],
+      "declinedFindings": []
+    },
+    "marketplace-publish-check": {
+      "path": "plugins/marketplace-kit/skills/marketplace-publish-check",
+      "schedule": {
+        "recurrence": "interval",
+        "intervalDays": 28
+      },
+      "sources": {
+        "codex-plugin-format": {
+          "url": "https://developers.openai.com/plugins/build/plugins",
+          "retrieval": {
+            "strategy": "page"
+          }
+        },
+        "plugin-marketplaces": {
+          "url": "https://code.claude.com/docs/en/plugin-marketplaces",
+          "retrieval": {
+            "strategy": "page"
+          }
+        }
+      },
+      "deferredFindings": [],
+      "declinedFindings": []
+    },
+    "marketplace-sync-check": {
+      "path": "plugins/marketplace-kit/skills/marketplace-sync-check",
+      "schedule": {
+        "recurrence": "interval",
+        "intervalDays": 28
+      },
+      "sources": {
+        "build-plugins-codex-docs": {
+          "url": "https://developers.openai.com/plugins/build/plugins",
+          "retrieval": {
+            "strategy": "page"
+          }
+        },
+        "plugin-marketplaces-claude-code-docs": {
+          "url": "https://code.claude.com/docs/en/plugin-marketplaces",
+          "retrieval": {
+            "strategy": "page"
+          }
+        }
+      },
+      "deferredFindings": [],
+      "declinedFindings": []
+    },
+    "obsidian-plugin-crafting": {
+      "path": "plugins/obsidian-plugin-kit/skills/obsidian-plugin-crafting",
+      "schedule": {
+        "recurrence": "interval",
+        "intervalDays": 28
+      },
+      "sources": {
+        "eslint-plugin-obsidianmd-on-npm": {
+          "url": "https://registry.npmjs.org/eslint-plugin-obsidianmd",
+          "retrieval": {
+            "strategy": "page"
+          }
+        },
+        "eslint-plugin-obsidianmd-repository": {
+          "url": "https://github.com/obsidianmd/eslint-plugin",
+          "retrieval": {
+            "strategy": "page"
+          }
+        },
+        "obsidian-changelog": {
+          "url": "https://obsidian.md/changelog/",
+          "retrieval": {
+            "strategy": "page"
+          }
+        },
+        "obsidian-developer-docs": {
+          "url": "https://docs.obsidian.md/",
+          "retrieval": {
+            "strategy": "crawl",
+            "includePaths": [
+              "/"
+            ],
+            "excludePaths": [],
+            "maxDepth": 2,
+            "maxPages": 25
+          }
+        },
+        "obsidian-developer-docs-repository": {
+          "url": "https://github.com/obsidianmd/obsidian-developer-docs",
+          "retrieval": {
+            "strategy": "page"
+          }
+        },
+        "obsidian-on-npm": {
+          "url": "https://registry.npmjs.org/obsidian",
+          "retrieval": {
+            "strategy": "page"
+          }
+        },
+        "obsidian-sample-plugin": {
+          "url": "https://github.com/obsidianmd/obsidian-sample-plugin",
+          "retrieval": {
+            "strategy": "page"
+          }
+        }
+      },
+      "deferredFindings": [],
+      "declinedFindings": []
+    },
+    "react-three-fiber-mastery": {
+      "path": "plugins/react-three-fiber-kit/skills/react-three-fiber-mastery",
+      "schedule": {
+        "recurrence": "interval",
+        "intervalDays": 28
+      },
+      "sources": {
+        "drei-documentation": {
+          "url": "https://drei.docs.pmnd.rs/",
+          "retrieval": {
+            "strategy": "crawl",
+            "includePaths": [
+              "/"
+            ],
+            "excludePaths": [],
+            "maxDepth": 2,
+            "maxPages": 25
+          }
+        },
+        "drei-releases": {
+          "url": "https://github.com/pmndrs/drei/releases",
+          "retrieval": {
+            "strategy": "page"
+          }
+        },
+        "fiber-releases": {
+          "url": "https://github.com/pmndrs/react-three-fiber/releases",
+          "retrieval": {
+            "strategy": "page"
+          }
+        },
+        "react-three-fiber-documentation": {
+          "url": "https://r3f.docs.pmnd.rs/",
+          "retrieval": {
+            "strategy": "crawl",
+            "includePaths": [
+              "/"
+            ],
+            "excludePaths": [],
+            "maxDepth": 2,
+            "maxPages": 25
+          }
+        }
+      },
+      "deferredFindings": [],
+      "declinedFindings": []
+    },
+    "sf-symbols": {
+      "path": "plugins/sf-symbols-kit/skills/sf-symbols",
+      "schedule": {
+        "recurrence": "interval",
+        "intervalDays": 7
+      },
+      "sources": {
+        "configuring-and-displaying-symbol-images-in-your-ui": {
+          "url": "https://developer.apple.com/documentation/uikit/configuring-and-displaying-symbol-images-in-your-ui",
+          "retrieval": {
+            "strategy": "page"
+          }
+        },
+        "hig-sf-symbols": {
+          "url": "https://developer.apple.com/design/human-interface-guidelines/sf-symbols",
+          "retrieval": {
+            "strategy": "page"
+          }
+        },
+        "sf-symbols-apple-developer": {
+          "url": "https://developer.apple.com/sf-symbols/",
+          "retrieval": {
+            "strategy": "page"
+          }
+        }
+      },
+      "deferredFindings": [],
+      "declinedFindings": []
+    },
+    "svgo": {
+      "path": "plugins/svg-tools/skills/svgo",
+      "schedule": {
+        "recurrence": "interval",
+        "intervalDays": 28
+      },
+      "sources": {
+        "svgo-plugin-docs": {
+          "url": "https://svgo.dev/docs/plugins/",
+          "retrieval": {
+            "strategy": "crawl",
+            "includePaths": [
+              "/docs/plugins/"
+            ],
+            "excludePaths": [],
+            "maxDepth": 2,
+            "maxPages": 25
+          }
+        },
+        "svgo-releases": {
+          "url": "https://github.com/svg/svgo/releases",
+          "retrieval": {
+            "strategy": "page"
+          }
+        }
+      },
+      "deferredFindings": [],
+      "declinedFindings": []
+    },
+    "swiftui-specialist": {
+      "path": "plugins/swift-xcode-kit/skills/swiftui-specialist",
+      "schedule": {
+        "recurrence": "interval",
+        "intervalDays": 28
+      },
+      "sources": {
+        "swiftui-documentation": {
+          "url": "https://developer.apple.com/documentation/swiftui",
+          "retrieval": {
+            "strategy": "page"
+          }
+        },
+        "swiftui-updates": {
+          "url": "https://developer.apple.com/documentation/updates/swiftui",
+          "retrieval": {
+            "strategy": "page"
+          }
+        }
+      },
+      "deferredFindings": [],
+      "declinedFindings": []
+    },
+    "swiftui-whats-new-27": {
+      "path": "plugins/swift-xcode-kit/skills/swiftui-whats-new-27",
+      "schedule": {
+        "recurrence": "interval",
+        "intervalDays": 7
+      },
+      "sources": {
+        "swiftui-documentation": {
+          "url": "https://developer.apple.com/documentation/swiftui",
+          "retrieval": {
+            "strategy": "page"
+          }
+        },
+        "swiftui-updates": {
+          "url": "https://developer.apple.com/documentation/updates/swiftui",
+          "retrieval": {
+            "strategy": "page"
+          }
+        }
+      },
+      "deferredFindings": [],
+      "declinedFindings": []
+    },
+    "test-modernizer": {
+      "path": "plugins/swift-xcode-kit/skills/test-modernizer",
+      "schedule": {
+        "recurrence": "interval",
+        "intervalDays": 28
+      },
+      "sources": {
+        "swift-testing-documentation": {
+          "url": "https://developer.apple.com/documentation/testing",
+          "retrieval": {
+            "strategy": "page"
+          }
+        },
+        "swiftlang-swift-testing": {
+          "url": "https://github.com/swiftlang/swift-testing",
+          "retrieval": {
+            "strategy": "page"
+          }
+        }
+      },
+      "deferredFindings": [],
+      "declinedFindings": []
+    },
+    "threejs-mastery": {
+      "path": "plugins/threejs-kit/skills/threejs-mastery",
+      "schedule": {
+        "recurrence": "interval",
+        "intervalDays": 7
+      },
+      "sources": {
+        "three-js-documentation": {
+          "url": "https://threejs.org/docs/",
+          "retrieval": {
+            "strategy": "crawl",
+            "includePaths": [
+              "/docs/"
+            ],
+            "excludePaths": [],
+            "maxDepth": 2,
+            "maxPages": 25
+          }
+        },
+        "three-js-migration-guide": {
+          "url": "https://github.com/mrdoob/three.js/wiki/Migration-Guide",
+          "retrieval": {
+            "strategy": "page"
+          }
+        },
+        "three-js-releases": {
+          "url": "https://github.com/mrdoob/three.js/releases",
+          "retrieval": {
+            "strategy": "page"
+          }
+        }
+      },
+      "deferredFindings": [],
+      "declinedFindings": []
+    },
+    "uikit-app-modernization": {
+      "path": "plugins/swift-xcode-kit/skills/uikit-app-modernization",
+      "schedule": {
+        "recurrence": "interval",
+        "intervalDays": 28
+      },
+      "sources": {
+        "transitioning-to-the-uikit-scene-based-life-cycle": {
+          "url": "https://developer.apple.com/documentation/uikit/transitioning-to-the-uikit-scene-based-life-cycle",
+          "retrieval": {
+            "strategy": "page"
+          }
+        },
+        "uikit-documentation": {
+          "url": "https://developer.apple.com/documentation/uikit",
+          "retrieval": {
+            "strategy": "page"
+          }
+        }
+      },
+      "deferredFindings": [],
+      "declinedFindings": []
+    },
+    "webgl-mastery": {
+      "path": "plugins/webgl-kit/skills/webgl-mastery",
+      "schedule": {
+        "recurrence": "interval",
+        "intervalDays": 28
+      },
+      "sources": {
+        "khronos-webgl-2-0-specification": {
+          "url": "https://registry.khronos.org/webgl/specs/latest/2.0/",
+          "retrieval": {
+            "strategy": "page"
+          }
+        },
+        "khronos-webgl-extension-registry": {
+          "url": "https://registry.khronos.org/webgl/extensions/",
+          "retrieval": {
+            "strategy": "page"
+          }
+        },
+        "mdn-webgl-api": {
+          "url": "https://developer.mozilla.org/en-US/docs/Web/API/WebGL_API",
+          "retrieval": {
+            "strategy": "page"
+          }
+        }
+      },
+      "deferredFindings": [],
+      "declinedFindings": []
+    }
+  }
+}

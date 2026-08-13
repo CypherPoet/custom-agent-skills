@@ -70,7 +70,8 @@ action.play();
 
 // Drive the mixer every frame with the time delta — NOT wall-clock time
 function animate() {
-  const delta = clock.getDelta();
+  timer.update();
+  const delta = timer.getDelta();
   mixer.update(delta);
   renderer.render(scene, camera);
 }
@@ -167,7 +168,8 @@ loader.load("model.glb", (gltf) => {
 });
 
 function animate() {
-  const delta = clock.getDelta();
+  timer.update();
+  const delta = timer.getDelta();
   window.mixer?.update(delta);
   renderer.render(scene, camera);
 }
@@ -196,11 +198,12 @@ scene.add(new THREE.SkeletonHelper(model));
 
 ```javascript
 function animate() {
-  const time = clock.getElapsedTime();
+  timer.update();
+  const time = timer.getElapsed();
   const head = skeleton.bones.find((b) => b.name === "Head");
   if (head) head.rotation.y = Math.sin(time) * 0.3;
 
-  mixer.update(clock.getDelta());
+  mixer.update(timer.getDelta());
 }
 ```
 
@@ -238,7 +241,8 @@ mesh.morphTargetInfluences[smile] = 1;
 ```javascript
 // Procedural
 function animate() {
-  const t = clock.getElapsedTime();
+  timer.update();
+  const t = timer.getElapsed();
   mesh.morphTargetInfluences[0] = (Math.sin(t) + 1) / 2;
 }
 
@@ -385,7 +389,8 @@ function animate() {
 
 ```javascript
 function animate() {
-  const t = clock.getElapsedTime();
+  timer.update();
+  const t = timer.getElapsed();
 
   mesh.position.y = Math.sin(t * 2) * 0.5;             // Sine
   mesh.position.y = Math.abs(Math.sin(t * 3)) * 2;     // Bouncing
@@ -414,7 +419,7 @@ mesh.onAfterRender = () => {
 | Mistake | Fix |
 |---------|-----|
 | Animation doesn't play — model is stuck in T-pose | You forgot `mixer.update(delta)` in the render loop. Drive every mixer with the per-frame delta. |
-| Animation speeds up/slows down with framerate | Passing wall-clock time (`elapsed`) instead of `delta` to `mixer.update()`. Use `clock.getDelta()`. |
+| Animation speeds up/slows down with framerate | Passing wall-clock time (`elapsed`) instead of `delta` to `mixer.update()`. Use `timer.getDelta()`. |
 | `crossFadeTo` does nothing | Both actions must be `play()`ing before the crossfade. The fade just retunes weights. |
 | Imported animation drifts at the end | Set `action.clampWhenFinished = true` (and `action.loop = THREE.LoopOnce` for one-shot anims). |
 | `LoopOnce` plays then snaps back to frame 0 | Same fix — `clampWhenFinished = true`. |

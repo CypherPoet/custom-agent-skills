@@ -41,13 +41,16 @@ For dyntopo, just enter sculpt mode and enable it via the brush settings in the 
 ## Switching brushes from script
 
 ```python
-def set_sculpt_brush(brush_name):
-    """brush_name: 'Draw', 'Clay', 'Crease', 'Smooth', 'Inflate', 'Grab', etc."""
-    brush = bpy.data.brushes.get(brush_name)
-    if brush is None:
-        return False
-    bpy.context.tool_settings.sculpt.brush = brush
-    return True
+def set_sculpt_brush(relative_asset_identifier):
+    """Brushes are assets on 4.3+ and `Paint.brush` is read-only, so a brush is
+    activated through the operator, not assigned. Pass the asset's identifier
+    relative to its library (read it off an active brush via
+    `bpy.context.tool_settings.sculpt.brush_asset_reference`)."""
+    bpy.ops.brush.asset_activate(
+        asset_library_type='ESSENTIALS',
+        relative_asset_identifier=relative_asset_identifier,
+    )
+    return bpy.context.tool_settings.sculpt.brush is not None
 ```
 
 Brush settings (radius, strength) are then on the brush itself: `brush.size`, `brush.strength`. Changes affect future strokes by the user.
@@ -89,7 +92,7 @@ The high-poly sculpt is rarely the final asset. To produce a clean low-poly mesh
    ts.use_snap = True
    ts.snap_elements = {'FACE'}
    ts.snap_target = 'CLOSEST'
-   ts.use_snap_project = True  # project new verts onto the high-poly
+   ts.snap_elements_individual = {'FACE_PROJECT'}  # project new verts onto the high-poly
    ```
 
 3. **Shrinkwrap modifier** — a programmatic way to bind a low-poly mesh to a sculpt surface:

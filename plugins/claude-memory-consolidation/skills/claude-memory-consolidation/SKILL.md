@@ -11,8 +11,6 @@ description: >
 
 # Consolidate Memory
 
-**Verified:** 2026-07-17
-
 Claude saves memories during conversations, but nothing ever prunes them. Over months, a project's memory directory accretes near-duplicates, references to files that have since been renamed, project facts about initiatives that have since shipped, and entries whose `description:` field has drifted away from what the body actually says. The `MEMORY.md` index can also fall out of sync — pointing at deleted files, missing entries for files that exist, or carrying one-line hooks that no longer match the underlying memory.
 
 This skill does a deliberate audit pass over the project's memory directory and proposes consolidations. It is the destructive counterpart to [`session-harvest`](https://github.com/CypherPoet/custom-agent-skills/tree/main/plugins/session-harvest): where that skill *adds* memories from a conversation, this one *dedupes, repairs, rewrites, and prunes* them.
@@ -223,7 +221,3 @@ After applying, confirm what changed:
 - **Conservative brevity.** Don't surface brevity findings unless the directory has crossed the 150-line / 50-file / 300-word thresholds. The system tolerates 200 lines; consolidation pressure belongs in the upper half of that range.
 - **Respect user edits.** If the user asks to revise a proposal before applying ("edit 4"), use their version exactly — don't second-guess.
 - **One pass per invocation.** If the user wants another round after applying changes, they'll ask. Don't loop automatically.
-
-## Primary Sources
-
-- [Claude Code memory documentation](https://code.claude.com/docs/en/memory) — authoritative for the memory-system behavior this skill audits (file locations, the MEMORY.md index, truncation limits).

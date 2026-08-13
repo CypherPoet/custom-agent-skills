@@ -2,7 +2,7 @@
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "apple-app-icons",
   "displayName": "Apple App Icons",
-  "version": "0.6.0",
+  "version": "0.7.0",
   "description": "Apple app icons end to end: design one that converts in the App Store (tap-through, audit, A/B testing) and ship it correctly — Icon Composer Liquid Glass .icon plus an appiconset fallback for older OS versions.",
   "author": { "name": "CypherPoet" },
   "homepage": "https://github.com/CypherPoet/custom-agent-skills/tree/main/plugins/apple-app-icons",

@@ -1,0 +1,259 @@
+{
+  "$id": "https://cypherpoet.dev/schemas/keeping-skills-current/manifest.v1.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "changeValidation": {
+      "enum": [
+        "enabled",
+        "disabled"
+      ]
+    },
+    "correctionStrategy": {
+      "enum": [
+        "reportOnly",
+        "applyHighConfidenceCorrections"
+      ]
+    },
+    "delivery": {
+      "oneOf": [
+        {
+          "additionalProperties": false,
+          "properties": {
+            "reportPath": {
+              "minLength": 1,
+              "type": "string"
+            },
+            "strategy": {
+              "const": "localReport"
+            }
+          },
+          "required": [
+            "strategy",
+            "reportPath"
+          ],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "autoMergeStrategy": {
+              "enum": [
+                "none",
+                "stateOnly"
+              ]
+            },
+            "branchName": {
+              "minLength": 1,
+              "type": "string"
+            },
+            "fallbackReportPath": {
+              "minLength": 1,
+              "type": "string"
+            },
+            "strategy": {
+              "const": "githubPullRequest"
+            }
+          },
+          "required": [
+            "strategy",
+            "branchName",
+            "autoMergeStrategy"
+          ],
+          "type": "object"
+        }
+      ]
+    },
+    "scheduler": {
+      "enum": [
+        "none",
+        "agentPlatform",
+        "githubActions"
+      ]
+    },
+    "schemaVersion": {
+      "const": 1
+    },
+    "skills": {
+      "additionalProperties": {
+        "additionalProperties": false,
+        "properties": {
+          "declinedFindings": [
+            "type",
+            "items"
+          ],
+          "deferredFindings": [
+            "type",
+            "items"
+          ],
+          "path": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "schedule": {
+            "oneOf": [
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "recurrence": {
+                    "const": "manual"
+                  }
+                },
+                "required": [
+                  "recurrence"
+                ],
+                "type": "object"
+              },
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "intervalDays": {
+                    "minimum": 1,
+                    "type": "integer"
+                  },
+                  "recurrence": {
+                    "const": "interval"
+                  }
+                },
+                "required": [
+                  "recurrence",
+                  "intervalDays"
+                ],
+                "type": "object"
+              }
+            ]
+          },
+          "sources": {
+            "additionalProperties": {
+              "additionalProperties": false,
+              "properties": {
+                "retrieval": {
+                  "oneOf": [
+                    {
+                      "additionalProperties": false,
+                      "properties": {
+                        "strategy": {
+                          "const": "page"
+                        }
+                      },
+                      "required": [
+                        "strategy"
+                      ],
+                      "type": "object"
+                    },
+                    {
+                      "additionalProperties": false,
+                      "properties": {
+                        "excludePaths": {
+                          "items": {
+                            "pattern": "^/",
+                            "type": "string"
+                          },
+                          "type": "array",
+                          "uniqueItems": true
+                        },
+                        "includePaths": {
+                          "items": {
+                            "pattern": "^/",
+                            "type": "string"
+                          },
+                          "minItems": 1,
+                          "type": "array",
+                          "uniqueItems": true
+                        },
+                        "maxDepth": {
+                          "maximum": 5,
+                          "minimum": 1,
+                          "type": "integer"
+                        },
+                        "maxPages": {
+                          "maximum": 100,
+                          "minimum": 1,
+                          "type": "integer"
+                        },
+                        "strategy": {
+                          "const": "crawl"
+                        }
+                      },
+                      "required": [
+                        "strategy",
+                        "includePaths",
+                        "maxDepth",
+                        "maxPages"
+                      ],
+                      "type": "object"
+                    }
+                  ]
+                },
+                "url": {
+                  "format": "uri",
+                  "pattern": "^https://",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "url",
+                "retrieval"
+              ],
+              "type": "object"
+            },
+            "propertyNames": {
+              "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+            },
+            "type": "object"
+          },
+          "state": {
+            "additionalProperties": false,
+            "properties": {
+              "inputFingerprint": {
+                "pattern": "^sha256:[0-9a-f]{64}$",
+                "type": "string"
+              },
+              "lastAttemptStatus": {
+                "enum": [
+                  "completed",
+                  "incomplete"
+                ]
+              },
+              "lastAttemptedReview": {
+                "format": "date-time",
+                "type": "string"
+              },
+              "lastCompletedReview": {
+                "format": "date-time",
+                "type": "string"
+              }
+            },
+            "required": [
+              "lastAttemptedReview",
+              "lastAttemptStatus"
+            ],
+            "type": "object"
+          }
+        },
+        "required": [
+          "path",
+          "schedule",
+          "sources",
+          "deferredFindings",
+          "declinedFindings"
+        ],
+        "type": "object"
+      },
+      "propertyNames": {
+        "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+      },
+      "type": "object"
+    }
+  },
+  "required": [
+    "schemaVersion",
+    "scheduler",
+    "delivery",
+    "correctionStrategy",
+    "changeValidation",
+    "skills"
+  ],
+  "title": "Keeping Skills Current Manifest",
+  "type": "object"
+}

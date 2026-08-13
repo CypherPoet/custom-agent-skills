@@ -2,7 +2,7 @@
 
 Two pipelines exist:
 
-- **TSL `PostProcessing` (modern, primary).** Node-based, integrates with `WebGPURenderer` natively, also runs under `WebGLRenderer` via the TSL backend. Imports come from `three/tsl`, plus `three/addons/tsl/display/` for the built-in effect passes. This is the recommended path for new code.
+- **TSL `RenderPipeline` (modern, primary).** Node-based, integrates with `WebGPURenderer` natively, also runs under `WebGLRenderer` via the TSL backend. Imports come from `three/tsl`, plus `three/addons/tsl/display/` for the built-in effect passes. This is the recommended path for new code.
 - **`EffectComposer` (legacy).** The classic WebGL pipeline of `Pass` objects. Still supported, large existing ecosystem of passes. Use when porting older code or when a specific pass has no TSL equivalent yet.
 
 > Scene/renderer setup: see [../SKILL.md#setup](../SKILL.md#setup).
@@ -18,7 +18,7 @@ import * as THREE from "three/webgpu";
 import { pass } from "three/tsl";
 import { bloom } from "three/addons/tsl/display/BloomNode.js";
 
-const postProcessing = new THREE.PostProcessing(renderer);
+const postProcessing = new THREE.RenderPipeline(renderer);
 
 const scenePass = pass(scene, camera);
 const bloomPass = bloom(scenePass, /* strength */ 0.5, /* radius */ 0.4, /* threshold */ 0.85);
@@ -297,10 +297,7 @@ composer.addPass(fxaa);
 ```javascript
 import { SMAAPass } from "three/addons/postprocessing/SMAAPass.js";
 
-composer.addPass(new SMAAPass(
-  window.innerWidth * renderer.getPixelRatio(),
-  window.innerHeight * renderer.getPixelRatio()
-));
+composer.addPass(new SMAAPass());   // Sizing is handled by the composer
 ```
 
 ### SSAO
@@ -338,7 +335,7 @@ bokeh.uniforms.focus.value = distanceToTarget;
 
 ```javascript
 import { FilmPass } from "three/addons/postprocessing/FilmPass.js";
-composer.addPass(new FilmPass(0.35, 0.5, 648, false));
+composer.addPass(new FilmPass(0.35, false));   // (intensity, grayscale)
 
 import { ShaderPass } from "three/addons/postprocessing/ShaderPass.js";
 import { VignetteShader }       from "three/addons/shaders/VignetteShader.js";
@@ -370,7 +367,7 @@ glitch.goWild = false;
 composer.addPass(glitch);
 
 import { HalftonePass } from "three/addons/postprocessing/HalftonePass.js";
-composer.addPass(new HalftonePass(window.innerWidth, window.innerHeight, {
+composer.addPass(new HalftonePass({
   shape: 1,                            // 1=dot, 2=ellipse, 3=line, 4=square
   radius: 4,
   rotateR: Math.PI / 12,
@@ -437,7 +434,7 @@ const WaveShader = {
 
 const wavePass = new ShaderPass(WaveShader);
 composer.addPass(wavePass);
-wavePass.uniforms.time.value = clock.getElapsedTime();
+wavePass.uniforms.time.value = timer.getElapsed();
 ```
 
 For TSL equivalents and a fuller shader reference, see [shaders.md](./shaders.md).
@@ -500,7 +497,7 @@ new UnrealBloomPass(
 | Blurry effects after window resize | Forgot to call `composer.setSize(width, height)` or `postProcessing.setSize(...)`. |
 | Colors look too dark/bright after adding effects | Tonemapping/sRGB conversion applies once at the end. If you add a manual `GammaCorrectionShader`/`OutputPass`/`renderOutput()` somewhere else, you may be double-applying it. Pick one and disable the other (`postProcessing.outputColorTransform = false` on TSL). |
 | FXAA on a tonemapped scene produces banding | FXAA must operate on sRGB pixels. Place `OutputPass()` *before* FXAA in `EffectComposer`; in TSL, do `fxaa(renderOutput(...))` with `outputColorTransform = false`. |
-| Adding legacy `EffectComposer` to `WebGPURenderer` doesn't work as expected | The legacy WebGL passes don't compose cleanly with WebGPU. Migrate to the TSL `PostProcessing` pipeline. |
+| Adding legacy `EffectComposer` to `WebGPURenderer` doesn't work as expected | The legacy WebGL passes don't compose cleanly with WebGPU. Migrate to the TSL `RenderPipeline` pipeline. |
 | `UnrealBloomPass` blooms the whole scene when you only wanted one mesh | Use the selective-bloom layer trick (legacy) or MRT-based emissive bloom (TSL). |
 | Bloom looks tiled or has hard edges | Bloom resolution must match the canvas size; on resize, the legacy pass needs `bloomPass.resolution.set(width, height)`. |
 | Outline pass selects update but render doesn't change | `outlinePass.selectedObjects` is a normal array — reassign or push and ensure references are still valid meshes. |

@@ -74,9 +74,10 @@ window.addEventListener("resize", () => {
   renderer.setSize(window.innerWidth, window.innerHeight);
 });
 
-const clock = new THREE.Clock();
+const timer = new THREE.Timer();
 renderer.setAnimationLoop(() => {
-  const delta = clock.getDelta();
+  timer.update();
+  const delta = timer.getDelta();
   controls.update();
   renderer.render(scene, camera);
 });
@@ -110,8 +111,6 @@ Or read the [release notes](https://github.com/mrdoob/three.js/releases). When a
 
 [`assets/scene-template.html`](./assets/scene-template.html) pins a specific Three.js version in its importmap — treat it as a fallback, not authoritative current state. Before handing the template (or any importmap snippet) to a user, verify against the latest release: `npm view three version`, the [release feed](https://github.com/mrdoob/three.js/releases), or context7's threejs docs. If the pin is behind by more than two minor releases, bump all three pinned URLs (`three`, `three/tsl`, `three/addons/`) before producing the answer.
 
-**Audit baseline:** this skill's content was last verified against **Three.js r185** (2026-07-24). When refreshing it for a newer release, diff **r185 → current** in the [Migration Guide](https://github.com/mrdoob/three.js/wiki/Migration-Guide) and release notes instead of re-checking everything — then bump this line (release + date) as the final step of the audit.
-
 ### Project Setup & Module Entry Points
 
 Module entry points (`three` / `three/webgpu` / `three/tsl` / `three/addons/`), npm + Vite bundling, TypeScript, and React (react-three-fiber) live in [references/project-setup.md](./references/project-setup.md).
@@ -133,13 +132,14 @@ See [references/textures.md#color-space](./references/textures.md#color-space--t
 
 ### Frame Delta
 
-Drive everything time-dependent with `clock.getDelta()`, not wall-clock time:
+Drive everything time-dependent with `timer.getDelta()`, not wall-clock time:
 
 ```javascript
-const clock = new THREE.Clock();
+const timer = new THREE.Timer();   // `Clock` is deprecated since r183
 
 renderer.setAnimationLoop(() => {
-  const delta = clock.getDelta();    // Seconds since last frame
+  timer.update();                    // Refresh once per frame, before reading
+  const delta = timer.getDelta();    // Seconds since last frame
   controls.update();                 // Required when damping is on
   mixer?.update(delta);              // Required for AnimationMixer
   renderer.render(scene, camera);
@@ -188,7 +188,7 @@ function onResize() {
   camera.updateProjectionMatrix();
   renderer.setSize(w, h);
   composer?.setSize(w, h);               // EffectComposer (legacy)
-  postProcessing?.setSize(w, h);         // PostProcessing (TSL)
+  postProcessing?.setSize(w, h);         // RenderPipeline (TSL)
 }
 window.addEventListener("resize", onResize);
 ```
@@ -215,7 +215,7 @@ All examples and references use `three/addons/...` — the modern alias. The old
 | Interaction | [interaction.md](./references/interaction.md) | Raycaster, controls catalog (Orbit/Fly/PointerLock/Transform/Drag), selection, screen↔world |
 | Shaders (TSL) | [shaders.md](./references/shaders.md) | TSL essentials + recipes (primary), WGSL interop, shader debugging + performance |
 | Shaders (GLSL, legacy) | [shaders-glsl.md](./references/shaders-glsl.md) | Raw-GLSL `ShaderMaterial`/`RawShaderMaterial`, `onBeforeCompile`, `ShaderChunk`, GLSL function reference |
-| Post-processing | [postprocessing.md](./references/postprocessing.md) | TSL `PostProcessing` pipeline + node passes (primary), `EffectComposer` (legacy) |
+| Post-processing | [postprocessing.md](./references/postprocessing.md) | TSL `RenderPipeline` pipeline + node passes (primary), `EffectComposer` (legacy) |
 | Compute | [compute.md](./references/compute.md) | GPU compute (WebGPU only): storage buffers, `instancedArray`/`attributeArray`, `compute()` dispatch, particles/simulation |
 | WebGPU runtime | [webgpu-runtime.md](./references/webgpu-runtime.md) | Device-loss handling and recovery, requesting device limits/features (WebGPU) |
 | Project setup | [project-setup.md](./references/project-setup.md) | Module entry points, npm/Vite bundling, TypeScript, React (r3f) |
@@ -262,13 +262,6 @@ These bite across every topic; topical mistakes live in each reference's own tab
 | Transparency/blending looks wrong under `WebGPURenderer` after upgrading to r185 | r185 changed premultiplied-alpha handling ([#33369](https://github.com/mrdoob/three.js/issues/33369)). Set an opaque background: `scene.background = new THREE.Color(...)` or `renderer.setClearColor(color, 1)`. Use a transparent clear only when the canvas must blend with the HTML page. |
 | Scene goes black only when devtools or browser automation probes the canvas | `canvas.getContext(type)` on a canvas whose renderer hasn't initialised yet **claims** the canvas's context type, so a pending renderer of the other type (`webgpu` probe vs WebGL2 renderer, or vice versa) fails when it later requests its own context. Probe context types only after the first frame has visibly rendered — on an initialised canvas, `getContext` with the same type returns the existing context and a different type returns `null`, both read-only. |
 
-## Change-Signal Sources
-
-Secondary leads for noticing when this skill's facts drift — the `skill-fact-check` routine consults them to discover *what* may have changed, then confirms every change against the primary sources above (official docs, release notes, the Migration Guide) before editing. These are leads, never authorities: don't cite them as the source for a correction.
-
-- [threejsroadmap.com/blog](https://threejsroadmap.com/blog) — Daniel Greenheck's blog; tracks new releases, TSL/WebGPU shifts, and API changes (roughly 1–2 posts/month).
-- [dgreenheck/webgpu-claude-skill](https://github.com/dgreenheck/webgpu-claude-skill) — Greenheck's focused WebGPU + TSL skill; a useful cross-check for compute, WGSL-interop, and device-loss specifics.
-
 ## See Also
 
 - [`webgl-mastery` skill](https://github.com/CypherPoet/custom-agent-skills/blob/main/plugins/webgl-kit/skills/webgl-mastery/SKILL.md) — sibling skill for raw WebGL2 / GLSL beneath Three.js (ships with this plugin).
@@ -277,9 +270,3 @@ Secondary leads for noticing when this skill's facts drift — the `skill-fact-c
 - [Three.js manual](https://threejs.org/manual/) — official tutorials.
 - [Three.js examples](https://threejs.org/examples/) — runnable showcases of nearly every API.
 - [TSL discussions](https://github.com/mrdoob/three.js/discussions) — Three.js Shading Language threads on GitHub.
-
-## Primary Sources
-
-- [Three.js releases](https://github.com/mrdoob/three.js/releases) — release channel; authoritative for versions.
-- [Three.js Migration Guide](https://github.com/mrdoob/three.js/wiki/Migration-Guide) — authoritative for API changes between releases.
-- [Three.js documentation](https://threejs.org/docs/) — official API reference; authoritative for API syntax.

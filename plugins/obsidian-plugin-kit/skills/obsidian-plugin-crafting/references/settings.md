@@ -1,6 +1,6 @@
 # Settings: Classic Tab, Declarative API (1.13+), and Secrets
 
-Two generations of settings API coexist. Which you target is a `minAppVersion` decision: the declarative API requires **Obsidian 1.13.0**, which the docs mark as an insider build as of this skill's Verified date — check the [changelog](https://obsidian.md/changelog/) before requiring it.
+Two generations of settings API coexist. Which you target is a `minAppVersion` decision: the declarative API requires **Obsidian 1.13.0**, which the 2026-07-23 docs snapshot marked as an insider build — check the [changelog](https://obsidian.md/changelog/) before requiring it.
 
 ## The Data Layer (both generations)
 

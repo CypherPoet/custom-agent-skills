@@ -4,7 +4,6 @@ description: |
   Guide for the C -fbounds-safety language extension — the language model, pointer annotations, adopting bounds-safety in existing C code, compiler build settings and modes, and runtime debugging of bounds violations. Use when working with, reading, reviewing, comparing, debugging, or analyzing C code that has adopted -fbounds-safety or wants to adopt it. Triggers: bounds annotations (__counted_by, __counted_by_or_null, __sized_by, __sized_by_or_null, __ended_by, __single, __indexable, __bidi_indexable, __unsafe_indexable, __null_terminated, __terminated_by), helper functions (__unsafe_forge_bidi_indexable, __unsafe_forge_single, __null_terminated_to_indexable, __unsafe_null_terminated_to_indexable, __unsafe_null_terminated_from_indexable), macros (__ptrcheck_abi_assume_single), or includes of "ptrcheck.h".
 ---
 
-**Verified:** 2026-07-11
 ## How to Use This Skill
 
 When helping with `-fbounds-safety` adoption or code changes, ask clarifying questions about the user's codebase and goals before suggesting changes. For complex tasks involving multiple files or non-trivial annotation decisions, use plan mode to propose an approach before implementing.
@@ -28,7 +27,3 @@ You MUST have fully read the following three documents (via the Read tool) at th
 For compiler flags, Xcode build settings, soft trap mode, and `ptrcheck.h` configuration, read [build-settings.md](references/build-settings.md).
 
 For debugging bounds violations at runtime — trap behavior, LLDB commands, wide pointer inspection, watchpoints, crash log analysis, and soft trap debugging, read [runtime-debugging.md](references/runtime-debugging.md).
-
-## Primary Sources
-
-- [Clang: `-fbounds-safety`](https://clang.llvm.org/docs/BoundsSafety.html) — authoritative for pointer-annotation semantics and language rules.

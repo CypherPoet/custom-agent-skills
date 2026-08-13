@@ -83,7 +83,7 @@ test("manifest presence declares platform support", () => {
 test("the package exposes the expected Node contract", () => {
   const packageJson = JSON.parse(readFileSync(resolve(root, "package.json"), "utf8"));
   assert.equal(packageJson.name, "@cypherpoet/plugin-sync");
-  assert.equal(packageJson.version, "0.2.1");
+  assert.equal(packageJson.version, "0.3.0");
   assert.equal(
     packageJson.description,
     "Synchronizes vendored skills and checks CypherPoet plugin repositories.",

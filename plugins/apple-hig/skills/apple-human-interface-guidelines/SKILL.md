@@ -81,8 +81,3 @@ When asked to review a screen or flow rather than answer a single question:
 3. Check each component against its best-practices bullets and specs; verify accessibility basics (Dynamic Type, contrast, tap targets, VoiceOver labels) and layout (safe areas, margins).
 4. Where a component choice looks wrong for the job, consult `decision-helpers.md` and propose the alternative with the HIG reasoning.
 5. Report findings grouped by severity, each citing the HIG topic it comes from (e.g., "Buttons — tap target below 44×44 pt").
-
-## Primary Sources
-
-- [Human Interface Guidelines](https://developer.apple.com/design/human-interface-guidelines) — the corpus this skill distills; authoritative for all component, platform, and spec guidance.
-- [What's new (Apple Design)](https://developer.apple.com/design/whats-new/) — the HIG change feed; check it when re-syncing the corpus.

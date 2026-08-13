@@ -5,8 +5,6 @@ name: audit-xcode-security-settings
 ---
 # Audit Xcode Security Settings
 
-**Verified:** 2026-07-11
-
 Assess an Xcode project's security posture and progressively enable security build settings and entitlements — from broadly applicable warnings through Enhanced Security hardening.
 
 ## Tool Preferences
@@ -217,10 +215,3 @@ Offer these one at a time, in order. Each is a separate yes/no question — do n
 - **Use `AskUserQuestion`** for inquiring about disabled settings, for the Enhanced Security apply-confirmation (including offering "apply to a subset"), and for the decision document location (first creation only).
 - **When asking a question provide context the user needs to answer the question**. For example, describe the benefit of the security protection before asking whether to enable it. Describe it in terms of the protection it provides, not how it is enabled.
 - **When emitting lists of Xcode build settings, use bullet lists** Don't use comma-separated lists.
-
-## Primary Sources
-
-- [Improving control flow integrity with pointer authentication](https://developer.apple.com/documentation/apple-silicon/improving-control-flow-integrity-with-pointer-authentication) — authoritative for pointer-authentication build settings.
-- [Adopting type-aware memory allocation](https://developer.apple.com/documentation/xcode/adopting-type-aware-memory-allocation) — authoritative for typed-allocator settings.
-- [Conforming to Mach IPC security restrictions](https://developer.apple.com/documentation/xcode/conforming-to-mach-ipc-security-restrictions) — authoritative for Mach IPC hardening.
-- [libc++ hardening modes](https://libcxx.llvm.org/Hardening.html) — authoritative for C++ standard-library hardening semantics.

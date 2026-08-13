@@ -40,7 +40,3 @@ It's idempotent: on an already-current catalog it prints `already in sync` and w
 The skill changes the working tree but does not commit. **Review the diff** (`git diff docs/CATALOG.md`), then commit it yourself — typically alongside the plugin change that caused the drift (a new plugin, a renamed skill, an edited description). If `--check` reported `already in sync`, there's nothing to do.
 
 If the description also needs to reach the **published** catalog (you edited a plugin's manifest `description`), that's a separate step — run `marketplace-publish <name>` to refresh the marketplace entry.
-
-## Primary Sources
-
-None declared yet — the fact-check routine falls back to vendor-primary sources per claim. Add entries as `- [Name](url) — what it's authoritative for.`

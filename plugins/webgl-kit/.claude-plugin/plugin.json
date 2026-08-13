@@ -2,7 +2,7 @@
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "webgl-kit",
   "displayName": "WebGL",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "description": "Raw WebGL2 + GLSL shader tooling.",
   "author": { "name": "CypherPoet" },
   "homepage": "https://github.com/CypherPoet/custom-agent-skills/tree/main/plugins/webgl-kit",

@@ -123,7 +123,7 @@ Common culprits, in order of likely impact:
 
 1. **Unused textures** — materials reference images that aren't actually wired into a node. `gltf-transform prune` removes them.
 2. **Modifier-baked Array/Mirror** — file has 50× the geometry it needs. Re-export with `export_apply=False`.
-3. **Animation tracks for unused bones** — `gltf-transform optimize-animation` (without other transforms) trims redundant keyframes.
+3. **Animation tracks for unused bones** — `gltf-transform resample` losslessly deduplicates redundant keyframes.
 4. **Per-vertex color where a material color would do** — strip with `gltf-transform color`.
 
 ## Sources

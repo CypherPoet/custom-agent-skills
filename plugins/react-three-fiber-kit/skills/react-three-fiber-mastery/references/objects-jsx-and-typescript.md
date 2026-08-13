@@ -1,6 +1,6 @@
 # Objects, JSX Semantics & TypeScript
 
-How the @react-three/fiber reconciler turns JSX into live three.js objects: constructor `args`, prop shorthands and piercing, `attach`, `<primitive>`, `extend`, automatic disposal, and the v9 TypeScript surface. Current stack: R3F 9.6.x + React 19 + three 0.185.x — v8 idioms appear only in explicitly labeled legacy notes.
+How the @react-three/fiber reconciler turns JSX into live three.js objects: constructor `args`, prop shorthands and piercing, `attach`, `<primitive>`, `extend`, automatic disposal, and the v9 TypeScript surface. Current stack: R3F 9.7.x + React 19 + three 0.185.x — v8 idioms appear only in explicitly labeled legacy notes.
 
 > Canvas/project setup: see [../SKILL.md](../SKILL.md) and [canvas-and-project-setup.md](./canvas-and-project-setup.md).
 

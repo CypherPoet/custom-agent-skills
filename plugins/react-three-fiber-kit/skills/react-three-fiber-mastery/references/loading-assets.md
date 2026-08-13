@@ -336,7 +336,7 @@ Quick reference for the `THREE.Texture` properties you set in loader callbacks:
 
 ### Second UV Set (aoMap / lightMap)
 
-`aoMap` and `lightMap` sample whichever UV set the texture's `channel` selects — `0` (the default) reads the base `uv`, `1` reads `uv1` (the attribute named `uv2` before three r151). `useGLTF` sets `channel = 1` for you when the AO is baked against `TEXCOORD_1`; a map that shares the base UVs needs nothing. For procedural geometry with a **separate** AO UV layout, author `uv1` and point the map at it:
+`aoMap` and `lightMap` sample whichever UV set the texture's `channel` selects — `0` (the default) reads the base `uv`, `1` reads `uv1` (the attribute named `uv2` before three r152). `useGLTF` sets `channel = 1` for you when the AO is baked against `TEXCOORD_1`; a map that shares the base UVs needs nothing. For procedural geometry with a **separate** AO UV layout, author `uv1` and point the map at it:
 
 ```jsx
 import { useEffect, useRef } from 'react'
@@ -347,7 +347,7 @@ function BakedPlane({ aoMap, aoUv }) {
   const meshRef = useRef(null)
   useEffect(() => {
     const mesh = meshRef.current
-    mesh.geometry.setAttribute('uv1', new BufferAttribute(aoUv, 2)) // 'uv1' was 'uv2' before three r151
+    mesh.geometry.setAttribute('uv1', new BufferAttribute(aoUv, 2)) // 'uv1' was 'uv2' before three r152
     mesh.material.aoMap.channel = 1 // 0 (default) = base `uv`; 1 = `uv1`
     mesh.material.needsUpdate = true // channel is baked into the program — force a recompile
   }, [aoMap, aoUv])
@@ -626,7 +626,7 @@ useGLTF(visible ? url : null)          // NOT an API — useGLTF has no null/con
 | Draco model fails under raw `useLoader(GLTFLoader)` ("No DRACOLoader instance provided") | Wire `DRACOLoader` in the extensions callback, or just use drei `useGLTF` (automatic). |
 | Color texture looks washed out / desaturated | v9 no longer auto-converts: set `texture.colorSpace = THREE.SRGBColorSpace` on hand-loaded color maps (config callback or pierced prop). |
 | Normal/roughness map renders wrong after marking textures sRGB | Data textures stay linear — only color maps (`map`, `emissiveMap`) get `SRGBColorSpace`. Delete v8-era colorSpace workarounds. |
-| `aoMap`/`lightMap` has no visible effect | They default to channel 0 (the base `uv`); for a separate AO UV set, author `uv1` and set `material.aoMap.channel = 1` (`uv1` was `uv2` before three r151). `useGLTF` handles `TEXCOORD_1` automatically. |
+| `aoMap`/`lightMap` has no visible effect | They default to channel 0 (the base `uv`); for a separate AO UV set, author `uv1` and set `material.aoMap.channel = 1` (`uv1` was `uv2` before three r152). `useGLTF` handles `TEXCOORD_1` automatically. |
 | Hand-loaded texture appears upside down on a GLTF mesh | GLTF UV convention: set `texture.flipY = false` (`TextureLoader` defaults to `true`). |
 | Setting `repeat`/`wrapS` on a `useTexture` result changes other components too | The cache shares one instance per URL. Clone for per-instance config: `useMemo(() => texture.clone(), [texture])`. |
 | `useGLTF(visible ? url : null)` throws | Not an API. Conditionally mount the component instead: `{visible && <Model />}`. |

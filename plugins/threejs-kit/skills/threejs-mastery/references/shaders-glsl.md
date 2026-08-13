@@ -30,7 +30,7 @@ const material = new THREE.ShaderMaterial({
 });
 
 // Drive uniforms each frame
-material.uniforms.time.value = clock.getElapsedTime();
+material.uniforms.time.value = timer.getElapsed();
 ```
 
 ## Built-in Uniforms and Attributes
@@ -239,8 +239,9 @@ material.onBeforeCompile = (shader) => {
 };
 
 function tick() {
+  timer.update();
   if (material.userData.shader) {
-    material.userData.shader.uniforms.time.value = clock.getElapsedTime();
+    material.userData.shader.uniforms.time.value = timer.getElapsed();
   }
 }
 ```

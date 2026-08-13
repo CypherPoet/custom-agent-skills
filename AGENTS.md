@@ -12,7 +12,7 @@ Composition is by **vendoring, not dependencies**: neither harness resolves a re
 - [`vendored-skills.json`](vendored-skills.json) — authoritative sources and generated targets for shared skills.
 - [`tooling/README.md`](tooling/README.md) — vendoring, manifest checks, and validation ownership for the shared [`@cypherpoet/plugin-sync`](package.json) package.
 - [`docs/CATALOG.md`](docs/CATALOG.md) — generated cross-plugin index.
-- [`docs/automated-routines/skill-fact-check-manifest.json`](docs/automated-routines/skill-fact-check-manifest.json) — per-skill fact-check volatility tiers.
+- [`.keeping-skills-current/manifest.json`](.keeping-skills-current/manifest.json) — project-local source-review configuration and state.
 
 ## Working In This Repo
 

@@ -15,8 +15,6 @@ description: >
 
 # App Store Connect Submission
 
-**Verified:** 2026-07-24
-
 The operational playbook for getting an Apple-platform app from **built** to
 **Submitted for Review**. It covers the console navigation, the order of operations,
 build delivery, sandbox testing, and the UI traps that aren't in Apple's happy-path docs.
@@ -59,7 +57,7 @@ Work top to bottom. Each step has detail in a reference file (see the table at t
 2. **Create the app record** (ASC → Apps → ＋ → New App). SKU and Bundle ID choices here are
    permanent; the bundle ID locks after the first build.
 3. **App Information** (app-level / "General"): name, subtitle, category, content rights, age rating, and the
-   **EU Digital Services Act trader status** — any app earning money in the EU (paid app or paid IAP) must
+   **EU Digital Services Act trader status** — every app on the EU App Store must have a trader status declared, and money-earning apps (paid app or paid IAP) must additionally
    verify trader details or it's pulled from the EU App Store.
 4. **App Privacy** (left sidebar → Trust & Safety): answer the data-collection question, set the
    **Privacy Policy URL** (Apple moved this field here from App Information), then **Publish** —
@@ -171,8 +169,3 @@ Load the one you need; don't read all of them upfront.
 | `references/build-and-delivery.md` | Building and delivering the archive — local Xcode archive **or** Xcode Cloud workflow setup, signing, and delivery |
 | `references/testing-purchases.md` | Testing in-app purchases — the local `.storekit` simulator path and the real **Sandbox** path (testers, scheme config, purchase-time sign-in) |
 | `references/api-automation.md` | Driving submission from the CLI / CI / an agent **without fastlane** — the App Store Connect **API key** + `.env` pattern, `xcrun altool` uploads, and JWT + REST for build status / metadata / submit |
-
-## Primary Sources
-
-- [App Store Connect API documentation](https://developer.apple.com/documentation/appstoreconnectapi) — authoritative for API endpoints, JWT auth, and request syntax.
-- [App Store Connect help](https://developer.apple.com/help/app-store-connect/) — authoritative for the submission workflow, field names, and review requirements.

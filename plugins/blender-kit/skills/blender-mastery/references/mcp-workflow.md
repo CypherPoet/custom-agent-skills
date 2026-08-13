@@ -205,7 +205,7 @@ When writing `script.py` for headless use, remember:
 Symptoms and first checks:
 
 - **Timeout.** The script ran too long. Either chunk it or escape to headless.
-- **Connection refused.** The MCP addon isn't running in Blender. Have the user check Preferences → Add-ons → Blender MCP → enabled.
+- **Connection refused.** The MCP addon isn't running in Blender. Have the user check Preferences → Add-ons → MCP → enabled.
 - **Script errors with no useful trace.** `execute_blender_code` may swallow some details. Wrap risky code in `try/except` and `print(traceback.format_exc())` for visibility.
 - **Edits don't appear visible.** The depsgraph hasn't been re-evaluated. Try `bpy.context.view_layer.update()` or `bpy.context.evaluated_depsgraph_get()` before screenshotting.
 

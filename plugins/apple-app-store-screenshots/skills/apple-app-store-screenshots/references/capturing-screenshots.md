@@ -49,7 +49,7 @@ The pieces:
 - `fastlane snapshot` runs the test once per device × language and writes named PNGs, then builds
   an HTML overview so you can eyeball the whole set.
 
-It also handles the clean status bar automatically (it overrides to 9:41, full bars) — one of the
+It also handles the clean status bar for you, but it's opt-in: set `override_status_bar(true)` in the `Snapfile` and it overrides to Tuesday, January 9 at 9:41 AM with full battery and reception (`override_status_bar_arguments` passes extra `xcrun simctl status_bar override` flags, e.g. carrier name) — one of the
 main reasons to use it over manual capture.
 
 ## Add device frames & captions — `frameit`
@@ -75,7 +75,7 @@ Two things keep custom-rendered shots crisp and acceptable:
   that App Store Connect rejects; finish with `-alpha remove -alpha off -colorspace sRGB`
   (see [device-specifications.md](device-specifications.md)).
 
-Hit an *exact* accepted size for the class (canonical 6.9" 1320×2868 or 6.7" 1290×2796), and keep
+Hit an *exact* accepted size for the class (canonical 6.9" — 1320×2868, 1290×2796, or 1260×2736), and keep
 real app UI prominent even in a marketing composition (a shot that's mostly art is a rejection
 trap, below).
 

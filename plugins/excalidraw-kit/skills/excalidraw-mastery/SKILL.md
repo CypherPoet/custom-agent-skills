@@ -13,8 +13,6 @@ description: >
 
 # Excalidraw Mastery
 
-**Verified:** 2026-07-17
-
 *Grounded in the official [Excalidraw documentation](https://docs.excalidraw.com/) and the `@excalidraw/excalidraw` v0.18.1 source (scene format `version` 2). Design methodology adapted from the community Excalidraw skills by [coleam00](https://github.com/coleam00/excalidraw-diagram-skill) and [awesome-copilot](https://github.com/github/awesome-copilot).*
 
 Working knowledge of [Excalidraw](https://excalidraw.com) — the virtual whiteboard for hand-drawn-style diagrams. Use this to author correct `.excalidraw` files, design diagrams that actually communicate, drive the `@excalidraw/excalidraw` API from code, and convert Mermaid — grounded in the docs and the source, not training-data guesses.
@@ -78,9 +76,3 @@ Download a `.excalidrawlib`, split it (`scripts/split_excalidraw_library.py`), t
 - **Rendering needs a browser + network** (Playwright/Chromium + the CDN); **validation does not**. With no render environment, open the file in [excalidraw.com](https://excalidraw.com) or the VS Code Excalidraw extension — but still inspect it before shipping.
 - **`restore()` fills missing element fields with defaults** but cannot invent intent — keep geometry, color, text, and bindings correct yourself, and validate for unique ids and live references.
 - Excalidraw evolves; the newest arrowhead types and font families may post-date this corpus. If exact current behavior matters, verify against the installed package version.
-
-## Primary Sources
-
-- [Excalidraw developer documentation](https://docs.excalidraw.com/) — official component API, integration, customization, and utility reference.
-- [Excalidraw releases](https://github.com/excalidraw/excalidraw/releases) — official release notes and breaking changes.
-- [`@excalidraw/excalidraw` on npm](https://www.npmjs.com/package/@excalidraw/excalidraw) — authoritative published package versions and installation metadata.

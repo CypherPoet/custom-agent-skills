@@ -59,7 +59,7 @@ The icon is your brand mark in the App Store. Keep it consistent with your app's
 
 ## Apple icon sizes
 
-Author one **1024×1024 px master** — no alpha, no rounded corners (Apple applies the mask). The system, or the [generation script](../SKILL.md#generation-script), derives the rest.
+Author a **1024×1024 px master** for iPhone, iPad, and Mac — Apple Watch uses a **1088×1088 px** canvas — with no alpha and no rounded corners (Apple applies the mask). The system, or the [generation script](../SKILL.md#generation-script), derives the rest.
 
 | Surface | Size |
 |---------|------|

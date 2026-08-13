@@ -1,6 +1,6 @@
 {
   "name": "swift-xcode-kit",
-  "version": "0.8.0",
+  "version": "0.9.0",
   "description": "Swift and Xcode development kit: SwiftUI best practices and 2027 SDK migration, UIKit multi-window modernization, XCTest-to-Swift-Testing migration, security-hardening audits of Xcode build settings, C -fbounds-safety guidance, and on-device/simulator UI verification.",
   "author": {
     "name": "CypherPoet"

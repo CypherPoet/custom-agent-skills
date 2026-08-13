@@ -1,6 +1,6 @@
 # Asset Integrations
 
-The Blender MCP server bundles integrations with several asset providers. Each is accessible either via dedicated MCP tool calls or by running `bpy` Python that the integration exposes. Prefer these over hand-modeling whenever a suitable asset exists.
+These asset-provider integrations are **not** part of the official Blender Lab MCP server — they ship with the separate third-party community server [`ahujasid/blender-mcp`](https://github.com/ahujasid/blender-mcp). On the official server there are no provider tool calls: fetch the asset yourself (PolyHaven's API, a Sketchfab download, a Rodin/Hunyuan3D generation) and import it with `bpy` through `execute_blender_code`. Prefer that over hand-modeling whenever a suitable asset exists.
 
 | Integration | What it gives you | Free? | Auth required? |
 |---|---|---|---|
@@ -67,7 +67,7 @@ Displacement maps don't survive GLTF export. Skip the displacement file or bake 
 
 ## Sketchfab: marketplace models
 
-Sketchfab requires an API token configured in the MCP addon settings. After download, the model imports into the active scene.
+Sketchfab requires an API token, configured in the third-party `blender-mcp` addon's settings — the official Blender Lab MCP add-on has no Sketchfab integration and no token field. After download, the model imports into the active scene.
 
 ### Post-import checklist
 

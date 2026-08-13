@@ -12,8 +12,6 @@ disable-model-invocation: true
 
 # marketplace-publish
 
-**Verified:** 2026-07-17
-
 Publish one plugin from this source repo to a marketplace **catalog** by opening a pull request on the marketplace repo. Works for a single plugin or a set, in one PR. Runs on your local `gh` credentials — no GitHub Actions, no tokens.
 
 A marketplace repo carries **two catalog files**, one per platform: `.claude-plugin/marketplace.json` (Claude Code) and `.agents/plugins/marketplace.json` (Codex). A publish run updates each catalog for which the plugin has a corresponding source manifest.
@@ -128,9 +126,3 @@ Re-running for an already-listed plugin just updates its entry — the operation
 ## After publishing
 
 Review and merge the PR on the marketplace repo; once merged, `/plugin install <name>@<marketplace>` (Claude Code) and `codex plugin add <name>@<marketplace>` (Codex, after `codex plugin marketplace add <owner>/<marketplace-repo>`) resolve the entries. To see what's listed vs. what's local at any point, use the `marketplace-sync-check` skill.
-
-## Primary Sources
-
-- [Plugin marketplaces (Claude Code docs)](https://code.claude.com/docs/en/plugin-marketplaces) — authoritative for the Claude `marketplace.json` schema and marketplace commands.
-- [Plugins reference (Claude Code docs)](https://code.claude.com/docs/en/plugins-reference) — authoritative for plugin manifest fields.
-- [Build plugins (Codex docs)](https://learn.chatgpt.com/docs/build-plugins) — authoritative for the Codex `.agents/plugins/marketplace.json` schema (`source` types, required `policy` + `category`) and `codex plugin marketplace` commands.

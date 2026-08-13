@@ -48,7 +48,7 @@ Obsidian consults it when a user's app is older than the current release's `minA
   - `build` — `tsc -noEmit -skipLibCheck` (type check) then production esbuild.
   - `version` — `node version-bump.mjs && git add manifest.json versions.json`, so `npm version patch|minor|major` bumps the manifest, maintains `versions.json`, and stages both.
   - `lint` — `eslint .` with `...obsidianmd.configs.recommended` (see [`linting-and-review.md`](linting-and-review.md)).
-- **Pinned devDependencies** (as of the Verified date): `esbuild 0.25.5`, `eslint ^9.39.4`, `eslint-plugin-obsidianmd ^0.4.0`, `typescript ^5.8.3`, `typescript-eslint ^8.59.1`, `obsidian: "latest"`.
+- **Pinned devDependencies** in the 2026-07-23 sample-plugin snapshot: `esbuild 0.25.5`, `eslint ^9.39.4`, `eslint-plugin-obsidianmd ^0.4.0`, `typescript ^5.8.3`, `typescript-eslint ^8.59.1`, `obsidian: "latest"`.
 
 Keep `main.ts` lifecycle-only (registrations and wiring); real logic lives in modules it imports. Never commit `main.js` or `node_modules`; do commit a lockfile.
 

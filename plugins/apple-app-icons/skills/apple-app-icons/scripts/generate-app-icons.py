@@ -4,8 +4,8 @@
 Cleans one source (trim a baked-in edge frame, recenter the dominant content,
 flatten to RGB) and emits a classic `.appiconset` — the asset-catalog fallback
 for OS versions below 26. Author the Liquid Glass `.icon` itself in Icon
-Composer; its material and Default / Dark / Clear appearance variants can't be
-produced by a script.
+Composer; its material and Default / Dark / Clear / Tinted appearance variants
+can't be produced by a script.
 
 iOS and watchOS need only the single 1024 (Xcode's "Single Size" generates the
 rest at build); the macOS size ladder is what this script is really for.

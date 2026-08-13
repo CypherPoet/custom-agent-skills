@@ -126,8 +126,8 @@ For interactive cleanup sessions, enable auto-merge so slid verts weld on contac
 **Eevee forgives, Cycles doesn't** (doctrine + documented settings). Normal tricks bend shading, not geometry — Cycles computes shadows from the true polygonal silhouette, so a low-poly curve casts faceted shadow seams no matter how clean the normals look. Mitigate per object, or add real geometry for path-traced targets:
 
 ```python
-obj.cycles.shadow_terminator_geometry_offset = 0.1  # preferred: offsets shadow rays, minimal lighting impact
-obj.cycles.shadow_terminator_offset = 0.0           # pushes the terminator; not energy-conserving
+obj.shadow_terminator_geometry_offset = 0.1         # preferred: offsets shadow rays, minimal lighting impact
+obj.shadow_terminator_shading_offset = 0.0          # pushes the terminator; not energy-conserving
 ```
 
 UI: Object Properties ‣ Shading ‣ Shadow Terminator (Cycles).

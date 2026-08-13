@@ -91,8 +91,6 @@ npm view @react-three/drei version
 npm view three version
 ```
 
-**Audit baseline:** this skill's content was last verified against **@react-three/fiber 9.6.1, @react-three/drei 10.7.7, three 0.185.1 (r185), React 19.2** (2026-07-03). When refreshing for newer releases, diff the [fiber releases](https://github.com/pmndrs/react-three-fiber/releases) and [drei releases](https://github.com/pmndrs/drei/releases) from that baseline instead of re-checking everything — then bump this line (versions + date) as the final step of the audit.
-
 ### Version Pairing
 
 The ecosystem majors move in lockstep, and mixing them is the #1 install-time failure:
@@ -228,10 +226,3 @@ These bite across every topic; topical mistakes live in each reference's own tab
 - [pmndrs market](https://market.pmnd.rs/) — free models/HDRIs for prototyping.
 - [gltfjsx](https://github.com/pmndrs/gltfjsx) — GLTF → JSX component generator (web UI: https://gltf.pmnd.rs/).
 - [fiber releases](https://github.com/pmndrs/react-three-fiber/releases) — release notes; check when APIs seem missing.
-
-## Primary Sources
-
-- [React Three Fiber documentation](https://r3f.docs.pmnd.rs/) — authoritative for fiber API syntax.
-- [fiber releases](https://github.com/pmndrs/react-three-fiber/releases) — release channel; authoritative for versions.
-- [drei documentation](https://drei.docs.pmnd.rs/) — authoritative for helper API syntax.
-- [drei releases](https://github.com/pmndrs/drei/releases) — release channel; authoritative for drei versions.

@@ -1,0 +1,33 @@
+{
+  "skill_name": "keeping-skills-current",
+  "evals": [
+    {
+      "id": 1,
+      "eval_name": "configure-missing-manifest",
+      "prompt": "Use $keeping-skills-current to review this project's configured skills. There is no manifest yet.",
+      "expected_output": "Enters the interactive configure flow, discovers project-owned skill candidates, defaults selected skills to manual and reportOnly, asks the user to confirm sources and delivery, shows the complete configuration diff, and resumes the original review only after successful configuration. It does not create a scheduler or configuration without confirmation.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "eval_name": "run-all-configured-sources-only",
+      "prompt": "Use $keeping-skills-current to run all configured skills in this fixture project. One source is a bounded documentation crawl and the skill contains several unrelated factual claims.",
+      "expected_output": "Retrieves only the configured page/crawl evidence, reasons from the evidence toward relevant skill changes, does not enumerate or certify every claim, does not perform unrestricted search, validates structured research output, and renders all agreed finding categories when any finding exists.",
+      "files": ["evals/fixtures/project/.keeping-skills-current/manifest.json", "evals/fixtures/project/plugins/example/skills/example/SKILL.md"]
+    },
+    {
+      "id": 3,
+      "eval_name": "status-is-read-only",
+      "prompt": "Use $keeping-skills-current status for this fixture project.",
+      "expected_output": "Reports the resolved configuration, draft/configured readiness, schedules, due reasons, and previous state without retrieving sources, changing files, invoking Git, migrating configuration, or repairing a scheduler.",
+      "files": ["evals/fixtures/project/.keeping-skills-current/manifest.json", "evals/fixtures/project/plugins/example/skills/example/SKILL.md"]
+    },
+    {
+      "id": 4,
+      "eval_name": "no-question-due-run",
+      "prompt": "Use $keeping-skills-current to review every configured skill that is currently due for review, without asking questions, in this project.",
+      "expected_output": "Processes only due interval skills, never opens configuration dialogs, treats unresolved choices as findings or failures, does nothing when no skills are due, and never broadens configured retrieval boundaries.",
+      "files": ["evals/fixtures/project/.keeping-skills-current/manifest.json", "evals/fixtures/project/plugins/example/skills/example/SKILL.md"]
+    }
+  ]
+}
