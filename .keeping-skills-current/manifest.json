@@ -548,7 +548,13 @@
         }
       },
       "deferredFindings": [],
-      "declinedFindings": []
+      "declinedFindings": [],
+      "state": {
+        "lastAttemptedReview": "2026-08-13T09:38:24Z",
+        "lastAttemptStatus": "completed",
+        "lastCompletedReview": "2026-08-13T09:38:24Z",
+        "inputFingerprint": "sha256:b40bc4b1c8b0c2724988dede7f26c3f6d1d54625651de6ab9dde345b45820f71"
+      }
     },
     "marketplace-sync-check": {
       "path": "plugins/marketplace-kit/skills/marketplace-sync-check",
