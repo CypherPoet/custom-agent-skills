@@ -21,7 +21,7 @@ from urllib.parse import urlsplit, urlunsplit
 
 
 SCHEMA_VERSION = 1
-REVIEW_PROCEDURE_VERSION = 2
+REVIEW_PROCEDURE_VERSION = 3
 DEFAULT_MANIFEST_PATH = ".keeping-skills-current/manifest.json"
 LOCATOR_PATH = ".keeping-skills-current/config.json"
 REPORT_VERSION = 1
@@ -1591,6 +1591,15 @@ def validate_research_result(
         raise ContractError("a completed research result cannot contain a failed retrieval, failure, or failed validation")
     if status == "incomplete" and not (failed_outcome or failures or validation_status == "failed"):
         raise ContractError("an incomplete research result must identify a retrieval, processing, or validation failure")
+    provisional_corrections = [
+        item for item in findings if item["details"]["category"] == "correction"
+    ]
+    if provisional and provisional_corrections and (
+        failed_outcome or failures or status == "incomplete"
+    ):
+        raise ContractError(
+            "provisional corrections require every configured source and processing stage to succeed"
+        )
     applied_findings = [item for item in findings if item["editDisposition"] == "applied"]
     reverted_findings = [
         item for item in findings if item["editDisposition"] == "revertedAfterValidationFailure"
@@ -2138,6 +2147,61 @@ def report_skill_results(report_input: Mapping[str, Any]) -> list[dict[str, Any]
     return [dict(report_input)]
 
 
+def provisional_result_fingerprint(report_input: Mapping[str, Any]) -> str:
+    """Bind final results to the immutable portion of a validated provisional result."""
+    normalized_results: list[dict[str, Any]] = []
+    for result in report_skill_results(report_input):
+        findings = []
+        for finding in result["findings"]:
+            evidence = sorted(
+                finding["evidence"],
+                key=canonical_json,
+            )
+            findings.append(
+                {
+                    "details": finding["details"],
+                    "evidence": evidence,
+                }
+            )
+        normalized_results.append(
+            {
+                "schemaVersion": result["schemaVersion"],
+                "projectIdentity": result["projectIdentity"],
+                "skillId": result["skillId"],
+                "skillPath": result["skillPath"],
+                "reviewedAt": result["reviewedAt"],
+                "sourceOutcomes": sorted(
+                    result["sourceOutcomes"],
+                    key=lambda item: item["sourceId"],
+                ),
+                "findings": sorted(findings, key=canonical_json),
+                "failures": sorted(result["failures"], key=canonical_json),
+            }
+        )
+    payload = {
+        "projectIdentity": report_input.get(
+            "projectIdentity",
+            normalized_results[0]["projectIdentity"],
+        ),
+        "reviewedAt": report_input.get(
+            "reviewedAt",
+            normalized_results[0]["reviewedAt"],
+        ),
+        "skillResults": sorted(normalized_results, key=lambda item: item["skillId"]),
+    }
+    digest = hashlib.sha256(canonical_json(payload).encode("utf-8")).hexdigest()
+    return f"sha256:{digest}"
+
+
+def requires_provisional_binding(
+    configuration: ProjectConfiguration,
+) -> bool:
+    return (
+        configuration.manifest["correctionStrategy"]
+        == "applyHighConfidenceCorrections"
+    )
+
+
 def configure_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description=__doc__)
     subparsers = parser.add_subparsers(dest="command", required=True)
@@ -2168,6 +2232,7 @@ def configure_parser() -> argparse.ArgumentParser:
     report.add_argument("--output")
     report.add_argument("--validate-only", action="store_true")
     report.add_argument("--provisional", action="store_true")
+    report.add_argument("--provisional-fingerprint")
     migration = subparsers.add_parser("migrate-legacy")
     migration.add_argument("--project-root")
     migration.add_argument("--legacy-manifest", required=True)
@@ -2317,11 +2382,28 @@ def main(arguments: Sequence[str] | None = None) -> int:
         elif args.command == "render-report":
             if args.provisional and not args.validate_only:
                 raise ContractError("--provisional requires --validate-only")
+            if args.provisional and args.provisional_fingerprint:
+                raise ContractError(
+                    "--provisional-fingerprint cannot be used with --provisional"
+                )
             report_input = normalize_report_input(
                 load_json_file(args.input, "--input"),
                 configuration,
                 provisional=args.provisional,
             )
+            binding_fingerprint = provisional_result_fingerprint(report_input)
+            if not args.provisional and requires_provisional_binding(configuration):
+                if args.provisional_fingerprint is None:
+                    raise ContractError(
+                        "a final result under applyHighConfidenceCorrections requires "
+                        "--provisional-fingerprint"
+                    )
+                if not FINGERPRINT_PATTERN.fullmatch(args.provisional_fingerprint):
+                    raise ContractError("--provisional-fingerprint is invalid")
+                if args.provisional_fingerprint != binding_fingerprint:
+                    raise ContractError(
+                        "the final result differs from the validated provisional result"
+                    )
             existing = ""
             if args.existing_report:
                 existing = Path(args.existing_report).read_text(encoding="utf-8")
@@ -2332,7 +2414,10 @@ def main(arguments: Sequence[str] | None = None) -> int:
             )
             owned = render_report(configuration, report_input, payload)
             if args.validate_only:
-                write_json_output({"valid": True})
+                response = {"valid": True}
+                if args.provisional:
+                    response["provisionalFingerprint"] = binding_fingerprint
+                write_json_output(response)
                 return 0
             rendered = merge_report(existing, owned)
             if args.output:

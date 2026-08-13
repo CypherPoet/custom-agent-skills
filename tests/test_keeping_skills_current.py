@@ -1,3 +1,4 @@
+import copy
 import importlib.util
 import json
 import os
@@ -258,6 +259,24 @@ class KeepingSkillsCurrentTests(unittest.TestCase):
             ],
             "editDisposition": "proposed",
         }
+
+    def provisional_fingerprint(self, result, result_path):
+        provisional = copy.deepcopy(result)
+        for finding in provisional["findings"]:
+            if finding["details"]["category"] == "correction":
+                finding["editDisposition"] = "proposed"
+        provisional["validation"] = {"status": "notApplicable", "checks": []}
+        write_json(result_path, provisional)
+        validated = self.run_helper(
+            "render-report",
+            "--project-root",
+            str(self.project),
+            "--input",
+            str(result_path),
+            "--validate-only",
+            "--provisional",
+        )
+        return json.loads(validated.stdout)["provisionalFingerprint"]
 
     def test_template_and_generated_schemas_are_current(self):
         template = json.loads((SKILL_ROOT / "assets/manifest.template.json").read_text())
@@ -798,6 +817,125 @@ class KeepingSkillsCurrentTests(unittest.TestCase):
         )
         self.assertTrue(json.loads(valid_locator.stdout)["valid"])
 
+    def test_provisional_correction_requires_a_complete_research_pass(self):
+        configured = self.configured_manifest()
+        configured["correctionStrategy"] = "applyHighConfidenceCorrections"
+        configured["skills"]["example"]["sources"]["secondary-reference"] = {
+            "url": "https://example.com/secondary",
+            "retrieval": {"strategy": "page"},
+        }
+        self.configure(configured)
+        result = self.valid_result(
+            status="incomplete",
+            findings=[self.correction_finding()],
+            validation={"status": "notApplicable", "checks": []},
+        )
+        result["sourceOutcomes"][0] = {
+            "sourceId": "example-documentation",
+            "rootUrl": source()["url"],
+            "status": "retrieved",
+            "successfulPages": 1,
+            "attemptedPages": 1,
+            "limitReached": False,
+        }
+        result_path = self.project / "result.json"
+        write_json(result_path, result)
+
+        rejected = self.run_helper(
+            "render-report",
+            "--project-root",
+            str(self.project),
+            "--input",
+            str(result_path),
+            "--validate-only",
+            "--provisional",
+            check=False,
+        )
+
+        self.assertEqual(rejected.returncode, 2)
+        self.assertIn("provisional corrections require every configured source", rejected.stderr)
+
+    def test_final_correction_is_bound_to_the_validated_provisional_result(self):
+        configured = self.configured_manifest()
+        configured["correctionStrategy"] = "applyHighConfidenceCorrections"
+        self.configure(configured)
+        result_path = self.project / "result.json"
+        final_result = self.valid_result(
+            findings=[self.correction_finding()],
+            validation={
+                "status": "passed",
+                "checks": [{"name": "skill integrity", "status": "passed"}],
+            },
+        )
+        final_result["findings"][0]["editDisposition"] = "applied"
+        provisional_fingerprint = self.provisional_fingerprint(final_result, result_path)
+        write_json(result_path, final_result)
+
+        missing_binding = self.run_helper(
+            "render-report",
+            "--project-root",
+            str(self.project),
+            "--input",
+            str(result_path),
+            "--validate-only",
+            check=False,
+        )
+        self.assertEqual(missing_binding.returncode, 2)
+        self.assertIn(
+            "applyHighConfidenceCorrections requires --provisional-fingerprint",
+            missing_binding.stderr,
+        )
+
+        omitted_finding_result = copy.deepcopy(final_result)
+        omitted_finding_result["findings"] = []
+        omitted_finding_result["validation"] = {
+            "status": "notApplicable",
+            "checks": [],
+        }
+        write_json(result_path, omitted_finding_result)
+        omitted_binding = self.run_helper(
+            "render-report",
+            "--project-root",
+            str(self.project),
+            "--input",
+            str(result_path),
+            "--validate-only",
+            check=False,
+        )
+        self.assertEqual(omitted_binding.returncode, 2)
+        self.assertIn("requires --provisional-fingerprint", omitted_binding.stderr)
+
+        write_json(result_path, final_result)
+        accepted = self.run_helper(
+            "render-report",
+            "--project-root",
+            str(self.project),
+            "--input",
+            str(result_path),
+            "--validate-only",
+            "--provisional-fingerprint",
+            provisional_fingerprint,
+        )
+        self.assertTrue(json.loads(accepted.stdout)["valid"])
+
+        final_result["findings"][0]["details"]["proposedAction"] = (
+            "Replace the guidance with a different action."
+        )
+        write_json(result_path, final_result)
+        changed_finding = self.run_helper(
+            "render-report",
+            "--project-root",
+            str(self.project),
+            "--input",
+            str(result_path),
+            "--validate-only",
+            "--provisional-fingerprint",
+            provisional_fingerprint,
+            check=False,
+        )
+        self.assertEqual(changed_finding.returncode, 2)
+        self.assertIn("differs from the validated provisional result", changed_finding.stderr)
+
     def test_render_report_rechecks_current_result_fingerprint(self):
         self.configured_manifest()
         configuration = HELPER_MODULE.load_configuration(str(self.project), None)
@@ -926,6 +1064,7 @@ class KeepingSkillsCurrentTests(unittest.TestCase):
                 "checks": [{"name": "skill integrity", "status": "passed"}],
             },
         )
+        provisional_fingerprint = self.provisional_fingerprint(valid, result_path)
         write_json(result_path, valid)
         accepted = self.run_helper(
             "render-report",
@@ -934,6 +1073,8 @@ class KeepingSkillsCurrentTests(unittest.TestCase):
             "--input",
             str(result_path),
             "--validate-only",
+            "--provisional-fingerprint",
+            provisional_fingerprint,
         )
         self.assertTrue(json.loads(accepted.stdout)["valid"])
 

@@ -47,9 +47,11 @@ If retrieved evidence says nothing relevant about part of the skill, do nothing:
 
 ## Structured Result
 
-Use the same `assets/research-result.schema.v1.json` contract in two passes. Before mutation, produce a provisional object and validate it with `render-report --validate-only --provisional` against the unchanged reviewed inputs. Keep unapplied corrections `proposed`, set validation to `notApplicable`, and include the current fingerprint. This pass must reject malformed source outcomes, evidence, findings, targets, proposed actions, or locators that do not occur in the target file before they can authorize an edit.
+Use the same `assets/research-result.schema.v1.json` contract in two passes. Before mutation, produce a provisional object and validate it with `render-report --validate-only --provisional` against the unchanged reviewed inputs. Keep unapplied corrections `proposed`, set validation to `notApplicable`, and include the current fingerprint. This pass must reject malformed source outcomes, evidence, findings, targets, proposed actions, or locators that do not occur in the target file before they can authorize an edit. A provisional result containing a correction cannot authorize mutation when any configured source or processing stage failed or the review status is incomplete.
 
-After edits and post-edit checks finish, update that object with the final fingerprint, edit dispositions, validation outcomes, and completed or incomplete status, then validate it again before report rendering or state changes. Include:
+The provisional command returns a `provisionalFingerprint` over the result fields that must remain fixed after mutation. When `correctionStrategy` is `applyHighConfidenceCorrections`, retain that value in ephemeral run state and pass it to the final command as `--provisional-fingerprint`. Do not persist it in the manifest or report.
+
+After edits and post-edit checks finish, update that object only with the final input fingerprint, edit dispositions, validation outcomes, and completed or incomplete status, then validate it again before report rendering or state changes. The final pass binds project and skill identity, review time, source outcomes, failures, finding details, and evidence to the validated provisional result; adding, removing, or materially changing any of them fails validation. Include:
 
 - Project and skill identity, the final reviewed `inputFingerprint`, reviewed timestamp, and `completed` or `incomplete` status.
 - Every configured source's root URL, retrieval status, successful and attempted page counts, limit-reached flag, and any failure stage.

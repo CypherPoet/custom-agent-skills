@@ -12,7 +12,7 @@
       "id": 2,
       "eval_name": "run-all-configured-sources-only",
       "prompt": "Use $keeping-skills-current to run all configured skills in this fixture project. One source is a bounded documentation crawl and the skill contains several unrelated factual claims.",
-      "expected_output": "Retrieves only the configured page/crawl evidence, reasons from the evidence toward relevant skill changes, does not enumerate or certify every claim, and does not perform unrestricted search. It validates a provisional structured result against unchanged inputs before any edit, validates the final fingerprinted result after edits and checks, and renders all agreed finding categories when any finding exists.",
+      "expected_output": "Retrieves only the configured page/crawl evidence, reasons from the evidence toward relevant skill changes, does not enumerate or certify every claim, and does not perform unrestricted search. It validates a complete correction-bearing provisional result against unchanged inputs before any edit, binds the final result to the returned provisional fingerprint, validates the final input fingerprint after edits and checks, and renders all agreed finding categories when any finding exists.",
       "files": ["evals/fixtures/project/.keeping-skills-current/manifest.json", "evals/fixtures/project/plugins/example/skills/example/SKILL.md"]
     },
     {
