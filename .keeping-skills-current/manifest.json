@@ -730,7 +730,13 @@
         }
       },
       "deferredFindings": [],
-      "declinedFindings": []
+      "declinedFindings": [],
+      "state": {
+        "lastAttemptedReview": "2026-08-13T09:38:24Z",
+        "lastAttemptStatus": "completed",
+        "lastCompletedReview": "2026-08-13T09:38:24Z",
+        "inputFingerprint": "sha256:4184b130b240683cbf628ff039873572a94b318c1eed615ff6ce6fd8180e1eef"
+      }
     },
     "svgo": {
       "path": "plugins/svg-tools/skills/svgo",
