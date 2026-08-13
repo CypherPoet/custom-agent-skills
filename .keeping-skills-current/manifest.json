@@ -695,7 +695,13 @@
         }
       },
       "deferredFindings": [],
-      "declinedFindings": []
+      "declinedFindings": [],
+      "state": {
+        "lastAttemptedReview": "2026-08-13T09:38:24Z",
+        "lastAttemptStatus": "completed",
+        "lastCompletedReview": "2026-08-13T09:38:24Z",
+        "inputFingerprint": "sha256:3c9dc209dc90c9b2ee8027535a8f5f1b2e27487912e6ecce2bc212ddc82fc650"
+      }
     },
     "sf-symbols": {
       "path": "plugins/sf-symbols-kit/skills/sf-symbols",
