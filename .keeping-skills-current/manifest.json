@@ -236,7 +236,13 @@
         }
       },
       "deferredFindings": [],
-      "declinedFindings": []
+      "declinedFindings": [],
+      "state": {
+        "lastAttemptedReview": "2026-08-13T09:38:24Z",
+        "lastAttemptStatus": "completed",
+        "lastCompletedReview": "2026-08-13T09:38:24Z",
+        "inputFingerprint": "sha256:f5d851d49e9e9c876fb2862eef6fcc3833d481eefc2e7785b2123cc745e4b8ea"
+      }
     },
     "blender-mastery": {
       "path": "plugins/blender-kit/skills/blender-mastery",
