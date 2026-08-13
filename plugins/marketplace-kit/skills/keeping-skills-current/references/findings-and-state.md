@@ -54,7 +54,7 @@ Require attempted timestamp and status together. Permit `completed` and `incompl
 
 Advance `lastCompletedReview` only after every configured source and functional file was processed, the complete result validated, and report delivery succeeded. Corrections, improvement suggestions, human decisions, 404/410 findings, and disabled post-edit validation are completed outcomes. Any retrieval, processing, structured-output, edit-validation, or delivery failure leaves completed state unchanged.
 
-Fingerprint the final reviewed file state: corrected files after validated applied corrections, or unchanged files in report-only mode. Do not advance completed state after reverted corrections.
+Fingerprint the final reviewed file state: corrected files after validated applied corrections, or unchanged files in report-only mode. Carry that fingerprint in the validated research result, report payload, and completed state. A mismatch at either delivery step invalidates the result. Do not advance completed state after reverted corrections.
 
 ## Due Calculation
 

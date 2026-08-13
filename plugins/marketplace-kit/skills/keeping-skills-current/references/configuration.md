@@ -121,7 +121,7 @@ Commands emit structured JSON on standard output, diagnostics on standard error,
 - `canonicalize` — validate and atomically rewrite the manifest using the canonical property and key order.
 - `status` — return read-only project and per-skill state.
 - `due-set` — return due interval records in deterministic order. Use `--now` for tests and `--force-failed` only for an explicit manual retry.
-- `fingerprint --skill-id <id>` — calculate current review-input fingerprint and list functional files.
+- `fingerprint --skill-id <id>` — calculate the final review-input fingerprint and list functional files. Put this value in the structured research result after edits and validation finish.
 - `render-report --input <result.json> [--existing-report <path>] [--output <path>]` — validate selected results, retain unselected current-state results, and render or atomically update an owned Markdown region.
 - `apply-state --input <result.json> --delivered-report <path> [--skill-id <id>]` — validate the research result, its current input fingerprint, and its matching delivered report payload, then atomically update only review state.
 - `migrate-legacy --legacy-manifest <path> [--write]` — create a version-1 proposal or, after interactive confirmation, write it. Never call unattended.

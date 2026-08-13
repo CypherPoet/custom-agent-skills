@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "scheduler": "agentPlatform",
+  "delivery": {
+    "strategy": "githubPullRequest",
+    "branchName": "automation/keeping-skills-current",
+    "autoMergeStrategy": "none"
+  },
+  "correctionStrategy": "reportOnly",
+  "changeValidation": "enabled",
+  "skills": {
+    "example": {
+      "path": "plugins/example/skills/example",
+      "schedule": {
+        "recurrence": "interval",
+        "intervalDays": 28
+      },
+      "sources": {
+        "example-documentation": {
+          "url": "https://example.com/docs/",
+          "retrieval": {
+            "strategy": "crawl",
+            "includePaths": [
+              "/docs/"
+            ],
+            "excludePaths": [],
+            "maxDepth": 2,
+            "maxPages": 25
+          }
+        }
+      },
+      "deferredFindings": [],
+      "declinedFindings": []
+    }
+  }
+}

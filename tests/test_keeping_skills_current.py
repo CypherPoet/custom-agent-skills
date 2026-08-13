@@ -1,9 +1,11 @@
+import importlib.util
 import json
 import os
 from pathlib import Path
 import subprocess
 import sys
 import unittest
+from unittest import mock
 
 from support import ROOT, fixture_directory, write, write_json
 
@@ -14,6 +16,11 @@ BUNDLED_PYTHON = Path(
     "/Users/ethan/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/bin/python3"
 )
 HELPER_PYTHON = BUNDLED_PYTHON if BUNDLED_PYTHON.exists() else Path(sys.executable)
+HELPER_SPEC = importlib.util.spec_from_file_location("keeping_skills_current_helper", HELPER)
+assert HELPER_SPEC is not None and HELPER_SPEC.loader is not None
+HELPER_MODULE = importlib.util.module_from_spec(HELPER_SPEC)
+sys.modules[HELPER_SPEC.name] = HELPER_MODULE
+HELPER_SPEC.loader.exec_module(HELPER_MODULE)
 
 
 def source(url="https://example.com/docs/"):
@@ -75,13 +82,23 @@ class KeepingSkillsCurrentTests(unittest.TestCase):
     def configure(self, value):
         write_json(self.project / ".keeping-skills-current/manifest.json", value)
 
-    def test_github_delivery_establishes_owned_branch_before_due_selection(self):
+    def test_github_delivery_previews_due_state_before_mutating_owned_branch(self):
         procedure = (SKILL_ROOT / "SKILL.md").read_text(encoding="utf-8")
-        branch_setup = procedure.index(
-            "establish the marked stable branch as the working state before selecting skills"
+        detached_preview = procedure.index(
+            "Create a disposable detached worktree from that tip"
         )
-        due_selection = procedure.index("Use `due-set` there for `run due`")
-        self.assertLess(branch_setup, due_selection)
+        no_due_exit = procedure.index(
+            "If nothing is selected, remove any preview worktree"
+        )
+        branch_setup = procedure.index(
+            "Otherwise establish or reuse the marked stable-branch worktree"
+        )
+        fast_forward = procedure.index(
+            "fast-forward it to the fetched owned tip when it is behind"
+        )
+        self.assertLess(detached_preview, no_due_exit)
+        self.assertLess(no_due_exit, branch_setup)
+        self.assertLess(branch_setup, fast_forward)
 
     def configured_manifest(self, recurrence="manual"):
         schedule = {"recurrence": recurrence}
@@ -109,17 +126,31 @@ class KeepingSkillsCurrentTests(unittest.TestCase):
         failures=None,
         validation=None,
     ):
+        configured = json.loads(
+            (self.project / ".keeping-skills-current/manifest.json").read_text()
+        )
+        configured_sources = configured["skills"][skill_id]["sources"]
+        fingerprint = json.loads(
+            self.run_helper(
+                "fingerprint",
+                "--project-root",
+                str(self.project),
+                "--skill-id",
+                skill_id,
+            ).stdout
+        )["inputFingerprint"]
         return {
             "schemaVersion": 1,
             "projectIdentity": self.project.name,
             "skillId": skill_id,
             "skillPath": skill_path,
+            "inputFingerprint": fingerprint,
             "reviewedAt": reviewed_at,
             "status": status,
             "sourceOutcomes": [
                 {
-                    "sourceId": "example-documentation",
-                    "rootUrl": "https://example.com/docs/",
+                    "sourceId": source_id,
+                    "rootUrl": configured_sources[source_id]["url"],
                     "status": "retrieved" if status == "completed" else "failed",
                     "successfulPages": 1 if status == "completed" else 0,
                     "attemptedPages": 1,
@@ -130,6 +161,7 @@ class KeepingSkillsCurrentTests(unittest.TestCase):
                         else {"failureStage": "retrieve", "failureReason": "timeout"}
                     ),
                 }
+                for source_id in sorted(configured_sources)
             ],
             "findings": findings or [],
             "failures": failures
@@ -316,6 +348,66 @@ class KeepingSkillsCurrentTests(unittest.TestCase):
                 self.assertEqual(result.returncode, 2)
                 self.assertIn(message, result.stderr)
 
+        with mock.patch(
+            "socket.getaddrinfo",
+            side_effect=AssertionError("configuration validation must not perform DNS"),
+        ):
+            unresolved = HELPER_MODULE.normalize_source_url(
+                "https://not-yet-resolved.example/docs/",
+                "source URL",
+                False,
+            )
+        self.assertEqual(unresolved, "https://not-yet-resolved.example/docs/")
+        self.assertEqual(
+            HELPER_MODULE.normalize_source_url(
+                "https://[2606:4700:4700::1111]/docs/",
+                "source URL",
+                False,
+            ),
+            "https://[2606:4700:4700::1111]/docs/",
+        )
+
+    def test_preflight_rejects_invalid_git_refs_and_active_manifests_inside_skills(self):
+        for branch_name in ("review~1", "review^next", "topic.lock", "HEAD", "@{-1}"):
+            with self.subTest(branch_name=branch_name):
+                self.configure(
+                    manifest(
+                        delivery={
+                            "strategy": "githubPullRequest",
+                            "branchName": branch_name,
+                            "autoMergeStrategy": "none",
+                        }
+                    )
+                )
+                result = self.run_helper(
+                    "preflight", "--project-root", str(self.project), check=False
+                )
+                self.assertEqual(result.returncode, 2)
+                self.assertIn("safe Git branch name", result.stderr)
+
+        inside_path = "plugins/example/skills/example/references/review.json"
+        inside_manifest = self.project / inside_path
+        write_json(inside_manifest, manifest({"example": skill_record()}))
+        for locator_arguments in (
+            ("--manifest", inside_path),
+            (),
+        ):
+            with self.subTest(locator_arguments=locator_arguments):
+                if not locator_arguments:
+                    write_json(
+                        self.project / ".keeping-skills-current/config.json",
+                        {"manifestPath": inside_path},
+                    )
+                result = self.run_helper(
+                    "preflight",
+                    "--project-root",
+                    str(self.project),
+                    *locator_arguments,
+                    check=False,
+                )
+                self.assertEqual(result.returncode, 2)
+                self.assertIn("must remain outside managed skill", result.stderr)
+
     def test_locator_override_and_redundant_default_are_supported(self):
         write_json(self.project / "configuration/review.json", manifest())
         write_json(
@@ -413,6 +505,41 @@ class KeepingSkillsCurrentTests(unittest.TestCase):
         self.assertEqual(backed_off["due"], [])
         self.assertIn("24-hour backoff", backed_off["skipped"][0]["reason"])
 
+        current_fingerprint = json.loads(
+            self.run_helper(
+                "fingerprint",
+                "--project-root",
+                str(self.project),
+                "--skill-id",
+                "example",
+            ).stdout
+        )["inputFingerprint"]
+        value["skills"]["example"]["state"] = {
+            "lastAttemptedReview": "2026-08-13T22:00:00Z",
+            "lastAttemptStatus": "incomplete",
+            "lastCompletedReview": "2026-08-01T00:00:00Z",
+            "inputFingerprint": current_fingerprint,
+        }
+        self.configure(value)
+        write(
+            self.project / "plugins/example/skills/example/SKILL.md",
+            "---\nname: example\ndescription: Example.\n---\n\n# Example\n\nChanged guidance.\n",
+        )
+        changed_but_backed_off = json.loads(
+            self.run_helper(
+                "due-set",
+                "--project-root",
+                str(self.project),
+                "--now",
+                "2026-08-13T23:00:00Z",
+            ).stdout
+        )
+        self.assertEqual(changed_but_backed_off["due"], [])
+        self.assertIn(
+            "24-hour backoff",
+            changed_but_backed_off["skipped"][0]["reason"],
+        )
+
     def test_research_result_cannot_leave_configured_evidence_or_apply_in_report_only(self):
         self.configured_manifest()
         finding = self.correction_finding()
@@ -445,6 +572,142 @@ class KeepingSkillsCurrentTests(unittest.TestCase):
         )
         self.assertEqual(invalid_apply.returncode, 2)
         self.assertIn("reportOnly", invalid_apply.stderr)
+
+    def test_research_result_binds_evidence_to_cited_sources_and_reviewed_inputs(self):
+        second_source = {
+            "url": "https://example.com/reference/",
+            "retrieval": {"strategy": "page"},
+        }
+        self.configure(
+            manifest(
+                {
+                    "example": skill_record(
+                        sources={
+                            "example-documentation": source(),
+                            "example-reference": second_source,
+                        }
+                    )
+                }
+            )
+        )
+        result_path = self.project / "result.json"
+        finding = self.correction_finding()
+        finding["evidence"][0] = {
+            "sourceId": "example-reference",
+            "sourceRootUrl": second_source["url"],
+            "evidencePageUrl": second_source["url"],
+            "summary": "The reference describes the replacement.",
+            "excerpt": "Use the replacement.",
+        }
+        write_json(result_path, self.valid_result(findings=[finding]))
+        mismatched_source = self.run_helper(
+            "render-report",
+            "--project-root",
+            str(self.project),
+            "--input",
+            str(result_path),
+            "--validate-only",
+            check=False,
+        )
+        self.assertEqual(mismatched_source.returncode, 2)
+        self.assertIn("not configured for the skill", mismatched_source.stderr)
+
+        all_sources_finding = self.correction_finding()
+        all_sources_finding["details"]["sources"]["example-reference"] = second_source
+        write_json(
+            result_path,
+            self.valid_result(findings=[all_sources_finding]),
+        )
+        missing_cited_evidence = self.run_helper(
+            "render-report",
+            "--project-root",
+            str(self.project),
+            "--input",
+            str(result_path),
+            "--validate-only",
+            check=False,
+        )
+        self.assertEqual(missing_cited_evidence.returncode, 2)
+        self.assertIn("does not represent cited source", missing_cited_evidence.stderr)
+
+        result = self.valid_result()
+        write_json(result_path, result)
+        write(
+            self.project / "plugins/example/skills/example/SKILL.md",
+            "---\nname: example\ndescription: Example.\n---\n\n# Example\n\nChanged after research.\n",
+        )
+        stale_result = self.run_helper(
+            "render-report",
+            "--project-root",
+            str(self.project),
+            "--input",
+            str(result_path),
+            "--validate-only",
+            check=False,
+        )
+        self.assertEqual(stale_result.returncode, 2)
+        self.assertIn("does not match the current reviewed files", stale_result.stderr)
+
+    def test_research_result_rejects_applied_edits_after_failures_or_failed_checks(self):
+        configured = self.configured_manifest()
+        configured["correctionStrategy"] = "applyHighConfidenceCorrections"
+        configured["skills"]["example"]["sources"]["secondary-reference"] = {
+            "url": "https://example.com/secondary",
+            "retrieval": {"strategy": "page"},
+        }
+        self.configure(configured)
+        finding = self.correction_finding()
+        finding["editDisposition"] = "applied"
+        result_path = self.project / "result.json"
+
+        incomplete = self.valid_result(
+            status="incomplete",
+            findings=[finding],
+            validation={
+                "status": "passed",
+                "checks": [{"name": "skill integrity", "status": "passed"}],
+            },
+        )
+        incomplete["sourceOutcomes"][0].update(
+            {
+                "status": "retrieved",
+                "successfulPages": 1,
+            }
+        )
+        incomplete["sourceOutcomes"][0].pop("failureStage")
+        incomplete["sourceOutcomes"][0].pop("failureReason")
+        write_json(result_path, incomplete)
+        failed_source = self.run_helper(
+            "render-report",
+            "--project-root",
+            str(self.project),
+            "--input",
+            str(result_path),
+            "--validate-only",
+            check=False,
+        )
+        self.assertEqual(failed_source.returncode, 2)
+        self.assertIn("every configured source", failed_source.stderr)
+
+        failed_check = self.valid_result(
+            findings=[finding],
+            validation={
+                "status": "passed",
+                "checks": [{"name": "project tests", "status": "failed"}],
+            },
+        )
+        write_json(result_path, failed_check)
+        inconsistent_validation = self.run_helper(
+            "render-report",
+            "--project-root",
+            str(self.project),
+            "--input",
+            str(result_path),
+            "--validate-only",
+            check=False,
+        )
+        self.assertEqual(inconsistent_validation.returncode, 2)
+        self.assertIn("must be failed", inconsistent_validation.stderr)
 
     def test_research_result_enforces_retrieval_and_edit_validation_boundaries(self):
         configured = self.configured_manifest()
@@ -620,6 +883,61 @@ class KeepingSkillsCurrentTests(unittest.TestCase):
         self.assertIn("`example` | completed — retained; new review due", stale)
         self.assertIn("Based on an earlier configuration or skill revision", stale)
 
+    def test_report_upgrades_results_created_before_fingerprint_binding(self):
+        self.configured_manifest()
+        result_path = self.project / "result.json"
+        report_path = self.project / "report.md"
+        result = self.valid_result()
+        write_json(result_path, result)
+        self.run_helper(
+            "render-report",
+            "--project-root",
+            str(self.project),
+            "--input",
+            str(result_path),
+            "--output",
+            str(report_path),
+        )
+
+        current_report = report_path.read_text()
+        payload_match = HELPER_MODULE.REPORT_PAYLOAD_PATTERN.search(current_report)
+        fingerprint_match = HELPER_MODULE.REPORT_FINGERPRINT_PATTERN.search(current_report)
+        assert payload_match is not None and fingerprint_match is not None
+        payload, _ = HELPER_MODULE.decoded_report_payload(payload_match.group(1))
+        payload["skills"]["example"]["result"].pop("inputFingerprint")
+        legacy_payload_marker = HELPER_MODULE.encoded_report_payload(payload)
+        legacy_report_fingerprint = HELPER_MODULE.report_state_fingerprint(payload)
+        legacy_report = current_report.replace(
+            payload_match.group(1),
+            legacy_payload_marker,
+            1,
+        ).replace(
+            fingerprint_match.group(1),
+            legacy_report_fingerprint,
+            1,
+        )
+        write(report_path, legacy_report)
+
+        self.run_helper(
+            "render-report",
+            "--project-root",
+            str(self.project),
+            "--input",
+            str(result_path),
+            "--existing-report",
+            str(report_path),
+            "--output",
+            str(report_path),
+        )
+        upgraded_report = report_path.read_text()
+        upgraded_match = HELPER_MODULE.REPORT_PAYLOAD_PATTERN.search(upgraded_report)
+        assert upgraded_match is not None
+        upgraded_payload, _ = HELPER_MODULE.decoded_report_payload(upgraded_match.group(1))
+        self.assertEqual(
+            upgraded_payload["skills"]["example"]["result"]["inputFingerprint"],
+            result["inputFingerprint"],
+        )
+
     def test_decisions_suppress_matching_findings_until_a_deferral_expires(self):
         finding = self.correction_finding()
         configured = manifest(
@@ -776,7 +1094,7 @@ class KeepingSkillsCurrentTests(unittest.TestCase):
             check=False,
         )
         self.assertEqual(stale.returncode, 2)
-        self.assertIn("input fingerprint is stale", stale.stderr)
+        self.assertIn("does not match the current reviewed files", stale.stderr)
         unchanged = json.loads(
             (self.project / ".keeping-skills-current/manifest.json").read_text()
         )

@@ -13,7 +13,6 @@ import json
 import os
 from pathlib import Path, PurePosixPath
 import re
-import socket
 import subprocess
 import sys
 import tempfile
@@ -22,7 +21,7 @@ from urllib.parse import urlsplit, urlunsplit
 
 
 SCHEMA_VERSION = 1
-REVIEW_PROCEDURE_VERSION = 1
+REVIEW_PROCEDURE_VERSION = 2
 DEFAULT_MANIFEST_PATH = ".keeping-skills-current/manifest.json"
 LOCATOR_PATH = ".keeping-skills-current/config.json"
 REPORT_VERSION = 1
@@ -341,6 +340,10 @@ def research_result_schema() -> dict[str, Any]:
             "projectIdentity": {"type": "string", "minLength": 1},
             "skillId": {"type": "string", "pattern": ID_PATTERN.pattern},
             "skillPath": {"type": "string", "minLength": 1},
+            "inputFingerprint": {
+                "type": "string",
+                "pattern": FINGERPRINT_PATTERN.pattern,
+            },
             "reviewedAt": {"type": "string", "format": "date-time"},
             "status": {"enum": ["completed", "incomplete"]},
             "sourceOutcomes": {"type": "array", "items": source_outcome},
@@ -362,6 +365,7 @@ def research_result_schema() -> dict[str, Any]:
             "projectIdentity",
             "skillId",
             "skillPath",
+            "inputFingerprint",
             "reviewedAt",
             "status",
             "sourceOutcomes",
@@ -528,16 +532,10 @@ def host_is_public(hostname: str) -> bool:
     if lowered == "localhost" or lowered.endswith(".localhost") or lowered.endswith(".local"):
         return False
     try:
-        addresses = [ipaddress.ip_address(lowered)]
+        address = ipaddress.ip_address(lowered)
     except ValueError:
-        try:
-            addresses = [
-                ipaddress.ip_address(item[4][0])
-                for item in socket.getaddrinfo(lowered, 443, type=socket.SOCK_STREAM)
-            ]
-        except socket.gaierror:
-            return True
-    return all(address.is_global for address in addresses)
+        return "." in lowered
+    return address.is_global
 
 
 def normalize_source_url(raw: Any, location: str, crawl: bool) -> str:
@@ -555,7 +553,8 @@ def normalize_source_url(raw: Any, location: str, crawl: bool) -> str:
         raise ContractError(f"{location} must target a public host")
     path = parsed.path or "/"
     normalized_path = normalize_url_path(path, f"{location} path")
-    netloc = parsed.hostname.lower()
+    normalized_hostname = parsed.hostname.lower()
+    netloc = f"[{normalized_hostname}]" if ":" in normalized_hostname else normalized_hostname
     if parsed.port is not None:
         netloc += f":{parsed.port}"
     return urlunsplit(("https", netloc, normalized_path, parsed.query, ""))
@@ -769,7 +768,16 @@ def validate_delivery(value: Any, root: Path) -> dict[str, Any]:
     reject_unknown(delivery, allowed, "delivery")
     require_keys(delivery, {"strategy", "branchName", "autoMergeStrategy"}, "delivery")
     branch = require_string(delivery["branchName"], "delivery.branchName")
-    if branch.startswith("-") or ".." in branch or " " in branch:
+    try:
+        branch_check = subprocess.run(
+            ["git", "check-ref-format", "--branch", branch],
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+    except OSError as error:
+        raise ContractError("githubPullRequest delivery requires Git for branch validation") from error
+    if branch.startswith("-") or "@{" in branch or branch_check.returncode != 0:
         raise ContractError("delivery.branchName is not a safe Git branch name")
     auto_merge = delivery["autoMergeStrategy"]
     if auto_merge not in {"none", "stateOnly"}:
@@ -949,6 +957,10 @@ def load_configuration(root_argument: str | None, manifest_argument: str | None)
     except (OSError, UnicodeError, json.JSONDecodeError) as error:
         raise ContractError(f"could not read {relative_path}: {error}") from error
     manifest = validate_manifest(raw, root)
+    ensure_outside_skills(
+        [relative_path],
+        [skill["path"] for skill in manifest["skills"].values()],
+    )
     if relative_path != DEFAULT_MANIFEST_PATH and (root / DEFAULT_MANIFEST_PATH).exists():
         warnings += (
             f"inactive default manifest exists at {DEFAULT_MANIFEST_PATH}; reconcile it interactively before automated mutation",
@@ -1101,18 +1113,15 @@ def due_reason(
         return False, "draft", None
     fingerprint, _ = skill_fingerprint(configuration, skill_id)
     state = skill.get("state")
+    if state and state.get("lastAttemptStatus") == "incomplete" and not force_failed:
+        attempted = parse_utc(state["lastAttemptedReview"], "lastAttemptedReview")
+        if now < attempted + datetime_module.timedelta(hours=24):
+            return False, "incomplete attempt in 24-hour backoff", fingerprint
     if state is None or "lastCompletedReview" not in state:
-        if state and state.get("lastAttemptStatus") == "incomplete" and not force_failed:
-            attempted = parse_utc(state["lastAttemptedReview"], "lastAttemptedReview")
-            if now < attempted + datetime_module.timedelta(hours=24):
-                return False, "incomplete attempt in 24-hour backoff", fingerprint
         return True, "never completed", fingerprint
     if state["inputFingerprint"] != fingerprint:
         return True, "review inputs changed", fingerprint
     if state.get("lastAttemptStatus") == "incomplete" and not force_failed:
-        attempted = parse_utc(state["lastAttemptedReview"], "lastAttemptedReview")
-        if now < attempted + datetime_module.timedelta(hours=24):
-            return False, "incomplete attempt in 24-hour backoff", fingerprint
         return True, "retry after incomplete attempt", fingerprint
     completed = parse_utc(state["lastCompletedReview"], "lastCompletedReview")
     due_at = completed + datetime_module.timedelta(days=schedule["intervalDays"])
@@ -1276,6 +1285,7 @@ def validate_research_result(
         "projectIdentity",
         "skillId",
         "skillPath",
+        "inputFingerprint",
         "reviewedAt",
         "status",
         "sourceOutcomes",
@@ -1304,6 +1314,16 @@ def validate_research_result(
     )
     if skill_path != skill["path"]:
         raise ContractError("research result skillPath does not match configuration")
+    input_fingerprint = require_string(
+        result["inputFingerprint"], "research result.inputFingerprint"
+    )
+    if not FINGERPRINT_PATTERN.fullmatch(input_fingerprint):
+        raise ContractError("research result.inputFingerprint is invalid")
+    current_fingerprint, _ = skill_fingerprint(configuration, skill_id)
+    if input_fingerprint != current_fingerprint:
+        raise ContractError(
+            "research result.inputFingerprint does not match the current reviewed files and configuration"
+        )
     parse_utc(result["reviewedAt"], "research result.reviewedAt")
     status = result["status"]
     if status not in {"completed", "incomplete"}:
@@ -1408,9 +1428,15 @@ def validate_research_result(
         if not isinstance(evidence_raw, list) or not evidence_raw:
             raise ContractError(f"{location}.evidence must be a nonempty array")
         evidence = [
-            validate_evidence(item, skill["sources"], f"{location}.evidence[{evidence_index}]")
+            validate_evidence(item, details["sources"], f"{location}.evidence[{evidence_index}]")
             for evidence_index, item in enumerate(evidence_raw)
         ]
+        represented_sources = {item["sourceId"] for item in evidence}
+        if represented_sources != set(details["sources"]):
+            missing_evidence = sorted(set(details["sources"]) - represented_sources)
+            raise ContractError(
+                f"{location}.evidence does not represent cited source(s): {', '.join(missing_evidence)}"
+            )
         disposition = finding["editDisposition"]
         allowed_dispositions = {
             "applied",
@@ -1464,6 +1490,12 @@ def validate_research_result(
         if "note" in check:
             normalized_check["note"] = require_string(check["note"], "validation check.note")
         normalized_checks.append(normalized_check)
+    if validation_status != "failed" and any(
+        item["status"] == "failed" for item in normalized_checks
+    ):
+        raise ContractError(
+            "research result.validation.status must be failed when a validation check failed"
+        )
     failed_outcome = any(item["status"] == "failed" for item in outcomes)
     if status == "completed" and (failed_outcome or failures or validation_status == "failed"):
         raise ContractError("a completed research result cannot contain a failed retrieval, failure, or failed validation")
@@ -1474,6 +1506,10 @@ def validate_research_result(
         item for item in findings if item["editDisposition"] == "revertedAfterValidationFailure"
     ]
     if applied_findings:
+        if failed_outcome or failures or status == "incomplete":
+            raise ContractError(
+                "applied corrections require every configured source and processing stage to succeed"
+            )
         expected_validation = (
             "passed"
             if configuration.manifest["changeValidation"] == "enabled"
@@ -1490,6 +1526,7 @@ def validate_research_result(
         "projectIdentity": provided_project_identity,
         "skillId": skill_id,
         "skillPath": skill_path,
+        "inputFingerprint": input_fingerprint,
         "reviewedAt": result["reviewedAt"],
         "status": status,
         "sourceOutcomes": outcomes,
@@ -1544,7 +1581,7 @@ def encoded_report_payload(payload: Mapping[str, Any]) -> str:
     return encoded.decode("ascii").rstrip("=")
 
 
-def decoded_report_payload(encoded: str) -> dict[str, Any]:
+def decoded_report_payload(encoded: str) -> tuple[dict[str, Any], str]:
     padding = "=" * (-len(encoded) % 4)
     try:
         raw = base64.urlsafe_b64decode(encoded + padding)
@@ -1552,6 +1589,7 @@ def decoded_report_payload(encoded: str) -> dict[str, Any]:
     except (ValueError, UnicodeError, json.JSONDecodeError) as error:
         raise ContractError("existing report contains an unreadable result payload") from error
     payload = require_object(value, "report payload")
+    encoded_fingerprint = report_state_fingerprint(payload)
     reject_unknown(payload, {"version", "projectIdentity", "skills"}, "report payload")
     require_keys(payload, {"version", "projectIdentity", "skills"}, "report payload")
     if payload["version"] != REPORT_VERSION:
@@ -1577,6 +1615,14 @@ def decoded_report_payload(encoded: str) -> dict[str, Any]:
         ):
             raise ContractError("existing report payload contains an invalid input fingerprint")
         result = require_object(envelope["result"], "report payload result")
+        result_fingerprint = result.get("inputFingerprint")
+        if result_fingerprint is None:
+            result = {**result, "inputFingerprint": envelope["inputFingerprint"]}
+            envelope["result"] = result
+        elif result_fingerprint != envelope["inputFingerprint"]:
+            raise ContractError(
+                "existing report result fingerprint differs from its envelope"
+            )
         if result.get("skillId") != skill_id:
             raise ContractError("existing report payload skill identity is inconsistent")
         if result.get("projectIdentity") != payload["projectIdentity"]:
@@ -1586,7 +1632,7 @@ def decoded_report_payload(encoded: str) -> dict[str, Any]:
             research_result_schema(),
             f"report payload.skills.{skill_id}.result",
         )
-    return payload
+    return payload, encoded_fingerprint
 
 
 def existing_report_payload(existing: str, project: str) -> dict[str, Any]:
@@ -1597,10 +1643,10 @@ def existing_report_payload(existing: str, project: str) -> dict[str, Any]:
     payloads = REPORT_PAYLOAD_PATTERN.findall(existing)
     if len(regions) != 1 or len(fingerprints) != 1 or len(payloads) != 1:
         raise ContractError("existing report has missing, duplicated, or malformed ownership markers")
-    payload = decoded_report_payload(payloads[0])
+    payload, encoded_fingerprint = decoded_report_payload(payloads[0])
     if payload["projectIdentity"] != project:
         raise ContractError("existing report belongs to another project")
-    if fingerprints[0] != report_state_fingerprint(payload):
+    if fingerprints[0] != encoded_fingerprint:
         raise ContractError("existing report payload does not match its ownership fingerprint")
     return payload
 
@@ -1618,9 +1664,8 @@ def build_report_payload(
         if skill_id in configuration.manifest["skills"]
     }
     for result in current_results:
-        fingerprint, _ = skill_fingerprint(configuration, result["skillId"])
         retained[result["skillId"]] = {
-            "inputFingerprint": fingerprint,
+            "inputFingerprint": result["inputFingerprint"],
             "result": result,
         }
     return {
@@ -2117,11 +2162,10 @@ def main(arguments: Sequence[str] | None = None) -> int:
                 }
                 old_state = skill.get("state", {})
                 if result["status"] == "completed":
-                    fingerprint, _ = skill_fingerprint(configuration, skill_id)
                     state.update(
                         {
                             "lastCompletedReview": format_utc(attempted),
-                            "inputFingerprint": fingerprint,
+                            "inputFingerprint": result["inputFingerprint"],
                         }
                     )
                 else:

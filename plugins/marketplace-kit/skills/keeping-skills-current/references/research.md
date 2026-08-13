@@ -23,6 +23,8 @@ For `crawl`:
 
 Respect robots, authentication, and publisher restrictions. A tool that cannot honor the configured boundary exactly is unavailable for that source. Prefer Firecrawl when it can enforce the contract, but keep provider identity out of configuration.
 
+Manifest loading performs only deterministic hostname checks: it rejects private or non-global IP literals, localhost names, local-only names, and single-label hosts without resolving DNS. Immediately before every request, the retriever must resolve the hostname and reject the request if any resolved address is not global. Repeat that check for every redirect hop. A DNS failure is a retrieval failure, not malformed configuration.
+
 Permit HTML, Markdown, plain text, JSON, XML, and PDF when the retriever can convert them reliably to text. Treat executables, archives, audio, video, and opaque binaries as unsupported.
 
 Share an ephemeral retrieval result across skills only when canonical URL, strategy, path boundaries, and limits match completely. Apply reasoning independently per skill and delete the shared result after the run.
@@ -47,7 +49,7 @@ If retrieved evidence says nothing relevant about part of the skill, do nothing:
 
 Produce one JSON object conforming to `assets/research-result.schema.v1.json`. Include:
 
-- Project and skill identity, reviewed timestamp, and `completed` or `incomplete` status.
+- Project and skill identity, the final reviewed `inputFingerprint`, reviewed timestamp, and `completed` or `incomplete` status.
 - Every configured source's root URL, retrieval status, successful and attempted page counts, limit-reached flag, and any failure stage.
 - Findings with category, target file, exactly one durable `currentText` or `anchorText`, summary, configured source snapshots, evidence-page URLs, concise evidence, and proposed action.
 - Edit disposition when relevant: `applied`, `proposed`, `revertedAfterValidationFailure`, or `notApplicable`.
@@ -55,7 +57,9 @@ Produce one JSON object conforming to `assets/research-result.schema.v1.json`. I
 
 Keep quoted evidence to the smallest excerpt that establishes the conclusion, normally one sentence and no more than 25 words from a source per finding. Paraphrase remaining context.
 
-Reject malformed or inconsistent output before mutation. In particular, reject completed results containing failed retrievals, corrections without supporting configured sources, automatic improvement edits, identity edits, or applied edits when the project strategy is report-only.
+Calculate the final fingerprint after all authorized edits and validation finish, then put that exact value in the structured result. Reject the result if files or fingerprinted configuration change before report rendering or state application.
+
+Reject malformed or inconsistent output before mutation. In particular, reject completed results containing failed retrievals, evidence whose source IDs differ from the finding's source snapshots, cited sources without evidence, corrections without supporting configured sources, automatic improvement edits, identity edits, applied edits after any source or processing failure, aggregate validation that conceals a failed check, or applied edits when the project strategy is report-only.
 
 ## Edits and Validation
 
