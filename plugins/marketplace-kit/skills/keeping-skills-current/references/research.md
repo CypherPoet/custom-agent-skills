@@ -47,7 +47,9 @@ If retrieved evidence says nothing relevant about part of the skill, do nothing:
 
 ## Structured Result
 
-Produce one JSON object conforming to `assets/research-result.schema.v1.json`. Include:
+Use the same `assets/research-result.schema.v1.json` contract in two passes. Before mutation, produce and validate a provisional object against the unchanged reviewed inputs. Keep unapplied corrections `proposed`, set validation to `notApplicable`, and include the current fingerprint. This pass must reject malformed source outcomes, evidence, findings, targets, or proposed actions before they can authorize an edit.
+
+After edits and post-edit checks finish, update that object with the final fingerprint, edit dispositions, validation outcomes, and completed or incomplete status, then validate it again before report rendering or state changes. Include:
 
 - Project and skill identity, the final reviewed `inputFingerprint`, reviewed timestamp, and `completed` or `incomplete` status.
 - Every configured source's root URL, retrieval status, successful and attempted page counts, limit-reached flag, and any failure stage.
@@ -57,7 +59,7 @@ Produce one JSON object conforming to `assets/research-result.schema.v1.json`. I
 
 Keep quoted evidence to the smallest excerpt that establishes the conclusion, normally one sentence and no more than 25 words from a source per finding. Paraphrase remaining context.
 
-Calculate the final fingerprint after all authorized edits and validation finish, then put that exact value in the structured result. Reject the result if files or fingerprinted configuration change before report rendering or state application.
+Calculate the final fingerprint after all authorized edits and validation finish, then put that exact value in the final structured result. Reject the result if files or fingerprinted configuration change before report rendering or state application. In report-only and no-edit runs, the provisional and final fingerprints are identical.
 
 Reject malformed or inconsistent output before mutation. In particular, reject completed results containing failed retrievals, evidence whose source IDs differ from the finding's source snapshots, cited sources without evidence, corrections without supporting configured sources, automatic improvement edits, identity edits, applied edits after any source or processing failure, aggregate validation that conceals a failed check, or applied edits when the project strategy is report-only.
 

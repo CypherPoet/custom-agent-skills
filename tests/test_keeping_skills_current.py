@@ -100,6 +100,16 @@ class KeepingSkillsCurrentTests(unittest.TestCase):
         self.assertLess(no_due_exit, branch_setup)
         self.assertLess(branch_setup, fast_forward)
 
+    def test_run_procedure_validates_provisional_and_final_results(self):
+        procedure = (SKILL_ROOT / "SKILL.md").read_text(encoding="utf-8")
+        provisional = procedure.index("Validate the provisional object before it can affect files")
+        apply_edits = procedure.index("Apply a correction only when")
+        final = procedure.index("validate it again")
+        render = procedure.index("Then render and publish the current report")
+        self.assertLess(provisional, apply_edits)
+        self.assertLess(apply_edits, final)
+        self.assertLess(final, render)
+
     def configured_manifest(self, recurrence="manual"):
         schedule = {"recurrence": recurrence}
         if recurrence == "interval":
