@@ -642,7 +642,13 @@
         }
       },
       "deferredFindings": [],
-      "declinedFindings": []
+      "declinedFindings": [],
+      "state": {
+        "lastAttemptedReview": "2026-08-13T09:38:24Z",
+        "lastAttemptStatus": "completed",
+        "lastCompletedReview": "2026-08-13T09:38:24Z",
+        "inputFingerprint": "sha256:c8db0e06507ba8774a0d2fa4acb1dbcdce081f0dcaa9c93e1cdb711a1b5a5e43"
+      }
     },
     "react-three-fiber-mastery": {
       "path": "plugins/react-three-fiber-kit/skills/react-three-fiber-mastery",
