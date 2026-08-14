@@ -520,10 +520,10 @@
       "deferredFindings": [],
       "declinedFindings": [],
       "state": {
-        "lastAttemptedReview": "2026-08-14T00:20:27Z",
+        "lastAttemptedReview": "2026-08-14T16:11:04Z",
         "lastAttemptStatus": "completed",
-        "lastCompletedReview": "2026-08-14T00:20:27Z",
-        "inputFingerprint": "sha256:a4184d72c06f365c754de9ecff4a4439261c6a25e0dda3cfe1ff44f2da6af5e1"
+        "lastCompletedReview": "2026-08-14T16:11:04Z",
+        "inputFingerprint": "sha256:61f18a10f21e9fd7009b99759dc9b84dde8438ecb9e42d993911f70a85c222d0"
       }
     },
     "marketplace-publish-check": {
