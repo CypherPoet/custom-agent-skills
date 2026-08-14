@@ -3,7 +3,17 @@
 > Source: Filament Materials — "Material models" (Materials.md), Filament v1.75.0
 > Last synced: 2026-08-14
 
-**Contents:** [Core Concepts](#core-concepts) · [Choosing a Model](#choosing-a-model) · [Lit Model (Standard)](#lit-model-standard) · [Base Color](#base-color) · [Metallic](#metallic) · [Roughness](#roughness) · [Reflectance](#reflectance) · [Specular Factor And Specular Color Factor](#specular-factor-and-specular-color-factor) · [Sheen Color And Sheen Roughness](#sheen-color-and-sheen-roughness) · [Clear Coat, Clear Coat Roughness, Clear Coat Normal](#clear-coat-clear-coat-roughness-clear-coat-normal) · [Anisotropy And Anisotropy Direction](#anisotropy-and-anisotropy-direction) · [Ambient Occlusion](#ambient-occlusion) · [Normal And Bent Normal](#normal-and-bent-normal) · [Emissive](#emissive) · [Post-Lighting Color](#post-lighting-color) · [Index Of Refraction (ior)](#index-of-refraction-ior) · [Transmission](#transmission) · [Absorption](#absorption) · [Thickness And Micro-Thickness](#thickness-and-micro-thickness) · [Dispersion](#dispersion) · [Shadow Strength](#shadow-strength) · [Subsurface Model](#subsurface-model) · [Cloth Model](#cloth-model) · [Unlit Model](#unlit-model) · [Specular Glossiness (Legacy)](#specular-glossiness-legacy)
+## Table of Contents
+
+| Section | Covers |
+|---|---|
+| [Core Concepts](#core-concepts) | Material — defines the visual appearance of a surface |
+| [Choosing a Model](#choosing-a-model) | When to choose lit, subsurface, cloth, unlit, or legacy specular-glossiness shading |
+| [Lit Model (Standard)](#lit-model-standard) | Filament's standard, physically-based shading model |
+| [Subsurface Model](#subsurface-model) | Selected with `shadingModel : subsurface` |
+| [Cloth Model](#cloth-model) | Selected with `shadingModel : cloth` |
+| [Unlit Model](#unlit-model) | Selected with `shadingModel : unlit` |
+| [Specular Glossiness (Legacy)](#specular-glossiness-legacy) | Selected with `shadingModel : specularGlossiness` |
 
 ---
 

@@ -9,6 +9,17 @@ These asset-provider integrations are **not** part of the official Blender Lab M
 | **Hyper3D Rodin** | AI generation from text or image (cloud) | Credits | Yes (API key) |
 | **Hunyuan3D** | AI generation from text/image (local) | Yes | No (runs locally) |
 
+## Table of Contents
+
+| Section | Covers |
+|---|---|
+| [PolyHaven: HDRIs, textures, models](#polyhaven-hdris-textures-models) | PolyHaven is the first-call source for environment lighting and surface materials |
+| [Sketchfab: marketplace models](#sketchfab-marketplace-models) | Sketchfab requires an API token, configured in the third-party `blender-mcp` addon's settings |
+| [Hyper3D Rodin: cloud AI generation](#hyper3d-rodin-cloud-ai-generation) | Generates from a text prompt and/or reference images |
+| [Hunyuan3D: local AI generation](#hunyuan3d-local-ai-generation) | Local text-to-3D and image-to-3D generation with the Hunyuan3D Blender addon |
+| [Picking the right integration](#picking-the-right-integration) | Blender asset-integration approaches matched to project needs |
+| [Sources](#sources) | Authoritative references that ground this guidance |
+
 ## PolyHaven: HDRIs, textures, models
 
 PolyHaven is the first-call source for environment lighting and surface materials. Everything is CC0, so it's safe in commercial work.

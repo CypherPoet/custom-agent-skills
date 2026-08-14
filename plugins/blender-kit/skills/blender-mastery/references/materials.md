@@ -2,6 +2,20 @@
 
 Materials in Blender are node trees attached to a `Material` data-block. The Principled BSDF is the standard PBR shader and the only one that exports cleanly to GLTF / USD / most game engines.
 
+## Table of Contents
+
+| Section | Covers |
+|---|---|
+| [The minimum viable Principled BSDF](#the-minimum-viable-principled-bsdf) | Enabling nodes and creating a minimal Principled BSDF material graph |
+| [Defensive node access on existing materials](#defensive-node-access-on-existing-materials) | Imported and user-authored materials may not be Principled |
+| [Color space for image textures](#color-space-for-image-textures) | Color textures (base color, emission) need `sRGB` |
+| [A complete PBR setup with image textures](#a-complete-pbr-setup-with-image-textures) | Loading base-color, roughness, metallic, and normal textures into a Principled material |
+| [Material slots (objects can have many)](#material-slots-objects-can-have-many) | A mesh has a list of material slots; each face has a `material_index` pointing into that list |
+| [Converting Diffuse BSDF imports to Principled](#converting-diffuse-bsdf-imports-to-principled) | Imported models (especially from Sketchfab) often use Diffuse BSDF |
+| [Things that don't export](#things-that-dont-export) | These work in Blender but get lost on GLTF/USD export |
+| [World shader (HDRI environment)](#world-shader-hdri-environment) | The `World` data-block has its own node tree and is shared across the scene |
+| [Sources](#sources) | Authoritative references that ground this guidance |
+
 ## The minimum viable Principled BSDF
 
 ```python

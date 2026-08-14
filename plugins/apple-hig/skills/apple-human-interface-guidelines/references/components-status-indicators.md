@@ -5,9 +5,17 @@
 
 Distilled from Apple's HIG Components pages: Progress indicators, Gauges, Activity rings, Rating indicators, Labels.
 
-**Contents:** [Progress indicators](#progress-indicators) · [Gauges](#gauges) · [Activity rings](#activity-rings) · [Rating indicators](#rating-indicators) · [Labels](#labels)
+## Table of Contents
 
-### Progress indicators
+| Section | Covers |
+|---|---|
+| [Progress indicators](#progress-indicators) | Show that the app isn't stalled while loading content or running lengthy operations; some also let people estimate wait time |
+| [Gauges](#gauges) | Display a specific numerical value within a range of values, optionally giving context about the range itself |
+| [Activity rings](#activity-rings) | Show an individual's daily progress toward Move, Exercise, and Stand goals, matching the colors and meanings of the Activity app |
+| [Rating indicators](#rating-indicators) | Use a series of horizontally arranged graphical symbols — by default, stars — to communicate a ranking level |
+| [Labels](#labels) | A static piece of text people can read and often copy, but not edit |
+
+## Progress indicators
 *Last changed: 2023-09*
 
 **Purpose:** Show that the app isn't stalled while loading content or running lengthy operations; some also let people estimate wait time. All are transient — visible only while the operation runs.
@@ -37,7 +45,7 @@ Canonical implementations: SwiftUI `ProgressView`, UIKit `UIProgressView` / `UIA
 - tvOS: No additional considerations.
 - visionOS: No additional considerations.
 
-### Gauges
+## Gauges
 *Last changed: 2022-09*
 
 **Purpose:** Display a specific numerical value within a range of values, optionally giving context about the range itself (e.g. labeling endpoints and using a color spectrum).
@@ -57,7 +65,7 @@ Canonical implementations: SwiftUI `Gauge`, AppKit `NSLevelIndicator`.
 - watchOS: No additional considerations.
 - tvOS: Not supported in tvOS.
 
-### Activity rings
+## Activity rings
 *Last changed: 2024-03*
 
 **Purpose:** Show an individual's daily progress toward Move, Exercise, and Stand goals, matching the colors and meanings of the Activity app.
@@ -93,7 +101,7 @@ Ring label/value colors (RGB):
 - tvOS: Not supported in tvOS.
 - visionOS: Not supported in visionOS.
 
-### Rating indicators
+## Rating indicators
 *Last changed: 2022-09*
 
 **Purpose:** Use a series of horizontally arranged graphical symbols — by default, stars — to communicate a ranking level.
@@ -114,7 +122,7 @@ Canonical implementations: AppKit `NSLevelIndicator.Style.rating`.
 - visionOS: Not supported in visionOS.
 - watchOS: Not supported in watchOS.
 
-### Labels
+## Labels
 *Last changed: 2023-06*
 
 **Purpose:** A static piece of text people can read and often copy, but not edit — appearing in buttons, menu items, lists, and views to convey context and available actions.

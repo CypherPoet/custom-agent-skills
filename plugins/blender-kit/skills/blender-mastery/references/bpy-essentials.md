@@ -2,6 +2,21 @@
 
 Cross-cutting Python patterns for working with `bpy` through the MCP. The themes that come up in almost every Blender script: data API vs operators, context, modes, depsgraph, undo, and naming.
 
+## Table of Contents
+
+| Section | Covers |
+|---|---|
+| [Data API vs operators](#data-api-vs-operators) | The single most important bpy distinction |
+| [Context: where operators get tripped up](#context-where-operators-get-tripped-up) | Operators read `bpy.context` to know what to act on |
+| [The select-active-edit triad](#the-select-active-edit-triad) | Three closely-related but distinct concepts that scripts routinely confuse |
+| [Modes](#modes) | `bpy.context.mode` is one of `OBJECT`, `EDIT_MESH`, `EDIT_CURVE`, `SCULPT`, `POSE`, `WEIGHT_PAINT`, `TEXTURE_PAINT`, etc |
+| [Depsgraph: when "current state" lies](#depsgraph-when-current-state-lies) | `bpy.data.objects[X].matrix_world` reflects the un-evaluated transform |
+| [Undo behavior under scripts](#undo-behavior-under-scripts) | Undo in `bpy` is unreliable when called from `execute_blender_code` |
+| [Naming and uniqueness](#naming-and-uniqueness) | Blender enforces unique names within each data block type |
+| [Modifier budgeting (don't bake what you don't have to)](#modifier-budgeting-dont-bake-what-you-dont-have-to) | Keeping reusable modifiers live instead of baking geometry unnecessarily |
+| [Common helper snippets](#common-helper-snippets) | Find every Principled BSDF in the scene, Iterate every mesh and report poly count |
+| [Sources](#sources) | Authoritative references that ground this guidance |
+
 ## Data API vs operators
 
 The single most important bpy distinction. Blender exposes two layers:

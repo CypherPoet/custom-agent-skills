@@ -1,6 +1,22 @@
 # Task: UIScreen.main Modernization
 
-**Contents:** [Overview](#overview) · [Pattern 1: UIScreen.main.scale → traitCollection.displayScale](#pattern-1-uiscreenmainscale--traitcollectiondisplayscale) · [Invalidation Analysis (mandatory for every displayScale replacement)](#invalidation-analysis-mandatory-for-every-displayscale-replacement) · [Pattern 2: UIScreen.main.bounds → view.bounds](#pattern-2-uiscreenmainbounds--viewbounds) · [Pattern 3: UIScreen.main.nativeScale — NO trait-collection equivalent](#pattern-3-uiscreenmainnativescale--no-trait-collection-equivalent) · [Pattern 4: Keyboard Notification Coordinate Space](#pattern-4-keyboard-notification-coordinate-space) · [Special Cases](#special-cases) · [Analysis](#analysis) · [Implementation Gates](#implementation-gates) · [Implementation Rules](#implementation-rules) · [Post-file Checklist](#post-file-checklist) · [Final Verification](#final-verification) · [API Reference](#api-reference)
+## Table of Contents
+
+| Section | Covers |
+|---|---|
+| [Overview](#overview) | `UIScreen.main` reflects a single-window assumption and is now deprecated for window-relative use |
+| [Pattern 1: UIScreen.main.scale → traitCollection.displayScale](#pattern-1-uiscreenmainscale--traitcollectiondisplayscale) | Intent: Get display scale for pixel-perfect rendering (2x, 3x) |
+| [Invalidation Analysis (mandatory for every displayScale replacement)](#invalidation-analysis-mandatory-for-every-displayscale-replacement) | When display-scale replacements require invalidation or task-scoped trait access |
+| [Pattern 2: UIScreen.main.bounds → view.bounds](#pattern-2-uiscreenmainbounds--viewbounds) | Intent: Get available space for layout or dimensions |
+| [Pattern 3: UIScreen.main.nativeScale — NO trait-collection equivalent](#pattern-3-uiscreenmainnativescale--no-trait-collection-equivalent) | `nativeScale` is the physical pixel density of the hardware display; `displayScale`/`scale` is the logical scale factor (2x, 3x) |
+| [Pattern 4: Keyboard Notification Coordinate Space](#pattern-4-keyboard-notification-coordinate-space) | Intent: Convert keyboard frame from notification using a coordinate space |
+| [Special Cases](#special-cases) | Free Functions and Cached Helpers, Notification Observers, Fallback Paths, and related topics |
+| [Analysis](#analysis) | In addition to the generic context read described in `SKILL.md` Phase 2 |
+| [Implementation Gates](#implementation-gates) | Before editing any line, answer these five gate questions |
+| [Implementation Rules](#implementation-rules) | Compatibility, warnings, deployment targets, and verification requirements |
+| [Post-file Checklist](#post-file-checklist) | Verify before moving to the next file |
+| [Final Verification](#final-verification) | In addition to the generic file-coverage audit in `SKILL.md` Phase 5 |
+| [API Reference](#api-reference) | UIKit scene, screen, trait, orientation, and coordinate-space APIs plus Apple guidance |
 
 ## Overview
 

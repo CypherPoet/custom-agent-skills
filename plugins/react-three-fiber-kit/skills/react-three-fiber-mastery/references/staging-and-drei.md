@@ -4,7 +4,21 @@ Scene staging at the React layer — light JSX, the shadow pipeline, drei enviro
 
 > Canvas setup and renderer defaults: see [canvas-and-project-setup.md](./canvas-and-project-setup.md). Shared conventions: [../SKILL.md](../SKILL.md).
 
-**Contents:** [Lights & Shadows](#lights--shadows) · [Debug Helpers](#debug-helpers) · [Environment & Sky](#environment--sky) · [Drei Shadow Helpers](#drei-shadow-helpers) · [Stage](#stage) · [Geometry & Layout Helpers](#geometry--layout-helpers) · [Text & Html](#text--html) · [Drei Specialty Materials](#drei-specialty-materials) · [Adaptive Quality](#adaptive-quality) · [Common Mistakes](#common-mistakes) · [See Also](#see-also)
+## Table of Contents
+
+| Section | Covers |
+|---|---|
+| [Lights & Shadows](#lights--shadows) | All three.js lights are lowercase JSX: `<ambientLight>`, `<hemisphereLight>` |
+| [Debug Helpers](#debug-helpers) | `useHelper` (drei) mounts any three.js helper class against a ref object |
+| [Environment & Sky](#environment--sky) | `<Environment>` (drei) loads an HDR, PMREM-filters it, and sets `scene.environment` |
+| [Drei Shadow Helpers](#drei-shadow-helpers) | When to use each Drei shadow helper and which properties control it |
+| [Stage](#stage) | Product staging with environment lighting, shadows, and automatic camera fitting |
+| [Geometry & Layout Helpers](#geometry--layout-helpers) | Instances / Merged, Lines, Edges, and related topics |
+| [Text & Html](#text--html) | `<Text>` (SDF, troika-based) — the default for any readable text: crisp at every zoom level |
+| [Drei Specialty Materials](#drei-specialty-materials) | Drop-in `<mesh>` children, uppercase imports from `@react-three/drei` |
+| [Adaptive Quality](#adaptive-quality) | FPS-based quality changes for resolution, effects, and expensive scene details |
+| [Common Mistakes](#common-mistakes) | Frequent mistakes and the changes that correct them |
+| [See Also](#see-also) | Related references and supporting guidance |
 
 ## Lights & Shadows
 

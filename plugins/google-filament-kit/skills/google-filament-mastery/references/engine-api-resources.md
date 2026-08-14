@@ -3,7 +3,22 @@
 > Source: Filament C++ headers (VertexBuffer/IndexBuffer/BufferObject/Texture/TextureSampler/Material/MaterialInstance/Skybox/IndirectLight), Filament v1.75.0
 > Last synced: 2026-08-14
 
-**Contents:** [Mental Model & Lifetime](#mental-model--lifetime) · [VertexBuffer](#vertexbuffer) · [Builder method set (verbatim)](#vertexbuffer-builder-method-set-verbatim) · [VertexAttribute enum (verbatim)](#vertexattribute-enum-verbatim) · [AttributeType / ElementType enum (verbatim)](#attributetype--elementtype-enum-verbatim) · [Uploading data (setBufferAt + BufferDescriptor)](#vertexbuffer-uploading-data-setbufferat--bufferdescriptor) · [IndexBuffer](#indexbuffer) · [BufferObject](#bufferobject) · [Texture](#texture) · [Builder method set (verbatim)](#texture-builder-method-set-verbatim) · [Sampler / SamplerType enum (verbatim)](#sampler--samplertype-enum-verbatim) · [InternalFormat / TextureFormat enum (representative, verbatim)](#internalformat--textureformat-enum-representative-verbatim) · [Usage / TextureUsage enum (verbatim)](#usage--textureusage-enum-verbatim) · [Format / PixelDataFormat & Type / PixelDataType (verbatim)](#format--pixeldataformat--type--pixeldatatype-verbatim) · [Uploading texels (setImage + PixelBufferDescriptor)](#texture-uploading-texels-setimage--pixelbufferdescriptor) · [Mipmaps & cubemaps](#mipmaps--cubemaps) · [TextureSampler](#texturesampler) · [Filter / Wrap / Compare enums (verbatim)](#filter--wrap--compare-enums-verbatim) · [Material](#material) · [MaterialInstance](#materialinstance) · [setParameter overloads](#setparameter-overloads) · [Render-state overrides](#render-state-overrides) · [Enums for render state (verbatim)](#enums-for-render-state-verbatim) · [Skybox](#skybox) · [IndirectLight](#indirectlight) · [BufferDescriptor & PixelBufferDescriptor (the upload+free contract)](#bufferdescriptor--pixelbufferdescriptor-the-uploadfree-contract) · [End-to-End Resource Flow](#end-to-end-resource-flow)
+## Table of Contents
+
+| Section | Covers |
+|---|---|
+| [Mental Model & Lifetime](#mental-model--lifetime) | Every GPU resource on this page follows the same pattern |
+| [VertexBuffer](#vertexbuffer) | Holds a set of buffers defining a Renderable's geometry (position, color, normals/tangents, UVs, etc.) |
+| [IndexBuffer](#indexbuffer) | Vertex indices into a `VertexBuffer` |
+| [BufferObject](#bufferobject) | A generic GPU buffer. Optional — for simple use you don't need it |
+| [Texture](#texture) | Supports 2D, 3D, cube maps, 2D arrays, and mip mapping |
+| [TextureSampler](#texturesampler) | A non-engine-owned value type that controls texture filtering, wrapping, and comparison |
+| [Material](#material) | A `Material` is built from a compiled `.filamat` package (binary blob produced by `matc` or `libfilamat`) |
+| [MaterialInstance](#materialinstance) | Holds the concrete parameter values for a `Material`, plus per-instance render-state overrides |
+| [Skybox](#skybox) | Fills untouched pixels of a Scene |
+| [IndirectLight](#indirectlight) | Environment lighting (global illumination): an irradiance component + a reflections (specular) component |
+| [BufferDescriptor & PixelBufferDescriptor (the upload+free contract)](#bufferdescriptor--pixelbufferdescriptor-the-uploadfree-contract) | Upload methods take ownership of a descriptor by rvalue (`&&` + `std::move`) |
+| [End-to-End Resource Flow](#end-to-end-resource-flow) | Putting the pieces together (composed from `hellotriangle.cpp` and `suzanne.cpp`) |
 
 ---
 

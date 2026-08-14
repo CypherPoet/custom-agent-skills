@@ -7,6 +7,16 @@ SwiftUI now supports drag-to-reorder in *any* container (`List`, `LazyVStack`, `
 
 If the user's deployment target is below iOS 27 / macOS 27 / watchOS 27 / visionOS 27, do not use these APIs unconditionally.
 
+## Table of Contents
+
+| Section | Covers |
+|---|---|
+| [Basic usage](#basic-usage) | `Sticker` must be `Identifiable` for the `for:` overload (it keys on `\.id`) |
+| [Applying the difference](#applying-the-difference) | Your `move` closure receives a `ReorderDifference<ItemID, CollectionID>` |
+| [Sections and multiple collections](#sections-and-multiple-collections) | Tagging and registering multiple reorderable collections in one container |
+| [Drag-and-drop integration](#drag-and-drop-integration) | `.reorderContainer(for:)` already acts as a drag container and a drop destination, so dragging to reorder works on its own |
+| [Availability summary](#availability-summary) | Platform availability for reorderable, drag-container, and drop-session APIs |
+
 ## Basic usage
 
 ```swift

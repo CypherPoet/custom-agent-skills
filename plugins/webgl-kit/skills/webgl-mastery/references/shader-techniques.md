@@ -2,7 +2,22 @@
 
 The GLSL patterns that power procedural visuals — shaped curves, soft edges, noise, signed distance fields. These compose: a great-looking shader is usually two or three of these stacked. For deep dives on any of them, [The Book of Shaders](https://thebookofshaders.com/) is the canonical reference. The snippets here are the working subset that covers ~90% of fragment-shader requests.
 
-**Contents:** [The Fullscreen Quad Setup](#the-fullscreen-quad-setup) · [`step` and `smoothstep`](#step-and-smoothstep--the-building-blocks) · [`mix`](#mix--linear-interpolation) · [Mouse-Following Soft Circle](#mouse-following-soft-circle) · [Hash and Value Noise](#hash-and-value-noise) · [Simplex / Perlin Noise](#simplex--perlin-noise) · [Fractal Brownian Motion (fBM)](#fractal-brownian-motion-fbm) · [Signed Distance Fields (SDFs)](#signed-distance-fields-sdfs) · [Polar Coordinates](#polar-coordinates) · [Color](#color) · [Composing](#composing--a-cheap-lava-lamp) · [Common Mistakes](#common-mistakes)
+## Table of Contents
+
+| Section | Covers |
+|---|---|
+| [The Fullscreen Quad Setup](#the-fullscreen-quad-setup) | Most of these techniques run in a fragment shader on a fullscreen quad |
+| [`step` and `smoothstep` — The Building Blocks](#step-and-smoothstep--the-building-blocks) | `smoothstep` is the single most-used function in shader art |
+| [`mix` — Linear Interpolation](#mix--linear-interpolation) | Combine with `smoothstep` to mix two values based on a soft threshold |
+| [Mouse-Following Soft Circle](#mouse-following-soft-circle) | The "hello world" of interactive shaders |
+| [Hash and Value Noise](#hash-and-value-noise) | Random in a shader uses a deterministic hash, not a real RNG |
+| [Simplex / Perlin Noise](#simplex--perlin-noise) | Smooth procedural noise for organic shader patterns |
+| [Fractal Brownian Motion (fBM)](#fractal-brownian-motion-fbm) | Layer multiple octaves of noise to get clouds, terrain, fire |
+| [Signed Distance Fields (SDFs)](#signed-distance-fields-sdfs) | A signed distance function returns the distance from a point to a shape — negative inside, positive outside, zero on the boundary |
+| [Polar Coordinates](#polar-coordinates) | Convert Cartesian to polar for radial patterns |
+| [Color](#color) | HSV conversion, hue rotation, color ramps, and palette mapping |
+| [Composing — A Cheap Lava Lamp](#composing--a-cheap-lava-lamp) | Two functions, one palette, and you have something to look at |
+| [Common Mistakes](#common-mistakes) | Frequent mistakes and the changes that correct them |
 
 ## The Fullscreen Quad Setup
 

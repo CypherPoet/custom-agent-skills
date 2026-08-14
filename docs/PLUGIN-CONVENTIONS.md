@@ -111,4 +111,26 @@ Do not hand-edit [`CATALOG.md`](CATALOG.md). The `catalog-refresh` skill regener
 
 Skills use the shared [`SKILL.md`](https://agentskills.io/) format. The repository's [`skill-structure-check`](../.claude/skills/skill-structure-check/SKILL.md) documents structure and remediation.
 
+### Reference Navigation
+
+Give a reference file longer than 100 lines a `## Table of Contents` after its
+introduction. Omit the table from shorter files unless the document genuinely
+needs routing help. Use a Markdown table with one row per top-level content
+section; do not flatten the document's subsections into a second index.
+
+```markdown
+## Table of Contents
+
+| Section | Covers |
+|---|---|
+| [Section Name](#section-name) | A concise description grounded in the section's actual content |
+```
+
+Link the section name in the first column. Use the second column to tell the
+reader what the section covers so they can decide whether to follow the link
+without loading irrelevant detail. Keep the description concise, omit ending
+punctuation, and update it when the section's scope changes. Do not use a
+heading-only list, a `**Contents:**` jump-line, or a table that merely repeats
+the document hierarchy.
+
 Project-managed source reviews are configured in [`.keeping-skills-current/manifest.json`](../.keeping-skills-current/manifest.json). Research sources and schedules belong there rather than in required skill-body sections. Unlisted skills are outside that workflow. Development-only `*-workspace/` and `evals/` directories do not ship.

@@ -2,7 +2,23 @@
 
 Cameras, Object3D, the scene graph, math utilities, and the building blocks every Three.js project leans on. Scene/renderer bootstrapping is covered once in [../SKILL.md#setup](../SKILL.md#setup); this file goes deeper on the parts the setup glosses over.
 
-**Contents:** [Scene](#scene) · [Cameras](#cameras) · [Renderer Configuration](#renderer-configuration) · [Object3D](#object3d) · [Group](#group) · [Mesh](#mesh) · [Coordinate System](#coordinate-system) · [Math Utilities](#math-utilities) · [LoadingManager](#loadingmanager) · [LOD](#lod-level-of-detail) · [Merging Static Geometry](#merging-static-geometry) · [Common Mistakes](#common-mistakes)
+## Table of Contents
+
+| Section | Covers |
+|---|---|
+| [Scene](#scene) | Top-level container for objects, lights, and cameras |
+| [Cameras](#cameras) | PerspectiveCamera, OrthographicCamera, ArrayCamera, and CubeCamera |
+| [Renderer Configuration](#renderer-configuration) | `WebGPURenderer` (modern) and `WebGLRenderer` (compatibility) share most configuration |
+| [Object3D](#object3d) | Base class of every node in the scene graph |
+| [Group](#group) | Empty container for organizing objects |
+| [Mesh](#mesh) | Pairs a geometry with a material (or array of materials, one per geometry group) |
+| [Coordinate System](#coordinate-system) | Right-handed: +X right, +Y up, +Z toward viewer |
+| [Math Utilities](#math-utilities) | Vector3, Matrix4, Quaternion, and related topics |
+| [LoadingManager](#loadingmanager) | Track or coordinate progress across multiple loaders |
+| [LOD (Level of Detail)](#lod-level-of-detail) | Switch meshes by camera distance |
+| [Merging Static Geometry](#merging-static-geometry) | Combine multiple geometries into one to reduce draw calls |
+| [Common Mistakes](#common-mistakes) | Frequent mistakes and the changes that correct them |
+| [See Also](#see-also) | Related references and supporting guidance |
 
 ## Scene
 

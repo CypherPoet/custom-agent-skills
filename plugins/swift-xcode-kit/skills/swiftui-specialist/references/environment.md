@@ -1,6 +1,14 @@
 # Environment Performance
 
-**Contents:** [How environment comparison works](#how-environment-comparison-works) · [Closures in the Environment](#closures-in-the-environment) · [Rapidly Updating Environment Values](#rapidly-updating-environment-values) · [Unstable Environment Default Values](#unstable-environment-default-values) · [Unused @Environment Reads](#unused-environment-reads)
+## Table of Contents
+
+| Section | Covers |
+|---|---|
+| [How environment comparison works](#how-environment-comparison-works) | When an environment value propagates, SwiftUI compares the old and new value to decide whether each reader needs to re-evaluate |
+| [Closures in the Environment](#closures-in-the-environment) | This section is about custom environment and focus-value keys that you define |
+| [Rapidly Updating Environment Values](#rapidly-updating-environment-values) | Every update to an environment key incurs a cost for EVERY VIEW |
+| [Unstable Environment Default Values](#unstable-environment-default-values) | An environment key's `defaultValue` is re-evaluated on every read |
+| [Unused @Environment Reads](#unused-environment-reads) | Declaring `@Environment(\.someKey)` on a view subscribes that view to changes in `\.someKey` |
 
 ## How environment comparison works
 

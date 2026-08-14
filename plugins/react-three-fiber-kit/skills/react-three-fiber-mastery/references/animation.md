@@ -2,7 +2,22 @@
 
 Everything that moves: `useFrame` mutation patterns, damping and lerp idioms, GLTF clip playback with drei's `useAnimations`, morph targets, bones, `@react-spring/three`, and drei's `Float`/`Trail` helpers. Applies to R3F v9 + React 19 + drei 10; setup and version pairing live in [../SKILL.md](../SKILL.md).
 
-**Contents:** [The useFrame Mutation Pattern](#the-useframe-mutation-pattern) · [Smooth Follow and Lerp](#smooth-follow-and-lerp) · [Damping with maath](#damping-with-maath) · [GLTF Clips with useAnimations](#gltf-clips-with-useanimations) · [Morph Targets](#morph-targets) · [Skeletal Animation](#skeletal-animation) · [React Spring](#react-spring) · [Drei Float and Trail](#drei-float-and-trail) · [Throttling Expensive Work](#throttling-expensive-work) · [Other Animation Libraries](#other-animation-libraries) · [Common Mistakes](#common-mistakes)
+## Table of Contents
+
+| Section | Covers |
+|---|---|
+| [The useFrame Mutation Pattern](#the-useframe-mutation-pattern) | `useFrame((state, delta, xrFrame) => {...}, renderPriority?)` runs every frame just before render |
+| [Smooth Follow and Lerp](#smooth-follow-and-lerp) | Move toward targets instead of snapping |
+| [Damping with maath](#damping-with-maath) | `maath` (a pmndrs package; last published 2024-07 but stable and widely used) ships `easing.damp*` helpers |
+| [GLTF Clips with useAnimations](#gltf-clips-with-useanimations) | drei's `useAnimations(clips, root?)` binds `AnimationClip`s to a scene graph and returns `{ ref, actions, names, clips, mixer }` |
+| [Morph Targets](#morph-targets) | Morph-target dictionaries, influence arrays, and blend-shape animation |
+| [Skeletal Animation](#skeletal-animation) | Finding bones, mutating transforms, and combining direct control with animation |
+| [React Spring](#react-spring) | `@react-spring/three` animates values with spring physics outside the React render loop — no re-render per frame |
+| [Drei Float and Trail](#drei-float-and-trail) | `Float` adds gentle idle hover/tumble to its children — the zero-effort "make it feel alive" wrapper |
+| [Throttling Expensive Work](#throttling-expensive-work) | Separating per-frame mutations from throttled raycasts, layout, and network work |
+| [Other Animation Libraries](#other-animation-libraries) | `framer-motion-3d` (declarative `motion.mesh` variants/gestures) exists but was built against R3F v8 / React 18 |
+| [Common Mistakes](#common-mistakes) | Frequent mistakes and the changes that correct them |
+| [See Also](#see-also) | Related references and supporting guidance |
 
 ## The useFrame Mutation Pattern
 

@@ -4,7 +4,18 @@ A concise diff for the cases where you need to support both: legacy code, fallba
 
 WebGL2 ships in every modern browser (including Safari since 15). WebGL1 is still useful for very old browsers and some embedded contexts. New code should default to WebGL2 with a WebGL1 fallback only if you have a concrete reason to support it.
 
-**Contents:** [Context Detection](#context-detection) · [Shader Source](#shader-source) · [Vertex Array Objects](#vertex-array-objects) · [Instancing](#instancing) · [NPOT Textures](#npot-textures) · [Features That Are WebGL2-Only](#features-that-are-webgl2-only) · [Recommended Strategy](#recommended-strategy) · [Common Mistakes](#common-mistakes)
+## Table of Contents
+
+| Section | Covers |
+|---|---|
+| [Context Detection](#context-detection) | Branch on `isWebGL2` for shader version selection, VAO API selection, and instancing path |
+| [Shader Source](#shader-source) | A pattern for dual-version shaders: ship one source as a string |
+| [Vertex Array Objects](#vertex-array-objects) | `OES_vertex_array_object` is universally available on WebGL1 in practice — assume it's there, but check |
+| [Instancing](#instancing) | A compatibility wrapper for WebGL 2 instancing and the WebGL 1 extension |
+| [NPOT Textures](#npot-textures) | WebGL1 imposes restrictions on non-power-of-two textures: only `CLAMP_TO_EDGE` wrap, only non-mipmap filters, no `generateMipmap` |
+| [Features That Are WebGL2-Only](#features-that-are-webgl2-only) | These have no WebGL1 equivalent (or only painful extension paths) |
+| [Recommended Strategy](#recommended-strategy) | WebGL2 has been the global baseline for years |
+| [Common Mistakes](#common-mistakes) | Frequent mistakes and the changes that correct them |
 
 ## Context Detection
 

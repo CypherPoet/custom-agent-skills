@@ -2,6 +2,17 @@
 
 Verified against SVGO 4.0.1. Run `npx svgo --help` to confirm against the version installed in any given project.
 
+## Table of Contents
+
+| Section | Covers |
+|---|---|
+| [Input / output](#input--output) | -i, --input , -s, --string , -f, --folder , and related topics |
+| [Optimization tuning](#optimization-tuning) | -p, --precision , --multipass, and --config |
+| [Output formatting](#output-formatting) | --pretty, --indent , --eol , and --final-newline |
+| [Data URI mode](#data-uri-mode) | Encoding optimized SVG output as base64 or percent-encoded data URIs |
+| [Other](#other) | --show-plugins, -q, --quiet, --no-color, and related topics |
+| [Notes on flag combinations](#notes-on-flag-combinations) | Interactions among folder, output, recursive, configuration, and multipass CLI flags |
+
 ## Input / output
 
 ### `-i, --input <files…>`

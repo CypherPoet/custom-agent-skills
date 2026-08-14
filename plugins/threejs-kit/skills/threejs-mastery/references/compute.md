@@ -6,7 +6,16 @@ GPU compute in Three.js runs through TSL: you allocate storage buffers, write a 
 
 > Scene/renderer setup: see [../SKILL.md#setup](../SKILL.md#setup).
 
-**Contents:** [Storage Buffers](#storage-buffers) · [Writing and Dispatching a Compute Node](#writing-and-dispatching-a-compute-node) · [Mutating Values Inside a Compute Node](#mutating-values-inside-a-compute-node) · [Worked Example: GPU Particles](#worked-example-gpu-particles) · [Common Mistakes](#common-mistakes)
+## Table of Contents
+
+| Section | Covers |
+|---|---|
+| [Storage Buffers](#storage-buffers) | Compute reads and writes storage buffers — GPU-resident arrays the shader can mutate in place |
+| [Writing and Dispatching a Compute Node](#writing-and-dispatching-a-compute-node) | A compute pass is an `Fn()` with no return value, turned into a compute node with `.compute(count)` and handed to the renderer |
+| [Mutating Values Inside a Compute Node](#mutating-values-inside-a-compute-node) | The one rule that trips everyone: mutation must flow through a shader node |
+| [Worked Example: GPU Particles](#worked-example-gpu-particles) | Two passes: a one-time seed, then a per-frame update that integrates gravity |
+| [Common Mistakes](#common-mistakes) | Frequent mistakes and the changes that correct them |
+| [See Also](#see-also) | Related references and supporting guidance |
 
 ## Storage Buffers
 

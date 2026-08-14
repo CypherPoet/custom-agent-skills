@@ -4,7 +4,21 @@ How the @react-three/fiber reconciler turns JSX into live three.js objects: cons
 
 > Canvas/project setup: see [../SKILL.md](../SKILL.md) and [canvas-and-project-setup.md](./canvas-and-project-setup.md).
 
-**Contents:** [How the Reconciler Maps JSX to three.js](#how-the-reconciler-maps-jsx-to-threejs) · [Constructor Arguments: args](#constructor-arguments-args) · [Prop Shorthands and Piercing](#prop-shorthands-and-piercing) · [The attach Prop](#the-attach-prop) · [primitive: Mounting Existing Objects](#primitive-mounting-existing-objects) · [extend: Registering Custom Elements](#extend-registering-custom-elements) · [Disposal and dispose=null](#disposal-and-disposenull) · [The onUpdate Prop](#the-onupdate-prop) · [TypeScript](#typescript) · [Common Mistakes](#common-mistakes)
+## Table of Contents
+
+| Section | Covers |
+|---|---|
+| [How the Reconciler Maps JSX to three.js](#how-the-reconciler-maps-jsx-to-threejs) | Every three.js class is available as a camelCase intrinsic element: `<mesh>` ≡ `new THREE.Mesh()` |
+| [Constructor Arguments: `args`](#constructor-arguments-args) | `args` is an array matching the class constructor signature |
+| [Prop Shorthands and Piercing](#prop-shorthands-and-piercing) | .set() and setScalar Shorthands and Piercing (Dash Props) |
+| [The `attach` Prop](#the-attach-prop) | `attach` binds a non-`Object3D` child to a named property of its parent instead of `parent.add()` |
+| [`<primitive>`: Mounting Existing Objects](#primitive-mounting-existing-objects) | `<primitive object={...}>` places a pre-existing three.js object into the JSX graph |
+| [`extend`: Registering Custom Elements](#extend-registering-custom-elements) | Classes outside the `THREE` namespace (addons, your own subclasses) must be registered before use as JSX |
+| [Disposal and `dispose={null}`](#disposal-and-disposenull) | When a JSX subtree unmounts, R3F automatically calls `.dispose()` on the objects beneath it — geometries, materials, textures |
+| [The `onUpdate` Prop](#the-onupdate-prop) | `onUpdate` is a callback — not a pointer event — invoked with the instance after fresh props are applied to it |
+| [TypeScript](#typescript) | Refs, Component Props: ThreeElements['mesh'], Typing extend: Module Augmentation with ThreeElement, and related topics |
+| [Common Mistakes](#common-mistakes) | Frequent mistakes and the changes that correct them |
+| [See Also](#see-also) | Related references and supporting guidance |
 
 ## How the Reconciler Maps JSX to three.js
 

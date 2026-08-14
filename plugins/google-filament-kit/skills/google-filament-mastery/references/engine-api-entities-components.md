@@ -3,7 +3,18 @@
 > Source: Filament C++ headers (RenderableManager/LightManager/TransformManager/Box), Filament v1.75.0
 > Last synced: 2026-08-14
 
-**Contents:** [Mental Model: Entity-Component](#mental-model-entity-component) · [Entities: utils::Entity & utils::EntityManager](#entities-utilsentity--utilsentitymanager) · [Common Manager Surface (Instance pattern)](#common-manager-surface-instance-pattern) · [RenderableManager](#renderablemanager) · [Builder method set (verbatim)](#renderablemanager-builder-method-set-verbatim) · [PrimitiveType enum](#primitivetype-enum) · [Geometry overloads](#geometry-overloads) · [Post-build mutators](#renderablemanager-post-build-mutators) · [LightManager](#lightmanager) · [Type enum (verbatim)](#lightmanager-type-enum-verbatim) · [Builder method set (verbatim)](#lightmanager-builder-method-set-verbatim) · [Physical units](#physical-units) · [Post-build mutators](#lightmanager-post-build-mutators) · [TransformManager](#transformmanager) · [Box & Aabb (bounding boxes)](#box--aabb-bounding-boxes) · [End-to-End Flow (grounded in hellopbr.cpp)](#end-to-end-flow-grounded-in-hellopbrcpp)
+## Table of Contents
+
+| Section | Covers |
+|---|---|
+| [Mental Model: Entity-Component](#mental-model-entity-component) | A Filament entity (`utils::Entity`) is just an opaque id |
+| [Entities: utils::Entity & utils::EntityManager](#entities-utilsentity--utilsentitymanager) | Entities are created and destroyed through the singleton `utils::EntityManager` (not the engine) |
+| [Common Manager Surface (Instance pattern)](#common-manager-surface-instance-pattern) | All three managers expose the same lookup pattern |
+| [RenderableManager](#renderablemanager) | A renderable is a bundle of primitives; each primitive has its own geometry and material |
+| [LightManager](#lightmanager) | A light is a component on an entity; build it with `LightManager::Builder(Type)` |
+| [TransformManager](#transformmanager) | Gives an entity a position/orientation relative to its parent transform, and computes the world transform (relative to the root) |
+| [Box & Aabb (bounding boxes)](#box--aabb-bounding-boxes) | `filament::Box` is the AABB type a renderable's `boundingBox()` expects |
+| [End-to-End Flow (grounded in hellopbr.cpp)](#end-to-end-flow-grounded-in-hellopbrcpp) | The complete create-entity → attach-component → add-to-scene flow |
 
 ---
 

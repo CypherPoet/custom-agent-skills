@@ -4,7 +4,24 @@ Custom GLSL at the React-reconciler layer: drei's `shaderMaterial` factory, raw 
 
 > Canvas/scene setup: see [canvas-and-project-setup.md](./canvas-and-project-setup.md) and [../SKILL.md](../SKILL.md).
 
-**Contents:** [Drei shaderMaterial Workflow](#drei-shadermaterial-workflow) · [Shader HMR](#shader-hmr) · [v9.6 Uniform Semantics](#v96-uniform-semantics) · [TypeScript for Custom Elements](#typescript-for-custom-elements) · [Raw THREE.ShaderMaterial](#raw-threeshadermaterial) · [Uniform Type Mapping](#uniform-type-mapping) · [Varyings and Shader Built-Ins](#varyings-and-shader-built-ins) · [Effect Cookbook](#effect-cookbook) · [Patching Built-In Materials](#patching-built-in-materials) · [Instanced Custom Attributes](#instanced-custom-attributes) · [External GLSL Files](#external-glsl-files) · [GLSL Performance Rules](#glsl-performance-rules) · [Common Mistakes](#common-mistakes) · [See Also](#see-also)
+## Table of Contents
+
+| Section | Covers |
+|---|---|
+| [Drei shaderMaterial Workflow](#drei-shadermaterial-workflow) | Defining, extending, and rendering reusable Drei shader materials |
+| [Shader HMR](#shader-hmr) | `WaveMaterial.key` is a UUID generated each time `shaderMaterial(...)` executes |
+| [v9.6 Uniform Semantics](#v96-uniform-semantics) | How React Three Fiber v9.6 applies uniform props without replacing stable objects |
+| [TypeScript for Custom Elements](#typescript-for-custom-elements) | v9 types custom elements by augmenting `ThreeElements` on the `@react-three/fiber` module |
+| [Raw THREE.ShaderMaterial](#raw-threeshadermaterial) | The escape hatch when you want vanilla three.js semantics |
+| [Uniform Type Mapping](#uniform-type-mapping) | The GLSL declaration decides the upload path; the JS value must match its shape |
+| [Varyings and Shader Built-Ins](#varyings-and-shader-built-ins) | Non-raw `ShaderMaterial` gets a prelude for free: attributes `position` |
+| [Effect Cookbook](#effect-cookbook) | Vertex displacement is in the workflow example above |
+| [Patching Built-In Materials](#patching-built-in-materials) | `onBeforeCompile` injects GLSL into a built-in material's shader while keeping its lighting, shadows, and fog |
+| [Instanced Custom Attributes](#instanced-custom-attributes) | Feed per-instance data to a custom shader with `<instancedBufferAttribute>` |
+| [External GLSL Files](#external-glsl-files) | Vite, zero-config — the `?raw` suffix imports any file as a string |
+| [GLSL Performance Rules](#glsl-performance-rules) | Branch avoidance, uniform packing, loop bounds, precision, and shader recompilation costs |
+| [Common Mistakes](#common-mistakes) | Frequent mistakes and the changes that correct them |
+| [See Also](#see-also) | Related references and supporting guidance |
 
 ## Drei shaderMaterial Workflow
 

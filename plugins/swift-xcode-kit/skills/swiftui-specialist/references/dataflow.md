@@ -2,7 +2,15 @@
 
 How data flows through a SwiftUI app determines which views invalidate and when. `@State` owns view-local state. `@Observable` model objects carry data that's shared across a subtree, with per-property tracking that scopes invalidation to the exact views that read what changed. `Binding` lets a child edit state owned by a parent. The sections below cover what shape of data to hand each view, when to use each ownership tool, how to set up models so views invalidate as narrowly as possible, and how to handle side effects and two-way edits.
 
-**Contents:** [Passing data into views](#passing-data-into-views) · [View-local state with @State](#view-local-state-with-state) · [Model objects with @Observable](#model-objects-with-observable) · [Side effects in views](#side-effects-in-views) · [Bindings](#bindings)
+## Table of Contents
+
+| Section | Covers |
+|---|---|
+| [Passing data into views](#passing-data-into-views) | A view's input shape determines its invalidation surface for value-type inputs |
+| [View-local state with @State](#view-local-state-with-state) | `@State` ownership, privacy, initialization, and mutation rules |
+| [Model objects with @Observable](#model-objects-with-observable) | Use `@Observable` (not `ObservableObject`) for classes that provide data to views |
+| [Side effects in views](#side-effects-in-views) | Isolating onChange(of:) side-effect invalidation |
+| [Bindings](#bindings) | Use KeyPath bindings, not closure bindings |
 
 ## Passing data into views
 

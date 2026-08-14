@@ -2,6 +2,21 @@
 
 This file is the canonical layout for handoff documents. `scripts/create_handoff.py` reads everything below the `# 🤝 Handoff:` line as the template body and substitutes the `{{placeholder}}` tokens at scaffold time. Edit the body to change the structure that gets emitted — there is no separate copy of this template inside the script.
 
+## Table of Contents
+
+| Section | Covers |
+|---|---|
+| [Why this structure](#why-this-structure) | Reading order and source-artifact placement for an agent resuming the work |
+| [Placeholders](#placeholders) | Template boundaries and the tokens replaced when a handoff is scaffolded |
+| [🧾 Session Metadata](#session-metadata) | Next action, timestamp, working directory, branch, repository, and recent commits |
+| [📍 Current State Summary](#current-state-summary) | Active work, current status, and the point where the previous session stopped |
+| [💡 Important Context](#important-context) | Decisions, failed approaches, and insights not captured in source artifacts |
+| [🚧 Pending Work](#pending-work) | Immediate next steps, blockers, open questions, and deferred items |
+| [⚠️ Constraints for Resuming Agent](#constraints-for-resuming-agent) | Non-obvious restrictions, known gotchas, and skills needed to resume safely |
+| [🧠 Codebase Understanding](#codebase-understanding) | Architecture, critical files, and implementation patterns discovered during the session |
+| [🏁 Work Completed](#work-completed) | Finished tasks, modified files, and decisions made |
+| [🌐 Environment State](#environment-state) | Tools, services, running processes, environment variables, and verification commands |
+
 ## Why this structure
 
 The document is ordered for the **resuming agent**, not the author. The agent's reading priority is: (1) what to do right now, (2) what canonical artifacts to open, (3) what constrains how, (4) what already shipped. So the top of the document is `Next Action` → metadata → source artifacts → state summary → important context → pending work → constraints. "What was completed" lives near the bottom because it's reference data once a session is over, not first-read material.

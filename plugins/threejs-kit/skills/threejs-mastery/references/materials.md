@@ -4,7 +4,29 @@ PBR, classic phong/lambert/basic, toon, point/line, and how to customize materia
 
 > Scene/renderer setup: see [../SKILL.md#setup](../SKILL.md#setup).
 
-**Contents:** [Material Types](#material-types) · [MeshBasicMaterial](#meshbasicmaterial) · [MeshLambertMaterial](#meshlambertmaterial) · [MeshPhongMaterial](#meshphongmaterial) · [MeshStandardMaterial](#meshstandardmaterial-pbr) · [MeshPhysicalMaterial](#meshphysicalmaterial) · [MeshToonMaterial](#meshtoonmaterial) · [Debug Materials](#debug-materials) · [Points / Line Materials](#pointsmaterial--linebasicmaterial--linedashedmaterial) · [Node Materials](#node-materials-tsl--modern-customization) · [ShaderMaterial](#shadermaterial-glsl--legacy--webgl) · [Patching Built-in Shaders](#patching-built-in-shaders-onbeforecompile) · [Common Material Properties](#common-material-properties) · [Multi-Material Meshes](#multi-material-meshes) · [Environment Maps](#environment-maps) · [Cloning, Modifying, and Disposing](#cloning-modifying-and-disposing) · [Performance Tips](#performance-tips) · [Common Mistakes](#common-mistakes)
+## Table of Contents
+
+| Section | Covers |
+|---|---|
+| [Material Types](#material-types) | If you don't know which to pick, start with `MeshStandardMaterial` (or `MeshStandardNodeMaterial` if you plan to customize) |
+| [MeshBasicMaterial](#meshbasicmaterial) | Unlit. Always visible regardless of lighting |
+| [MeshLambertMaterial](#meshlambertmaterial) | Diffuse lighting only. Fast — use when you don't need specular highlights |
+| [MeshPhongMaterial](#meshphongmaterial) | Specular highlights. Useful for shiny plastic-style surfaces |
+| [MeshStandardMaterial (PBR)](#meshstandardmaterial-pbr) | The recommended default. Drives realistic results via roughness/metalness and an environment map |
+| [MeshPhysicalMaterial](#meshphysicalmaterial) | Extends `MeshStandardMaterial` with clearcoat, transmission, sheen, iridescence, anisotropy, and explicit specular controls |
+| [MeshToonMaterial](#meshtoonmaterial) | Cel-shading. Provide a tiny stepped gradient texture for the toon ramp |
+| [Debug Materials](#debug-materials) | Normal and depth materials for inspecting geometry and rendering |
+| [PointsMaterial / LineBasicMaterial / LineDashedMaterial](#pointsmaterial--linebasicmaterial--linedashedmaterial) | Material settings for points, basic lines, and dashed lines |
+| [Node Materials (TSL — Modern Customization)](#node-materials-tsl--modern-customization) | Modern custom material behavior built with Three Shading Language nodes |
+| [ShaderMaterial (GLSL — Legacy / WebGL)](#shadermaterial-glsl--legacy--webgl) | `ShaderMaterial` is still supported and useful when you're targeting `WebGLRenderer` exclusively or porting older code |
+| [Patching Built-in Shaders (`onBeforeCompile`)](#patching-built-in-shaders-onbeforecompile) | Pre-TSL, the way to inject custom GLSL into a standard material was `onBeforeCompile` |
+| [Common Material Properties](#common-material-properties) | Visibility, transparency, depth, blending, polygon offset, clipping, and precision settings |
+| [Multi-Material Meshes](#multi-material-meshes) | Assign different materials to geometry groups |
+| [Environment Maps](#environment-maps) | Drive reflections / IBL on a per-material basis, or globally via `scene.environment` |
+| [Cloning, Modifying, and Disposing](#cloning-modifying-and-disposing) | Cloning and mutating materials, triggering recompilation, and disposing resources |
+| [Performance Tips](#performance-tips) | Material reuse, shader variants, transparency, cloning, and disposal |
+| [Common Mistakes](#common-mistakes) | Frequent mistakes and the changes that correct them |
+| [See Also](#see-also) | Related references and supporting guidance |
 
 ## Material Types
 

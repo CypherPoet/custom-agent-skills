@@ -5,7 +5,19 @@ elements ergonomically, exporting, and converting Mermaid. For hand-authoring a
 static `.excalidraw` file you don't need any of this — see
 [`file-format.md`](file-format.md). Current package: **v0.18.1**.
 
-**Contents:** [Install](#install) · [The Component & Props](#the-component--props) · [initialData](#initialdata) · [The imperative API](#the-imperative-api-excalidrawapi) · [convertToExcalidrawElements](#converttoexcalidrawelements-skeleton-api) · [restore](#restore--restoreelements) · [Export utilities](#export-utilities) · [Constants](#constants) · [Mermaid → Excalidraw](#mermaid--excalidraw)
+## Table of Contents
+
+| Section | Covers |
+|---|---|
+| [Install](#install) | `react` and `react-dom` are peer dependencies |
+| [The Component & Props](#the-component--props) | All props are optional. The most useful |
+| [initialData](#initialdata) | The scene the component loads with — an object (or a promise resolving to one) |
+| [The Imperative API (`excalidrawAPI`)](#the-imperative-api-excalidrawapi) | Capture the API object to drive the editor after mount |
+| [`convertToExcalidrawElements` (Skeleton API)](#converttoexcalidrawelements-skeleton-api) | Creating complete Excalidraw elements from concise JavaScript skeletons |
+| [`restore` / `restoreElements`](#restore--restoreelements) | Normalizers that fill missing fields with defaults, repair bindings, and normalize z-index — the same pass the editor runs on load |
+| [Export Utilities](#export-utilities) | All take the scene and return an image/string |
+| [Constants](#constants) | Excalidraw font-family, theme, and MIME-type constants |
+| [Mermaid → Excalidraw](#mermaid--excalidraw) | Convert Mermaid text into editable Excalidraw elements with the companion package `@excalidraw/mermaid-to-excalidraw` |
 
 ## Install
 

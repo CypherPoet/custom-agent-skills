@@ -7,7 +7,17 @@ Two pipelines exist:
 
 > Scene/renderer setup: see [../SKILL.md#setup](../SKILL.md#setup).
 
-**Contents:** [TSL Post-Processing](#tsl-post-processing-modern) · [EffectComposer](#effectcomposer-legacy-webgl-pipeline) · [Multi-Scene Compositing](#multi-scene-compositing) · [Render to Texture](#render-to-texture-both-pipelines) · [Performance Tips](#performance-tips) · [Common Mistakes](#common-mistakes)
+## Table of Contents
+
+| Section | Covers |
+|---|---|
+| [TSL Post-Processing (Modern)](#tsl-post-processing-modern) | Minimal Setup, Resize, Built-in TSL Passes, and related topics |
+| [EffectComposer (Legacy WebGL Pipeline)](#effectcomposer-legacy-webgl-pipeline) | Use this with `WebGLRenderer` when porting existing code or when you need a pass that hasn't migrated to TSL yet |
+| [Multi-Scene Compositing](#multi-scene-compositing) | Render multiple scenes into one output |
+| [Render to Texture (Both Pipelines)](#render-to-texture-both-pipelines) | Rendering a scene into a texture and reusing the result on another material |
+| [Performance Tips](#performance-tips) | Pass count, resolution scaling, device tiers, antialiasing, and upscaling |
+| [Common Mistakes](#common-mistakes) | Frequent mistakes and the changes that correct them |
+| [See Also](#see-also) | Related references and supporting guidance |
 
 ## TSL Post-Processing (Modern)
 

@@ -5,9 +5,14 @@
 
 If the business model is not obvious, it must be explained in metadata and App Review notes. Expensive apps with irrationally high prices will be rejected. Manipulation of reviews, chart rankings, or use of paid/incentivized/fake feedback may result in expulsion from the Apple Developer Program.
 
----
+## Table of Contents
 
-**Contents:** [3.1 Payments](#31-payments) · [3.2 Other Business Model Issues](#32-other-business-model-issues)
+| Section | Covers |
+|---|---|
+| [3.1 Payments](#31-payments) | 3.1.1 In-App Purchase, 3.1.1(a) Link to Other Purchase Methods, 3.1.2 Subscriptions, and related topics |
+| [3.2 Other Business Model Issues](#32-other-business-model-issues) | 3.2.1 Acceptable and 3.2.2 Unacceptable |
+
+---
 
 ## 3.1 Payments
 

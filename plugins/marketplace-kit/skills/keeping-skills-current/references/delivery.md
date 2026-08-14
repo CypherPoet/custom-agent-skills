@@ -1,7 +1,5 @@
 # Delivery and Transactions
 
-**Contents:** [Local Report](#local-report) · [GitHub Pull Request](#github-pull-request) · [Ownership](#ownership) · [State-Only Auto-Merge](#state-only-auto-merge) · [Recovery](#recovery)
-
 ## Local Report
 
 Write the current report, manifest state, and any authorized corrections into the local working tree. Never stage, commit, push, or create a pull request. Allow report-only operation outside Git. Require a Git worktree before `applyHighConfidenceCorrections` so a durable diff and restoration boundary exist.

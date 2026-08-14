@@ -1,7 +1,5 @@
 # Configured-Source Research
 
-**Contents:** [Research Boundary](#research-boundary) · [Retrieval](#retrieval) · [Reasoning](#reasoning) · [Structured Result](#structured-result) · [Edits and Validation](#edits-and-validation) · [Failure Semantics](#failure-semantics)
-
 ## Research Boundary
 
 Treat each configured source record as an authorized evidence request, not a hint for wider discovery. Retrieve that request and ask what its evidence changes in the skill's existing job. Do not parse the skill into an exhaustive claim inventory, certify uncovered text, use nearby citations as updater inputs, or search for evidence not in the manifest.

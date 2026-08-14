@@ -2,6 +2,21 @@
 
 Engine selection, baking workflows, render passes, and light setup. Most of this lives in `bpy.context.scene.render` and `bpy.context.scene.cycles` / `scene.eevee`.
 
+## Table of Contents
+
+| Section | Covers |
+|---|---|
+| [Cycles vs Eevee](#cycles-vs-eevee) | Pick by the requirement, not the default |
+| [GPU acceleration in Cycles](#gpu-acceleration-in-cycles) | GPU rendering needs the Cycles addon prefs configured and the scene's device set to GPU |
+| [Baking workflow (the order matters)](#baking-workflow-the-order-matters) | The two parts most scripts get wrong |
+| [Common bake types](#common-bake-types) | Bake types for lightmaps, normals, ambient occlusion, and material properties |
+| [Render passes (separating contributions)](#render-passes-separating-contributions) | For compositing or post-production, enable individual passes |
+| [Light setups](#light-setups) | 3-point setup (key + fill + rim) and HDRI-only |
+| [Camera placement](#camera-placement) | Creating a camera, target, and tracking constraint for stable framing |
+| [Output settings](#output-settings) | Resolution, output path, image format, color depth, and animation frame range |
+| [When to escape to headless](#when-to-escape-to-headless) | Renders are the canonical case for the headless escape hatch |
+| [Sources](#sources) | Authoritative references that ground this guidance |
+
 ## Cycles vs Eevee
 
 Pick by the requirement, not the default:

@@ -1,6 +1,16 @@
 # Pipeline and Setup
 
-**Contents:** [The Mental Model](#the-mental-model) · [Creating the Context](#creating-the-context) · [HiDPI and Resize](#hidpi-and-resize) · [State Machine Hygiene](#state-machine-hygiene) · [Clearing](#clearing) · [Context Loss](#context-loss) · [Common Mistakes](#common-mistakes)
+## Table of Contents
+
+| Section | Covers |
+|---|---|
+| [The Mental Model](#the-mental-model) | WebGL is a rasterization engine, not a "3D engine." It runs two programs you write |
+| [Creating the Context](#creating-the-context) | WebGL 2 context creation, WebGL 1 fallback, and required context options |
+| [HiDPI and Resize](#hidpi-and-resize) | Synchronizing canvas display size and drawing-buffer resolution on HiDPI screens |
+| [State Machine Hygiene](#state-machine-hygiene) | WebGL has one current value for almost every kind of setting |
+| [Clearing](#clearing) | A frame typically starts with a clear |
+| [Context Loss](#context-loss) | The browser can drop your WebGL context at any time — GPU reset |
+| [Common Mistakes](#common-mistakes) | Frequent mistakes and the changes that correct them |
 
 ## The Mental Model
 

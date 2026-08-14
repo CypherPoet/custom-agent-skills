@@ -9,7 +9,19 @@ Pick one per surface; you can mix in the same scene but the mental model is clea
 
 > Scene/renderer setup: see [../SKILL.md#setup](../SKILL.md#setup).
 
-**Contents:** [TSL](#tsl-modern) · [TSL Recipes](#tsl-recipes) · [Recent TSL Additions](#recent-tsl-additions-r184r185) · [WGSL Interop](#wgsl-interop) · [GLSL (Legacy)](#glsl-legacy) · [Debugging](#debugging) · [Performance Tips](#performance-tips) · [Common Mistakes](#common-mistakes)
+## Table of Contents
+
+| Section | Covers |
+|---|---|
+| [TSL (Modern)](#tsl-modern) | Imports, Minimum Viable TSL Material, Uniforms, and related topics |
+| [TSL Recipes](#tsl-recipes) | Texture Sampling, Vertex Displacement, Fresnel, and related topics |
+| [Recent TSL Additions (r184–r185)](#recent-tsl-additions-r184r185) | Render-pipeline, storage, batching, texture, and shader-node APIs added in r184 and r185 |
+| [WGSL Interop](#wgsl-interop) | When you need hand-written WGSL under `WebGPURenderer` — porting an existing shader |
+| [GLSL (Legacy)](#glsl-legacy) | Raw-GLSL `ShaderMaterial` / `RawShaderMaterial` — the compatibility path for WebGL-only targets |
+| [Debugging](#debugging) | Inspect the Compiled Shader and Visualize Intermediate Values |
+| [Performance Tips](#performance-tips) | Uniform counts, branching, precision, loop bounds, and recompilation |
+| [Common Mistakes](#common-mistakes) | Legacy raw-GLSL pitfalls live in shaders-glsl.md |
+| [See Also](#see-also) | Related references and supporting guidance |
 
 ## TSL (Modern)
 

@@ -7,7 +7,21 @@ Exhaustive lookup table for every Filament material parameter: property name, GL
 
 The five material models are: **Lit** (standard), **Subsurface**, **Cloth**, **Unlit**, **Specular glossiness** (legacy). The Lit model is the baseline; Cloth, Unlit, and Specular glossiness are explicitly defined as subsets/variants of it (see each section's scope note).
 
-**Contents:** [Standard (Lit) Model — Base & Common](#standard-lit-model--base--common) · [Standard (Lit) Model — Clear Coat](#standard-lit-model--clear-coat) · [Standard (Lit) Model — Anisotropy](#standard-lit-model--anisotropy) · [Standard (Lit) Model — Sheen](#standard-lit-model--sheen) · [Standard (Lit) Model — Refraction / Transmission](#standard-lit-model--refraction--transmission) · [Standard (Lit) Model — Other](#standard-lit-model--other) · [Subsurface Model](#subsurface-model) · [Cloth Model](#cloth-model) · [Unlit Model](#unlit-model) · [Specular Glossiness Model (legacy)](#specular-glossiness-model-legacy) · [Reference Value Tables](#reference-value-tables) · [baseColor — Common Non-Metals (dielectrics)](#basecolor--common-non-metals-dielectrics) · [baseColor — Common Metals (conductors)](#basecolor--common-metals-conductors) · [Reflectance / IOR of Common Materials](#reflectance--ior-of-common-materials) · [Index of Refraction of Common Materials](#index-of-refraction-of-common-materials) · [Dispersion of Common Materials](#dispersion-of-common-materials)
+## Table of Contents
+
+| Section | Covers |
+|---|---|
+| [Standard (Lit) Model — Base & Common](#standard-lit-model--base--common) | Types, ranges, and notes are reproduced from Materials.md `[standardPropertiesTypes]` |
+| [Standard (Lit) Model — Clear Coat](#standard-lit-model--clear-coat) | The clear coat layer is always isotropic and dielectric, with a fixed index of refraction of 1.5 |
+| [Standard (Lit) Model — Anisotropy](#standard-lit-model--anisotropy) | Anisotropy amount and tangent-space direction properties |
+| [Standard (Lit) Model — Sheen](#standard-lit-model--sheen) | Sheen color and roughness for cloth-like material response |
+| [Standard (Lit) Model — Refraction / Transmission](#standard-lit-model--refraction--transmission) | Refractive properties apply when `refractionMode` is set to `cubemap` or `screenspace` |
+| [Standard (Lit) Model — Other](#standard-lit-model--other) | Emissive and post-lighting color properties shared across material models |
+| [Subsurface Model](#subsurface-model) | Subsurface thickness, color, and power properties and source-data limits |
+| [Cloth Model](#cloth-model) | The cloth model encompasses all standard (Lit) model parameters except `metallic` and `reflectance` |
+| [Unlit Model](#unlit-model) | Turns off all lighting computations |
+| [Specular Glossiness Model (legacy)](#specular-glossiness-model-legacy) | Legacy, non-physically-based model |
+| [Reference Value Tables](#reference-value-tables) | Concrete sample values for tuning common materials |
 
 ---
 

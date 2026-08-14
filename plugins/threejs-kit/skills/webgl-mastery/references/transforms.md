@@ -1,6 +1,18 @@
 # Transforms
 
-**Contents:** [Clip Space](#clip-space) · [The MVP Chain](#the-mvp-chain) · [Use a Matrix Library](#use-a-matrix-library) · [Perspective Projection](#perspective-projection) · [Orthographic Projection](#orthographic-projection) · [A Basic Camera](#a-basic-camera) · [Normals](#normals--the-subtle-matrix) · [2D Math Without 3D Overhead](#2d-math-without-3d-overhead) · [Common Mistakes](#common-mistakes)
+## Table of Contents
+
+| Section | Covers |
+|---|---|
+| [Clip Space](#clip-space) | The vertex shader's job is to output a `vec4` in clip space — a coordinate system |
+| [The MVP Chain](#the-mvp-chain) | The classical chain is Model × View × Projection (read right-to-left when applied to a position) |
+| [Use a Matrix Library](#use-a-matrix-library) | Don't roll your own. The two standard choices for WebGL |
+| [Perspective Projection](#perspective-projection) | Perspective-matrix parameters, field of view, aspect ratio, and near/far clipping |
+| [Orthographic Projection](#orthographic-projection) | For 2D rendering, UI layers, or technical visualizations |
+| [A Basic Camera](#a-basic-camera) | `lookAt` is the standard "where am I and what am I pointing at" |
+| [Normals — The Subtle Matrix](#normals--the-subtle-matrix) | When you transform positions by a matrix, you can't transform normals by the same matrix if it includes non-uniform scale |
+| [2D Math Without 3D Overhead](#2d-math-without-3d-overhead) | For pure 2D work (sprites, UI, charts) you can stick to `mat3` and `vec2` |
+| [Common Mistakes](#common-mistakes) | Frequent mistakes and the changes that correct them |
 
 ## Clip Space
 

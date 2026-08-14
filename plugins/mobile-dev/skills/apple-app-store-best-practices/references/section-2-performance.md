@@ -3,9 +3,17 @@
 > Source: https://developer.apple.com/app-store/review/guidelines/
 > Last synced: 2026-07-17
 
----
+## Table of Contents
 
-**Contents:** [§2.1 App Completeness](#21-app-completeness) · [§2.2 Beta Testing](#22-beta-testing) · [§2.3 Accurate Metadata](#23-accurate-metadata) · [§2.4 Hardware Compatibility](#24-hardware-compatibility) · [§2.5 Software Requirements](#25-software-requirements)
+| Section | Covers |
+|---|---|
+| [§2.1 App Completeness](#21-app-completeness) | §2.1(a) Final Versions Only and §2.1(b) In-App Purchases Complete |
+| [§2.2 Beta Testing](#22-beta-testing) | Requirement: Betas, demos, trial versions, and pre-release builds must be distributed through TestFlight, not the App Store |
+| [§2.3 Accurate Metadata](#23-accurate-metadata) | §2.3.1 Hidden or Undocumented Features, §2.3.2 In-App Purchase Metadata, §2.3.3 Screenshots, and related topics |
+| [§2.4 Hardware Compatibility](#24-hardware-compatibility) | §2.4.1 iPhone Apps on iPad, §2.4.2 Power Efficiency, §2.4.3 Apple TV Remote Compatibility, and related topics |
+| [§2.5 Software Requirements](#25-software-requirements) | §2.5.1 Public APIs Only, §2.5.2 Self-Contained Bundles, §2.5.3 No Malicious Code, and related topics |
+
+---
 
 ## §2.1 App Completeness
 

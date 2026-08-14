@@ -4,7 +4,19 @@ Light types, shadows, and image-based environment lighting. The light classes th
 
 > Scene/renderer setup: see [../SKILL.md#setup](../SKILL.md#setup).
 
-**Contents:** [Light Types](#light-types) · [Shadows](#shadows) · [Light Helpers](#light-helpers) · [Environment Lighting](#environment-lighting-ibl) · [Common Setups](#common-setups) · [Many Dynamic Lights](#many-dynamic-lights-webgpu) · [Performance Tips](#performance-tips) · [Common Mistakes](#common-mistakes)
+## Table of Contents
+
+| Section | Covers |
+|---|---|
+| [Light Types](#light-types) | *RectAreaLight shadows require custom solutions |
+| [Shadows](#shadows) | Enabling Shadows, Tuning DirectionalLight Shadows, PointLight / SpotLight Shadows, and related topics |
+| [Light Helpers](#light-helpers) | Visual helpers for directional, point, spot, hemisphere, and area lights |
+| [Environment Lighting (IBL)](#environment-lighting-ibl) | Image-Based Lighting uses an HDR environment map to drive PBR materials |
+| [Common Setups](#common-setups) | Three-Point Lighting, Outdoor Daylight, and Indoor Studio |
+| [Many Dynamic Lights (WebGPU)](#many-dynamic-lights-webgpu) | `WebGPURenderer` can pack lights into uniform arrays so adding or removing lights doesn't recompile affected materials |
+| [Performance Tips](#performance-tips) | Light counts, shadow costs, baked lighting, and update strategies |
+| [Common Mistakes](#common-mistakes) | Frequent mistakes and the changes that correct them |
+| [See Also](#see-also) | Related references and supporting guidance |
 
 ## Light Types
 

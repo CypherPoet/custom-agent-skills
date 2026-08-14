@@ -5,9 +5,17 @@
 
 Distilled from Apple's HIG Components pages: Sheets, Popovers, Alerts, Panels, Windows.
 
-**Contents:** [Sheets](#sheets) · [Popovers](#popovers) · [Alerts](#alerts) · [Panels](#panels) · [Windows](#windows)
+## Table of Contents
 
-### Sheets
+| Section | Covers |
+|---|---|
+| [Sheets](#sheets) | A sheet presents a scoped task closely related to the current context |
+| [Popovers](#popovers) | A popover is a transient view that appears above other content when people click or tap a control or interactive area |
+| [Alerts](#alerts) | An alert is a modal view that gives people critical information they need right away |
+| [Panels](#panels) | In a macOS app, a panel floats above other open windows providing supplementary controls |
+| [Windows](#windows) | A window presents UI views and components in your app or game |
+
+## Sheets
 *Last changed: 2026-03*
 
 **Purpose:** A sheet presents a scoped task closely related to the current context — requesting specific information or letting people complete a simple task before returning to the parent view.
@@ -46,7 +54,7 @@ Adding `medium` lets the sheet rest at both heights; specifying only `medium` pr
 - watchOS: A full-screen, semitransparent view that slides over current content (system blurs and desaturates the covered content). Use only when a modal task requires a custom title or custom content presentation; otherwise use an alert or action sheet. Keep interactions brief and occasional; don't use for navigation. If changing the default label, prefer SF Symbols and avoid labels that look like a page/app title (people won't know how to dismiss).
 - tvOS: No additional considerations.
 
-### Popovers
+## Popovers
 
 **Purpose:** A popover is a transient view that appears above other content when people click or tap a control or interactive area, exposing a small amount of related information or functionality.
 
@@ -75,7 +83,7 @@ Canonical implementations: SwiftUI `popover(isPresented:attachmentAnchor:arrowEd
 - tvOS: Not supported.
 - watchOS: Not supported.
 
-### Alerts
+## Alerts
 *Last changed: 2024-02*
 
 **Purpose:** An alert is a modal view that gives people critical information they need right away — reporting a problem, warning about destructive action, or confirming an important user-initiated action.
@@ -127,7 +135,7 @@ Canonical implementations: SwiftUI `alert(_:isPresented:actions:)`, UIKit `UIAle
 - tvOS: No additional considerations.
 - watchOS: No additional considerations.
 
-### Panels
+## Panels
 
 **Purpose:** In a macOS app, a panel floats above other open windows providing supplementary controls, options, or information related to the active window or current selection.
 
@@ -153,7 +161,7 @@ Canonical implementations: AppKit `NSPanel`; HUD style via `hudWindow`.
 - macOS: Supported (panels are a macOS component).
 - iOS/iPadOS, tvOS, visionOS, watchOS: Not supported.
 
-### Windows
+## Windows
 *Last changed: 2025-06*
 
 **Purpose:** A window presents UI views and components in your app or game, defining the visual boundaries of app content and enabling multitasking within and between apps.

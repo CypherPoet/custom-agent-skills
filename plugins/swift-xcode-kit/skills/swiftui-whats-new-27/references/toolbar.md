@@ -5,6 +5,20 @@ If the user's deployment target is below iOS 27 / macOS 27 / watchOS 27 / vision
 
 When a toolbar has more items than fit the available width (a narrow window, a resized app, or iPhone), the system moves the overflow into a trailing overflow menu. The 2027 SDKs add modifiers to control what stays in the bar, what overflows, and what is pinned, to minimize a bar as the person scrolls, and to adjust toolbar content margins and status-bar visibility. `ForEach` and `EmptyView` also work inside a `toolbar` builder now.
 
+## Table of Contents
+
+| Section | Covers |
+|---|---|
+| [Visibility priority](#visibility-priority) | Controlling which toolbar items overflow first when space becomes constrained |
+| [Overflow menu](#overflow-menu) | `ToolbarOverflowMenu` holds content that always lives in the overflow menu instead of the bar |
+| [Pinned trailing item](#pinned-trailing-item) | A `ToolbarItem` placed with `.topBarPinnedTrailing` stays in the trailing position and never moves to the overflow menu |
+| [Minimize on scroll](#minimize-on-scroll) | `toolbarMinimizationBehavior(_:for:)` minimizes a bar as the person scrolls |
+| [Toolbar content margins](#toolbar-content-margins) | `contentMarginsRemoved(_:)` removes the default margins around a piece of toolbar content |
+| [Status bar visibility](#status-bar-visibility) | The status bar is now a `ToolbarPlacement`, so you control its visibility with `toolbarVisibility(_:for:)` |
+| [Dynamic content](#dynamic-content) | `ForEach` now conforms to `ToolbarContent`, so a `toolbar` builder can generate items from a collection just as a view body does |
+| [Deployment target below SDK 27](#deployment-target-below-sdk-27) | When the user's deployment target is below SDK 27 and the answer needs any of the new APIs above |
+| [Availability summary](#availability-summary) | Platform availability for toolbar priority, overflow, placement, and minimization APIs |
+
 ## Visibility priority
 
 `visibilityPriority(_:)` sets how readily a piece of `ToolbarContent` (a `ToolbarItem` or `ToolbarItemGroup`) overflows when space is tight: higher-priority content stays in the bar, lower-priority content moves to the overflow menu first. The priorities are `.automatic` (the default), `.low`, and `.high`, or you can derive one relative to another with `ToolbarItemVisibilityPriority(higherThan:)` or `(lowerThan:)`.

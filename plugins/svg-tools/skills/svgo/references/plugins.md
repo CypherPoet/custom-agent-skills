@@ -4,6 +4,15 @@ Every plugin SVGO ships with, grouped by whether it's part of `preset-default`. 
 
 Tables include the one-line behavior and a "when to flip" note. Plugins flagged with ⚠ have safety tradeoffs worth understanding before enabling/disabling.
 
+## Table of Contents
+
+| Section | Covers |
+|---|---|
+| [Plugins in `preset-default` (on by default)](#plugins-in-preset-default-on-by-default) | `preset-default` plugins, what they do, and when to disable them |
+| [Plugins NOT in `preset-default` (opt-in)](#plugins-not-in-preset-default-opt-in) | Opt-in plugins, what they do, and when to enable them |
+| [Configuring plugins](#configuring-plugins) | Object, name-plus-params, and preset plugin configuration shapes |
+| [Notes](#notes) | Version drift in default plugin bundles and the need to pin explicit configurations |
+
 ## Plugins in `preset-default` (on by default)
 
 | Plugin | What it does | When to disable |

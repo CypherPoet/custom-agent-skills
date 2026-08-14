@@ -1,6 +1,16 @@
 # Debugging
 
-**Contents:** [The Black Canvas Checklist](#the-black-canvas-checklist) · [Reading Info Logs](#reading-info-logs) · [`gl.getError()`](#glgeterror) · [Spector.js](#spectorjs--the-tool-to-reach-for) · [Print-Debugging Inside Shaders](#print-debugging-inside-shaders) · [When the Shader Compiles Differently in Production](#when-the-shader-compiles-differently-in-production) · [Common Mistakes](#common-mistakes)
+## Table of Contents
+
+| Section | Covers |
+|---|---|
+| [The Black Canvas Checklist](#the-black-canvas-checklist) | By far the most common WebGL question: "my canvas is black, no errors logged, what's wrong?" Walk this checklist top to bottom |
+| [Reading Info Logs](#reading-info-logs) | Shader logs typically look like `ERROR: 0:5: 'foo' : undeclared identifier` |
+| [`gl.getError()`](#glgeterror) | `getError` is cumulative and slow |
+| [Spector.js — The Tool to Reach For](#spectorjs--the-tool-to-reach-for) | Spector.js is a browser extension that captures every WebGL call in a frame and lets you click through them |
+| [Print-Debugging Inside Shaders](#print-debugging-inside-shaders) | There's no `console.log` in GLSL |
+| [When the Shader Compiles Differently in Production](#when-the-shader-compiles-differently-in-production) | Driver bugs and shader compiler differences are real |
+| [Common Mistakes](#common-mistakes) | Frequent mistakes and the changes that correct them |
 
 ## The Black Canvas Checklist
 

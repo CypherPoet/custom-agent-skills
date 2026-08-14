@@ -4,7 +4,21 @@ Built-in shapes, custom `BufferGeometry`, instancing, and the math you need to b
 
 > Scene/renderer setup: see [../SKILL.md#setup](../SKILL.md#setup).
 
-**Contents:** [Built-in Geometries](#built-in-geometries) · [BufferGeometry](#buffergeometry) · [Edges & Wireframe](#edgesgeometry-and-wireframegeometry) · [Points](#points) · [Lines](#lines) · [Instancing](#instancing) · [Geometry Utilities](#geometry-utilities) · [Common Manipulations](#common-manipulations) · [Performance Tips](#performance-tips) · [Common Mistakes](#common-mistakes)
+## Table of Contents
+
+| Section | Covers |
+|---|---|
+| [Built-in Geometries](#built-in-geometries) | Basic Shapes, Polyhedra and Capsule, Path-Based Shapes, and Text Geometry |
+| [BufferGeometry](#buffergeometry) | The base class for every geometry |
+| [EdgesGeometry and WireframeGeometry](#edgesgeometry-and-wireframegeometry) | Generating thresholded edges and complete triangle wireframes |
+| [Points](#points) | Building point clouds with `BufferGeometry` and `PointsMaterial` |
+| [Lines](#lines) | Creating connected lines, loops, and line segments from point data |
+| [Instancing](#instancing) | InstancedMesh, Updating an Instance, Picking Instances, and InstancedBufferGeometry |
+| [Geometry Utilities](#geometry-utilities) | Merging geometries, computing tangents, interleaving attributes, and estimating memory |
+| [Common Manipulations](#common-manipulations) | Centering, normalization, cloning, transforms, morph targets, groups, and bounding volumes |
+| [Performance Tips](#performance-tips) | Segment counts, geometry reuse, instancing, index buffers, and update strategies |
+| [Common Mistakes](#common-mistakes) | Frequent mistakes and the changes that correct them |
+| [See Also](#see-also) | Related references and supporting guidance |
 
 ## Built-in Geometries
 

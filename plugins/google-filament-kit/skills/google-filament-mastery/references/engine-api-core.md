@@ -3,9 +3,21 @@
 > Source: Filament C++ headers (Engine/SwapChain/Renderer/View/Scene/Camera) + repo README, Filament v1.75.0
 > Last synced: 2026-08-14
 
-**Contents:** [Mental Model & Ownership](#mental-model--ownership) · [Minimal Setup + Render Loop](#minimal-setup--render-loop) · [Engine](#engine) · [Creating an Engine](#creating-an-engine) · [Engine::Config](#engineconfig) · [Factory Methods](#factory-methods) · [Destruction & Resource Tracking](#destruction--resource-tracking) · [Feature Levels](#feature-levels) · [Threading & Frame Pumping](#threading--frame-pumping) · [SwapChain](#swapchain) · [Renderer](#renderer) · [View](#view) · [Scene](#scene) · [Camera](#camera) · [Common Pitfalls](#common-pitfalls)
-
 > Build, linking, SDK install, and native-window creation (SDL2 / NSView / HWND / ANativeWindow) live in the platform reference, not here. Exposure / tone-mapping / post-processing depth lives in `concepts-imaging-pipeline.md`.
+
+## Table of Contents
+
+| Section | Covers |
+|---|---|
+| [Mental Model & Ownership](#mental-model--ownership) | `Engine` is Filament's main entry point and the factory + owner of every other object |
+| [Minimal Setup + Render Loop](#minimal-setup--render-loop) | The Engine header's own doc-comment gives the canonical full lifecycle (this is verbatim from `Engine.h`) |
+| [Engine](#engine) | Creating an Engine, Engine::Config, Factory Methods, and related topics |
+| [SwapChain](#swapchain) | A `SwapChain` represents an OS native renderable surface |
+| [Renderer](#renderer) | A `Renderer` represents one OS window and generates the drawing commands |
+| [View](#view) | A `View` is everything needed to render a Scene — effectively one render pass |
+| [Scene](#scene) | A `Scene` is a flat container of renderable and light entities |
+| [Camera](#camera) | A `Camera` is a component on an entity, not a free object |
+| [Common Pitfalls](#common-pitfalls) | Frame guards, swap-chain lifecycle, resource destruction, and engine-thread mistakes |
 
 ---
 

@@ -3,7 +3,20 @@
 > Source: Filament Core Concepts — "Material system" (Filament.md), Filament v1.75.0
 > Last synced: 2026-08-14
 
-**Contents:** [Notation](#notation) · [The standard surface model](#the-standard-surface-model) · [Microfacet theory](#microfacet-theory) · [Dielectrics vs conductors](#dielectrics-vs-conductors) · [Energy conservation](#energy-conservation) · [Specular BRDF (Cook-Torrance)](#specular-brdf-cook-torrance) · [D — Normal distribution (GGX)](#d--normal-distribution-ggx) · [G / V — Geometric shadowing (Smith-GGX)](#g--v--geometric-shadowing-smith-ggx) · [F — Fresnel (Schlick)](#f--fresnel-schlick) · [Diffuse BRDF (Lambert vs Disney)](#diffuse-brdf-lambert-vs-disney) · [Energy compensation (multiscattering)](#energy-compensation-multiscattering) · [Parameterization & remapping](#parameterization--remapping) · [Standard parameters and ranges](#standard-parameters-and-ranges) · [baseColor → diffuse / f0](#basecolor--diffuse--f0) · [reflectance → f0 (dielectrics)](#reflectance--f0-dielectrics) · [perceptualRoughness → roughness](#perceptualroughness--roughness) · [Authoring cheat sheet](#authoring-cheat-sheet) · [Extended models](#extended-models) · [Clear coat](#clear-coat) · [Anisotropic](#anisotropic) · [Subsurface](#subsurface) · [Cloth (sheen)](#cloth-sheen)
+## Table of Contents
+
+| Section | Covers |
+|---|---|
+| [Notation](#notation) | Perceptual roughness notation and the BRDF value derived from it |
+| [The standard surface model](#the-standard-surface-model) | A material is described by a BSDF (Bidirectional Scattering Distribution Function) = BRDF (reflectance) + BTDF (transmittance) |
+| [Microfacet theory](#microfacet-theory) | Real surfaces aren't flat at the micro level — they're a large number of randomly aligned planar fragments (microfacets) |
+| [Dielectrics vs conductors](#dielectrics-vs-conductors) | How dielectric and conductor surfaces divide specular and diffuse reflection |
+| [Energy conservation](#energy-conservation) | A good PBR BRDF is energy conservative: total reflected (specular + diffuse) energy is ≤ incident energy |
+| [Specular BRDF (Cook-Torrance)](#specular-brdf-cook-torrance) | The specular term is the Cook-Torrance approximation of the microfacet integral |
+| [Diffuse BRDF (Lambert vs Disney)](#diffuse-brdf-lambert-vs-disney) | Filament uses a simple Lambertian diffuse BRDF (uniform diffuse response over the microfacet hemisphere) |
+| [Energy compensation (multiscattering)](#energy-compensation-multiscattering) | The single-bounce Cook-Torrance model loses energy at high roughness |
+| [Parameterization & remapping](#parameterization--remapping) | Disney's full model has too many parameters for real-time |
+| [Extended models](#extended-models) | In Filament's implementation the standard, clear-coat, and anisotropic models combine into one flexible model |
 
 ## Notation
 

@@ -4,7 +4,19 @@ Raycasting, camera controls, pointer/touch input, drag/transform gizmos, selecti
 
 > Scene/renderer setup: see [../SKILL.md#setup](../SKILL.md#setup).
 
-**Contents:** [Raycaster](#raycaster) · [Camera Controls](#camera-controls) · [Selection Patterns](#selection-patterns) · [Keyboard Input](#keyboard-input) · [Screen ↔ World Conversion](#screen--world-conversion) · [Interaction Manager Pattern](#interaction-manager-pattern) · [Performance Tips](#performance-tips) · [Common Mistakes](#common-mistakes)
+## Table of Contents
+
+| Section | Covers |
+|---|---|
+| [Raycaster](#raycaster) | Basic Picking, Raycaster API, Mouse Coordinates: Full Window vs Canvas, and related topics |
+| [Camera Controls](#camera-controls) | OrbitControls, FlyControls, FirstPersonControls, and related topics |
+| [Selection Patterns](#selection-patterns) | Click to Select with Highlight, Hover Effects, and Box (Marquee) Selection |
+| [Keyboard Input](#keyboard-input) | Track held keys in a map; read each frame |
+| [Screen ↔ World Conversion](#screen--world-conversion) | World → Screen, Screen → World (at a target Z), and Ray → Plane Intersection |
+| [Interaction Manager Pattern](#interaction-manager-pattern) | For larger apps, encapsulate event wiring |
+| [Performance Tips](#performance-tips) | Raycast throttling, target filtering, layer masks, object reuse, and event delegation |
+| [Common Mistakes](#common-mistakes) | Frequent mistakes and the changes that correct them |
+| [See Also](#see-also) | Related references and supporting guidance |
 
 ## Raycaster
 

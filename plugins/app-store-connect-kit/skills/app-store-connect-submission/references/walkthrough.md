@@ -3,7 +3,19 @@
 The end-to-end App Store Connect flow, in order. *As of 2026-06; trust the screen when it
 disagrees.* Examples use placeholders like `com.you.YourApp` — substitute the real values.
 
-**Contents:** [0. Before you open App Store Connect](#0-before-you-open-app-store-connect) · [1. Create the app record](#1-create-the-app-record) · [2. App Information (app-level)](#2-app-information-app-level) · [3. App Privacy](#3-app-privacy) · [4. Pricing & availability](#4-pricing--availability) · [5. In-app purchases](#5-in-app-purchases) · [6. Version page metadata](#6-version-page-metadata) · [7. App Review Information](#7-app-review-information) · [8. Attach the IAP, pick a release option, submit](#8-attach-the-iap-pick-a-release-option-submit)
+## Table of Contents
+
+| Section | Covers |
+|---|---|
+| [0. Before you open App Store Connect](#0-before-you-open-app-store-connect) | Developer enrollment, agreements, banking, tax, and App ID prerequisites |
+| [1. Create the app record](#1-create-the-app-record) | App name, primary language, bundle ID, SKU, and user-access settings |
+| [2. App Information (app-level)](#2-app-information-app-level) | App-level category, age-rating, licensing, and privacy-policy settings |
+| [3. App Privacy](#3-app-privacy) | Privacy-policy URL, data-collection declarations, tracking, and questionnaire workflow |
+| [4. Pricing & availability](#4-pricing--availability) | Price, tax category, territories, preorder availability, and distribution controls |
+| [5. In-app purchases](#5-in-app-purchases) | Product identifiers, review screenshots, pricing, localization, and first-purchase submission |
+| [6. Version page metadata](#6-version-page-metadata) | Build selection, screenshots, descriptions, keywords, URLs, and version metadata |
+| [7. App Review Information](#7-app-review-information) | Reviewer contact details, demo credentials, review notes, and supporting attachments |
+| [8. Attach the IAP, pick a release option, submit](#8-attach-the-iap-pick-a-release-option-submit) | Build and IAP attachment, release timing, and final review submission |
 
 ---
 

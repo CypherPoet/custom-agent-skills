@@ -1,7 +1,5 @@
 # Scheduling
 
-**Contents:** [Strategies](#strategies) · [Generated Invocation](#generated-invocation) · [Activation](#activation) · [Reconciliation](#reconciliation)
-
 ## Strategies
 
 Store only the portable scheduler strategy:

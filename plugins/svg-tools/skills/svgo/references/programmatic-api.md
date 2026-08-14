@@ -4,6 +4,16 @@ Use the Node API from `'svgo'` when optimizing inside a build script, test, or l
 
 Verified against SVGO 4.0.1.
 
+## Table of Contents
+
+| Section | Covers |
+|---|---|
+| [`optimize(input, config?)`](#optimizeinput-config) | Synchronously optimize a single SVG string |
+| [`loadConfig(configFile?, cwd?)`](#loadconfigconfigfile-cwd) | Asynchronously load an `svgo.config.{js,mjs,cjs}` and return its default export |
+| [Common patterns](#common-patterns) | Batch a folder programmatically, Emit a data URI for CSS embedding, and Per-file plugin choices |
+| [Custom plugins](#custom-plugins) | A plugin is a `{ name, fn }` object where `fn` receives the AST root and returns a visitor |
+| [Types](#types) | Configuration, plugin, result, and API types exported for TypeScript users |
+
 ## `optimize(input, config?)`
 
 Synchronously optimize a single SVG string. Returns `{ data: string }`.

@@ -4,7 +4,24 @@ R3F raycasts DOM pointer input against the scene and delivers React-style synthe
 
 > Canvas-level event props (`events`, `eventSource`, `eventPrefix`, `onPointerMissed`) and general setup: see [canvas-and-project-setup.md](./canvas-and-project-setup.md) and [../SKILL.md](../SKILL.md).
 
-**Contents:** [Event Catalog](#event-catalog) · [Event Data](#event-data) · [Occlusion and Propagation](#occlusion-and-propagation) · [Pointer Capture](#pointer-capture) · [Raycast Tuning](#raycast-tuning) · [Hover and Cursor](#hover-and-cursor) · [Custom Event Manager and Event Source](#custom-event-manager-and-event-source) · [Camera Controls](#camera-controls) · [Transform and Drag Controls](#transform-and-drag-controls) · [Keyboard Controls](#keyboard-controls) · [Scroll and Presentation Controls](#scroll-and-presentation-controls) · [Screen and World Coordinates](#screen-and-world-coordinates) · [Common Mistakes](#common-mistakes) · [See Also](#see-also)
+## Table of Contents
+
+| Section | Covers |
+|---|---|
+| [Event Catalog](#event-catalog) | Attach handlers directly to any object with a `raycast` method (mesh, line, points, sprite) |
+| [Event Data](#event-data) | Every handler receives a `ThreeEvent`: the native DOM event spread together with the `THREE.Intersection` for this hit |
+| [Occlusion and Propagation](#occlusion-and-propagation) | The raycaster returns all intersected objects sorted nearest-first |
+| [Pointer Capture](#pointer-capture) | Standard DOM API, R3F-routed: capture on pointerdown, release on pointerup |
+| [Raycast Tuning](#raycast-tuning) | Override hit-testing per object with the `raycast` prop |
+| [Hover and Cursor](#hover-and-cursor) | Hover boundaries are discrete events — setState here is fine (unlike per-frame updates) |
+| [Custom Event Manager and Event Source](#custom-event-manager-and-event-source) | Replace or extend the event system through the Canvas `events` prop — a factory `(state) => EventManager` |
+| [Camera Controls](#camera-controls) | Orbit, Map, Trackball, Fly, PointerLock, and Transform controls from Drei |
+| [Transform and Drag Controls](#transform-and-drag-controls) | TransformControls — translate/rotate/scale gizmo |
+| [Keyboard Controls](#keyboard-controls) | `KeyboardControls` wraps the app (outside `<Canvas>` is fine) with a key map; `useKeyboardControls` reads it two ways |
+| [Scroll and Presentation Controls](#scroll-and-presentation-controls) | ScrollControls creates a scrollable HTML zone over the canvas and exposes progress to the scene — the scrollytelling primitive |
+| [Screen and World Coordinates](#screen-and-world-coordinates) | Screen → world, the easy case: if the pointer hit a mesh, `e.point` already is the world-space position |
+| [Common Mistakes](#common-mistakes) | Frequent mistakes and the changes that correct them |
+| [See Also](#see-also) | Related references and supporting guidance |
 
 ## Event Catalog
 

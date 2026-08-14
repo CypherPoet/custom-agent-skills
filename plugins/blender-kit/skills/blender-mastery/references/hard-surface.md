@@ -2,6 +2,20 @@
 
 Doctrine and executable patterns for hard-surface work: non-destructive modifier stacks, boolean workflows, normal management, and topology remediation. Each topic states its decision rule once, then the `bpy` route (primary) and — where it earns its place — a keyboard route for agents driving Blender's UI (see [Driving the UI as an agent](#driving-the-ui-as-an-agent)). API claims here are verified against Blender 5.2; workflow defaults are professional doctrine, labeled as such. Operator/context traps: `bpy-essentials.md`.
 
+## Table of Contents
+
+| Section | Covers |
+|---|---|
+| [The non-destructive spine](#the-non-destructive-spine) | Modifier order, unapplied transforms, and an editable stack for mirrored hard-surface parts |
+| [Primitives & topology standards](#primitives--topology-standards) | Keyboard route: `S X 0 Return` (scale-to-zero on the axis — see the orientation caveat below) |
+| [Booleans: cut fast, clean deliberately](#booleans-cut-fast-clean-deliberately) | Solver choice on 5.x (the enum: `FLOAT`, `EXACT`, `MANIFOLD`) |
+| [Normals & shading on 4.1+/5.x](#normals--shading-on-415x) | The break every stale tutorial trips over: Blender 4.1 removed mesh-level Auto Smooth |
+| [Edge control](#edge-control) | Bevel weights let one Bevel modifier carry many fillet widths |
+| [The hand-off audit](#the-hand-off-audit) | Run before export, bake, or delivery (all checks data-API, headless-safe) |
+| [Driving the UI as an agent](#driving-the-ui-as-an-agent) | For agents with keyboard/screen control (or advising a human at the keyboard) |
+| [Third-party ecosystem (if installed)](#third-party-ecosystem-if-installed) | Detecting optional Blender extensions before adapting the workflow |
+| [Sources](#sources) | Authoritative references that ground this guidance |
+
 ## The non-destructive spine
 
 Stay parametric until hand-off. A live modifier stack keeps wall thickness, fillet radii, and silhouette editable in seconds; applied ("baked") geometry makes every revision a rebuild. The doctrine default for a mirrored, solid, filleted, smoothed part:

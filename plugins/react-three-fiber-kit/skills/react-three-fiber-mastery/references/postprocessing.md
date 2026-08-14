@@ -4,7 +4,27 @@ Screen-space effects in R3F via `@react-three/postprocessing` (v3), the React wr
 
 > Scene/Canvas setup: see [../SKILL.md](../SKILL.md). Custom *materials* (shaders on objects, not on the screen): see [shaders-and-custom-materials.md](./shaders-and-custom-materials.md).
 
-**Contents:** [Install and Versions](#install-and-versions) · [EffectComposer](#effectcomposer) · [Effect Ordering](#effect-ordering) · [Bloom and Emissive Glow](#bloom-and-emissive-glow) · [Selective Effects: Selection and Select](#selective-effects-selection-and-select) · [Depth of Field](#depth-of-field) · [Ambient Occlusion: N8AO and SSAO](#ambient-occlusion-n8ao-and-ssao) · [Outline](#outline) · [God Rays](#god-rays) · [Tone Mapping and Color Grading](#tone-mapping-and-color-grading) · [Anti-Aliasing](#anti-aliasing) · [Custom Effects](#custom-effects) · [Animating Effect Parameters](#animating-effect-parameters) · [Performance and Mobile Scaling](#performance-and-mobile-scaling) · [Native three.js Post-Processing](#native-threejs-post-processing) · [Common Mistakes](#common-mistakes) · [See Also](#see-also)
+## Table of Contents
+
+| Section | Covers |
+|---|---|
+| [Install and Versions](#install-and-versions) | v3 declares `postprocessing` — plus `n8ao` and `maath` — as regular dependencies |
+| [EffectComposer](#effectcomposer) | Place `<EffectComposer>` inside `<Canvas>`, after scene content |
+| [Effect Ordering](#effect-ordering) | How composer child order controls post-processing pass order |
+| [Bloom and Emissive Glow](#bloom-and-emissive-glow) | (Defaults from `postprocessing` 6.39.x — set the ones you rely on explicitly.) |
+| [Selective Effects: Selection and Select](#selective-effects-selection-and-select) | Selecting scene subtrees for targeted post-processing effects |
+| [Depth of Field](#depth-of-field) | `target` is a position, not an object ref — the v8-era `target={meshRef}` idiom does not exist in v3 |
+| [Ambient Occlusion: N8AO and SSAO](#ambient-occlusion-n8ao-and-ssao) | Prefer `N8AO`. It is exported directly from `@react-three/postprocessing` (backed by the bundled `n8ao` package's `N8AOPostPass`) |
+| [Outline](#outline) | Selection contexts, selected objects, layers, and props for targeted outlines |
+| [God Rays](#god-rays) | `<GodRays sun={...}>` accepts a `Mesh`/`Points` instance or a ref to one |
+| [Tone Mapping and Color Grading](#tone-mapping-and-color-grading) | The composer disables renderer tone mapping (see EffectComposer), so grade inside the chain — late, before AA |
+| [Anti-Aliasing](#anti-aliasing) | SMAA, FXAA, and multisampling tradeoffs and configuration |
+| [Custom Effects](#custom-effects) | Subclass `Effect` from `postprocessing` |
+| [Animating Effect Parameters](#animating-effect-parameters) | Mutate the effect instance through a ref inside `useFrame` — never `setState` per frame |
+| [Performance and Mobile Scaling](#performance-and-mobile-scaling) | The low-end branch: `multisampling={0}` (+ cheap FXAA), drop ambient occlusion first, then shrink bloom (`levels`/`radius`) |
+| [Native three.js Post-Processing](#native-threejs-post-processing) | Three.js `EffectComposer`, passes, output transforms, and multisampling |
+| [Common Mistakes](#common-mistakes) | Frequent mistakes and the changes that correct them |
+| [See Also](#see-also) | Related references and supporting guidance |
 
 ## Install and Versions
 

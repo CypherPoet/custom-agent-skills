@@ -4,7 +4,19 @@ How to make a diagram *say something*, not just label boxes. This is the judgmen
 layer on top of the mechanical [`elements.md`](elements.md); the step-by-step
 process that applies it is [`authoring-workflow.md`](authoring-workflow.md).
 
-**Contents:** [Core Philosophy](#core-philosophy) · [Depth Assessment](#depth-assessment) · [Evidence Artifacts](#evidence-artifacts) · [Visual Pattern Library](#visual-pattern-library) · [Multi-Zoom Architecture](#multi-zoom-architecture) · [Container Discipline](#container-discipline) · [Shape Meaning](#shape-meaning) · [Layout](#layout) · [Color & Aesthetics](#color--aesthetics)
+## Table of Contents
+
+| Section | Covers |
+|---|---|
+| [Core Philosophy](#core-philosophy) | A diagram should ARGUE, not DISPLAY |
+| [Depth Assessment](#depth-assessment) | Decide this first — it changes everything downstream |
+| [Evidence Artifacts](#evidence-artifacts) | Concrete proof embedded in a technical diagram — they make it teach and show it's correct |
+| [Visual Pattern Library](#visual-pattern-library) | Match each concept to the pattern that mirrors its behavior |
+| [Multi-Zoom Architecture](#multi-zoom-architecture) | Comprehensive diagrams work at three zoom levels at once, like a map showing both country borders and street names |
+| [Container Discipline](#container-discipline) | When labels need containers, which shapes to use, and how to avoid diagram clutter |
+| [Shape Meaning](#shape-meaning) | Diagram concepts and the Excalidraw shapes that represent them |
+| [Layout](#layout) | secondary ~120×60, marker ~10–20px |
+| [Color & Aesthetics](#color--aesthetics) | Color encodes meaning, it isn't decoration |
 
 ## Core Philosophy
 

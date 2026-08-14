@@ -2,7 +2,12 @@
 
 This document covers common patterns for working with `-fbounds-safety` and pitfalls encountered during real-world adoption.
 
-**Contents:** [Common Patterns](#common-patterns) · [Common Pitfalls](#common-pitfalls)
+## Table of Contents
+
+| Section | Covers |
+|---|---|
+| [Common Patterns](#common-patterns) | Using Local Variables to Avoid Assignment Restrictions, Data Organization: Prefer Rows Over Columns |
+| [Common Pitfalls](#common-pitfalls) | These are common issues encountered during real-world adoption, along with recommended solutions |
 
 ## Common Patterns
 

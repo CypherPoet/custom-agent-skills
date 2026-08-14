@@ -2,6 +2,22 @@
 
 Common failures when driving Blender via the MCP and writing `bpy` scripts. Organized by where they bite — MCP server, `bpy` runtime, modes/selection, materials, modifiers, textures, GLTF, render/bake.
 
+## Table of Contents
+
+| Section | Covers |
+|---|---|
+| [MCP server errors](#mcp-server-errors) | Connection, timeout, payload-size, and execution-context failures in Blender MCP |
+| [bpy runtime errors](#bpy-runtime-errors) | Context, registration, data-block, and attribute failures in Blender Python scripts |
+| [Mode and selection traps](#mode-and-selection-traps) | Failures caused by the wrong mode, inactive objects, hidden state, or stale selections |
+| [Material / node tree gotchas](#material--node-tree-gotchas) | Missing nodes, wrong sockets, color-space mismatches, and material assignment failures |
+| [Modifier and geometry traps](#modifier-and-geometry-traps) | Unapplied scale, modifier order, topology, and evaluated-geometry mistakes |
+| [Texture path issues](#texture-path-issues) | Missing files, relative paths, resource packing, and texture-size problems |
+| [GLTF name mapping](#gltf-name-mapping) | GLTF has stricter name rules than Blender |
+| [GLTF export survival matrix](#gltf-export-survival-matrix) | What survives a Blender → GLTF export and what doesn't |
+| [Draco re-encoding](#draco-re-encoding) | Corruption and simplification failures caused by unsafe Draco re-encoding |
+| [Render and bake errors](#render-and-bake-errors) | UV, active-image, light, render-engine, and hardware settings that break renders or bakes |
+| [Sources](#sources) | Authoritative references that ground this guidance |
+
 ## MCP server errors
 
 | Error | Cause | Fix |

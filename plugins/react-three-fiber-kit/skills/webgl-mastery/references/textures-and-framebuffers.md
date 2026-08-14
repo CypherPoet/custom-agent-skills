@@ -1,6 +1,18 @@
 # Textures and Framebuffers
 
-**Contents:** [Loading a Texture from an Image](#loading-a-texture-from-an-image) · [Binding to a Sampler](#binding-to-a-sampler) · [Filtering and Wrap Modes](#filtering-and-wrap-modes) · [NPOT (Non-Power-of-Two) Textures](#npot-non-power-of-two-textures) · [Sampling in the Shader](#sampling-in-the-shader) · [Render-to-Texture: Framebuffer Objects](#render-to-texture-framebuffer-objects) · [Ping-Pong for Multi-Pass Effects](#ping-pong-for-multi-pass-effects) · [Reading Pixels Back](#reading-pixels-back) · [Common Mistakes](#common-mistakes)
+## Table of Contents
+
+| Section | Covers |
+|---|---|
+| [Loading a Texture from an Image](#loading-a-texture-from-an-image) | Loading image textures with a placeholder, CORS handling, and power-of-two setup |
+| [Binding to a Sampler](#binding-to-a-sampler) | Binding texture units and assigning their indexes to sampler uniforms |
+| [Filtering and Wrap Modes](#filtering-and-wrap-modes) | The most common mistake: setting `MIN_FILTER` to a `_MIPMAP_` variant without generating mipmaps |
+| [NPOT (Non-Power-of-Two) Textures](#npot-non-power-of-two-textures) | In WebGL1, NPOT textures have severe restrictions: no `REPEAT` wrap mode, no mipmaps, only `LINEAR`/`NEAREST` filtering |
+| [Sampling in the Shader](#sampling-in-the-shader) | GLSL ES 3.00 uses `texture(sampler, uv)` for all sampler types (it's overloaded) |
+| [Render-to-Texture: Framebuffer Objects](#render-to-texture-framebuffer-objects) | To render into a texture instead of the canvas, create a framebuffer with a texture attached |
+| [Ping-Pong for Multi-Pass Effects](#ping-pong-for-multi-pass-effects) | Alternating framebuffer pairs across iterative multipass effects |
+| [Reading Pixels Back](#reading-pixels-back) | `readPixels` stalls the entire pipeline — the CPU waits for the GPU to finish everything queued |
+| [Common Mistakes](#common-mistakes) | Frequent mistakes and the changes that correct them |
 
 ## Loading a Texture from an Image
 

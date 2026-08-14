@@ -4,7 +4,26 @@ Image, data, canvas, video, and HDR textures; color space; filtering; render tar
 
 > Scene/renderer setup: see [../SKILL.md#setup](../SKILL.md#setup).
 
-**Contents:** [Loading](#loading) · [Color Space](#color-space--the-1-gotcha) · [Wrapping & Repeat](#wrapping-repeat-offset-rotation) · [Filtering & Mipmaps](#filtering-and-mipmaps) · [Texture Sources](#texture-sources) · [Cube & HDR Environments](#cube-textures-and-hdr-environments) · [Render Targets](#render-targets) · [CubeCamera](#cubecamera--dynamic-environment-maps) · [UV Mapping](#uv-mapping) · [Texture Atlases](#texture-atlases) · [PBR Texture Set](#pbr-texture-set) · [Procedural Textures](#procedural-textures) · [Memory Management](#memory-management) · [Performance Tips](#performance-tips) · [Common Mistakes](#common-mistakes)
+## Table of Contents
+
+| Section | Covers |
+|---|---|
+| [Loading](#loading) | TextureLoader and Promise Wrapper |
+| [Color Space — the #1 Gotcha](#color-space--the-1-gotcha) | Color/albedo textures must be tagged `SRGBColorSpace` |
+| [Wrapping, Repeat, Offset, Rotation](#wrapping-repeat-offset-rotation) | Wrapping modes plus texture repeat, offset, rotation, and pivot controls |
+| [Filtering and Mipmaps](#filtering-and-mipmaps) | Minification, magnification, mipmap, and anisotropic filtering settings |
+| [Texture Sources](#texture-sources) | Image, DataTexture, CanvasTexture, and related topics |
+| [Cube Textures and HDR Environments](#cube-textures-and-hdr-environments) | CubeTextureLoader, Equirectangular HDR → Filtered Environment, RGBELoader (.hdr), and related topics |
+| [Render Targets](#render-targets) | Render the scene (or a custom pass) into a texture |
+| [CubeCamera — Dynamic Environment Maps](#cubecamera--dynamic-environment-maps) | Cube-camera updates are expensive — every frame is six camera renders |
+| [UV Mapping](#uv-mapping) | Reading and Writing UVs, Second UV Channel, and UV Transform in a Shader |
+| [Texture Atlases](#texture-atlases) | Selecting sprites by changing a shared atlas texture's offset and repeat |
+| [PBR Texture Set](#pbr-texture-set) | Color, normal, roughness, metalness, occlusion, emissive, displacement, and alpha maps |
+| [Procedural Textures](#procedural-textures) | Generating noise data textures and canvas-based color gradients |
+| [Memory Management](#memory-management) | Disposing texture-backed materials and pooling shared texture loads |
+| [Performance Tips](#performance-tips) | Power-of-two sizing, compression, dimensions, channel packing, and disposal |
+| [Common Mistakes](#common-mistakes) | Frequent mistakes and the changes that correct them |
+| [See Also](#see-also) | Related references and supporting guidance |
 
 ## Loading
 

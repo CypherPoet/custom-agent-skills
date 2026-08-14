@@ -4,7 +4,18 @@ The four core R3F hooks — `useThree` (state access), `useFrame` (render loop),
 
 > Canvas props, render defaults, and the color-management flags mirrored in state: see [canvas-and-project-setup.md](./canvas-and-project-setup.md). Shared stack setup: [../SKILL.md](../SKILL.md).
 
-**Contents:** [Hook Rules](#hook-rules) · [useThree](#usethree) · [useFrame](#useframe) · [useLoader](#useloader) · [useGraph](#usegraph) · [Global and Additional Exports](#global-and-additional-exports) · [Common Mistakes](#common-mistakes) · [See Also](#see-also)
+## Table of Contents
+
+| Section | Covers |
+|---|---|
+| [Hook Rules](#hook-rules) | R3F hooks read the root store from context, and that context exists only inside `<Canvas>` |
+| [useThree](#usethree) | Reading root state, selecting reactive values, changing renderer state, and accessing non-reactive state |
+| [useFrame](#useframe) | Subscribes a callback to the render loop; it runs every frame, just before R3F renders |
+| [useLoader](#useloader) | Suspense-based wrapper around any three.js loader class (anything with a `.load` method) |
+| [useGraph](#usegraph) | Builds the same memoized `{ nodes, materials }` collection from any `Object3D` |
+| [Global and Additional Exports](#global-and-additional-exports) | All importable from `@react-three/fiber` |
+| [Common Mistakes](#common-mistakes) | Frequent mistakes and the changes that correct them |
+| [See Also](#see-also) | Related references and supporting guidance |
 
 ## Hook Rules
 

@@ -3,7 +3,18 @@
 > Source: Filament android samples (Kotlin) + repo README + Maven guide, Filament v1.75.0
 > Last synced: 2026-08-14
 
-**Contents:** [Dependencies](#dependencies) · [Initialize Filament (`Filament.init()`)](#initialize-filament-filamentinit) · [Canonical Render Setup](#canonical-render-setup) · [Field declarations](#field-declarations) · [`onCreate` wiring](#oncreate-wiring) · [`UiHelper` + `SurfaceView`](#uihelper--surfaceview) · [Engine / Renderer / View / Scene / Camera](#engine--renderer--view--scene--camera) · [Configuring the View](#configuring-the-view) · [The `UiHelper.RendererCallback` (swap chain lifecycle)](#the-uihelperrenderercallback-swap-chain-lifecycle) · [The Frame Loop (`ChoreographerHelper` + `Renderer`)](#the-frame-loop-choreographerhelper--renderer) · [Loading Assets from the APK](#loading-assets-from-the-apk) · [Reading a raw asset into a `ByteBuffer`](#reading-a-raw-asset-into-a-bytebuffer) · [Materials (`.filamat`) and material instances](#materials-filamat-and-material-instances) · [Image-based lighting (IBL / KTX)](#image-based-lighting-ibl--ktx) · [Meshes (`.filamesh`)](#meshes-filamesh) · [JNI / Lifetime: explicit destruction](#jni--lifetime-explicit-destruction) · [Kotlin vs Java](#kotlin-vs-java)
+## Table of Contents
+
+| Section | Covers |
+|---|---|
+| [Dependencies](#dependencies) | Android projects declare Filament libraries as Maven dependencies from Maven Central, group `com.google.android.filament` |
+| [Initialize Filament (`Filament.init()`)](#initialize-filament-filamentinit) | `Filament.init()` loads the JNI native library that backs almost every API call |
+| [Canonical Render Setup](#canonical-render-setup) | Grounded in `hellotriangle-MainActivity.kt` (minimal), `litcube-MainActivity.kt` (material instance + light) |
+| [The `UiHelper.RendererCallback` (swap chain lifecycle)](#the-uihelperrenderercallback-swap-chain-lifecycle) | You implement `UiHelper.RendererCallback` and create/destroy the `SwapChain` in response |
+| [The Frame Loop (`ChoreographerHelper` + `Renderer`)](#the-frame-loop-choreographerhelper--renderer) | The Android utility library's `ChoreographerHelper` schedules frames and uses the associated `Renderer` for pacing |
+| [Loading Assets from the APK](#loading-assets-from-the-apk) | Reading a raw asset into a ByteBuffer, Materials (.filamat) and material instances |
+| [JNI / Lifetime: explicit destruction](#jni--lifetime-explicit-destruction) | Every Filament object is backed by a native (C++) resource reached through JNI |
+| [Kotlin vs Java](#kotlin-vs-java) | Using Filament's Java and JNI Android API from Kotlin or Java |
 
 ---
 

@@ -5,9 +5,20 @@
 
 Distilled from Apple's HIG Components pages: Buttons, Menus, Context menus, Pull-down buttons, Pop-up buttons, Edit menus, Action sheets, Activity views.
 
-**Contents:** [Buttons](#buttons) · [Menus](#menus) · [Context menus](#context-menus) · [Pull-down buttons](#pull-down-buttons) · [Pop-up buttons](#pop-up-buttons) · [Edit menus](#edit-menus) · [Action sheets](#action-sheets) · [Activity views](#activity-views)
+## Table of Contents
 
-### Buttons
+| Section | Covers |
+|---|---|
+| [Buttons](#buttons) | A button initiates an instantaneous action, combining a style, content (symbol and/or text label), and a system-defined role |
+| [Menus](#menus) | A menu reveals commands, options, or states on interaction — a space-efficient way to present commands |
+| [Context menus](#context-menus) | A context menu provides hidden-by-default access to functionality directly related to an item |
+| [Pull-down buttons](#pull-down-buttons) | A pull-down button displays a menu of items or actions directly related to the button's purpose |
+| [Pop-up buttons](#pop-up-buttons) | A pop-up button displays a menu of mutually exclusive options |
+| [Edit menus](#edit-menus) | Editing actions for selected text, images, files, charts, and other content |
+| [Action sheets](#action-sheets) | An action sheet is a modal view presenting choices related to an action people intentionally initiate |
+| [Activity views](#activity-views) | An activity view (share sheet) presents sharing activities, actions |
+
+## Buttons
 *Last changed: 2025-12*
 
 **Purpose:** A button initiates an instantaneous action, combining a style, content (symbol and/or text label), and a system-defined role.
@@ -54,7 +65,7 @@ macOS help button locations:
 - watchOS: All inline buttons use the capsule shape with a contrasting material effect. Use a toolbar to place buttons in corners (system moves time/title and applies Liquid Glass). Prefer full-width buttons for primary actions; two side-by-side buttons need equal heights and images or short titles. Use identical heights in vertical stacks of one- and two-line text buttons.
 - tvOS: No additional considerations.
 
-### Menus
+## Menus
 *Last changed: 2026-06*
 
 **Purpose:** A menu reveals commands, options, or states on interaction — a space-efficient way to present commands; its labeling and organization rules apply to all menu types.
@@ -77,7 +88,7 @@ Canonical implementation: SwiftUI `Menu`.
 - visionOS: Supports the small and large layouts. Present near the content it controls; menus can extend beyond window bounds. Prefer the `subtle` breakthrough effect (default via `automatic` when overlapping 3D content); `prominent` can disrupt and cause discomfort; `none` may hide the menu behind 3D content.
 - macOS/tvOS/watchOS: No additional considerations.
 
-### Context menus
+## Context menus
 *Last changed: 2023-12*
 
 **Purpose:** A context menu provides hidden-by-default access to functionality directly related to an item, revealed by touch-and-hold/pinch-and-hold (iOS, iPadOS, visionOS), Control-click, or secondary click (macOS, iPadOS).
@@ -106,7 +117,7 @@ Canonical implementations: SwiftUI `contextMenu(menuItems:)`, UIKit `UIContextMe
 - visionOS: Consider a context menu instead of a panel or inspector window for frequent functionality. Avoid menu heights exceeding the window height — system controls sit above and below the window edges.
 - tvOS: No additional considerations. Not supported in watchOS.
 
-### Pull-down buttons
+## Pull-down buttons
 *Last changed: 2022-09*
 
 **Purpose:** A pull-down button displays a menu of items or actions directly related to the button's purpose; choosing an item closes the menu and performs the action.
@@ -129,7 +140,7 @@ Canonical implementations: SwiftUI `MenuPickerStyle`, UIKit `showsMenuAsPrimaryA
 - iOS/iPadOS: A More (ellipsis) pull-down button can hold items that don't need prominent placement, but the ellipsis icon hurts predictability — weigh space savings against discoverability.
 - macOS/visionOS: No additional considerations. Not supported in tvOS or watchOS.
 
-### Pop-up buttons
+## Pop-up buttons
 *Last changed: 2023-10*
 
 **Purpose:** A pop-up button displays a menu of mutually exclusive options; after a choice, the menu closes and the button can update to show the current selection.
@@ -149,7 +160,7 @@ Canonical implementations: SwiftUI `MenuPickerStyle`, UIKit `changesSelectionAsP
 - iPadOS: In a popover or modal view, consider a pop-up button instead of a disclosure indicator for a list item with a small, well-defined set of options — avoids a detail-view round trip.
 - iOS/macOS/visionOS: No additional considerations. Not supported in tvOS or watchOS.
 
-### Edit menus
+## Edit menus
 *Last changed: 2023-06*
 
 **Purpose:** An edit menu lets people change selected content (text, images, files, contact cards, charts, map locations) in the current view, with related commands like Copy, Select, Translate, and Look Up; in iOS, iPadOS, and visionOS the system detects the selection's data type and may add related actions (e.g. Get Directions for an address).
@@ -176,7 +187,7 @@ Canonical implementations: UIKit `UIEditMenuInteraction`, AppKit `NSMenu`.
 - macOS: Editing commands appear in a context menu during editing and in the menu bar's Edit menu (see The menu bar > Edit menu for ordering).
 - visionOS: Opens via pinch and hold as a horizontal bar or as a context menu; no additional considerations. Not supported in tvOS or watchOS.
 
-### Action sheets
+## Action sheets
 
 **Purpose:** An action sheet is a modal view presenting choices related to an action people intentionally initiate.
 
@@ -213,7 +224,7 @@ watchOS button styles:
 - watchOS: System style includes a title, optional message, Cancel button, and one or more additional buttons; appearance varies by device.
 - macOS/tvOS: No additional considerations. Not supported in visionOS.
 
-### Activity views
+## Activity views
 
 **Purpose:** An activity view (share sheet) presents sharing activities (e.g. messaging), actions (e.g. Copy, Print), and frequently used apps for the current context, appearing as a sheet or popover; the system lists app-specific actions before cross-app/system ones, and people can edit the action list.
 

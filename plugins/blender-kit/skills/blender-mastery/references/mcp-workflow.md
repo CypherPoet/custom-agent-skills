@@ -4,6 +4,21 @@ How to drive Blender productively through the official MCP server (the lab exten
 
 The single biggest mistake under MCP is treating it like a stateless REPL. Blender has no preview-of-pending-edits, no cheap rollback, no protection against context drift between calls. The patterns below exist to compensate.
 
+## Table of Contents
+
+| Section | Covers |
+|---|---|
+| [The loop, in detail](#the-loop-in-detail) | 1. Read, 2. Propose, 3. Execute, and related topics |
+| [Look it up: bundled docs search](#look-it-up-bundled-docs-search) | Searching Blender's bundled manual and Python API documentation |
+| [Idempotent-edit patterns](#idempotent-edit-patterns) | Scripts that can re-run safely save you from half-completed-state hell |
+| [Persistent helpers module](#persistent-helpers-module) | Sharing reusable Blender helper modules across `execute_blender_code` calls |
+| [Fresh files without read_homefile](#fresh-files-without-readhomefile) | In-session file reloads are the one reliable way to lose the MCP mid-session |
+| [Chunking large operations](#chunking-large-operations) | If an operation might exceed the MCP timeout (~15–30 seconds), split it |
+| [The headless CLI escape hatch](#the-headless-cli-escape-hatch) | For long-running ops, drop out of the MCP and run Blender directly |
+| [Handling large output](#handling-large-output) | `execute_blender_code` returns printed output in a `stdout` field |
+| [When the MCP misbehaves](#when-the-mcp-misbehaves) | Timeout, connection, traceback, and dependency-graph checks for failed MCP operations |
+| [Sources](#sources) | Authoritative references that ground this guidance |
+
 ## The loop, in detail
 
 ### 1. Read

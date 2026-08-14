@@ -1,6 +1,6 @@
 {
   "name": "threejs-kit",
-  "version": "0.12.1",
+  "version": "0.12.2",
   "description": "Three.js / WebGPU / WebGL tooling.",
   "author": {
     "name": "CypherPoet"

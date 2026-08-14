@@ -2,8 +2,6 @@
 
 The deliverables and severity scale an [apple-app-store-best-practices](../SKILL.md) audit produces.
 
-**Contents:** [Output Format](#output-format) · [Severity Definitions](#severity-definitions)
-
 ## Output Format
 
 Produce these 6 deliverables:

@@ -2,7 +2,16 @@
 
 How to make an Apple app icon *convert* — the design and tap-through side that complements the build-and-ship engineering in [`../SKILL.md`](../SKILL.md). This is Apple-focused; Android adaptive icons and Play Store experiments are a separate concern.
 
-**Contents:** [Why the icon is your highest-leverage asset](#why-the-icon-is-your-highest-leverage-asset) · [Design principles](#design-principles) · [Apple icon sizes](#apple-icon-sizes) · [Icon audit rubric](#icon-audit-rubric) · [A/B-testing icons on iOS](#ab-testing-icons-on-ios) · [Designer brief template](#designer-brief-template)
+## Table of Contents
+
+| Section | Covers |
+|---|---|
+| [Why the icon is your highest-leverage asset](#why-the-icon-is-your-highest-leverage-asset) | The icon is the first thing users see in search results — before the title, rating, or screenshots |
+| [Design principles](#design-principles) | Small-scale simplicity, platform consistency, visual depth, contrast, and recognizability |
+| [Apple icon sizes](#apple-icon-sizes) | Author a 1024×1024 px master for iPhone, iPad, and Mac — Apple Watch uses a 1088×1088 px canvas |
+| [Icon audit rubric](#icon-audit-rubric) | Score a current or proposed icon 1–10 per dimension |
+| [A/B-testing icons on iOS](#ab-testing-icons-on-ios) | Apple's Product Page Optimization (PPO) in App Store Connect tests icon variants against your live listing with real traffic |
+| [Designer brief template](#designer-brief-template) | Concept variants, small-size mockups, dark-background checks, and source deliverables |
 
 ## Why the icon is your highest-leverage asset
 

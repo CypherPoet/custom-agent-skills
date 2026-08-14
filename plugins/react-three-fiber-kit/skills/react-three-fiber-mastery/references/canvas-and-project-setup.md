@@ -2,7 +2,26 @@
 
 How to get a React Three Fiber project running and configure the `<Canvas>` root: install commands and version pairing, the full Canvas prop surface, the render defaults it installs, bundler setup (Vite/Next.js/React Native), WebGPU, custom tree-shakable roots, and StrictMode behavior in v9. Skill overview: [../SKILL.md](../SKILL.md).
 
-**Contents:** [Install & Version Pairing](#install--version-pairing) · [Minimal App](#minimal-app) · [Canvas Props](#canvas-props) · [Render Defaults](#render-defaults) · [Camera Setup](#camera-setup) · [Shadows](#shadows) · [Frameloop](#frameloop) · [Color Management Flags](#color-management-flags) · [Event Wiring](#event-wiring) · [onCreated & Fallback](#oncreated--fallback) · [Bundler Setup](#bundler-setup) · [WebGPU](#webgpu) · [Custom Tree-Shakable Roots](#custom-tree-shakable-roots) · [StrictMode in v9](#strictmode-in-v9) · [Common Mistakes](#common-mistakes)
+## Table of Contents
+
+| Section | Covers |
+|---|---|
+| [Install & Version Pairing](#install--version-pairing) | Version rules that decide whether an install works at all |
+| [Minimal App](#minimal-app) | `<Canvas>` creates the WebGL renderer, a default scene, and a default camera, then renders its children into that scene |
+| [Canvas Props](#canvas-props) | Renderer construction, v9 callback behavior, and supported Canvas properties |
+| [Render Defaults](#render-defaults) | What `<Canvas>` installs when you pass nothing |
+| [Camera Setup](#camera-setup) | Default camera construction, custom cameras, and runtime camera replacement |
+| [Shadows](#shadows) | The `shadows` prop enables `gl.shadowMap` and picks the algorithm |
+| [Frameloop](#frameloop) | `invalidate()` requests a frame; it does not render synchronously |
+| [Color Management Flags](#color-management-flags) | Three flags, three distinct switches — they are not synonyms |
+| [Event Wiring](#event-wiring) | Canvas-level event configuration (per-object handlers and the raycast/propagation model live in events-and-interaction.md) |
+| [onCreated & Fallback](#oncreated--fallback) | `onCreated` root-state access and graceful handling when WebGL initialization fails |
+| [Bundler Setup](#bundler-setup) | Vite — zero config. `npm create vite@latest my-app -- --template react-ts`, install the packages, done |
+| [WebGPU](#webgpu) | v9 supports `THREE.WebGPURenderer` through the async `gl` callback |
+| [Custom Tree-Shakable Roots](#custom-tree-shakable-roots) | `<Canvas>` is a convenience wrapper |
+| [StrictMode in v9](#strictmode-in-v9) | v9 inherits `<StrictMode>` from the parent React tree across the renderer boundary |
+| [Common Mistakes](#common-mistakes) | Frequent mistakes and the changes that correct them |
+| [See Also](#see-also) | Related references and supporting guidance |
 
 ## Install & Version Pairing
 

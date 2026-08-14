@@ -2,6 +2,19 @@
 
 This guide covers debugging programs built with `-fbounds-safety`, including trap behavior, LLDB commands, wide pointer inspection, and soft trap debugging.
 
+## Table of Contents
+
+| Section | Covers |
+|---|---|
+| [Optimized vs Unoptimized Builds](#optimized-vs-unoptimized-builds) | Debug unoptimized code when possible |
+| [What Happens When a Bounds Violation Occurs](#what-happens-when-a-bounds-violation-occurs) | When `-fbounds-safety` detects an issue at runtime, it executes a trap instruction |
+| [Trap Reasons](#trap-reasons) | Human-readable bounds-safety trap descriptions encoded as artificial inline frames |
+| [Working with Wide Pointers](#working-with-wide-pointers) | Examining Wide Pointers and Known Limitations |
+| [Working with Externally Counted Pointers](#working-with-externally-counted-pointers) | LLDB shows the count expression (unevaluated) for externally counted pointers |
+| [Types Without Special Debugger Support](#types-without-special-debugger-support) | These annotations currently have no special LLDB display — the unannotated pointer type is shown |
+| [Expression Parsing Limitations](#expression-parsing-limitations) | The `-fbounds-safety` language mode is mostly off in LLDB's expression evaluator |
+| [Soft Traps in LLDB](#soft-traps-in-lldb) | Soft trap mode must be enabled at build time — see build-settings.md for the compiler flag and Xcode build setting |
+
 ## Optimized vs Unoptimized Builds
 
 Debug unoptimized code when possible. Optimized code is harder to debug because:

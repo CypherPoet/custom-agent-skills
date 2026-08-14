@@ -2,6 +2,19 @@
 
 Sculpting is more interactive than scriptable — most of the actual sculpting happens through brush strokes, which Claude can't drive through the MCP. The script-relevant parts: setting up the right topology before sculpting, switching brushes, and the retopology / bake workflow afterward.
 
+## Table of Contents
+
+| Section | Covers |
+|---|---|
+| [The sculpt mode lifecycle](#the-sculpt-mode-lifecycle) | Topology preparation, sculpting, optional retopology, and finishing |
+| [Multires vs Dyntopo](#multires-vs-dyntopo) | Levels go up exponentially — level 4 is 16× the polys of level 0 |
+| [Switching brushes from script](#switching-brushes-from-script) | Brush settings (radius, strength) are then on the brush itself: `brush.size`, `brush.strength` |
+| [Common brush use cases](#common-brush-use-cases) | Sculpting brushes and the mesh changes each one is best suited to create |
+| [Retopology workflow](#retopology-workflow) | The high-poly sculpt is rarely the final asset |
+| [Baking sculpt detail to normals](#baking-sculpt-detail-to-normals) | After retopology, bake the sculpt's surface detail into a normal map on the low-poly |
+| [Common pitfalls](#common-pitfalls) | Mesh mutation, multiresolution ownership, and topology changes that break sculpt workflows |
+| [Sources](#sources) | Authoritative references that ground this guidance |
+
 ## The sculpt mode lifecycle
 
 1. **Prepare topology** — choose multires (subdivide a base mesh) or dyntopo (real-time tessellation). They're not interchangeable; pick before you start.

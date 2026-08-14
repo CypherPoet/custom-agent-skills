@@ -1,6 +1,16 @@
 # Lighting
 
-**Contents:** [The Three Ingredients](#the-three-ingredients) · [Per-Vertex vs Per-Fragment](#per-vertex-vs-per-fragment) · [Surface Normals](#surface-normals) · [Light Types](#light-types) · [Multiple Lights](#multiple-lights) · [Tone Mapping and Gamma](#tone-mapping-and-gamma) · [Common Mistakes](#common-mistakes)
+## Table of Contents
+
+| Section | Covers |
+|---|---|
+| [The Three Ingredients](#the-three-ingredients) | Real-time shading boils down to three terms added together per fragment |
+| [Per-Vertex vs Per-Fragment](#per-vertex-vs-per-fragment) | Quality and performance tradeoffs between vertex and fragment lighting |
+| [Surface Normals](#surface-normals) | Lighting math needs the surface normal |
+| [Light Types](#light-types) | Directional, point, and spot-light equations, ranges, and attenuation |
+| [Multiple Lights](#multiple-lights) | For raw WebGL projects, almost always: one directional ("sun") + a handful of points |
+| [Tone Mapping and Gamma](#tone-mapping-and-gamma) | After computing lighting in linear space, output to an sRGB display |
+| [Common Mistakes](#common-mistakes) | Frequent mistakes and the changes that correct them |
 
 ## The Three Ingredients
 

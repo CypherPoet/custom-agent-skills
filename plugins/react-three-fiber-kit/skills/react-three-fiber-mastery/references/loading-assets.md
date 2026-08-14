@@ -4,7 +4,25 @@ Models, textures, video, and render targets at the React layer: `useLoader` and 
 
 > Canvas/project setup: see [canvas-and-project-setup.md](./canvas-and-project-setup.md); shared conventions: [../SKILL.md](../SKILL.md).
 
-**Contents:** [Quick Start](#quick-start) · [useGLTF](#usegltf) · [The gltfjsx Workflow](#the-gltfjsx-workflow) · [useLoader](#useloader) · [Primitive and Clone](#primitive-and-clone) · [Other Model Formats](#other-model-formats) · [useTexture](#usetexture) · [Texture Configuration](#texture-configuration) · [Color Spaces](#color-spaces) · [Environment, Cube, and Video Textures](#environment-cube-and-video-textures) · [Render Targets and Procedural Textures](#render-targets-and-procedural-textures) · [Suspense and Loading UI](#suspense-and-loading-ui) · [Caching and Preloading](#caching-and-preloading) · [Common Mistakes](#common-mistakes)
+## Table of Contents
+
+| Section | Covers |
+|---|---|
+| [Quick Start](#quick-start) | Every loader hook in this file suspends — a `<Suspense>` boundary above the loading component is mandatory |
+| [useGLTF](#usegltf) | The recommended way to load GLTF/GLB (drei) |
+| [The gltfjsx Workflow](#the-gltfjsx-workflow) | gltfjsx turns a GLTF/GLB into a typed React component — the preferred way to consume models you control |
+| [useLoader](#useloader) | Fiber's core loading hook, for any three.js loader: `useLoader(LoaderClassOrInstance, urlOrUrls, extensions?, onProgress?)` |
+| [Primitive and Clone](#primitive-and-clone) | `<primitive object={...}>` mounts a pre-existing three.js object into the JSX tree; extra props are applied to it |
+| [Other Model Formats](#other-model-formats) | Supported non-glTF model formats, their loader APIs, and returned objects |
+| [useTexture](#usetexture) | drei's texture hook (suspends, caches by URL, uploads to the GPU on load — call it inside `<Canvas>`) |
+| [Texture Configuration](#texture-configuration) | Quick reference for the `THREE.Texture` properties you set in loader callbacks |
+| [Color Spaces](#color-spaces) | v9 change: R3F v8 automatically converted every texture prop to sRGB — which corrupted data textures (normal, displacement) |
+| [Environment, Cube, and Video Textures](#environment-cube-and-video-textures) | For scene-wide environment lighting/background prefer the declarative `<Environment>` component — see staging-and-drei.md |
+| [Render Targets and Procedural Textures](#render-targets-and-procedural-textures) | useFBO (drei) creates a `THREE.WebGLRenderTarget` (defaults to canvas size; accepts `useFBO(width, height, { samples, depth })`) |
+| [Suspense and Loading UI](#suspense-and-loading-ui) | Suspense boundaries, fallback progress, error handling, and grouped loading |
+| [Caching and Preloading](#caching-and-preloading) | `useLoader` (and every drei hook built on it) caches by loader + URL: same URL → same instance, across all components |
+| [Common Mistakes](#common-mistakes) | Frequent mistakes and the changes that correct them |
+| [See Also](#see-also) | Related references and supporting guidance |
 
 ## Quick Start
 

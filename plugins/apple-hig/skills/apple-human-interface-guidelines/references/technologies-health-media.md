@@ -5,9 +5,25 @@
 
 Distilled from Apple's HIG Technologies pages: Playing audio, Playing video, AirPlay, SharePlay, Live Photos, Photo editing, ShazamKit, HealthKit, CareKit, ResearchKit, Workouts, HomeKit, Augmented reality.
 
-**Contents:** [Playing audio](#playing-audio) · [Playing video](#playing-video) · [AirPlay](#airplay) · [SharePlay](#shareplay) · [Live Photos](#live-photos) · [Photo editing](#photo-editing) · [ShazamKit](#shazamkit) · [HealthKit](#healthkit) · [CareKit](#carekit) · [ResearchKit](#researchkit) · [Workouts](#workouts) · [HomeKit](#homekit) · [Augmented reality](#augmented-reality)
+## Table of Contents
 
-### Playing audio
+| Section | Covers |
+|---|---|
+| [Playing audio](#playing-audio) | Deliver rich audio that automatically adjusts as device context, volume, and output routes change |
+| [Playing video](#playing-video) | Provide rich, consistent video playback by embedding the system player (and optionally integrating with the TV app) across iOS |
+| [AirPlay](#airplay) | Let people stream media wirelessly from iOS, iPadOS, macOS, and tvOS devices to Apple TV |
+| [SharePlay](#shareplay) | Let multiple people share a synchronized activity — watching |
+| [Live Photos](#live-photos) | Present sound- and motion-rich Live Photos that spring to life on press |
+| [Photo editing](#photo-editing) | Let photo-editing extensions modify photos and videos inside the Photos app via filters or other changes |
+| [ShazamKit](#shazamkit) | Audio recognition through Shazam's catalog or app-defined custom catalogs |
+| [HealthKit](#healthkit) | Read and write health and fitness data through the central HealthKit repository on iOS |
+| [CareKit](#carekit) | Build care-plan apps (chronic-illness management, recovery, wellness goals) using CareKit UI's prebuilt task |
+| [ResearchKit](#researchkit) | Build medical-research apps with predesigned onboarding, consent, survey, and active-task screens |
+| [Workouts](#workouts) | Create workout/fitness experiences (primarily Apple Watch, also iPhone/iPad) |
+| [HomeKit](#homekit) | Let people securely control connected home accessories via Siri or the Apple Home app on iPhone |
+| [Augmented reality](#augmented-reality) | Blend virtual 3D objects with the live camera view of the real world using ARKit to create convincing |
+
+## Playing audio
 *Last changed: 2023-06*
 
 **Purpose:** Deliver rich audio that automatically adjusts as device context, volume, and output routes change.
@@ -43,7 +59,7 @@ Canonical implementations: AVFAudio `AVAudioSession`, MediaPlayer `MPVolumeView`
 - watchOS: System manages playback. Play short clips while active, or longer audio that continues across wrist-lower/app-switch (Playing Background Audio). Encode media at 64 kbps HE-AAC. Consider a Now Playing view to control current/recent audio.
 - tvOS: System plays audio only when people initiate it; no sounds accompany alerts or notifications.
 
-### Playing video
+## Playing video
 *Last changed: 2023-09*
 
 **Purpose:** Provide rich, consistent video playback by embedding the system player (and optionally integrating with the TV app) across iOS, iPadOS, macOS, tvOS, and visionOS.
@@ -82,7 +98,7 @@ watchOS media asset encoding:
 - visionOS: Help comfort — let people start video, use a small resizable window, keep surroundings visible. In a fully immersive experience the system places the player at a predictable spot; don't let virtual content occlude playback/transport controls, and don't auto-start fully immersive playback. For scrubbing, supply a thumbnail track with each thumbnail 160 px wide. Inline video must be 2D — don't expand an inline `AVPlayerViewController` to fill a window; keep window content visible. Use a RealityKit video player for splash/transitional views (no controls, auto aspect ratio for 2D/3D, closed captions).
 - watchOS: System manages playback; play short clips while active and running in foreground (`VideoPlayer`). Keep clips no longer than 30 seconds. Use recommended sizes/encoding; don't scale clips. Don't make a poster image look like a system control; do make it represent the clip's contents.
 
-### AirPlay
+## AirPlay
 *Last changed: 2023-05*
 
 **Purpose:** Let people stream media wirelessly from iOS, iPadOS, macOS, and tvOS devices to Apple TV, HomePod, and AirPlay-capable TVs and speakers.
@@ -106,7 +122,7 @@ Canonical implementations: AVKit `AVPlayerViewController`, AVFoundation, HTTP Li
 - iOS/iPadOS/macOS/tvOS/visionOS: No additional considerations.
 - watchOS: Not supported.
 
-### SharePlay
+## SharePlay
 *Last changed: 2023-12*
 
 **Purpose:** Let multiple people share a synchronized activity — watching, listening, gaming, sketching — during a FaceTime call or Messages conversation.
@@ -128,7 +144,7 @@ Canonical implementations: GroupActivities (`SystemCoordinator`, `SpatialTemplat
 - watchOS: Not supported.
 - visionOS: Most apps are expected to support SharePlay; people choose the Spatial option in FaceTime. Spatial Personas appear in each wearer's space within a _shared context_ (single coordinate system; system synchronizes size, position, orientation). Pick a spatial Persona template — side-by-side (all face content, good for media, less nonverbal interaction), surround (around 3D content, faces each other), or conversational (around a center point with content on the circle, for being-together-while-app-works-in-background). Launch directly into the shared activity (present sign-in in an autodismissible window); help people join together without forcing a level-of-immersion change that would disrupt their task; integrate new participants smoothly and design for up to five. Keep everyone on the same app state; use Spatial Audio; prefer letting people resolve conflicts socially (e.g. last-change-wins); keep private vs shared windows distinguishable and allow dragging content from private to shared. Let people personalize without changing others' experience (volume, subtitles); give a unique per-person view only when content needs a specific angle (e.g. Spatial Capture); make it easy to exit and rejoin.
 
-### Live Photos
+## Live Photos
 
 **Purpose:** Present sound- and motion-rich Live Photos that spring to life on press, while keeping their content and interaction model consistent across apps.
 
@@ -147,7 +163,7 @@ Canonical implementations: PhotoKit `PHLivePhoto`, LivePhotosKit JS.
 - watchOS: Not supported.
 - visionOS: People can view a Live Photo but can't capture one.
 
-### Photo editing
+## Photo editing
 
 **Purpose:** Let photo-editing extensions modify photos and videos inside the Photos app via filters or other changes, always saving edits as new files that preserve the originals.
 
@@ -163,7 +179,7 @@ Canonical implementations: PhotoKit; App extensions.
 - iOS/iPadOS/macOS: No additional considerations.
 - tvOS/visionOS/watchOS: Not supported.
 
-### ShazamKit
+## ShazamKit
 
 **Purpose:** Recognize audio by matching a sample against the ShazamKit catalog or a custom catalog (for genre-aware graphics, synced captions/sign language, or synchronized in-app experiences).
 
@@ -177,7 +193,7 @@ Canonical implementations: ShazamKit.
 **Platform deltas:**
 - iOS/iPadOS/macOS/tvOS/visionOS/watchOS: No additional considerations.
 
-### HealthKit
+## HealthKit
 
 **Purpose:** Read and write health and fitness data through the central HealthKit repository on iOS, iPadOS, and watchOS, with the user's permission.
 
@@ -196,7 +212,7 @@ Canonical implementations: HealthKit `HKHealthStore`, HealthKitUI `HKActivityRin
 - iOS/iPadOS/watchOS: No additional considerations.
 - macOS/tvOS/visionOS: Not supported.
 
-### CareKit
+## CareKit
 *Last changed: 2023-05*
 
 **Purpose:** Build care-plan apps (chronic-illness management, recovery, wellness goals) using CareKit UI's prebuilt task, chart, and contact views backed by the on-device CareKit Store.
@@ -229,7 +245,7 @@ CareKit task information:
 - iOS/iPadOS: No additional considerations.
 - macOS/tvOS/visionOS/watchOS: Not supported.
 
-### ResearchKit
+## ResearchKit
 *Last changed: 2023-09*
 
 **Purpose:** Build medical-research apps with predesigned onboarding, consent, survey, and active-task screens. (Informational only, not legal advice — consult an attorney.)
@@ -248,7 +264,7 @@ CareKit task information:
 - iOS/iPadOS: No additional considerations.
 - macOS/tvOS/visionOS/watchOS: Not supported.
 
-### Workouts
+## Workouts
 
 **Purpose:** Create workout/fitness experiences (primarily Apple Watch, also iPhone/iPad) that surface live activity data and familiar fitness-metric components.
 
@@ -269,7 +285,7 @@ Canonical implementations: WorkoutKit; HealthKit (workouts and activity rings).
 - iOS/iPadOS/watchOS: No additional considerations.
 - macOS/tvOS/visionOS: Not supported.
 
-### HomeKit
+## HomeKit
 *Last changed: 2023-05*
 
 **Purpose:** Let people securely control connected home accessories via Siri or the Apple Home app on iPhone, iPad, Apple Watch, and Mac, with your app providing custom or accessory-specific experiences.
@@ -290,7 +306,7 @@ Canonical implementations: HomeKit `HMAccessorySetupManager`.
 **Platform deltas:**
 - iOS/iPadOS/macOS/tvOS/visionOS/watchOS: No additional considerations.
 
-### Augmented reality
+## Augmented reality
 
 **Purpose:** Blend virtual 3D objects with the live camera view of the real world using ARKit to create convincing, interactive immersive experiences.
 

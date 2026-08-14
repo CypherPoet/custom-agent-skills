@@ -9,7 +9,23 @@ Text("Explore", tableName: "Navigation",
      comment: "Tab bar item title for the Explore screen.")
 ```
 
-# Bundle for Swift Packages and Frameworks
+## Table of Contents
+
+| Section | Covers |
+|---|---|
+| [Bundle for Swift Packages and Frameworks](#bundle-for-swift-packages-and-frameworks) | Apps, app extensions, and XPC services are their own main bundle, so the `bundle` parameter can be omitted |
+| [SwiftUI Views Localize String Literals Automatically](#swiftui-views-localize-string-literals-automatically) | SwiftUI initializers that accept `LocalizedStringKey` automatically treat string literals as localization keys |
+| [Localizing Variables and Custom Types](#localizing-variables-and-custom-types) | When a `String` variable is passed to `Text`, the `StringProtocol` overload runs and the string is NOT localized |
+| [String Interpolation vs Concatenation](#string-interpolation-vs-concatenation) | String interpolation preserves `LocalizedStringKey` and produces a format string in the catalog |
+| [Casing](#casing) | Bake the desired case into the string itself rather than transforming case at runtime via `.textCase(_:)` |
+| [Formatting Dates, Numbers, and Currencies](#formatting-dates-numbers-and-currencies) | Use `Text`'s `format` parameter or `.formatted()` instead of `DateFormatter` or `NumberFormatter` with hardcoded format strings |
+| [Layout for Localization](#layout-for-localization) | Use `.leading` and `.trailing` instead of `.left` and `.right` — they flip for right-to-left locales; `.left` and `.right` don't |
+| [Reading the Current Locale](#reading-the-current-locale) | Use `@Environment(\.locale)` instead of `Locale.current` for locale-dependent logic in views |
+| [String(localized:) Outside SwiftUI Views](#stringlocalized-outside-swiftui-views) | When you need a localized `String` outside of SwiftUI views, use `String(localized:)`, not `NSLocalizedString` |
+| [LocalizedStringResource for Non-View Types](#localizedstringresource-for-non-view-types) | When a non-view type carries a user-facing string — a model object |
+| [Comments for Translators](#comments-for-translators) | Add a `comment` describing the UI element and its purpose, especially for ambiguous strings |
+
+## Bundle for Swift Packages and Frameworks
 
 Apps, app extensions, and XPC services are their own main bundle, so the `bundle` parameter can be omitted. Frameworks and Swift packages need an explicit `bundle`; without one, SwiftUI looks up strings from `Bundle.main` and the lookup fails silently — the string appears unlocalized at runtime.
 
@@ -26,7 +42,7 @@ Text("Save to Favorites", bundle: #bundle,
 
 `#bundle` is the preferred form; `Bundle.module` and `Bundle(for: MyClass.self)` work but are older patterns.
 
-# SwiftUI Views Localize String Literals Automatically
+## SwiftUI Views Localize String Literals Automatically
 
 SwiftUI initializers that accept `LocalizedStringKey` (e.g., `Text`, `Button`, `.navigationTitle`) automatically treat string literals as localization keys. Do not wrap literals in `NSLocalizedString`, `String(localized:)`, or `LocalizedStringResource`.
 
@@ -46,7 +62,7 @@ Both opaque keys (`"start_workout"`) and natural-language strings (`"Start Worko
 
 Use `Text(verbatim:)` to opt out of localization for a string literal — most often a debug label that interpolates a runtime value (e.g., `Text(verbatim: "Session: \(sessionID)")`), where the literal would otherwise be treated as a localization key. When the argument is already a `String` variable, `Text(value)` calls the `StringProtocol` overload and skips localization on its own — no `verbatim:` needed.
 
-# Localizing Variables and Custom Types
+## Localizing Variables and Custom Types
 
 When a `String` variable is passed to `Text`, the `StringProtocol` overload runs and the string is NOT localized. Wrapping the variable in `LocalizedStringKey(_:)` at the call site does not help either — Xcode cannot extract a literal from a runtime value, so the entry never lands in the catalog. To localize a value chosen from a known set of keys, model the set with a type that exposes `LocalizedStringResource`:
 
@@ -81,7 +97,7 @@ struct SectionHeader {
 }
 ```
 
-# String Interpolation vs Concatenation
+## String Interpolation vs Concatenation
 
 String interpolation preserves `LocalizedStringKey` and produces a format string in the catalog (e.g., `"Welcome, %@"`). Concatenation with `+` produces a `String` — the result is not localized.
 
@@ -107,7 +123,7 @@ Text(String(localized: "Created by")) + Text(" ") + Text(authorName)
 Text("Created by \(authorName)")
 ```
 
-# Casing
+## Casing
 
 Bake the desired case into the string itself rather than transforming case at runtime via `.textCase(_:)`, `.localizedUppercase`, or `.localizedCapitalized`. A runtime transform forces the same casing decision across all translations, leaving translators no way to adjust per language.
 
@@ -121,7 +137,7 @@ Text("SECTION HEADER")
 
 This applies to localized strings. Strings the user typed in should display as-is; you don't know what casing they intended. If a transform is unavoidable, prefer `.localizedUppercase` / `.localizedCapitalized`, which honor the user's locale (Turkish dotted/dotless I, German ß, etc.).
 
-# Formatting Dates, Numbers, and Currencies
+## Formatting Dates, Numbers, and Currencies
 
 Use `Text`'s `format` parameter or `.formatted()` instead of `DateFormatter` or `NumberFormatter` with hardcoded format strings. Format styles adapt to the user's locale; hardcoded format strings do not. These overloads localize through the format style — they're not a bypass of localization, and the value itself doesn't produce a catalog entry. When the value is interpolated into a localized literal (e.g., `"Total: \(price, format: ...)"`), the surrounding literal still accepts a `comment:` as usual.
 
@@ -163,7 +179,7 @@ Text("Order: \(items.formatted())")
 
 When `DateFormatter` is genuinely unavoidable, use `setLocalizedDateFormatFromTemplate(_:)` rather than assigning `dateFormat` directly — the template reorders fields per locale.
 
-# Layout for Localization
+## Layout for Localization
 
 Use `.leading` and `.trailing` instead of `.left` and `.right` — they flip for right-to-left locales; `.left` and `.right` don't.
 
@@ -199,11 +215,11 @@ Text("Welcome").font(.system(size: 17))
 Text("Welcome").font(.body)
 ```
 
-# Reading the Current Locale
+## Reading the Current Locale
 
 Use `@Environment(\.locale)` instead of `Locale.current` for locale-dependent logic in views — the environment respects preview overrides and per-view injection; `Locale.current` does not.
 
-# String(localized:) Outside SwiftUI Views
+## String(localized:) Outside SwiftUI Views
 
 When you need a localized `String` outside of SwiftUI views, use `String(localized:)`, not `NSLocalizedString`.
 
@@ -221,7 +237,7 @@ Do not interpolate inside `NSLocalizedString` — Xcode extracts keys from liter
 
 Prefer `String(localized:)` over `String(format:)` and `String.localizedStringWithFormat`. `String(format:)` always renders digits as 0–9 regardless of locale and is unsuitable for user-facing text; `String.localizedStringWithFormat` works when paired with `NSLocalizedString`, but `String(localized:)` is the modern API and the right default.
 
-# LocalizedStringResource for Non-View Types
+## LocalizedStringResource for Non-View Types
 
 When a non-view type carries a user-facing string — a model object, a tip, a queued notification — use `LocalizedStringResource` instead of `String`. The string is resolved at display time, not creation time, so it honors the locale active when the value actually renders. Whenever a `String` would otherwise be passed between view models, modules, or into a view, `LocalizedStringResource` is the right type. Apply this when designing new types or changing user-facing text — don't sweep through existing `String` properties as part of unrelated edits.
 
@@ -242,7 +258,7 @@ struct Tip {
 let tip = Tip(headline: "Tip of the Day")
 ```
 
-# Comments for Translators
+## Comments for Translators
 
 Add a `comment` describing the UI element and its purpose, especially for ambiguous strings. For interpolated strings, describe each placeholder by position — translators don't see Swift variable names.
 

@@ -10,7 +10,28 @@ JS API is a thin binding over the C++ API: same objects (`Engine`, `Scene`, `Vie
 demand it (e.g. `createIblFromKtx1`, `setColor3Parameter`). All API names below are copied verbatim
 from the tutorials — do not substitute guessed names.
 
-**Contents:** [Page Skeleton (HTML)](#page-skeleton-html) · [Bootstrapping: `Filament.init` and Engine Creation](#bootstrapping-filamentinit-and-engine-creation) · [WebGL2 / WebGPU Backend](#webgl2--webgpu-backend) · [Serving Over HTTP (CORS / MIME)](#serving-over-http-cors--mime) · [Core Object Graph](#core-object-graph) · [Entities, Components, Managers](#entities-components-managers) · [The Builder Pattern in JS](#the-builder-pattern-in-js) · [Vertex & Index Buffers](#vertex--index-buffers) · [Materials & Material Instances](#materials--material-instances) · [Lighting (Directional / Sun / IBL)](#lighting-directional--sun--ibl) · [Skybox & IBL from KTX](#skybox--ibl-from-ktx) · [Textures (KTX2, Compressed, Async)](#textures-ktx2-compressed-async) · [Meshes: filamesh](#meshes-filamesh) · [The Render & Resize Loop](#the-render--resize-loop) · [Resize / DPR Handling](#resize--dpr-handling) · [Asset-Production Toolchain (matc / cmgen / filamesh / mipgen)](#asset-production-toolchain-matc--cmgen--filamesh--mipgen) · [Asset Type Reference](#asset-type-reference) · [Gotchas](#gotchas)
+## Table of Contents
+
+| Section | Covers |
+|---|---|
+| [Page Skeleton (HTML)](#page-skeleton-html) | A minimal, mobile-friendly page with a full-screen canvas |
+| [Bootstrapping: `Filament.init` and Engine Creation](#bootstrapping-filamentinit-and-engine-creation) | `Filament.init()` takes two arguments: a list of asset URLs and a callback |
+| [WebGL2 / WebGPU Backend](#webgl2--webgpu-backend) | Default backend is WebGL 2.0 — no `options` needed |
+| [Serving Over HTTP (CORS / MIME)](#serving-over-http-cors--mime) | Because of CORS restrictions, the app cannot fetch material packages / textures from the local filesystem (`file://`) |
+| [Core Object Graph](#core-object-graph) | The standard wiring, lifted from the constructors |
+| [Entities, Components, Managers](#entities-components-managers) | Filament uses an Entity-Component System |
+| [The Builder Pattern in JS](#the-builder-pattern-in-js) | Builders mirror the C++ API: chain configuration calls, end with `.build(engine[, entity])` |
+| [Vertex & Index Buffers](#vertex--index-buffers) | Enums are nested types exposed with a `$` separator (`Filament.VertexBuffer$AttributeType`, `Filament.IndexBuffer$IndexType`) |
+| [Materials & Material Instances](#materials--material-instances) | A material package (`.filamat`) is a binary blob (shaders + metadata) produced by `matc` |
+| [Lighting (Directional / Sun / IBL)](#lighting-directional--sun--ibl) | Lights are entities with a `LightManager` component |
+| [Skybox & IBL from KTX](#skybox--ibl-from-ktx) | The high-level helpers are the easy path; the low-level path is shown for completeness |
+| [Textures (KTX2, Compressed, Async)](#textures-ktx2-compressed-async) | `.ktx2` textures are loaded with `engine.createTextureFromKtx2(url, options)` |
+| [Meshes: filamesh](#meshes-filamesh) | Filament has no general asset-loading system, but ships a simple binary mesh format, `.filamesh` (produced by the `filamesh` CLI) |
+| [The Render & Resize Loop](#the-render--resize-loop) | Drive frames with `requestAnimationFrame` |
+| [Resize / DPR Handling](#resize--dpr-handling) | The resize handler scales the drawing buffer by `window.devicePixelRatio` for high-DPI displays |
+| [Asset-Production Toolchain (matc / cmgen / filamesh / mipgen)](#asset-production-toolchain-matc--cmgen--filamesh--mipgen) | The CLI tools live in the Filament release for your development machine (not the web archive) |
+| [Asset Type Reference](#asset-type-reference) | Asset types that must be initialized before creating matching Filament resources |
+| [Gotchas](#gotchas) | `Filament.IndexBuffer$IndexType`, `Filament.RenderableManager$PrimitiveType` |
 
 ---
 

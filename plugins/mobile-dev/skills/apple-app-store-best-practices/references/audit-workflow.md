@@ -2,7 +2,17 @@
 
 The phase-by-phase compliance audit for the [apple-app-store-best-practices](../SKILL.md) skill. Load this when running a standard or deep audit; Phase 1 (reconnaissance) decides which `section-*.md` references to pull in.
 
-**Contents:** [Phase 1: Reconnaissance](#phase-1-app-reconnaissance) · [Phase 2: Technical](#phase-2-technical-compliance) · [Phase 3: Business](#phase-3-business-model-compliance) · [Phase 4: Safety](#phase-4-safety-and-content) · [Phase 5: Design & Metadata](#phase-5-design-and-metadata) · [Phase 6: Legal](#phase-6-legal-compliance) · [Post-Rejection](#post-rejection-workflow)
+## Table of Contents
+
+| Section | Covers |
+|---|---|
+| [Phase 1: App Reconnaissance](#phase-1-app-reconnaissance) | Platform targets, user flows, monetization, authentication, data, content, and audience |
+| [Phase 2: Technical Compliance](#phase-2-technical-compliance) | Crashes, completeness, hardware use, software requirements, and beta or test behavior |
+| [Phase 3: Business Model Compliance](#phase-3-business-model-compliance) | Payments, subscriptions, purchase methods, ads, and platform-specific monetization rules |
+| [Phase 4: Safety and Content](#phase-4-safety-and-content) | Objectionable content, user-generated content, children, physical harm, and developer conduct |
+| [Phase 5: Design and Metadata](#phase-5-design-and-metadata) | Minimum functionality, copied apps, login services, extensions, and truthful store metadata |
+| [Phase 6: Legal Compliance](#phase-6-legal-compliance) | Privacy, intellectual property, gambling, financial services, VPN, and regulatory compliance |
+| [Post-Rejection Workflow](#post-rejection-workflow) | Evidence collection, root-cause classification, remediation, and appeal decisions after rejection |
 
 ## Phase 1: App Reconnaissance
 
@@ -199,7 +209,6 @@ If the app tracks users across apps/websites:
 **Kids privacy (§5.1.4):**
 - COPPA and GDPR compliance for children's data
 - No third-party analytics or advertising in kids apps
-
 
 ## Post-Rejection Workflow
 

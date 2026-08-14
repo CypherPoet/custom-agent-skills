@@ -1,5 +1,17 @@
 # Task: Scene Lifecycle Migration
 
+## Table of Contents
+
+| Section | Covers |
+|---|---|
+| [Overview](#overview) | UIKit apps must adopt scene-based lifecycle (`UISceneDelegate`) to function correctly on modern iOS |
+| [Detection](#detection) | Migration needed (proceed with all steps) |
+| [Scope & Automation Level](#scope--automation-level) | Out of scope: Multiple window support (`UIApplicationSupportsMultipleScenes` set to `false`), external display support |
+| [Step 1: Add Scene Manifest to Info.plist](#step-1-add-scene-manifest-to-infoplist) | This step must complete before Step 2 |
+| [Step 2: Create SceneDelegate](#step-2-create-scenedelegate) | Creating `SceneDelegate` and registering it in the app's scene configuration |
+| [Step 3: Relocate Lifecycle Methods](#step-3-relocate-lifecycle-methods) | Moving foreground, background, URL, restoration, and quick-action handlers to scene lifecycle |
+| [API Reference](#api-reference) | UIKit scene APIs and the minimum iOS versions that support them |
+
 ## Overview
 
 UIKit apps must adopt scene-based lifecycle (`UISceneDelegate`) to function correctly on modern iOS. The system dispatches foreground/background transitions per-scene, not per-app — apps that only implement `UIApplicationDelegate` lifecycle methods miss these events in multi-window scenarios.

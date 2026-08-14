@@ -4,7 +4,22 @@ Three.js animation has three building blocks: `AnimationClip` (keyframe data), `
 
 > Render loop and `delta`: see [../SKILL.md#setup](../SKILL.md#setup).
 
-**Contents:** [Building an AnimationClip](#building-an-animationclip) · [AnimationMixer](#animationmixer) · [AnimationAction](#animationaction) · [Loading GLTF Animations](#loading-gltf-animations) · [Skeletal Animation](#skeletal-animation) · [Morph Targets](#morph-targets) · [Animation Blending](#animation-blending) · [Animation Utilities](#animation-utilities) · [Procedural Patterns](#procedural-patterns) · [Performance Tips](#performance-tips) · [Common Mistakes](#common-mistakes)
+## Table of Contents
+
+| Section | Covers |
+|---|---|
+| [Building an AnimationClip](#building-an-animationclip) | KeyframeTrack Types and Interpolation Modes |
+| [AnimationMixer](#animationmixer) | A mixer plays animations on an `Object3D` and everything below it |
+| [AnimationAction](#animationaction) | Controls how a clip plays through a mixer |
+| [Loading GLTF Animations](#loading-gltf-animations) | GLTF/GLB is the most common source of skeletal animation |
+| [Skeletal Animation](#skeletal-animation) | Skeleton and Bones, Programmatic Bone Animation, and Attaching Objects to Bones |
+| [Morph Targets](#morph-targets) | Blend-shape influence arrays, clip tracks, and per-frame morph control |
+| [Animation Blending](#animation-blending) | Weighting, crossfading, synchronization, and additive clip blending |
+| [Animation Utilities](#animation-utilities) | Clip lookup, subclipping, additive conversion, cloning, optimization, and duration operations |
+| [Procedural Patterns](#procedural-patterns) | When you don't need (or don't have) keyframe data, drive transforms in the loop directly |
+| [Performance Tips](#performance-tips) | Clip reuse, mixer counts, track pruning, and efficient procedural animation |
+| [Common Mistakes](#common-mistakes) | Frequent mistakes and the changes that correct them |
+| [See Also](#see-also) | Related references and supporting guidance |
 
 ## Building an AnimationClip
 

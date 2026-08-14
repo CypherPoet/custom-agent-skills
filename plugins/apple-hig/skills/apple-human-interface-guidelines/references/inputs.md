@@ -5,9 +5,25 @@
 
 Distilled from Apple's HIG Inputs pages: Gestures, Focus and selection, Keyboards, Virtual keyboards, Playing haptics, Digital Crown, Apple Pencil and Scribble, Camera Control, Action button, Game controls, Remotes, Eyes, Gyroscope and accelerometer.
 
-**Contents:** [Gestures](#gestures) · [Focus and selection](#focus-and-selection) · [Keyboards](#keyboards) · [Virtual keyboards](#virtual-keyboards) · [Playing haptics](#playing-haptics) · [Digital Crown](#digital-crown) · [Apple Pencil and Scribble](#apple-pencil-and-scribble) · [Camera Control](#camera-control) · [Action button](#action-button) · [Game controls](#game-controls) · [Remotes](#remotes) · [Eyes](#eyes) · [Gyroscope and accelerometer](#gyroscope-and-accelerometer)
+## Table of Contents
 
-### Gestures
+| Section | Covers |
+|---|---|
+| [Gestures](#gestures) | A gesture is a physical motion a person uses to directly affect an object in an app or game |
+| [Focus and selection](#focus-and-selection) | Focus visually confirms which object an interaction targets, supporting component-based navigation via remote |
+| [Keyboards](#keyboards) | A physical keyboard is an essential input device for text entry |
+| [Virtual keyboards](#virtual-keyboards) | On devices without physical keyboards, the system offers virtual keyboards with task-optimized key sets |
+| [Playing haptics](#playing-haptics) | Haptics engage the sense of touch to complement visual and auditory feedback |
+| [Digital Crown](#digital-crown) | The Digital Crown is a key hardware input for Apple Vision Pro and Apple Watch |
+| [Apple Pencil and Scribble](#apple-pencil-and-scribble) | Apple Pencil enables precise drawing, handwriting, and markup on iPad and works as a pointer |
+| [Camera Control](#camera-control) | Hardware camera access, interaction states, and the Camera Control overlay |
+| [Action button](#action-button) | The Action button (supported iPhone and Apple Watch models) gives quick access to a favorite feature |
+| [Game controls](#game-controls) | Physical controllers, touch, keyboard, remote, and spatial game input |
+| [Remotes](#remotes) | The Siri Remote is the primary input for Apple TV, combining a clickpad and touch surface with dedicated buttons to navigate |
+| [Eyes](#eyes) | Gaze targeting, hover feedback, and privacy boundaries in visionOS |
+| [Gyroscope and accelerometer](#gyroscope-and-accelerometer) | Motion-based interactions driven by gyroscope and accelerometer data |
+
+## Gestures
 *Last changed: 2024-09*
 
 **Purpose:** A gesture is a physical motion a person uses to directly affect an object in an app or game, made on a touchscreen, in the air, or on a trackpad, mouse, remote, or game controller.
@@ -43,7 +59,7 @@ Standard gestures (system APIs):
 - tvOS: Standard gestures via compatible remote, Siri Remote, or game controller with a touch surface.
 - visionOS: Two categories — *indirect* (look to target, then pinch fingers from a distance; comfortable at any distance, best for UI/buttons) and *direct* (physically touch an object; best for infrequent close-up use to avoid arm fatigue). Direct gestures: Touch (select/activate), Touch and hold (contextual menu), Touch and drag (move), Double touch (preview/select word), Swipe (reveal/dismiss/scroll), two-hand pinch-drag together/apart (zoom), two-hand pinch-drag circular (rotate). Reserve the area around a person's hand for system overlays (Home indicator, Control Center via hand-roll); don't anchor content to hands. Avoid custom gestures requiring a specific hand or specific body movements/positions. Custom gestures require a Full Space and permission to access hand data (ARKit).
 
-### Focus and selection
+## Focus and selection
 *Last changed: 2023-10*
 
 **Purpose:** Focus visually confirms which object an interaction targets, supporting component-based navigation via remote, game controller, or keyboard.
@@ -66,7 +82,7 @@ Canonical implementations: UIKit `UICollectionView`, `UICollectionViewCell`, `UI
 - tvOS: Uses *directional focus* (swipe Siri Remote or arrow keys reach every element). Avoid displaying a pointer; use the focus model for menus/interface. In a full-screen experience, let gestures affect content, not focus. Focusable items have five visually distinct states: unfocused, focused (scales up, elevates, illuminates, animates — supply larger assets), highlighted (instant feedback on choosing), selected (chosen/activated), unavailable (inactive, can't focus).
 - visionOS: Same focus system as iPadOS/tvOS for connected input devices (keyboard, game controller). Focus effects are distinct from the hover (eye) effect.
 
-### Keyboards
+## Keyboards
 *Last changed: 2025-06*
 
 **Purpose:** A physical keyboard is an essential input device for text entry, games, and app control; keyboard shortcuts (a primary key plus Control/Option/Shift/Command modifiers) speed up interactions.
@@ -101,7 +117,7 @@ Modifier keys and symbols:
 - watchOS: *Not supported.*
 - visionOS: App shortcuts appear in a shortcut interface shown when holding Command on a connected keyboard — a flat list per system category (File, Edit, View), showing only available commands that have shortcuts. Write descriptive shortcut titles (no submenu context). A virtual keyboard overlay appears above the physical keyboard with typing completion.
 
-### Virtual keyboards
+## Virtual keyboards
 *Last changed: 2025-06*
 
 **Purpose:** On devices without physical keyboards, the system offers virtual keyboards with task-optimized key sets (e.g., an email keyboard with "@" and ".com"); virtual keyboards don't support keyboard shortcuts.
@@ -125,7 +141,7 @@ Canonical implementations: SwiftUI `keyboardType(_:)`, `textContentType(_:)`, `s
 - visionOS: System virtual keyboard supports direct and indirect gestures, appears in a separate movable window — don't account for its location in your layout.
 - watchOS: A keyboard shows if the screen is large enough; otherwise people use Dictation or Scribble. You can't change keyboard type but can set the text field's content type (via `textContentType(_:)`). People can also enter text via a paired iPhone.
 
-### Playing haptics
+## Playing haptics
 *Last changed: 2024-05*
 
 **Purpose:** Haptics engage the sense of touch to complement visual and auditory feedback, played by built-in engines (iPhone Taptic Engine, Apple Watch, Force Touch trackpad) or external devices (game controllers, Apple Pencil Pro, some trackpads).
@@ -166,7 +182,7 @@ macOS Magic Trackpad patterns (on drag or force click): Alignment (item snaps in
 - macOS: On a Magic Trackpad, an app can play alignment/level-change/generic haptics during drag or force click.
 - watchOS: Apple Watch Series 4+ provides Digital Crown haptics; default linear detents as the Crown turns; defines the named haptic set above.
 
-### Digital Crown
+## Digital Crown
 *Last changed: 2023-12*
 
 **Purpose:** The Digital Crown is a key hardware input for Apple Vision Pro and Apple Watch, used for navigation, scrolling, and operating controls.
@@ -185,7 +201,7 @@ Canonical implementations: WatchKit `WKCrownDelegate`.
 - Apple Vision Pro: Use the Crown to adjust volume, adjust immersion level (portal/Environment/Full Space), recenter content, open Accessibility settings, and exit to the Home View. visionOS apps don't receive direct Digital Crown information.
 - Apple Watch: Turning generates data for scrolling and controls. watchOS 10+ makes it the primary navigation input — widgets in the Smart Stack on the watch face, vertical movement through apps on the Home Screen, switching paginated tabs and scrolling within apps. Most models provide linear haptic detents as the Crown turns a set distance.
 
-### Apple Pencil and Scribble
+## Apple Pencil and Scribble
 *Last changed: 2024-05*
 
 **Purpose:** Apple Pencil enables precise drawing, handwriting, and markup on iPad and works as a pointer; Scribble converts Apple Pencil handwriting to text in any text field via on-device recognition.
@@ -209,7 +225,7 @@ Canonical implementations: PencilKit, PaperKit; UIKit `UIScribbleInteraction`, `
 **Platform deltas:**
 - iOS/macOS/tvOS/visionOS/watchOS: *Not supported.*
 
-### Camera Control
+## Camera Control
 *Last changed: 2024-09*
 
 **Purpose:** The Camera Control (iPhone 16 and iPhone 16 Pro) gives direct hardware access to an app's camera experience and shows an overlay for adjusting camera controls.
@@ -232,7 +248,7 @@ Canonical implementations: AVFoundation `AVCaptureControl`, `AVCaptureSlider` (`
 **Platform deltas:**
 - iPadOS/macOS/watchOS/tvOS/visionOS: *Not supported.*
 
-### Action button
+## Action button
 *Last changed: 2023-09*
 
 **Purpose:** The Action button (supported iPhone and Apple Watch models) gives quick access to a favorite feature — running an App Shortcut or system function the person assigns in setup or Settings.
@@ -247,7 +263,7 @@ Canonical implementations: AVFoundation `AVCaptureControl`, `AVCaptureSlider` (`
 - iOS: Let people use actions without leaving their context via Live Activities and custom snippets (e.g., "Set Timer" prompts for duration then shows a Live Activity countdown rather than opening Clock).
 - watchOS: First press can drop a waypoint, start a dive, or begin a specific workout; the button also supports secondary actions (mark a segment, advance a multi-part workout). Offer a secondary function that supports/advances the primary action (people often act without looking); limit secondary functions to avoid cognitive load. Prefer subsequent presses for additional functionality, not stopping a function (offer stop within your UI). Pause the current function when people press the Action button and side button together — except in diving apps, where pausing a dive may be dangerous.
 
-### Game controls
+## Game controls
 *Last changed: 2025-06*
 
 **Purpose:** Game controls cover input from physical game controllers and platform default interactions (touch, remote, keyboard, mouse); support both to reach the widest audience.
@@ -287,7 +303,7 @@ Canonical implementations: Touch Controller framework; Game Controller framework
 - watchOS: *Not supported* (physical game controllers).
 - visionOS: Match spatial game controller behavior (e.g., PlayStation VR2 Sense) to hand input — look at an object and press a trigger to interact indirectly, or reach out and press a trigger to interact directly.
 
-### Remotes
+## Remotes
 
 **Purpose:** The Siri Remote is the primary input for Apple TV, combining a clickpad and touch surface with dedicated buttons to navigate, browse, play/pause, and select from across the room.
 
@@ -318,7 +334,7 @@ Canonical implementations: TVServices `Providing Channel Navigation`.
 **Platform deltas:**
 - iOS/iPadOS/macOS/visionOS/watchOS: *Not supported.*
 
-### Eyes
+## Eyes
 *Last changed: 2024-06*
 
 **Purpose:** In visionOS, people look at a virtual object to target it; the system shows a *hover effect* confirming the element is interactive and ready for an indirect gesture like tap.
@@ -340,7 +356,7 @@ Canonical implementations: visionOS `Adopting best practices for privacy and use
 **Platform deltas:**
 - iOS/iPadOS/macOS/tvOS/watchOS: *Not supported.*
 
-### Gyroscope and accelerometer
+## Gyroscope and accelerometer
 
 **Purpose:** On-device gyroscopes and accelerometers supply real-time data about a device's physical movement for motion-based app and game experiences.
 

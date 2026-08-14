@@ -5,9 +5,25 @@
 
 Distilled from Apple's HIG Components pages: Entering data, Text fields, Text views, Combo boxes, Token fields, Pickers, Digit entry views, Sliders, Steppers, Toggles, Disclosure controls, Color wells, Image wells.
 
-**Contents:** [Entering data](#entering-data) · [Text fields](#text-fields) · [Text views](#text-views) · [Combo boxes](#combo-boxes) · [Token fields](#token-fields) · [Pickers](#pickers) · [Digit entry views](#digit-entry-views) · [Sliders](#sliders) · [Steppers](#steppers) · [Toggles](#toggles) · [Disclosure controls](#disclosure-controls) · [Color wells](#color-wells) · [Image wells](#image-wells)
+## Table of Contents
 
-### Entering data
+| Section | Covers |
+|---|---|
+| [Entering data](#entering-data) | Patterns for collecting information from people easily and without mistakes, across all input methods |
+| [Text fields](#text-fields) | A rectangular area for entering or editing small, specific pieces of text such as a name or email address |
+| [Text views](#text-views) | Displays multiline, styled text content that can optionally be editable and can scroll when content overflows |
+| [Combo boxes](#combo-boxes) | Combines a text field with a pull-down button in one control; people enter a custom value or pick from a predefined list |
+| [Token fields](#token-fields) | A text field that converts entered text into tokens that are easy to select and manipulate |
+| [Pickers](#pickers) | Displays one or more scrollable lists of distinct values to choose single or multipart values |
+| [Digit entry views](#digit-entry-views) | A full-screen view that prompts for a series of digits (like a PIN) using a digit-specific keyboard |
+| [Sliders](#sliders) | A horizontal track with an adjustable thumb that sets a value between a minimum and maximum |
+| [Steppers](#steppers) | A two-segment control to increase or decrease an incremental value |
+| [Toggles](#toggles) | Lets people choose between a pair of opposing states, using a different appearance per state |
+| [Disclosure controls](#disclosure-controls) | Reveal and hide information/functionality related to specific controls or views |
+| [Color wells](#color-wells) | Lets people adjust the color of text, shapes, guides, and other onscreen elements |
+| [Image wells](#image-wells) | An editable version of an image view; people can copy/paste or delete its image, or drag a new image in without selecting first |
+
+## Entering data
 *Last changed: 2023-06*
 
 **Purpose:** Patterns for collecting information from people easily and without mistakes, across all input methods.
@@ -28,7 +44,7 @@ Canonical implementations: SwiftUI `SecureField`.
 - iOS/iPadOS, tvOS, visionOS, watchOS: No additional considerations.
 - macOS: Consider an expansion tooltip to show the full version of clipped/truncated text in a field (appears on pointer hover); also applies to iOS/iPadOS apps running on a Mac.
 
-### Text fields
+## Text fields
 *Last changed: 2023-06*
 
 **Purpose:** A rectangular area for entering or editing small, specific pieces of text such as a name or email address.
@@ -59,7 +75,7 @@ Canonical implementations: SwiftUI `TextField` / `SecureField`, UIKit `UITextFie
 - macOS: Consider a combo box if pairing text input with a list of choices.
 - watchOS: Present a text field only when necessary; prefer a list of options.
 
-### Text views
+## Text views
 *Last changed: 2023-06*
 
 **Purpose:** Displays multiline, styled text content that can optionally be editable and can scroll when content overflows.
@@ -81,7 +97,7 @@ Canonical implementations: SwiftUI `Text`, UIKit `UITextView`, AppKit `NSTextVie
 - iOS/iPadOS: Show the appropriate keyboard type for the content.
 - tvOS: Text can be displayed in a text view, but because text input is minimal by design, tvOS uses text fields for editable text instead.
 
-### Combo boxes
+## Combo boxes
 **Purpose:** Combines a text field with a pull-down button in one control; people enter a custom value or pick from a predefined list.
 
 **Best practices:**
@@ -96,7 +112,7 @@ Canonical implementations: AppKit `NSComboBox`.
 **Platform deltas:**
 - Not supported in iOS, iPadOS, tvOS, visionOS, or watchOS. (macOS only.)
 
-### Token fields
+## Token fields
 **Purpose:** A text field that converts entered text into tokens that are easy to select and manipulate (e.g. Mail recipient fields).
 
 **Best practices:**
@@ -110,7 +126,7 @@ Canonical implementations: AppKit `NSTokenField`.
 **Platform deltas:**
 - Not supported in iOS, iPadOS, tvOS, visionOS, and watchOS. (macOS only.)
 
-### Pickers
+## Pickers
 *Last changed: 2023-06*
 
 **Purpose:** Displays one or more scrollable lists of distinct values to choose single or multipart values; values and order depend on device language.
@@ -154,7 +170,7 @@ iOS/iPadOS date picker modes:
 - tvOS: Pickers available with SwiftUI `Picker`.
 - watchOS: Navigated with the Digital Crown; picker uses the wheels style, including date and time pickers. Configurable with outline, caption, and scrolling indicator. For longer lists, a navigation link displays the picker as a button (`navigationLink`); can scrub with the Digital Crown without tapping.
 
-### Digit entry views
+## Digit entry views
 **Purpose:** A full-screen view that prompts for a series of digits (like a PIN) using a digit-specific keyboard, with optional title and prompt above the digit line.
 
 **Best practices:**
@@ -166,7 +182,7 @@ Canonical implementations: TVUIKit `TVDigitEntryViewController`.
 **Platform deltas:**
 - Not supported in iOS, iPadOS, macOS, visionOS, or watchOS. (tvOS only.)
 
-### Sliders
+## Sliders
 *Last changed: 2023-06*
 
 **Purpose:** A horizontal track with an adjustable thumb that sets a value between a minimum and maximum; the track between minimum and thumb fills with color.
@@ -185,7 +201,7 @@ Canonical implementations: SwiftUI `Slider`, UIKit `UISlider`, AppKit `NSSlider`
 - visionOS: Prefer horizontal sliders (side-to-side gesture is easier than up-and-down).
 - watchOS: Track appears as discrete steps or a continuous bar over a finite range; side buttons increase/decrease by a predefined amount. System shows plus/minus signs by default; create custom glyphs if needed.
 
-### Steppers
+## Steppers
 **Purpose:** A two-segment control to increase or decrease an incremental value; it doesn't display the value itself, so it sits next to a field showing the current value.
 
 **Best practices:**
@@ -199,7 +215,7 @@ Canonical implementations: UIKit `UIStepper`, AppKit `NSStepper`.
 - Not supported in watchOS or tvOS.
 - macOS: For large value ranges, consider supporting Shift-click to change the value by more than the default increment (e.g. 10× the default).
 
-### Toggles
+## Toggles
 *Last changed: 2024-03*
 
 **Purpose:** Lets people choose between a pair of opposing states (e.g. on/off), using a different appearance per state; styles include switch and checkbox, used differently per platform.
@@ -223,7 +239,7 @@ Canonical implementations: SwiftUI `Toggle`, UIKit `UISwitch`, AppKit `NSButton.
   - Checkboxes: A small square button — empty when off, checkmark when on, dash when mixed; usually titled on the trailing side (no title in an editable checklist). Use a checkbox instead of a switch to present a hierarchy of settings (alignment + indentation show dependencies). Use radio buttons for more than two mutually exclusive options. Use a label to introduce a group if the relationship isn't clear (align label baseline with the first checkbox). Accurately reflect on/off/mixed state; show mixed when subordinate checkboxes differ (`allowsMixedState`).
   - Radio buttons: A small circular button followed by a label, typically in groups of 2–5, for mutually exclusive choices; state is selected (filled circle) or deselected (empty circle). Prefer radio buttons for mutually exclusive options; use checkboxes if multiple options can be chosen. Avoid more than about 5 in a set — use a pop-up button instead. To present a single on/off setting, prefer a checkbox. Use consistent spacing when displaying radio buttons horizontally (size to the longest label).
 
-### Disclosure controls
+## Disclosure controls
 **Purpose:** Reveal and hide information/functionality related to specific controls or views.
 
 **Best practices:**
@@ -238,7 +254,7 @@ Canonical implementations: SwiftUI `DisclosureGroup`, AppKit `NSButton.BezelStyl
 - iOS/iPadOS, visionOS: Available with the SwiftUI `DisclosureGroup` view.
 - Not supported in tvOS or watchOS.
 
-### Color wells
+## Color wells
 **Purpose:** Lets people adjust the color of text, shapes, guides, and other onscreen elements; tapping or clicking displays a color picker (system-provided or custom).
 
 **Best practices:**
@@ -251,7 +267,7 @@ Canonical implementations: UIKit `UIColorWell` / `UIColorPickerViewController`, 
 - Not supported in tvOS or watchOS.
 - macOS: A clicked color well receives a highlight to confirm it's active, then opens a color picker; the well updates to the new color after selection. Supports drag and drop of colors between wells and from the color picker to a well.
 
-### Image wells
+## Image wells
 **Purpose:** An editable version of an image view; people can copy/paste or delete its image, or drag a new image in without selecting first.
 
 **Best practices:**

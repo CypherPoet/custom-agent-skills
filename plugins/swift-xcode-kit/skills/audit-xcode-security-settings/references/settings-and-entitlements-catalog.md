@@ -6,6 +6,16 @@ Complete catalog of security build settings and entitlements managed by this ski
 
 **Filtering recipe.** `scripts/filter_build_settings.py` filters `GetTargetBuildSettings` output to catalog entries; it derives its filter regex from this file at runtime by extracting backtick-quoted macro names. Adding a new setting to this catalog automatically extends the filter. See `references/reading-build-settings.md` for usage.
 
+## Table of Contents
+
+| Section | Covers |
+|---|---|
+| [Basic Clang Safety Warnings — Always Enable](#basic-clang-safety-warnings--always-enable) | Clang warning and analyzer settings that are safe to enable by default |
+| [Enhanced Security — Capability](#enhanced-security--capability) | Xcode's Enhanced Security capability, added entitlements, and runtime access consequences |
+| [Additional Settings — Potentially More False Positives](#additional-settings--potentially-more-false-positives) | Conditional C++, DriverKit, IOKit, Blocks, and project-specific hardening settings |
+| [Not Auto-Enabled (Mentioned in Report)](#not-auto-enabled-mentioned-in-report) | Security settings intentionally left manual and why they are not auto-enabled |
+| [Default-ON Security Checkers — Audit Only](#default-on-security-checkers--audit-only) | Xcode security checkers already enabled by default and how to audit them |
+
 ## Basic Clang Safety Warnings — Always Enable
 
 | Build Setting | Value | CLI Flag | Scope | Why Safe |

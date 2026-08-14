@@ -2,7 +2,7 @@
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "apple-app-store-screenshots",
   "displayName": "App Store Screenshots",
-  "version": "0.6.1",
+  "version": "0.6.2",
   "description": "Apple App Store screenshot and app preview specifications.",
   "author": { "name": "CypherPoet" },
   "homepage": "https://github.com/CypherPoet/custom-agent-skills/tree/main/plugins/apple-app-store-screenshots",

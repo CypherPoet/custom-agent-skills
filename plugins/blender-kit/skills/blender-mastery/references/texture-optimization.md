@@ -2,6 +2,22 @@
 
 Cutting GLB / GLTF size and GPU memory for web targets. The pipeline: `gltf-transform` (Node CLI) handles the post-export work — Blender doesn't optimize textures directly.
 
+## Table of Contents
+
+| Section | Covers |
+|---|---|
+| [The web target reality](#the-web-target-reality) | A raw Blender GLTF export at 4K textures is typically 20-50 MB |
+| [VRAM budgets by target](#vram-budgets-by-target) | Approximate. Real numbers depend on format and mip levels |
+| [What one texture actually costs](#what-one-texture-actually-costs) | Pick a resolution and a format from the sections above and you have implicitly spent a fixed number of bytes |
+| [Setup](#setup) | Installing and verifying the glTF Transform CLI |
+| [The pipeline (steps you actually want)](#the-pipeline-steps-you-actually-want) | In practice this drops a 22MB raw export to ~1MB |
+| [What NOT to do](#what-not-to-do) | Optimization commands and texture workflows that damage or inflate assets |
+| [KTX2 / Basis Universal — when WebP isn't enough](#ktx2--basis-universal--when-webp-isnt-enough) | WebP saves download bandwidth but textures get decoded back to RGBA8 in VRAM |
+| [Texture atlasing](#texture-atlasing) | When a model has many small textures, atlasing combines them into one larger texture — fewer draw calls, often smaller total size |
+| [Texture format quick reference](#texture-format-quick-reference) | Texture formats, their best use cases, and important constraints |
+| [When the size still won't budge](#when-the-size-still-wont-budge) | Common culprits, in order of likely impact |
+| [Sources](#sources) | Authoritative references that ground this guidance |
+
 ## The web target reality
 
 A raw Blender GLTF export at 4K textures is typically 20-50 MB. Web-friendly is sub-5MB. The gap closes through three independent dimensions:

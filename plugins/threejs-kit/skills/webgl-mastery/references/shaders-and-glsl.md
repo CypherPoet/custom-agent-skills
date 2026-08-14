@@ -1,6 +1,19 @@
 # Shaders and GLSL
 
-**Contents:** [The Compile + Link Lifecycle](#the-compile--link-lifecycle) · [GLSL ES 3.00 (WebGL2)](#glsl-es-300-webgl2) · [Types You'll Actually Use](#types-youll-actually-use) · [Swizzling](#swizzling) · [Qualifiers](#qualifiers) · [Built-In Variables](#built-in-variables) · [Uniforms from JS](#uniforms-from-js) · [Precision](#precision) · [Control Flow Caveats](#control-flow-caveats) · [Common Mistakes](#common-mistakes)
+## Table of Contents
+
+| Section | Covers |
+|---|---|
+| [The Compile + Link Lifecycle](#the-compile--link-lifecycle) | A WebGL program is a vertex shader and a fragment shader compiled separately, then linked together |
+| [GLSL ES 3.00 (WebGL2)](#glsl-es-300-webgl2) | A WebGL2 shader must start with `#version 300 es` on the first line — no leading whitespace, no comments before it |
+| [Types You'll Actually Use](#types-youll-actually-use) | Scalar, vector, matrix, sampler, array, and struct types used in GLSL |
+| [Swizzling](#swizzling) | Vector components have multiple names that all map to the same slots: `.xyzw`, `.rgba`, `.stpq` |
+| [Qualifiers](#qualifiers) | Where each GLSL qualifier is valid and what it means |
+| [Built-In Variables](#built-in-variables) | In the vertex shader, you write to `gl_Position` (a `vec4` in clip space) and optionally `gl_PointSize` |
+| [Uniforms from JS](#uniforms-from-js) | A few rules that confuse newcomers |
+| [Precision](#precision) | In WebGL1, vertex shaders defaulted to `highp` for `float` and fragment shaders had no default |
+| [Control Flow Caveats](#control-flow-caveats) | Old WebGL1 advice was "no `for` loops, no early `return`, no `if`" — this is mostly obsolete on modern GPUs |
+| [Common Mistakes](#common-mistakes) | Frequent mistakes and the changes that correct them |
 
 ## The Compile + Link Lifecycle
 

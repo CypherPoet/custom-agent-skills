@@ -2,6 +2,20 @@
 
 The conceptual structure that makes `bpy` make sense. Most scripting bugs trace back to confusing two layers of this model — usually object vs mesh, or mode vs API surface.
 
+## Table of Contents
+
+| Section | Covers |
+|---|---|
+| [Data-blocks](#data-blocks) | Everything addressable by name lives in a `bpy.data.*` collection |
+| [Object vs mesh data](#object-vs-mesh-data) | The most-confused pair. They share names by default, which makes the confusion easy |
+| [Modes](#modes) | The mode determines which APIs work and what selection means |
+| [Units and coordinate system](#units-and-coordinate-system) | Blender coordinates, metric defaults, and Euler-versus-quaternion rotation storage |
+| [Parent/child and collections](#parentchild-and-collections) | Two organizational hierarchies, which behave differently |
+| [Scenes and view layers](#scenes-and-view-layers) | A `.blend` file can have multiple scenes (rare) |
+| [Linked vs appended data](#linked-vs-appended-data) | When pulling data from another .blend file (`File → Append` / `File → Link`) |
+| [Depsgraph in one paragraph](#depsgraph-in-one-paragraph) | The dependency graph is what Blender uses to evaluate the scene each frame: it figures out |
+| [Sources](#sources) | Authoritative references that ground this guidance |
+
 ## Data-blocks
 
 Everything addressable by name lives in a `bpy.data.*` collection. Each entry is a "data-block". Common ones:

@@ -1,6 +1,15 @@
 # Configuration Contract
 
-**Contents:** [Project Lookup](#project-lookup) · [Manifest](#manifest) · [Skill Records](#skill-records) · [Sources](#sources) · [Helper Interface](#helper-interface) · [Configure Transaction](#configure-transaction)
+## Table of Contents
+
+| Section | Covers |
+|---|---|
+| [Project Lookup](#project-lookup) | Store durable workflow files together by default |
+| [Manifest](#manifest) | Use schema version 2 and the property order shown in `assets/manifest.template.json` |
+| [Skill Records](#skill-records) | Key `skills` by stable project-local IDs matching `^[a-z0-9]+(?:-[a-z0-9]+)*$` |
+| [Sources](#sources) | Authoritative references that ground this guidance |
+| [Helper Interface](#helper-interface) | Stable helper commands for configuration, review, and state operations |
+| [Configure Transaction](#configure-transaction) | Discover candidate skills inside the resolved root, respect project ignore rules, and never follow directory symlinks |
 
 ## Project Lookup
 

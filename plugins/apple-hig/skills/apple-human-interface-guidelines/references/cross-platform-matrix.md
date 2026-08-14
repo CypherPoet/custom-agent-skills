@@ -5,6 +5,20 @@
 
 Availability of components, inputs, and technologies across the six Apple platforms, derived from each entry's stated platform support. Legend: **Yes** = explicitly supported / has guidance; **No** = the reference states "Not supported"; **—** = the reference doesn't state support either way (check the component reference). When in doubt, open the linked reference.
 
+## Table of Contents
+
+| Section | Covers |
+|---|---|
+| [Components — Navigation & Bars](#components--navigation--bars) | Source: components-navigation-bars.md |
+| [Components — Content Views](#components--content-views) | Source: components-content-views.md |
+| [Components — Selection & Input](#components--selection--input) | Source: components-selection-input.md |
+| [Components — Presentation](#components--presentation) | Source: components-presentation.md |
+| [Components — Status & Indicators](#components--status--indicators) | Source: components-status-indicators.md |
+| [Components — Menus & Actions](#components--menus--actions) | Source: components-menus-actions.md |
+| [Components — System Experiences](#components--system-experiences) | Source: components-system-experiences.md |
+| [Inputs](#inputs) | Cross-platform support for focus, keyboards, gestures, haptics, hardware controls, and sensors |
+| [Technologies](#technologies) | Sources: technologies-commerce-id.md, technologies-system-services.md, technologies-health-media.md |
+
 ## Components — Navigation & Bars
 
 Source: [components-navigation-bars.md](components-navigation-bars.md)

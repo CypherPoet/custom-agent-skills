@@ -2,7 +2,14 @@
 
 The official linter encodes most review feedback as rules; what it can't see, human reviewers check. Work in that order: lint clean first, then walk the checklist.
 
-**Contents:** [Setup](#setup) · [Rule catalog](#rule-catalog-v041) · [Linter-invisible pitfalls](#linter-invisible-pitfalls) · [Review checklist](#human-review-checklist)
+## Table of Contents
+
+| Section | Covers |
+|---|---|
+| [Setup](#setup) | The npm package is `eslint-plugin-obsidianmd` (repo: obsidianmd/eslint-plugin); the fetched 2026-07-23 corpus used v0.4.1 |
+| [Rule Catalog (v0.4.1)](#rule-catalog-v041) | Severity in the `recommended` config: ✅ error, ⚠️ warn, 🚫 off |
+| [Linter-Invisible Pitfalls](#linter-invisible-pitfalls) | Static analysis can't catch these — check them by reading the code |
+| [Human Review Checklist](#human-review-checklist) | Manifest, commands, settings, cleanup, accessibility, compatibility, and release-readiness checks |
 
 ## Setup
 

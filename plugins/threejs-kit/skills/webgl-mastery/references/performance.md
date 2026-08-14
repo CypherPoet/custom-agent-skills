@@ -2,7 +2,20 @@
 
 WebGL bottlenecks fall into three families: too many draw calls, too much GPU state churn, and CPU↔GPU sync stalls. Frame budget is ~16ms at 60fps; on mobile, often half that. Measure with the browser's performance profiler before you optimize — guesses are usually wrong.
 
-**Contents:** [Instancing](#instancing--one-draw-many-copies) · [Uniform Buffer Objects (UBOs)](#uniform-buffer-objects-ubos) · [Draw Call Batching](#draw-call-batching) · [State Change Minimization](#state-change-minimization) · [Avoid CPU↔GPU Sync Points](#avoid-cpugpu-sync-points) · [Buffer Update Strategies](#buffer-update-strategies) · [Texture Atlasing](#texture-atlasing) · [Mobile-Specific Pitfalls](#mobile-specific-pitfalls) · [Measuring](#measuring) · [Common Mistakes](#common-mistakes)
+## Table of Contents
+
+| Section | Covers |
+|---|---|
+| [Instancing — One Draw, Many Copies](#instancing--one-draw-many-copies) | Drawing many copies of one mesh with per-instance variation |
+| [Uniform Buffer Objects (UBOs)](#uniform-buffer-objects-ubos) | For uniforms shared across many programs — camera matrices, scene lighting |
+| [Draw Call Batching](#draw-call-batching) | Each draw call has fixed CPU overhead (validation, state checks) |
+| [State Change Minimization](#state-change-minimization) | Track JS-side what's currently bound and skip redundant calls |
+| [Avoid CPU↔GPU Sync Points](#avoid-cpugpu-sync-points) | These functions stall the entire pipeline because the CPU has to wait for the GPU to finish |
+| [Buffer Update Strategies](#buffer-update-strategies) | Updating a buffer every frame is fine — the driver double-buffers internally |
+| [Texture Atlasing](#texture-atlasing) | Switching textures is a state change |
+| [Mobile-Specific Pitfalls](#mobile-specific-pitfalls) | Tile-based GPU constraints around overdraw, render targets, blending, and bandwidth |
+| [Measuring](#measuring) | Browser DevTools' performance tab shows the CPU work per frame — useful for catching JS-side bottlenecks |
+| [Common Mistakes](#common-mistakes) | Frequent mistakes and the changes that correct them |
 
 ## Instancing — One Draw, Many Copies
 

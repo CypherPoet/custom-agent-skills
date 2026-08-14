@@ -4,7 +4,22 @@ The complete `@react-three/fiber` v8 → v9 migration: version and peer-dependen
 
 > New-project setup on the current stack: see [../SKILL.md](../SKILL.md) and [canvas-and-project-setup.md](./canvas-and-project-setup.md).
 
-**Contents:** [Version Requirements](#version-requirements) · [Ecosystem Pairing](#ecosystem-pairing) · [Migration Checklist](#migration-checklist) · [Breaking and Behavioral Changes](#breaking-and-behavioral-changes) · [TypeScript Migration](#typescript-migration) · [bufferAttribute Requires Constructor Args](#bufferattribute-requires-constructor-args) · [New v9 Features](#new-v9-features) · [v9.6: Stable Uniform References](#v96-stable-uniform-references) · [Ecosystem Moves That Bite During Migration](#ecosystem-moves-that-bite-during-migration) · [The v10 Horizon](#the-v10-horizon) · [Common Mistakes](#common-mistakes) · [See Also](#see-also)
+## Table of Contents
+
+| Section | Covers |
+|---|---|
+| [Version Requirements](#version-requirements) | React, React DOM, TypeScript, and ecosystem versions required by React Three Fiber v9 |
+| [Ecosystem Pairing](#ecosystem-pairing) | Verified against the npm registry (2026-08-08) |
+| [Migration Checklist](#migration-checklist) | Then sweep the codebase in this order |
+| [Breaking and Behavioral Changes](#breaking-and-behavioral-changes) | gl Callback Receives Constructor Props, StrictMode Is Inherited, Automatic sRGB Texture Conversion Removed, and related topics |
+| [TypeScript Migration](#typescript-migration) | Every removed type has a direct replacement |
+| [bufferAttribute Requires Constructor Args](#bufferattribute-requires-constructor-args) | v8 code set `count`/`array`/`itemSize` as props after construction |
+| [New v9 Features](#new-v9-features) | useLoader Accepts Loader Instances, Factory extend, and Async gl and WebGPU |
+| [v9.6: Stable Uniform References](#v96-stable-uniform-references) | Stable shader-uniform references introduced in React Three Fiber v9.6 |
+| [Ecosystem Moves That Bite During Migration](#ecosystem-moves-that-bite-during-migration) | These are not fiber changes, but they land in the same upgrade window and produce the most confusing symptoms |
+| [The v10 Horizon](#the-v10-horizon) | v10 exists only as alphas on npm (10.0.0-alpha.x; alpha.1 released 2026-01-17) |
+| [Common Mistakes](#common-mistakes) | Frequent mistakes and the changes that correct them |
+| [See Also](#see-also) | Related references and supporting guidance |
 
 ## Version Requirements
 

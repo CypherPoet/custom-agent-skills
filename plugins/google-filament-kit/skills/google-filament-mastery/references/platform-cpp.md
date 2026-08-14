@@ -7,7 +7,17 @@ Install/link/native-window/build glue only. The `Engine`/`Renderer`/`View`/`Scen
 itself is covered in `engine-api-core` — this file stops at getting an `Engine` and a `SwapChain`
 created from a native window.
 
-**Contents:** [Supported platforms & backends](#supported-platforms--backends) · [Toolchain prerequisites](#toolchain-prerequisites) · [Getting the SDK: prebuilt vs build from source](#getting-the-sdk-prebuilt-vs-build-from-source) · [Prebuilt release binaries](#prebuilt-release-binaries) · [Build from source: build.sh (macOS/Linux)](#build-from-source-buildsh-macoslinux) · [Build from source: raw cmake + ninja](#build-from-source-raw-cmake--ninja) · [Filament-specific CMake options](#filament-specific-cmake-options) · [Per-OS build notes](#per-os-build-notes) · [What you link against (libraries & include dirs)](#what-you-link-against-libraries--include-dirs) · [Engine + SwapChain from a native window (desktop)](#engine--swapchain-from-a-native-window-desktop) · [The hellotriangle include set](#the-hellotriangle-include-set) · [The filamentapp / SDL helper vs. a real app](#the-filamentapp--sdl-helper-vs-a-real-app) · [iOS specifics](#ios-specifics) · [CocoaPods install](#cocoapods-install) · [Objective-C++ + headers](#objective-c--headers) · [Engine with the Metal backend](#engine-with-the-metal-backend) · [SwapChain from a CAMetalLayer](#swapchain-from-a-cametallayer) · [Compiled assets at build time (matc / cmgen / filamesh / resgen)](#compiled-assets-at-build-time-matc--cmgen--filamesh--resgen)
+## Table of Contents
+
+| Section | Covers |
+|---|---|
+| [Supported platforms & backends](#supported-platforms--backends) | Filament is a real-time physically based rendering engine for Android, iOS, Linux, macOS, Windows, and WASM |
+| [Toolchain prerequisites](#toolchain-prerequisites) | From BUILDING.md, to build Filament you must first install |
+| [Getting the SDK: prebuilt vs build from source](#getting-the-sdk-prebuilt-vs-build-from-source) | Prebuilt release binaries, Build from source: build.sh (macOS/Linux), Build from source: raw cmake + ninja, and related topics |
+| [What you link against (libraries & include dirs)](#what-you-link-against-libraries--include-dirs) | Filament is split into the core engine plus supporting libraries (from the repo directory structure) |
+| [Engine + SwapChain from a native window (desktop)](#engine--swapchain-from-a-native-window-desktop) | The platform-specific glue is: create an `Engine`, then create a `SwapChain` from a native window pointer passed as a `void*` |
+| [iOS specifics](#ios-specifics) | Source: the "CocoaPods Hello Triangle" tutorial (`ios.md`) |
+| [Compiled assets at build time (matc / cmgen / filamesh / resgen)](#compiled-assets-at-build-time-matc--cmgen--filamesh--resgen) | Filament consumes pre-compiled binary assets, not raw source assets, at runtime |
 
 ## Supported platforms & backends
 

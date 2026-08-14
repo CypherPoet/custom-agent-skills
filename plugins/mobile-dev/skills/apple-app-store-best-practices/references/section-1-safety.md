@@ -3,9 +3,19 @@
 > Source: https://developer.apple.com/app-store/review/guidelines/
 > Last synced: 2026-06-01
 
----
+## Table of Contents
 
-**Contents:** [§1.1 Objectionable Content](#11-objectionable-content) · [§1.2 User-Generated Content](#12-user-generated-content) · [§1.3 Kids Category](#13-kids-category) · [§1.4 Physical Harm](#14-physical-harm-asr--nr) · [§1.5 Developer Information](#15-developer-information-asr--nr) · [§1.6 Data Security](#16-data-security-asr--nr) · [§1.7 Reporting Criminal Activity](#17-reporting-criminal-activity)
+| Section | Covers |
+|---|---|
+| [§1.1 Objectionable Content](#11-objectionable-content) | Apps should not include content that is offensive, insensitive |
+| [§1.2 User-Generated Content](#12-user-generated-content) | Mandatory filtering, reporting, blocking, and contact controls for user-generated content |
+| [§1.3 Kids Category](#13-kids-category) | Requirement: Apps in the Kids Category must not include links out of the app |
+| [§1.4 Physical Harm (ASR & NR)](#14-physical-harm-asr--nr) | Apps that behave in a way that risks physical harm may be rejected |
+| [§1.5 Developer Information (ASR & NR)](#15-developer-information-asr--nr) | Requirement: Apps and their Support URL must include an easy way to contact the developer |
+| [§1.6 Data Security (ASR & NR)](#16-data-security-asr--nr) | Requirement: Apps must implement appropriate security measures to ensure proper handling of user information |
+| [§1.7 Reporting Criminal Activity](#17-reporting-criminal-activity) | Requirement: Apps for reporting alleged criminal activity must involve local law enforcement |
+
+---
 
 ## §1.1 Objectionable Content
 

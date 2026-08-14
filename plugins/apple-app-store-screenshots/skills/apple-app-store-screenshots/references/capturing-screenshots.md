@@ -4,6 +4,19 @@ How to produce pixel-correct, store-ready screenshots — by hand for a quick se
 when you have several locales and device classes to keep in sync. Dimensions and the
 upload-the-largest rule are in [device-specifications.md](device-specifications.md).
 
+## Table of Contents
+
+| Section | Covers |
+|---|---|
+| [What "store-ready" means](#what-store-ready-means) | accepted size for the class (see device-specifications.md) |
+| [Manual route (a few screenshots, one language)](#manual-route-a-few-screenshots-one-language) | (9:41 is Apple's convention.) Reset later with `xcrun simctl status_bar booted clear` |
+| [Automated route — `fastlane snapshot` (many locales × classes)](#automated-route--fastlane-snapshot-many-locales--classes) | When you have more than one language or want screenshots regenerated on every release, `fastlane snapshot` is the standard tool |
+| [Add device frames & captions — `frameit`](#add-device-frames--captions--frameit) | Adding Apple device frames and localized caption bands with `frameit` |
+| [Render your own marketing screenshots (without fastlane)](#render-your-own-marketing-screenshots-without-fastlane) | Rendering custom framed and captioned marketing compositions without fastlane |
+| [Upload — `fastlane deliver`](#upload--fastlane-deliver) | Uploading localized screenshots and metadata with `deliver` |
+| [Localization workflow](#localization-workflow) | uploading via `deliver` maps each folder to the matching App Store localization |
+| [Common rejection / quality traps](#common-rejection--quality-traps) | device-specifications.md, and prefer producing the canonical (largest) size so the rest auto-scale |
+
 ## What "store-ready" means
 
 - **Native resolution, never upscaled.** Capture on a device/simulator whose screen matches an

@@ -5,8 +5,6 @@
 
 Distilled from Apple's HIG platform pages: Designing for macOS, The menu bar, Dock menus, Mac Catalyst.
 
-**Contents:** [Designing for macOS](#designing-for-macos) · [The menu bar](#the-menu-bar) · [Dock menus](#dock-menus) · [Mac Catalyst](#mac-catalyst)
-
 ### Designing for macOS
 
 **Purpose:** Design for a large-display, pointer-and-keyboard, multi-window environment where people run several apps at once for tasks ranging from quick edits to hours of deep concentration.

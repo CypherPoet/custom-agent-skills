@@ -2,6 +2,20 @@
 
 Procedural geometry via node graphs. From a script, you build the node tree the same way you'd build a shader tree — create nodes, set inputs, link sockets — then attach the tree to an object as a `NODES` modifier.
 
+## Table of Contents
+
+| Section | Covers |
+|---|---|
+| [Mental model](#mental-model) | Geometry-node data blocks, socket flow, fields, modifiers, and evaluation |
+| [Attaching a Geometry Nodes modifier](#attaching-a-geometry-nodes-modifier) | `nt.interface.new_socket(...)` is the 4.x+ API for declaring tree inputs/outputs |
+| [Pattern: scatter instances on a surface](#pattern-scatter-instances-on-a-surface) | The classic geometry-nodes example |
+| [Setting attributes from script](#setting-attributes-from-script) | Creating mesh attributes, assigning per-element values, and choosing data domains and types |
+| [Reading evaluated geometry](#reading-evaluated-geometry) | Geometry-nodes-modified meshes show their evaluated state through the depsgraph (see `bpy-essentials.md`) |
+| [Node-tree modifier inputs](#node-tree-modifier-inputs) | A geometry-node group can expose user-facing inputs |
+| [Common patterns and what they're for](#common-patterns-and-what-theyre-for) | Reusable geometry-node patterns and the problems each pattern solves |
+| [When to escalate](#when-to-escalate) | Geometry node trees built from script can get long (hundreds of nodes for complex graphs) |
+| [Sources](#sources) | Authoritative references that ground this guidance |
+
 ## Mental model
 
 - A **Geometry Node Tree** is a `bpy.types.GeometryNodeTree` data-block.

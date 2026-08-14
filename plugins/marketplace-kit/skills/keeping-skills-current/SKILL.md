@@ -10,8 +10,6 @@ Review project-owned skills against a project-controlled evidence set. Keep rese
 
 Require explicit invocation. Never select this skill implicitly, create configuration, edit skills, create pull requests, or create schedulers merely because maintenance might be useful.
 
-**Contents:** [Interpret the Request](#interpret-the-request) · [Locate the Project and Helper](#locate-the-project-and-helper) · [Route by Action](#route-by-action) · [Safety Invariants](#safety-invariants)
-
 ## Interpret the Request
 
 Normalize explicit requests to one of these actions:

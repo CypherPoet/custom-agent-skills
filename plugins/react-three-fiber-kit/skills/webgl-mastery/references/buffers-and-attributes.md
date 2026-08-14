@@ -1,6 +1,18 @@
 # Buffers and Attributes
 
-**Contents:** [The Pieces](#the-pieces) · [Uploading Data](#uploading-data) · [VAOs Are Mandatory in Practice](#vaos-are-mandatory-in-practice) · [`vertexAttribPointer`](#vertexattribpointer--the-most-misread-api) · [Interleaved vs Separate Buffers](#interleaved-vs-separate-buffers) · [Indexed Draws](#indexed-draws) · [Per-Instance Attributes (Instancing)](#per-instance-attributes-instancing) · [Cleanup](#cleanup) · [Common Mistakes](#common-mistakes)
+## Table of Contents
+
+| Section | Covers |
+|---|---|
+| [The Pieces](#the-pieces) | Vertex, index, and attribute buffers plus vertex-array objects and draw calls |
+| [Uploading Data](#uploading-data) | The usage hint in the third argument is just a hint — the GPU doesn't enforce it, but the driver may pick different memory |
+| [VAOs Are Mandatory in Practice](#vaos-are-mandatory-in-practice) | Vertex-array state setup and the bind-plus-draw sequence used each frame |
+| [`vertexAttribPointer` — The Most Misread API](#vertexattribpointer--the-most-misread-api) | The pointer records the currently bound `ARRAY_BUFFER` |
+| [Interleaved vs Separate Buffers](#interleaved-vs-separate-buffers) | Separate (one buffer per attribute, tightly packed) |
+| [Indexed Draws](#indexed-draws) | For meshes with shared vertices (cubes, anything organic), use an index buffer |
+| [Per-Instance Attributes (Instancing)](#per-instance-attributes-instancing) | Add an attribute, then mark it as per-instance instead of per-vertex with `vertexAttribDivisor(loc, 1)` |
+| [Cleanup](#cleanup) | GPU memory isn't garbage-collected |
+| [Common Mistakes](#common-mistakes) | Frequent mistakes and the changes that correct them |
 
 ## The Pieces
 

@@ -4,7 +4,24 @@
 
 > Scene/Canvas setup: see [../SKILL.md](../SKILL.md). Frame-loop mechanics: [hooks.md](./hooks.md).
 
-**Contents:** [Setup](#setup) · [RigidBody](#rigidbody) · [Colliders](#colliders) · [Imperative Body API](#imperative-body-api) · [Collision Events and Sensors](#collision-events-and-sensors) · [Collision Filtering](#collision-filtering) · [Joints](#joints) · [Instanced Physics](#instanced-physics) · [World Access, Stepping, and Snapshots](#world-access-stepping-and-snapshots) · [Attractors](#attractors) · [Character Controllers](#character-controllers) · [Performance Rules](#performance-rules) · [Common Mistakes](#common-mistakes) · [See Also](#see-also)
+## Table of Contents
+
+| Section | Covers |
+|---|---|
+| [Setup](#setup) | `<Physics>` creates the world and steps it |
+| [RigidBody](#rigidbody) | `<RigidBody>` registers its mesh children with the simulation and drives their transform |
+| [Colliders](#colliders) | Auto-Collider Strategy, Explicit Colliders — Args Are Half-Extents, and MeshCollider |
+| [Imperative Body API](#imperative-body-api) | Grab the body with a ref — the type is `RapierRigidBody` |
+| [Collision Events and Sensors](#collision-events-and-sensors) | Handlers go on `<RigidBody>` (fires for any of its colliders) or on individual collider components (fires for that shape only) |
+| [Collision Filtering](#collision-filtering) | `interactionGroups(memberships, filters?)` packs group data into the number the engine expects |
+| [Joints](#joints) | Fixed, spherical, revolute, prismatic, rope, and spring joints between rigid bodies |
+| [Instanced Physics](#instanced-physics) | `<InstancedRigidBodies>` pairs one `instancedMesh` with one rigid body per instance |
+| [World Access, Stepping, and Snapshots](#world-access-stepping-and-snapshots) | Accessing the Rapier world, manual stepping, and snapshot-based state restoration |
+| [Attractors](#attractors) | `Attractor` lives in the separate `@react-three/rapier-addons` package |
+| [Character Controllers](#character-controllers) | Kinematic character movement, collision correction, slopes, and autostep |
+| [Performance Rules](#performance-rules) | Sleeping, collider choice, rigid-body counts, event costs, and timestep guidance |
+| [Common Mistakes](#common-mistakes) | Frequent mistakes and the changes that correct them |
+| [See Also](#see-also) | Related references and supporting guidance |
 
 ## Setup
 

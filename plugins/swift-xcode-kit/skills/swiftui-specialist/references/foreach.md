@@ -10,7 +10,18 @@ If identity is unstable, none of this works: state resets, animations break into
 
 The rule of thumb: the identity of a `ForEach` element must be **stable** (the same element has the same id across body evaluations, even if its position in the collection changes) and **unique** (no two distinct elements share an id in the same `ForEach`).
 
-**Contents:** [Applies to other data-driven initializers](#applies-to-other-data-driven-initializers) · [Avoid collection indices as identity](#avoid-collection-indices-as-identity) · [Don't create a new id on every body evaluation](#dont-create-a-new-id-on-every-body-evaluation) · [Prefer `Identifiable` conformance](#prefer-identifiable-conformance) · [Keep the id cheap to hash](#keep-the-id-cheap-to-hash) · [Identity must outlive the view that renders the `ForEach`](#identity-must-outlive-the-view-that-renders-the-foreach) · [Don't sort or filter inline in `ForEach`](#dont-sort-or-filter-inline-in-foreach) · [Prefer unary row views in `List`](#prefer-unary-row-views-in-list)
+## Table of Contents
+
+| Section | Covers |
+|---|---|
+| [Applies to other data-driven initializers](#applies-to-other-data-driven-initializers) | Identity requirements shared by other collection-driven SwiftUI initializers |
+| [Avoid collection indices as identity](#avoid-collection-indices-as-identity) | Using a collection's indices, or `.self` on an index, as the identifier is the most common anti-pattern |
+| [Don't create a new id on every body evaluation](#dont-create-a-new-id-on-every-body-evaluation) | An `Identifiable` type whose `id` is generated fresh each time `body` runs looks like it has identity |
+| [Prefer `Identifiable` conformance](#prefer-identifiable-conformance) | When element-level `Identifiable` conformance is preferable to an explicit `id` key path |
+| [Keep the id cheap to hash](#keep-the-id-cheap-to-hash) | `ForEach` hashes and compares element ids frequently - on every diff |
+| [Identity must outlive the view that renders the `ForEach`](#identity-must-outlive-the-view-that-renders-the-foreach) | `ForEach` assumes that an element's identity is stable for at least as long as the view rendering the `ForEach` is on screen |
+| [Don't sort or filter inline in `ForEach`](#dont-sort-or-filter-inline-in-foreach) | The collection passed to `ForEach` is evaluated every time the enclosing view's `body` runs |
+| [Prefer unary row views in `List`](#prefer-unary-row-views-in-list) | `List` needs the identity of every row up front: it has to materialize the full id set to diff against the previous update |
 
 ## Applies to other data-driven initializers
 

@@ -4,7 +4,20 @@ The pitfalls doctrine from the official R3F docs plus the scaling toolbox: on-de
 
 > Canvas props (`frameloop`, `dpr`, `performance`): see [canvas-and-project-setup.md](./canvas-and-project-setup.md). Shared setup: see [../SKILL.md](../SKILL.md).
 
-**Contents:** [The Eight Pitfalls](#the-eight-pitfalls) · [On-Demand Rendering](#on-demand-rendering) · [Instancing and the Draw-Call Budget](#instancing-and-the-draw-call-budget) · [Level of Detail](#level-of-detail) · [Adaptive Quality and Movement Regression](#adaptive-quality-and-movement-regression) · [Expensive State Updates: startTransition](#expensive-state-updates-starttransition) · [React State Discipline](#react-state-discipline) · [Profiling](#profiling) · [Common Mistakes](#common-mistakes) · [See Also](#see-also)
+## Table of Contents
+
+| Section | Covers |
+|---|---|
+| [The Eight Pitfalls](#the-eight-pitfalls) | Two cost models drive every rule: (a) creating three.js objects is expensive |
+| [On-Demand Rendering](#on-demand-rendering) | Scenes that only change on interaction should not render 60 times per second |
+| [Instancing and the Draw-Call Budget](#instancing-and-the-draw-call-budget) | Budget heuristic: ~1000 draw calls is where most scenes start sagging — well before triangle count matters on modern GPUs |
+| [Level of Detail](#level-of-detail) | Swap geometry complexity by camera distance with drei `<Detailed>` (wraps `THREE.LOD`) |
+| [Adaptive Quality and Movement Regression](#adaptive-quality-and-movement-regression) | Performance envelopes, movement regression, and adaptive device quality |
+| [Expensive State Updates: startTransition](#expensive-state-updates-starttransition) | When a setState will trigger expensive work — mounting a model |
+| [React State Discipline](#react-state-discipline) | The organizing principle for games and state-heavy apps: the render loop must never depend on React re-renders |
+| [Profiling](#profiling) | `r3f-perf` is the standard in-canvas profiler — FPS, CPU/GPU frame time, draw calls, triangles, and geometry/texture memory |
+| [Common Mistakes](#common-mistakes) | Frequent mistakes and the changes that correct them |
+| [See Also](#see-also) | Related references and supporting guidance |
 
 ## The Eight Pitfalls
 

@@ -4,7 +4,19 @@ Every entry in a scene's `elements` array. For the file wrapper see
 [`file-format.md`](file-format.md); for style *meaning* (which color, when a box)
 see [`design-principles.md`](design-principles.md).
 
-**Contents:** [Shared Properties](#shared-properties) · [Verified Constants](#verified-constants) · [Shapes](#shapes-rectangle-ellipse-diamond) · [Text](#text) · [Arrows](#arrows) · [Lines](#lines) · [Binding Arrows to Shapes](#binding-arrows-to-shapes) · [Frames & Images](#frames--images) · [Gotchas](#gotchas)
+## Table of Contents
+
+| Section | Covers |
+|---|---|
+| [Shared Properties](#shared-properties) | Identifiers, geometry, style, grouping, binding, locking, and other properties shared by every element |
+| [Verified Constants](#verified-constants) | These are the exact values from `@excalidraw/excalidraw` (`packages/common/src/constants.ts`) |
+| [Shapes: `rectangle`, `ellipse`, `diamond`](#shapes-rectangle-ellipse-diamond) | Geometry and use cases for rectangle, ellipse, and diamond container shapes |
+| [Text](#text) | Two modes. Free-floating text (a label/title) has `containerId: null` |
+| [Arrows](#arrows) | Arrow points, bindings, heads, elbows, labels, and connector geometry |
+| [Lines](#lines) | Same as an arrow but non-directional (no arrowheads by default) — use for dividers, timelines, tree trunks, and flow spines |
+| [Binding Arrows to Shapes](#binding-arrows-to-shapes) | Binding is what makes a connector stick to a shape |
+| [Frames & Images](#frames--images) | group a region; rarely needed for static diagrams |
+| [Gotchas](#gotchas) | (`decision`, `arrow_to_db`) and namespace by section for big diagrams |
 
 ## Shared Properties
 

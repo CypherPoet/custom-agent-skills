@@ -4,7 +4,24 @@ Loading models (GLTF/GLB primary, plus OBJ/FBX/STL/PLY), textures (`TextureLoade
 
 > Scene/renderer setup: see [../SKILL.md#setup](../SKILL.md#setup).
 
-**Contents:** [LoadingManager](#loadingmanager--coordinate-progress) · [TextureLoader](#textureloader) · [CubeTextureLoader](#cubetextureloader) · [HDR / EXR Environments](#hdr--exr-environments) · [GLTFLoader](#gltfloader-primary-3d-format) · [Other Model Formats](#other-model-formats) · [Async / Promise Patterns](#async--promise-patterns) · [Cache](#cache) · [Asset Manager Pattern](#asset-manager-pattern) · [Loading From Other Sources](#loading-from-other-sources) · [Error Handling](#error-handling) · [Performance Tips](#performance-tips) · [Common Mistakes](#common-mistakes)
+## Table of Contents
+
+| Section | Covers |
+|---|---|
+| [LoadingManager — Coordinate Progress](#loadingmanager--coordinate-progress) | Coordinating progress and ready state across multiple asset loaders |
+| [TextureLoader](#textureloader) | Texture configuration (wrap, repeat, filtering, anisotropy) is covered in textures.md |
+| [CubeTextureLoader](#cubetextureloader) | Loading six-face cube textures for backgrounds, environments, and material maps |
+| [HDR / EXR Environments](#hdr--exr-environments) | PMREMGenerator — Prefilter for PBR |
+| [GLTFLoader (Primary 3D Format)](#gltfloader-primary-3d-format) | GLB/GLTF is the recommended format for web 3D |
+| [Other Model Formats](#other-model-formats) | OBJ and MTL, FBX, STL, and PLY loaders and their returned scene data |
+| [Async / Promise Patterns](#async--promise-patterns) | Promisify Any Loader and Parallel Loads with Promise.all |
+| [Cache](#cache) | Three.js has a global request cache shared across loaders that go through the file loader (most do) |
+| [Asset Manager Pattern](#asset-manager-pattern) | For larger apps, a small cache layer pays off |
+| [Loading From Other Sources](#loading-from-other-sources) | Data URL / Base64, Blob URL, ArrayBuffer / parse, and Base Paths and URL Rewriting |
+| [Error Handling](#error-handling) | Fallback and retry patterns for asynchronous asset loading |
+| [Performance Tips](#performance-tips) | Geometry and texture compression, caching, concurrency, and disposal |
+| [Common Mistakes](#common-mistakes) | Frequent mistakes and the changes that correct them |
+| [See Also](#see-also) | Related references and supporting guidance |
 
 ## LoadingManager — Coordinate Progress
 

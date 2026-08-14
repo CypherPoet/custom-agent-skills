@@ -6,7 +6,21 @@ If the user's deployment target is below iOS 27 / macOS 27 / visionOS 27, do not
 
 SDK 27.0 introduces two new protocols for document-based apps: `ReadableDocument` (read-only) and `WritableDocument` (adds saving). They give the document model **direct access to the file URL**, run reading and writing in the background, support progress reporting, and support coordinated disk access at any time. For new code, always prefer them over `ReferenceFileDocument` and `FileDocument`.
 
-**Contents:** [Mental model](#mental-model) · [Set up the app: `DocumentGroup`](#set-up-the-app-documentgroup) · [`FileWrapperDocumentReader` / `FileWrapperDocumentWriter` (recommended)](#filewrapperdocumentreader--filewrapperdocumentwriter-recommended) · [Register undo actions (required for autosave)](#register-undo-actions-required-for-autosave) · [Custom readers and writers](#custom-readers-and-writers) · [Report progress with `Subprogress`](#report-progress-with-subprogress) · [Coordinated disk access outside read/write](#coordinated-disk-access-outside-readwrite) · [iOS launch scene and multiple creation sources](#ios-launch-scene-and-multiple-creation-sources) · [Export to a new location or format](#export-to-a-new-location-or-format) · [Concurrency contract (common agent pitfalls)](#concurrency-contract-common-agent-pitfalls) · [Quick API reference](#quick-api-reference)
+## Table of Contents
+
+| Section | Covers |
+|---|---|
+| [Mental model](#mental-model) | Document lifecycle from file opening through snapshotting, writing, and autosave |
+| [Set up the app: `DocumentGroup`](#set-up-the-app-documentgroup) | `DocumentGroup` takes two closures |
+| [`FileWrapperDocumentReader` / `FileWrapperDocumentWriter` (recommended)](#filewrapperdocumentreader--filewrapperdocumentwriter-recommended) | These convenience types handle file reading and writing: you supply closures |
+| [Register undo actions (required for autosave)](#register-undo-actions-required-for-autosave) | SwiftUI tracks unsaved changes through undo actions |
+| [Custom readers and writers](#custom-readers-and-writers) | Use a custom `DocumentReader` / `DocumentWriter` only when the `FileWrapper` convenience types can't do what you need |
+| [Report progress with `Subprogress`](#report-progress-with-subprogress) | `read` and `write` receive `consuming Subprogress` |
+| [Coordinated disk access outside read/write](#coordinated-disk-access-outside-readwrite) | SwiftUI coordinates file access for `read` and `write` automatically |
+| [iOS launch scene and multiple creation sources](#ios-launch-scene-and-multiple-creation-sources) | Read `context.creationSource` in your initializer to set the document up accordingly |
+| [Export to a new location or format](#export-to-a-new-location-or-format) | Use `fileExporter` with a `WritableDocument` |
+| [Concurrency contract (common agent pitfalls)](#concurrency-contract-common-agent-pitfalls) | Reader and writer isolation, snapshot boundaries, progress, cancellation, and coordinated disk access |
+| [Quick API reference](#quick-api-reference) | Document-based app symbols and the role each one plays |
 
 ## Mental model
 
