@@ -1,12 +1,6 @@
 ---
 name: claude-memory-consolidation
-description: >
-  Audit and consolidate Claude's per-project auto-memory directory. Use when the
-  user says "clean up / consolidate / audit / prune memory" or similar,
-  complains about stale or duplicated memories, hits memory references that no
-  longer resolve, or when MEMORY.md nears the 200-line truncation cap. Produces
-  a severity-tiered audit, waits for per-cluster approval, then applies edits —
-  never modifies memory without explicit confirmation.
+description: Audit and consolidate Claude's per-project auto-memory directory. Use when the user says "clean up / consolidate / audit / prune memory" or similar, complains about stale or duplicated memories, hits memory references that no longer resolve, or when MEMORY.md nears the 200-line truncation cap. Produces a severity-tiered audit, waits for per-cluster approval, then applies edits — never modifies memory without explicit confirmation.
 ---
 
 # Consolidate Memory

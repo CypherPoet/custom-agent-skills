@@ -1,12 +1,6 @@
 ---
 name: react-three-fiber-mastery
-description: >
-  Use whenever the user is working with React Three Fiber or the pmndrs
-  ecosystem: @react-three/fiber, drei, @react-three/postprocessing, rapier,
-  gltfjsx, leva. Trigger on <Canvas>, useFrame, useThree, useGLTF, drei helpers,
-  or "three.js in React / Next.js / Expo" — even when the library is never
-  named. Covers R3F v9 + React 19. For plain Three.js questions beneath the
-  React layer, defer to threejs-mastery.
+description: 'Use whenever the user is working with React Three Fiber or the pmndrs ecosystem: @react-three/fiber, drei, @react-three/postprocessing, rapier, gltfjsx, leva. Trigger on <Canvas>, useFrame, useThree, useGLTF, drei helpers, or "three.js in React / Next.js / Expo" — even when the library is never named. Covers R3F v9 + React 19. For plain Three.js questions beneath the React layer, defer to threejs-mastery.'
 ---
 
 # React Three Fiber Mastery

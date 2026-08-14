@@ -49,6 +49,32 @@ export function stripCodeFences(text) {
     }
     return output.join("\n");
 }
+function descriptionUsesMultilineScalar(skillText) {
+    const frontmatter = /^---[ \t]*\r?\n([\s\S]*?)\r?\n---(?:[ \t]*\r?\n|[ \t]*$)/u.exec(skillText)?.[1];
+    if (frontmatter === undefined) {
+        return false;
+    }
+    const lines = frontmatter.split(/\r?\n/u);
+    const descriptionIndex = lines.findIndex((line) => /^description:/u.test(line));
+    if (descriptionIndex === -1) {
+        return false;
+    }
+    const descriptionLine = lines[descriptionIndex];
+    const initialValue = /^description:[ \t]*(.*)$/u.exec(descriptionLine ?? "")?.[1]?.trim() ?? "";
+    if (initialValue.length === 0 || /^[>|]/u.test(initialValue)) {
+        return true;
+    }
+    for (const continuationLine of lines.slice(descriptionIndex + 1)) {
+        if (!/^[ \t]/u.test(continuationLine)) {
+            return false;
+        }
+        const trimmed = continuationLine.trim();
+        if (trimmed.length > 0 && !trimmed.startsWith("#")) {
+            return true;
+        }
+    }
+    return false;
+}
 export function headingAnchors(text) {
     const seen = new Map();
     const valid = new Set();
@@ -169,6 +195,13 @@ export function auditSkillStructure(pluginsDirectory) {
             }
             const label = `${plugin}/${skill}`;
             const skillText = readFileSync(skillManifest, "utf8");
+            if (descriptionUsesMultilineScalar(skillText)) {
+                errors.push([
+                    label,
+                    "SKILL.md",
+                    "description must be a single-line YAML scalar — put the complete value on the description: line",
+                ]);
+            }
             const skillLines = lineCount(skillText);
             if (skillLines > SKILL_LINE_LIMIT) {
                 errors.push([

@@ -2,7 +2,7 @@
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "sf-symbols-kit",
   "displayName": "SF Symbols",
-  "version": "0.6.0",
+  "version": "0.6.1",
   "description": "Apple SF Symbols end to end: find the right symbol with natural language, export clean recolorable SVGs at any of the 9 weights, browse an HTML gallery, build full icon sets, and convert your own SVG art into importable custom SF Symbol templates.",
   "author": { "name": "CypherPoet" },
   "homepage": "https://github.com/CypherPoet/custom-agent-skills/tree/main/plugins/sf-symbols-kit",

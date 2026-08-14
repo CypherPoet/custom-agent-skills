@@ -1,15 +1,6 @@
 ---
 name: apple-human-interface-guidelines
-description: >
-  Use whenever the user is designing, building, or reviewing UI for any Apple
-  platform (iOS, iPadOS, macOS, tvOS, visionOS, watchOS): choosing components
-  (tab bar vs sidebar, sheet vs popover), layout, navigation, color, Dark Mode,
-  typography, SF Symbols, Liquid Glass, motion, haptics, accessibility, or
-  wanting an app to "feel native" — even when "HIG" is never said. Includes hard
-  specs and per-platform deltas. For App Review compliance use
-  apple-app-store-best-practices; for submission mechanics,
-  app-store-connect-submission; for screenshot specs,
-  apple-app-store-screenshots.
+description: 'Use whenever the user is designing, building, or reviewing UI for any Apple platform (iOS, iPadOS, macOS, tvOS, visionOS, watchOS): choosing components (tab bar vs sidebar, sheet vs popover), layout, navigation, color, Dark Mode, typography, SF Symbols, Liquid Glass, motion, haptics, accessibility, or wanting an app to "feel native" — even when "HIG" is never said. Includes hard specs and per-platform deltas. For App Review compliance use apple-app-store-best-practices; for submission mechanics, app-store-connect-submission; for screenshot specs, apple-app-store-screenshots.'
 ---
 
 # Apple Human Interface Guidelines

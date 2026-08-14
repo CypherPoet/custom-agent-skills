@@ -1,12 +1,6 @@
 ---
 name: keeping-skills-current
-description: >
-  This skill should be used when the user explicitly asks to configure
-  source-based maintenance for project-owned skills, review configured skills
-  against approved sources, refresh managed skills, inspect review status, or
-  process skills currently due for review. It is not for ordinary code review,
-  general skill editing, installed-package updates, or unsourced requests to
-  make a skill better.
+description: This skill should be used when the user explicitly asks to configure source-based maintenance for project-owned skills, review configured skills against approved sources, refresh managed skills, inspect review status, or process skills currently due for review. It is not for ordinary code review, general skill editing, installed-package updates, or unsourced requests to make a skill better.
 disable-model-invocation: true
 ---
 

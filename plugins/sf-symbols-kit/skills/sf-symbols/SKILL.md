@@ -1,12 +1,6 @@
 ---
 name: sf-symbols
-description: >
-  Work with Apple SF Symbols end to end: find or look up symbols, browse them in
-  an HTML gallery, check availability and keywords, export clean SVGs at any
-  weight, or create a custom SF Symbol from the user's own SVG art (template
-  conversion, export, validation). Also for SF Symbols design questions:
-  rendering modes, variable color, weights/scales, animations. Triggers on "SF
-  Symbol", "Apple/system icons", "convert this SVG to an SF Symbol".
+description: 'Work with Apple SF Symbols end to end: find or look up symbols, browse them in an HTML gallery, check availability and keywords, export clean SVGs at any weight, or create a custom SF Symbol from the user''s own SVG art (template conversion, export, validation). Also for SF Symbols design questions: rendering modes, variable color, weights/scales, animations. Triggers on "SF Symbol", "Apple/system icons", "convert this SVG to an SF Symbol".'
 ---
 
 # SF Symbols

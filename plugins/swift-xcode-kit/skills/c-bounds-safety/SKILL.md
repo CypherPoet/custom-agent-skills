@@ -1,7 +1,6 @@
 ---
 name: c-bounds-safety
-description: |
-  Guide for the C -fbounds-safety language extension — the language model, pointer annotations, adopting bounds-safety in existing C code, compiler build settings and modes, and runtime debugging of bounds violations. Use when working with, reading, reviewing, comparing, debugging, or analyzing C code that has adopted -fbounds-safety or wants to adopt it. Triggers: bounds annotations (__counted_by, __counted_by_or_null, __sized_by, __sized_by_or_null, __ended_by, __single, __indexable, __bidi_indexable, __unsafe_indexable, __null_terminated, __terminated_by), helper functions (__unsafe_forge_bidi_indexable, __unsafe_forge_single, __null_terminated_to_indexable, __unsafe_null_terminated_to_indexable, __unsafe_null_terminated_from_indexable), macros (__ptrcheck_abi_assume_single), or includes of "ptrcheck.h".
+description: 'Guide for the C -fbounds-safety language extension — the language model, pointer annotations, adopting bounds-safety in existing C code, compiler build settings and modes, and runtime debugging of bounds violations. Use when working with, reading, reviewing, comparing, debugging, or analyzing C code that has adopted -fbounds-safety or wants to adopt it. Triggers: bounds annotations (__counted_by, __counted_by_or_null, __sized_by, __sized_by_or_null, __ended_by, __single, __indexable, __bidi_indexable, __unsafe_indexable, __null_terminated, __terminated_by), helper functions (__unsafe_forge_bidi_indexable, __unsafe_forge_single, __null_terminated_to_indexable, __unsafe_null_terminated_to_indexable, __unsafe_null_terminated_from_indexable), macros (__ptrcheck_abi_assume_single), or includes of "ptrcheck.h".'
 ---
 
 ## How to Use This Skill

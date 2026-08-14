@@ -1,6 +1,6 @@
 {
   "name": "changelog-maintenance",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "description": "Maintain a project's CHANGELOG.md in Keep-a-Changelog format.",
   "author": {
     "name": "CypherPoet"

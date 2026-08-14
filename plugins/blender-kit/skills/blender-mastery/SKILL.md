@@ -1,13 +1,6 @@
 ---
 name: blender-mastery
-description: >
-  Use whenever the user mentions Blender, `bpy`, a `.blend` file, or asks
-  to model / sculpt / rig / animate / texture / bake / render / export
-  anything in Blender — even if they don't name the skill. Pro tips,
-  `bpy` patterns, and Blender mental models covering modeling (including
-  hard-surface modeling, booleans, and topology cleanup), materials,
-  rigging, geometry nodes, rendering, asset import, and export — driven
-  through the official Blender MCP server or the headless CLI.
+description: Use whenever the user mentions Blender, `bpy`, a `.blend` file, or asks to model / sculpt / rig / animate / texture / bake / render / export anything in Blender — even if they don't name the skill. Pro tips, `bpy` patterns, and Blender mental models covering modeling (including hard-surface modeling, booleans, and topology cleanup), materials, rigging, geometry nodes, rendering, asset import, and export — driven through the official Blender MCP server or the headless CLI.
 ---
 
 # Blender Mastery

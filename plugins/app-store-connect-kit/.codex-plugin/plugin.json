@@ -1,6 +1,6 @@
 {
   "name": "app-store-connect-kit",
-  "version": "0.6.0",
+  "version": "0.6.1",
   "description": "Hands-on App Store Connect submission workflow and console navigation.",
   "author": {
     "name": "CypherPoet"

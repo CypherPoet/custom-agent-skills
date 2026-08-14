@@ -1,12 +1,6 @@
 ---
 name: threejs-mastery
-description: >
-  Use whenever the user is working with Three.js: scenes, WebGPU/WebGL
-  rendering, geometry, materials, lighting, textures, TSL or GLSL shaders,
-  animation, loaders, raycasting, controls, or post-processing. Trigger on
-  .glb/.gltf files, NodeMaterial, OrbitControls, EffectComposer, or any Three.js
-  API — even when "Three.js" is never named. Treats WebGPURenderer + TSL as the
-  primary path, WebGLRenderer + GLSL as the fallback.
+description: 'Use whenever the user is working with Three.js: scenes, WebGPU/WebGL rendering, geometry, materials, lighting, textures, TSL or GLSL shaders, animation, loaders, raycasting, controls, or post-processing. Trigger on .glb/.gltf files, NodeMaterial, OrbitControls, EffectComposer, or any Three.js API — even when "Three.js" is never named. Treats WebGPURenderer + TSL as the primary path, WebGLRenderer + GLSL as the fallback.'
 ---
 
 # Three.js Mastery

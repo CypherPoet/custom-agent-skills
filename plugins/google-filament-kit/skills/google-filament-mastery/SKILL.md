@@ -1,14 +1,6 @@
 ---
 name: google-filament-mastery
-description: >
-  Use whenever the user is building or debugging anything in Google Filament —
-  the real-time physically-based rendering engine — in C++, on the web
-  (filament.js), or on Android. Covers the Engine/Scene/View/Renderer API,
-  renderables and GPU resources, .mat/matc materials, PBR parameters and shading
-  models, physically-correct lighting and IBL, tone mapping, glTF loading, and
-  the CLI tools (cmgen, filamesh, matinfo). Trigger even when "Filament" isn't
-  named but the user pastes Filament code or works with .filamat/.filamesh
-  files. For raw WebGL use webgl-mastery; for Three.js, threejs-mastery.
+description: Use whenever the user is building or debugging anything in Google Filament — the real-time physically-based rendering engine — in C++, on the web (filament.js), or on Android. Covers the Engine/Scene/View/Renderer API, renderables and GPU resources, .mat/matc materials, PBR parameters and shading models, physically-correct lighting and IBL, tone mapping, glTF loading, and the CLI tools (cmgen, filamesh, matinfo). Trigger even when "Filament" isn't named but the user pastes Filament code or works with .filamat/.filamesh files. For raw WebGL use webgl-mastery; for Three.js, threejs-mastery.
 ---
 
 # Google Filament Mastery

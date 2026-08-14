@@ -95,6 +95,41 @@ test("large unindexed references and oversized skills are reported", async (t) =
   });
 });
 
+test("skill descriptions must be single-line YAML scalars", async (t) => {
+  const cases = [
+    "---\nname: example\ndescription: >\n  Folded description.\n---\n",
+    "---\nname: example\ndescription: >2-\n  Folded description.\n---\n",
+    "---\nname: example\ndescription: |-\n  Literal description.\n---\n",
+    "---\nname: example\ndescription: Continued\n  description.\n---\n",
+  ];
+  for (const text of cases) {
+    await t.test(text.split("\n")[2], (caseContext) => {
+      const { root, skill } = fixture(caseContext);
+      writeText(join(skill, "SKILL.md"), text);
+      assert.ok(
+        auditSkillStructure(join(root, "plugins")).errors.some((finding) =>
+          finding[2].includes("single-line YAML scalar"),
+        ),
+      );
+    });
+  }
+});
+
+test("long plain and quoted single-line skill descriptions pass", (t) => {
+  for (const description of [
+    "A ".repeat(300).trim(),
+    '"Use when: YAML punctuation requires quoting."',
+  ]) {
+    const root = temporaryDirectory(t);
+    const skill = join(root, "plugins/example/skills/example");
+    writeText(
+      join(skill, "SKILL.md"),
+      `---\nname: example\ndescription: ${description}\n---\n`,
+    );
+    assert.deepEqual(auditSkillStructure(join(root, "plugins")).errors, []);
+  }
+});
+
 test("cross-plugin links fail everywhere shipped Markdown can appear", async (t) => {
   const cases = [
     ["plugins/example/README.md", "../other/skills/other/SKILL.md", "example", "README.md"],

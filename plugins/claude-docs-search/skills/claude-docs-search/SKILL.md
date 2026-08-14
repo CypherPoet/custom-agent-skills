@@ -1,12 +1,6 @@
 ---
 name: claude-docs-search
-description: >
-  Use whenever the user asks about Claude Code itself — features, setup,
-  configuration, permissions, hooks, MCP servers, skills, settings, subagents,
-  plugins, CLI flags, or troubleshooting — including "how do I X in Claude Code"
-  and "does Claude Code support X", even when "docs" is never said. Looks up
-  answers in the official Claude Code documentation. Not for general coding
-  questions, the Claude API/SDK, or the user's own project code.
+description: Use whenever the user asks about Claude Code itself — features, setup, configuration, permissions, hooks, MCP servers, skills, settings, subagents, plugins, CLI flags, or troubleshooting — including "how do I X in Claude Code" and "does Claude Code support X", even when "docs" is never said. Looks up answers in the official Claude Code documentation. Not for general coding questions, the Claude API/SDK, or the user's own project code.
 ---
 
 # Claude Code Docs Search

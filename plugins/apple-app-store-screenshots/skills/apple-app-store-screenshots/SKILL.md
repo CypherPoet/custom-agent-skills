@@ -1,14 +1,6 @@
 ---
 name: apple-app-store-screenshots
-description: >
-  Authoritative spec and workflow for App Store screenshots and app preview
-  videos across every Apple device class. Use when preparing, sizing, capturing,
-  automating, localizing, or troubleshooting product-page imagery — screenshot
-  dimensions ('6.9" display', 1290x2796), upload rejections, counts and formats,
-  preview video specs, fastlane snapshot/frameit, or ordering a screenshot set
-  for conversion — even when "screenshot" is never said but store imagery is the
-  task. For review compliance and broader ASO, defer to
-  apple-app-store-best-practices.
+description: Authoritative spec and workflow for App Store screenshots and app preview videos across every Apple device class. Use when preparing, sizing, capturing, automating, localizing, or troubleshooting product-page imagery — screenshot dimensions ('6.9" display', 1290x2796), upload rejections, counts and formats, preview video specs, fastlane snapshot/frameit, or ordering a screenshot set for conversion — even when "screenshot" is never said but store imagery is the task. For review compliance and broader ASO, defer to apple-app-store-best-practices.
 ---
 
 # Apple App Store Screenshots

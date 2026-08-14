@@ -1,11 +1,6 @@
 ---
 name: marketplace-sync-check
-description: >
-  Read-only audit of whether this repo's plugins/ match the places that index
-  them: both published marketplace catalogs plus the local docs/CATALOG.md. Use
-  for "is everything published", "is the catalog up to date", "did I forget to
-  publish anything", or a pre/post-publish double-check. Reports drift; never
-  edits any file or repo.
+description: 'Read-only audit of whether this repo''s plugins/ match the places that index them: both published marketplace catalogs plus the local docs/CATALOG.md. Use for "is everything published", "is the catalog up to date", "did I forget to publish anything", or a pre/post-publish double-check. Reports drift; never edits any file or repo.'
 ---
 
 # marketplace-sync-check
