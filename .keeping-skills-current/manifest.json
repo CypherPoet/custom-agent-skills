@@ -796,10 +796,10 @@
       "deferredFindings": [],
       "declinedFindings": [],
       "state": {
-        "lastAttemptedReview": "2026-08-13T09:38:24Z",
+        "lastAttemptedReview": "2026-08-14T00:20:27Z",
         "lastAttemptStatus": "completed",
-        "lastCompletedReview": "2026-08-13T09:38:24Z",
-        "inputFingerprint": "sha256:fc2dc89f2acb7c62acc5d7cc949c7edf3fc35b86b31305af002f24a908b2232b"
+        "lastCompletedReview": "2026-08-14T00:20:27Z",
+        "inputFingerprint": "sha256:074ba25717f1606f071474adfb35680bf48405c21c1ad99b2f8fe0beca29cb19"
       }
     },
     "swiftui-whats-new-27": {
