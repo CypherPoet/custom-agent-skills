@@ -5,7 +5,7 @@ This repo publishes the following plugins via the [`cypherpoet-toolchest`](https
 | Plugin | Description | Components |
 |---|---|---|
 | [app-store-connect-kit](../plugins/app-store-connect-kit/README.md) | Hands-on App Store Connect submission workflow and console navigation. | 1 skill |
-| [apple-app-icons](../plugins/apple-app-icons/README.md) | Apple app icons end to end: design one that converts in the App Store (tap-through, audit, A/B testing) and ship it correctly — Icon Composer Liquid Glass .icon plus an appiconset fallback for older OS versions. | 1 skill |
+| [apple-app-icons](../plugins/apple-app-icons/README.md) | Apple app icons end to end: design one that converts in the App Store (tap-through, audit, A/B testing) and ship it correctly — Icon Composer Liquid Glass .icon with Xcode-generated compatibility artwork or an optional custom appiconset. | 1 skill |
 | [apple-app-store-screenshots](../plugins/apple-app-store-screenshots/README.md) | Apple App Store screenshot and app preview specifications. | 1 skill |
 | [apple-hig](../plugins/apple-hig/README.md) | Thorough distillation of Apple's complete Human Interface Guidelines across all six platforms (iOS, iPadOS, macOS, tvOS, visionOS, watchOS) — component-by-component best practices, hard specs (tap targets, type sizes, color tokens), per-platform deltas, and choose-the-right-component decision tables, with a synced reference corpus that tracks Apple's updates. | 1 skill |
 | [blender-kit](../plugins/blender-kit/README.md) | Blender mastery — modeling, materials, rigging, geometry nodes, rendering, and export via bpy, driven through the official Blender MCP server or the headless CLI. | 1 skill |
