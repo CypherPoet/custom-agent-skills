@@ -103,10 +103,10 @@
       "deferredFindings": [],
       "declinedFindings": [],
       "state": {
-        "lastAttemptedReview": "2026-08-13T09:38:24Z",
+        "lastAttemptedReview": "2026-08-14T00:20:27Z",
         "lastAttemptStatus": "completed",
-        "lastCompletedReview": "2026-08-13T09:38:24Z",
-        "inputFingerprint": "sha256:5cf2b3ce30c7ffb97f8337c85151ab20dc383adfa1952340797d16650aaf18f0"
+        "lastCompletedReview": "2026-08-14T00:20:27Z",
+        "inputFingerprint": "sha256:3d93f8c2b666053ae90bd14896476f81e42d9681fd5cfddae43da52d965fc96a"
       }
     },
     "apple-app-store-screenshots": {
