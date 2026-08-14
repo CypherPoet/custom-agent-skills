@@ -4,32 +4,32 @@ description: >
   Creating, designing, auditing, or A/B-testing an Apple app icon — both making
   it convert on the App Store (design principles, audit rubric, Product Page
   Optimization tests) and shipping it correctly (Liquid Glass Icon Composer
-  .icon files, Xcode wiring, .appiconset fallback for OS versions below 26).
+  .icon files, Xcode wiring, and optional .appiconset legacy artwork).
   Also for debugging icon problems: off-center artwork, edge borders,
   alpha-channel rejections, wrong sizes, or icons that read poorly at small
   sizes. Triggers on "app icon", "Icon Composer", ".icon", "appiconset",
   "actool".
 ---
 
-# Apple App Icons (Icon Composer + appiconset)
+# Apple App Icons (Icon Composer + Optional appiconset)
 
 ## Overview
 
 An app icon has two jobs: **earn the tap** in the App Store (a design / conversion problem) and **ship correctly** across every OS version and appearance (an engineering problem). This skill covers both — settle the design first, then build and wire the assets.
 
-Modern Apple app icons come in two formats that coexist:
+Modern Apple app icons can use two formats:
 
-- **`.icon`** — an Icon Composer bundle (iOS/iPadOS/macOS/watchOS **26+**). One source, rendered by the system into every size, the per-platform shape (squircle, circle), and the **Default / Dark / Clear / Tinted** appearance variants. This is the Liquid Glass icon.
-- **`.appiconset`** — the classic asset-catalog icon set (one PNG per idiom/size/scale). The fallback for **OS versions below 26**, which can't read `.icon`.
+- **`.icon`** — an Icon Composer bundle. One source defines the per-platform shape (squircle or circle), sizes, and **Default / Dark / Clear / Tinted** appearances for current operating systems. When the deployment target includes earlier releases, Xcode generates compatible app-icon images from this file at build time.
+- **`.appiconset`** — the classic asset-catalog icon set (one PNG per idiom/size/scale). Keep one when the product deliberately ships different legacy artwork or still depends on an existing asset-catalog workflow; it is not required solely because the deployment target is below 26.
 
-You usually ship **both**, named the same (`AppIcon`), and let the build system pick per OS version. Drop the appiconset only if your deployment target is 26+.
+Start with the `.icon`. Add an appiconset only for an intentional legacy-artwork or workflow requirement. When both use the same `AppIcon` name, enable inclusion of all app-icon assets so the build can carry both.
 
 ## When to Use
 
 - Designing or auditing an icon so it stands out and converts in the App Store
 - Creating or refreshing an app icon from source artwork
 - Wiring an Icon Composer `.icon` into an Xcode project
-- Adding a flat fallback for pre-26 OS versions
+- Preserving intentionally different legacy app-icon artwork
 - Planning an icon A/B test, or briefing a designer
 - Debugging: off-center art, white edge border, alpha/size rejections, icon missing on some OS versions
 
@@ -41,7 +41,7 @@ A technically perfect icon that nobody taps is still a failure. The icon is the 
 - **It survives light *and* dark.** The App Store shows your icon on a light background and a dark one, and so does the Home Screen. A near-white or near-black full-bleed fill dissolves into one of them. This is exactly why the `.icon`'s **Dark** appearance variant is worth authoring deliberately rather than letting it default — design for both contexts.
 - **It differs from its category.** Pull up your top ~20 competitors' icons and design to be the one that stands out, not the one that blends in.
 
-Settle the design first, then build the assets from that one mark — author the `.icon` in Icon Composer, and run the [generation script](#generation-script) below for the appiconset fallback.
+Settle the design first, then author the `.icon` in Icon Composer. Use the [generation script](#generation-script) only when the project intentionally needs a classic appiconset too.
 
 For the full audit rubric, an iOS A/B-test workflow (App Store Connect → Product Page Optimization), and a designer brief template, see [`references/icon-design-and-aso.md`](references/icon-design-and-aso.md).
 
@@ -50,13 +50,14 @@ For the full audit rubric, an iOS A/B-test workflow (App Store Connect → Produ
 | Concern | Answer |
 |---|---|
 | New Liquid Glass icon | `Foo.icon` authored in Icon Composer; lives in the project, **not** inside `.xcassets` |
-| Older-OS fallback | `AppIcon.appiconset` in `.xcassets`, same `AppIcon` name |
-| Ship both | `ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES` |
+| Earlier OS releases | Xcode generates compatible images from the `.icon` at build time |
+| Optional legacy artwork | `AppIcon.appiconset` in `.xcassets`, same `AppIcon` name |
+| Intentionally ship both | `ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES` |
 | Tell Xcode which icon | `ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon` (resolves to the `.icon` by base name) |
 | iOS 1024 marketing PNG | **no alpha channel** (App Store rejects alpha); full-bleed, system masks corners |
 | App Store listing icon | derived from the build's asset-catalog **default** appearance — there's no separate App Store upload; a *dark* listing icon means making dark the build default (which also flips the Home Screen) |
 | Verify | `xcodebuild … build`, then inspect the compiled `Assets.car` |
-| Generate the appiconset fallback | `scripts/generate-app-icons.py` (cleans the source, writes the macOS ladder; author the `.icon` in Icon Composer) |
+| Generate an optional appiconset | `scripts/generate-app-icons.py` (cleans the source and writes the macOS ladder; author the `.icon` in Icon Composer) |
 
 ## The `.icon` bundle
 
@@ -98,6 +99,8 @@ Key points:
 
 ## Layering & appearances (Dark, Tinted, Clear)
 
+After importing source artwork, organize the default group's layers into **no more than four groups**. This is Apple's documented complexity limit for a maintainable Icon Composer composition.
+
 The reason to ship a `.icon` over a flat PNG is that the system re-renders your **layers** per appearance — Default, Dark, Tinted (monochrome), and Clear. Per-appearance values live in `icon.json` as a `<property>-specializations` array on a layer: the **first entry is the default (no `appearance` key)** and each later entry overrides one appearance. The simplest two-edition icon is two flat composites swapped by opacity:
 
 ```json
@@ -133,11 +136,10 @@ Icon Composer writes this `opacity-specializations` shape for you. But note this
 ## Wiring into Xcode
 
 - Add `AppIcon.icon` to the project (a normal file; with a synced file-system group it's auto-included).
-- Keep the appiconset at `Assets.xcassets/AppIcon.appiconset` for the fallback, named `AppIcon`.
+- If the product intentionally keeps legacy artwork, put `AppIcon.appiconset` at `Assets.xcassets/AppIcon.appiconset` with the same name.
 - Build settings:
   - `ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon`
-  - `ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES` (bundles both so the system picks per OS)
-- Going 26-only? Delete the appiconset and drop `INCLUDE_ALL_APPICON_ASSETS`; `APPICON_NAME = AppIcon` then resolves to the `.icon` alone.
+  - Set `ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES` only when intentionally bundling both formats.
 
 ## Verify (don't trust the editor preview)
 
@@ -152,11 +154,11 @@ In the log, `actool` should run over **both** the `.icon` and `.xcassets` with `
 xcrun --sdk iphonesimulator assetutil --info <App>.app/Assets.car | grep -i AppIcon
 ```
 
-Expect Liquid Glass layer renditions plus `AppIcon … UIAppearanceAny` / `…Dark`, and the fallback springboard PNGs emplaced in the `.app`.
+Expect Liquid Glass layer renditions plus `AppIcon … UIAppearanceAny` / `…Dark`, along with build-time images for supported earlier releases. If an appiconset is intentionally included, verify its renditions too.
 
 ## Generation script
 
-`scripts/generate-app-icons.py` (Pillow; paths relative to this skill's directory) cleans one source and emits the **`.appiconset`** fallback. Author the Liquid Glass `.icon` itself in **Icon Composer** — its material and Default / Dark / Clear / Tinted appearance variants can't be produced by a script.
+`scripts/generate-app-icons.py` (Pillow; paths relative to this skill's directory) cleans one source and emits an optional **`.appiconset`**. Author the Liquid Glass `.icon` itself in **Icon Composer** — its material and Default / Dark / Clear / Tinted appearance variants can't be produced by a script.
 
 ```shell
 python3 scripts/generate-app-icons.py \
@@ -173,8 +175,8 @@ python3 scripts/generate-app-icons.py \
 - **White/bright border** on every rendered size → an edge frame baked into the source art. Trim it (`--clean`).
 - **Looks centered in Finder but ships off-center** (or the reverse) → centering lived in `icon.json`'s `translation-in-points`, not in the pixels. Bake the framing into the PNG and zero the translation.
 - **App Store upload rejected** → the 1024 PNG has an alpha channel. Flatten to RGB.
-- **Icon shows on iOS 26 but is blank on iOS 18** → you shipped only the `.icon`. Add an `.appiconset` and `INCLUDE_ALL_APPICON_ASSETS = YES`.
+- **Icon shows on iOS 26 but is blank on an earlier release** → inspect the Xcode build log and compiled `Assets.car`; Xcode should generate earlier-release images from the `.icon`. Add an appiconset only when the project intentionally needs separate legacy artwork.
 - **Square icon on the Mac Dock** → full-bleed flat PNG with no system shaping; fine for the `.icon` (the system shapes it on 26+), but pre-26 appiconset Mac icons render as authored.
-- **Raising the deployment target just to use the `.icon`** → unnecessary, and it drops users. Ship both instead.
+- **Raising the deployment target just to use the `.icon`** → unnecessary, and it drops users. Xcode generates compatible images for earlier releases.
 - **Flat icon looks dead in Tinted/Clear** → a single full-bleed layer has nothing for the system to separate. Split the emblem onto its own transparent layer over a background layer; verify on device (those appearances render at runtime).
 - **Wanted a dark icon on the App Store listing** → the listing icon is the build's *default* appearance — there's no separate upload, and making it dark also makes dark the Home Screen default. Pick which look is your default and design both appearances to that.

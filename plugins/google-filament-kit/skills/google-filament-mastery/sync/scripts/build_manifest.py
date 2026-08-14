@@ -17,7 +17,7 @@ Usage:
       --raw-dir <workspace>/raw \
       --references-dir <skill>/references \
       --out <skill>/sync/filament-sync-manifest.json \
-      --tag v1.72.0 --version 1.72.0 --date 2026-06-19
+      --tag v1.75.0 --version 1.75.0 --date 2026-08-14
 """
 import argparse
 import json
@@ -147,8 +147,8 @@ def main():
     ap.add_argument("--raw-dir", required=True, help="workspace raw/ dir of downloaded sources")
     ap.add_argument("--references-dir", required=True, help="skill references/ dir")
     ap.add_argument("--out", required=True, help="output manifest path")
-    ap.add_argument("--tag", default="v1.72.0")
-    ap.add_argument("--version", default="1.72.0")
+    ap.add_argument("--tag", default="v1.75.0")
+    ap.add_argument("--version", default="1.75.0")
     ap.add_argument("--date", required=True, help="sync date YYYY-MM-DD (pass in; not derived)")
     args = ap.parse_args()
 

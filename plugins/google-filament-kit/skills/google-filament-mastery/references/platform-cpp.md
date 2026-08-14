@@ -1,7 +1,7 @@
 # Platform Setup: C++ (Desktop & iOS)
 
-> Source: Filament repo README + BUILDING.md + iOS tutorial + C++ sample, Filament v1.72.0
-> Last synced: 2026-06-19
+> Source: Filament repo README + BUILDING.md + iOS tutorial + C++ sample, Filament v1.75.0
+> Last synced: 2026-08-14
 
 Install/link/native-window/build glue only. The `Engine`/`Renderer`/`View`/`Scene`/`Camera` API
 itself is covered in `engine-api-core` — this file stops at getting an `Engine` and a `SwapChain`
@@ -237,6 +237,10 @@ The desktop C++ sample (`samples/hellotriangle.cpp`) uses this include set:
 
 ```c++
 #include "common/arguments.h"
+#include "common/SampleConfig.h"
+#include "generated/resources/resources.h"
+
+#include <filamentapp/FilamentApp2.h>
 
 #include <filament/Camera.h>
 #include <filament/Engine.h>
@@ -252,16 +256,11 @@ The desktop C++ sample (`samples/hellotriangle.cpp`) uses this include set:
 
 #include <utils/EntityManager.h>
 
-#include <filamentapp/Config.h>
-#include <filamentapp/FilamentApp.h>
-
 #include <utils/getopt.h>
 
 #include <cmath>
 #include <iostream>
 #include <string>// for printing usage/help
-
-#include "generated/resources/resources.h"
 
 using namespace filament;
 using utils::Entity;
@@ -276,15 +275,22 @@ Two install/build-relevant notes here:
 
 ### The filamentapp / SDL helper vs. a real app
 
-The sample never calls `Engine::create()` / `createSwapChain()` itself — it hands a `setup` and
-`cleanup` lambda to `FilamentApp`:
+The sample never calls `Engine::create()` / `createSwapChain()` itself — it hands `setup` and
+`cleanup` callbacks to a `FilamentApp2` builder:
 
 ```c++
 auto setup = [&app](Engine* engine, View* view, Scene* scene) {
     // ... build skybox, vertex/index buffers, material, renderable, camera ...
 };
 
-FilamentApp::get().run(app.config, setup, cleanup);
+auto filamentApp = FilamentApp2::Builder()
+        .title(app.config.title)
+        .backend(app.config.backend)
+        .featureLevel(app.config.featureLevel)
+        .setup(setup)
+        .cleanup(cleanup)
+        .build();
+filamentApp->run();
 ```
 
 From the README: the samples "are all based on `libs/filamentapp/` which contains the code that
@@ -317,7 +323,7 @@ Source: the "CocoaPods Hello Triangle" tutorial (`ios.md`). CocoaPods install ha
 README form:
 
 ```shell
-pod 'Filament', '~> 1.72.0'
+pod 'Filament', '~> 1.75.0'
 ```
 
 Full Podfile from the tutorial:

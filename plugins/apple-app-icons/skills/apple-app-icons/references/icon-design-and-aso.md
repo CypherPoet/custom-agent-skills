@@ -69,7 +69,7 @@ Author a **1024×1024 px master** for iPhone, iPad, and Mac — Apple Watch uses
 | Apple Watch | 40–44 pt range (model-dependent) |
 | Spotlight / Settings / Notifications | system-derived smaller sizes |
 
-A modern `.icon` collapses this to a single layered source the system renders per platform; the appiconset still needs discrete PNGs for pre-26 OS versions (the script writes them).
+A modern `.icon` collapses this to a single layered source that Xcode uses to generate compatible images for earlier deployment targets. An appiconset needs discrete PNGs only when the product intentionally carries different legacy artwork or retains an existing asset-catalog workflow; the script writes those optional files.
 
 ## Icon audit rubric
 

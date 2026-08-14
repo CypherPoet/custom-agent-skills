@@ -1528,16 +1528,23 @@ def validate_research_result(
         }
         if disposition not in allowed_dispositions:
             raise ContractError(f"{location}.editDisposition is invalid")
-        if details["category"] != "correction" and disposition in {
+        if details["category"] == "humanDecision" and disposition in {
             "applied",
             "revertedAfterValidationFailure",
         }:
-            raise ContractError(f"{location} applies an edit to a non-correction finding")
-        if configuration.manifest["correctionStrategy"] == "reportOnly" and disposition == "applied":
+            raise ContractError(f"{location} applies an edit to a human-decision finding")
+        if (
+            configuration.manifest["delivery"]["strategy"] == "localReport"
+            and configuration.manifest["correctionStrategy"] == "reportOnly"
+            and disposition == "applied"
+        ):
             raise ContractError(f"{location} applies an edit while correctionStrategy is reportOnly")
-        if provisional and details["category"] == "correction" and disposition != "proposed":
+        if provisional and details["category"] in {
+            "correction",
+            "improvementSuggestion",
+        } and disposition != "proposed":
             raise ContractError(
-                f"{location} must keep a provisional correction proposed before mutation"
+                f"{location} must keep a provisional change proposed before mutation"
             )
         findings.append({"details": details, "evidence": evidence, "editDisposition": disposition})
     failures_raw = result["failures"]
@@ -1591,14 +1598,16 @@ def validate_research_result(
         raise ContractError("a completed research result cannot contain a failed retrieval, failure, or failed validation")
     if status == "incomplete" and not (failed_outcome or failures or validation_status == "failed"):
         raise ContractError("an incomplete research result must identify a retrieval, processing, or validation failure")
-    provisional_corrections = [
-        item for item in findings if item["details"]["category"] == "correction"
+    provisional_changes = [
+        item
+        for item in findings
+        if item["details"]["category"] in {"correction", "improvementSuggestion"}
     ]
-    if provisional and provisional_corrections and (
+    if provisional and provisional_changes and (
         failed_outcome or failures or status == "incomplete"
     ):
         raise ContractError(
-            "provisional corrections require every configured source and processing stage to succeed"
+            "provisional changes require every configured source and processing stage to succeed"
         )
     applied_findings = [item for item in findings if item["editDisposition"] == "applied"]
     reverted_findings = [
@@ -1607,7 +1616,7 @@ def validate_research_result(
     if applied_findings:
         if failed_outcome or failures or status == "incomplete":
             raise ContractError(
-                "applied corrections require every configured source and processing stage to succeed"
+                "applied changes require every configured source and processing stage to succeed"
             )
         expected_validation = (
             "passed"
@@ -1616,10 +1625,10 @@ def validate_research_result(
         )
         if validation_status != expected_validation:
             raise ContractError(
-                f"applied corrections require validation status {expected_validation}"
+                f"applied changes require validation status {expected_validation}"
             )
     if reverted_findings and validation_status != "failed":
-        raise ContractError("reverted corrections require failed validation")
+        raise ContractError("reverted changes require failed validation")
     normalized_result = {
         "schemaVersion": SCHEMA_VERSION,
         "projectIdentity": provided_project_identity,
@@ -2214,7 +2223,8 @@ def requires_provisional_binding(
     configuration: ProjectConfiguration,
 ) -> bool:
     return (
-        configuration.manifest["correctionStrategy"]
+        configuration.manifest["delivery"]["strategy"] == "githubPullRequest"
+        or configuration.manifest["correctionStrategy"]
         == "applyHighConfidenceCorrections"
     )
 
@@ -2412,7 +2422,7 @@ def main(arguments: Sequence[str] | None = None) -> int:
             if not args.provisional and requires_provisional_binding(configuration):
                 if args.provisional_fingerprint is None:
                     raise ContractError(
-                        "a final result under applyHighConfidenceCorrections requires "
+                        "a final result with edit-capable delivery requires "
                         "--provisional-fingerprint"
                     )
                 if not FINGERPRINT_PATTERN.fullmatch(args.provisional_fingerprint):

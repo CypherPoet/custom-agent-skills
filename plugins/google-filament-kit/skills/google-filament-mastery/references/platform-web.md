@@ -1,7 +1,7 @@
 # Platform Setup: Web (filament.js / WebAssembly)
 
-> Source: Filament web tutorials (triangle/redball/suzanne), Filament v1.72.0
-> Last synced: 2026-06-19
+> Source: Filament web tutorials (triangle/redball/suzanne), Filament v1.75.0
+> Last synced: 2026-08-14
 
 Filament runs in the browser as a WebAssembly module (`filament.js`) targeting **WebGL 2.0**. The
 JS API is a thin binding over the C++ API: same objects (`Engine`, `Scene`, `View`, `Renderer`,

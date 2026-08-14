@@ -1,9 +1,9 @@
 # Loading Assets: glTF / GLB (gltfio)
 
-> Source: Filament gltfio library (public headers) + web suzanne tutorial + C++ sample, Filament v1.72.0
-> Last synced: 2026-06-19
+> Source: Filament gltfio library (public headers) + web suzanne tutorial + C++ sample, Filament v1.75.0
+> Last synced: 2026-08-14
 
-**Contents:** [The short version](#the-short-version) · [gltfio is a separate library, not core Filament](#gltfio-is-a-separate-library-not-core-filament) · [The gltfio object model](#the-gltfio-object-model) · [AssetLoader](#assetloader) · [ResourceLoader](#resourceloader) · [FilamentAsset](#filamentasset) · [FilamentInstance](#filamentinstance) · [Animator](#animator) · [MaterialProvider (ubershader vs JIT)](#materialprovider-ubershader-vs-jit) · [TextureProvider (PNG/JPEG vs KTX2 vs WebP)](#textureprovider-pngjpeg-vs-ktx2-vs-webp) · [The canonical end-to-end C++ load flow](#the-canonical-end-to-end-c-load-flow) · [The ubershader archive (.uberz) toolchain](#the-ubershader-archive-uberz-toolchain) · [Texture compression & mesh compression](#texture-compression--mesh-compression) · [IMPORTANT: filamesh is NOT glTF](#important-filamesh-is-not-gltf) · [What the Filament v1.72.0 samples actually load](#what-the-filament-v1720-samples-actually-load) · [C++ sample (samples/suzanne.cpp) — filamesh + KTX2](#c-sample-samplessuzannecpp--filamesh--ktx2) · [Web tutorial (web/suzanne) — filamesh + KTX2](#web-tutorial-websuzanne--filamesh--ktx2) · [What is verified vs not in this file](#what-is-verified-vs-not-in-this-file)
+**Contents:** [The short version](#the-short-version) · [gltfio is a separate library, not core Filament](#gltfio-is-a-separate-library-not-core-filament) · [The gltfio object model](#the-gltfio-object-model) · [AssetLoader](#assetloader) · [ResourceLoader](#resourceloader) · [FilamentAsset](#filamentasset) · [FilamentInstance](#filamentinstance) · [Animator](#animator) · [MaterialProvider (ubershader vs JIT)](#materialprovider-ubershader-vs-jit) · [TextureProvider (PNG/JPEG vs KTX2 vs WebP)](#textureprovider-pngjpeg-vs-ktx2-vs-webp) · [The canonical end-to-end C++ load flow](#the-canonical-end-to-end-c-load-flow) · [The ubershader archive (.uberz) toolchain](#the-ubershader-archive-uberz-toolchain) · [Texture compression & mesh compression](#texture-compression--mesh-compression) · [IMPORTANT: filamesh is NOT glTF](#important-filamesh-is-not-gltf) · [What the Filament v1.75.0 samples actually load](#what-the-filament-v1750-samples-actually-load) · [C++ sample (samples/suzanne.cpp) — filamesh + KTX2](#c-sample-samplessuzannecpp--filamesh--ktx2) · [Web tutorial (web/suzanne) — filamesh + KTX2](#web-tutorial-websuzanne--filamesh--ktx2) · [What is verified vs not in this file](#what-is-verified-vs-not-in-this-file)
 
 ---
 
@@ -34,7 +34,7 @@ Implications:
 
 ## The gltfio object model
 
-All types below are in namespace `filament::gltfio`. Signatures are quoted verbatim from the v1.72.0 public headers (`gltfio/AssetLoader.h`, `ResourceLoader.h`, `FilamentAsset.h`, `FilamentInstance.h`, `Animator.h`, `MaterialProvider.h`, `TextureProvider.h`).
+All types below are in namespace `filament::gltfio`. Signatures are quoted verbatim from the v1.75.0 public headers (`gltfio/AssetLoader.h`, `ResourceLoader.h`, `FilamentAsset.h`, `FilamentInstance.h`, `Animator.h`, `MaterialProvider.h`, `TextureProvider.h`).
 
 The two **plug-in interfaces** are `TextureProvider` and `MaterialProvider`. Each ships with ready-to-go implementations that you obtain through free factory functions — you do **not** instantiate the provider classes directly:
 
@@ -85,6 +85,9 @@ void enableDiagnostics(bool enable = true);
 // Destroys the asset, all its Filament objects, and all its instances.
 void destroyAsset(const FilamentAsset* asset);
 
+// Sweep unused entries from the loader's internal component managers.
+void gc() noexcept;
+
 const filament::Material* const* getMaterials() const noexcept;
 size_t getMaterialsCount() const noexcept;
 MaterialProvider& getMaterialProvider() noexcept;
@@ -103,7 +106,7 @@ Construction parameters (`struct ResourceConfiguration`):
 ```cpp
 struct ResourceConfiguration {
     class filament::Engine* engine;        // required
-    const char* gltfPath;                  // optional base path/URI for relative resources
+    const char* gltfPath;                  // deprecated optional base path/URI for relative resources
     bool normalizeSkinningWeights;          // adjust skin weights to sum to 1
 };
 ```
@@ -381,7 +384,7 @@ What the provided sources do **not** state (do not claim these from this file):
 - **Draco** geometry compression — not mentioned in any of the source files or the 7 gltfio headers.
 - **meshopt / EXT_meshopt_compression** — not mentioned in any of the source files or the 7 gltfio headers.
 
-If you need to assert Draco or meshopt support for gltfio v1.72.0, verify against the actual gltfio sources / Filament release notes first. They are not confirmed here.
+If you need to assert Draco or meshopt support for gltfio v1.75.0, verify against the actual gltfio sources / Filament release notes first. They are not confirmed here.
 
 ---
 
@@ -405,7 +408,7 @@ Do not present the Suzanne samples as glTF examples. They demonstrate filamesh l
 
 ---
 
-## What the Filament v1.72.0 samples actually load
+## What the Filament v1.75.0 samples actually load
 
 ### C++ sample (samples/suzanne.cpp) — filamesh + KTX2
 
@@ -614,7 +617,7 @@ this.scene.setIndirectLight(this.indirectLight);
 
 ## What is verified vs not in this file
 
-**Verified — quoted from the v1.72.0 gltfio public headers and corpus files:**
+**Verified — quoted from the v1.75.0 gltfio public headers and corpus files:**
 
 - The full `filament::gltfio` C++ object model and signatures: `AssetLoader` (`create`/`createAsset`/`createInstancedAsset`/`createInstance`/`destroyAsset`/`destroy`, `AssetConfiguration`), `ResourceLoader` (`ResourceConfiguration`, `addResourceData`, `addTextureProvider`, `loadResources`, `asyncBeginLoad`/`asyncGetLoadProgress`/`asyncUpdateLoad`/`asyncCancelLoad`, `evictResourceData`), `FilamentAsset` (`getEntities`/`getRenderableEntities`/`getLightEntities`/`getCameraEntities`/`getRoot`/`getBoundingBox`/`getInstance`/`getResourceUris`/`releaseSourceData`/`popRenderable`), `FilamentInstance` (`getEntities`/`getRoot`/`getAnimator`/`applyMaterialVariant`/`getMaterialInstances`), `Animator` (`applyAnimation`/`updateBoneMatrices`/`applyCrossFade`/`resetBoneMatrices`/`getAnimationCount`/`getAnimationDuration`/`getAnimationName`). (gltfio headers)
 - The provider factories: `createUbershaderProvider` vs `createJitShaderProvider` (and the `MaterialKey` / `AlphaMode` types), `createStbProvider` / `createKtx2Provider` / `createWebpProvider` + `isWebpSupported`. These are **free functions**; the concrete provider classes are internal. (`MaterialProvider.h`, `TextureProvider.h`)

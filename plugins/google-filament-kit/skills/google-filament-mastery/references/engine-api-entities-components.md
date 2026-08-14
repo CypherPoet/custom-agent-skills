@@ -1,7 +1,7 @@
 # Engine API: Entities & Component Managers
 
-> Source: Filament C++ headers (RenderableManager/LightManager/TransformManager/Box), Filament v1.72.0
-> Last synced: 2026-06-19
+> Source: Filament C++ headers (RenderableManager/LightManager/TransformManager/Box), Filament v1.75.0
+> Last synced: 2026-08-14
 
 **Contents:** [Mental Model: Entity-Component](#mental-model-entity-component) · [Entities: utils::Entity & utils::EntityManager](#entities-utilsentity--utilsentitymanager) · [Common Manager Surface (Instance pattern)](#common-manager-surface-instance-pattern) · [RenderableManager](#renderablemanager) · [Builder method set (verbatim)](#renderablemanager-builder-method-set-verbatim) · [PrimitiveType enum](#primitivetype-enum) · [Geometry overloads](#geometry-overloads) · [Post-build mutators](#renderablemanager-post-build-mutators) · [LightManager](#lightmanager) · [Type enum (verbatim)](#lightmanager-type-enum-verbatim) · [Builder method set (verbatim)](#lightmanager-builder-method-set-verbatim) · [Physical units](#physical-units) · [Post-build mutators](#lightmanager-post-build-mutators) · [TransformManager](#transformmanager) · [Box & Aabb (bounding boxes)](#box--aabb-bounding-boxes) · [End-to-End Flow (grounded in hellopbr.cpp)](#end-to-end-flow-grounded-in-hellopbrcpp)
 
@@ -178,13 +178,13 @@ Builder& morphing(size_t targetCount) noexcept;                        // legacy
 Builder& morphing(MorphTargetBuffer* morphTargetBuffer) noexcept;      // standard morphing
 Builder& morphing(uint8_t level, size_t primitiveIndex, size_t offset) noexcept;
 
-Builder& blendOrder(size_t primitiveIndex, uint16_t order) noexcept;    // default 0, low 15 bits
+Builder& blendOrder(size_t primitiveIndex, uint16_t blendOrder) noexcept; // default 0, low 15 bits
 Builder& globalBlendOrderEnabled(size_t primitiveIndex, bool enabled) noexcept; // default local
 
 Builder& instances(size_t instanceCount) noexcept;                     // default 1, max 32767
 Builder& instances(size_t instanceCount, InstanceBuffer* instanceBuffer) noexcept;
 
-Result build(Engine& engine, utils::Entity entity);
+Result build(Engine& engine, utils::Entity entity) const;
 ```
 
 **Mandatory-ish:** `boundingBox` is required unless culling is disabled. `material` is optional (Filament falls back to a basic default material). At least one `geometry` call per primitive is expected.
@@ -366,7 +366,7 @@ void  setShadowCaster(Instance, bool shadowCaster) noexcept;          // only DI
 bool  isShadowCaster(Instance) const noexcept;
 ```
 
-`ShadowOptions` (selected defaults): `mapSize = 1024`, `shadowCascades = 1` (1–4; CSM > 1, SUN/DIRECTIONAL only), `cascadeSplitPositions = {0.125, 0.25, 0.50}`, `constantBias = 0.001`, `normalBias = 1.0`, `shadowFar = 0.0` (0 = camera far), `shadowNearHint = 1.0`, `shadowFarHint = 100.0`, `stable = false`, `lispsm = true`, `screenSpaceContactShadows = false`, `stepCount = 8`, `maxShadowDistance = 0.3`, `shadowBulbRadius = 0.02`, plus a `Vsm` sub-struct (`elvsm = false`, `blurWidth = 0.0`). Split-position helpers live in `LightManager::ShadowCascades::computeUniformSplits / computeLogSplits / computePracticalSplits`.
+`ShadowOptions` (selected defaults): `mapSize = 1024`, `shadowCascades = 1` (1–4; CSM > 1, SUN/DIRECTIONAL only), `cascadeSplitPositions = {0.125, 0.25, 0.50}`, `constantBias = 0.001`, `normalBias = 1.0`, `shadowFar = 0.0` (0 = camera far), `shadowNearHint = 1.0`, `shadowFarHint = 100.0`, `stable = false`, `lispsm = true`, `screenSpaceContactShadows = false`, `stepCount = 8`, `maxShadowDistance = 0.3`, and `shadowBulbRadius = -1.0` (select the light-type default). PCSS adds per-light `penumbraScale = 1.0`, `penumbraRatioScale = 1.0`, `maxPenumbraRatio = 0.0`, and `maxSearchRadius = 0.0`; nonpositive maximums use the corresponding global defaults. The `Vsm` sub-struct retains `elvsm = false` and `blurWidth = 0.0`. Split-position helpers live in `LightManager::ShadowCascades::computeUniformSplits / computeLogSplits / computePracticalSplits`.
 
 ---
 
@@ -513,11 +513,13 @@ scene->addEntity(app.light);
 Per-frame animation (drives the transform component live):
 
 ```cpp
-FilamentApp::get().animate([&app](Engine* engine, View* view, double now) {
+auto animate = [&app](Engine* engine, View* view, double now) {
     auto& tcm = engine->getTransformManager();
     auto ti = tcm.getInstance(app.mesh.renderable);
     tcm.setTransform(ti, app.transform * mat4f::rotation(now, float3{ 0, 1, 0 }));
-});
+};
+
+// Supply `animate` to FilamentApp2::Builder().animation(animate).
 ```
 
 Cleanup — destroy components/entities through the engine:

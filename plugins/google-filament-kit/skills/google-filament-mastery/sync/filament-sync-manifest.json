@@ -2,15 +2,15 @@
   "schema_version": 1,
   "skill": "google-filament-mastery",
   "source_repo": "https://github.com/google/filament",
-  "source_tag": "v1.72.0",
-  "filament_version": "1.72.0",
-  "last_full_sync": "2026-06-19",
+  "source_tag": "v1.75.0",
+  "filament_version": "1.75.0",
+  "last_full_sync": "2026-08-14",
   "hash_algorithm": "sha256",
   "hash_canonicalization": "v1",
   "sources": [
     {
       "repo_path": "BUILDING.md",
-      "url": "https://raw.githubusercontent.com/google/filament/v1.72.0/BUILDING.md",
+      "url": "https://raw.githubusercontent.com/google/filament/v1.75.0/BUILDING.md",
       "category": "setup",
       "raw_hash": "sha256:cea315ad21affcfbf9d8708f2869ec50943bbd89b2d9070c677e655c18d5f81e",
       "reference_files": [
@@ -19,9 +19,9 @@
     },
     {
       "repo_path": "README.md",
-      "url": "https://raw.githubusercontent.com/google/filament/v1.72.0/README.md",
+      "url": "https://raw.githubusercontent.com/google/filament/v1.75.0/README.md",
       "category": "setup",
-      "raw_hash": "sha256:b45aa826fedfc69e9700f6f86e91f3e5b8d6ed9c646d412cb1f8f01dde446868",
+      "raw_hash": "sha256:3f6197347d43329c9552d1acdd772185d0d0647ea13453a9f24f2cd9b38b629f",
       "reference_files": [
         "engine-api-core.md",
         "platform-android.md",
@@ -30,7 +30,7 @@
     },
     {
       "repo_path": "android/filament-utils-android/src/main/java/com/google/android/filament/utils/KTX1Loader.kt",
-      "url": "https://raw.githubusercontent.com/google/filament/v1.72.0/android/filament-utils-android/src/main/java/com/google/android/filament/utils/KTX1Loader.kt",
+      "url": "https://raw.githubusercontent.com/google/filament/v1.75.0/android/filament-utils-android/src/main/java/com/google/android/filament/utils/KTX1Loader.kt",
       "category": "android-binding",
       "raw_hash": "sha256:0618b1df674c1d29e305500ee797f234e347c7490f7f73e265d8e97c27569336",
       "reference_files": [
@@ -39,36 +39,36 @@
     },
     {
       "repo_path": "android/samples/sample-hello-triangle/src/main/java/com/google/android/filament/hellotriangle/MainActivity.kt",
-      "url": "https://raw.githubusercontent.com/google/filament/v1.72.0/android/samples/sample-hello-triangle/src/main/java/com/google/android/filament/hellotriangle/MainActivity.kt",
+      "url": "https://raw.githubusercontent.com/google/filament/v1.75.0/android/samples/sample-hello-triangle/src/main/java/com/google/android/filament/hellotriangle/MainActivity.kt",
       "category": "sample-android",
-      "raw_hash": "sha256:0f96e2fbefda2bd0786604341fcd5f075a3cd29297dfe484d168d3f3bd173723",
+      "raw_hash": "sha256:fcdd38d5d59bcadcd999d48ef9c62b8d65a526e3c68ad69ea6dbd2bd8fb1fa87",
       "reference_files": [
         "platform-android.md"
       ]
     },
     {
       "repo_path": "android/samples/sample-image-based-lighting/src/main/java/com/google/android/filament/ibl/MainActivity.kt",
-      "url": "https://raw.githubusercontent.com/google/filament/v1.72.0/android/samples/sample-image-based-lighting/src/main/java/com/google/android/filament/ibl/MainActivity.kt",
+      "url": "https://raw.githubusercontent.com/google/filament/v1.75.0/android/samples/sample-image-based-lighting/src/main/java/com/google/android/filament/ibl/MainActivity.kt",
       "category": "sample-android",
-      "raw_hash": "sha256:01ea6d1cbc5a01239716f36e1c3fde31c1cb0374018e4de033aa2d8c724c4d0b",
+      "raw_hash": "sha256:22567bf567137ec9c072ab0092a926ac1350737e6bdf12edd7b7120d64f389cc",
       "reference_files": [
         "platform-android.md"
       ]
     },
     {
       "repo_path": "android/samples/sample-lit-cube/src/main/java/com/google/android/filament/litcube/MainActivity.kt",
-      "url": "https://raw.githubusercontent.com/google/filament/v1.72.0/android/samples/sample-lit-cube/src/main/java/com/google/android/filament/litcube/MainActivity.kt",
+      "url": "https://raw.githubusercontent.com/google/filament/v1.75.0/android/samples/sample-lit-cube/src/main/java/com/google/android/filament/litcube/MainActivity.kt",
       "category": "sample-android",
-      "raw_hash": "sha256:47b2da0d765d9c6e7fd96a5228481cac63a6eed0b6d8749683596e714caffa34",
+      "raw_hash": "sha256:77466a92a34b2ffc92229ee978b946a83fda2a37aed803e9f69d41ea704f42b7",
       "reference_files": [
         "platform-android.md"
       ]
     },
     {
       "repo_path": "docs_src/src_markdeep/Filament.md.html",
-      "url": "https://raw.githubusercontent.com/google/filament/v1.72.0/docs_src/src_markdeep/Filament.md.html",
+      "url": "https://raw.githubusercontent.com/google/filament/v1.75.0/docs_src/src_markdeep/Filament.md.html",
       "category": "book",
-      "raw_hash": "sha256:8d5ae3804ee6a35a5c73b1b156e5a13e4aa3fc8a325ab156af8c4212adb6ed38",
+      "raw_hash": "sha256:f538b2fd293197394d1dc76e796f4f36be39b735a59e7597fcd1d62a8cab0b97",
       "reference_files": [
         "concepts-imaging-pipeline.md",
         "concepts-lighting-ibl.md",
@@ -77,9 +77,9 @@
     },
     {
       "repo_path": "docs_src/src_markdeep/Materials.md.html",
-      "url": "https://raw.githubusercontent.com/google/filament/v1.72.0/docs_src/src_markdeep/Materials.md.html",
+      "url": "https://raw.githubusercontent.com/google/filament/v1.75.0/docs_src/src_markdeep/Materials.md.html",
       "category": "book",
-      "raw_hash": "sha256:93125b34164cb275890de0dd504752fefffe0245cee1aaeaab2a31b670e5af29",
+      "raw_hash": "sha256:a66ee4ec3bba59e8fcc517afaceda945d0628fd79d6f627d614519047b6c9e39",
       "reference_files": [
         "materials-compiling-matc.md",
         "materials-definition-language.md",
@@ -89,7 +89,7 @@
     },
     {
       "repo_path": "docs_src/src_mdbook/src/notes/framegraph.md",
-      "url": "https://raw.githubusercontent.com/google/filament/v1.72.0/docs_src/src_mdbook/src/notes/framegraph.md",
+      "url": "https://raw.githubusercontent.com/google/filament/v1.75.0/docs_src/src_mdbook/src/notes/framegraph.md",
       "category": "note",
       "raw_hash": "sha256:e9351880c8001cd24cf66b494c0d92a01c9fc2ad3240db1f55c84d1560ef10fb",
       "reference_files": [
@@ -98,7 +98,7 @@
     },
     {
       "repo_path": "docs_src/src_mdbook/src/notes/material_properties.md",
-      "url": "https://raw.githubusercontent.com/google/filament/v1.72.0/docs_src/src_mdbook/src/notes/material_properties.md",
+      "url": "https://raw.githubusercontent.com/google/filament/v1.75.0/docs_src/src_mdbook/src/notes/material_properties.md",
       "category": "note",
       "raw_hash": "sha256:64cfc0971b356613a1ba4ef1a0fe6b6cb68538ed9a38757880e4aa5747fbe083",
       "reference_files": [
@@ -107,7 +107,7 @@
     },
     {
       "repo_path": "docs_src/src_mdbook/src/notes/metal_debugging.md",
-      "url": "https://raw.githubusercontent.com/google/filament/v1.72.0/docs_src/src_mdbook/src/notes/metal_debugging.md",
+      "url": "https://raw.githubusercontent.com/google/filament/v1.75.0/docs_src/src_mdbook/src/notes/metal_debugging.md",
       "category": "note",
       "raw_hash": "sha256:39ef078464510af5e0eb31c9769fd30b55e06ff526dd133d4e227bb6745dde52",
       "reference_files": [
@@ -116,7 +116,7 @@
     },
     {
       "repo_path": "docs_src/src_mdbook/src/notes/performance_analysis.md",
-      "url": "https://raw.githubusercontent.com/google/filament/v1.72.0/docs_src/src_mdbook/src/notes/performance_analysis.md",
+      "url": "https://raw.githubusercontent.com/google/filament/v1.75.0/docs_src/src_mdbook/src/notes/performance_analysis.md",
       "category": "note",
       "raw_hash": "sha256:b240ba1f9df398e1d6e0e041670094c7100d365ab06d821b6b0710037fac23ec",
       "reference_files": [
@@ -125,7 +125,7 @@
     },
     {
       "repo_path": "docs_src/src_mdbook/src/notes/vulkan_debugging.md",
-      "url": "https://raw.githubusercontent.com/google/filament/v1.72.0/docs_src/src_mdbook/src/notes/vulkan_debugging.md",
+      "url": "https://raw.githubusercontent.com/google/filament/v1.75.0/docs_src/src_mdbook/src/notes/vulkan_debugging.md",
       "category": "note",
       "raw_hash": "sha256:0535b31447de538b81416b9241dd22ac16933021a98db04a6528bd6a7de5eaa6",
       "reference_files": [
@@ -134,7 +134,7 @@
     },
     {
       "repo_path": "docs_src/src_mdbook/src/release/maven.md",
-      "url": "https://raw.githubusercontent.com/google/filament/v1.72.0/docs_src/src_mdbook/src/release/maven.md",
+      "url": "https://raw.githubusercontent.com/google/filament/v1.75.0/docs_src/src_mdbook/src/release/maven.md",
       "category": "release",
       "raw_hash": "sha256:8930429a516d6298b70726f55df05a798ed468759ae7c444e8d8772a4746ce0a",
       "reference_files": [
@@ -143,14 +143,14 @@
     },
     {
       "repo_path": "docs_src/src_mdbook/src/release/versioning.md",
-      "url": "https://raw.githubusercontent.com/google/filament/v1.72.0/docs_src/src_mdbook/src/release/versioning.md",
+      "url": "https://raw.githubusercontent.com/google/filament/v1.75.0/docs_src/src_mdbook/src/release/versioning.md",
       "category": "release",
       "raw_hash": "sha256:58bd1e3ee8885950937aed8d12c541638802c04b236a2b859ca0b4b43b00e58d",
       "reference_files": []
     },
     {
       "repo_path": "docs_src/src_mdbook/src/samples/README.md",
-      "url": "https://raw.githubusercontent.com/google/filament/v1.72.0/docs_src/src_mdbook/src/samples/README.md",
+      "url": "https://raw.githubusercontent.com/google/filament/v1.75.0/docs_src/src_mdbook/src/samples/README.md",
       "category": "setup",
       "raw_hash": "sha256:96663ce3e083a80f11d5fac6c36b666b1a20ead49e59446677014e57caf55098",
       "reference_files": [
@@ -159,7 +159,7 @@
     },
     {
       "repo_path": "docs_src/src_mdbook/src/samples/ios.md",
-      "url": "https://raw.githubusercontent.com/google/filament/v1.72.0/docs_src/src_mdbook/src/samples/ios.md",
+      "url": "https://raw.githubusercontent.com/google/filament/v1.75.0/docs_src/src_mdbook/src/samples/ios.md",
       "category": "setup",
       "raw_hash": "sha256:83c8ac2df8a6b8a9ee38ddde9b4c0e08fec2d5845c36b8b5cdcd73d945236ec3",
       "reference_files": [
@@ -168,7 +168,7 @@
     },
     {
       "repo_path": "docs_src/src_mdbook/src/samples/web/samples.md",
-      "url": "https://raw.githubusercontent.com/google/filament/v1.72.0/docs_src/src_mdbook/src/samples/web/samples.md",
+      "url": "https://raw.githubusercontent.com/google/filament/v1.75.0/docs_src/src_mdbook/src/samples/web/samples.md",
       "category": "web",
       "raw_hash": "sha256:9d48bc47fab3cd077781a4fb96cd3e6778687b19449c344e95a6a26f90c5a4bc",
       "reference_files": [
@@ -177,7 +177,7 @@
     },
     {
       "repo_path": "docs_src/src_mdbook/src/samples/web/tutorials.md",
-      "url": "https://raw.githubusercontent.com/google/filament/v1.72.0/docs_src/src_mdbook/src/samples/web/tutorials.md",
+      "url": "https://raw.githubusercontent.com/google/filament/v1.75.0/docs_src/src_mdbook/src/samples/web/tutorials.md",
       "category": "web",
       "raw_hash": "sha256:da3e4b1ef1e75235811bd5ddd7a4b70c76296f8a89cc972a70cc837661379c95",
       "reference_files": [
@@ -186,7 +186,7 @@
     },
     {
       "repo_path": "filament/include/filament/Box.h",
-      "url": "https://raw.githubusercontent.com/google/filament/v1.72.0/filament/include/filament/Box.h",
+      "url": "https://raw.githubusercontent.com/google/filament/v1.75.0/filament/include/filament/Box.h",
       "category": "header",
       "raw_hash": "sha256:6a29a5295dd3acc3578a8da0cf0d682a7b372d1758287f7573a57bac411908b1",
       "reference_files": [
@@ -195,7 +195,7 @@
     },
     {
       "repo_path": "filament/include/filament/BufferObject.h",
-      "url": "https://raw.githubusercontent.com/google/filament/v1.72.0/filament/include/filament/BufferObject.h",
+      "url": "https://raw.githubusercontent.com/google/filament/v1.75.0/filament/include/filament/BufferObject.h",
       "category": "header",
       "raw_hash": "sha256:25ddfc0904421c9e6b7e1d70050bb37e12b8e2543ac0e4796b9217074fb653fe",
       "reference_files": [
@@ -204,7 +204,7 @@
     },
     {
       "repo_path": "filament/include/filament/Camera.h",
-      "url": "https://raw.githubusercontent.com/google/filament/v1.72.0/filament/include/filament/Camera.h",
+      "url": "https://raw.githubusercontent.com/google/filament/v1.75.0/filament/include/filament/Camera.h",
       "category": "header",
       "raw_hash": "sha256:343bf30d36cf78a3e26541bbef963772e56cb0cf738c8713f978301eb86ab486",
       "reference_files": [
@@ -214,7 +214,7 @@
     },
     {
       "repo_path": "filament/include/filament/Color.h",
-      "url": "https://raw.githubusercontent.com/google/filament/v1.72.0/filament/include/filament/Color.h",
+      "url": "https://raw.githubusercontent.com/google/filament/v1.75.0/filament/include/filament/Color.h",
       "category": "header",
       "raw_hash": "sha256:43a117eeda7d624ce07b9ad2b2d6c168198eda4eedce8e0d8af886b2ec21eda7",
       "reference_files": [
@@ -223,7 +223,7 @@
     },
     {
       "repo_path": "filament/include/filament/ColorGrading.h",
-      "url": "https://raw.githubusercontent.com/google/filament/v1.72.0/filament/include/filament/ColorGrading.h",
+      "url": "https://raw.githubusercontent.com/google/filament/v1.75.0/filament/include/filament/ColorGrading.h",
       "category": "header",
       "raw_hash": "sha256:a22e5faac2453b4b7e4cbeeabeab1453770e21474781c7df83b61b33d1b1f1c7",
       "reference_files": [
@@ -232,7 +232,7 @@
     },
     {
       "repo_path": "filament/include/filament/ColorSpace.h",
-      "url": "https://raw.githubusercontent.com/google/filament/v1.72.0/filament/include/filament/ColorSpace.h",
+      "url": "https://raw.githubusercontent.com/google/filament/v1.75.0/filament/include/filament/ColorSpace.h",
       "category": "header",
       "raw_hash": "sha256:f443b60ddcb573b9ef2e46142516d0b6ce4422476648fe75be8fd58764e13950",
       "reference_files": [
@@ -241,16 +241,16 @@
     },
     {
       "repo_path": "filament/include/filament/Engine.h",
-      "url": "https://raw.githubusercontent.com/google/filament/v1.72.0/filament/include/filament/Engine.h",
+      "url": "https://raw.githubusercontent.com/google/filament/v1.75.0/filament/include/filament/Engine.h",
       "category": "header",
-      "raw_hash": "sha256:08bce87465953fe746032d0e5b2a6b966769eef033fc9841075e0cfb2ce0372c",
+      "raw_hash": "sha256:3aa10ebad778d88793e58e575c7dde1f49299dda48209d4b3cf428915b44f846",
       "reference_files": [
         "engine-api-core.md"
       ]
     },
     {
       "repo_path": "filament/include/filament/Exposure.h",
-      "url": "https://raw.githubusercontent.com/google/filament/v1.72.0/filament/include/filament/Exposure.h",
+      "url": "https://raw.githubusercontent.com/google/filament/v1.75.0/filament/include/filament/Exposure.h",
       "category": "header",
       "raw_hash": "sha256:61a12af2f136e4c15be8edf6998b1b828e482be43d17bc0dfd62a7236dcc706c",
       "reference_files": [
@@ -259,7 +259,7 @@
     },
     {
       "repo_path": "filament/include/filament/Frustum.h",
-      "url": "https://raw.githubusercontent.com/google/filament/v1.72.0/filament/include/filament/Frustum.h",
+      "url": "https://raw.githubusercontent.com/google/filament/v1.75.0/filament/include/filament/Frustum.h",
       "category": "header",
       "raw_hash": "sha256:e69707bc8bc2ea992519c1923f182902740013b14d5369e4bf1735043db559ed",
       "reference_files": [
@@ -268,7 +268,7 @@
     },
     {
       "repo_path": "filament/include/filament/IndexBuffer.h",
-      "url": "https://raw.githubusercontent.com/google/filament/v1.72.0/filament/include/filament/IndexBuffer.h",
+      "url": "https://raw.githubusercontent.com/google/filament/v1.75.0/filament/include/filament/IndexBuffer.h",
       "category": "header",
       "raw_hash": "sha256:b9f279ab8994346e6b44921031bcedbb7bb1e491675b1e9d59b83c4005f0d54c",
       "reference_files": [
@@ -277,7 +277,7 @@
     },
     {
       "repo_path": "filament/include/filament/IndirectLight.h",
-      "url": "https://raw.githubusercontent.com/google/filament/v1.72.0/filament/include/filament/IndirectLight.h",
+      "url": "https://raw.githubusercontent.com/google/filament/v1.75.0/filament/include/filament/IndirectLight.h",
       "category": "header",
       "raw_hash": "sha256:d818c7f56a7427dbc0344e4c7beffc59a631618f7907ab3b392f03c321dd7aeb",
       "reference_files": [
@@ -287,9 +287,9 @@
     },
     {
       "repo_path": "filament/include/filament/LightManager.h",
-      "url": "https://raw.githubusercontent.com/google/filament/v1.72.0/filament/include/filament/LightManager.h",
+      "url": "https://raw.githubusercontent.com/google/filament/v1.75.0/filament/include/filament/LightManager.h",
       "category": "header",
-      "raw_hash": "sha256:7076fbc69086d1562dd8d371233551526f902cf32bb6b05d0687e565ca234178",
+      "raw_hash": "sha256:9a0e7090fd4c454b8c5fb707edb024d09b140b6bb0bd7037bd1602b4539e5bba",
       "reference_files": [
         "concepts-lighting-ibl.md",
         "engine-api-entities-components.md"
@@ -297,16 +297,16 @@
     },
     {
       "repo_path": "filament/include/filament/Material.h",
-      "url": "https://raw.githubusercontent.com/google/filament/v1.72.0/filament/include/filament/Material.h",
+      "url": "https://raw.githubusercontent.com/google/filament/v1.75.0/filament/include/filament/Material.h",
       "category": "header",
-      "raw_hash": "sha256:53c7e81a45485d6f6c2831e3960a3ab151c5d068e5e99d82ff8b1667ab979b38",
+      "raw_hash": "sha256:900db014fe38810b650849c0e0810625bd2ca46911720b7380b7c286272ad6be",
       "reference_files": [
         "engine-api-resources.md"
       ]
     },
     {
       "repo_path": "filament/include/filament/MaterialInstance.h",
-      "url": "https://raw.githubusercontent.com/google/filament/v1.72.0/filament/include/filament/MaterialInstance.h",
+      "url": "https://raw.githubusercontent.com/google/filament/v1.75.0/filament/include/filament/MaterialInstance.h",
       "category": "header",
       "raw_hash": "sha256:c3451240812bc1a7142feb08a6ba24e2ae00ce4d7ff3c9432dc342eddc954119",
       "reference_files": [
@@ -315,16 +315,16 @@
     },
     {
       "repo_path": "filament/include/filament/Options.h",
-      "url": "https://raw.githubusercontent.com/google/filament/v1.72.0/filament/include/filament/Options.h",
+      "url": "https://raw.githubusercontent.com/google/filament/v1.75.0/filament/include/filament/Options.h",
       "category": "header",
-      "raw_hash": "sha256:a86ae336611cd3d9f83896ae4a1173b52a64c491d5add0f3a00a854a03e23e95",
+      "raw_hash": "sha256:222da2faf627108b68c4fe510109cb4572b6511575482749f6bcdc5ed97f5cc9",
       "reference_files": [
         "concepts-imaging-pipeline.md"
       ]
     },
     {
       "repo_path": "filament/include/filament/RenderTarget.h",
-      "url": "https://raw.githubusercontent.com/google/filament/v1.72.0/filament/include/filament/RenderTarget.h",
+      "url": "https://raw.githubusercontent.com/google/filament/v1.75.0/filament/include/filament/RenderTarget.h",
       "category": "header",
       "raw_hash": "sha256:f9f53064aa69a19bcd8fecf819461e132d9216739c8e7d6b0958948ae5c8df9f",
       "reference_files": [
@@ -333,25 +333,25 @@
     },
     {
       "repo_path": "filament/include/filament/RenderableManager.h",
-      "url": "https://raw.githubusercontent.com/google/filament/v1.72.0/filament/include/filament/RenderableManager.h",
+      "url": "https://raw.githubusercontent.com/google/filament/v1.75.0/filament/include/filament/RenderableManager.h",
       "category": "header",
-      "raw_hash": "sha256:98af30489e6f09d161e9c288a574b82386a066bb1689d12ff06566003f0ce79a",
+      "raw_hash": "sha256:5dee2534bfc0f8818e03a5d370851d0baa185f73b9402031e3391f01581b3e2f",
       "reference_files": [
         "engine-api-entities-components.md"
       ]
     },
     {
       "repo_path": "filament/include/filament/Renderer.h",
-      "url": "https://raw.githubusercontent.com/google/filament/v1.72.0/filament/include/filament/Renderer.h",
+      "url": "https://raw.githubusercontent.com/google/filament/v1.75.0/filament/include/filament/Renderer.h",
       "category": "header",
-      "raw_hash": "sha256:5dee26e82112e595bf2825db847e90bac37a426e2b91920116368929801e3fd3",
+      "raw_hash": "sha256:f8ce84712519987afd645c88fd179c6731f3ece9647e2b8d6a61e5d57746f6e9",
       "reference_files": [
         "engine-api-core.md"
       ]
     },
     {
       "repo_path": "filament/include/filament/Scene.h",
-      "url": "https://raw.githubusercontent.com/google/filament/v1.72.0/filament/include/filament/Scene.h",
+      "url": "https://raw.githubusercontent.com/google/filament/v1.75.0/filament/include/filament/Scene.h",
       "category": "header",
       "raw_hash": "sha256:a3560e465d5d19b0e3dcc7b7ef8d4f48e2cd543ff2270cc8220682b29daecac1",
       "reference_files": [
@@ -360,7 +360,7 @@
     },
     {
       "repo_path": "filament/include/filament/Skybox.h",
-      "url": "https://raw.githubusercontent.com/google/filament/v1.72.0/filament/include/filament/Skybox.h",
+      "url": "https://raw.githubusercontent.com/google/filament/v1.75.0/filament/include/filament/Skybox.h",
       "category": "header",
       "raw_hash": "sha256:ed2121d944df1b9d4a29a702ed362f817afee0462360a8ddcfbb919cb9c90e08",
       "reference_files": [
@@ -370,25 +370,25 @@
     },
     {
       "repo_path": "filament/include/filament/SwapChain.h",
-      "url": "https://raw.githubusercontent.com/google/filament/v1.72.0/filament/include/filament/SwapChain.h",
+      "url": "https://raw.githubusercontent.com/google/filament/v1.75.0/filament/include/filament/SwapChain.h",
       "category": "header",
-      "raw_hash": "sha256:4e6d656238d46ca2472748a69c84cce7d35956affd78ef0e61448e8e153f5bcb",
+      "raw_hash": "sha256:d181efda50fee91fddbade8ec115c2c8922b50166866481fcc1088fae6eb4ef0",
       "reference_files": [
         "engine-api-core.md"
       ]
     },
     {
       "repo_path": "filament/include/filament/Texture.h",
-      "url": "https://raw.githubusercontent.com/google/filament/v1.72.0/filament/include/filament/Texture.h",
+      "url": "https://raw.githubusercontent.com/google/filament/v1.75.0/filament/include/filament/Texture.h",
       "category": "header",
-      "raw_hash": "sha256:5005a0a6919513146b71f2c40a548b47b1b0cf41930bf7153b73d72ed9fc60d5",
+      "raw_hash": "sha256:1da155cdc935f658d23b3a0833add02a798d33acd6ae656a709975f20f641913",
       "reference_files": [
         "engine-api-resources.md"
       ]
     },
     {
       "repo_path": "filament/include/filament/TextureSampler.h",
-      "url": "https://raw.githubusercontent.com/google/filament/v1.72.0/filament/include/filament/TextureSampler.h",
+      "url": "https://raw.githubusercontent.com/google/filament/v1.75.0/filament/include/filament/TextureSampler.h",
       "category": "header",
       "raw_hash": "sha256:1e94e827a7debf0ac1f1e54a93f667245eec29b1ae5b08095e0da601eee3fead",
       "reference_files": [
@@ -397,7 +397,7 @@
     },
     {
       "repo_path": "filament/include/filament/ToneMapper.h",
-      "url": "https://raw.githubusercontent.com/google/filament/v1.72.0/filament/include/filament/ToneMapper.h",
+      "url": "https://raw.githubusercontent.com/google/filament/v1.75.0/filament/include/filament/ToneMapper.h",
       "category": "header",
       "raw_hash": "sha256:c13db6198c33b51c8b79eaef13130ac6932468cecdf3f48edea93e31b6b3435f",
       "reference_files": [
@@ -406,7 +406,7 @@
     },
     {
       "repo_path": "filament/include/filament/TransformManager.h",
-      "url": "https://raw.githubusercontent.com/google/filament/v1.72.0/filament/include/filament/TransformManager.h",
+      "url": "https://raw.githubusercontent.com/google/filament/v1.75.0/filament/include/filament/TransformManager.h",
       "category": "header",
       "raw_hash": "sha256:15327b46547e30a103b2feb301afc0f0f13724e98f21d0734b87bd72e760899d",
       "reference_files": [
@@ -415,7 +415,7 @@
     },
     {
       "repo_path": "filament/include/filament/VertexBuffer.h",
-      "url": "https://raw.githubusercontent.com/google/filament/v1.72.0/filament/include/filament/VertexBuffer.h",
+      "url": "https://raw.githubusercontent.com/google/filament/v1.75.0/filament/include/filament/VertexBuffer.h",
       "category": "header",
       "raw_hash": "sha256:65a30383f6019f8db6a29554068b3965d71b9e7c91733022dcdac54bf076eb3f",
       "reference_files": [
@@ -424,9 +424,9 @@
     },
     {
       "repo_path": "filament/include/filament/View.h",
-      "url": "https://raw.githubusercontent.com/google/filament/v1.72.0/filament/include/filament/View.h",
+      "url": "https://raw.githubusercontent.com/google/filament/v1.75.0/filament/include/filament/View.h",
       "category": "header",
-      "raw_hash": "sha256:8a283df7c002a4e02b4a26c25ee6ccfdd01b2cc341addeeccbf810954d983cfd",
+      "raw_hash": "sha256:57709ded5911e3e7e2299776a7f481ef108f67fc308f464cd9dbb6d4fc3b45ba",
       "reference_files": [
         "concepts-imaging-pipeline.md",
         "engine-api-core.md"
@@ -434,7 +434,7 @@
     },
     {
       "repo_path": "filament/include/filament/Viewport.h",
-      "url": "https://raw.githubusercontent.com/google/filament/v1.72.0/filament/include/filament/Viewport.h",
+      "url": "https://raw.githubusercontent.com/google/filament/v1.75.0/filament/include/filament/Viewport.h",
       "category": "header",
       "raw_hash": "sha256:b26b02cf5918862764840ac6fd19c1a460bdc95f8111de838a4d85835592c66e",
       "reference_files": [
@@ -443,7 +443,7 @@
     },
     {
       "repo_path": "libs/filamat/README.md",
-      "url": "https://raw.githubusercontent.com/google/filament/v1.72.0/libs/filamat/README.md",
+      "url": "https://raw.githubusercontent.com/google/filament/v1.75.0/libs/filamat/README.md",
       "category": "lib",
       "raw_hash": "sha256:15c79f8f9e1364d34e5ebb66919bac1b22ddeaa079dc619db86f17dd1f1fea9b",
       "reference_files": [
@@ -453,7 +453,7 @@
     },
     {
       "repo_path": "libs/gltfio/README.md",
-      "url": "https://raw.githubusercontent.com/google/filament/v1.72.0/libs/gltfio/README.md",
+      "url": "https://raw.githubusercontent.com/google/filament/v1.75.0/libs/gltfio/README.md",
       "category": "lib",
       "raw_hash": "sha256:674fdf00587081fc4b54ed53d6c4c3da55a4a821b358053654301ac19add758a",
       "reference_files": [
@@ -462,7 +462,7 @@
     },
     {
       "repo_path": "libs/gltfio/include/gltfio/Animator.h",
-      "url": "https://raw.githubusercontent.com/google/filament/v1.72.0/libs/gltfio/include/gltfio/Animator.h",
+      "url": "https://raw.githubusercontent.com/google/filament/v1.75.0/libs/gltfio/include/gltfio/Animator.h",
       "category": "gltfio-header",
       "raw_hash": "sha256:262228485b0c108059ac0f5deb689ab4338e701fee6dfa7960346154bcc04e06",
       "reference_files": [
@@ -471,61 +471,61 @@
     },
     {
       "repo_path": "libs/gltfio/include/gltfio/AssetLoader.h",
-      "url": "https://raw.githubusercontent.com/google/filament/v1.72.0/libs/gltfio/include/gltfio/AssetLoader.h",
+      "url": "https://raw.githubusercontent.com/google/filament/v1.75.0/libs/gltfio/include/gltfio/AssetLoader.h",
       "category": "gltfio-header",
-      "raw_hash": "sha256:b913a9cbef4a147ac9419fab3498d148aca4f87c8898fd213c9a9535929c458d",
+      "raw_hash": "sha256:215b1a51cca760efd5bc28b16ec36683388726a4a13c3e5fc066d6fbb4992ea8",
       "reference_files": [
         "assets-gltf.md"
       ]
     },
     {
       "repo_path": "libs/gltfio/include/gltfio/FilamentAsset.h",
-      "url": "https://raw.githubusercontent.com/google/filament/v1.72.0/libs/gltfio/include/gltfio/FilamentAsset.h",
+      "url": "https://raw.githubusercontent.com/google/filament/v1.75.0/libs/gltfio/include/gltfio/FilamentAsset.h",
       "category": "gltfio-header",
-      "raw_hash": "sha256:1f1e1c09c4f0475d1b691f01e151940aafe57e6a76f766f211caaff759d9c857",
+      "raw_hash": "sha256:acadad4b26bf0c5c2120b3ff1b17ffe535df770c51240552e8c4cb5b94dc0f06",
       "reference_files": [
         "assets-gltf.md"
       ]
     },
     {
       "repo_path": "libs/gltfio/include/gltfio/FilamentInstance.h",
-      "url": "https://raw.githubusercontent.com/google/filament/v1.72.0/libs/gltfio/include/gltfio/FilamentInstance.h",
+      "url": "https://raw.githubusercontent.com/google/filament/v1.75.0/libs/gltfio/include/gltfio/FilamentInstance.h",
       "category": "gltfio-header",
-      "raw_hash": "sha256:79923e7babd80c110bdb69f60ad23652bcb69f3d28ff0be0fe151c9e3313b7e4",
+      "raw_hash": "sha256:340e9d100c9e73793d9148bfb0f8066e4124a9fbae3ac1340dba67db9532cc83",
       "reference_files": [
         "assets-gltf.md"
       ]
     },
     {
       "repo_path": "libs/gltfio/include/gltfio/MaterialProvider.h",
-      "url": "https://raw.githubusercontent.com/google/filament/v1.72.0/libs/gltfio/include/gltfio/MaterialProvider.h",
+      "url": "https://raw.githubusercontent.com/google/filament/v1.75.0/libs/gltfio/include/gltfio/MaterialProvider.h",
       "category": "gltfio-header",
-      "raw_hash": "sha256:68a4ea4fe6cb320b6e822755784f5c91eb8f0bb2957d6398ec31b1828d254fb6",
+      "raw_hash": "sha256:9c164b6774e65597da35f6af7e2babc3e727f785fa915ad06ac3afdf63cecd86",
       "reference_files": [
         "assets-gltf.md"
       ]
     },
     {
       "repo_path": "libs/gltfio/include/gltfio/ResourceLoader.h",
-      "url": "https://raw.githubusercontent.com/google/filament/v1.72.0/libs/gltfio/include/gltfio/ResourceLoader.h",
+      "url": "https://raw.githubusercontent.com/google/filament/v1.75.0/libs/gltfio/include/gltfio/ResourceLoader.h",
       "category": "gltfio-header",
-      "raw_hash": "sha256:30c7e5e3a9c7291031fb3456a91cc08865240e12ba46ab65a26fbd898aca4dfd",
+      "raw_hash": "sha256:7f00ba7604e870aad9edc0310ed25ec0436f8e1d700472017bfa21f0e24d09ad",
       "reference_files": [
         "assets-gltf.md"
       ]
     },
     {
       "repo_path": "libs/gltfio/include/gltfio/TextureProvider.h",
-      "url": "https://raw.githubusercontent.com/google/filament/v1.72.0/libs/gltfio/include/gltfio/TextureProvider.h",
+      "url": "https://raw.githubusercontent.com/google/filament/v1.75.0/libs/gltfio/include/gltfio/TextureProvider.h",
       "category": "gltfio-header",
-      "raw_hash": "sha256:8b7c33e242884b2a44660424b63995bb4d10bdb8ec1a2cb70ceb6a92b50b1d25",
+      "raw_hash": "sha256:bb4718a40b61df09140c7f2c2492829d975b5494bf56b05871b4dec440b66ea4",
       "reference_files": [
         "assets-gltf.md"
       ]
     },
     {
       "repo_path": "libs/iblprefilter/README.md",
-      "url": "https://raw.githubusercontent.com/google/filament/v1.72.0/libs/iblprefilter/README.md",
+      "url": "https://raw.githubusercontent.com/google/filament/v1.75.0/libs/iblprefilter/README.md",
       "category": "lib",
       "raw_hash": "sha256:515b44a757f2053b5295f02abdef5b53f9a01fe4d5725957ea1d8fafeb3fbfaa",
       "reference_files": [
@@ -535,7 +535,7 @@
     },
     {
       "repo_path": "libs/matdbg/README.md",
-      "url": "https://raw.githubusercontent.com/google/filament/v1.72.0/libs/matdbg/README.md",
+      "url": "https://raw.githubusercontent.com/google/filament/v1.75.0/libs/matdbg/README.md",
       "category": "lib",
       "raw_hash": "sha256:b4f86e0a738682f8df13ca2cb883fd4e467c3455f79567cbd8784a8b61fc3582",
       "reference_files": [
@@ -544,7 +544,7 @@
     },
     {
       "repo_path": "libs/viewer/README.md",
-      "url": "https://raw.githubusercontent.com/google/filament/v1.72.0/libs/viewer/README.md",
+      "url": "https://raw.githubusercontent.com/google/filament/v1.75.0/libs/viewer/README.md",
       "category": "lib",
       "raw_hash": "sha256:7cdbebd6fcdfc502b43c2abd004d61989e92a93a5478bfe90867d9b1967acbb3",
       "reference_files": [
@@ -553,18 +553,18 @@
     },
     {
       "repo_path": "samples/hellopbr.cpp",
-      "url": "https://raw.githubusercontent.com/google/filament/v1.72.0/samples/hellopbr.cpp",
+      "url": "https://raw.githubusercontent.com/google/filament/v1.75.0/samples/hellopbr.cpp",
       "category": "sample-cpp",
-      "raw_hash": "sha256:9715bfa2ded07dee49a43ec1eb412c4226ad277b94552f2240a2d72271bf4149",
+      "raw_hash": "sha256:bea2135e93abf795b332517e6af0ef68ac92bb4c080f141633a0f85d65557da6",
       "reference_files": [
         "engine-api-entities-components.md"
       ]
     },
     {
       "repo_path": "samples/hellotriangle.cpp",
-      "url": "https://raw.githubusercontent.com/google/filament/v1.72.0/samples/hellotriangle.cpp",
+      "url": "https://raw.githubusercontent.com/google/filament/v1.75.0/samples/hellotriangle.cpp",
       "category": "sample-cpp",
-      "raw_hash": "sha256:6cf51ff189265311496d3af424482afad170cbb3ea4bb3c4cebe6c927381a4c2",
+      "raw_hash": "sha256:08bfc8b73262c20ddc14e28f3129286931d031f790df4765f630e0b860cffcab",
       "reference_files": [
         "engine-api-core.md",
         "platform-cpp.md"
@@ -572,9 +572,9 @@
     },
     {
       "repo_path": "samples/lightbulb.cpp",
-      "url": "https://raw.githubusercontent.com/google/filament/v1.72.0/samples/lightbulb.cpp",
+      "url": "https://raw.githubusercontent.com/google/filament/v1.75.0/samples/lightbulb.cpp",
       "category": "sample-cpp",
-      "raw_hash": "sha256:165296002f3e085562578f71270b9f0ae29922559aa14f218dee156adc252f5d",
+      "raw_hash": "sha256:ff97f15ef39136a7b1441dcde2cf0eaa91b673cff5da3fcece092b82b51004d2",
       "reference_files": [
         "concepts-lighting-ibl.md",
         "engine-api-resources.md"
@@ -582,9 +582,9 @@
     },
     {
       "repo_path": "samples/suzanne.cpp",
-      "url": "https://raw.githubusercontent.com/google/filament/v1.72.0/samples/suzanne.cpp",
+      "url": "https://raw.githubusercontent.com/google/filament/v1.75.0/samples/suzanne.cpp",
       "category": "sample-cpp",
-      "raw_hash": "sha256:a20a501b00388871446cadf2eccaa7eb360d01a0635e433f4896cc21ee77e52d",
+      "raw_hash": "sha256:51a3e75b082a1eacf4b71c532130962c27013e896ab8ab4a25622f315ca71d14",
       "reference_files": [
         "assets-gltf.md",
         "engine-api-resources.md"
@@ -592,7 +592,7 @@
     },
     {
       "repo_path": "tools/cmgen/README.md",
-      "url": "https://raw.githubusercontent.com/google/filament/v1.72.0/tools/cmgen/README.md",
+      "url": "https://raw.githubusercontent.com/google/filament/v1.75.0/tools/cmgen/README.md",
       "category": "tool",
       "raw_hash": "sha256:fd6cc3a5602fad71b065545de098a5d16392b1230252ad04871758105cba38c2",
       "reference_files": [
@@ -602,7 +602,7 @@
     },
     {
       "repo_path": "tools/filamesh/README.md",
-      "url": "https://raw.githubusercontent.com/google/filament/v1.72.0/tools/filamesh/README.md",
+      "url": "https://raw.githubusercontent.com/google/filament/v1.75.0/tools/filamesh/README.md",
       "category": "tool",
       "raw_hash": "sha256:24e8b22a507047f87451f84c229f2f934535cd6ea046c703e91b9e48c5c32575",
       "reference_files": [
@@ -612,7 +612,7 @@
     },
     {
       "repo_path": "tools/matinfo/README.md",
-      "url": "https://raw.githubusercontent.com/google/filament/v1.72.0/tools/matinfo/README.md",
+      "url": "https://raw.githubusercontent.com/google/filament/v1.75.0/tools/matinfo/README.md",
       "category": "tool",
       "raw_hash": "sha256:7316eea8200eaba293c66054ea160efca00dc629cae3857ada84795bfd2d4992",
       "reference_files": [
@@ -621,7 +621,7 @@
     },
     {
       "repo_path": "tools/mipgen/README.md",
-      "url": "https://raw.githubusercontent.com/google/filament/v1.72.0/tools/mipgen/README.md",
+      "url": "https://raw.githubusercontent.com/google/filament/v1.75.0/tools/mipgen/README.md",
       "category": "tool",
       "raw_hash": "sha256:cf5847f14ea23e59951afa3d3a8860bbdc2ad1b3e3d789b3166fd2cd5f5e1f85",
       "reference_files": [
@@ -630,7 +630,7 @@
     },
     {
       "repo_path": "tools/normal-blending/README.md",
-      "url": "https://raw.githubusercontent.com/google/filament/v1.72.0/tools/normal-blending/README.md",
+      "url": "https://raw.githubusercontent.com/google/filament/v1.75.0/tools/normal-blending/README.md",
       "category": "tool",
       "raw_hash": "sha256:338f774fd804dbfc1d02cd456797d5032bc9fda0931cb0ade201b1e224c5790e",
       "reference_files": [
@@ -639,7 +639,7 @@
     },
     {
       "repo_path": "tools/roughness-prefilter/README.md",
-      "url": "https://raw.githubusercontent.com/google/filament/v1.72.0/tools/roughness-prefilter/README.md",
+      "url": "https://raw.githubusercontent.com/google/filament/v1.75.0/tools/roughness-prefilter/README.md",
       "category": "tool",
       "raw_hash": "sha256:d44725970cc95590a882626a399b7d32d3871435dd31dc01bf505bfc9477df6e",
       "reference_files": [
@@ -648,7 +648,7 @@
     },
     {
       "repo_path": "tools/specgen/README.md",
-      "url": "https://raw.githubusercontent.com/google/filament/v1.72.0/tools/specgen/README.md",
+      "url": "https://raw.githubusercontent.com/google/filament/v1.75.0/tools/specgen/README.md",
       "category": "tool",
       "raw_hash": "sha256:8a758a76943a4d19be8230428710afd3b9638d3ede3a88d2205c90b896c26483",
       "reference_files": [
@@ -657,7 +657,7 @@
     },
     {
       "repo_path": "web/examples/redball.md",
-      "url": "https://raw.githubusercontent.com/google/filament/v1.72.0/web/examples/redball.md",
+      "url": "https://raw.githubusercontent.com/google/filament/v1.75.0/web/examples/redball.md",
       "category": "web",
       "raw_hash": "sha256:bd21312cd43e609e9a7cb966201235c877ab445b4c9c75a02d544a1f6b1f7962",
       "reference_files": [
@@ -666,7 +666,7 @@
     },
     {
       "repo_path": "web/examples/suzanne.md",
-      "url": "https://raw.githubusercontent.com/google/filament/v1.72.0/web/examples/suzanne.md",
+      "url": "https://raw.githubusercontent.com/google/filament/v1.75.0/web/examples/suzanne.md",
       "category": "web",
       "raw_hash": "sha256:cbf81722b52f0c3ae49a5aec57345b7f02305642b3899efbd589d8cbab3055ab",
       "reference_files": [
@@ -676,7 +676,7 @@
     },
     {
       "repo_path": "web/examples/triangle.md",
-      "url": "https://raw.githubusercontent.com/google/filament/v1.72.0/web/examples/triangle.md",
+      "url": "https://raw.githubusercontent.com/google/filament/v1.75.0/web/examples/triangle.md",
       "category": "web",
       "raw_hash": "sha256:4fffc55987486b030101c53a064feae139dc9f3ec2794bfcb9ab8ae3eaec060b",
       "reference_files": [
@@ -687,42 +687,42 @@
   "reference_files": [
     {
       "file": "assets-gltf.md",
-      "content_hash": "sha256:13dfa697cdf259d3b5d23af58a76d98f229bb6e7e8a0d51971f621a799bdf39d",
+      "content_hash": "sha256:5ff9bebc5ad15a8ae02a037e490682303a02ecff533cd97ddd3ba7a0ba627016",
       "source_count": 11
     },
     {
       "file": "concepts-imaging-pipeline.md",
-      "content_hash": "sha256:00d5c18c6bc24c121c64dfbd1033f9d14fb18cdffaa9477b2967ecf446aede46",
+      "content_hash": "sha256:b82a296b7e6f0750c3d0e452ac415c5151f2e11ce2c4dad00d2bed74059f4a19",
       "source_count": 9
     },
     {
       "file": "concepts-lighting-ibl.md",
-      "content_hash": "sha256:05547535eb2b633ae5396dd1994b3acc9fdd3ea672a77137799073a4871ed986",
+      "content_hash": "sha256:9fd27dacb2fde698a0c34f359b4b792f6ed9964bcb7e652a6055683c34d9e804",
       "source_count": 7
     },
     {
       "file": "concepts-pbr-shading.md",
-      "content_hash": "sha256:9714945b4b5213a9b03b9c938f961f533814b50dc18b9b1309071c7c3f6969ba",
+      "content_hash": "sha256:c63e910976e15bf0f12115090c6ad7a3881e506d4c85977bcb9be29c16a4bae8",
       "source_count": 1
     },
     {
       "file": "cross-platform-matrix.md",
-      "content_hash": "sha256:d41028dc5cfa74e9d58012d2fe1a2bb480bd418c750dbce6cd9ccc8f64aedba5",
+      "content_hash": "sha256:dd2aaac98460235e101767834e27b6b8d8f25de7be2645bf7c3dd0a6f9fe9590",
       "source_count": 0
     },
     {
       "file": "engine-api-core.md",
-      "content_hash": "sha256:008edbfccc1ed5bc47039e7ed48b3f99d443c02b6a4a63f5fac6b50f820b3bdc",
+      "content_hash": "sha256:8713d04e78208cd02a072f644a137983b1d5a4ce10742d49a8f0ae2d20247f35",
       "source_count": 10
     },
     {
       "file": "engine-api-entities-components.md",
-      "content_hash": "sha256:0a539b98dceb9b7893806708a1f4e8e5a6b7ee45a61072990574a9c46193fca7",
+      "content_hash": "sha256:7fcff7b176e323e6a5ce669d8b93aad1dcb1ab54d18df116ca9ab421f2cea499",
       "source_count": 5
     },
     {
       "file": "engine-api-resources.md",
-      "content_hash": "sha256:a43eeb4e0a5bb72b0fec0ff3bb2fd8ddc2c8f70e684095a07ce5fab5c9403ab4",
+      "content_hash": "sha256:1ea837e96958eb91f969d261b806386228d8cedcdab689451ce629e0667c9afd",
       "source_count": 12
     },
     {
@@ -732,42 +732,42 @@
     },
     {
       "file": "materials-compiling-matc.md",
-      "content_hash": "sha256:e78b8bf9e0f18d6e33e2e88649140c238713e87dd8745515eb5ae6ffd6895572",
+      "content_hash": "sha256:52dd9a63394eaed0d2ef1d5b98979f1b7b9322009da1a0aab743c7e1eacb3903",
       "source_count": 2
     },
     {
       "file": "materials-definition-language.md",
-      "content_hash": "sha256:6bc61a451c3165ece2cb5702928ed66e47ec384952267a6b2dceb94c9e4cbd30",
+      "content_hash": "sha256:47122c8414fa3791f9c9b5e0548078178aa9a11525ff35b0f5a626ea341b4cf8",
       "source_count": 1
     },
     {
       "file": "materials-models.md",
-      "content_hash": "sha256:60dc9ffa4aa986ac451cff22e697410514ece6535071715f77e91f36cf2453d7",
+      "content_hash": "sha256:843f61cacbe1b811e2858a6f89ad7c8ed82e9454254f63e1154d577c4750c74b",
       "source_count": 1
     },
     {
       "file": "materials-properties-reference.md",
-      "content_hash": "sha256:b201f0618ce22ae49edfa8632d5fe4978804b31a04473b9bb7b180364afdb1e9",
+      "content_hash": "sha256:c2f2c809170c71fe4aea12c22fa75c549aa185d733a5a22effe7569ee701c637",
       "source_count": 2
     },
     {
       "file": "platform-android.md",
-      "content_hash": "sha256:3d2205e1084af7d6888dc29bde38c51623fccc4bb1cb7e49769a34ba99f554f2",
+      "content_hash": "sha256:d1e88d07f29666fd3524afb744d50e02f703813855d6da054736fe9093999864",
       "source_count": 6
     },
     {
       "file": "platform-cpp.md",
-      "content_hash": "sha256:58ecc8338ec099d062c4e151e375d441b9565d55418276b57c0acd1081e615ab",
+      "content_hash": "sha256:4552ae968c72559cc64a7cf534e80fd2cc978b3ac483dbbf85d645b0c94b7453",
       "source_count": 5
     },
     {
       "file": "platform-web.md",
-      "content_hash": "sha256:2ab7276d1e47421b6f48249d4c4e89b0b58afc47bfd75f62bc4b6cfc03e94ee2",
+      "content_hash": "sha256:4fe004282b0b5b87f960c026f620b88a71819d5b32b7359fb9d954e0feafaac2",
       "source_count": 5
     },
     {
       "file": "tooling.md",
-      "content_hash": "sha256:fc356ee9031213178b8982687dd6366afa55834165cfa4a3ff1a8ec0fb91d8f2",
+      "content_hash": "sha256:512019ab46cec9b9e662ce2847bc3055269bc094a128f3e01ebdb894d4869589",
       "source_count": 15
     }
   ]

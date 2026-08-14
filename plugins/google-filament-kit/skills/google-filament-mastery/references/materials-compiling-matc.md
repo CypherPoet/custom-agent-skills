@@ -1,7 +1,7 @@
 # Compiling Materials (matc) & Color Handling
 
-> Source: Filament Materials — "Compiling materials" + "Handling colors" (Materials.md) + filamat lib, Filament v1.72.0
-> Last synced: 2026-06-19
+> Source: Filament Materials — "Compiling materials" + "Handling colors" (Materials.md) + filamat lib, Filament v1.75.0
+> Last synced: 2026-08-14
 
 `matc` is the command-line tool that compiles a material definition (`.mat`) into a
 material package (`.filamat`). `filamat` is the library that does the same thing at
