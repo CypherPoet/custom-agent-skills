@@ -1,6 +1,6 @@
 ---
 name: skill-structure-check
-description: Audit this repo's plugin skills and vendored copies for structural drift. Checks single-line skill descriptions, skill size, Contents jump-lines, installed-copy-safe links, and vendored copies. Use after creating, editing, vendoring, or restructuring a skill, before opening a PR that touches skills, or whenever the user says "audit the skills", "check skill structure", "is this skill too big", "lint the skills", or "did I break a Contents link". Runs a deterministic local script and reports — it never edits files.
+description: Audit this repo's plugin skills and vendored copies for structural drift. Checks skill size, Contents jump-lines, installed-copy-safe links, and vendored copies. Use after creating, editing, vendoring, or restructuring a skill, before opening a PR that touches skills, or whenever the user says "audit the skills", "check skill structure", "is this skill too big", "lint the skills", or "did I break a Contents link". Runs a deterministic local script and reports — it never edits files.
 ---
 
 # Skill Structure Check
@@ -22,7 +22,6 @@ ADVISORYs all fail. Run it before opening a PR that adds or edits a skill.
 
 | Severity | Rule | Why |
 |---|---|---|
-| ERROR | `description` is not a single-line YAML scalar | The description is one routing string. Keeping it on the `description:` line exposes its size and avoids YAML folding, newline-preservation, and chomping behavior. |
 | ERROR | `SKILL.md` over 500 lines | The always-loaded body must stay a lean router; move topical or once-needed depth to `references/`. |
 | ERROR | a `**Contents:**` link whose anchor does not resolve | The jump-line drifted from the headings it indexes. |
 | ERROR | a relative link that escapes its plugin — in **any** `.md` under that plugin, at any depth | A sparse-clone install contains only one plugin, so cross-plugin links must be absolute GitHub URLs. The check walks the whole plugin rather than listing known locations, so it can't drift from the rule. |
@@ -52,7 +51,6 @@ a single line, placed after the file's introduction,
 
 ## Acting on Findings
 
-- **Multiline `description` scalar** — put the complete description on the `description:` line. Use a plain scalar when valid; quote it only when YAML syntax requires quoting. Do not use `>`, `|`, or continuation lines.
 - **Oversized `SKILL.md`** — extract topical sections into `references/<topic>.md` and leave a routing table in the body. `threejs-kit` and `mobile-dev` are worked examples; follow `skill-creator`'s progressive-disclosure guidance.
 - **Missing or stale Contents index** — add or repair the jump-line per [The Contents Index Format](#the-contents-index-format).
 - **Escaping relative link** — use an absolute GitHub URL for another plugin; keep links within the current plugin relative.
