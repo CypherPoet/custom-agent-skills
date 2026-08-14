@@ -20,8 +20,10 @@ from typing import Any, Iterable, Mapping, Sequence
 from urllib.parse import urlsplit, urlunsplit
 
 
-SCHEMA_VERSION = 1
-REVIEW_PROCEDURE_VERSION = 3
+MANIFEST_SCHEMA_VERSION = 2
+LEGACY_MANIFEST_SCHEMA_VERSION = 1
+RESEARCH_RESULT_SCHEMA_VERSION = 1
+REVIEW_PROCEDURE_VERSION = 4
 DEFAULT_MANIFEST_PATH = ".keeping-skills-current/manifest.json"
 LOCATOR_PATH = ".keeping-skills-current/config.json"
 REPORT_VERSION = 1
@@ -40,6 +42,13 @@ IGNORED_DIRECTORY_NAMES = {
     "outputs",
 }
 TOP_LEVEL_ORDER = (
+    "schemaVersion",
+    "scheduler",
+    "delivery",
+    "changeValidation",
+    "skills",
+)
+LEGACY_TOP_LEVEL_ORDER = (
     "schemaVersion",
     "scheduler",
     "delivery",
@@ -72,6 +81,7 @@ STATE_ORDER = (
 DELIVERY_ORDER = (
     "strategy",
     "reportPath",
+    "correctionStrategy",
     "branchName",
     "autoMergeStrategy",
     "fallbackReportPath",
@@ -229,13 +239,22 @@ def skill_schema() -> dict[str, Any]:
     )
 
 
-def manifest_schema() -> dict[str, Any]:
+def manifest_schema(version: int = MANIFEST_SCHEMA_VERSION) -> dict[str, Any]:
+    if version not in {LEGACY_MANIFEST_SCHEMA_VERSION, MANIFEST_SCHEMA_VERSION}:
+        raise ContractError(f"manifest schema version {version} is not available")
+    local_delivery_properties: dict[str, Any] = {
+        "strategy": {"const": "localReport"},
+        "reportPath": {"type": "string", "minLength": 1},
+    }
+    local_delivery_required = ["strategy", "reportPath"]
+    if version == MANIFEST_SCHEMA_VERSION:
+        local_delivery_properties["correctionStrategy"] = {
+            "enum": ["reportOnly", "applyHighConfidenceCorrections"]
+        }
+        local_delivery_required.append("correctionStrategy")
     local_delivery = object_schema(
-        {
-            "strategy": {"const": "localReport"},
-            "reportPath": {"type": "string", "minLength": 1},
-        },
-        ["strategy", "reportPath"],
+        local_delivery_properties,
+        local_delivery_required,
     )
     github_delivery = object_schema(
         {
@@ -246,25 +265,28 @@ def manifest_schema() -> dict[str, Any]:
         },
         ["strategy", "branchName", "autoMergeStrategy"],
     )
-    schema = object_schema(
-        {
-            "schemaVersion": {"const": SCHEMA_VERSION},
-            "scheduler": {"enum": ["none", "agentPlatform", "githubActions"]},
-            "delivery": {"oneOf": [local_delivery, github_delivery]},
-            "correctionStrategy": {
-                "enum": ["reportOnly", "applyHighConfidenceCorrections"]
-            },
-            "changeValidation": {"enum": ["enabled", "disabled"]},
-            "skills": {
-                "type": "object",
-                "propertyNames": {"pattern": ID_PATTERN.pattern},
-                "additionalProperties": skill_schema(),
-            },
+    properties: dict[str, Any] = {
+        "schemaVersion": {"const": version},
+        "scheduler": {"enum": ["none", "agentPlatform", "githubActions"]},
+        "delivery": {"oneOf": [local_delivery, github_delivery]},
+        "changeValidation": {"enum": ["enabled", "disabled"]},
+        "skills": {
+            "type": "object",
+            "propertyNames": {"pattern": ID_PATTERN.pattern},
+            "additionalProperties": skill_schema(),
         },
-        TOP_LEVEL_ORDER,
-    )
+    }
+    required = TOP_LEVEL_ORDER
+    if version == LEGACY_MANIFEST_SCHEMA_VERSION:
+        properties["correctionStrategy"] = {
+            "enum": ["reportOnly", "applyHighConfidenceCorrections"]
+        }
+        required = LEGACY_TOP_LEVEL_ORDER
+    schema = object_schema(properties, required)
     schema["$schema"] = "https://json-schema.org/draft/2020-12/schema"
-    schema["$id"] = "https://cypherpoet.dev/schemas/keeping-skills-current/manifest.v1.json"
+    schema["$id"] = (
+        f"https://cypherpoet.dev/schemas/keeping-skills-current/manifest.v{version}.json"
+    )
     schema["title"] = "Keeping Skills Current Manifest"
     return schema
 
@@ -337,7 +359,7 @@ def research_result_schema() -> dict[str, Any]:
     )
     schema = object_schema(
         {
-            "schemaVersion": {"const": SCHEMA_VERSION},
+            "schemaVersion": {"const": RESEARCH_RESULT_SCHEMA_VERSION},
             "projectIdentity": {"type": "string", "minLength": 1},
             "skillId": {"type": "string", "pattern": ID_PATTERN.pattern},
             "skillPath": {"type": "string", "minLength": 1},
@@ -783,17 +805,39 @@ def check_git_branch_capability(branch: str) -> tuple[bool, bool]:
     return True, result.returncode == 0
 
 
-def validate_delivery(value: Any, root: Path) -> dict[str, Any]:
+def validate_correction_strategy(value: Any, location: str) -> str:
+    if value not in {"reportOnly", "applyHighConfidenceCorrections"}:
+        raise ContractError(f"{location} is invalid")
+    return value
+
+
+def validate_delivery(
+    value: Any,
+    root: Path,
+    legacy_correction_strategy: str | None = None,
+) -> dict[str, Any]:
     delivery = require_object(value, "delivery")
     strategy = delivery.get("strategy")
     if strategy == "localReport":
-        reject_unknown(delivery, {"strategy", "reportPath"}, "delivery")
-        require_keys(delivery, {"strategy", "reportPath"}, "delivery")
+        allowed = {"strategy", "reportPath"}
+        required = set(allowed)
+        if legacy_correction_strategy is None:
+            allowed.add("correctionStrategy")
+            required.add("correctionStrategy")
+            correction_strategy = validate_correction_strategy(
+                delivery.get("correctionStrategy"),
+                "delivery.correctionStrategy",
+            )
+        else:
+            correction_strategy = legacy_correction_strategy
+        reject_unknown(delivery, allowed, "delivery")
+        require_keys(delivery, required, "delivery")
         return {
             "strategy": strategy,
             "reportPath": normalize_relative_path(
                 delivery["reportPath"], root, "delivery.reportPath", ".md"
             ),
+            "correctionStrategy": correction_strategy,
         }
     if strategy != "githubPullRequest":
         raise ContractError("delivery.strategy must be localReport or githubPullRequest")
@@ -857,25 +901,47 @@ def target_belongs_to_skill(target_path: str, skill_path: str) -> bool:
     )
 
 
-def validate_manifest(raw: Any, root: Path) -> dict[str, Any]:
+def normalize_manifest(
+    raw: Any,
+    root: Path,
+    allow_legacy_version: bool = False,
+) -> dict[str, Any]:
     manifest = require_object(raw, "manifest")
-    reject_unknown(manifest, TOP_LEVEL_ORDER, "manifest")
-    require_keys(manifest, TOP_LEVEL_ORDER, "manifest")
-    version = manifest["schemaVersion"]
-    if version != SCHEMA_VERSION:
-        if isinstance(version, int) and version < SCHEMA_VERSION:
+    version = manifest.get("schemaVersion")
+    if version != MANIFEST_SCHEMA_VERSION:
+        if version == LEGACY_MANIFEST_SCHEMA_VERSION and allow_legacy_version:
+            pass
+        elif isinstance(version, int) and version < MANIFEST_SCHEMA_VERSION:
             raise ContractError(f"manifest schemaVersion {version} requires interactive migration")
-        raise ContractError(f"manifest schemaVersion {version!r} is not supported by this installed skill")
+        else:
+            raise ContractError(
+                f"manifest schemaVersion {version!r} is not supported by this installed skill"
+            )
+    validate_against_model(manifest, manifest_schema(version), "manifest")
+    top_level_order = (
+        LEGACY_TOP_LEVEL_ORDER
+        if version == LEGACY_MANIFEST_SCHEMA_VERSION
+        else TOP_LEVEL_ORDER
+    )
+    reject_unknown(manifest, top_level_order, "manifest")
+    require_keys(manifest, top_level_order, "manifest")
     scheduler = manifest["scheduler"]
     if scheduler not in {"none", "agentPlatform", "githubActions"}:
         raise ContractError("scheduler must be none, agentPlatform, or githubActions")
-    correction_strategy = manifest["correctionStrategy"]
-    if correction_strategy not in {"reportOnly", "applyHighConfidenceCorrections"}:
-        raise ContractError("correctionStrategy is invalid")
+    legacy_correction_strategy = None
+    if version == LEGACY_MANIFEST_SCHEMA_VERSION:
+        legacy_correction_strategy = validate_correction_strategy(
+            manifest["correctionStrategy"],
+            "correctionStrategy",
+        )
     change_validation = manifest["changeValidation"]
     if change_validation not in {"enabled", "disabled"}:
         raise ContractError("changeValidation is invalid")
-    delivery = validate_delivery(manifest["delivery"], root)
+    delivery = validate_delivery(
+        manifest["delivery"],
+        root,
+        legacy_correction_strategy,
+    )
     if scheduler == "githubActions" and delivery["strategy"] != "githubPullRequest":
         raise ContractError("githubActions requires githubPullRequest delivery")
     skills_raw = require_object(manifest["skills"], "skills")
@@ -939,15 +1005,18 @@ def validate_manifest(raw: Any, root: Path) -> dict[str, Any]:
         root,
     )
     normalized_manifest = {
-        "schemaVersion": SCHEMA_VERSION,
+        "schemaVersion": MANIFEST_SCHEMA_VERSION,
         "scheduler": scheduler,
         "delivery": delivery,
-        "correctionStrategy": correction_strategy,
         "changeValidation": change_validation,
         "skills": skills,
     }
     validate_against_model(normalized_manifest, manifest_schema(), "manifest")
     return normalized_manifest
+
+
+def validate_manifest(raw: Any, root: Path) -> dict[str, Any]:
+    return normalize_manifest(raw, root)
 
 
 def resolve_project_root(explicit: str | None) -> Path:
@@ -971,9 +1040,8 @@ def resolve_project_root(explicit: str | None) -> Path:
 def resolve_manifest_path(root: Path, explicit: str | None) -> tuple[str, tuple[str, ...]]:
     warnings: list[str] = []
     if explicit is not None:
-        return normalize_relative_path(explicit, root, "--manifest", ".json"), tuple(warnings)
-    locator = root / LOCATOR_PATH
-    if locator.exists():
+        relative_path = normalize_relative_path(explicit, root, "--manifest", ".json")
+    elif (locator := root / LOCATOR_PATH).exists():
         if locator.is_symlink() or not locator.is_file():
             raise ContractError(f"{LOCATOR_PATH} must be a regular file")
         try:
@@ -983,35 +1051,43 @@ def resolve_manifest_path(root: Path, explicit: str | None) -> tuple[str, tuple[
         config = require_object(raw, LOCATOR_PATH)
         reject_unknown(config, {"manifestPath"}, LOCATOR_PATH)
         require_keys(config, {"manifestPath"}, LOCATOR_PATH)
-        path = normalize_relative_path(config["manifestPath"], root, "manifestPath", ".json")
-        if path == DEFAULT_MANIFEST_PATH:
+        relative_path = normalize_relative_path(
+            config["manifestPath"], root, "manifestPath", ".json"
+        )
+        if relative_path == DEFAULT_MANIFEST_PATH:
             warnings.append(f"{LOCATOR_PATH} redundantly points to the default manifest")
-        return path, tuple(warnings)
-    return DEFAULT_MANIFEST_PATH, tuple(warnings)
+    else:
+        relative_path = DEFAULT_MANIFEST_PATH
+    if relative_path != DEFAULT_MANIFEST_PATH and (root / DEFAULT_MANIFEST_PATH).exists():
+        warnings.append(
+            f"inactive default manifest exists at {DEFAULT_MANIFEST_PATH}; reconcile it interactively before automated mutation"
+        )
+    return relative_path, tuple(warnings)
 
 
-def load_configuration(root_argument: str | None, manifest_argument: str | None) -> ProjectConfiguration:
-    root = resolve_project_root(root_argument)
-    relative_path, warnings = resolve_manifest_path(root, manifest_argument)
+def read_manifest_document(root: Path, relative_path: str) -> Any:
     path = root / Path(*PurePosixPath(relative_path).parts)
     if not path.exists():
         raise ContractError(f"Not configured: {relative_path} does not exist")
     if path.is_symlink() or not path.is_file():
         raise ContractError(f"manifest must be a regular file: {relative_path}")
     try:
-        raw = json.loads(path.read_text(encoding="utf-8"))
+        return json.loads(path.read_text(encoding="utf-8"))
     except (OSError, UnicodeError, json.JSONDecodeError) as error:
         raise ContractError(f"could not read {relative_path}: {error}") from error
+
+
+def load_configuration(root_argument: str | None, manifest_argument: str | None) -> ProjectConfiguration:
+    root = resolve_project_root(root_argument)
+    relative_path, warnings = resolve_manifest_path(root, manifest_argument)
+    path = root / Path(*PurePosixPath(relative_path).parts)
+    raw = read_manifest_document(root, relative_path)
     manifest = validate_manifest(raw, root)
     ensure_outside_skills(
         [relative_path],
         [skill["path"] for skill in manifest["skills"].values()],
         root,
     )
-    if relative_path != DEFAULT_MANIFEST_PATH and (root / DEFAULT_MANIFEST_PATH).exists():
-        warnings += (
-            f"inactive default manifest exists at {DEFAULT_MANIFEST_PATH}; reconcile it interactively before automated mutation",
-        )
     return ProjectConfiguration(root, path, relative_path, manifest, warnings)
 
 
@@ -1033,32 +1109,32 @@ def ordered(value: Any, order: Sequence[str] | None = None) -> Any:
     output: dict[str, Any] = {}
     for key in keys:
         child_order: Sequence[str] | None = None
-        if key == "skills":
+        if key == "skills" and order in {TOP_LEVEL_ORDER, LEGACY_TOP_LEVEL_ORDER}:
             output[key] = {
                 skill_id: ordered(value[key][skill_id], SKILL_ORDER)
                 for skill_id in sorted(value[key])
             }
             continue
-        if key == "sources":
+        if key == "sources" and order in {SKILL_ORDER, DETAILS_ORDER}:
             output[key] = {
                 source_id: ordered(value[key][source_id], SOURCE_ORDER)
                 for source_id in sorted(value[key])
             }
             continue
-        if key in {"deferredFindings", "declinedFindings"}:
+        if key in {"deferredFindings", "declinedFindings"} and order == SKILL_ORDER:
             output[key] = [ordered(item, DECISION_ORDER) for item in value[key]]
             continue
-        if key == "retrieval":
+        if key == "retrieval" and order == SOURCE_ORDER:
             child_order = RETRIEVAL_ORDER
-        elif key == "state":
+        elif key == "state" and order == SKILL_ORDER:
             child_order = STATE_ORDER
-        elif key == "delivery":
+        elif key == "delivery" and order in {TOP_LEVEL_ORDER, LEGACY_TOP_LEVEL_ORDER}:
             child_order = DELIVERY_ORDER
-        elif key == "schedule":
+        elif key == "schedule" and order == SKILL_ORDER:
             child_order = SCHEDULE_ORDER
-        elif key == "details":
+        elif key == "details" and order == DECISION_ORDER:
             child_order = DETAILS_ORDER
-        elif key == "target":
+        elif key == "target" and order == DETAILS_ORDER:
             child_order = TARGET_ORDER
         output[key] = ordered(value[key], child_order)
     return output
@@ -1121,6 +1197,13 @@ def functional_files(root: Path, skill_path: str) -> list[tuple[str, bytes]]:
     return result
 
 
+def change_preparation_strategy(manifest: Mapping[str, Any]) -> str:
+    delivery = manifest["delivery"]
+    if delivery["strategy"] == "githubPullRequest":
+        return "pullRequestDiff"
+    return delivery["correctionStrategy"]
+
+
 def skill_fingerprint(configuration: ProjectConfiguration, skill_id: str) -> tuple[str, list[str]]:
     try:
         skill = configuration.manifest["skills"][skill_id]
@@ -1139,7 +1222,9 @@ def skill_fingerprint(configuration: ProjectConfiguration, skill_id: str) -> tup
             for path, content in files
         ],
         "sources": skill["sources"],
-        "correctionStrategy": configuration.manifest["correctionStrategy"],
+        "changePreparationStrategy": change_preparation_strategy(
+            configuration.manifest
+        ),
         "changeValidation": configuration.manifest["changeValidation"],
     }
     digest = hashlib.sha256(canonical_json(payload).encode("utf-8")).hexdigest()
@@ -1227,8 +1312,8 @@ def project_identity(root: Path) -> str:
 
 def preflight_output(configuration: ProjectConfiguration, mutation: bool) -> dict[str, Any]:
     warnings = list(configuration.warnings)
-    if mutation and any(message.startswith("inactive default") for message in warnings):
-        raise ContractError(warnings[-1])
+    if mutation:
+        require_safe_manifest_mutation(warnings)
     capabilities: dict[str, Any] = {}
     delivery = configuration.manifest["delivery"]
     if delivery["strategy"] == "githubPullRequest":
@@ -1268,6 +1353,12 @@ def preflight_output(configuration: ProjectConfiguration, mutation: bool) -> dic
         "manifest": configuration.manifest,
         "skills": skills,
     }
+
+
+def require_safe_manifest_mutation(warnings: Sequence[str]) -> None:
+    for warning in warnings:
+        if warning.startswith("inactive default"):
+            raise ContractError(warning)
 
 
 def status_output(configuration: ProjectConfiguration, now: datetime_module.datetime) -> dict[str, Any]:
@@ -1370,7 +1461,7 @@ def validate_research_result(
     }
     reject_unknown(result, allowed, "research result")
     require_keys(result, allowed, "research result")
-    if result["schemaVersion"] != SCHEMA_VERSION:
+    if result["schemaVersion"] != RESEARCH_RESULT_SCHEMA_VERSION:
         raise ContractError("research result schemaVersion is unsupported")
     skill_id = require_string(result["skillId"], "research result.skillId")
     if expected_skill_id is not None and skill_id != expected_skill_id:
@@ -1535,7 +1626,8 @@ def validate_research_result(
             raise ContractError(f"{location} applies an edit to a human-decision finding")
         if (
             configuration.manifest["delivery"]["strategy"] == "localReport"
-            and configuration.manifest["correctionStrategy"] == "reportOnly"
+            and configuration.manifest["delivery"]["correctionStrategy"]
+            == "reportOnly"
             and disposition == "applied"
         ):
             raise ContractError(f"{location} applies an edit while correctionStrategy is reportOnly")
@@ -1630,7 +1722,7 @@ def validate_research_result(
     if reverted_findings and validation_status != "failed":
         raise ContractError("reverted changes require failed validation")
     normalized_result = {
-        "schemaVersion": SCHEMA_VERSION,
+        "schemaVersion": RESEARCH_RESULT_SCHEMA_VERSION,
         "projectIdentity": provided_project_identity,
         "skillId": skill_id,
         "skillPath": skill_path,
@@ -1966,6 +2058,22 @@ def merge_report(existing: str, owned_region: str) -> str:
     return existing[: match.start()] + owned_region.rstrip() + existing[match.end() :]
 
 
+def migrate_manifest_v1(root: Path, relative_path: str) -> dict[str, Any]:
+    raw = require_object(read_manifest_document(root, relative_path), "manifest")
+    if raw.get("schemaVersion") != LEGACY_MANIFEST_SCHEMA_VERSION:
+        raise ContractError(
+            "migrate-manifest supports only schemaVersion 1; "
+            "the configured manifest is not an eligible migration source"
+        )
+    proposal = normalize_manifest(raw, root, allow_legacy_version=True)
+    ensure_outside_skills(
+        [relative_path],
+        [skill["path"] for skill in proposal["skills"].values()],
+        root,
+    )
+    return proposal
+
+
 def legacy_sources(skill_file: Path) -> dict[str, Any]:
     if not skill_file.is_file():
         return {}
@@ -2040,13 +2148,13 @@ def migrate_legacy(root: Path, legacy_path: str) -> tuple[dict[str, Any], list[d
                 "declinedFindings": [],
             }
     proposal = {
-        "schemaVersion": SCHEMA_VERSION,
+        "schemaVersion": MANIFEST_SCHEMA_VERSION,
         "scheduler": "none",
         "delivery": {
             "strategy": "localReport",
             "reportPath": ".keeping-skills-current/report.md",
+            "correctionStrategy": "reportOnly",
         },
-        "correctionStrategy": "reportOnly",
         "changeValidation": "enabled",
         "skills": skills,
     }
@@ -2224,7 +2332,7 @@ def requires_provisional_binding(
 ) -> bool:
     return (
         configuration.manifest["delivery"]["strategy"] == "githubPullRequest"
-        or configuration.manifest["correctionStrategy"]
+        or configuration.manifest["delivery"]["correctionStrategy"]
         == "applyHighConfidenceCorrections"
     )
 
@@ -2260,6 +2368,10 @@ def configure_parser() -> argparse.ArgumentParser:
     report.add_argument("--validate-only", action="store_true")
     report.add_argument("--provisional", action="store_true")
     report.add_argument("--provisional-fingerprint")
+    manifest_migration = subparsers.add_parser("migrate-manifest")
+    manifest_migration.add_argument("--project-root")
+    manifest_migration.add_argument("--manifest")
+    manifest_migration.add_argument("--write", action="store_true")
     migration = subparsers.add_parser("migrate-legacy")
     migration.add_argument("--project-root")
     migration.add_argument("--legacy-manifest", required=True)
@@ -2269,6 +2381,7 @@ def configure_parser() -> argparse.ArgumentParser:
     cleanup.add_argument("--write", action="store_true")
     schema = subparsers.add_parser("schema")
     schema.add_argument("--kind", choices=("manifest", "research"), required=True)
+    schema.add_argument("--version", type=int)
     group = schema.add_mutually_exclusive_group()
     group.add_argument("--output")
     group.add_argument("--check")
@@ -2283,18 +2396,64 @@ def main(arguments: Sequence[str] | None = None) -> int:
     args = parser.parse_args(arguments)
     try:
         if args.command == "schema":
-            schema_value = manifest_schema() if args.kind == "manifest" else research_result_schema()
+            if args.kind == "manifest":
+                schema_version = (
+                    MANIFEST_SCHEMA_VERSION if args.version is None else args.version
+                )
+                schema_value = manifest_schema(schema_version)
+            else:
+                schema_version = (
+                    RESEARCH_RESULT_SCHEMA_VERSION
+                    if args.version is None
+                    else args.version
+                )
+                if schema_version != RESEARCH_RESULT_SCHEMA_VERSION:
+                    raise ContractError(
+                        f"research schema version {schema_version} is not available"
+                    )
+                schema_value = research_result_schema()
             content = pretty_json(schema_value)
             if args.check:
                 existing = Path(args.check).read_text(encoding="utf-8")
                 if existing != content:
                     raise ContractError(f"generated {args.kind} schema differs from {args.check}")
-                write_json_output({"checked": args.check, "kind": args.kind})
+                write_json_output(
+                    {
+                        "checked": args.check,
+                        "kind": args.kind,
+                        "version": schema_version,
+                    }
+                )
             elif args.output:
                 atomic_write(Path(args.output), content)
-                write_json_output({"written": args.output, "kind": args.kind})
+                write_json_output(
+                    {
+                        "written": args.output,
+                        "kind": args.kind,
+                        "version": schema_version,
+                    }
+                )
             else:
                 sys.stdout.write(content)
+            return 0
+
+        if args.command == "migrate-manifest":
+            root = resolve_project_root(args.project_root)
+            relative, warnings = resolve_manifest_path(root, args.manifest)
+            proposal = migrate_manifest_v1(root, relative)
+            payload: dict[str, Any] = {
+                "manifestPath": relative,
+                "manifest": proposal,
+                "warnings": list(warnings),
+                "write": args.write,
+            }
+            if args.write:
+                require_safe_manifest_mutation(warnings)
+                path = root / Path(*PurePosixPath(relative).parts)
+                atomic_write(path, pretty_json(proposal, TOP_LEVEL_ORDER))
+                validate_manifest(read_manifest_document(root, relative), root)
+                payload["written"] = relative
+            write_json_output(payload)
             return 0
 
         if args.command == "migrate-legacy":

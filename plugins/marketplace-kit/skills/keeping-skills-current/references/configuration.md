@@ -23,14 +23,13 @@ Own exact files, not the entire directory. Preserve unknown files and remove `.k
 
 ## Manifest
 
-Use schema version 1 and the property order shown in `assets/manifest.template.json`:
+Use schema version 2 and the property order shown in `assets/manifest.template.json`:
 
 1. `schemaVersion`
 2. `scheduler`
 3. `delivery`
-4. `correctionStrategy`
-5. `changeValidation`
-6. `skills`
+4. `changeValidation`
+5. `skills`
 
 Require every field. Reject unknown fields and unknown enum values.
 
@@ -41,7 +40,8 @@ Require every field. Reject unknown fields and unknown enum values.
 ```json
 {
   "strategy": "localReport",
-  "reportPath": ".keeping-skills-current/report.md"
+  "reportPath": ".keeping-skills-current/report.md",
+  "correctionStrategy": "reportOnly"
 }
 ```
 
@@ -56,7 +56,7 @@ Require every field. Reject unknown fields and unknown enum values.
 
 Omit `fallbackReportPath` unless a pull-request body reaches its size limit. Permit `autoMergeStrategy` values `none` and `stateOnly` only.
 
-`correctionStrategy` is `reportOnly` or `applyHighConfidenceCorrections`. It controls whether local-report delivery edits files. GitHub pull-request delivery always prepares supported corrections and concrete improvements on its owned branch because the diff is the proposal. `autoMergeStrategy` independently controls acceptance. `changeValidation` is `enabled` or `disabled`.
+For local-report delivery, `correctionStrategy` is `reportOnly` or `applyHighConfidenceCorrections`. GitHub pull-request delivery has no correction strategy: it always prepares supported corrections and concrete improvements on its owned branch because the diff is the proposal. `autoMergeStrategy` independently controls acceptance. `changeValidation` is `enabled` or `disabled`.
 
 Write canonical UTF-8 JSON using two-space indentation and one trailing newline. Preserve the fixed property order, sort skill and source keys by ID, sort crawl paths lexically, and preserve chronological decision-array order.
 
@@ -125,9 +125,10 @@ Commands emit structured JSON on standard output, diagnostics on standard error,
 - `render-report --input <result.json> --validate-only --provisional` — validate the pre-edit result and exact target locators against unchanged reviewed files. Its JSON response includes the `provisionalFingerprint` that binds a later edit-capable final pass.
 - `render-report --input <result.json> [--provisional-fingerprint <sha256:...>] [--existing-report <path>] [--output <path>]` — validate final selected results, retain unselected current-state results, and render or atomically update an owned Markdown region. Require the fingerprint returned by the provisional pass whenever the configured delivery can edit files.
 - `apply-state --input <result.json> --delivered-report <path> [--skill-id <id>]` — validate the research result, its current input fingerprint, and its matching delivered report payload, then atomically update only review state.
-- `migrate-legacy --legacy-manifest <path> [--write]` — create a version-1 proposal or, after interactive confirmation, write it. Never call unattended.
+- `migrate-manifest [--write]` — preview or atomically migrate the active version-1 manifest to version 2 during interactive configuration. Never call unattended.
+- `migrate-legacy --legacy-manifest <path> [--write]` — create a version-2 proposal from the retired fact-check format or, after interactive confirmation, write it. Never call unattended.
 - `cleanup-legacy [--write]` — preview or remove updater-only `## Primary Sources` sections and standalone `**Verified:**` markers from configured skills after their sources are represented in the manifest.
-- `schema --kind <manifest|research> [--output <path>|--check <path>]` — render or verify the bundled schema.
+- `schema --kind <manifest|research> [--version <n>] [--output <path>|--check <path>]` — render or verify a bundled schema; omit `--version` for the current version.
 
 Accept `--project-root` and optional `--manifest` on project commands. Require Python 3.11 before any command.
 

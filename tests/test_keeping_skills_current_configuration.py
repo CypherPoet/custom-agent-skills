@@ -46,19 +46,56 @@ class ConfigurationTests(KeepingSkillsCurrentTestCase):
         template = json.loads((SKILL_ROOT / "assets/manifest.template.json").read_text())
         self.configure(template)
         result = self.run_helper("preflight", "--project-root", str(self.project))
-        self.assertEqual(json.loads(result.stdout)["manifest"]["schemaVersion"], 1)
-        for kind, name in (
-            ("manifest", "manifest.schema.v1.json"),
-            ("research", "research-result.schema.v1.json"),
+        self.assertEqual(json.loads(result.stdout)["manifest"]["schemaVersion"], 2)
+        for kind, version, name in (
+            ("manifest", 1, "manifest.schema.v1.json"),
+            ("manifest", 2, "manifest.schema.v2.json"),
+            ("research", 1, "research-result.schema.v1.json"),
         ):
             checked = self.run_helper(
                 "schema",
                 "--kind",
                 kind,
+                "--version",
+                str(version),
                 "--check",
                 str(SKILL_ROOT / "assets" / name),
             )
-            self.assertEqual(json.loads(checked.stdout)["kind"], kind)
+            payload = json.loads(checked.stdout)
+            self.assertEqual(payload["kind"], kind)
+            self.assertEqual(payload["version"], version)
+
+        for version in (1, 2):
+            schema = json.loads(
+                (SKILL_ROOT / f"assets/manifest.schema.v{version}.json").read_text()
+            )
+            skill_properties = schema["properties"]["skills"][
+                "additionalProperties"
+            ]["properties"]
+            for decision_array in ("deferredFindings", "declinedFindings"):
+                with self.subTest(version=version, decision_array=decision_array):
+                    self.assertIsInstance(skill_properties[decision_array], dict)
+                    self.assertEqual(skill_properties[decision_array]["type"], "array")
+                    self.assertIsInstance(skill_properties[decision_array]["items"], dict)
+
+    def test_schema_generation_rejects_explicit_unsupported_zero_version(self):
+        for kind in ("manifest", "research"):
+            with self.subTest(kind=kind):
+                output = self.project / f"{kind}.v0.json"
+                result = self.run_helper(
+                    "schema",
+                    "--kind",
+                    kind,
+                    "--version",
+                    "0",
+                    "--output",
+                    str(output),
+                    check=False,
+                )
+
+                self.assertEqual(result.returncode, 2)
+                self.assertIn(f"{kind} schema version 0 is not available", result.stderr)
+                self.assertFalse(output.exists())
 
     def test_project_identity_uses_sanitized_git_origin(self):
         subprocess.run(
@@ -96,6 +133,18 @@ class ConfigurationTests(KeepingSkillsCurrentTestCase):
         unknown = manifest()
         unknown["unexpected"] = True
         cases.append((unknown, "unknown field"))
+        misplaced_strategy = manifest()
+        misplaced_strategy["correctionStrategy"] = "reportOnly"
+        cases.append((misplaced_strategy, "unknown field"))
+        github_strategy = manifest(
+            delivery={
+                "strategy": "githubPullRequest",
+                "branchName": "automation/keeping-skills-current",
+                "autoMergeStrategy": "none",
+                "correctionStrategy": "reportOnly",
+            }
+        )
+        cases.append((github_strategy, "match exactly one supported shape"))
         cases.append(
             (
                 manifest(

@@ -64,7 +64,7 @@ If no interval skills are due, report `No skills are due.` and make no manifest,
 
 Run the helper's `status` command and add environment capability checks without retrieving sources. Report the resolved root, manifest, delivery, scheduler, and correction/validation strategies. For each skill, report its path, schedule, source count, previous review state, and due reason; distinguish `Draft`, `Configured`, and `Runnable here` according to the configuration contract and current environment.
 
-Report missing or malformed configuration, supported migration availability, unknown newer schema versions, ignored configuration, and scheduler discrepancies. Never enter configuration, migrate, retrieve sources, update state, invoke Git, or repair a scheduler during `status`.
+Report missing or malformed configuration, supported migration availability, unknown newer schema versions, ignored configuration, and scheduler discrepancies. Report the local correction strategy only for local-report delivery. Never enter configuration, migrate, retrieve sources, update state, invoke Git, or repair a scheduler during `status`.
 
 ### Legacy Migration
 

@@ -17,6 +17,130 @@ from keeping_skills_current_test_support import (
 
 
 class MigrationTests(KeepingSkillsCurrentTestCase):
+    def test_manifest_v1_migration_scopes_correction_strategy_to_local_delivery(self):
+        version_one = manifest(
+            {
+                "example": skill_record(
+                    sources={"example-documentation": source()},
+                )
+            }
+        )
+        version_one["schemaVersion"] = 1
+        version_one["correctionStrategy"] = version_one["delivery"].pop(
+            "correctionStrategy"
+        )
+        self.configure(version_one)
+
+        unsupported = self.run_helper(
+            "preflight",
+            "--project-root",
+            str(self.project),
+            check=False,
+        )
+        self.assertEqual(unsupported.returncode, 2)
+        self.assertIn("requires interactive migration", unsupported.stderr)
+
+        preview = json.loads(
+            self.run_helper(
+                "migrate-manifest",
+                "--project-root",
+                str(self.project),
+            ).stdout
+        )
+        proposal = preview["manifest"]
+        self.assertFalse(preview["write"])
+        self.assertEqual(proposal["schemaVersion"], 2)
+        self.assertNotIn("correctionStrategy", proposal)
+        self.assertEqual(
+            proposal["delivery"]["correctionStrategy"],
+            "reportOnly",
+        )
+        self.assertEqual(
+            json.loads(
+                (self.project / ".keeping-skills-current/manifest.json").read_text()
+            )["schemaVersion"],
+            1,
+        )
+
+        written = json.loads(
+            self.run_helper(
+                "migrate-manifest",
+                "--project-root",
+                str(self.project),
+                "--write",
+            ).stdout
+        )
+        self.assertEqual(written["written"], ".keeping-skills-current/manifest.json")
+        migrated = json.loads(
+            (self.project / ".keeping-skills-current/manifest.json").read_text()
+        )
+        self.assertEqual(migrated, proposal)
+
+        github_version_one = manifest(
+            delivery={
+                "strategy": "githubPullRequest",
+                "branchName": "automation/keeping-skills-current",
+                "autoMergeStrategy": "none",
+            }
+        )
+        github_version_one["schemaVersion"] = 1
+        github_version_one["correctionStrategy"] = "reportOnly"
+        self.configure(github_version_one)
+        github_proposal = json.loads(
+            self.run_helper(
+                "migrate-manifest",
+                "--project-root",
+                str(self.project),
+            ).stdout
+        )["manifest"]
+        self.assertNotIn("correctionStrategy", github_proposal)
+        self.assertNotIn("correctionStrategy", github_proposal["delivery"])
+
+    def test_manifest_migration_refuses_to_mutate_an_override_beside_a_default(self):
+        self.configure(manifest())
+        version_one = manifest()
+        version_one["schemaVersion"] = 1
+        version_one["correctionStrategy"] = version_one["delivery"].pop(
+            "correctionStrategy"
+        )
+        override_path = ".keeping-skills-current/legacy-manifest.json"
+        write_json(self.project / override_path, version_one)
+        write_json(
+            self.project / ".keeping-skills-current/config.json",
+            {"manifestPath": override_path},
+        )
+
+        preview = json.loads(
+            self.run_helper(
+                "migrate-manifest",
+                "--project-root",
+                str(self.project),
+            ).stdout
+        )
+        self.assertTrue(
+            any(warning.startswith("inactive default") for warning in preview["warnings"])
+        )
+
+        for arguments in (
+            (),
+            ("--manifest", override_path),
+        ):
+            with self.subTest(arguments=arguments):
+                result = self.run_helper(
+                    "migrate-manifest",
+                    "--project-root",
+                    str(self.project),
+                    *arguments,
+                    "--write",
+                    check=False,
+                )
+                self.assertEqual(result.returncode, 2)
+                self.assertIn("inactive default manifest exists", result.stderr)
+                self.assertEqual(
+                    json.loads((self.project / override_path).read_text()),
+                    version_one,
+                )
+
     def test_legacy_migration_converts_intervals_and_surfaces_acknowledgments(self):
         skill_file = self.project / "plugins/example/skills/example/SKILL.md"
         write(
@@ -47,6 +171,11 @@ class MigrationTests(KeepingSkillsCurrentTestCase):
                 "--legacy-manifest",
                 "legacy.json",
             ).stdout
+        )
+        self.assertEqual(result["manifest"]["schemaVersion"], 2)
+        self.assertEqual(
+            result["manifest"]["delivery"]["correctionStrategy"],
+            "reportOnly",
         )
         migrated = result["manifest"]["skills"]["example"]
         self.assertEqual(migrated["schedule"]["intervalDays"], 7)

@@ -78,7 +78,8 @@ Calculate `sha256:` plus lowercase hexadecimal over canonical UTF-8 JSON contain
 - The stable skill ID and configured path.
 - Every reviewed functional file's relative path and exact bytes.
 - Normalized source definitions and retrieval boundaries.
-- Project `correctionStrategy` and `changeValidation`.
+- Effective change-preparation behavior: the configured local correction strategy or fixed GitHub pull-request diff behavior.
+- Project `changeValidation`.
 - The helper's internal review-procedure version.
 
 Sort object keys and file/source entries, use compact JSON separators, and exclude schedules, timestamps, scheduler choice, delivery settings, and deferred or declined decisions.

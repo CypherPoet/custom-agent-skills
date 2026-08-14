@@ -203,7 +203,7 @@ class ResearchTests(KeepingSkillsCurrentTestCase):
 
     def test_provisional_correction_requires_a_complete_research_pass(self):
         configured = self.configured_manifest()
-        configured["correctionStrategy"] = "applyHighConfidenceCorrections"
+        configured["delivery"]["correctionStrategy"] = "applyHighConfidenceCorrections"
         configured["skills"]["example"]["sources"]["secondary-reference"] = {
             "url": "https://example.com/secondary",
             "retrieval": {"strategy": "page"},
@@ -241,7 +241,7 @@ class ResearchTests(KeepingSkillsCurrentTestCase):
 
     def test_final_correction_is_bound_to_the_validated_provisional_result(self):
         configured = self.configured_manifest()
-        configured["correctionStrategy"] = "applyHighConfidenceCorrections"
+        configured["delivery"]["correctionStrategy"] = "applyHighConfidenceCorrections"
         self.configure(configured)
         result_path = self.project / "result.json"
         final_result = self.valid_result(
@@ -322,7 +322,7 @@ class ResearchTests(KeepingSkillsCurrentTestCase):
 
     def test_final_improvement_can_be_applied_as_a_pull_request_change(self):
         configured = self.configured_manifest()
-        configured["correctionStrategy"] = "applyHighConfidenceCorrections"
+        configured["delivery"]["correctionStrategy"] = "applyHighConfidenceCorrections"
         self.configure(configured)
         result_path = self.project / "result.json"
         finding = self.correction_finding()
@@ -377,7 +377,7 @@ class ResearchTests(KeepingSkillsCurrentTestCase):
 
     def test_research_result_rejects_applied_edits_after_failures_or_failed_checks(self):
         configured = self.configured_manifest()
-        configured["correctionStrategy"] = "applyHighConfidenceCorrections"
+        configured["delivery"]["correctionStrategy"] = "applyHighConfidenceCorrections"
         configured["skills"]["example"]["sources"]["secondary-reference"] = {
             "url": "https://example.com/secondary",
             "retrieval": {"strategy": "page"},
@@ -456,7 +456,7 @@ class ResearchTests(KeepingSkillsCurrentTestCase):
         self.assertEqual(boundary.returncode, 2)
         self.assertIn("configured boundary", boundary.stderr)
 
-        configured["correctionStrategy"] = "applyHighConfidenceCorrections"
+        configured["delivery"]["correctionStrategy"] = "applyHighConfidenceCorrections"
         self.configure(configured)
         finding = self.correction_finding()
         finding["editDisposition"] = "applied"

@@ -1,5 +1,5 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion": 2,
   "scheduler": "agentPlatform",
   "delivery": {
     "strategy": "githubPullRequest",
@@ -7,7 +7,6 @@
     "autoMergeStrategy": "none",
     "fallbackReportPath": ".keeping-skills-current/report.md"
   },
-  "correctionStrategy": "reportOnly",
   "changeValidation": "enabled",
   "skills": {
     "app-store-connect-submission": {
