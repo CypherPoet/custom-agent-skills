@@ -34,7 +34,7 @@
     "versions:check": "node tooling/dist/version-bumps-cli.js"
   },
   "devDependencies": {
-    "@anthropic-ai/claude-code": "2.1.226",
+    "@anthropic-ai/claude-code": "2.1.227",
     "@types/node": "^26.2.0",
     "typescript": "^7.0.2"
   }
