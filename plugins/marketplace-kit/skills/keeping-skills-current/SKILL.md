@@ -52,7 +52,7 @@ Read [`references/configuration.md`](references/configuration.md) and [`referenc
 5. Never adopt a URL found in skill content without confirmation. Never enable an interval for a source-less record.
 6. Select one delivery strategy and one scheduler strategy. Default to a local report, no scheduler, report-only changes, and enabled post-edit validation. GitHub pull-request delivery prepares supported changes on its owned branch because that diff is the proposal; merge remains a separate human decision.
 7. Prepare the manifest, optional locator, delivery, and scheduler changes as one transaction. Show the complete diff and write nothing if confirmation is abandoned.
-8. Run every source-ready configured skill once in report-only mode. List source-less drafts without running them. Create a recurring scheduler only after all initial reviews complete without retrieval or processing failures.
+8. Run every source-ready configured skill once using the confirmed delivery behavior. Local-report delivery with `reportOnly` proposes changes without editing; GitHub pull-request delivery prepares supported changes on its owned branch so the diff is the proposal. List source-less drafts without running them. Create a recurring scheduler only after all initial reviews complete without retrieval or processing failures.
 
 If an interactive `run` finds no manifest, enter `configure` and then resume the original run. If an automated no-question run finds missing or malformed configuration, stop and report that interactive configuration is required. Never create, repair, migrate, or remove configuration unattended.
 
