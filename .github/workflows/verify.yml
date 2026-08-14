@@ -51,4 +51,4 @@ jobs:
         with:
           python-version: "3.11"
       - name: Run portable helper tests
-        run: python3 -m unittest discover -s tests -p 'test_keeping_skills_current.py'
+        run: python3 -m unittest discover -s tests -p 'test_keeping_skills_current_*.py'

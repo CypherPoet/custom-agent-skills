@@ -52,7 +52,7 @@ Read every contract linked for the selected action before acting. The references
 
 Follow the configuration contract for project discovery, enrollment, sources, defaults, and the complete configuration transaction. Follow the scheduling contract for scheduler selection and activation. Show the combined diff and require confirmation before writing anything.
 
-After confirmed configuration, run every source-ready skill once in report-only mode, list source-less drafts without running them, and activate a recurring scheduler only after every initial review completes without retrieval or processing failures. An interactive `run` with no manifest may enter `configure` and then resume; an automated no-question run must stop and request interactive configuration. Never create, repair, migrate, or remove configuration unattended.
+After confirmed configuration, run every source-ready skill once using the confirmed delivery behavior, list source-less drafts without running them, and activate a recurring scheduler only after every initial review completes without retrieval or processing failures. Local `reportOnly` delivery proposes changes without editing; GitHub pull-request delivery prepares supported changes on its owned branch so the diff is the proposal. An interactive `run` with no manifest may enter `configure` and then resume; an automated no-question run must stop and request interactive configuration. Never create, repair, migrate, or remove configuration unattended.
 
 ### Run
 

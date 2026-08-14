@@ -5,7 +5,7 @@ description: Use whenever the user is building or debugging anything in Google F
 
 # Google Filament Mastery
 
-*Distilled from the official [Filament documentation](https://google.github.io/filament/) and the `google/filament` source at tag **v1.72.0** (released 2026-06-17).*
+*Distilled from the official [Filament documentation](https://google.github.io/filament/) and the `google/filament` source at tag **v1.75.0** (released 2026-08-04).*
 
 Working knowledge of [Google Filament](https://github.com/google/filament) — a real-time **physically-based** rendering engine for C++ (desktop/iOS), the web (WebAssembly over WebGL2), and Android. Use this to write correct, idiomatic Filament code, author and compile materials, light scenes with real photometric units, load assets, and explain the rendering model — grounded in the docs, not training-data guesses.
 
@@ -23,7 +23,7 @@ Filament's concepts (PBR, lighting, materials, the render graph) are the same ev
 
 ## Reference Files
 
-Load only the rows the question touches — usually one or two files. Each reference is a dense, source-grounded cluster; signatures are quoted from the v1.72.0 headers/docs.
+Load only the rows the question touches — usually one or two files. Each reference is a dense, source-grounded cluster; signatures are quoted from the v1.75.0 headers/docs.
 
 | Asking about… | Read |
 |---|---|
@@ -73,7 +73,7 @@ Start at the **debugging checklist** in [`how-do-i.md`](references/how-do-i.md) 
 
 ## Accuracy Notes
 
-A few things the upstream v1.72.0 docs leave incomplete — don't fill them with guesses:
+A few things the upstream v1.75.0 docs leave incomplete — don't fill them with guesses:
 
 - The **subsurface** material model and **area lights** are `[TODO]` placeholders in the official docs; their properties are named but not fully specified, and there is no area-light `LightManager::Type`. Say so rather than inventing an API.
 - `matc`'s documented `--api` values are `opengl`, `vulkan`, `all` — the CLI docs don't list `metal` even though the engine renders with Metal (the `filamat` `TargetApi::ALL` covers it).

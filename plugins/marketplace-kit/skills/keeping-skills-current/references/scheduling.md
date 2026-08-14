@@ -31,7 +31,7 @@ For GitHub Actions, require the user to select the agent command and credential-
 During configuration:
 
 1. Save and validate the confirmed project configuration with `scheduler: "none"`.
-2. Run every source-ready skill once in report-only mode. Treat findings as successful research outcomes; treat retrieval and processing failures as blockers.
+2. Run every source-ready skill once using the confirmed delivery behavior. Local-report delivery with `reportOnly` proposes changes without editing; GitHub pull-request delivery prepares supported changes on its owned branch. Treat findings as successful research outcomes; treat retrieval and processing failures as blockers.
 3. Confirm that the scheduler environment can retrieve every configured source within its boundary and can durably deliver the report.
 4. For fresh-clone scheduling, require the manifest and optional locator to be committed and reachable from the cloned branch. Do not commit or publish configuration merely because configuration was requested.
 5. Create the uniquely marked scheduler after separate authorization.
