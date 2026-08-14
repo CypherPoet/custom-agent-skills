@@ -27,3 +27,12 @@ On Codex, add the same marketplace: `codex plugin marketplace add CypherPoet/cyp
 | [marketplace-publish-check](skills/marketplace-publish-check/SKILL.md) | Read-only check of whether the current branch's changes require a `marketplace-publish` (Claude or Codex catalog surface) — drives the PR label. | Yes |
 | [marketplace-sync-check](skills/marketplace-sync-check/SKILL.md) | Read-only audit of local `plugins/` against the published marketplace catalogs (Claude + Codex) and the local `docs/CATALOG.md`. | Yes |
 | [keeping-skills-current](skills/keeping-skills-current/SKILL.md) | Configure and run source-bounded reviews that report relevant corrections and improvements for project-owned skills. | No |
+
+### Keeping Skills Current
+
+The [`keeping-skills-current`](skills/keeping-skills-current/SKILL.md) skill reviews project-owned skills against sources configured in `.keeping-skills-current/manifest.json`. After [installing this plugin](#installation), run its read-only `status` action from the project root:
+
+- Claude Code: `/marketplace-kit:keeping-skills-current status`
+- Codex: `$keeping-skills-current status`
+
+Use `configure` to create or revise the project configuration, `run` to perform configured reviews, and `status` to inspect configuration and review state without retrieving sources or changing the project.
