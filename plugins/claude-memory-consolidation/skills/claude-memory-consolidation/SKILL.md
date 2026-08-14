@@ -35,12 +35,12 @@ If the memory directory doesn't exist, or exists but contains only an empty `MEM
 
 Read `MEMORY.md` and every memory file in the directory.
 
-For each memory file, parse the YAML frontmatter into `{name, description, type, file_path}` and keep the body text. Capture:
+For each memory file, parse the YAML frontmatter into `{name, description, type, modified, file_path}` and keep the body text. Preserve any additional frontmatter fields even when the audit doesn't use them. Capture:
 
 - Total file count, and a breakdown by `type` (`feedback`, `project`, `user`, `reference`).
-- `MEMORY.md` line count.
+- `MEMORY.md` line count and UTF-8 byte size.
 - Body length for each file (word count is fine).
-- Modification times — older files are more likely to have decayed.
+- Modification times — prefer the runtime-managed `modified` frontmatter timestamp when present, and fall back to the filesystem modification time. Older files are more likely to have decayed.
 
 Build a single in-memory inventory keyed by filename. Every subsequent check operates on this inventory rather than re-reading files. This baseline also drives the report's summary line.
 
@@ -110,11 +110,11 @@ For each file not in the index → 💡 candidate "add to MEMORY.md" with a prop
 
 ### 💡 Brevity pressure
 
-`MEMORY.md` is truncated after roughly 200 lines, so very long indexes start to silently lose entries. Long memory bodies also burn context when loaded.
+Claude Code loads the first 200 lines or 25 KB of `MEMORY.md`, whichever limit comes first, so an index can silently lose entries by either measure. Long memory bodies also burn context when loaded.
 
 Trigger this check when *any* of:
 
-- `MEMORY.md` is ≥ 150 lines (75% of the cap — strong nudge at 180+)
+- `MEMORY.md` is ≥ 150 lines or ≥ 18.75 KB (75% of either cap — strong nudge at 180+ lines or 22.5+ KB)
 - Any individual body is > 300 words
 - Total memory file count is > 50
 
@@ -134,7 +134,7 @@ Use this shape:
 ```
 # Memory Audit — <project name>
 
-**Inventory:** 47 memories (28 feedback, 14 project, 3 user, 2 reference)  •  MEMORY.md: 53 lines
+**Inventory:** 47 memories (28 feedback, 14 project, 3 user, 2 reference)  •  MEMORY.md: 53 lines / 8.4 KB
 
 **Summary:** 2 errors, 4 warnings, 3 suggestions
 
@@ -212,6 +212,7 @@ After applying, confirm what changed:
 - **When in doubt, leave it alone.** Borderline duplicates and ambiguous staleness should be flagged as 💡 suggestions, not 🟡 warnings. Two slightly-overlapping memories are cheaper than an incorrect merge.
 - **Historical context is legitimate.** A `reference` memory documenting a deprecated tool or a past pivot is not "stale" — it's a deliberate record. Only delete reference memories the user confirms are obsolete.
 - **Updates over deletes.** When merging, write a single consolidated memory that preserves every unique claim. Don't drop signal to shorten.
-- **Conservative brevity.** Don't surface brevity findings unless the directory has crossed the 150-line / 50-file / 300-word thresholds. The system tolerates 200 lines; consolidation pressure belongs in the upper half of that range.
+- **Preserve runtime metadata.** Keep all existing frontmatter fields during edits. Treat `modified` as runtime-owned: use it when judging currency, don't fabricate it, and let Claude Code update it when a memory is written.
+- **Conservative brevity.** Don't surface brevity findings unless the directory has crossed the 150-line / 18.75-KB / 50-file / 300-word thresholds. The system loads at most 200 lines or 25 KB, whichever comes first; consolidation pressure belongs in the upper quarter of either range.
 - **Respect user edits.** If the user asks to revise a proposal before applying ("edit 4"), use their version exactly — don't second-guess.
 - **One pass per invocation.** If the user wants another round after applying changes, they'll ask. Don't loop automatically.

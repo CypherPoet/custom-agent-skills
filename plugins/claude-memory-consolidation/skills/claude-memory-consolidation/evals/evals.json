@@ -21,6 +21,13 @@
       "prompt": "Set up the test fixtures first by running `python evals/setup_test_env.py`.\n\nThen handle this user request: \"My memory directory has some old reference memories about tools we've migrated away from. Can you audit /tmp/consolidate-memory-fixtures/historical-reference/memory/ and tell me if anything should be cleaned up? Working dir is /tmp/consolidate-memory-fixtures/historical-reference/project/.\"",
       "expected_output": "The skill detects that reference_legacy_playwright_flag.md mentions `playwright-cli` and `--full-page` which don't exist in the current project. However, the skill should NOT recommend deletion \u2014 it should explicitly note this is a `reference`-type memory whose own body declares it as historical context (not current guidance) for reading old PRs. The proposed action should be 'confirm with user before deletion' or 'keep \u2014 intentional historical record', not auto-delete. A naive cleanup that just sees a broken reference and recommends removal would be wrong here. The skill should NOT make any filesystem writes.",
       "files": []
+    },
+    {
+      "id": 4,
+      "name": "byte-limit-brevity-pressure",
+      "prompt": "Set up the test fixtures first by running `python evals/setup_test_env.py`.\n\nThen handle this user request: \"Audit the memory at /tmp/consolidate-memory-fixtures/byte-limit/memory/ for anything that needs consolidation. The working directory is /tmp/consolidate-memory-fixtures/byte-limit/project/. Show me the audit only; don't apply changes.\"",
+      "expected_output": "The skill should surface brevity pressure for MEMORY.md because its UTF-8 byte size exceeds 18.75 KB even though it has far fewer than 150 lines. It should identify the oversized index hook as the targeted condensation opportunity, explain that Claude Code loads only the first 200 lines or 25 KB (whichever comes first), and make no filesystem writes.",
+      "files": []
     }
   ]
 }

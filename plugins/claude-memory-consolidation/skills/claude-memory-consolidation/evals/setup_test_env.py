@@ -2,7 +2,7 @@
 """
 Set up test fixtures for the consolidate-memory skill evals.
 
-Materializes three fixture memory directories (with associated project
+Materializes four fixture memory directories (with associated project
 working directories) under /tmp/consolidate-memory-fixtures/, so the
 evals in evals.json can run against them on any machine.
 
@@ -19,6 +19,11 @@ BASE = Path("/tmp/consolidate-memory-fixtures")
 
 
 FIXTURES = {
+    'byte-limit': {
+        'memory/MEMORY.md': '# Memory Index\n\n- [feedback_oversized_hook.md](feedback_oversized_hook.md) — ' + ('Keep this index hook concise. ' * 760) + '\n',
+        'memory/feedback_oversized_hook.md': '---\nname: Oversized index hook\ndescription: Keep MEMORY.md hooks concise enough to remain inside Claude Code\'s read limits\ntype: feedback\nmodified: 2026-08-14T00:00:00Z\n---\n\nUse one concise line per MEMORY.md entry and keep detail in the topic file.\n',
+        'project/README.md': '# byte-limit-project\n\nA minimal project for testing MEMORY.md byte-limit pressure.\n',
+    },
     'healthy-small': {
         'memory/MEMORY.md': '# Memory Index\n\n- [feedback_clear_comments.md](feedback_clear_comments.md) — Default to no comments; explain why, not what\n- [user_role.md](user_role.md) — User is a backend engineer leading the data ingestion rewrite\n- [project_current_focus.md](project_current_focus.md) — Current focus is reducing p99 ingest latency before the May freeze\n- [reference_internal_docs.md](reference_internal_docs.md) — Architecture docs for the ingest pipeline live in Notion under "Ingest v3"\n',
         'memory/feedback_clear_comments.md': "---\nname: Default to no comments; explain why, not what\ndescription: Don't add comments that restate the code; only add one when the why is non-obvious\ntype: feedback\n---\n\nDefault to writing no comments. Add one only when the *why* is non-obvious — a hidden constraint, a workaround, behavior that would surprise a reader.\n\n**Why:** Comments that restate well-named code add noise and tend to drift out of sync.\n\n**How to apply:** Before adding a comment, check whether removing it would confuse a future reader. If not, skip it.\n",
