@@ -210,7 +210,7 @@
       "prompt": "What's the current stable release of Google Filament right now, and will the API guidance you give me match that release?",
       "expected_output": "The current stable Filament release is 1.75.0 (released 2026-08-04). Guidance should be framed as current to that release. (A stale answer naming a pre-2026 version like 1.5x is the failure mode.)",
       "assertions": [
-        "Identifies the current Filament release as 1.75.0 (the 1.72.x line), not a pre-2026 version such as 1.5x or 1.4x",
+        "Identifies the current Filament release as 1.75.0 (the 1.75.x line), not a pre-2026 version such as 1.5x or 1.4x",
         "Frames its API guidance as current to that release rather than to an unspecified/older version"
       ],
       "ground_truth": "Verified from GitHub releases: google/filament latest stable is v1.75.0, published 2026-08-04. (A model without this skill, training cutoff Jan 2026, cannot know 1.75.0 and will name an older release.)",
