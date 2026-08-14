@@ -46,19 +46,24 @@ class ConfigurationTests(KeepingSkillsCurrentTestCase):
         template = json.loads((SKILL_ROOT / "assets/manifest.template.json").read_text())
         self.configure(template)
         result = self.run_helper("preflight", "--project-root", str(self.project))
-        self.assertEqual(json.loads(result.stdout)["manifest"]["schemaVersion"], 1)
-        for kind, name in (
-            ("manifest", "manifest.schema.v1.json"),
-            ("research", "research-result.schema.v1.json"),
+        self.assertEqual(json.loads(result.stdout)["manifest"]["schemaVersion"], 2)
+        for kind, version, name in (
+            ("manifest", 1, "manifest.schema.v1.json"),
+            ("manifest", 2, "manifest.schema.v2.json"),
+            ("research", 1, "research-result.schema.v1.json"),
         ):
             checked = self.run_helper(
                 "schema",
                 "--kind",
                 kind,
+                "--version",
+                str(version),
                 "--check",
                 str(SKILL_ROOT / "assets" / name),
             )
-            self.assertEqual(json.loads(checked.stdout)["kind"], kind)
+            payload = json.loads(checked.stdout)
+            self.assertEqual(payload["kind"], kind)
+            self.assertEqual(payload["version"], version)
 
     def test_project_identity_uses_sanitized_git_origin(self):
         subprocess.run(
@@ -96,6 +101,18 @@ class ConfigurationTests(KeepingSkillsCurrentTestCase):
         unknown = manifest()
         unknown["unexpected"] = True
         cases.append((unknown, "unknown field"))
+        misplaced_strategy = manifest()
+        misplaced_strategy["correctionStrategy"] = "reportOnly"
+        cases.append((misplaced_strategy, "unknown field"))
+        github_strategy = manifest(
+            delivery={
+                "strategy": "githubPullRequest",
+                "branchName": "automation/keeping-skills-current",
+                "autoMergeStrategy": "none",
+                "correctionStrategy": "reportOnly",
+            }
+        )
+        cases.append((github_strategy, "match exactly one supported shape"))
         cases.append(
             (
                 manifest(

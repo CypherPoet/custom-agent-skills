@@ -1,5 +1,11 @@
 # One-Shot Legacy Migration
 
+## Manifest Version 1
+
+During interactive `configure`, run `migrate-manifest` without `--write`, show the complete version-2 proposal, and require confirmation. For local-report delivery, move the top-level `correctionStrategy` into `delivery`. For GitHub pull-request delivery, remove it because the branch diff is always the proposal. Preserve all other configuration, decisions, and review state; normal fingerprint comparison marks affected skills due without fabricating new review state. After confirmation, rerun with `--write`; a scheduled run must stop instead of migrating.
+
+## Retired Fact-Check Format
+
 Migrate `skill-fact-check` configuration interactively. Never support the old identity, manifest shape, datelines, branch, or scheduler after cutover.
 
 1. Refresh the live repository and open legacy pull requests. Preserve still-valid substantive corrections and runtime citations; omit obsolete session metadata and maintenance-only date edits.

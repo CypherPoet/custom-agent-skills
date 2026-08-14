@@ -49,14 +49,14 @@ def skill_record(schedule=None, sources=None):
 
 def manifest(skills=None, delivery=None):
     return {
-        "schemaVersion": 1,
+        "schemaVersion": 2,
         "scheduler": "none",
         "delivery": delivery
         or {
             "strategy": "localReport",
             "reportPath": ".keeping-skills-current/report.md",
+            "correctionStrategy": "reportOnly",
         },
-        "correctionStrategy": "reportOnly",
         "changeValidation": "enabled",
         "skills": skills or {},
     }
