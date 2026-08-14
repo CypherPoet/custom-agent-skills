@@ -1,5 +1,5 @@
 ---
-description: "Modernize test suites to use modern Swift Testing features or migrate from XCTest."
+description: Modernize test suites to use modern Swift Testing features or migrate from XCTest.
 name: test-modernizer
 ---
 # Test Modernizer

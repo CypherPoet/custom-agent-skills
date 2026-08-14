@@ -1,12 +1,6 @@
 ---
 name: catalog-refresh
-description: >
-  Regenerate docs/CATALOG.md's plugin table deterministically from the plugin
-  manifests, fixing missing, stale, or mis-counted rows. Use when the user asks
-  to refresh the local catalog, or after a plugin's name, description, or
-  component count changes. The write-capable counterpart to
-  marketplace-sync-check; touches only the local catalog table — never the
-  published marketplace, never commits.
+description: Regenerate docs/CATALOG.md's plugin table deterministically from the plugin manifests, fixing missing, stale, or mis-counted rows. Use when the user asks to refresh the local catalog, or after a plugin's name, description, or component count changes. The write-capable counterpart to marketplace-sync-check; touches only the local catalog table — never the published marketplace, never commits.
 ---
 
 # catalog-refresh

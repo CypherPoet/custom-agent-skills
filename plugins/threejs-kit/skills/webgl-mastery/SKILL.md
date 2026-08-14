@@ -1,13 +1,6 @@
 ---
 name: webgl-mastery
-description: >
-  Raw WebGL or GLSL without a higher-level framework — writing, debugging, or
-  optimizing WebGL1/2 pipelines and shaders. Trigger on GL pipeline APIs
-  (getContext('webgl2'), buffers/VAOs, framebuffers, draw calls), GLSL shader
-  code (gl_FragColor, uniform/varying, noise/SDF patterns), shader compile
-  errors, or "black canvas" debugging — even when "WebGL" is never named. For
-  app-level 3D (Three.js scene graph, loaders, post-processing), defer to
-  threejs-mastery.
+description: Raw WebGL or GLSL without a higher-level framework — writing, debugging, or optimizing WebGL1/2 pipelines and shaders. Trigger on GL pipeline APIs (getContext('webgl2'), buffers/VAOs, framebuffers, draw calls), GLSL shader code (gl_FragColor, uniform/varying, noise/SDF patterns), shader compile errors, or "black canvas" debugging — even when "WebGL" is never named. For app-level 3D (Three.js scene graph, loaders, post-processing), defer to threejs-mastery.
 ---
 
 # WebGL Fundamentals

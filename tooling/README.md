@@ -38,7 +38,7 @@ The package supplies checks that both source repositories share:
 - `auditPluginManifests(root)` discovers platform support, requires at least one manifest per plugin, checks each name against its directory, validates `major.minor.patch`, requires equal versions when both manifests exist, and rejects Codex `plugin-name:skill-name` identities longer than 64 characters. The identity uses the skill frontmatter `name`; Claude-only plugins are not subject to the Codex limit.
 - `synchronizeVendoredSkills(root, write)` validates and synchronizes declared skill copies.
 - `npm run versions:check` requires a fresh shared plugin version for shipped changes.
-- `npm run structure:check` checks skill size, links, reference indexes, and vendored-copy drift.
+- `npm run structure:check` checks skill size and relative Markdown links that would break in a standalone plugin installation.
 - `npm run validate:claude` invokes Claude Code's pinned official strict validator.
 
 These are repository invariants, not substitutes for platform schemas. Codex does not currently provide a stable repository validation command suitable for CI. The optional local `plugin-creator` scaffold preflight is non-authoritative release-review evidence, not a platform schema or repository gate.
@@ -70,4 +70,4 @@ npm run build
 npm test
 ```
 
-`npm run build:check` verifies that committed JavaScript and declarations match the TypeScript source. Version `0.3.0` removes the former fact-check manifest and `Primary Sources` coupling from structural validation. Tag the reviewed merge commit as `plugin-sync-v0.3.0`; downstream repositories should pin that immutable tag and its resolved commit.
+`npm run build:check` verifies that committed JavaScript and declarations match the TypeScript source. Version `0.4.0` narrows structural validation to skill size and links that would break in a standalone plugin installation; `sync:check` remains the sole vendored-copy drift gate. Tag the reviewed merge commit as `plugin-sync-v0.4.0`; downstream repositories should pin that immutable tag and its resolved commit.

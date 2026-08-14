@@ -1,13 +1,6 @@
 ---
 name: worktree-cleanup
-description: >
-  Use whenever the user asks to clean up stale branches AND worktrees, prune
-  old worktrees, remove leftover agent-created checkouts (e.g.
-  .claude-worktrees), or when a "clean gone branches" ask mentions worktrees —
-  "clean up my stale/outdated branches and worktrees", "prune old worktrees",
-  "tidy my checkouts". Extends gone-branch cleanup (e.g. /clean_gone) to the
-  worktrees attached to those branches: inventories candidates with their
-  risk, then removes only what the user approves, item by item.
+description: 'Use whenever the user asks to clean up stale branches AND worktrees, prune old worktrees, remove leftover agent-created checkouts (e.g. .claude-worktrees), or when a "clean gone branches" ask mentions worktrees — "clean up my stale/outdated branches and worktrees", "prune old worktrees", "tidy my checkouts". Extends gone-branch cleanup (e.g. /clean_gone) to the worktrees attached to those branches: inventories candidates with their risk, then removes only what the user approves, item by item.'
 ---
 
 # Worktree Cleanup

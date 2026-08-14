@@ -1,14 +1,6 @@
 ---
 name: excalidraw-mastery
-description: >
-  Use whenever the user is creating or editing Excalidraw diagrams or using the
-  Excalidraw library — authoring .excalidraw scene JSON, designing
-  flowchart/architecture/mind-map diagrams that read well, or embedding
-  @excalidraw/excalidraw in React (initialData, exports, Mermaid-to-Excalidraw).
-  Trigger on "make a diagram/flowchart", pasted Excalidraw JSON, or
-  .excalidraw/.excalidrawlib files — even when "Excalidraw" is never named but
-  an editable hand-drawn diagram is meant. For non-Excalidraw vector work use
-  svg-tools.
+description: Use whenever the user is creating or editing Excalidraw diagrams or using the Excalidraw library — authoring .excalidraw scene JSON, designing flowchart/architecture/mind-map diagrams that read well, or embedding @excalidraw/excalidraw in React (initialData, exports, Mermaid-to-Excalidraw). Trigger on "make a diagram/flowchart", pasted Excalidraw JSON, or .excalidraw/.excalidrawlib files — even when "Excalidraw" is never named but an editable hand-drawn diagram is meant. For non-Excalidraw vector work use svg-tools.
 ---
 
 # Excalidraw Mastery

@@ -1,13 +1,6 @@
 ---
 name: remote-branch-sync
-description: >
-  Use whenever the user asks to sync with the remote, pull in the latest,
-  get up to date with main/origin, refresh local branches, or catch a branch
-  up before continuing work — including terse asks like "sync with the
-  remote", "pull latest from main", "update my branch", or "get current".
-  Fetches with prune, fast-forwards what is safe, integrates the default
-  branch into feature work only when asked, and reports divergence instead
-  of guessing at a resolution.
+description: Use whenever the user asks to sync with the remote, pull in the latest, get up to date with main/origin, refresh local branches, or catch a branch up before continuing work — including terse asks like "sync with the remote", "pull latest from main", "update my branch", or "get current". Fetches with prune, fast-forwards what is safe, integrates the default branch into feature work only when asked, and reports divergence instead of guessing at a resolution.
 ---
 
 # Remote Branch Sync

@@ -1,5 +1,5 @@
 ---
-description: "Best practices and idiomatic patterns for SwiftUI. Use when writing, reviewing, or editing SwiftUI code."
+description: Best practices and idiomatic patterns for SwiftUI. Use when writing, reviewing, or editing SwiftUI code.
 name: swiftui-specialist
 ---
 

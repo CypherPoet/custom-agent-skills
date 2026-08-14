@@ -1,12 +1,6 @@
 ---
 name: marketplace-publish
-description: >
-  Publish one or more of this repo's plugins to its marketplace — both the
-  Claude Code and Codex catalogs in the marketplace repo — by opening a PR
-  there. Use to add a new plugin to the marketplace or update an already-listed
-  plugin's catalog entry (name, description, homepage, Codex category). Not
-  needed for ordinary content edits to a listed plugin — those reach consumers
-  automatically.
+description: Publish one or more of this repo's plugins to its marketplace — both the Claude Code and Codex catalogs in the marketplace repo — by opening a PR there. Use to add a new plugin to the marketplace or update an already-listed plugin's catalog entry (name, description, homepage, Codex category). Not needed for ordinary content edits to a listed plugin — those reach consumers automatically.
 disable-model-invocation: true
 ---
 

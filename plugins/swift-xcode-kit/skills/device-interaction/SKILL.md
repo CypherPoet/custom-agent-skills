@@ -1,5 +1,5 @@
 ---
-description: "Verify iOS app behavior on device or simulator via screenshots, UI hierarchy, and touch interactions."
+description: Verify iOS app behavior on device or simulator via screenshots, UI hierarchy, and touch interactions.
 name: device-interaction
 ---
 # Device Interaction

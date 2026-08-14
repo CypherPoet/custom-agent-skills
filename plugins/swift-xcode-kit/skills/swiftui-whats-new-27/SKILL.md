@@ -1,14 +1,5 @@
 ---
-description: >
-  New SwiftUI APIs, behaviors, and deprecations in the 2027 OS releases
-  (iOS/macOS/watchOS/tvOS/visionOS 27). Use when the user asks what's new in
-  SwiftUI; when code breaks after an SDK 27 update — especially @State compile
-  errors like "used before being initialized" or "invalid redeclaration of
-  synthesized property" (@State became a macro; the obvious reordering fix is
-  WRONG — consult the references first); or when adopting SDK 27 features:
-  drag-to-reorder and swipe actions in any container, AsyncImage caching and
-  request control, toolbar overflow/pinning/minimize-on-scroll, confirmation
-  dialogs and alerts from item bindings, and DocumentGroup document-based apps.
+description: 'New SwiftUI APIs, behaviors, and deprecations in the 2027 OS releases (iOS/macOS/watchOS/tvOS/visionOS 27). Use when the user asks what''s new in SwiftUI; when code breaks after an SDK 27 update — especially @State compile errors like "used before being initialized" or "invalid redeclaration of synthesized property" (@State became a macro; the obvious reordering fix is WRONG — consult the references first); or when adopting SDK 27 features: drag-to-reorder and swipe actions in any container, AsyncImage caching and request control, toolbar overflow/pinning/minimize-on-scroll, confirmation dialogs and alerts from item bindings, and DocumentGroup document-based apps.'
 name: swiftui-whats-new-27
 ---
 

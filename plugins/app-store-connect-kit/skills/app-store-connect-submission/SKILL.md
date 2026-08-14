@@ -1,16 +1,6 @@
 ---
 name: app-store-connect-submission
-description: >
-  Step-by-step playbook for submitting an Apple-platform app through App Store
-  Connect — the console mechanics from "built" to "Submitted for Review": app
-  records, agreements/tax/banking, App Information vs version pages, App
-  Privacy, pricing, attaching in-app purchases, archive delivery via Xcode or
-  Xcode Cloud, and sandbox testing. Also use to debug submission errors
-  ("Invalid bundle", greyed-out Xcode Cloud workflows, sandbox tester or
-  empty-paywall traps). Trigger on "submit/ship my app to the App Store" even
-  when App Store Connect is never named. For review-guideline compliance and ASO
-  use apple-app-store-best-practices; for screenshot specs,
-  apple-app-store-screenshots.
+description: 'Step-by-step playbook for submitting an Apple-platform app through App Store Connect — the console mechanics from "built" to "Submitted for Review": app records, agreements/tax/banking, App Information vs version pages, App Privacy, pricing, attaching in-app purchases, archive delivery via Xcode or Xcode Cloud, and sandbox testing. Also use to debug submission errors ("Invalid bundle", greyed-out Xcode Cloud workflows, sandbox tester or empty-paywall traps). Trigger on "submit/ship my app to the App Store" even when App Store Connect is never named. For review-guideline compliance and ASO use apple-app-store-best-practices; for screenshot specs, apple-app-store-screenshots.'
 ---
 
 # App Store Connect Submission

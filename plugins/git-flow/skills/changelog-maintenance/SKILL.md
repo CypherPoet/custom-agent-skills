@@ -1,12 +1,6 @@
 ---
 name: changelog-maintenance
-description: >
-  Use whenever the user wants to update a changelog, cut a release, write
-  release notes, document breaking changes, create a migration guide, or pick
-  the next version number — including any reference to CHANGELOG.md or "what
-  changed since the last release". Follows Keep a Changelog and Semantic
-  Versioning. For the user's own project changelog only — not for fetching
-  external release notes.
+description: Use whenever the user wants to update a changelog, cut a release, write release notes, document breaking changes, create a migration guide, or pick the next version number — including any reference to CHANGELOG.md or "what changed since the last release". Follows Keep a Changelog and Semantic Versioning. For the user's own project changelog only — not for fetching external release notes.
 ---
 
 # Changelog Maintenance

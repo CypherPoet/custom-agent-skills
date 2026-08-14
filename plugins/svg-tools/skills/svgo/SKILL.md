@@ -1,13 +1,6 @@
 ---
 name: svgo
-description: >
-  Use any time the user works with SVGO or needs SVGs smaller: shrinking,
-  minifying, or cleaning up SVG files; choosing or disabling plugins (prefixIds,
-  removeViewBox, multipass); writing svgo.config.mjs; wiring SVGO into a build
-  via CLI or the Node optimize() API; or fixing SVGO-caused breakage (wrong
-  gradients, lost hover states, viewBox/scaling loss, ID collisions). Skip for
-  raster formats, hand-editing SVG content, SVGR, and SVG hosting unrelated to
-  byte size.
+description: 'Use any time the user works with SVGO or needs SVGs smaller: shrinking, minifying, or cleaning up SVG files; choosing or disabling plugins (prefixIds, removeViewBox, multipass); writing svgo.config.mjs; wiring SVGO into a build via CLI or the Node optimize() API; or fixing SVGO-caused breakage (wrong gradients, lost hover states, viewBox/scaling loss, ID collisions). Skip for raster formats, hand-editing SVG content, SVGR, and SVG hosting unrelated to byte size.'
 ---
 
 # SVGO

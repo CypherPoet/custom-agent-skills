@@ -1,6 +1,6 @@
 {
   "name": "apple-app-icons",
-  "version": "0.7.1",
+  "version": "0.7.2",
   "description": "Apple app icons end to end: design one that converts in the App Store (tap-through, audit, A/B testing) and ship it correctly — Icon Composer Liquid Glass .icon with Xcode-generated compatibility artwork or an optional custom appiconset.",
   "author": {
     "name": "CypherPoet"
