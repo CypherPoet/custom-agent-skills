@@ -196,10 +196,10 @@
       "deferredFindings": [],
       "declinedFindings": [],
       "state": {
-        "lastAttemptedReview": "2026-08-14T00:20:27Z",
+        "lastAttemptedReview": "2026-08-14T16:11:04Z",
         "lastAttemptStatus": "completed",
-        "lastCompletedReview": "2026-08-14T00:20:27Z",
-        "inputFingerprint": "sha256:38c178de237b28e3042b4595fa0b8006d9cb29839af227c02ab46dcac3cc944a"
+        "lastCompletedReview": "2026-08-14T16:11:04Z",
+        "inputFingerprint": "sha256:cceb6a268861b2a5b2ea0885012528f14d9bb0fb0dadb5108fbf9b12245974be"
       }
     },
     "audit-xcode-security-settings": {
