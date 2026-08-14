@@ -22,7 +22,7 @@ Use one stable branch and at most one open pull request per project. Mark both a
 6. If work is selected, establish the stable branch in its isolated worktree. When the local branch is absent, create it from the fetched owned tip if that tip exists, or from the fetched default tip when no owned branch exists anywhere. Otherwise fast-forward a behind local branch to the fetched owned tip, preserve local-ahead commits as preexisting work, stop on divergence, and incorporate the fetched default without rewriting history or force-pushing.
 7. Repeat authoritative preflight and selection from the established branch before research. Treat human commits as preexisting work and do not automatically modify the same files during a no-question run.
 
-Commit each skill transaction separately, including its state and authorized edits or supporting artifacts. Build all commits locally, push once after the complete run, then update the pull-request body immediately. Never expose a half-reported remote run.
+Commit each skill transaction separately, including its state and authorized edits or supporting artifacts. Supported corrections and concrete improvements belong in the branch diff; the pull-request body explains that diff and records any findings that still need a human decision. Build all commits locally, push once after the complete run, then update the pull-request body immediately. Never expose a half-reported remote run.
 
 Make a completed review with corrections, suggestions, or human decisions ready for human review. Use draft status for an incomplete review or a temporary fallback report. A later run updates the existing branch and pull request rather than opening another.
 

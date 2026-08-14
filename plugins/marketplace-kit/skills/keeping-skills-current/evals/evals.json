@@ -5,7 +5,7 @@
       "id": 1,
       "eval_name": "configure-missing-manifest",
       "prompt": "Use $keeping-skills-current to review this project's configured skills. There is no manifest yet.",
-      "expected_output": "Enters the interactive configure flow, discovers project-owned skill candidates, defaults selected skills to manual and reportOnly, asks the user to confirm sources and delivery, shows the complete configuration diff, and resumes the original review only after successful configuration. It does not create a scheduler or configuration without confirmation.",
+      "expected_output": "Enters the interactive configure flow, discovers project-owned skill candidates, defaults selected skills to manual, asks the user to confirm sources and delivery, explains that GitHub pull-request delivery prepares supported changes on the owned branch while reportOnly prevents direct edits during local-report delivery, shows the complete configuration diff, and resumes the original review only after successful configuration. It does not create a scheduler or configuration without confirmation.",
       "files": []
     },
     {
