@@ -579,10 +579,10 @@
       "deferredFindings": [],
       "declinedFindings": [],
       "state": {
-        "lastAttemptedReview": "2026-08-13T09:38:24Z",
+        "lastAttemptedReview": "2026-08-14T00:20:27Z",
         "lastAttemptStatus": "completed",
-        "lastCompletedReview": "2026-08-13T09:38:24Z",
-        "inputFingerprint": "sha256:f2ea482fef44044fb389e3c87dac3d74c130d75464eae184c4e25378efcb4346"
+        "lastCompletedReview": "2026-08-14T00:20:27Z",
+        "inputFingerprint": "sha256:efa0b47b94ef8e1d96de79393a2019bdf1c60353636f354d3f44b0c21c206d4c"
       }
     },
     "obsidian-plugin-crafting": {
