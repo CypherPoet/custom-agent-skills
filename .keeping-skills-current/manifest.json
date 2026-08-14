@@ -404,10 +404,10 @@
       "deferredFindings": [],
       "declinedFindings": [],
       "state": {
-        "lastAttemptedReview": "2026-08-13T09:38:24Z",
+        "lastAttemptedReview": "2026-08-14T00:20:27Z",
         "lastAttemptStatus": "completed",
-        "lastCompletedReview": "2026-08-13T09:38:24Z",
-        "inputFingerprint": "sha256:6bbe45f64ff80f7f7bfafd26f03a5f362e738f79b3981d4de36f84c56c1943be"
+        "lastCompletedReview": "2026-08-14T00:20:27Z",
+        "inputFingerprint": "sha256:145f1c664e4d378fc8a0187a22bdf18f61b4326801ce2dbc892ac9b4df18c96b"
       }
     },
     "expo-snack-prototyper": {
