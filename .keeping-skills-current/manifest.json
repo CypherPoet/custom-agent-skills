@@ -38,10 +38,10 @@
       "deferredFindings": [],
       "declinedFindings": [],
       "state": {
-        "lastAttemptedReview": "2026-08-14T00:20:27Z",
+        "lastAttemptedReview": "2026-08-14T16:11:04Z",
         "lastAttemptStatus": "completed",
-        "lastCompletedReview": "2026-08-14T00:20:27Z",
-        "inputFingerprint": "sha256:64ef13b1943d409b11862df7d37d71c579dd7a1089d6decfa1be7a6dd51ff9ea"
+        "lastCompletedReview": "2026-08-14T16:11:04Z",
+        "inputFingerprint": "sha256:9f10e5becdc3fbda4c8b7b27f53bc48f6256c40338a09a161d6cb0601b0ebbcc"
       }
     },
     "apple-app-icons": {
