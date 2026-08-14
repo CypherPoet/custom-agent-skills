@@ -1,7 +1,7 @@
 # Material Properties Reference
 
-> Source: Filament — "Material Properties" notes (material_properties.md) + Materials.md, Filament v1.72.0
-> Last synced: 2026-06-19
+> Source: Filament — "Material Properties" notes (material_properties.md) + Materials.md, Filament v1.75.0
+> Last synced: 2026-08-14
 
 Exhaustive lookup table for every Filament material parameter: property name, GLSL type, value range, default, applicable shading model(s), and a one-line meaning. Defaults are left blank where the source does not state one — do not infer.
 

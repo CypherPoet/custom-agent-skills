@@ -1,14 +1,14 @@
 # Cross-Platform Matrix: C++ vs Web vs Android
 
-> Source: Synthesized from the platform references (platform-cpp / platform-web / platform-android), Filament v1.72.0
-> Last synced: 2026-06-19
+> Source: Synthesized from the platform references (platform-cpp / platform-web / platform-android), Filament v1.75.0
+> Last synced: 2026-08-14
 
 Filament's **rendering model is identical across bindings** — the same `Engine` → `Renderer` → `View` (+ `Scene`, `Camera`) graph, the same physical light units, the same compiled asset formats (`.filamat`, `.ktx`/`.ktx2`, `.filamesh`, glTF). What differs is the bootstrap, the surface/window, the frame driver, and the asset-loading helpers. Use this table to translate a snippet from one binding to another; load the matching `platform-*.md` for full code.
 
 | Concern | C++ (desktop/iOS) | Web (filament.js) | Android (Kotlin/Java) |
 |---|---|---|---|
 | Language | C++17 | JavaScript | Kotlin / Java |
-| Get the SDK | Prebuilt release archive, or build from source (`build.sh`) | `filament.js` + `filament.wasm` (npm / release) | Maven: `com.google.android.filament:filament-android:1.72.0` (+ `gltfio-android`, `filament-utils-android`, `filamat-android`) |
+| Get the SDK | Prebuilt release archive, or build from source (`build.sh`) | `filament.js` + `filament.wasm` (npm / release) | Maven: `com.google.android.filament:filament-android:1.75.0` (+ `gltfio-android`, `filament-utils-android`, `filamat-android`) |
 | One-time init | none | `Filament.init([asset urls], onReady)` — fetches assets, then runs your callback | `Filament.init()` (loads the native lib) |
 | Backend | `Engine::create(Backend::OPENGL\|VULKAN\|METAL)` | WebGL2 (or `Filament.initWebGPU`) | GLES/Vulkan, auto-selected |
 | Create Engine | `Engine::create(backend)` | `Filament.Engine.create(canvas)` | `Engine.create()` |
@@ -34,4 +34,4 @@ Filament's **rendering model is identical across bindings** — the same `Engine
 
 - **Android:** every Filament object you create must be explicitly destroyed through the `Engine`; there is no finalizer safety net, and leaking the `Engine` leaks native memory. Bundle Filament assets **uncompressed** in the APK (`noCompress` for `filamat`/`ktx`/`filamesh`) so they can be `mmap`/`openFd`'d.
 - **Web:** assets must be fetched before use — pass them to `Filament.init([...])` (or `Filament.fetch`) and only touch the engine in the `onReady` callback. Serve over HTTP (not `file://`) and respect CORS. Requires WebGL2.
-- **C++ / iOS:** the SwapChain's native-window pointer is platform-specific (CAMetalLayer on iOS/Metal, NSView on macOS, HWND on Windows). iOS ships via CocoaPods (`pod 'Filament', '~> 1.72.0'`) and uses the Metal backend; the render code is typically Objective-C++.
+- **C++ / iOS:** the SwapChain's native-window pointer is platform-specific (CAMetalLayer on iOS/Metal, NSView on macOS, HWND on Windows). iOS ships via CocoaPods (`pod 'Filament', '~> 1.75.0'`) and uses the Metal backend; the render code is typically Objective-C++.

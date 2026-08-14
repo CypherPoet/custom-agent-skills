@@ -1,7 +1,7 @@
 # Material Definition Language (.mat)
 
-> Source: Filament Materials — "Material definitions" + "Sampler usage" (Materials.md), Filament v1.72.0
-> Last synced: 2026-06-19
+> Source: Filament Materials — "Material definitions" + "Sampler usage" (Materials.md), Filament v1.75.0
+> Last synced: 2026-08-14
 
 A `.mat` material definition is a text file describing everything a material needs: name, user parameters, material model, required attributes, interpolants (called _variables_), raster state (blending mode, etc.), and shader code (fragment shader, optionally vertex shader). It is compiled into a `.filamat` package by the `matc` command-line tool.
 
@@ -619,12 +619,14 @@ Available in vertex and/or fragment blocks. Use the type aliases over raw GLSL t
 | `getWorldOffset()` | float3 | [deprecated] Shift to API-level world space; use `getUserWorldPosition()` |
 | `getUserWorldFromWorldMatrix()` | float4x4 | World space → API-level (user) world space |
 | `getTime()` | float | Current time as a remainder of 1 second (0–1) |
-| `getUserTime()` | float4 | Current time in seconds: `time`, `(double)time - time`, `0`, `0` |
+| `getUserTime()` | float4 | Current time as a float-float pair: `(float)time`, `time - (float)time`, `0`, `0` |
 | `getUserTimeMod(float m)` | float | Current time modulo m, in seconds |
 | `getExposure()` | float | Photometric exposure of the camera |
 | `getEV100()` | float | Exposure value at ISO 100 of the camera |
 
 > Filament's "world space" does not necessarily match API-level world space (precision shift). For the API-level camera, transform `getWorldCameraPosition()` with `getUserWorldFromWorldMatrix()`.
+
+`getUserTime()` splits a double-precision time value across its first two floats. Use both components with a float-float technique such as Dekker's algorithms when an animation needs more precision than `getUserTime().x` alone provides.
 
 ### Material globals
 

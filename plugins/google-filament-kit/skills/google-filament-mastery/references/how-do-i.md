@@ -1,7 +1,7 @@
 # How Do I…? Task Index & Gotchas
 
-> Source: Synthesized task index over the other references, Filament v1.72.0
-> Last synced: 2026-06-19
+> Source: Synthesized task index over the other references, Filament v1.75.0
+> Last synced: 2026-08-14
 
 A goal-oriented map: find the task, jump to the reference(s), and heed the gotcha that bites people first. "Engine API" tasks are binding-agnostic in shape — translate the calls with [`cross-platform-matrix.md`](cross-platform-matrix.md).
 
