@@ -1,7 +1,7 @@
 # PBR Shading Model
 
-> Source: Filament Core Concepts — "Material system" (Filament.md), Filament v1.72.0
-> Last synced: 2026-06-19
+> Source: Filament Core Concepts — "Material system" (Filament.md), Filament v1.75.0
+> Last synced: 2026-08-14
 
 **Contents:** [Notation](#notation) · [The standard surface model](#the-standard-surface-model) · [Microfacet theory](#microfacet-theory) · [Dielectrics vs conductors](#dielectrics-vs-conductors) · [Energy conservation](#energy-conservation) · [Specular BRDF (Cook-Torrance)](#specular-brdf-cook-torrance) · [D — Normal distribution (GGX)](#d--normal-distribution-ggx) · [G / V — Geometric shadowing (Smith-GGX)](#g--v--geometric-shadowing-smith-ggx) · [F — Fresnel (Schlick)](#f--fresnel-schlick) · [Diffuse BRDF (Lambert vs Disney)](#diffuse-brdf-lambert-vs-disney) · [Energy compensation (multiscattering)](#energy-compensation-multiscattering) · [Parameterization & remapping](#parameterization--remapping) · [Standard parameters and ranges](#standard-parameters-and-ranges) · [baseColor → diffuse / f0](#basecolor--diffuse--f0) · [reflectance → f0 (dielectrics)](#reflectance--f0-dielectrics) · [perceptualRoughness → roughness](#perceptualroughness--roughness) · [Authoring cheat sheet](#authoring-cheat-sheet) · [Extended models](#extended-models) · [Clear coat](#clear-coat) · [Anisotropic](#anisotropic) · [Subsurface](#subsurface) · [Cloth (sheen)](#cloth-sheen)
 
@@ -373,7 +373,7 @@ float  Vc = V_Kelemen(clearCoatRoughness, LoH);
 float  Fc = F_Schlick(0.04, LoH) * clearCoat;  // coat strength
 float Frc = (Dc * Vc) * Fc;
 // account for energy loss in the base layer:
-return color * ((Fd + Fr * (1.0 - Fc)) * (1.0 - Fc) + Frc);
+return color * ((Fd + Fr) * (1.0 - Fc) + Frc);
 ```
 
 **Base-layer f0 modification:** the base f0 normally assumes an air-material interface, but under a coat it's a coat-material interface. Recompute via the base IOR then a new f0 against the coat's IOR (1.5):

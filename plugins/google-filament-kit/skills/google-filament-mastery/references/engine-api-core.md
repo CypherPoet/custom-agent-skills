@@ -1,7 +1,7 @@
 # Engine API: Core Objects & Render Loop
 
-> Source: Filament C++ headers (Engine/SwapChain/Renderer/View/Scene/Camera) + repo README, Filament v1.72.0
-> Last synced: 2026-06-19
+> Source: Filament C++ headers (Engine/SwapChain/Renderer/View/Scene/Camera) + repo README, Filament v1.75.0
+> Last synced: 2026-08-14
 
 **Contents:** [Mental Model & Ownership](#mental-model--ownership) · [Minimal Setup + Render Loop](#minimal-setup--render-loop) · [Engine](#engine) · [Creating an Engine](#creating-an-engine) · [Engine::Config](#engineconfig) · [Factory Methods](#factory-methods) · [Destruction & Resource Tracking](#destruction--resource-tracking) · [Feature Levels](#feature-levels) · [Threading & Frame Pumping](#threading--frame-pumping) · [SwapChain](#swapchain) · [Renderer](#renderer) · [View](#view) · [Scene](#scene) · [Camera](#camera) · [Common Pitfalls](#common-pitfalls)
 
@@ -146,12 +146,13 @@ Passed to `Builder::config()` / `create(..., config)`. Controls memory footprint
 
 ```cpp
 struct Config {
+    static constexpr uint32_t SINGLE_THREADED = std::numeric_limits<uint32_t>::max();
     uint32_t commandBufferSizeMB        = 3;   // = minCommandBufferSizeMB * 3 (3 frames batched)
     uint32_t perRenderPassArenaSizeMB   = 3;   // main per-frame allocation arena (froxels, hi-level cmds)
     uint32_t driverHandleArenaSizeMB    = 0;   // 0 => platform default
     uint32_t minCommandBufferSizeMB     = 1;
     uint32_t perFrameCommandsSizeMB     = 2;   // ~ number of draw calls per frame
-    uint32_t jobSystemThreadCount       = 0;   // 0 => heuristic
+    uint32_t jobSystemThreadCount       = 0;   // 0 => heuristic; SINGLE_THREADED => caller thread
     size_t   metalUploadBufferSizeBytes = 512 * 1024;  // Metal only; 0 disables shared staging buffer
     bool     metalDisablePanicOnDrawableFailure = false;
     bool     disableParallelShaderCompile = false;     // deprecated -> feature flag
@@ -224,6 +225,7 @@ Note: post-processing (including MSAA) is disabled at `FEATURE_LEVEL_0` — valu
 
 - An `Engine` instance is **not thread-safe**. The implementation does not synchronize calls; if you call into it from multiple threads, you must synchronize externally.
 - On creation, the Engine starts a render thread plus multiple worker threads at elevated priority. Worker count is chosen automatically; on big.LITTLE it makes educated core-affinity guesses (e.g. keeps the GLES thread on a big core).
+- Set `Engine::Config::jobSystemThreadCount` to `Engine::Config::SINGLE_THREADED` to run jobs on the calling thread without a worker pool in CPU-constrained environments.
 - `render()` must run on the Engine's main thread (or be externally synchronized); calls to `render()` on different `Renderer`s must be synchronized.
 - `flushAndWait()` / `flushAndWait(timeout_ns)` — kick the hardware thread and block until all commands so far are executed (typically used right after destroying a SwapChain). `flush()` — kick without waiting.
 - `pumpMessageQueues()` — drain & run pending user callbacks immediately; call once per frame after vsync.
@@ -271,6 +273,8 @@ SwapChain::CONFIG_MSAA_4_SAMPLES       // 4x MSAA swap chain (needs isMSAASwapCh
 
 Capability checks (static, take `Engine&`): `isProtectedContentSupported(engine)`, `isSRGBSwapChainSupported(engine)`, `isMSAASwapChainSupported(engine, samples)` — all default to `false`.
 
+Frame-rate control is instance-specific: `isFrameRateChangeSupported()` returns a `utils::tribool` because a newly connected surface can be indeterminate, and `setFrameRate(frameRate, compatibility, strategy)` requests an intended rate. A rate of `0.0f` clears the request.
+
 Frame callbacks (Metal-centric): `setFrameScheduledCallback(handler, callback, flags)` (latched at `endFrame()`; lets the app schedule presentation via the supplied `PresentCallable` — on non-Metal backends the callable is a no-op), and `setFrameCompletedCallback(handler, callback)` (fires when GPU rendering of a frame completes — **only Metal**; other backends ignore it).
 
 ---
@@ -317,12 +321,13 @@ Other Renderer surface:
 - `setDisplayInfo(DisplayInfo)` — `{ float refreshRate=60.0f; ... }` (set refreshRate to 0 for offscreen / to disable frame-pacing) — needed for dynamic resolution + frame-pacing.
 - `setFrameRateOptions(FrameRateOptions)` — `{ float headRoomRatio=0; float scaleRate=1/8; uint8_t history=15; uint8_t interval=1; }`.
 - `skipFrame(vsyncTime)` / `skipNextFrames(n)` / `getFrameToSkipCount()` — skip frames when the scene is static.
-- `setVsyncTime(ns)`, `setPresentationTime(monotonic_clock_ns)` (between begin/end).
+- `setVsyncTime(ns)`, `setPresentationTime(...)`, `setDesiredPresentationTime(...)`, and `setRenderingDeadline(...)` configure frame timing before `endFrame()`; each presentation/deadline API accepts raw steady-clock nanoseconds or a `std::chrono::steady_clock::time_point`.
 - `copyFrame(dstSwapChain, dstViewport, srcViewport, flags)` — flags `COMMIT` / `SET_PRESENTATION_TIME` / `CLEAR`; call after `render()` before `endFrame()`.
 - `readPixels(...)` (SwapChain or a RenderTarget) — debug/testing; significant perf impact; within a frame.
 - `renderStandaloneView(view)` — renders a View into its associated RenderTarget *outside* begin/end (lower overhead; a poor-man's compute).
 - `getFrameInfoHistory(n)` / `getMaxFrameHistorySize()` — frame timing telemetry.
-- `getUserTime()` / `resetUserTime()` — seconds since last reset, exposed to materials as `getUserTime()`.
+- `getMaterialTime()` / `setMaterialTimeEpoch(...)` — the material clock and its steady-clock epoch. The deprecated `getUserTime()` / `resetUserTime()` C++ methods remain compatibility helpers; materials still read the encoded clock through the shader function `getUserTime()`.
+- `hasGpuFallenBehind()`, `setFrameScheduleTime(...)`, and `pauseRenderThread(duration_ns)` support manual pacing and latency testing.
 
 ---
 
@@ -363,14 +368,14 @@ void setColorGrading(ColorGrading* colorGrading) noexcept;   // nullptr => defau
 void setRenderQuality(RenderQuality const&) noexcept;
 void setDynamicResolutionOptions(DynamicResolutionOptions const&) noexcept;
 void setShadowingEnabled(bool) noexcept;                     // ON by default
-void setShadowType(ShadowType) noexcept;                     // experimental: VSM/DPCF/PCSS/...
+void setShadowType(ShadowType) noexcept;                     // PCF, VSM, or PCSS; DPCF is deprecated and falls back to PCSS
 void setStencilBufferEnabled(bool) noexcept;                 // needs CONFIG_HAS_STENCIL_BUFFER if no post-proc
 void setStereoscopicOptions(StereoscopicOptions const&) noexcept;
 ```
 
 Note: `setSampleCount(uint8_t)` / `getSampleCount()` are **deprecated** — use the MSAA options instead. The detailed semantics of bloom/DoF/vignette/color-grading and exposure are in `concepts-imaging-pipeline.md`.
 
-Visibility & misc: `setVisibleLayers(select, values)` / `setLayerEnabled(layer, enabled)` (8 layers; only layer 0 visible by default), `setFrontFaceWindingInverted(bool)`, `setDynamicLightingOptions(zLightNear, zLightFar)` (defaults 5m / 100m). Picking: the templated `pick(x, y, ...)` family enqueues a query resolved during the next `render()` (results arrive a couple frames later). Debug: `setFrustumCullingEnabled(bool)`, `setDebugCamera(Camera*)`, `setFroxelVizEnabled(bool)`. Temporal history: `clearFrameHistory(engine)` when switching Renderer or on a hard scene cut (avoids TAA/SSR ghosting).
+Visibility & misc: `setVisibleLayers(select, values)` / `setLayerEnabled(layer, enabled)` (8 layers; only layer 0 visible by default), `setFrontFaceWindingInverted(bool)`, `setDynamicLightingOptions(zLightNear, zLightFar)` (defaults 5m / 100m), and `getVisibleRenderableCount()` (returns the most recent rendered count, or `-1` before a valid render). Picking: the templated `pick(x, y, ...)` family enqueues a query resolved during the next `render()` (results arrive a couple frames later). Debug: `setFrustumCullingEnabled(bool)`, `setDebugCamera(Camera*)`, `setFroxelVizEnabled(bool)`. Temporal history: `clearFrameHistory(engine)` when switching Renderer or on a hard scene cut (avoids TAA/SSR ghosting).
 
 ---
 

@@ -106,7 +106,7 @@
       "id": 9,
       "eval_name": "android-render-setup",
       "prompt": "What's the canonical way to drive Filament rendering on Android in Kotlin, and how do I load a KTX environment as image-based lighting? Mention the dependency too.",
-      "expected_output": "Add the Maven deps (com.google.android.filament:filament-android, filament-utils-android, and gltfio-android as needed), call Filament.init(). Use a SurfaceView (or TextureView) with UiHelper + a RendererCallback to manage the SwapChain across surface changes, create Engine/Renderer/View/Scene/Camera, and drive frames from a Choreographer.FrameCallback calling renderer.beginFrame/render/endFrame. Load the IBL via KTX1Loader.createIndirectLight(engine, buffer) (and createSkybox) from filament-utils. Destroy every Filament object explicitly through the engine on teardown (no GC for native objects).",
+      "expected_output": "Add the Maven deps (com.google.android.filament:filament-android, filament-utils-android, and gltfio-android as needed), call Filament.init(). Use a SurfaceView (or TextureView) with UiHelper + a RendererCallback to manage the SwapChain across surface changes, create Engine/Renderer/View/Scene/Camera, and drive frames from a ChoreographerHelper calling renderer.beginFrame/render/endFrame. Load the IBL via KTX1Loader.createIndirectLight(engine, buffer) (and createSkybox) from filament-utils. Destroy every Filament object explicitly through the engine on teardown (no GC for native objects).",
       "files": [],
       "assertions": [
         "Uses UiHelper with a SurfaceView/TextureView to manage the SwapChain",
@@ -162,7 +162,7 @@
         "Obtains the TextureProvider via createStbProvider and/or createKtx2Provider (free functions)",
         "Passes the providers into AssetLoader/ResourceLoader rather than subclassing the provider interfaces"
       ],
-      "ground_truth": "Verified from gltfio headers (MaterialProvider.h, TextureProvider.h) at v1.72.0: providers come from FREE FUNCTIONS returning MaterialProvider*/TextureProvider* \u2014 createUbershaderProvider(Engine*, const void* archive, size_t), createJitShaderProvider(Engine*, ...), createStbProvider(Engine*), createKtx2Provider(Engine*). They are NOT classes you instantiate/subclass.",
+      "ground_truth": "Verified from gltfio headers (MaterialProvider.h, TextureProvider.h) at v1.75.0: providers come from FREE FUNCTIONS returning MaterialProvider*/TextureProvider* \u2014 createUbershaderProvider(Engine*, const void* archive, size_t), createJitShaderProvider(Engine*, ...), createStbProvider(Engine*), createKtx2Provider(Engine*). They are NOT classes you instantiate/subclass.",
       "files": []
     },
     {
@@ -175,7 +175,7 @@
         "States createSkybox returns a SkyboxBundle, accessed via .skybox",
         "Does not claim the methods return the IndirectLight/Skybox object directly"
       ],
-      "ground_truth": "Verified from KTX1Loader.kt (filament-utils-android) at v1.72.0: createIndirectLight(engine, buffer, options) -> IndirectLightBundle(indirectLight, cubemap); createSkybox(...) -> SkyboxBundle(skybox, cubemap); createTexture(...) -> Texture; getSphericalHarmonics(buffer) -> FloatArray?.",
+      "ground_truth": "Verified from KTX1Loader.kt (filament-utils-android) at v1.75.0: createIndirectLight(engine, buffer, options) -> IndirectLightBundle(indirectLight, cubemap); createSkybox(...) -> SkyboxBundle(skybox, cubemap); createTexture(...) -> Texture; getSphericalHarmonics(buffer) -> FloatArray?.",
       "files": []
     },
     {
@@ -188,7 +188,7 @@
         "Gives the correct value for a -1..1 mesh: center {0,0,0}, half-extent {1,1,1}",
         "Mentions Box::set(min, max) (or computeAABB / an engine-computed AABB) as the way to specify by corners"
       ],
-      "ground_truth": "Verified from Box.h at v1.72.0: 'An axis aligned 3D box represented by its center and half-extent.' float3 center; float3 halfExtent; getMin()=center-halfExtent; getMax()=center+halfExtent; Box& set(min, max) computes center=(max+min)/2, halfExtent=(max-min)/2. So brace-init {{...},{...}} is {center, halfExtent}, not corners.",
+      "ground_truth": "Verified from Box.h at v1.75.0: 'An axis aligned 3D box represented by its center and half-extent.' float3 center; float3 halfExtent; getMin()=center-halfExtent; getMax()=center+halfExtent; Box& set(min, max) computes center=(max+min)/2, halfExtent=(max-min)/2. So brace-init {{...},{...}} is {center, halfExtent}, not corners.",
       "files": []
     },
     {
@@ -201,19 +201,19 @@
         "Does NOT require explicit engine.execute() or beginFrame()/endFrame() each frame in the JS binding",
         "Correctly attributes the begin/execute/end cycle to the native C++ API, not the web binding"
       ],
-      "ground_truth": "Verified from the official filament.js triangle tutorial (web/examples/triangle.md) at v1.72.0: the render method is `this.renderer.render(this.swapChain, this.view); window.requestAnimationFrame(this.render);` \u2014 no engine.execute()/beginFrame()/endFrame() in the JS loop.",
+      "ground_truth": "Verified from the official filament.js triangle tutorial (web/examples/triangle.md) at v1.75.0: the render method is `this.renderer.render(this.swapChain, this.view); window.requestAnimationFrame(this.render);` \u2014 no engine.execute()/beginFrame()/endFrame() in the JS loop.",
       "files": []
     },
     {
       "id": 17,
       "eval_name": "current-version-currency",
       "prompt": "What's the current stable release of Google Filament right now, and will the API guidance you give me match that release?",
-      "expected_output": "The current stable Filament release is 1.72.0 (released 2026-06-17). Guidance should be framed as current to that release. (A stale answer naming a pre-2026 version like 1.5x is the failure mode.)",
+      "expected_output": "The current stable Filament release is 1.75.0 (released 2026-08-04). Guidance should be framed as current to that release. (A stale answer naming a pre-2026 version like 1.5x is the failure mode.)",
       "assertions": [
-        "Identifies the current Filament release as 1.72.0 (the 1.72.x line), not a pre-2026 version such as 1.5x or 1.4x",
+        "Identifies the current Filament release as 1.75.0 (the 1.75.x line), not a pre-2026 version such as 1.5x or 1.4x",
         "Frames its API guidance as current to that release rather than to an unspecified/older version"
       ],
-      "ground_truth": "Verified from GitHub releases: google/filament latest stable is v1.72.0, published 2026-06-17. (A model without this skill, training cutoff Jan 2026, cannot know 1.72.0 and will name an older release.)",
+      "ground_truth": "Verified from GitHub releases: google/filament latest stable is v1.75.0, published 2026-08-04. (A model without this skill, training cutoff Jan 2026, cannot know 1.75.0 and will name an older release.)",
       "files": []
     },
     {
@@ -226,7 +226,7 @@
         "Says to free the CPU buffer inside that callback, not immediately after the upload call",
         "Notes the callback can be a free function (e.g. stbi_image_free)"
       ],
-      "ground_truth": "Verified from VertexBuffer.h/backend BufferDescriptor and suzanne.cpp at v1.72.0: data is uploaded via a (Pixel)BufferDescriptor carrying a Callback invoked when the data has been consumed; suzanne.cpp passes `(Texture::PixelBufferDescriptor::Callback) &stbi_image_free`. Freeing right after the call is unsafe.",
+      "ground_truth": "Verified from VertexBuffer.h/backend BufferDescriptor and suzanne.cpp at v1.75.0: data is uploaded via a (Pixel)BufferDescriptor carrying a Callback invoked when the data has been consumed; suzanne.cpp passes `(Texture::PixelBufferDescriptor::Callback) &stbi_image_free`. Freeing right after the call is unsafe.",
       "files": []
     },
     {
@@ -239,7 +239,7 @@
         "States the default Skybox intensity is also 30000 (applies when no IndirectLight is set)",
         "States the unit is lux (lumen/m^2)"
       ],
-      "ground_truth": "Verified from IndirectLight.h (default = 30000, result in lux / lumen/m^2) and Skybox.h (envIntensity default = 30000 lux, ignored when an IndirectLight is set) at v1.72.0.",
+      "ground_truth": "Verified from IndirectLight.h (default = 30000, result in lux / lumen/m^2) and Skybox.h (envIntensity default = 30000 lux, ignored when an IndirectLight is set) at v1.75.0.",
       "files": []
     },
     {
@@ -251,7 +251,7 @@
         "States the default sunAngularRadius is 0.545 degrees",
         "States the valid range is 0.25 to 20.0 degrees"
       ],
-      "ground_truth": "Verified from LightManager.h at v1.72.0: 'Defines the angular radius of the sun, in degrees, between 0.25\u00b0 and 20.0\u00b0'; 'Default is 0.545\u00b0'; real sun angular size 0.526\u00b0\u20130.545\u00b0.",
+      "ground_truth": "Verified from LightManager.h at v1.75.0: 'Defines the angular radius of the sun, in degrees, between 0.25\u00b0 and 20.0\u00b0'; 'Default is 0.545\u00b0'; real sun angular size 0.526\u00b0\u20130.545\u00b0.",
       "files": []
     }
   ]

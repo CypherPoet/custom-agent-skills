@@ -61,6 +61,6 @@ Create a GitHub release whose **tag exactly matches `manifest.json` `version` (n
 
 ## Accuracy Notes
 
-- **Obsidian 1.13 features were marked "insider build" in the docs snapshot fetched 2026-07-23** — the declarative settings API and settings-window behavior may have since reached public release. When `minAppVersion` decisions hinge on it, check the [Obsidian changelog](https://obsidian.md/changelog/).
+- **Obsidian 1.13 is a public release** — its redesigned settings window and new settings API are available to public users. Set `minAppVersion` from the exact APIs a plugin uses, and check the [Obsidian changelog](https://obsidian.md/changelog/) before depending on later additions.
 - **`eslint-plugin-obsidianmd` is v0.4.1 here** (npm, 2026-07-02). The rule catalog grows between minor versions — when a rule id isn't in [`linting-and-review.md`](references/linting-and-review.md), trust the installed package's README over this corpus.
 - **The `obsidian` typings package is 1.13.1** (npm, 2026-06-09); the sample plugin pins `"obsidian": "latest"`.

@@ -1,9 +1,9 @@
 # Platform Setup: Android (Kotlin/Java)
 
-> Source: Filament android samples (Kotlin) + repo README + Maven guide, Filament v1.72.0
-> Last synced: 2026-06-19
+> Source: Filament android samples (Kotlin) + repo README + Maven guide, Filament v1.75.0
+> Last synced: 2026-08-14
 
-**Contents:** [Dependencies](#dependencies) · [Initialize Filament (`Filament.init()`)](#initialize-filament-filamentinit) · [Canonical Render Setup](#canonical-render-setup) · [Field declarations](#field-declarations) · [`onCreate` wiring](#oncreate-wiring) · [`UiHelper` + `SurfaceView`](#uihelper--surfaceview) · [Engine / Renderer / View / Scene / Camera](#engine--renderer--view--scene--camera) · [Configuring the View](#configuring-the-view) · [The `UiHelper.RendererCallback` (swap chain lifecycle)](#the-uihelperrenderercallback-swap-chain-lifecycle) · [The Frame Loop (`Choreographer` + `Renderer`)](#the-frame-loop-choreographer--renderer) · [Loading Assets from the APK](#loading-assets-from-the-apk) · [Reading a raw asset into a `ByteBuffer`](#reading-a-raw-asset-into-a-bytebuffer) · [Materials (`.filamat`) and material instances](#materials-filamat-and-material-instances) · [Image-based lighting (IBL / KTX)](#image-based-lighting-ibl--ktx) · [Meshes (`.filamesh`)](#meshes-filamesh) · [JNI / Lifetime: explicit destruction](#jni--lifetime-explicit-destruction) · [Kotlin vs Java](#kotlin-vs-java)
+**Contents:** [Dependencies](#dependencies) · [Initialize Filament (`Filament.init()`)](#initialize-filament-filamentinit) · [Canonical Render Setup](#canonical-render-setup) · [Field declarations](#field-declarations) · [`onCreate` wiring](#oncreate-wiring) · [`UiHelper` + `SurfaceView`](#uihelper--surfaceview) · [Engine / Renderer / View / Scene / Camera](#engine--renderer--view--scene--camera) · [Configuring the View](#configuring-the-view) · [The `UiHelper.RendererCallback` (swap chain lifecycle)](#the-uihelperrenderercallback-swap-chain-lifecycle) · [The Frame Loop (`ChoreographerHelper` + `Renderer`)](#the-frame-loop-choreographerhelper--renderer) · [Loading Assets from the APK](#loading-assets-from-the-apk) · [Reading a raw asset into a `ByteBuffer`](#reading-a-raw-asset-into-a-bytebuffer) · [Materials (`.filamat`) and material instances](#materials-filamat-and-material-instances) · [Image-based lighting (IBL / KTX)](#image-based-lighting-ibl--ktx) · [Meshes (`.filamesh`)](#meshes-filamesh) · [JNI / Lifetime: explicit destruction](#jni--lifetime-explicit-destruction) · [Kotlin vs Java](#kotlin-vs-java)
 
 ---
 
@@ -18,19 +18,19 @@ repositories {
 }
 
 dependencies {
-    implementation 'com.google.android.filament:filament-android:1.72.0'
+    implementation 'com.google.android.filament:filament-android:1.75.0'
 }
 ```
 
 All artifacts in the `com.google.android.filament` group (verbatim descriptions from the README):
 
-| Artifact | Coordinate (v1.72.0) | Description |
+| Artifact | Coordinate (v1.75.0) | Description |
 | --- | --- | --- |
-| `filament-android` | `com.google.android.filament:filament-android:1.72.0` | The Filament rendering engine itself. |
-| `filament-android-debug` | `com.google.android.filament:filament-android-debug:1.72.0` | Debug version of `filament-android`. |
-| `gltfio-android` | `com.google.android.filament:gltfio-android:1.72.0` | A glTF 2.0 loader for Filament, depends on `filament-android`. |
-| `filament-utils-android` | `com.google.android.filament:filament-utils-android:1.72.0` | KTX loading, Kotlin math, and camera utilities, depends on `gltfio-android`. |
-| `filamat-android` | `com.google.android.filament:filamat-android:1.72.0` | A runtime material builder/compiler. This library is large but contains a full shader compiler/validator/optimizer and supports both OpenGL and Vulkan. |
+| `filament-android` | `com.google.android.filament:filament-android:1.75.0` | The Filament rendering engine itself. |
+| `filament-android-debug` | `com.google.android.filament:filament-android-debug:1.75.0` | Debug version of `filament-android`. |
+| `gltfio-android` | `com.google.android.filament:gltfio-android:1.75.0` | A glTF 2.0 loader for Filament, depends on `filament-android`. |
+| `filament-utils-android` | `com.google.android.filament:filament-utils-android:1.75.0` | KTX loading, Kotlin math, and camera utilities, depends on `gltfio-android`. |
+| `filamat-android` | `com.google.android.filament:filamat-android:1.75.0` | A runtime material builder/compiler. This library is large but contains a full shader compiler/validator/optimizer and supports both OpenGL and Vulkan. |
 
 Notes:
 - The dependency chain is `filament-utils-android` → `gltfio-android` → `filament-android`. Pulling `filament-utils-android` transitively brings the loader and the engine.
@@ -75,9 +75,6 @@ private lateinit var surfaceView: SurfaceView
 private lateinit var uiHelper: UiHelper
 // DisplayHelper is provided by Filament to manage the display
 private lateinit var displayHelper: DisplayHelper
-// Choreographer is used to schedule new frames
-private lateinit var choreographer: Choreographer
-
 // Engine creates and destroys Filament resources
 // Each engine must be accessed from a single thread of your choosing
 // Resources cannot be shared across engines
@@ -103,10 +100,10 @@ private val frameScheduler = FrameCallback()
 Imports used across the samples (package `com.google.android.filament`):
 
 ```kotlin
-import android.view.Choreographer
 import android.view.Surface
 import android.view.SurfaceView
 import com.google.android.filament.*
+import com.google.android.filament.android.ChoreographerHelper
 import com.google.android.filament.android.DisplayHelper
 import com.google.android.filament.android.FilamentHelper
 import com.google.android.filament.android.UiHelper
@@ -122,8 +119,6 @@ override fun onCreate(savedInstanceState: Bundle?) {
 
     surfaceView = SurfaceView(this)
     setContentView(surfaceView)
-
-    choreographer = Choreographer.getInstance()
 
     displayHelper = DisplayHelper(this)
 
@@ -163,6 +158,7 @@ The simple samples create the engine with `Engine.create()`:
 private fun setupFilament() {
     engine = Engine.create()
     renderer = engine.createRenderer()
+    frameScheduler.setRenderer(renderer)
     scene = engine.createScene()
     view = engine.createView()
     camera = engine.createCamera(engine.entityManager.create())
@@ -181,6 +177,7 @@ private fun setupFilament() {
         .featureLevel(Engine.FeatureLevel.FEATURE_LEVEL_0)
         .build()
     renderer = engine.createRenderer()
+    frameScheduler.setRenderer(renderer)
     scene = engine.createScene()
     view = engine.createView()
     camera = engine.createCamera(engine.entityManager.create())
@@ -296,16 +293,13 @@ override fun onNativeWindowChanged(surface: Surface) {
 
 ---
 
-## The Frame Loop (`Choreographer` + `Renderer`)
+## The Frame Loop (`ChoreographerHelper` + `Renderer`)
 
-A `Choreographer.FrameCallback` re-posts itself every frame and drives `renderer.beginFrame` / `render` / `endFrame`. Identical across all three samples:
+The Android utility library's `ChoreographerHelper` schedules frames and uses the associated `Renderer` for pacing. Set the renderer once after creation, then implement `onFrame`:
 
 ```kotlin
-inner class FrameCallback : Choreographer.FrameCallback {
-    override fun doFrame(frameTimeNanos: Long) {
-        // Schedule the next frame
-        choreographer.postFrameCallback(this)
-
+inner class FrameCallback : ChoreographerHelper() {
+    override fun onFrame(frameTimeNanos: Long) {
         // This check guarantees that we have a swap chain
         if (uiHelper.isReadyToRender) {
             // If beginFrame() returns false you should skip the frame
@@ -319,18 +313,18 @@ inner class FrameCallback : Choreographer.FrameCallback {
 }
 ```
 
-Drive it from the Activity lifecycle — post in `onResume`, remove in `onPause` (and again in `onDestroy`):
+Drive it from the Activity lifecycle — call `post()` in `onResume` and `remove()` in `onPause` (and again in `onDestroy`):
 
 ```kotlin
 override fun onResume() {
     super.onResume()
-    choreographer.postFrameCallback(frameScheduler)
+    frameScheduler.post()
     animator.start()
 }
 
 override fun onPause() {
     super.onPause()
-    choreographer.removeFrameCallback(frameScheduler)
+    frameScheduler.remove()
     animator.cancel()
 }
 ```
@@ -338,7 +332,7 @@ override fun onPause() {
 Frame-loop rules from the samples' comments:
 - Guard every frame with `uiHelper.isReadyToRender` — this guarantees a swap chain exists before you dereference `swapChain!!`.
 - `renderer.beginFrame(swapChain, frameTimeNanos)` returns `false` when you're feeding the GPU too fast; **skip the frame** (don't call `render`/`endFrame`) when it does.
-- Always re-post the callback (`choreographer.postFrameCallback(this)`) at the top of `doFrame` to keep the loop alive.
+- `ChoreographerHelper` owns the repeated scheduling; do not manually re-post from `onFrame`.
 
 Animation in these samples is a plain `ValueAnimator` whose update listener mutates Filament state on the main thread — e.g. `engine.transformManager.setTransform(...)` (litcube/hellotriangle) or `camera.lookAt(...)` (ibl).
 
@@ -499,7 +493,7 @@ override fun onDestroy() {
     super.onDestroy()
 
     // Stop the animation and any pending frame
-    choreographer.removeFrameCallback(frameScheduler)
+    frameScheduler.remove()
     animator.cancel()
 
     // Always detach the surface before destroying the engine
@@ -556,7 +550,7 @@ The samples are Kotlin, but Filament's Android binding is a plain **Java/JNI API
 
 - Kotlin property access (`view.camera = camera`, `scene.skybox = ...`) becomes Java setters (`view.setCamera(camera)`, `scene.setSkybox(...)`).
 - Kotlin's `engine.entityManager` becomes `engine.getEntityManager()` in Java.
-- Builders, `Engine`, `EntityManager.get()`, the `UiHelper.RendererCallback` / `Choreographer.FrameCallback` interfaces, and all `engine.destroy*` calls are identical method names from Java.
+- Builders, `Engine`, `EntityManager.get()`, the `UiHelper.RendererCallback` / `ChoreographerHelper` interfaces, and all `engine.destroy*` calls are identical method names from Java.
 - `Filament.init()`, the JNI-lifetime rules, and the asset-loading patterns are language-agnostic — they apply identically to a Java `Activity`.
 
 The `filament-utils-android` "Kotlin math" types are a Kotlin convenience; the core engine API is usable from either language.

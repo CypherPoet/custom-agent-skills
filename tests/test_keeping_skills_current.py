@@ -155,7 +155,7 @@ class KeepingSkillsCurrentTests(unittest.TestCase):
     def test_run_procedure_validates_provisional_and_final_results(self):
         procedure = (SKILL_ROOT / "SKILL.md").read_text(encoding="utf-8")
         provisional = procedure.index("Validate the provisional object with")
-        apply_edits = procedure.index("Apply a correction only when")
+        apply_edits = procedure.index("Apply a correction or improvement suggestion only when")
         final = procedure.index("validate it again")
         render = procedure.index("Then render and publish the current report")
         self.assertLess(provisional, apply_edits)
@@ -263,7 +263,10 @@ class KeepingSkillsCurrentTests(unittest.TestCase):
     def provisional_fingerprint(self, result, result_path):
         provisional = copy.deepcopy(result)
         for finding in provisional["findings"]:
-            if finding["details"]["category"] == "correction":
+            if finding["details"]["category"] in {
+                "correction",
+                "improvementSuggestion",
+            }:
                 finding["editDisposition"] = "proposed"
         provisional["validation"] = {"status": "notApplicable", "checks": []}
         write_json(result_path, provisional)
@@ -542,6 +545,48 @@ class KeepingSkillsCurrentTests(unittest.TestCase):
         )
         self.assertEqual(mutation.returncode, 2)
         self.assertIn("requires Git before mutation", mutation.stderr)
+
+    def test_github_delivery_authorizes_changes_in_the_pull_request_diff(self):
+        configured = manifest(
+            {
+                "example": skill_record(
+                    sources={"example-documentation": source()},
+                )
+            },
+            delivery={
+                "strategy": "githubPullRequest",
+                "branchName": "automation/keeping-skills-current",
+                "autoMergeStrategy": "none",
+            }
+        )
+        self.configure(configured)
+        result_path = self.project / "result.json"
+        finding = self.correction_finding()
+        finding["details"]["category"] = "improvementSuggestion"
+        finding["details"]["summary"] = "The documented addition materially improves reliability."
+        finding["editDisposition"] = "applied"
+        result = self.valid_result(
+            findings=[finding],
+            validation={
+                "status": "passed",
+                "checks": [{"name": "skill integrity", "status": "passed"}],
+            },
+        )
+        provisional_fingerprint = self.provisional_fingerprint(result, result_path)
+        write_json(result_path, result)
+
+        accepted = self.run_helper(
+            "render-report",
+            "--project-root",
+            str(self.project),
+            "--input",
+            str(result_path),
+            "--validate-only",
+            "--provisional-fingerprint",
+            provisional_fingerprint,
+        )
+
+        self.assertTrue(json.loads(accepted.stdout)["valid"])
 
     def test_locator_override_and_redundant_default_are_supported(self):
         write_json(self.project / "configuration/review.json", manifest())
@@ -853,7 +898,7 @@ class KeepingSkillsCurrentTests(unittest.TestCase):
         )
 
         self.assertEqual(rejected.returncode, 2)
-        self.assertIn("provisional corrections require every configured source", rejected.stderr)
+        self.assertIn("provisional changes require every configured source", rejected.stderr)
 
     def test_final_correction_is_bound_to_the_validated_provisional_result(self):
         configured = self.configured_manifest()
@@ -882,7 +927,7 @@ class KeepingSkillsCurrentTests(unittest.TestCase):
         )
         self.assertEqual(missing_binding.returncode, 2)
         self.assertIn(
-            "applyHighConfidenceCorrections requires --provisional-fingerprint",
+            "edit-capable delivery requires --provisional-fingerprint",
             missing_binding.stderr,
         )
 
@@ -935,6 +980,38 @@ class KeepingSkillsCurrentTests(unittest.TestCase):
         )
         self.assertEqual(changed_finding.returncode, 2)
         self.assertIn("differs from the validated provisional result", changed_finding.stderr)
+
+    def test_final_improvement_can_be_applied_as_a_pull_request_change(self):
+        configured = self.configured_manifest()
+        configured["correctionStrategy"] = "applyHighConfidenceCorrections"
+        self.configure(configured)
+        result_path = self.project / "result.json"
+        finding = self.correction_finding()
+        finding["details"]["category"] = "improvementSuggestion"
+        finding["details"]["summary"] = "The documented addition materially improves reliability."
+        finding["editDisposition"] = "applied"
+        result = self.valid_result(
+            findings=[finding],
+            validation={
+                "status": "passed",
+                "checks": [{"name": "skill integrity", "status": "passed"}],
+            },
+        )
+        provisional_fingerprint = self.provisional_fingerprint(result, result_path)
+        write_json(result_path, result)
+
+        accepted = self.run_helper(
+            "render-report",
+            "--project-root",
+            str(self.project),
+            "--input",
+            str(result_path),
+            "--validate-only",
+            "--provisional-fingerprint",
+            provisional_fingerprint,
+        )
+
+        self.assertTrue(json.loads(accepted.stdout)["valid"])
 
     def test_render_report_rechecks_current_result_fingerprint(self):
         self.configured_manifest()

@@ -1,7 +1,7 @@
 # Tooling: CLI Tools, Debuggers & Performance
 
-> Source: Filament tool READMEs + library notes (cmgen/filamesh/mipgen/matinfo/specgen/matdbg/viewer/framegraph/debugging), Filament v1.72.0
-> Last synced: 2026-06-19
+> Source: Filament tool READMEs + library notes (cmgen/filamesh/mipgen/matinfo/specgen/matdbg/viewer/framegraph/debugging), Filament v1.75.0
+> Last synced: 2026-08-14
 
 **Contents:** [Asset & Material CLI Tools](#asset--material-cli-tools) · [matc — material compiler (cross-ref)](#matc--material-compiler-cross-ref) · [cmgen — IBL / cubemap & SH generation](#cmgen--ibl--cubemap--sh-generation) · [filamesh — mesh → .filamesh binary](#filamesh--mesh--filamesh-binary) · [mipgen — mipmap chains](#mipgen--mipmap-chains) · [matinfo — inspect a compiled .filamat](#matinfo--inspect-a-compiled-filamat) · [specgen — spectral integration matrices (dispersion)](#specgen--spectral-integration-matrices-dispersion) · [normal_blending — combine two normal maps](#normal_blending--combine-two-normal-maps) · [roughness_prefilter — prefilter a roughness map](#roughness_prefilter--prefilter-a-roughness-map) · [Inspect & Debug Libraries](#inspect--debug-libraries) · [matdbg — in-app material debugger web UI](#matdbg--in-app-material-debugger-web-ui) · [viewer — model viewer / gltf_viewer](#viewer--model-viewer--gltf_viewer) · [filamat — runtime material compilation (cross-ref)](#filamat--runtime-material-compilation-cross-ref) · [Performance & Backend Debugging](#performance--backend-debugging) · [FrameGraph](#framegraph) · [Performance analysis (Android / AGI)](#performance-analysis-android--agi) · [Metal debugging](#metal-debugging) · [Vulkan debugging](#vulkan-debugging)
 

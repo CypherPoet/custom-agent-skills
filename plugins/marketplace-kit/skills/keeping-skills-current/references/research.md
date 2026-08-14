@@ -47,9 +47,9 @@ If retrieved evidence says nothing relevant about part of the skill, do nothing:
 
 ## Structured Result
 
-Use the same `assets/research-result.schema.v1.json` contract in two passes. Before mutation, produce a provisional object and validate it with `render-report --validate-only --provisional` against the unchanged reviewed inputs. Keep unapplied corrections `proposed`, set validation to `notApplicable`, and include the current fingerprint. This pass must reject malformed source outcomes, evidence, findings, targets, proposed actions, or locators that do not occur in the target file before they can authorize an edit. A provisional result containing a correction cannot authorize mutation when any configured source or processing stage failed or the review status is incomplete.
+Use the same `assets/research-result.schema.v1.json` contract in two passes. Before mutation, produce a provisional object and validate it with `render-report --validate-only --provisional` against the unchanged reviewed inputs. Keep unapplied corrections and improvement suggestions `proposed`, set validation to `notApplicable`, and include the current fingerprint. This pass must reject malformed source outcomes, evidence, findings, targets, proposed actions, or locators that do not occur in the target file before they can authorize an edit. A provisional result containing a proposed change cannot authorize mutation when any configured source or processing stage failed or the review status is incomplete.
 
-The provisional command returns a `provisionalFingerprint` over the result fields that must remain fixed after mutation. When `correctionStrategy` is `applyHighConfidenceCorrections`, retain that value in ephemeral run state and pass it to the final command as `--provisional-fingerprint`. Do not persist it in the manifest or report.
+The provisional command returns a `provisionalFingerprint` over the result fields that must remain fixed after mutation. Retain that value whenever GitHub pull-request delivery or `applyHighConfidenceCorrections` authorizes edits, then pass it to the final command as `--provisional-fingerprint`. Do not persist it in the manifest or report.
 
 After edits and post-edit checks finish, update that object only with the final input fingerprint, edit dispositions, validation outcomes, and completed or incomplete status, then validate it again before report rendering or state changes. The final pass binds project and skill identity, review time, source outcomes, failures, finding details, and evidence to the validated provisional result; adding, removing, or materially changing any of them fails validation. Include:
 
@@ -63,13 +63,13 @@ Keep quoted evidence to the smallest excerpt that establishes the conclusion, no
 
 Calculate the final fingerprint after all authorized edits and validation finish, then put that exact value in the final structured result. Reject the result if files or fingerprinted configuration change before report rendering or state application. In report-only and no-edit runs, the provisional and final fingerprints are identical.
 
-Reject malformed or inconsistent output before mutation. In particular, reject completed results containing failed retrievals, evidence whose source IDs differ from the finding's source snapshots, cited sources without evidence, corrections without supporting configured sources, automatic improvement edits, identity edits, applied edits after any source or processing failure, aggregate validation that conceals a failed check, or applied edits when the project strategy is report-only.
+Reject malformed or inconsistent output before mutation. In particular, reject completed results containing failed retrievals, evidence whose source IDs differ from the finding's source snapshots, cited sources without evidence, proposed changes without supporting configured sources, identity edits, applied edits after any source or processing failure, aggregate validation that conceals a failed check, or applied edits when local-report delivery uses `reportOnly`.
 
 ## Edits and Validation
 
-Permit high-confidence correction edits only in regular UTF-8 functional files. Prohibit automatic edits to `name` or `description` frontmatter, assets, binary files, generated output, files outside the managed skill, vendored copies, and the currently executing `keeping-skills-current` copy.
+Permit high-confidence correction and improvement edits only in regular UTF-8 functional files. An improvement is editable only when the configured evidence establishes the concrete change, not merely a broad direction. Prohibit automatic edits to `name` or `description` frontmatter, assets, binary files, generated output, files outside the managed skill, vendored copies, and the currently executing `keeping-skills-current` copy.
 
-Apply all eligible corrections for one skill as a transaction. Track the exact updater changes separately from preexisting work. When validation is enabled:
+Apply all eligible changes for one skill as a transaction. Track the exact updater changes separately from preexisting work. When validation is enabled:
 
 - Confirm every changed path is authorized.
 - Confirm changed text remains UTF-8.
