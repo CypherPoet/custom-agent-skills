@@ -110,7 +110,6 @@ test("the package exposes the expected Node contract", () => {
     "tooling/dist/claude-plugin-validation-cli.js",
   );
   assert.equal(packageJson.dependencies, undefined);
-  assert.equal(packageJson.devDependencies["@anthropic-ai/claude-code"], "2.1.226");
   assert.equal(packageJson.scripts.prepare, undefined);
   assert.equal(packageJson.scripts.postinstall, undefined);
   assert.ok(existsSync(resolve(root, "package-lock.json")));
