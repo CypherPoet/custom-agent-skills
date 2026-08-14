@@ -65,6 +65,38 @@ class ConfigurationTests(KeepingSkillsCurrentTestCase):
             self.assertEqual(payload["kind"], kind)
             self.assertEqual(payload["version"], version)
 
+        for version in (1, 2):
+            schema = json.loads(
+                (SKILL_ROOT / f"assets/manifest.schema.v{version}.json").read_text()
+            )
+            skill_properties = schema["properties"]["skills"][
+                "additionalProperties"
+            ]["properties"]
+            for decision_array in ("deferredFindings", "declinedFindings"):
+                with self.subTest(version=version, decision_array=decision_array):
+                    self.assertIsInstance(skill_properties[decision_array], dict)
+                    self.assertEqual(skill_properties[decision_array]["type"], "array")
+                    self.assertIsInstance(skill_properties[decision_array]["items"], dict)
+
+    def test_schema_generation_rejects_explicit_unsupported_zero_version(self):
+        for kind in ("manifest", "research"):
+            with self.subTest(kind=kind):
+                output = self.project / f"{kind}.v0.json"
+                result = self.run_helper(
+                    "schema",
+                    "--kind",
+                    kind,
+                    "--version",
+                    "0",
+                    "--output",
+                    str(output),
+                    check=False,
+                )
+
+                self.assertEqual(result.returncode, 2)
+                self.assertIn(f"{kind} schema version 0 is not available", result.stderr)
+                self.assertFalse(output.exists())
+
     def test_project_identity_uses_sanitized_git_origin(self):
         subprocess.run(
             ["git", "init", "--initial-branch", "main"],

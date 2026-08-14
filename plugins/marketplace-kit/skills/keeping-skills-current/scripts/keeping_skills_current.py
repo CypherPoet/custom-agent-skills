@@ -1040,9 +1040,8 @@ def resolve_project_root(explicit: str | None) -> Path:
 def resolve_manifest_path(root: Path, explicit: str | None) -> tuple[str, tuple[str, ...]]:
     warnings: list[str] = []
     if explicit is not None:
-        return normalize_relative_path(explicit, root, "--manifest", ".json"), tuple(warnings)
-    locator = root / LOCATOR_PATH
-    if locator.exists():
+        relative_path = normalize_relative_path(explicit, root, "--manifest", ".json")
+    elif (locator := root / LOCATOR_PATH).exists():
         if locator.is_symlink() or not locator.is_file():
             raise ContractError(f"{LOCATOR_PATH} must be a regular file")
         try:
@@ -1052,11 +1051,18 @@ def resolve_manifest_path(root: Path, explicit: str | None) -> tuple[str, tuple[
         config = require_object(raw, LOCATOR_PATH)
         reject_unknown(config, {"manifestPath"}, LOCATOR_PATH)
         require_keys(config, {"manifestPath"}, LOCATOR_PATH)
-        path = normalize_relative_path(config["manifestPath"], root, "manifestPath", ".json")
-        if path == DEFAULT_MANIFEST_PATH:
+        relative_path = normalize_relative_path(
+            config["manifestPath"], root, "manifestPath", ".json"
+        )
+        if relative_path == DEFAULT_MANIFEST_PATH:
             warnings.append(f"{LOCATOR_PATH} redundantly points to the default manifest")
-        return path, tuple(warnings)
-    return DEFAULT_MANIFEST_PATH, tuple(warnings)
+    else:
+        relative_path = DEFAULT_MANIFEST_PATH
+    if relative_path != DEFAULT_MANIFEST_PATH and (root / DEFAULT_MANIFEST_PATH).exists():
+        warnings.append(
+            f"inactive default manifest exists at {DEFAULT_MANIFEST_PATH}; reconcile it interactively before automated mutation"
+        )
+    return relative_path, tuple(warnings)
 
 
 def read_manifest_document(root: Path, relative_path: str) -> Any:
@@ -1082,10 +1088,6 @@ def load_configuration(root_argument: str | None, manifest_argument: str | None)
         [skill["path"] for skill in manifest["skills"].values()],
         root,
     )
-    if relative_path != DEFAULT_MANIFEST_PATH and (root / DEFAULT_MANIFEST_PATH).exists():
-        warnings += (
-            f"inactive default manifest exists at {DEFAULT_MANIFEST_PATH}; reconcile it interactively before automated mutation",
-        )
     return ProjectConfiguration(root, path, relative_path, manifest, warnings)
 
 
@@ -1107,32 +1109,32 @@ def ordered(value: Any, order: Sequence[str] | None = None) -> Any:
     output: dict[str, Any] = {}
     for key in keys:
         child_order: Sequence[str] | None = None
-        if key == "skills":
+        if key == "skills" and order in {TOP_LEVEL_ORDER, LEGACY_TOP_LEVEL_ORDER}:
             output[key] = {
                 skill_id: ordered(value[key][skill_id], SKILL_ORDER)
                 for skill_id in sorted(value[key])
             }
             continue
-        if key == "sources":
+        if key == "sources" and order in {SKILL_ORDER, DETAILS_ORDER}:
             output[key] = {
                 source_id: ordered(value[key][source_id], SOURCE_ORDER)
                 for source_id in sorted(value[key])
             }
             continue
-        if key in {"deferredFindings", "declinedFindings"}:
+        if key in {"deferredFindings", "declinedFindings"} and order == SKILL_ORDER:
             output[key] = [ordered(item, DECISION_ORDER) for item in value[key]]
             continue
-        if key == "retrieval":
+        if key == "retrieval" and order == SOURCE_ORDER:
             child_order = RETRIEVAL_ORDER
-        elif key == "state":
+        elif key == "state" and order == SKILL_ORDER:
             child_order = STATE_ORDER
-        elif key == "delivery":
+        elif key == "delivery" and order in {TOP_LEVEL_ORDER, LEGACY_TOP_LEVEL_ORDER}:
             child_order = DELIVERY_ORDER
-        elif key == "schedule":
+        elif key == "schedule" and order == SKILL_ORDER:
             child_order = SCHEDULE_ORDER
-        elif key == "details":
+        elif key == "details" and order == DECISION_ORDER:
             child_order = DETAILS_ORDER
-        elif key == "target":
+        elif key == "target" and order == DETAILS_ORDER:
             child_order = TARGET_ORDER
         output[key] = ordered(value[key], child_order)
     return output
@@ -1310,8 +1312,8 @@ def project_identity(root: Path) -> str:
 
 def preflight_output(configuration: ProjectConfiguration, mutation: bool) -> dict[str, Any]:
     warnings = list(configuration.warnings)
-    if mutation and any(message.startswith("inactive default") for message in warnings):
-        raise ContractError(warnings[-1])
+    if mutation:
+        require_safe_manifest_mutation(warnings)
     capabilities: dict[str, Any] = {}
     delivery = configuration.manifest["delivery"]
     if delivery["strategy"] == "githubPullRequest":
@@ -1351,6 +1353,12 @@ def preflight_output(configuration: ProjectConfiguration, mutation: bool) -> dic
         "manifest": configuration.manifest,
         "skills": skills,
     }
+
+
+def require_safe_manifest_mutation(warnings: Sequence[str]) -> None:
+    for warning in warnings:
+        if warning.startswith("inactive default"):
+            raise ContractError(warning)
 
 
 def status_output(configuration: ProjectConfiguration, now: datetime_module.datetime) -> dict[str, Any]:
@@ -2389,10 +2397,16 @@ def main(arguments: Sequence[str] | None = None) -> int:
     try:
         if args.command == "schema":
             if args.kind == "manifest":
-                schema_version = args.version or MANIFEST_SCHEMA_VERSION
+                schema_version = (
+                    MANIFEST_SCHEMA_VERSION if args.version is None else args.version
+                )
                 schema_value = manifest_schema(schema_version)
             else:
-                schema_version = args.version or RESEARCH_RESULT_SCHEMA_VERSION
+                schema_version = (
+                    RESEARCH_RESULT_SCHEMA_VERSION
+                    if args.version is None
+                    else args.version
+                )
                 if schema_version != RESEARCH_RESULT_SCHEMA_VERSION:
                     raise ContractError(
                         f"research schema version {schema_version} is not available"
@@ -2434,6 +2448,7 @@ def main(arguments: Sequence[str] | None = None) -> int:
                 "write": args.write,
             }
             if args.write:
+                require_safe_manifest_mutation(warnings)
                 path = root / Path(*PurePosixPath(relative).parts)
                 atomic_write(path, pretty_json(proposal, TOP_LEVEL_ORDER))
                 validate_manifest(read_manifest_document(root, relative), root)

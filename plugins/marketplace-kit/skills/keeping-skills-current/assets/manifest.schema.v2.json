@@ -79,14 +79,387 @@
       "additionalProperties": {
         "additionalProperties": false,
         "properties": {
-          "declinedFindings": [
-            "type",
-            "items"
-          ],
-          "deferredFindings": [
-            "type",
-            "items"
-          ],
+          "declinedFindings": {
+            "items": {
+              "additionalProperties": false,
+              "properties": {
+                "decidedAt": {
+                  "format": "date-time",
+                  "type": "string"
+                },
+                "details": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "category": {
+                      "enum": [
+                        "correction",
+                        "improvementSuggestion",
+                        "humanDecision"
+                      ]
+                    },
+                    "proposedAction": {
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "sources": {
+                      "additionalProperties": {
+                        "additionalProperties": false,
+                        "properties": {
+                          "retrieval": {
+                            "oneOf": [
+                              {
+                                "additionalProperties": false,
+                                "properties": {
+                                  "strategy": {
+                                    "const": "page"
+                                  }
+                                },
+                                "required": [
+                                  "strategy"
+                                ],
+                                "type": "object"
+                              },
+                              {
+                                "additionalProperties": false,
+                                "properties": {
+                                  "excludePaths": {
+                                    "items": {
+                                      "pattern": "^/",
+                                      "type": "string"
+                                    },
+                                    "type": "array",
+                                    "uniqueItems": true
+                                  },
+                                  "includePaths": {
+                                    "items": {
+                                      "pattern": "^/",
+                                      "type": "string"
+                                    },
+                                    "minItems": 1,
+                                    "type": "array",
+                                    "uniqueItems": true
+                                  },
+                                  "maxDepth": {
+                                    "maximum": 5,
+                                    "minimum": 1,
+                                    "type": "integer"
+                                  },
+                                  "maxPages": {
+                                    "maximum": 100,
+                                    "minimum": 1,
+                                    "type": "integer"
+                                  },
+                                  "strategy": {
+                                    "const": "crawl"
+                                  }
+                                },
+                                "required": [
+                                  "strategy",
+                                  "includePaths",
+                                  "maxDepth",
+                                  "maxPages"
+                                ],
+                                "type": "object"
+                              }
+                            ]
+                          },
+                          "url": {
+                            "format": "uri",
+                            "pattern": "^https://",
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "url",
+                          "retrieval"
+                        ],
+                        "type": "object"
+                      },
+                      "minProperties": 1,
+                      "propertyNames": {
+                        "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+                      },
+                      "type": "object"
+                    },
+                    "summary": {
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "target": {
+                      "oneOf": [
+                        {
+                          "additionalProperties": false,
+                          "not": {
+                            "required": [
+                              "anchorText"
+                            ]
+                          },
+                          "properties": {
+                            "anchorText": {
+                              "minLength": 1,
+                              "type": "string"
+                            },
+                            "currentText": {
+                              "minLength": 1,
+                              "type": "string"
+                            },
+                            "filePath": {
+                              "minLength": 1,
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "filePath",
+                            "currentText"
+                          ],
+                          "type": "object"
+                        },
+                        {
+                          "additionalProperties": false,
+                          "not": {
+                            "required": [
+                              "currentText"
+                            ]
+                          },
+                          "properties": {
+                            "anchorText": {
+                              "minLength": 1,
+                              "type": "string"
+                            },
+                            "currentText": {
+                              "minLength": 1,
+                              "type": "string"
+                            },
+                            "filePath": {
+                              "minLength": 1,
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "filePath",
+                            "anchorText"
+                          ],
+                          "type": "object"
+                        }
+                      ]
+                    }
+                  },
+                  "required": [
+                    "category",
+                    "summary",
+                    "target",
+                    "sources",
+                    "proposedAction"
+                  ],
+                  "type": "object"
+                },
+                "reason": {
+                  "minLength": 1,
+                  "type": "string"
+                }
+              },
+              "required": [
+                "details",
+                "reason",
+                "decidedAt"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "deferredFindings": {
+            "items": {
+              "additionalProperties": false,
+              "properties": {
+                "decidedAt": {
+                  "format": "date-time",
+                  "type": "string"
+                },
+                "details": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "category": {
+                      "enum": [
+                        "correction",
+                        "improvementSuggestion",
+                        "humanDecision"
+                      ]
+                    },
+                    "proposedAction": {
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "sources": {
+                      "additionalProperties": {
+                        "additionalProperties": false,
+                        "properties": {
+                          "retrieval": {
+                            "oneOf": [
+                              {
+                                "additionalProperties": false,
+                                "properties": {
+                                  "strategy": {
+                                    "const": "page"
+                                  }
+                                },
+                                "required": [
+                                  "strategy"
+                                ],
+                                "type": "object"
+                              },
+                              {
+                                "additionalProperties": false,
+                                "properties": {
+                                  "excludePaths": {
+                                    "items": {
+                                      "pattern": "^/",
+                                      "type": "string"
+                                    },
+                                    "type": "array",
+                                    "uniqueItems": true
+                                  },
+                                  "includePaths": {
+                                    "items": {
+                                      "pattern": "^/",
+                                      "type": "string"
+                                    },
+                                    "minItems": 1,
+                                    "type": "array",
+                                    "uniqueItems": true
+                                  },
+                                  "maxDepth": {
+                                    "maximum": 5,
+                                    "minimum": 1,
+                                    "type": "integer"
+                                  },
+                                  "maxPages": {
+                                    "maximum": 100,
+                                    "minimum": 1,
+                                    "type": "integer"
+                                  },
+                                  "strategy": {
+                                    "const": "crawl"
+                                  }
+                                },
+                                "required": [
+                                  "strategy",
+                                  "includePaths",
+                                  "maxDepth",
+                                  "maxPages"
+                                ],
+                                "type": "object"
+                              }
+                            ]
+                          },
+                          "url": {
+                            "format": "uri",
+                            "pattern": "^https://",
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "url",
+                          "retrieval"
+                        ],
+                        "type": "object"
+                      },
+                      "minProperties": 1,
+                      "propertyNames": {
+                        "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+                      },
+                      "type": "object"
+                    },
+                    "summary": {
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "target": {
+                      "oneOf": [
+                        {
+                          "additionalProperties": false,
+                          "not": {
+                            "required": [
+                              "anchorText"
+                            ]
+                          },
+                          "properties": {
+                            "anchorText": {
+                              "minLength": 1,
+                              "type": "string"
+                            },
+                            "currentText": {
+                              "minLength": 1,
+                              "type": "string"
+                            },
+                            "filePath": {
+                              "minLength": 1,
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "filePath",
+                            "currentText"
+                          ],
+                          "type": "object"
+                        },
+                        {
+                          "additionalProperties": false,
+                          "not": {
+                            "required": [
+                              "currentText"
+                            ]
+                          },
+                          "properties": {
+                            "anchorText": {
+                              "minLength": 1,
+                              "type": "string"
+                            },
+                            "currentText": {
+                              "minLength": 1,
+                              "type": "string"
+                            },
+                            "filePath": {
+                              "minLength": 1,
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "filePath",
+                            "anchorText"
+                          ],
+                          "type": "object"
+                        }
+                      ]
+                    }
+                  },
+                  "required": [
+                    "category",
+                    "summary",
+                    "target",
+                    "sources",
+                    "proposedAction"
+                  ],
+                  "type": "object"
+                },
+                "reason": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "revisitAfter": {
+                  "format": "date-time",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "details",
+                "reason",
+                "decidedAt",
+                "revisitAfter"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          },
           "path": {
             "minLength": 1,
             "type": "string"
