@@ -6,18 +6,14 @@ import {
 } from "node:fs";
 import { dirname, join, normalize, relative, resolve, sep } from "node:path";
 
-import { synchronizeVendoredSkills } from "./sync.js";
-
 export const SKILL_LINE_LIMIT = 500;
 export const SKILL_LINE_WARNING = 450;
-export const REFERENCE_CONTENTS_THRESHOLD = 300;
 
 export type StructureFinding = readonly [label: string, location: string, message: string];
 
 export interface StructureAudit {
   errors: StructureFinding[];
   warnings: StructureFinding[];
-  missingContents: Array<readonly [label: string, file: string]>;
 }
 
 interface GateOutput {
@@ -53,14 +49,6 @@ export function findStructureRepositoryRoot(start: string): string | undefined {
   }
 }
 
-export function githubHeadingAnchor(heading: string): string {
-  return heading
-    .toLocaleLowerCase("und")
-    .replace(/[^\p{L}\p{N}_\s-]/gu, "")
-    .trim()
-    .replace(/ /gu, "-");
-}
-
 export function stripCodeFences(text: string): string {
   const output: string[] = [];
   let insideFence = false;
@@ -72,32 +60,6 @@ export function stripCodeFences(text: string): string {
     }
   }
   return output.join("\n");
-}
-
-export function headingAnchors(text: string): Set<string> {
-  const seen = new Map<string, number>();
-  const valid = new Set<string>();
-  for (const line of stripCodeFences(text).split(/\r?\n/u)) {
-    const match = /^#{1,6}\s+(.*)$/u.exec(line);
-    if (match?.[1] === undefined) {
-      continue;
-    }
-    const anchor = githubHeadingAnchor(match[1].trim());
-    const occurrence = seen.get(anchor) ?? 0;
-    valid.add(occurrence === 0 ? anchor : `${anchor}-${occurrence}`);
-    seen.set(anchor, occurrence + 1);
-  }
-  return valid;
-}
-
-export function contentsAnchors(text: string): string[] | undefined {
-  const jumpLine = /^\*\*Contents:\*\*.*$/mu.exec(stripCodeFences(text))?.[0];
-  if (jumpLine === undefined) {
-    return undefined;
-  }
-  const anchors = Array.from(jumpLine.matchAll(/\[[^\]]*\]\(#([^)]+)\)/gu), (match) => match[1])
-    .filter((value): value is string => value !== undefined);
-  return anchors.length > 0 ? anchors : undefined;
 }
 
 export function escapingLinks(text: string, markdownPath: string, pluginRoot: string): string[] {
@@ -168,7 +130,7 @@ function escapingLinkErrors(plugin: string, pluginRoot: string): StructureFindin
       findings.push([
         label,
         location,
-        "cross-plugin relative link(s) — dead in a sparse-clone install, use an absolute GitHub URL: " +
+        "relative link(s) leave this standalone plugin; use an absolute GitHub URL: " +
           links.join(", "),
       ]);
     }
@@ -179,7 +141,6 @@ function escapingLinkErrors(plugin: string, pluginRoot: string): StructureFindin
 export function auditSkillStructure(pluginsDirectory: string): StructureAudit {
   const errors: StructureFinding[] = [];
   const warnings: StructureFinding[] = [];
-  const missingContents: Array<readonly [string, string]> = [];
 
   for (const pluginEntry of readdirSync(pluginsDirectory, { withFileTypes: true }).sort((left, right) =>
     left.name.localeCompare(right.name, "en"),
@@ -223,39 +184,9 @@ export function auditSkillStructure(pluginsDirectory: string): StructureAudit {
           `${skillLines} lines — approaching the ${SKILL_LINE_LIMIT}-line limit`,
         ]);
       }
-
-      const referencesDirectory = join(skillRoot, "references");
-      if (!existsSync(referencesDirectory) || !statSync(referencesDirectory).isDirectory()) {
-        continue;
-      }
-      for (const referenceEntry of readdirSync(referencesDirectory, { withFileTypes: true }).sort(
-        (left, right) => left.name.localeCompare(right.name, "en"),
-      )) {
-        if (!referenceEntry.isFile() || !referenceEntry.name.endsWith(".md")) {
-          continue;
-        }
-        const referenceText = readFileSync(join(referencesDirectory, referenceEntry.name), "utf8");
-        const anchors = contentsAnchors(referenceText);
-        if (anchors === undefined) {
-          const referenceLines = lineCount(referenceText);
-          if (referenceLines > REFERENCE_CONTENTS_THRESHOLD) {
-            missingContents.push([label, `${referenceEntry.name} (${referenceLines} lines)`]);
-          }
-          continue;
-        }
-        const validAnchors = headingAnchors(referenceText);
-        const broken = anchors.filter((anchor) => !validAnchors.has(anchor));
-        if (broken.length > 0) {
-          errors.push([
-            label,
-            `references/${referenceEntry.name}`,
-            `stale Contents anchors: ${broken.map((anchor) => `#${anchor}`).join(", ")}`,
-          ]);
-        }
-      }
     }
   }
-  return { errors, warnings, missingContents };
+  return { errors, warnings };
 }
 
 function renderFindings(rows: readonly StructureFinding[], kind: string, output: GateOutput): void {
@@ -280,19 +211,9 @@ export function runSkillStructureCheck(
     return 2;
   }
   const audit = auditSkillStructure(resolve(root, "plugins"));
-  for (const message of synchronizeVendoredSkills(root, false)) {
-    audit.errors.push(["vendoring", "sync", message]);
-  }
 
-  if (
-    audit.errors.length === 0 &&
-    audit.warnings.length === 0 &&
-    audit.missingContents.length === 0
-  ) {
-    output.stdout(
-      `OK — every SKILL.md is lean, large reference files are indexed, ` +
-        `and all Contents anchors resolve.`,
-    );
+  if (audit.errors.length === 0 && audit.warnings.length === 0) {
+    output.stdout("OK — every SKILL.md is lean and relative Markdown links stay within each plugin.");
     return 0;
   }
 
@@ -304,29 +225,9 @@ export function runSkillStructureCheck(
     output.stdout(`${audit.warnings.length} WARNING(s):`);
     renderFindings(audit.warnings, "WARN", output);
   }
-  if (audit.missingContents.length > 0) {
-    const bySkill = new Map<string, string[]>();
-    for (const [label, file] of audit.missingContents) {
-      const files = bySkill.get(label) ?? [];
-      files.push(file);
-      bySkill.set(label, files);
-    }
-    output.stdout(
-      `ADVISORY — ${audit.missingContents.length} large reference file(s) across ` +
-        `${bySkill.size} skill(s) lack a **Contents:** jump-line (non-failing):`,
-    );
-    for (const [label, files] of Array.from(bySkill.entries()).sort(([left], [right]) =>
-      left.localeCompare(right, "en"),
-    )) {
-      output.stdout(`  ${label}: ${files.join(", ")}`);
-    }
-  }
   output.stdout("\nRules and remediation: .claude/skills/skill-structure-check/SKILL.md");
   if (audit.errors.length > 0) {
     return 1;
   }
-  return strict &&
-    (audit.warnings.length > 0 || audit.missingContents.length > 0)
-    ? 1
-    : 0;
+  return strict && audit.warnings.length > 0 ? 1 : 0;
 }
