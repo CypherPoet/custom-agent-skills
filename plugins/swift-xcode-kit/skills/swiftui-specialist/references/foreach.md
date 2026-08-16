@@ -16,7 +16,7 @@ The rule of thumb: the identity of a `ForEach` element must be **stable** (the s
 |---|---|
 | [Applies to other data-driven initializers](#applies-to-other-data-driven-initializers) | Identity requirements shared by other collection-driven SwiftUI initializers |
 | [Avoid collection indices as identity](#avoid-collection-indices-as-identity) | Using a collection's indices, or `.self` on an index, as the identifier is the most common anti-pattern |
-| [Don't create a new id on every body evaluation](#dont-create-a-new-id-on-every-body-evaluation) | An `Identifiable` type whose `id` is generated fresh each time `body` runs looks like it has identity |
+| [Don't create a new id on every body evaluation](#dont-create-a-new-id-on-every-body-evaluation) | Regenerated IDs make SwiftUI replace the collection on every `body` evaluation, resetting state and animations; store durable model identity |
 | [Prefer `Identifiable` conformance](#prefer-identifiable-conformance) | When element-level `Identifiable` conformance is preferable to an explicit `id` key path |
 | [Keep the id cheap to hash](#keep-the-id-cheap-to-hash) | `ForEach` hashes and compares element ids frequently - on every diff |
 | [Identity must outlive the view that renders the `ForEach`](#identity-must-outlive-the-view-that-renders-the-foreach) | `ForEach` assumes that an element's identity is stable for at least as long as the view rendering the `ForEach` is on screen |

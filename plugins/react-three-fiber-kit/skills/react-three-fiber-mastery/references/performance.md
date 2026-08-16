@@ -8,7 +8,7 @@ The pitfalls doctrine from the official R3F docs plus the scaling toolbox: on-de
 
 | Section | Covers |
 |---|---|
-| [The Eight Pitfalls](#the-eight-pitfalls) | Two cost models drive every rule: (a) creating three.js objects is expensive |
+| [The Eight Pitfalls](#the-eight-pitfalls) | Expensive object creation and per-frame work multiplied by refresh rate, with rules for sharing, state, deltas, mounting, allocation, and loader caching |
 | [On-Demand Rendering](#on-demand-rendering) | Scenes that only change on interaction should not render 60 times per second |
 | [Instancing and the Draw-Call Budget](#instancing-and-the-draw-call-budget) | Budget heuristic: ~1000 draw calls is where most scenes start sagging — well before triangle count matters on modern GPUs |
 | [Level of Detail](#level-of-detail) | Swap geometry complexity by camera distance with drei `<Detailed>` (wraps `THREE.LOD`) |

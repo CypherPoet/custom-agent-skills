@@ -15,7 +15,7 @@ Custom GLSL at the React-reconciler layer: drei's `shaderMaterial` factory, raw 
 | [Raw THREE.ShaderMaterial](#raw-threeshadermaterial) | The escape hatch when you want vanilla three.js semantics |
 | [Uniform Type Mapping](#uniform-type-mapping) | The GLSL declaration decides the upload path; the JS value must match its shape |
 | [Varyings and Shader Built-Ins](#varyings-and-shader-built-ins) | ShaderMaterial built-ins versus RawShaderMaterial, cross-stage varyings, coordinate-space consistency, tone mapping, and color-space output |
-| [Effect Cookbook](#effect-cookbook) | Vertex displacement is in the workflow example above |
+| [Effect Cookbook](#effect-cookbook) | Fresnel rims, value-noise and FBM, dissolve effects, and dissolve overdraw costs |
 | [Patching Built-In Materials](#patching-built-in-materials) | `onBeforeCompile` injects GLSL into a built-in material's shader while keeping its lighting, shadows, and fog |
 | [Instanced Custom Attributes](#instanced-custom-attributes) | Feed per-instance data to a custom shader with `<instancedBufferAttribute>` |
 | [External GLSL Files](#external-glsl-files) | Vite, zero-config — the `?raw` suffix imports any file as a string |

@@ -31,7 +31,7 @@ from the tutorials — do not substitute guessed names.
 | [Resize / DPR Handling](#resize--dpr-handling) | The resize handler scales the drawing buffer by `window.devicePixelRatio` for high-DPI displays |
 | [Asset-Production Toolchain (matc / cmgen / filamesh / mipgen)](#asset-production-toolchain-matc--cmgen--filamesh--mipgen) | The CLI tools live in the Filament release for your development machine (not the web archive) |
 | [Asset Type Reference](#asset-type-reference) | Asset types that must be initialized before creating matching Filament resources |
-| [Gotchas](#gotchas) | `Filament.IndexBuffer$IndexType`, `Filament.RenderableManager$PrimitiveType` |
+| [Gotchas](#gotchas) | Nested-enum names, native-handle deletion, asset prefetch, sRGB flags, camera entities, KTX helper versions, mesh-loader limits, and WASM MIME handling |
 
 ---
 

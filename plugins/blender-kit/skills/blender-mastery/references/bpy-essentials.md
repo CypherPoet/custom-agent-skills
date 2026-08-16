@@ -6,7 +6,7 @@ Cross-cutting Python patterns for working with `bpy` through the MCP. The themes
 
 | Section | Covers |
 |---|---|
-| [Data API vs operators](#data-api-vs-operators) | The single most important bpy distinction |
+| [Data API vs operators](#data-api-vs-operators) | Direct, context-independent `bpy.data` access versus context-sensitive `bpy.ops` actions, with selection rules and task examples |
 | [Context: where operators get tripped up](#context-where-operators-get-tripped-up) | Operators read `bpy.context` to know what to act on |
 | [The select-active-edit triad](#the-select-active-edit-triad) | Three closely-related but distinct concepts that scripts routinely confuse |
 | [Modes](#modes) | `bpy.context.mode` is one of `OBJECT`, `EDIT_MESH`, `EDIT_CURVE`, `SCULPT`, `POSE`, `WEIGHT_PAINT`, `TEXTURE_PAINT`, etc |

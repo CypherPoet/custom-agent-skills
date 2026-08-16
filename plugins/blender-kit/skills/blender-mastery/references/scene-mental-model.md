@@ -12,7 +12,7 @@ The conceptual structure that makes `bpy` make sense. Most scripting bugs trace 
 | [Units and coordinate system](#units-and-coordinate-system) | Blender coordinates, metric defaults, and Euler-versus-quaternion rotation storage |
 | [Parent/child and collections](#parentchild-and-collections) | Two organizational hierarchies, which behave differently |
 | [Scenes and view layers](#scenes-and-view-layers) | A `.blend` file can have multiple scenes (rare) |
-| [Linked vs appended data](#linked-vs-appended-data) | When pulling data from another .blend file (`File → Append` / `File → Link`) |
+| [Linked vs appended data](#linked-vs-appended-data) | Append creates an independent local copy; Link retains a read-only source-file reference; `.library` distinguishes them |
 | [Depsgraph in one paragraph](#depsgraph-in-one-paragraph) | Source data in `bpy.data` versus evaluated animation, constraint, driver, and modifier state from the dependency graph |
 | [Sources](#sources) | Authoritative references that ground this guidance |
 

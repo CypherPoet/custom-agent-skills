@@ -6,7 +6,7 @@ Armatures (the bones), pose mode (the deformations), drivers (logic), and fcurve
 
 | Section | Covers |
 |---|---|
-| [Object vs armature data](#object-vs-armature-data) | Same split as object/mesh (see `scene-mental-model.md`) |
+| [Object vs armature data](#object-vs-armature-data) | Armature object transforms and pose data versus rest-bone hierarchy in armature data, including `PoseBone` constraints and properties |
 | [Building an armature from script](#building-an-armature-from-script) | Creating and parenting edit bones, placing heads and tails, and switching modes safely |
 | [Pose mode: posing and constraining](#pose-mode-posing-and-constraining) | Pose mode operates on `pose_bones` (the deformable layer) |
 | [Bone constraints](#bone-constraints) | Constraint type strings come from the operator reference: `bpy.ops.pose.constraint_add` lists them |

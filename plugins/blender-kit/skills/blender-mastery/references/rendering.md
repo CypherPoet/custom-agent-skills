@@ -8,7 +8,7 @@ Engine selection, baking workflows, render passes, and light setup. Most of this
 |---|---|
 | [Cycles vs Eevee](#cycles-vs-eevee) | Pick by the requirement, not the default |
 | [GPU acceleration in Cycles](#gpu-acceleration-in-cycles) | GPU rendering needs the Cycles addon prefs configured and the scene's device set to GPU |
-| [Baking workflow (the order matters)](#baking-workflow-the-order-matters) | The two parts most scripts get wrong |
+| [Baking workflow (the order matters)](#baking-workflow-the-order-matters) | Ordered selection, Cycles, UV, target-image, active-node, bake, and save steps |
 | [Common bake types](#common-bake-types) | Bake types for lightmaps, normals, ambient occlusion, and material properties |
 | [Render passes (separating contributions)](#render-passes-separating-contributions) | For compositing or post-production, enable individual passes |
 | [Light setups](#light-setups) | 3-point setup (key + fill + rim) and HDRI-only |

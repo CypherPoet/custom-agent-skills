@@ -8,7 +8,7 @@ The single biggest mistake under MCP is treating it like a stateless REPL. Blend
 
 | Section | Covers |
 |---|---|
-| [The loop, in detail](#the-loop-in-detail) | 1. Read, 2. Propose, 3. Execute, and related topics |
+| [The loop, in detail](#the-loop-in-detail) | Read, propose, execute, verify, and iterate after Blender mutations |
 | [Look it up: bundled docs search](#look-it-up-bundled-docs-search) | Searching Blender's bundled manual and Python API documentation |
 | [Idempotent-edit patterns](#idempotent-edit-patterns) | Scripts that can re-run safely save you from half-completed-state hell |
 | [Persistent helpers module](#persistent-helpers-module) | Sharing reusable Blender helper modules across `execute_blender_code` calls |

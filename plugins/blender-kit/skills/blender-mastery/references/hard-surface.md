@@ -7,7 +7,7 @@ Doctrine and executable patterns for hard-surface work: non-destructive modifier
 | Section | Covers |
 |---|---|
 | [The non-destructive spine](#the-non-destructive-spine) | Modifier order, unapplied transforms, and an editable stack for mirrored hard-surface parts |
-| [Primitives & topology standards](#primitives--topology-standards) | Keyboard route: `S X 0 Return` (scale-to-zero on the axis — see the orientation caveat below) |
+| [Primitives & topology standards](#primitives--topology-standards) | Cylinder vertex counts, safe n-gons, exact coplanarity, and topology-preserving vertex movement |
 | [Booleans: cut fast, clean deliberately](#booleans-cut-fast-clean-deliberately) | Solver choice on 5.x (the enum: `FLOAT`, `EXACT`, `MANIFOLD`) |
 | [Normals & shading on 4.1+/5.x](#normals--shading-on-415x) | The break every stale tutorial trips over: Blender 4.1 removed mesh-level Auto Smooth |
 | [Edge control](#edge-control) | Bevel weights let one Bevel modifier carry many fillet widths |

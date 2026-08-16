@@ -12,7 +12,7 @@
 | [Post-Processing & `View` Options](#post-processing--view-options) | Post-processing is configured on the `View` (`View.h`) |
 | [Color Management](#color-management) | Linear vs sRGB, Color Conversion API, and ColorSpace API |
 | [Renderer Pipeline: Clustered Forward Rendering](#renderer-pipeline-clustered-forward-rendering) | Filament uses clustered forward rendering |
-| [Coordinate Systems & Conventions](#coordinate-systems--conventions) | Quoting the doc's "Coordinates systems" section |
+| [Coordinate Systems & Conventions](#coordinate-systems--conventions) | Filament handedness, axes, units, camera orientation, clipping and NDC, winding, picking, and cubemap conventions |
 | [Validation & Debug](#validation--debug) | Reference rendering, debug views, and checks for the imaging pipeline |
 
 ---

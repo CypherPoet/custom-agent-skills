@@ -9,10 +9,10 @@
 |---|---|
 | [The short version](#the-short-version) | How `gltfio` turns glTF and GLB assets into Filament entities and resources |
 | [gltfio is a separate library, not core Filament](#gltfio-is-a-separate-library-not-core-filament) | Why `gltfio` is separate from core Filament and which assets its loader returns |
-| [The gltfio object model](#the-gltfio-object-model) | All types below are in namespace `filament::gltfio` |
+| [The gltfio object model](#the-gltfio-object-model) | `AssetLoader`, `ResourceLoader`, `MaterialProvider`, and `TextureProvider` roles, ownership, implementations, and threading constraints |
 | [The canonical end-to-end C++ load flow](#the-canonical-end-to-end-c-load-flow) | This is the worked example from the `AssetLoader.h` docstring (quoted) |
 | [The ubershader archive (.uberz) toolchain](#the-ubershader-archive-uberz-toolchain) | Building and loading precompiled `.uberz` shader archives |
-| [Texture compression & mesh compression](#texture-compression--mesh-compression) | What the provided sources actually state |
+| [Texture compression & mesh compression](#texture-compression--mesh-compression) | First-class KTX2 and Basis texture-provider support and sample encodings; Draco and meshopt geometry support remains unverified |
 | [IMPORTANT: filamesh is NOT glTF](#important-filamesh-is-not-gltf) | This is the single most important accuracy point in this corpus |
 | [What the Filament v1.75.0 samples actually load](#what-the-filament-v1750-samples-actually-load) | C++ sample (samples/suzanne.cpp) — filamesh + KTX2 and Web tutorial (web/suzanne) — filamesh + KTX2 |
 | [What is verified vs not in this file](#what-is-verified-vs-not-in-this-file) | Verified — quoted from the v1.75.0 gltfio public headers and corpus files |

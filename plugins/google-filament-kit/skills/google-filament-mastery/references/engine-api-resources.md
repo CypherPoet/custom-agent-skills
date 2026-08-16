@@ -7,7 +7,7 @@
 
 | Section | Covers |
 |---|---|
-| [Mental Model & Lifetime](#mental-model--lifetime) | Every GPU resource on this page follows the same pattern |
+| [Mental Model & Lifetime](#mental-model--lifetime) | Build engine-owned resources, upload separately, destroy through the engine, and free CPU data only after the descriptor callback |
 | [VertexBuffer](#vertexbuffer) | Holds a set of buffers defining a Renderable's geometry (position, color, normals/tangents, UVs, etc.) |
 | [IndexBuffer](#indexbuffer) | Vertex indices into a `VertexBuffer` |
 | [BufferObject](#bufferobject) | A generic GPU buffer. Optional — for simple use you don't need it |

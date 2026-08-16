@@ -9,8 +9,8 @@ The complete `@react-three/fiber` v8 → v9 migration: version and peer-dependen
 | Section | Covers |
 |---|---|
 | [Version Requirements](#version-requirements) | React, React DOM, TypeScript, and ecosystem versions required by React Three Fiber v9 |
-| [Ecosystem Pairing](#ecosystem-pairing) | Verified against the npm registry (2026-08-08) |
-| [Migration Checklist](#migration-checklist) | Then sweep the codebase in this order |
+| [Ecosystem Pairing](#ecosystem-pairing) | Compatibility matrix and peer ranges for React, Fiber, Drei, postprocessing, Rapier, XR, Zustand, Leva, and three.js |
+| [Migration Checklist](#migration-checklist) | Coordinated package upgrades followed by sweeps for removed types, buffer attributes, Canvas callbacks, StrictMode, color space, tests, and ecosystem changes |
 | [Breaking and Behavioral Changes](#breaking-and-behavioral-changes) | gl Callback Receives Constructor Props, StrictMode Is Inherited, Automatic sRGB Texture Conversion Removed, and related topics |
 | [TypeScript Migration](#typescript-migration) | Every removed type has a direct replacement |
 | [bufferAttribute Requires Constructor Args](#bufferattribute-requires-constructor-args) | v8 code set `count`/`array`/`itemSize` as props after construction |
