@@ -10,7 +10,7 @@ static `.excalidraw` file you don't need any of this — see
 | Section | Covers |
 |---|---|
 | [Install](#install) | `react` and `react-dom` are peer dependencies |
-| [The Component & Props](#the-component--props) | All props are optional. The most useful |
+| [The Component & Props](#the-component--props) | Component initialization, imperative API capture, change hooks, view modes, UI options, and custom element metadata |
 | [initialData](#initialdata) | The scene the component loads with — an object (or a promise resolving to one) |
 | [The Imperative API (`excalidrawAPI`)](#the-imperative-api-excalidrawapi) | Capture the API object to drive the editor after mount |
 | [`convertToExcalidrawElements` (Skeleton API)](#converttoexcalidrawelements-skeleton-api) | Creating complete Excalidraw elements from concise JavaScript skeletons |

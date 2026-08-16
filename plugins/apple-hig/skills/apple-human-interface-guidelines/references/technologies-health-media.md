@@ -21,7 +21,7 @@ Distilled from Apple's HIG Technologies pages: Playing audio, Playing video, Air
 | [ResearchKit](#researchkit) | Build medical-research apps with predesigned onboarding, consent, survey, and active-task screens |
 | [Workouts](#workouts) | Create workout/fitness experiences (primarily Apple Watch, also iPhone/iPad) |
 | [HomeKit](#homekit) | Let people securely control connected home accessories via Siri or the Apple Home app on iPhone |
-| [Augmented reality](#augmented-reality) | Blend virtual 3D objects with the live camera view of the real world using ARKit to create convincing |
+| [Augmented reality](#augmented-reality) | Immersive ARKit experiences, including convincing presentation, object placement, interaction, comfort and safety, multiuser sessions, and interruption recovery |
 
 ## Playing audio
 *Last changed: 2023-06*

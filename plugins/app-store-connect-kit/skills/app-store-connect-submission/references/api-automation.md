@@ -13,7 +13,7 @@ You can drive it from the CLI (or an agent / CI) without fastlane. *As of 2026-0
 | [Everything else — a JWT + REST call](#everything-else--a-jwt--rest-call) | Build-status polling, metadata, screenshots, and submitting for review hit the REST API directly |
 | [Uploading screenshots & previews (reserve → upload → commit)](#uploading-screenshots--previews-reserve--upload--commit) | Media uploads are a 3-phase flow (plus an ordering step), same shape for both (only the asset endpoint differs) |
 | [Useful endpoints](#useful-endpoints) | Full schema: Apple's App Store Connect API reference |
-| [Verify the submission landed](#verify-the-submission-landed) | After `POST /v1/reviewSubmissions` (+ items) and marking it submitted |
+| [Verify the submission landed](#verify-the-submission-landed) | Confirm the review submission is queued through `reviewSubmissions` and verify that a first in-app purchase changed state and is attached |
 | [Scope — what stays console-bound](#scope--what-stays-console-bound) | The API covers builds, metadata, screenshots, pricing, IAP, TestFlight, and version submission |
 
 ## The key, and the `.env` pattern

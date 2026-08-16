@@ -16,7 +16,7 @@ When a toolbar has more items than fit the available width (a narrow window, a r
 | [Toolbar content margins](#toolbar-content-margins) | `contentMarginsRemoved(_:)` removes the default margins around a piece of toolbar content |
 | [Status bar visibility](#status-bar-visibility) | The status bar is now a `ToolbarPlacement`, so you control its visibility with `toolbarVisibility(_:for:)` |
 | [Dynamic content](#dynamic-content) | `ForEach` now conforms to `ToolbarContent`, so a `toolbar` builder can generate items from a collection just as a view body does |
-| [Deployment target below SDK 27](#deployment-target-below-sdk-27) | When the user's deployment target is below SDK 27 and the answer needs any of the new APIs above |
+| [Deployment target below SDK 27](#deployment-target-below-sdk-27) | Gate the complete `.toolbar { … }` body in one `if #available` block and provide an older-OS fallback |
 | [Availability summary](#availability-summary) | Platform availability for toolbar priority, overflow, placement, and minimization APIs |
 
 ## Visibility priority

@@ -13,7 +13,7 @@ The conceptual structure that makes `bpy` make sense. Most scripting bugs trace 
 | [Parent/child and collections](#parentchild-and-collections) | Two organizational hierarchies, which behave differently |
 | [Scenes and view layers](#scenes-and-view-layers) | A `.blend` file can have multiple scenes (rare) |
 | [Linked vs appended data](#linked-vs-appended-data) | When pulling data from another .blend file (`File → Append` / `File → Link`) |
-| [Depsgraph in one paragraph](#depsgraph-in-one-paragraph) | The dependency graph is what Blender uses to evaluate the scene each frame: it figures out |
+| [Depsgraph in one paragraph](#depsgraph-in-one-paragraph) | Source data in `bpy.data` versus evaluated animation, constraint, driver, and modifier state from the dependency graph |
 | [Sources](#sources) | Authoritative references that ground this guidance |
 
 ## Data-blocks

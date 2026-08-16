@@ -12,7 +12,7 @@ GLTF, FBX, OBJ, USD pipelines. Export is almost always a headless-CLI job — th
 | [OBJ — geometry only](#obj--geometry-only) | Use OBJ when you need geometry only (no animation, simple materials) |
 | [USD — film and pro pipelines](#usd--film-and-pro-pipelines) | USD is the right choice for asset interchange in pro pipelines (Houdini, Nuke, Solaris, Omniverse) |
 | [Pre-export sanity script](#pre-export-sanity-script) | Run before any export, especially under MCP where the user can't see the viewport |
-| [Validation after export](#validation-after-export) | For GLTF, use `gltf-transform inspect` (CLI tool from `@gltf-transform/cli`) |
+| [Validation after export](#validation-after-export) | Format-specific validation with `gltf-transform inspect` and runtime viewers for glTF, FBX, and USD exports |
 | [Sources](#sources) | Authoritative references that ground this guidance |
 
 ## The export workflow (in order)
