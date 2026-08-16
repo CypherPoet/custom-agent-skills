@@ -12,7 +12,7 @@ Distilled from Apple's HIG Technologies pages: Playing audio, Playing video, Air
 | [Playing audio](#playing-audio) | Deliver rich audio that automatically adjusts as device context, volume, and output routes change |
 | [Playing video](#playing-video) | Provide rich, consistent video playback by embedding the system player (and optionally integrating with the TV app) across iOS |
 | [AirPlay](#airplay) | Let people stream media wirelessly from iOS, iPadOS, macOS, and tvOS devices to Apple TV |
-| [SharePlay](#shareplay) | Let multiple people share a synchronized activity — watching |
+| [SharePlay](#shareplay) | Synchronized watching, listening, gaming, and sketching during FaceTime calls or Messages conversations |
 | [Live Photos](#live-photos) | Present sound- and motion-rich Live Photos that spring to life on press |
 | [Photo editing](#photo-editing) | Let photo-editing extensions modify photos and videos inside the Photos app via filters or other changes |
 | [ShazamKit](#shazamkit) | Audio recognition through Shazam's catalog or app-defined custom catalogs |

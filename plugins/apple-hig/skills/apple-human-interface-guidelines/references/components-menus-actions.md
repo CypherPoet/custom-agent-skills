@@ -16,7 +16,7 @@ Distilled from Apple's HIG Components pages: Buttons, Menus, Context menus, Pull
 | [Pop-up buttons](#pop-up-buttons) | A pop-up button displays a menu of mutually exclusive options |
 | [Edit menus](#edit-menus) | Editing actions for selected text, images, files, charts, and other content |
 | [Action sheets](#action-sheets) | An action sheet is a modal view presenting choices related to an action people intentionally initiate |
-| [Activity views](#activity-views) | An activity view (share sheet) presents sharing activities, actions |
+| [Activity views](#activity-views) | Share-sheet activities, context-specific actions, frequently used apps, extension behavior, and background completion |
 
 ## Buttons
 *Last changed: 2025-12*

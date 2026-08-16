@@ -8,10 +8,10 @@ Many of SwiftUI's result builders (most notably `@ViewBuilder`) have been unifie
 | Section | Covers |
 |---|---|
 | [Ambiguous ShapeStyle Modifiers in `overlay` or `background`](#ambiguous-shapestyle-modifiers-in-overlay-or-background) | Resolving ambiguous shape-style modifiers in overlay and background builders |
-| [Ambiguous Type References When Another Module Shadows SwiftUI Types](#ambiguous-type-references-when-another-module-shadows-swiftui-types) | Issue: If your project imports a module that declares a type with the same name as a SwiftUI type, you may see |
-| [`TupleContent` vs `TupleView` Type Mismatch](#tuplecontent-vs-tupleview-type-mismatch) | Issue: Code that explicitly references `TupleView` as a nested generic type parameter may produce |
+| [Ambiguous Type References When Another Module Shadows SwiftUI Types](#ambiguous-type-references-when-another-module-shadows-swiftui-types) | Module-shadowed SwiftUI type names cause ambiguous member errors; qualify the intended type or rename the collision |
+| [`TupleContent` vs `TupleView` Type Mismatch](#tuplecontent-vs-tupleview-type-mismatch) | `ContentBuilder` returns `TupleContent`, causing explicit nested `TupleView` constraints to mismatch; prefer opaque types or update the concrete type |
 | [Empty Builder Body with MapKit](#empty-builder-body-with-mapkit) | Avoiding empty result-builder bodies when SwiftUI and MapKit are imported together |
-| [Type-Check Timeout in Swift Charts with Deeply Branching Content (Back-Deployment Only)](#type-check-timeout-in-swift-charts-with-deeply-branching-content-back-deployment-only) | Issue: When your project's minimum deployment target is lower than any Apple OS 27.0 |
+| [Type-Check Timeout in Swift Charts with Deeply Branching Content (Back-Deployment Only)](#type-check-timeout-in-swift-charts-with-deeply-branching-content-back-deployment-only) | Back-deployed Charts with deeply branching content can time out during type checking; extract branches into an `@ChartContentBuilder` function |
 
 ## Ambiguous ShapeStyle Modifiers in `overlay` or `background`
 **Issue:**

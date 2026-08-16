@@ -22,7 +22,7 @@ Text("Explore", tableName: "Navigation",
 | [Layout for Localization](#layout-for-localization) | Use `.leading` and `.trailing` instead of `.left` and `.right` — they flip for right-to-left locales; `.left` and `.right` don't |
 | [Reading the Current Locale](#reading-the-current-locale) | Use `@Environment(\.locale)` instead of `Locale.current` for locale-dependent logic in views |
 | [String(localized:) Outside SwiftUI Views](#stringlocalized-outside-swiftui-views) | When you need a localized `String` outside of SwiftUI views, use `String(localized:)`, not `NSLocalizedString` |
-| [LocalizedStringResource for Non-View Types](#localizedstringresource-for-non-view-types) | When a non-view type carries a user-facing string — a model object |
+| [LocalizedStringResource for Non-View Types](#localizedstringresource-for-non-view-types) | Use `LocalizedStringResource` for user-facing strings carried by models or other non-view types so localization resolves at display time |
 | [Comments for Translators](#comments-for-translators) | Add a `comment` describing the UI element and its purpose, especially for ambiguous strings |
 
 ## Bundle for Swift Packages and Frameworks

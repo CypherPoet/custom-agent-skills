@@ -8,7 +8,7 @@ When building a new view with distinct sections — a header, a list, a footer, 
 
 | Section | Covers |
 |---|---|
-| [Always use separate `View` types for sections, not computed properties](#always-use-separate-view-types-for-sections-not-computed-properties) | Long `var body` implementations are hard to read, but the more important problem is |
+| [Always use separate `View` types for sections, not computed properties](#always-use-separate-view-types-for-sections-not-computed-properties) | Why computed properties share the parent's invalidation boundary and separate `View` types narrow invalidation through explicit inputs |
 | [Keep view `init` cheap](#keep-view-init-cheap) | A view's `init` runs every time the parent re-evaluates its body |
 | [Single Child `Group`](#single-child-group) | `Group { SomeView() }`, which is a `Group` with only one child, isn't free |
 

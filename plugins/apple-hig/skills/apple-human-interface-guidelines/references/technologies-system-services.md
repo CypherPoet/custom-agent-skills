@@ -12,7 +12,7 @@ Distilled from Apple's HIG Technologies pages: Siri, App Shortcuts, Snippets, Ge
 | [Siri](#siri) | Lets people find information and perform quick actions throughout the system and your app by voice |
 | [App Shortcuts](#app-shortcuts) | System-wide access to app functions through Siri, Spotlight, and Shortcuts |
 | [Snippets](#snippets) | Compact views that appear in response to a Siri, Spotlight, or Shortcuts action to show a result or ask for confirmation |
-| [Generative AI](#generative-ai) | Uses machine learning models to create and transform text, images |
+| [Generative AI](#generative-ai) | Creating and transforming text, images, and other content with responsible controls for privacy, transparency, safety, and user agency |
 | [Machine learning](#machine-learning) | On-device models, recommendations, personalization, and responsible ML experiences |
 | [Maps](#maps) | Displays outdoor or indoor geographical data in your app or website |
 | [Nearby interactions](#nearby-interactions) | Supports on-device experiences that integrate the presence of nearby people and objects using Ultra Wideband (UWB) |

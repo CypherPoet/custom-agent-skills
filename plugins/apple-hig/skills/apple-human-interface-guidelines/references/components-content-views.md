@@ -9,7 +9,7 @@ Distilled from Apple's HIG Components pages: Lists and tables, Collections, Spli
 
 | Section | Covers |
 |---|---|
-| [Lists and tables](#lists-and-tables) | Present data in one or more columns of rows, supporting grouped/hierarchical content and interactions like selecting |
+| [Lists and tables](#lists-and-tables) | Row-based data presentation with grouped or hierarchical content and selection, insertion, deletion, and reordering interactions |
 | [Collections](#collections) | Manage an ordered set of content in a customizable, highly visual layout (default horizontal row or grid) |
 | [Split views](#split-views) | Adjacent panes for navigating and presenting multiple hierarchy levels |
 | [Scroll views](#scroll-views) | Let people view content larger than the view's boundaries by moving it vertically or horizontally |

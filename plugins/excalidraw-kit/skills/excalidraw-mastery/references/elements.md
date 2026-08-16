@@ -15,8 +15,8 @@ see [`design-principles.md`](design-principles.md).
 | [Arrows](#arrows) | Arrow points, bindings, heads, elbows, labels, and connector geometry |
 | [Lines](#lines) | Same as an arrow but non-directional (no arrowheads by default) — use for dividers, timelines, tree trunks, and flow spines |
 | [Binding Arrows to Shapes](#binding-arrows-to-shapes) | Binding is what makes a connector stick to a shape |
-| [Frames & Images](#frames--images) | group a region; rarely needed for static diagrams |
-| [Gotchas](#gotchas) | (`decision`, `arrow_to_db`) and namespace by section for big diagrams |
+| [Frames & Images](#frames--images) | Frame containers for grouping regions and image elements that reference embedded files with explicit geometry |
+| [Gotchas](#gotchas) | Unique IDs, relative points, two-sided bindings, valid constants, canvas coordinates, and reference validation |
 
 ## Shared Properties
 

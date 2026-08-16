@@ -9,9 +9,9 @@ Distilled from Apple's HIG Technologies pages: Apple Pay, In-app purchase, Walle
 
 | Section | Covers |
 |---|---|
-| [Apple Pay](#apple-pay) | A secure, easy way to pay for physical goods and services, donations |
+| [Apple Pay](#apple-pay) | Physical-goods and services payments, donations, subscriptions, browser checkout, payment sheets, and biometric or Apple Watch authorization |
 | [In-app purchase](#in-app-purchase) | Lets people securely pay within your app for virtual goods — premium content, digital goods, and subscriptions — via StoreKit |
-| [Wallet](#wallet) | Securely stores credit/debit cards, IDs, transit cards, tickets |
+| [Wallet](#wallet) | Cards, IDs, transit, tickets, keys, passes, order tracking, and identity verification in Wallet |
 | [Sign in with Apple](#sign-in-with-apple) | A fast, private way to sign in or sign up using an existing Apple Account |
 | [Tap to Pay on iPhone](#tap-to-pay-on-iphone) | Lets merchants accept contactless payments using an iOS app on iPhone |
 | [ID Verifier](#id-verifier) | Lets an iPhone app read ISO18013-5 compliant mobile IDs in person (no external hardware) for in-person ID verification |

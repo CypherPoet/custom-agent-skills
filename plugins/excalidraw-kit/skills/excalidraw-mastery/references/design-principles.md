@@ -15,7 +15,7 @@ process that applies it is [`authoring-workflow.md`](authoring-workflow.md).
 | [Multi-Zoom Architecture](#multi-zoom-architecture) | Comprehensive diagrams work at three zoom levels at once, like a map showing both country borders and street names |
 | [Container Discipline](#container-discipline) | When labels need containers, which shapes to use, and how to avoid diagram clutter |
 | [Shape Meaning](#shape-meaning) | Diagram concepts and the Excalidraw shapes that represent them |
-| [Layout](#layout) | secondary ~120×60, marker ~10–20px |
+| [Layout](#layout) | Element scale, whitespace, flow direction, required connections, and spacing rules for readable diagrams |
 | [Color & Aesthetics](#color--aesthetics) | Color encodes meaning, it isn't decoration |
 
 ## Core Philosophy
