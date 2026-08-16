@@ -8,14 +8,14 @@ This file is the canonical layout for handoff documents. `scripts/create_handoff
 |---|---|
 | [Why this structure](#why-this-structure) | Reading order and source-artifact placement for an agent resuming the work |
 | [Placeholders](#placeholders) | Template boundaries and the tokens replaced when a handoff is scaffolded |
-| [🧾 Session Metadata](#session-metadata) | Next action, timestamp, working directory, branch, repository, and recent commits |
-| [📍 Current State Summary](#current-state-summary) | Active work, current status, and the point where the previous session stopped |
-| [💡 Important Context](#important-context) | Decisions, failed approaches, and insights not captured in source artifacts |
-| [🚧 Pending Work](#pending-work) | Immediate next steps, blockers, open questions, and deferred items |
-| [⚠️ Constraints for Resuming Agent](#constraints-for-resuming-agent) | Non-obvious restrictions, known gotchas, and skills needed to resume safely |
-| [🧠 Codebase Understanding](#codebase-understanding) | Architecture, critical files, and implementation patterns discovered during the session |
-| [🏁 Work Completed](#work-completed) | Finished tasks, modified files, and decisions made |
-| [🌐 Environment State](#environment-state) | Tools, services, running processes, environment variables, and verification commands |
+| [🧾 Session Metadata](#-session-metadata) | Next action, timestamp, working directory, branch, repository, and recent commits |
+| [📍 Current State Summary](#-current-state-summary) | Active work, current status, and the point where the previous session stopped |
+| [💡 Important Context](#-important-context) | Decisions, failed approaches, and insights not captured in source artifacts |
+| [🚧 Pending Work](#-pending-work) | Immediate next steps, blockers, open questions, and deferred items |
+| [⚠️ Constraints for Resuming Agent](#-constraints-for-resuming-agent) | Non-obvious restrictions, known gotchas, and skills needed to resume safely |
+| [🧠 Codebase Understanding](#-codebase-understanding) | Architecture, critical files, and implementation patterns discovered during the session |
+| [🏁 Work Completed](#-work-completed) | Finished tasks, modified files, and decisions made |
+| [🌐 Environment State](#-environment-state) | Tools, services, running processes, environment variables, and verification commands |
 
 ## Why this structure
 
