@@ -16,7 +16,7 @@ R3F raycasts DOM pointer input against the scene and delivers React-style synthe
 | [Hover and Cursor](#hover-and-cursor) | Hover boundaries are discrete events — setState here is fine (unlike per-frame updates) |
 | [Custom Event Manager and Event Source](#custom-event-manager-and-event-source) | Replace or extend the event system through the Canvas `events` prop — a factory `(state) => EventManager` |
 | [Camera Controls](#camera-controls) | Orbit, Map, Trackball, Fly, PointerLock, and Transform controls from Drei |
-| [Transform and Drag Controls](#transform-and-drag-controls) | TransformControls — translate/rotate/scale gizmo |
+| [Transform and Drag Controls](#transform-and-drag-controls) | TransformControls, PivotControls, and DragControls with controlled matrices, snapping, axis locks, and camera-control coordination |
 | [Keyboard Controls](#keyboard-controls) | `KeyboardControls` wraps the app (outside `<Canvas>` is fine) with a key map; `useKeyboardControls` reads it two ways |
 | [Scroll and Presentation Controls](#scroll-and-presentation-controls) | ScrollControls creates a scrollable HTML zone over the canvas and exposes progress to the scene — the scrollytelling primitive |
 | [Screen and World Coordinates](#screen-and-world-coordinates) | Screen → world, the easy case: if the pointer hit a mesh, `e.point` already is the world-space position |

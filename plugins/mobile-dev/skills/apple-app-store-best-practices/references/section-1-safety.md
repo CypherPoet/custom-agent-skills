@@ -7,7 +7,7 @@
 
 | Section | Covers |
 |---|---|
-| [§1.1 Objectionable Content](#11-objectionable-content) | Apps should not include content that is offensive, insensitive |
+| [§1.1 Objectionable Content](#11-objectionable-content) | Rules for defamatory or discriminatory content, violence, weapons, sexual material, religion, false features, and exploitation of current events |
 | [§1.2 User-Generated Content](#12-user-generated-content) | Mandatory filtering, reporting, blocking, and contact controls for user-generated content |
 | [§1.3 Kids Category](#13-kids-category) | Requirement: Apps in the Kids Category must not include links out of the app |
 | [§1.4 Physical Harm (ASR & NR)](#14-physical-harm-asr--nr) | Apps that behave in a way that risks physical harm may be rejected |

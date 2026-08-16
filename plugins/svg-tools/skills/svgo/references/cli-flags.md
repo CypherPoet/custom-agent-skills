@@ -6,7 +6,7 @@ Verified against SVGO 4.0.1. Run `npx svgo --help` to confirm against the versio
 
 | Section | Covers |
 |---|---|
-| [Input / output](#input--output) | -i, --input , -s, --string , -f, --folder , and related topics |
+| [Input / output](#input--output) | File, string, folder, and stdin inputs; output paths or stdout; recursion; exclusions; and in-place overwrite behavior |
 | [Optimization tuning](#optimization-tuning) | -p, --precision , --multipass, and --config |
 | [Output formatting](#output-formatting) | --pretty, --indent , --eol , and --final-newline |
 | [Data URI mode](#data-uri-mode) | Encoding optimized SVG output as base64 or percent-encoded data URIs |

@@ -8,7 +8,7 @@ Procedural geometry via node graphs. From a script, you build the node tree the 
 |---|---|
 | [Mental model](#mental-model) | Geometry-node data blocks, socket flow, fields, modifiers, and evaluation |
 | [Attaching a Geometry Nodes modifier](#attaching-a-geometry-nodes-modifier) | `nt.interface.new_socket(...)` is the 4.x+ API for declaring tree inputs/outputs |
-| [Pattern: scatter instances on a surface](#pattern-scatter-instances-on-a-surface) | The classic geometry-nodes example |
+| [Pattern: scatter instances on a surface](#pattern-scatter-instances-on-a-surface) | Distribute points on a surface, instance source geometry, randomize rotation, and join the instances with the input mesh |
 | [Setting attributes from script](#setting-attributes-from-script) | Creating mesh attributes, assigning per-element values, and choosing data domains and types |
 | [Reading evaluated geometry](#reading-evaluated-geometry) | Geometry-nodes-modified meshes show their evaluated state through the depsgraph (see `bpy-essentials.md`) |
 | [Node-tree modifier inputs](#node-tree-modifier-inputs) | A geometry-node group can expose user-facing inputs |

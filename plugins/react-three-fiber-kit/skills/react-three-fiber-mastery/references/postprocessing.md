@@ -19,7 +19,7 @@ Screen-space effects in R3F via `@react-three/postprocessing` (v3), the React wr
 | [God Rays](#god-rays) | `<GodRays sun={...}>` accepts a `Mesh`/`Points` instance or a ref to one |
 | [Tone Mapping and Color Grading](#tone-mapping-and-color-grading) | The composer disables renderer tone mapping (see EffectComposer), so grade inside the chain — late, before AA |
 | [Anti-Aliasing](#anti-aliasing) | SMAA, FXAA, and multisampling tradeoffs and configuration |
-| [Custom Effects](#custom-effects) | Subclass `Effect` from `postprocessing` |
+| [Custom Effects](#custom-effects) | `Effect` subclasses with shader entry points, uniform maps, an `update()` lifecycle, and `<primitive>` or `wrapEffect` mounting |
 | [Animating Effect Parameters](#animating-effect-parameters) | Mutate the effect instance through a ref inside `useFrame` — never `setState` per frame |
 | [Performance and Mobile Scaling](#performance-and-mobile-scaling) | The low-end branch: `multisampling={0}` (+ cheap FXAA), drop ambient occlusion first, then shrink bloom (`levels`/`radius`) |
 | [Native three.js Post-Processing](#native-threejs-post-processing) | Three.js `EffectComposer`, passes, output transforms, and multisampling |

@@ -27,7 +27,7 @@ from the tutorials — do not substitute guessed names.
 | [Skybox & IBL from KTX](#skybox--ibl-from-ktx) | The high-level helpers are the easy path; the low-level path is shown for completeness |
 | [Textures (KTX2, Compressed, Async)](#textures-ktx2-compressed-async) | `.ktx2` textures are loaded with `engine.createTextureFromKtx2(url, options)` |
 | [Meshes: filamesh](#meshes-filamesh) | Filament has no general asset-loading system, but ships a simple binary mesh format, `.filamesh` (produced by the `filamesh` CLI) |
-| [The Render & Resize Loop](#the-render--resize-loop) | Drive frames with `requestAnimationFrame` |
+| [The Render & Resize Loop](#the-render--resize-loop) | Frame scheduling, manager updates, temporary-handle deletion, `renderer.render(swapChain, view)`, callback binding, and resize handling |
 | [Resize / DPR Handling](#resize--dpr-handling) | The resize handler scales the drawing buffer by `window.devicePixelRatio` for high-DPI displays |
 | [Asset-Production Toolchain (matc / cmgen / filamesh / mipgen)](#asset-production-toolchain-matc--cmgen--filamesh--mipgen) | The CLI tools live in the Filament release for your development machine (not the web archive) |
 | [Asset Type Reference](#asset-type-reference) | Asset types that must be initialized before creating matching Filament resources |

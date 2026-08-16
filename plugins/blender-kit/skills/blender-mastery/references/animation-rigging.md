@@ -10,7 +10,7 @@ Armatures (the bones), pose mode (the deformations), drivers (logic), and fcurve
 | [Building an armature from script](#building-an-armature-from-script) | Creating and parenting edit bones, placing heads and tails, and switching modes safely |
 | [Pose mode: posing and constraining](#pose-mode-posing-and-constraining) | Pose mode operates on `pose_bones` (the deformable layer) |
 | [Bone constraints](#bone-constraints) | Constraint type strings come from the operator reference: `bpy.ops.pose.constraint_add` lists them |
-| [Building a basic IK leg setup](#building-a-basic-ik-leg-setup) | For an FK/IK switch, drive `ik.influence` from a custom property on the rig's root bone — keyframing 0 → 1 toggles |
+| [Building a basic IK leg setup](#building-a-basic-ik-leg-setup) | Add an IK constraint to the lower bone, configure its target and chain length, add an optional pole, and optionally drive FK/IK influence |
 | [Drivers](#drivers) | A driver makes one property follow another, evaluated every frame |
 | [Keyframes and fcurves](#keyframes-and-fcurves) | The action holding the keyframes lives on `arm_obj.animation_data.action` |
 | [NLA strips](#nla-strips) | The NLA editor combines multiple actions into a non-linear timeline (walk → run → idle blends) |

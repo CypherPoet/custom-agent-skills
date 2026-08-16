@@ -18,7 +18,7 @@ How to get a React Three Fiber project running and configure the `<Canvas>` root
 | [onCreated & Fallback](#oncreated--fallback) | `onCreated` root-state access and graceful handling when WebGL initialization fails |
 | [Bundler Setup](#bundler-setup) | Vite — zero config. `npm create vite@latest my-app -- --template react-ts`, install the packages, done |
 | [WebGPU](#webgpu) | v9 supports `THREE.WebGPURenderer` through the async `gl` callback |
-| [Custom Tree-Shakable Roots](#custom-tree-shakable-roots) | `<Canvas>` is a convenience wrapper |
+| [Custom Tree-Shakable Roots](#custom-tree-shakable-roots) | Selective `extend`, async `createRoot` configuration, manual event and resize wiring, rendering, and unmount disposal |
 | [StrictMode in v9](#strictmode-in-v9) | v9 inherits `<StrictMode>` from the parent React tree across the renderer boundary |
 | [Common Mistakes](#common-mistakes) | Frequent mistakes and the changes that correct them |
 | [See Also](#see-also) | Related references and supporting guidance |

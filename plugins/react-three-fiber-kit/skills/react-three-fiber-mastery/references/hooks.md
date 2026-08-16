@@ -13,7 +13,7 @@ The four core R3F hooks — `useThree` (state access), `useFrame` (render loop),
 | [useFrame](#useframe) | Subscribes a callback to the render loop; it runs every frame, just before R3F renders |
 | [useLoader](#useloader) | Suspense-based wrapper around any three.js loader class (anything with a `.load` method) |
 | [useGraph](#usegraph) | Builds the same memoized `{ nodes, materials }` collection from any `Object3D` |
-| [Global and Additional Exports](#global-and-additional-exports) | All importable from `@react-three/fiber` |
+| [Global and Additional Exports](#global-and-additional-exports) | Portal rendering, imperative prop application, global frame effects, manual loop control, graph building, roots, and advanced or test utilities |
 | [Common Mistakes](#common-mistakes) | Frequent mistakes and the changes that correct them |
 | [See Also](#see-also) | Related references and supporting guidance |
 

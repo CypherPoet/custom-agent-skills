@@ -12,7 +12,7 @@ Doctrine and executable patterns for hard-surface work: non-destructive modifier
 | [Normals & shading on 4.1+/5.x](#normals--shading-on-415x) | The break every stale tutorial trips over: Blender 4.1 removed mesh-level Auto Smooth |
 | [Edge control](#edge-control) | Bevel weights let one Bevel modifier carry many fillet widths |
 | [The hand-off audit](#the-hand-off-audit) | Run before export, bake, or delivery (all checks data-API, headless-safe) |
-| [Driving the UI as an agent](#driving-the-ui-as-an-agent) | For agents with keyboard/screen control (or advising a human at the keyboard) |
+| [Driving the UI as an agent](#driving-the-ui-as-an-agent) | Editor focus, typed transforms, axis semantics, screenshot verification, keyboard routes, and mouse-fragile operations to script |
 | [Third-party ecosystem (if installed)](#third-party-ecosystem-if-installed) | Detecting optional Blender extensions before adapting the workflow |
 | [Sources](#sources) | Authoritative references that ground this guidance |
 

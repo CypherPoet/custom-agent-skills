@@ -20,7 +20,7 @@ This guide walks through the process of adopting `-fbounds-safety` in an existin
 | Section | Covers |
 |---|---|
 | [Choosing an Adoption Approach](#choosing-an-adoption-approach) | There are two approaches to adopting `-fbounds-safety` |
-| [Full Adoption](#full-adoption) | Typical source code changes, Adoption strategy, Use of unsafe constructs, and related topics |
+| [Full Adoption](#full-adoption) | Per-file tasks and dependency ordering, compile-fix-test cycles, safe-wrapper work, review stops, and scoped commits |
 | [Header-Only Adoption](#header-only-adoption) | A lightweight library strategy that annotates headers before implementation files |
 
 ## Choosing an Adoption Approach

@@ -13,7 +13,7 @@ Everything that moves: `useFrame` mutation patterns, damping and lerp idioms, GL
 | [Morph Targets](#morph-targets) | Morph-target dictionaries, influence arrays, and blend-shape animation |
 | [Skeletal Animation](#skeletal-animation) | Finding bones, mutating transforms, and combining direct control with animation |
 | [React Spring](#react-spring) | `@react-spring/three` animates values with spring physics outside the React render loop — no re-render per frame |
-| [Drei Float and Trail](#drei-float-and-trail) | `Float` adds gentle idle hover/tumble to its children — the zero-effort "make it feel alive" wrapper |
+| [Drei Float and Trail](#drei-float-and-trail) | `Float` hover and tumble plus `Trail` ribbons with child or external targets, width, length, decay, and attenuation controls |
 | [Throttling Expensive Work](#throttling-expensive-work) | Separating per-frame mutations from throttled raycasts, layout, and network work |
 | [Other Animation Libraries](#other-animation-libraries) | `framer-motion-3d` (declarative `motion.mesh` variants/gestures) exists but was built against R3F v8 / React 18 |
 | [Common Mistakes](#common-mistakes) | Frequent mistakes and the changes that correct them |

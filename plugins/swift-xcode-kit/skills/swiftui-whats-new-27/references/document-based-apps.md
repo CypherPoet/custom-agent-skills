@@ -11,7 +11,7 @@ SDK 27.0 introduces two new protocols for document-based apps: `ReadableDocument
 | Section | Covers |
 |---|---|
 | [Mental model](#mental-model) | Document lifecycle from file opening through snapshotting, writing, and autosave |
-| [Set up the app: `DocumentGroup`](#set-up-the-app-documentgroup) | `DocumentGroup` takes two closures |
+| [Set up the app: `DocumentGroup`](#set-up-the-app-documentgroup) | Editor or viewer UI closure versus async document-creation closure, including protocol requirements, configuration, and creation context |
 | [`FileWrapperDocumentReader` / `FileWrapperDocumentWriter` (recommended)](#filewrapperdocumentreader--filewrapperdocumentwriter-recommended) | These convenience types handle file reading and writing: you supply closures |
 | [Register undo actions (required for autosave)](#register-undo-actions-required-for-autosave) | SwiftUI tracks unsaved changes through undo actions |
 | [Custom readers and writers](#custom-readers-and-writers) | Use a custom `DocumentReader` / `DocumentWriter` only when the `FileWrapper` convenience types can't do what you need |
