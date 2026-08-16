@@ -7,7 +7,7 @@
 | [Human Decisions](#human-decisions) | Persist decisions inside the corresponding skill record |
 | [Review State](#review-state) | Require attempted timestamp and status together |
 | [Due Calculation](#due-calculation) | Manual records are never selected automatically but remain available for explicit runs |
-| [Input Fingerprint](#input-fingerprint) | Calculate `sha256:` plus lowercase hexadecimal over canonical UTF-8 JSON containing |
+| [Input Fingerprint](#input-fingerprint) | Skill identity, reviewed bytes, source boundaries, change behavior, validation, review version, exclusions, and canonical SHA-256 encoding |
 | [Report Contract](#report-contract) | Begin with a compact project run summary containing completion status |
 
 ## Human Decisions

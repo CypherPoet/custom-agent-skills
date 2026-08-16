@@ -8,14 +8,14 @@ upload-the-largest rule are in [device-specifications.md](device-specifications.
 
 | Section | Covers |
 |---|---|
-| [What "store-ready" means](#what-store-ready-means) | accepted size for the class (see device-specifications.md) |
-| [Manual route (a few screenshots, one language)](#manual-route-a-few-screenshots-one-language) | (9:41 is Apple's convention.) Reset later with `xcrun simctl status_bar booted clear` |
-| [Automated route — `fastlane snapshot` (many locales × classes)](#automated-route--fastlane-snapshot-many-locales--classes) | When you have more than one language or want screenshots regenerated on every release, `fastlane snapshot` is the standard tool |
+| [What "store-ready" means](#what-store-ready-means) | Native-resolution captures at accepted sizes, with clean status bars and representative in-app content |
+| [Manual route (a few screenshots, one language)](#manual-route-a-few-screenshots-one-language) | Simulator setup, status-bar normalization, native-resolution capture, and canonical iPhone and iPad sizes |
+| [Automated route — `fastlane snapshot` (many locales × classes)](#automated-route--fastlane-snapshot-many-locales--classes) | Automated native-size capture across device and locale matrices with XCUITest and `snapshot` |
 | [Add device frames & captions — `frameit`](#add-device-frames--captions--frameit) | Adding Apple device frames and localized caption bands with `frameit` |
 | [Render your own marketing screenshots (without fastlane)](#render-your-own-marketing-screenshots-without-fastlane) | Rendering custom framed and captioned marketing compositions without fastlane |
 | [Upload — `fastlane deliver`](#upload--fastlane-deliver) | Uploading localized screenshots and metadata with `deliver` |
-| [Localization workflow](#localization-workflow) | uploading via `deliver` maps each folder to the matching App Store localization |
-| [Common rejection / quality traps](#common-rejection--quality-traps) | device-specifications.md, and prefer producing the canonical (largest) size so the rest auto-scale |
+| [Localization workflow](#localization-workflow) | Per-locale screenshot folders, localized captions, App Store mapping, and the Apple Watch size constraint |
+| [Common rejection / quality traps](#common-rejection--quality-traps) | Wrong dimensions, upscaling, blurry captures, stale status bars, marketing-heavy art, and unshipped content |
 
 ## What "store-ready" means
 

@@ -15,7 +15,7 @@ Distilled from Apple's HIG Components pages: Tab bars, Sidebars, Tab views, Tool
 | [Toolbars](#toolbars) | A toolbar provides convenient access to frequently used commands |
 | [Segmented controls](#segmented-controls) | A segmented control is a linear set of two or more equal-width segments |
 | [Path controls](#path-controls) | A path control (macOS only) shows the file system path of a selected file or folder |
-| [Page controls](#page-controls) | A page control displays a row of indicator dots (a solid dot marks the current page) representing pages in a flat |
+| [Page controls](#page-controls) | Indicator dots for navigating a flat, ordered set of pages and showing the current page |
 
 ## Tab bars
 *Last changed: 2026-06*

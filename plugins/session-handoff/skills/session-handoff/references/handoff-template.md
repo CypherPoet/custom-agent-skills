@@ -12,7 +12,7 @@ This file is the canonical layout for handoff documents. `scripts/create_handoff
 | [📍 Current State Summary](#-current-state-summary) | Active work, current status, and the point where the previous session stopped |
 | [💡 Important Context](#-important-context) | Decisions, failed approaches, and insights not captured in source artifacts |
 | [🚧 Pending Work](#-pending-work) | Immediate next steps, blockers, open questions, and deferred items |
-| [⚠️ Constraints for Resuming Agent](#-constraints-for-resuming-agent) | Non-obvious restrictions, known gotchas, and skills needed to resume safely |
+| [⚠ Constraints for Resuming Agent](#-constraints-for-resuming-agent) | Non-obvious restrictions, known gotchas, and skills needed to resume safely |
 | [🧠 Codebase Understanding](#-codebase-understanding) | Architecture, critical files, and implementation patterns discovered during the session |
 | [🏁 Work Completed](#-work-completed) | Finished tasks, modified files, and decisions made |
 | [🌐 Environment State](#-environment-state) | Tools, services, running processes, environment variables, and verification commands |
@@ -93,7 +93,7 @@ The canonical record for this work. Link by path or URL; do not restate their co
 
 > If this handoff *exists to track* items deferred from a previous task — i.e., those items are the primary effort, not adjacent to it — write `none` here and put the canonical list in **Immediate Next Steps**.
 
-## ⚠️ Constraints for Resuming Agent
+## ⚠ Constraints for Resuming Agent
 
 ### Potential Gotchas
 
