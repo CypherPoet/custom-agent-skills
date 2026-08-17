@@ -14,14 +14,14 @@ This header should be included unconditionally, even in code that builds without
 | [Quick Reference: Pointer Kinds and Bounds Annotations](#quick-reference-pointer-kinds-and-bounds-annotations) | Pointer kinds, bounds annotations, ABI compatibility, and default behavior |
 | [ABI Compatibility and ABI Visibility](#abi-compatibility-and-abi-visibility) | By establishing conventions for tying a pointer with its length, bounds-safe code remains ABI-compatible with bounds-unsafe code |
 | [Attribute Placement on Multi-Level Pointers](#attribute-placement-on-multi-level-pointers) | Every pointer/bounds attribute — `__single`, `__bidi_indexable` |
-| [Indexability Kinds](#indexability-kinds) | There are 4 kinds of pointers with internal bounds |
+| [Indexability Kinds](#indexability-kinds) | Four pointer kinds, pointer-bound access, conversions between indexable pointers, and default pointer attributes |
 | [External Bounds Annotations](#external-bounds-annotations) | For C APIs that pass a pointer and a length, `-fbounds-safety` supports annotations |
 | [Out and In-Out Parameters with `__counted_by`](#out-and-in-out-parameters-with-__counted_by) | Pointer-count parameter pairs that callees return, fill, or resize |
 | [Flexible Array Members](#flexible-array-members) | Structures with flexible array members must indicate the count with `__counted_by` inside the empty array brackets |
 | [Value-Terminated Arrays](#value-terminated-arrays) | `-fbounds-safety` supports value-terminated arrays with `__terminated_by(TR)` |
 | [Comprehensive Pointer Conversion Table](#comprehensive-pointer-conversion-table) | The table below summarizes the allowed implicit and explicit conversions across all pointer kinds |
 | [Deriving Bounds from Objects](#deriving-bounds-from-objects) | Rules for which bounds you get with regular C operations |
-| [Escape Hatches](#escape-hatches) | __unsafeforgebidi_indexable, __unsafeforgesingle, When to Forge, and related topics |
+| [Escape Hatches](#escape-hatches) | `__unsafe_forge_bidi_indexable`, `__unsafe_forge_single`, when and when not to forge, and the distinct `__unsafe_indexable` boundary |
 | [Principled Bounds Checks](#principled-bounds-checks) | All bounds checks verify that a range of memory is within another range |
 | [Performance Implications](#performance-implications) | `-fbounds-safety` may impact performance by adding bounds checks and increasing pointer size |
 | [Detecting `-fbounds-safety`](#detecting--fbounds-safety) | Conditionally compiling code when bounds safety is enabled |

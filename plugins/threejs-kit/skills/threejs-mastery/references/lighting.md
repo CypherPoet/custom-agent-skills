@@ -9,7 +9,7 @@ Light types, shadows, and image-based environment lighting. The light classes th
 | Section | Covers |
 |---|---|
 | [Light Types](#light-types) | Ambient, hemisphere, directional, point, spot, and rectangular area lights compared by behavior, shadow support, and cost |
-| [Shadows](#shadows) | Enabling Shadows, Tuning DirectionalLight Shadows, PointLight / SpotLight Shadows, and related topics |
+| [Shadows](#shadows) | Enabling shadows, tuning directional, point, and spot-light shadows, sizing shadow maps, and contact-shadow techniques |
 | [Light Helpers](#light-helpers) | Visual helpers for directional, point, spot, hemisphere, and area lights |
 | [Environment Lighting (IBL)](#environment-lighting-ibl) | Image-Based Lighting uses an HDR environment map to drive PBR materials |
 | [Common Setups](#common-setups) | Three-Point Lighting, Outdoor Daylight, and Indoor Studio |

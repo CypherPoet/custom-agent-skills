@@ -16,7 +16,7 @@ How the @react-three/fiber reconciler turns JSX into live three.js objects: cons
 | [`extend`: Registering Custom Elements](#extend-registering-custom-elements) | Classes outside the `THREE` namespace (addons, your own subclasses) must be registered before use as JSX |
 | [Disposal and `dispose={null}`](#disposal-and-disposenull) | When a JSX subtree unmounts, R3F automatically calls `.dispose()` on the objects beneath it — geometries, materials, textures |
 | [The `onUpdate` Prop](#the-onupdate-prop) | `onUpdate` is a callback — not a pointer event — invoked with the instance after fresh props are applied to it |
-| [TypeScript](#typescript) | Refs, Component Props: ThreeElements['mesh'], Typing extend: Module Augmentation with ThreeElement, and related topics |
+| [TypeScript](#typescript) | Refs, `ThreeElements['mesh']` component props, `ThreeElement` module augmentation for `extend`, exported utility types, and legacy v8 types to replace |
 | [Common Mistakes](#common-mistakes) | Frequent mistakes and the changes that correct them |
 | [See Also](#see-also) | Related references and supporting guidance |
 

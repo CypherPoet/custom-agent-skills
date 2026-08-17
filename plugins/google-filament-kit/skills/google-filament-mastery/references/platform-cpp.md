@@ -13,7 +13,7 @@ created from a native window.
 |---|---|
 | [Supported platforms & backends](#supported-platforms--backends) | Filament is a real-time physically based rendering engine for Android, iOS, Linux, macOS, Windows, and WASM |
 | [Toolchain prerequisites](#toolchain-prerequisites) | Minimum CMake, Clang, and Ninja versions; when prebuilt or CocoaPods consumers can skip them; and Android-only extras |
-| [Getting the SDK: prebuilt vs build from source](#getting-the-sdk-prebuilt-vs-build-from-source) | Prebuilt release binaries, Build from source: build.sh (macOS/Linux), Build from source: raw cmake + ninja, and related topics |
+| [Getting the SDK: prebuilt vs build from source](#getting-the-sdk-prebuilt-vs-build-from-source) | Prebuilt releases, `build.sh` on macOS and Linux, raw CMake and Ninja builds, Filament-specific CMake options, and per-OS build notes |
 | [What you link against (libraries & include dirs)](#what-you-link-against-libraries--include-dirs) | Filament is split into the core engine plus supporting libraries (from the repo directory structure) |
 | [Engine + SwapChain from a native window (desktop)](#engine--swapchain-from-a-native-window-desktop) | The platform-specific glue is: create an `Engine`, then create a `SwapChain` from a native window pointer passed as a `void*` |
 | [iOS specifics](#ios-specifics) | CocoaPods installation, Objective-C++ setup, Metal engine creation, `CAMetalLayer` swap chains, and reverse-order teardown |

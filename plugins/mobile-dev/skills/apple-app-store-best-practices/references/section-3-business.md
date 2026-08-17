@@ -9,7 +9,7 @@ If the business model is not obvious, it must be explained in metadata and App R
 
 | Section | Covers |
 |---|---|
-| [3.1 Payments](#31-payments) | 3.1.1 In-App Purchase, 3.1.1(a) Link to Other Purchase Methods, 3.1.2 Subscriptions, and related topics |
+| [3.1 Payments](#31-payments) | In-App Purchase and external purchase links, subscriptions, IAP-exempt purchase methods, hardware-specific content, and cryptocurrency wallets, mining, exchanges, offerings, and rewards |
 | [3.2 Other Business Model Issues](#32-other-business-model-issues) | 3.2.1 Acceptable and 3.2.2 Unacceptable |
 
 ---

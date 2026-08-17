@@ -7,7 +7,7 @@ The official linter encodes most review feedback as rules; what it can't see, hu
 | Section | Covers |
 |---|---|
 | [Setup](#setup) | The npm package is `eslint-plugin-obsidianmd` (repo: obsidianmd/eslint-plugin); the fetched 2026-07-23 corpus used v0.4.1 |
-| [Rule Catalog (v0.4.1)](#rule-catalog-v041) | Severity in the `recommended` config: ✅ error, ⚠️ warn, 🚫 off |
+| [Rule Catalog (v0.4.1)](#rule-catalog-v041) | Command registration, lifecycle cleanup, type and API correctness, DOM and styling, settings tabs, UI text, manifest hygiene, and recommended severities |
 | [Linter-Invisible Pitfalls](#linter-invisible-pitfalls) | Static analysis can't catch these — check them by reading the code |
 | [Human Review Checklist](#human-review-checklist) | Manifest, commands, settings, cleanup, accessibility, compatibility, and release-readiness checks |
 

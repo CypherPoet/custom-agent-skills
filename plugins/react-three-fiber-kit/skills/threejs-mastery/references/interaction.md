@@ -8,8 +8,8 @@ Raycasting, camera controls, pointer/touch input, drag/transform gizmos, selecti
 
 | Section | Covers |
 |---|---|
-| [Raycaster](#raycaster) | Basic Picking, Raycaster API, Mouse Coordinates: Full Window vs Canvas, and related topics |
-| [Camera Controls](#camera-controls) | OrbitControls, FlyControls, FirstPersonControls, and related topics |
+| [Raycaster](#raycaster) | Basic picking, Raycaster APIs, full-window and canvas coordinates, touch picking, and lower-cost raycasting strategies |
+| [Camera Controls](#camera-controls) | Orbit, Fly, FirstPerson, PointerLock, Trackball, Map, Transform, and Drag controls |
 | [Selection Patterns](#selection-patterns) | Click to Select with Highlight, Hover Effects, and Box (Marquee) Selection |
 | [Keyboard Input](#keyboard-input) | Track held keys in a map; read each frame |
 | [Screen ↔ World Conversion](#screen--world-conversion) | World → Screen, Screen → World (at a target Z), and Ray → Plane Intersection |

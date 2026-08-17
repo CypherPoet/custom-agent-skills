@@ -15,7 +15,7 @@
 | [Specular BRDF (Cook-Torrance)](#specular-brdf-cook-torrance) | The specular term is the Cook-Torrance approximation of the microfacet integral |
 | [Diffuse BRDF (Lambert vs Disney)](#diffuse-brdf-lambert-vs-disney) | Filament uses a simple Lambertian diffuse BRDF (uniform diffuse response over the microfacet hemisphere) |
 | [Energy compensation (multiscattering)](#energy-compensation-multiscattering) | The single-bounce Cook-Torrance model loses energy at high roughness |
-| [Parameterization & remapping](#parameterization--remapping) | Disney's full model has too many parameters for real-time |
+| [Parameterization & remapping](#parameterization--remapping) | Standard parameter ranges, base-color and dielectric `f0` derivation, reflectance conversion, perceptual-roughness remapping, and the authoring cheat sheet |
 | [Extended models](#extended-models) | In Filament's implementation the standard, clear-coat, and anisotropic models combine into one flexible model |
 
 ## Notation

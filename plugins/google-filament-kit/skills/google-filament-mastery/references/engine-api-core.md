@@ -11,7 +11,7 @@
 |---|---|
 | [Mental Model & Ownership](#mental-model--ownership) | `Engine` is Filament's main entry point and the factory + owner of every other object |
 | [Minimal Setup + Render Loop](#minimal-setup--render-loop) | The Engine header's own doc-comment gives the canonical full lifecycle (this is verbatim from `Engine.h`) |
-| [Engine](#engine) | Creating an Engine, Engine::Config, Factory Methods, and related topics |
+| [Engine](#engine) | Engine creation and configuration, factory methods, explicit resource destruction and tracking, feature levels, threading constraints, and frame pumping |
 | [SwapChain](#swapchain) | A `SwapChain` represents an OS native renderable surface |
 | [Renderer](#renderer) | A `Renderer` represents one OS window and generates the drawing commands |
 | [View](#view) | A `View` is everything needed to render a Scene — effectively one render pass |

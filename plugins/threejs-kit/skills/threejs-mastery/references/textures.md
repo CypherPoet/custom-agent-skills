@@ -12,8 +12,8 @@ Image, data, canvas, video, and HDR textures; color space; filtering; render tar
 | [Color Space — the #1 Gotcha](#color-space--the-1-gotcha) | Color/albedo textures must be tagged `SRGBColorSpace` |
 | [Wrapping, Repeat, Offset, Rotation](#wrapping-repeat-offset-rotation) | Wrapping modes plus texture repeat, offset, rotation, and pivot controls |
 | [Filtering and Mipmaps](#filtering-and-mipmaps) | Minification, magnification, mipmap, and anisotropic filtering settings |
-| [Texture Sources](#texture-sources) | Image, DataTexture, CanvasTexture, and related topics |
-| [Cube Textures and HDR Environments](#cube-textures-and-hdr-environments) | CubeTextureLoader, Equirectangular HDR → Filtered Environment, RGBELoader (.hdr), and related topics |
+| [Texture Sources](#texture-sources) | Image, `DataTexture`, `CanvasTexture`, `VideoTexture`, and KTX2/Basis compressed textures |
+| [Cube Textures and HDR Environments](#cube-textures-and-hdr-environments) | `CubeTextureLoader`, PMREM-filtered equirectangular environments, RGBE and EXR loading, and scene-background tuning |
 | [Render Targets](#render-targets) | Render the scene (or a custom pass) into a texture |
 | [CubeCamera — Dynamic Environment Maps](#cubecamera--dynamic-environment-maps) | Cube-camera updates are expensive — every frame is six camera renders |
 | [UV Mapping](#uv-mapping) | Reading and Writing UVs, Second UV Channel, and UV Transform in a Shader |

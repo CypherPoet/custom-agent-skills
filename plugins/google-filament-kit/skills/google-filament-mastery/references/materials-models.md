@@ -9,7 +9,7 @@
 |---|---|
 | [Core Concepts](#core-concepts) | Material — defines the visual appearance of a surface |
 | [Choosing a Model](#choosing-a-model) | When to choose lit, subsurface, cloth, unlit, or legacy specular-glossiness shading |
-| [Lit Model (Standard)](#lit-model-standard) | Filament's standard, physically-based shading model |
+| [Lit Model (Standard)](#lit-model-standard) | Base color, metallic, roughness, reflectance, sheen, clear coat, anisotropy, ambient occlusion, normals, emissive output, IOR, transmission, absorption, thickness, dispersion, and shadow strength |
 | [Subsurface Model](#subsurface-model) | Selected with `shadingModel : subsurface` |
 | [Cloth Model](#cloth-model) | Selected with `shadingModel : cloth` |
 | [Unlit Model](#unlit-model) | Selected with `shadingModel : unlit` |

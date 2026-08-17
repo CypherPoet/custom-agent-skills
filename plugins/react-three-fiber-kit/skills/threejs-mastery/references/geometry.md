@@ -9,7 +9,7 @@ Built-in shapes, custom `BufferGeometry`, instancing, and the math you need to b
 | Section | Covers |
 |---|---|
 | [Built-in Geometries](#built-in-geometries) | Basic Shapes, Polyhedra and Capsule, Path-Based Shapes, and Text Geometry |
-| [BufferGeometry](#buffergeometry) | The base class for every geometry |
+| [BufferGeometry](#buffergeometry) | Building geometry from scratch, defining and mutating attributes, and configuring interleaved buffers |
 | [EdgesGeometry and WireframeGeometry](#edgesgeometry-and-wireframegeometry) | Generating thresholded edges and complete triangle wireframes |
 | [Points](#points) | Building point clouds with `BufferGeometry` and `PointsMaterial` |
 | [Lines](#lines) | Creating connected lines, loops, and line segments from point data |

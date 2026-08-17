@@ -9,7 +9,7 @@
 |---|---|
 | [The Imaging Pipeline](#the-imaging-pipeline) | Filament's lighting equations compute scene luminance in physically based photometric units |
 | [Physically Based Camera & Exposure](#physically-based-camera--exposure) | The first step is using a physically based camera to properly expose the scene's outgoing luminance |
-| [Post-Processing & `View` Options](#post-processing--view-options) | Post-processing is configured on the `View` (`View.h`) |
+| [Post-Processing & `View` Options](#post-processing--view-options) | `View` controls for tone mapping, color grading, bloom, lens flare, chromatic aberration, depth of field, vignette, anti-aliasing, dithering, and other post-process effects |
 | [Color Management](#color-management) | Linear vs sRGB, Color Conversion API, and ColorSpace API |
 | [Renderer Pipeline: Clustered Forward Rendering](#renderer-pipeline-clustered-forward-rendering) | Filament uses clustered forward rendering |
 | [Coordinate Systems & Conventions](#coordinate-systems--conventions) | Filament handedness, axes, units, camera orientation, clipping and NDC, winding, picking, and cubemap conventions |

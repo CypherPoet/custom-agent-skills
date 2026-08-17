@@ -9,7 +9,7 @@
 |---|---|
 | [Physical light units (the trap)](#physical-light-units-the-trap) | Filament uses physical light units so lighting is correct by default and lighting rigs are reusable |
 | [Direct lighting](#direct-lighting) | All light evaluation computes the outgoing luminance (radiance) `L_out = f(v,l) · E` |
-| [Image-based lighting (IBL)](#image-based-lighting-ibl) | What an IBL is, Diffuse: spherical harmonics (irradiance), Specular: prefiltered roughness mip chain, and related topics |
+| [Image-based lighting (IBL)](#image-based-lighting-ibl) | Diffuse spherical harmonics, prefiltered specular mip chains, why raw HDR cannot feed `IndirectLight`, HDR preprocessing with `cmgen` or GPU `iblprefilter`, and skybox setup |
 | [Occlusion](#occlusion) | Contact, ambient, and screen-space darkening at different spatial scales |
 | [Normal mapping](#normal-mapping) | Two use cases: replacing high-poly with low-poly meshes (base map) and adding surface detail (detail map) |
 | [Runtime API reference (verbatim signatures)](#runtime-api-reference-verbatim-signatures) | LightManager::Builder (from LightManager.h), IndirectLight::Builder (from IndirectLight.h), and Skybox::Builder (from Skybox.h) |

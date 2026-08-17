@@ -13,8 +13,8 @@ Pick one per surface; you can mix in the same scene but the mental model is clea
 
 | Section | Covers |
 |---|---|
-| [TSL (Modern)](#tsl-modern) | Imports, Minimum Viable TSL Material, Uniforms, and related topics |
-| [TSL Recipes](#tsl-recipes) | Texture Sampling, Vertex Displacement, Fresnel, and related topics |
+| [TSL (Modern)](#tsl-modern) | Imports, minimum materials, uniforms, varyings and attributes, function nodes, swizzling and math, and conditional flow |
+| [TSL Recipes](#tsl-recipes) | Texture sampling, vertex displacement, Fresnel, rim lighting, gradients, dissolve effects, instanced TSL, extending built-in node materials, and output-node overrides |
 | [Recent TSL Additions (r184–r185)](#recent-tsl-additions-r184r185) | Render-pipeline, storage, batching, texture, and shader-node APIs added in r184 and r185 |
 | [WGSL Interop](#wgsl-interop) | When you need hand-written WGSL under `WebGPURenderer` — porting an existing shader |
 | [GLSL (Legacy)](#glsl-legacy) | Raw-GLSL `ShaderMaterial` / `RawShaderMaterial` — the compatibility path for WebGL-only targets |

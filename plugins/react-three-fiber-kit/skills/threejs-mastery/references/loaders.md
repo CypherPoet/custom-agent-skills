@@ -12,7 +12,7 @@ Loading models (GLTF/GLB primary, plus OBJ/FBX/STL/PLY), textures (`TextureLoade
 | [TextureLoader](#textureloader) | Texture configuration (wrap, repeat, filtering, anisotropy) is covered in textures.md |
 | [CubeTextureLoader](#cubetextureloader) | Loading six-face cube textures for backgrounds, environments, and material maps |
 | [HDR / EXR Environments](#hdr--exr-environments) | PMREMGenerator — Prefilter for PBR |
-| [GLTFLoader (Primary 3D Format)](#gltfloader-primary-3d-format) | GLB/GLTF is the recommended format for web 3D |
+| [GLTFLoader (Primary 3D Format)](#gltfloader-primary-3d-format) | Loading GLB/GLTF scenes and animations, enabling shadows, finding meshes, tuning materials, centering and normalizing models, and configuring Draco, Meshopt, and KTX2 decoders |
 | [Other Model Formats](#other-model-formats) | OBJ and MTL, FBX, STL, and PLY loaders and their returned scene data |
 | [Async / Promise Patterns](#async--promise-patterns) | Promisify Any Loader and Parallel Loads with Promise.all |
 | [Cache](#cache) | Three.js has a global request cache shared across loaders that go through the file loader (most do) |

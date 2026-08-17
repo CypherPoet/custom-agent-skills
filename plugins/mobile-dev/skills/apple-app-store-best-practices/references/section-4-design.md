@@ -11,7 +11,7 @@
 | [4.2 Minimum Functionality](#42-minimum-functionality) | Requirement: Apps must provide sufficient value and functionality to justify their presence on the App Store |
 | [4.3 Spam](#43-spam) | 4.3(a) Duplicate Apps (ASR & NR) and 4.3(b) Category Saturation |
 | [4.4 Extensions (ASR & NR)](#44-extensions-asr--nr) | Requirement: App extensions must comply with the App Extension Programming Guide |
-| [4.5 Apple Sites and Services (ASR & NR)](#45-apple-sites-and-services-asr--nr) | 4.5.1 Apple Data Sources, 4.5.2 Apple Music, 4.5.3 No Spam via Apple Services, and related topics |
+| [4.5 Apple Sites and Services (ASR & NR)](#45-apple-sites-and-services-asr--nr) | Apple data sources, Apple Music, spam restrictions, push notifications, Game Center, and Apple emoji |
 | [4.7 Mini Apps, Mini Games, Streaming Games, Chatbots, Plug-ins, Game Emulators (ASR & NR)](#47-mini-apps-mini-games-streaming-games-chatbots-plug-ins-game-emulators-asr--nr) | Requirement: The developer of the host app is responsible for all software offered through the app |
 | [4.8 Login Services (ASR & NR)](#48-login-services-asr--nr) | Requirement: Apps that offer third-party or social login must also offer Sign in with Apple as an equivalent option |
 | [4.9 Apple Pay (ASR & NR)](#49-apple-pay-asr--nr) | Requirement: Apps using Apple Pay must display all material purchase information before the transaction is confirmed |

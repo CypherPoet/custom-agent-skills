@@ -9,11 +9,11 @@ Cameras, Object3D, the scene graph, math utilities, and the building blocks ever
 | [Scene](#scene) | Top-level container for objects, lights, and cameras |
 | [Cameras](#cameras) | PerspectiveCamera, OrthographicCamera, ArrayCamera, and CubeCamera |
 | [Renderer Configuration](#renderer-configuration) | `WebGPURenderer` (modern) and `WebGLRenderer` (compatibility) share most configuration |
-| [Object3D](#object3d) | Base class of every node in the scene graph |
+| [Object3D](#object3d) | Local and world transforms, parent-child hierarchy behavior, visibility layers, and manual matrix updates |
 | [Group](#group) | Empty container for organizing objects |
 | [Mesh](#mesh) | Pairs a geometry with a material (or array of materials, one per geometry group) |
 | [Coordinate System](#coordinate-system) | Right-handed: +X right, +Y up, +Z toward viewer |
-| [Math Utilities](#math-utilities) | Vector3, Matrix4, Quaternion, and related topics |
+| [Math Utilities](#math-utilities) | `Vector3`, `Matrix4`, `Quaternion`, `Euler`, `Color`, and `MathUtils` operations |
 | [LoadingManager](#loadingmanager) | Track or coordinate progress across multiple loaders |
 | [LOD (Level of Detail)](#lod-level-of-detail) | Switch meshes by camera distance |
 | [Merging Static Geometry](#merging-static-geometry) | Combine multiple geometries into one to reduce draw calls |

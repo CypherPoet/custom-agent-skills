@@ -13,7 +13,7 @@ Scene staging at the React layer — light JSX, the shadow pipeline, drei enviro
 | [Environment & Sky](#environment--sky) | `<Environment>` (drei) loads an HDR, PMREM-filters it, and sets `scene.environment` |
 | [Drei Shadow Helpers](#drei-shadow-helpers) | When to use each Drei shadow helper and which properties control it |
 | [Stage](#stage) | Product staging with environment lighting, shadows, and automatic camera fitting |
-| [Geometry & Layout Helpers](#geometry--layout-helpers) | Instances / Merged, Lines, Edges, and related topics |
+| [Geometry & Layout Helpers](#geometry--layout-helpers) | Instances and Merged, lines and edges, Center and Bounds camera fitting, Detailed LOD, Float, Trail, Sparkles, and Billboard |
 | [Text & Html](#text--html) | `<Text>` (SDF, troika-based) — the default for any readable text: crisp at every zoom level |
 | [Drei Specialty Materials](#drei-specialty-materials) | Drop-in `<mesh>` children, uppercase imports from `@react-three/drei` |
 | [Adaptive Quality](#adaptive-quality) | FPS-based quality changes for resolution, effects, and expensive scene details |

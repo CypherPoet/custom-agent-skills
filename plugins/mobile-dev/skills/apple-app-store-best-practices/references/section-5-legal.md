@@ -7,8 +7,8 @@
 
 | Section | Covers |
 |---|---|
-| [5.1 Privacy](#51-privacy) | 5.1.1 Data Collection and Storage, 5.1.2 Data Use and Sharing, 5.1.3 Health and Health Research, and related topics |
-| [5.2 Intellectual Property](#52-intellectual-property) | 5.2.1 Licensed or Owned Content Only, 5.2.2 Third-Party Service Authorization, 5.2.3 No Illegal File Sharing, and related topics |
+| [5.1 Privacy](#51-privacy) | Data collection and storage, data use and sharing, health and research data, children's privacy, and location services |
+| [5.2 Intellectual Property](#52-intellectual-property) | Licensed or owned content, third-party service authorization, illegal file sharing, false Apple endorsements, and confusing similarity to Apple products |
 | [§5.3 Gaming, Gambling, and Lotteries](#53-gaming-gambling-and-lotteries) | Gaming and gambling are highly regulated industries |
 | [§5.4 VPN Apps (ASR & NR)](#54-vpn-apps-asr--nr) | Requirement: Apps offering VPN services must use the `NEVPNManager` API |
 | [§5.5 Mobile Device Management (ASR & NR)](#55-mobile-device-management-asr--nr) | Apple capability approval and eligibility requirements for MDM apps |

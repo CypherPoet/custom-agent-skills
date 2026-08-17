@@ -11,7 +11,7 @@ Two pipelines exist:
 
 | Section | Covers |
 |---|---|
-| [TSL Post-Processing (Modern)](#tsl-post-processing-modern) | Minimal Setup, Resize, Built-in TSL Passes, and related topics |
+| [TSL Post-Processing (Modern)](#tsl-post-processing-modern) | Composer setup and resize, built-in passes, bloom and selective bloom, depth of field, FXAA, FSR1 and TAAU upscaling, custom output transforms, and custom TSL effects |
 | [EffectComposer (Legacy WebGL Pipeline)](#effectcomposer-legacy-webgl-pipeline) | Use this with `WebGLRenderer` when porting existing code or when you need a pass that hasn't migrated to TSL yet |
 | [Multi-Scene Compositing](#multi-scene-compositing) | Render multiple scenes into one output |
 | [Render to Texture (Both Pipelines)](#render-to-texture-both-pipelines) | Rendering a scene into a texture and reusing the result on another material |

@@ -10,7 +10,7 @@
 | [Pattern 2: UIScreen.main.bounds → view.bounds](#pattern-2-uiscreenmainbounds--viewbounds) | Intent: Get available space for layout or dimensions |
 | [Pattern 3: UIScreen.main.nativeScale — NO trait-collection equivalent](#pattern-3-uiscreenmainnativescale--no-trait-collection-equivalent) | `nativeScale` is the physical pixel density of the hardware display; `displayScale`/`scale` is the logical scale factor (2x, 3x) |
 | [Pattern 4: Keyboard Notification Coordinate Space](#pattern-4-keyboard-notification-coordinate-space) | Intent: Convert keyboard frame from notification using a coordinate space |
-| [Special Cases](#special-cases) | Free Functions and Cached Helpers, Notification Observers, Fallback Paths, and related topics |
+| [Special Cases](#special-cases) | Free functions and cached helpers, notification observers, fallback paths, window initialization, SwiftUI, `UIGraphicsImageRendererFormat`, and call-chain propagation |
 | [Analysis](#analysis) | In addition to the generic context read described in `SKILL.md` Phase 2 |
 | [Implementation Gates](#implementation-gates) | Before editing any line, answer these five gate questions |
 | [Implementation Rules](#implementation-rules) | Compatibility, warnings, deployment targets, and verification requirements |
