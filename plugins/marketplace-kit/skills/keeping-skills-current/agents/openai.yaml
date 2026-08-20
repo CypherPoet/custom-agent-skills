@@ -1,6 +1,0 @@
-interface:
-  display_name: "Keeping Skills Current"
-  short_description: "Review skills against configured sources"
-  default_prompt: "Use $keeping-skills-current to review this project's configured skills."
-policy:
-  allow_implicit_invocation: false
