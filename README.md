@@ -58,6 +58,8 @@ Conventions live in [`docs/PLUGIN-CONVENTIONS.md`](docs/PLUGIN-CONVENTIONS.md); 
 
 Marketplace maintenance uses the [`marketplace-kit`](plugins/marketplace-kit/README.md) plugin.
 
+Configured source reviews use the separately installed `skill-crafting-kit` plugin. This repository stores only its [configuration](.keeping-skills-current/manifest.json) and [machine-managed state](.keeping-skills-current/state.json).
+
 Before opening a PR, run the repository health suite:
 
 ```shell
