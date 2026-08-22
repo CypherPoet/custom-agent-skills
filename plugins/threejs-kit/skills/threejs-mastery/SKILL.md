@@ -212,6 +212,7 @@ All examples and references use `three/addons/...` — the modern alias. The old
 | Post-processing | [postprocessing.md](./references/postprocessing.md) | TSL `RenderPipeline` pipeline + node passes (primary), `EffectComposer` (legacy) |
 | Compute | [compute.md](./references/compute.md) | GPU compute (WebGPU only): storage buffers, `instancedArray`/`attributeArray`, `compute()` dispatch, particles/simulation |
 | WebGPU runtime | [webgpu-runtime.md](./references/webgpu-runtime.md) | Device-loss handling and recovery, requesting device limits/features (WebGPU) |
+| Migrations | [migrations.md](./references/migrations.md) | Version-bound breaking changes; includes the unreleased r186 guidance published after r185 |
 | Project setup | [project-setup.md](./references/project-setup.md) | Module entry points, npm/Vite bundling, TypeScript, React (r3f) |
 
 ## Routing Rules
