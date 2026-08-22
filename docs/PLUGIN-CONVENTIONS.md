@@ -133,4 +133,4 @@ punctuation, and update it when the section's scope changes. Do not use a
 heading-only list, a `**Contents:**` jump-line, or a table that merely repeats
 the document hierarchy.
 
-Project-managed source reviews are configured in [`.keeping-skills-current/manifest.json`](../.keeping-skills-current/manifest.json). Research sources and schedules belong there rather than in required skill-body sections. Unlisted skills are outside that workflow. Development-only `*-workspace/` and `evals/` directories do not ship.
+Project-managed source reviews use the private standalone [`skill-crafting-kit`](https://github.com/CypherPoet/skill-crafting-kit) plugin rather than a skill shipped by this repository. Static source policies and schedules live in [`.keeping-skills-current/manifest.json`](../.keeping-skills-current/manifest.json); machine-managed attempt and completion data lives in [`.keeping-skills-current/state.json`](../.keeping-skills-current/state.json). Unlisted skills are outside that workflow. Development-only `*-workspace/` and `evals/` directories do not ship.

@@ -113,6 +113,25 @@ auto-fill the questionnaire.
 
 ---
 
+## 3A. Accessibility Nutrition Labels
+
+Open the app's **App Accessibility** section in App Store Connect. These labels are **voluntary for
+now**, but Apple says they will become required over time for new apps and app updates.
+
+- Report support separately for each device type. A feature can be supported on one device type
+  and unsupported on another.
+- Claim a feature only when people can use it for **all common tasks** in the app, not just one
+  screen or flow.
+- Add an accessibility URL when you have a page that explains the app's support in more detail;
+  the URL is optional.
+
+Treat the form as a product audit, not a marketing checklist. If a feature only works for part of
+the app, leave that claim off until the common-task requirement is met.
+
+*Accessibility Nutrition Label guidance checked against Apple Help on 2026-08-21.*
+
+---
+
 ## 4. Pricing & availability
 
 Monetization → **Pricing and Availability**.

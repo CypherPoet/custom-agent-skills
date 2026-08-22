@@ -2,7 +2,7 @@
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "threejs-kit",
   "displayName": "Three.js",
-  "version": "0.12.2",
+  "version": "0.13.1",
   "description": "Three.js / WebGPU / WebGL tooling.",
   "author": {
     "name": "CypherPoet"

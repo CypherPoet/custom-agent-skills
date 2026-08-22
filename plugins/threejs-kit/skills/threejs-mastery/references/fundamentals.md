@@ -137,6 +137,10 @@ await renderer.init();                           // WebGPURenderer only
 renderer.render(scene, camera);
 ```
 
+The example's `PCFSoftShadowMap` setting is valid for r185 and the WebGL path. The r186 migration
+guide removes it from `WebGPURenderer`; use `PCFShadowMap` there. See
+[migrations.md](./migrations.md) before updating a version-bound renderer configuration.
+
 ## Object3D
 
 Base class of every node in the scene graph. `Mesh`, `Group`, `Light`, `Camera`, and `Bone` all extend it.
