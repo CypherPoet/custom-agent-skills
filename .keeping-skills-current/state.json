@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "skills": {
     "app-store-connect-submission": {
-      "lastAttemptedReview": "2026-08-22T00:25:08.207Z",
+      "lastAttemptedReview": "2026-08-22T10:51:53.998Z",
       "lastAttemptStatus": "completed",
-      "lastAttemptFingerprint": "sha256:bacf57a8b85861017cb47e1b763a3b7c15d98d22dc82326ca0d6a0b42ade20c0",
-      "lastCompletedReview": "2026-08-22T00:25:08.207Z",
-      "completedFingerprint": "sha256:bacf57a8b85861017cb47e1b763a3b7c15d98d22dc82326ca0d6a0b42ade20c0"
+      "lastAttemptFingerprint": "sha256:2e471c4d6ab67383275ad822a5664ca12da74092656ea4b60dd6cfbc462a8804",
+      "lastCompletedReview": "2026-08-22T10:51:53.998Z",
+      "completedFingerprint": "sha256:2e471c4d6ab67383275ad822a5664ca12da74092656ea4b60dd6cfbc462a8804"
     },
     "apple-app-icons": {
       "lastAttemptedReview": "2026-08-22T00:25:08.207Z",
@@ -149,11 +149,11 @@
       "completedFingerprint": "sha256:8c3834553b8a5620be24a41e9020c50f3e53b954880e92129989dad6b9b03702"
     },
     "swiftui-whats-new-27": {
-      "lastAttemptedReview": "2026-08-22T00:25:08.207Z",
+      "lastAttemptedReview": "2026-08-22T10:51:53.998Z",
       "lastAttemptStatus": "completed",
-      "lastAttemptFingerprint": "sha256:888859b75130ad7b156cd79729183ec306e7708d34b0938ec38adef523fc6aa2",
-      "lastCompletedReview": "2026-08-22T00:25:08.207Z",
-      "completedFingerprint": "sha256:888859b75130ad7b156cd79729183ec306e7708d34b0938ec38adef523fc6aa2"
+      "lastAttemptFingerprint": "sha256:19fdc14c7d4b64ffc385c98ba182419a390f708fc2ce8ea97d924b148a2d165d",
+      "lastCompletedReview": "2026-08-22T10:51:53.998Z",
+      "completedFingerprint": "sha256:19fdc14c7d4b64ffc385c98ba182419a390f708fc2ce8ea97d924b148a2d165d"
     },
     "test-modernizer": {
       "lastAttemptedReview": "2026-08-14T16:11:04Z",

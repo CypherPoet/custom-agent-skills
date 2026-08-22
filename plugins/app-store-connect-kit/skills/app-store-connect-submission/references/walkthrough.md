@@ -103,7 +103,7 @@ auto-fill the questionnaire.
 
 ## 3A. Accessibility Nutrition Labels
 
-Open the app's **Accessibility** section in App Store Connect. These labels are **voluntary for
+Open the app's **App Accessibility** section in App Store Connect. These labels are **voluntary for
 now**, but Apple says they will become required over time for new apps and app updates.
 
 - Report support separately for each device type. A feature can be supported on one device type
