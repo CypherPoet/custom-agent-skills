@@ -18,7 +18,7 @@ Cameras, Object3D, the scene graph, math utilities, and the building blocks ever
 | [LOD (Level of Detail)](#lod-level-of-detail) | Camera-distance thresholds for switching among mesh detail levels |
 | [Merging Static Geometry](#merging-static-geometry) | Draw-call reduction for same-material static meshes and when instancing is the better alternative |
 | [Common Mistakes](#common-mistakes) | Projection and resize omissions, removed geometry APIs, stale matrices, disabled auto-updates, Euler interpolation, and unattached light targets |
-| [See Also](#see-also) | Related references and supporting guidance |
+| [See Also](#see-also) | Geometry and instancing, PBR and node materials, lighting and image-based environments, and raycasting or camera controls |
 
 ## Scene
 

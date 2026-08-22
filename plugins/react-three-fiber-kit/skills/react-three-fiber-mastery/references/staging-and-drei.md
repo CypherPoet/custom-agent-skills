@@ -18,7 +18,7 @@ Scene staging at the React layer — light JSX, the shadow pipeline, drei enviro
 | [Drei Specialty Materials](#drei-specialty-materials) | Reflective floors, premium transmission, wobble and distortion, invisible shadow and raycast surfaces, render-cost constraints, and built-in physical-material recipes |
 | [Adaptive Quality](#adaptive-quality) | Sustained-FPS quality decisions and temporary movement regression for pixel ratio, effects, and expensive scene details |
 | [Common Mistakes](#common-mistakes) | Required shadow switches, frustum and bias tuning, helper refs and mounted light targets, area-light initialization, self-hosted environments, shadow-helper update lifecycles, Html anchoring, default controls for gizmos, Text3D centering, instance capacity, and portable wide lines |
-| [See Also](#see-also) | Related references and supporting guidance |
+| [See Also](#see-also) | Performance and adaptive quality, JSX attachment, model and HDR loading, custom materials, stack setup, and the official drei and R3F catalogs |
 
 ## Lights & Shadows
 

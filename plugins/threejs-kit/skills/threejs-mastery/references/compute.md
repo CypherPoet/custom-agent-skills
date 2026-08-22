@@ -15,7 +15,7 @@ GPU compute in Three.js runs through TSL: you allocate storage buffers, write a 
 | [Mutating Values Inside a Compute Node](#mutating-values-inside-a-compute-node) | Assignable shader variables and storage nodes, ineffective JavaScript rebinding, and value-returning conditional selection |
 | [Worked Example: GPU Particles](#worked-example-gpu-particles) | GPU-only seeding and gravity integration, delta uniforms, synchronous updates, and correct instance-attribute rendering |
 | [Common Mistakes](#common-mistakes) | Uninitialized dispatch, non-node mutation, WebGL fallback, collapsed rendering, element stride mismatch, and storage-buffer limits |
-| [See Also](#see-also) | Related references and supporting guidance |
+| [See Also](#see-also) | TSL node fundamentals, WebGPU device-limit configuration, and instanced rendering for compute-driven transforms |
 
 ## Storage Buffers
 

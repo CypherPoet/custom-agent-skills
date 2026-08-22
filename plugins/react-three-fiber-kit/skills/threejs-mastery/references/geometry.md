@@ -18,7 +18,7 @@ Built-in shapes, custom `BufferGeometry`, instancing, and the math you need to b
 | [Common Manipulations](#common-manipulations) | Bounding-box centering and normalization, cloned transforms, and position-based morph targets |
 | [Performance Tips](#performance-tips) | Intentional segmentation, indexed vertices, static merging, repeated-object instancing, and GPU disposal |
 | [Common Mistakes](#common-mistakes) | Missing update flags, stale normals and bounds, excessive draw calls, index-width overflow, leaked buffers, missing tangents, addon imports, and stale instances |
-| [See Also](#see-also) | Related references and supporting guidance |
+| [See Also](#see-also) | Object transforms and math, material attribute requirements, and TSL or GLSL attributes and instancing |
 
 ## Built-in Geometries
 

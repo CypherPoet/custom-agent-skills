@@ -18,7 +18,7 @@ How the @react-three/fiber reconciler turns JSX into live three.js objects: cons
 | [The `onUpdate` Prop](#the-onupdate-prop) | Post-prop imperative follow-up, especially rebuilding camera projection matrices after focal or clipping changes |
 | [TypeScript](#typescript) | Refs, `ThreeElements['mesh']` component props, `ThreeElement` module augmentation for `extend`, exported utility types, and legacy v8 types to replace |
 | [Common Mistakes](#common-mistakes) | Stable constructor arguments and v9 buffer attributes, one-parent primitives and cached-resource disposal, custom-element registration and current types, camera projection updates, custom-shader color space, material-slot order, explicit attachment, and avoidable object allocation |
-| [See Also](#see-also) | Related references and supporting guidance |
+| [See Also](#see-also) | Stack setup, core hooks, model loading and caching, custom shader materials, v9 migration, and official object or TypeScript guidance |
 
 ## How the Reconciler Maps JSX to three.js
 

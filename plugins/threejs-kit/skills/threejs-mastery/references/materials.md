@@ -26,7 +26,7 @@ PBR, classic phong/lambert/basic, toon, point/line, and how to customize materia
 | [Cloning, Modifying, and Disposing](#cloning-modifying-and-disposing) | Independent clones, immediate numeric changes, shader-affecting recompilation flags, and GPU cleanup |
 | [Performance Tips](#performance-tips) | Shared and pooled materials, alpha testing over transparency, appropriately cheap shading, and restrained light counts |
 | [Common Mistakes](#common-mistakes) | Incorrect map color spaces and UV channels, missing recompiles, mixed shader pipelines, wrong PBR class, leaked materials, and duplicate tone mapping |
-| [See Also](#see-also) | Related references and supporting guidance |
+| [See Also](#see-also) | Texture color spaces and maps, TSL or GLSL shader customization, PBR lighting and environments, and node-based screen-space effects |
 
 ## Material Types
 

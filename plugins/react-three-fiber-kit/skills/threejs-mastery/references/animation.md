@@ -19,7 +19,7 @@ Three.js animation has three building blocks: `AnimationClip` (keyframe data), `
 | [Procedural Patterns](#procedural-patterns) | Direct transform animation with smooth damping, spring integration, and common oscillation paths |
 | [Performance Tips](#performance-tips) | Clip reuse, mixer counts, track pruning, and efficient procedural animation |
 | [Common Mistakes](#common-mistakes) | Missing or incorrect mixer updates, inactive crossfades, one-shot resets, cleanup leaks, bone conflicts, displaced skinned vertices, and renamed clips |
-| [See Also](#see-also) | Related references and supporting guidance |
+| [See Also](#see-also) | Animated-asset loading, clocks and render loops, and TSL or GLSL vertex and material animation |
 
 ## Building an AnimationClip
 

@@ -16,7 +16,7 @@ Light types, shadows, and image-based environment lighting. The light classes th
 | [Many Dynamic Lights (WebGPU)](#many-dynamic-lights-webgpu) | Uniform-packed runtime light sets that avoid material recompilation under WebGPU |
 | [Performance Tips](#performance-tips) | Light-count control, baked maps, restrained shadow resolution and coverage, selective casting, and light layers |
 | [Common Mistakes](#common-mistakes) | Incomplete shadow enablement, loose or biased maps, area-light initialization, unfiltered HDR, tone mapping, and stale helpers |
-| [See Also](#see-also) | Related references and supporting guidance |
+| [See Also](#see-also) | PBR material response, lightmaps and environment-map encoding, and bloom or other lighting-driven post-processing |
 
 ## Light Types
 

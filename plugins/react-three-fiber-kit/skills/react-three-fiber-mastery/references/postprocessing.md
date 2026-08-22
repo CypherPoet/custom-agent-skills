@@ -24,7 +24,7 @@ Screen-space effects in R3F via `@react-three/postprocessing` (v3), the React wr
 | [Performance and Mobile Scaling](#performance-and-mobile-scaling) | Effect and blur-pass budgets, pass adjacency, persistent toggles, demand rendering, GPU-tier branches, low-end anti-aliasing and bloom reductions, and Canvas-level resolution scaling |
 | [Native three.js Post-Processing](#native-threejs-post-processing) | The separate imperative composer and pass hierarchy, manual frame rendering, incompatibility with React effect passes, and the correct R3F boundary |
 | [Common Mistakes](#common-mistakes) | HDR bloom and restored tone mapping, selection-aware effects, state-backed God Rays sources, SSAO normal passes, exclusive anti-aliasing, Outline context and clearing, ref-driven effect animation, world-space depth-of-field targets, memoized custom effects, compatible pipeline imports, and the one-composer rule |
-| [See Also](#see-also) | Related references and supporting guidance |
+| [See Also](#see-also) | Object-level shaders, scene and mobile performance, HDR staging, Canvas color defaults, stack setup, and upstream effect or pass guidance |
 
 ## Install and Versions
 

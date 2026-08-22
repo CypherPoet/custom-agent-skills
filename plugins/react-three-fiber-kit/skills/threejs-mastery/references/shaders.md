@@ -21,7 +21,7 @@ Pick one per surface; you can mix in the same scene but the mental model is clea
 | [Debugging](#debugging) | Logging compiled stages, surfacing shader errors, and visualizing UV, normal, or position data in GLSL and TSL |
 | [Performance Tips](#performance-tips) | Packed uniforms, branchless selection, CPU-precomputed constants, texture lookups, and overdraw control |
 | [Common Mistakes](#common-mistakes) | Stale node assignments, illegal mutation, skinned displacement inputs, material-lighting differences, and mismatched attribute kinds |
-| [See Also](#see-also) | Related references and supporting guidance |
+| [See Also](#see-also) | Legacy raw GLSL, material integration and patching, TSL screen-space effects, texture sampling and render targets, and instanced attributes |
 
 ## TSL (Modern)
 

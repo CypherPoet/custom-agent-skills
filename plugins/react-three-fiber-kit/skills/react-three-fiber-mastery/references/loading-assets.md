@@ -22,7 +22,7 @@ Models, textures, video, and render targets at the React layer: `useLoader` and 
 | [Suspense and Loading UI](#suspense-and-loading-ui) | In-canvas fallback types, nested progressive assets, global progress and full-page overlays, error boundaries, cached-failure eviction, and v9 side-effect timing |
 | [Caching and Preloading](#caching-and-preloading) | Shared loader-and-URL instances, mutation and disposal consequences, module-scope fetches, scene-wide GPU preparation, and conditional mounting for lazy loads |
 | [Common Mistakes](#common-mistakes) | Suspense placement, one-parent primitives and cloning, decoder wiring, v9 color and data texture spaces, AO UV channels and orientation, shared-cache mutation and disposal, conditional loading, video autoplay, texture uploads, loading-UI placement, cached failures, and gltfjsx types |
-| [See Also](#see-also) | Related references and supporting guidance |
+| [See Also](#see-also) | Environment staging, clip animation, asset and instance performance, v9 migration, stack setup, and upstream loading, gltfjsx, and drei guidance |
 
 ## Quick Start
 

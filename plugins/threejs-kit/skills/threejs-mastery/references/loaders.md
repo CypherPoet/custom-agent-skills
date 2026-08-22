@@ -21,7 +21,7 @@ Loading models (GLTF/GLB primary, plus OBJ/FBX/STL/PLY), textures (`TextureLoade
 | [Error Handling](#error-handling) | Fallback and retry patterns for asynchronous asset loading |
 | [Performance Tips](#performance-tips) | Geometry and texture compression, lazy fetching, CDN delivery, early caching, and placeholder swaps |
 | [Common Mistakes](#common-mistakes) | Missing shadows and decoders, oversized assets, replacement texture color space, asset pivots, stale mixers, FBX scale, and duplicate requests |
-| [See Also](#see-also) | Related references and supporting guidance |
+| [See Also](#see-also) | Texture configuration, GLTF animation playback, loaded-model material tuning, and HDR environment lighting |
 
 ## LoadingManager — Coordinate Progress
 

@@ -15,7 +15,7 @@ The four core R3F hooks — `useThree` (state access), `useFrame` (render loop),
 | [useGraph](#usegraph) | Memoized node and material lookup after ordinary or skeleton-safe cloning plus the non-hook `buildGraph` equivalent |
 | [Global and Additional Exports](#global-and-additional-exports) | Portal rendering, imperative prop application, global frame effects, manual loop control, graph building, roots, and advanced or test utilities |
 | [Common Mistakes](#common-mistakes) | Canvas hook scope, narrow selectors and fresh reads, mutable camera state, delta-scaled frame work and render priorities, Suspense and error boundaries, shared-loader cloning and disposal, loop-specific invalidation, deprecated pointer naming, and v9 loader instances |
-| [See Also](#see-also) | Related references and supporting guidance |
+| [See Also](#see-also) | Canvas state setup, asset loading, animation, render-loop performance, stack setup, and the official hooks API |
 
 ## Hook Rules
 

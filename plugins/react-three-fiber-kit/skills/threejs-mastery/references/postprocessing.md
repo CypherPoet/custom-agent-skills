@@ -17,7 +17,7 @@ Two pipelines exist:
 | [Render to Texture (Both Pipelines)](#render-to-texture-both-pipelines) | Capturing a scene in a render target and sampling that result from another material |
 | [Performance Tips](#performance-tips) | Full-screen pass budgeting, lower-resolution blur, device-tier toggles, disabled passes, cheap antialiasing, and upscaling |
 | [Common Mistakes](#common-mistakes) | Bypassed pipelines, stale sizes, duplicate output transforms, misplaced FXAA, renderer mixing, indiscriminate bloom, wrong resolutions, and stale outline selections |
-| [See Also](#see-also) | Related references and supporting guidance |
+| [See Also](#see-also) | Custom TSL or GLSL effects, render targets and depth textures, and tone-mapping interactions with bloom or HDR lighting |
 
 ## TSL Post-Processing (Modern)
 

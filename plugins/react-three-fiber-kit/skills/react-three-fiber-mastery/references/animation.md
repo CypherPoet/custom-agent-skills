@@ -17,7 +17,7 @@ Everything that moves: `useFrame` mutation patterns, damping and lerp idioms, GL
 | [Throttling Expensive Work](#throttling-expensive-work) | Separating per-frame mutations from throttled raycasts, layout, and network work |
 | [Other Animation Libraries](#other-animation-libraries) | `framer-motion-3d` (declarative `motion.mesh` variants/gestures) exists but was built against R3F v8 / React 18 |
 | [Common Mistakes](#common-mistakes) | Ref-only delta-scaled updates, allocation-free smoothing, clip lookup and reset-safe playback, loop and reverse settings, post-mixer bone overrides, animated spring wrappers, demand-frame invalidation, and child-mesh morph targets |
-| [See Also](#see-also) | Related references and supporting guidance |
+| [See Also](#see-also) | Frame-loop priorities, performance discipline, animated-asset loading, drei animation helpers, stack setup, and upstream action, spring, and damping APIs |
 
 ## The useFrame Mutation Pattern
 

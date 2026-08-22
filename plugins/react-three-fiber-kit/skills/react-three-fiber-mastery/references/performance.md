@@ -17,7 +17,7 @@ The pitfalls doctrine from the official R3F docs plus the scaling toolbox: on-de
 | [React State Discipline](#react-state-discipline) | Isolated animated and display components, narrow root selectors, imperative frame reads, non-rendering Zustand subscriptions, and shallow multi-value selectors |
 | [Profiling](#profiling) | In-canvas CPU, GPU, draw, triangle, and memory metrics, lightweight renderer counters, and diagnoses for draw-call, allocation, mount, and fill-rate bottlenecks |
 | [Common Mistakes](#common-mistakes) | Per-frame allocation, fixed increments, React updates, and reactive store binding; demand invalidation; mount churn and shared-resource disposal; Zustand 5 subscriptions; instancing and culling; loader caching; and mobile pixel-ratio caps |
-| [See Also](#see-also) | Related references and supporting guidance |
+| [See Also](#see-also) | Frame and state hooks, animation smoothing, cached asset loading, JSX reconstruction and disposal, stack setup, and official performance guidance |
 
 ## The Eight Pitfalls
 

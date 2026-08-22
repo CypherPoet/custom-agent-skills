@@ -11,7 +11,7 @@ How data flows through a SwiftUI app determines which views invalidate and when.
 | [Model objects with @Observable](#model-objects-with-observable) | Main-actor models, equality-based update suppression, property-level dependency limits, cached derived values, and isolated collection or struct data |
 | [Side effects in views](#side-effects-in-views) | Isolating non-rendering `onChange(of:)` dependencies in modifiers and when that extra boundary is unnecessary |
 | [Bindings](#bindings) | Key-path and subscript binding projections that avoid closure allocations and spurious invalidation |
-| [`@Entry` macro](#entry-macro) | Stable defaults for custom value stores, optional focused values, and replacing manual key boilerplate in reviews |
+| [`@Entry` macro](#entry-macro) | Stable defaults for custom environment, transaction, container, and focused values; optional focused entries; Xcode 16+ compilation with iOS 13 and macOS 10.15 availability; and top-line review findings for manual key boilerplate without unprompted rewrites |
 
 ## Passing data into views
 

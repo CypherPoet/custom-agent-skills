@@ -21,7 +21,7 @@ How to get a React Three Fiber project running and configure the `<Canvas>` root
 | [Custom Tree-Shakable Roots](#custom-tree-shakable-roots) | Selective `extend`, async `createRoot` configuration, manual event and resize wiring, rendering, and unmount disposal |
 | [StrictMode in v9](#strictmode-in-v9) | v9 inherits `<StrictMode>` from the parent React tree across the renderer boundary |
 | [Common Mistakes](#common-mistakes) | Zero-size canvases and out-of-tree hooks, constructor-only cameras and v9 renderer callbacks, incomplete shadows and demand invalidation, color and StrictMode surprises, bundler setup, WebGPU lifecycle failures, DPR caps, and peer-version mismatches |
-| [See Also](#see-also) | Related references and supporting guidance |
+| [See Also](#see-also) | JSX object semantics, root hooks, rendering performance, v9 migration, stack setup, and official Canvas or installation guidance |
 
 ## Install & Version Pairing
 

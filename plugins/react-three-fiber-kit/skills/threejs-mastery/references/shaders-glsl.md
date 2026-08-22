@@ -21,7 +21,7 @@ The classic raw-GLSL path: `ShaderMaterial` and `RawShaderMaterial`. Still fully
 | [Common Material Options (ShaderMaterial)](#common-material-options-shadermaterial) | Transparency, sidedness, depth, blending, extensions, wireframe, and GLSL version options |
 | [Shader Chunks](#shader-chunks) | Reusing internal depth, packing, fog, and lighting fragments and importing external shader source files |
 | [Common Mistakes](#common-mistakes) | Unwritten varyings, mobile precision artifacts, mixed GLSL-version syntax, and brittle source-patch matching |
-| [See Also](#see-also) | Related references and supporting guidance |
+| [See Also](#see-also) | Modern TSL, shared shader debugging and performance, material integration and patching, and texture sampling, color spaces, or render targets |
 
 ## Minimum Viable ShaderMaterial
 

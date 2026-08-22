@@ -16,7 +16,7 @@ Raycasting, camera controls, pointer/touch input, drag/transform gizmos, selecti
 | [Interaction Manager Pattern](#interaction-manager-pattern) | Centralized pointer and touch wiring, normalized coordinates, reusable raycasting, and object-specific callbacks |
 | [Performance Tips](#performance-tips) | Hover throttling, layer filtering, proxy meshes, disabled controls, and nonrecursive intersections |
 | [Common Mistakes](#common-mistakes) | Missing control updates, wrong canvas coordinates, instance picking, unthrottled hover, competing controls, user-gesture locks, delta omissions, and touch handling |
-| [See Also](#see-also) | Related references and supporting guidance |
+| [See Also](#see-also) | Object and camera layers, animated selection responses, and outline or highlight shaders |
 
 ## Raycaster
 

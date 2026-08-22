@@ -21,7 +21,7 @@ R3F raycasts DOM pointer input against the scene and delivers React-style synthe
 | [Scroll and Presentation Controls](#scroll-and-presentation-controls) | Damped horizontal or vertical scroll rigs, progress-window helpers, synchronized 3D and HTML content, and spring-driven product rotation with limits and snapback |
 | [Screen and World Coordinates](#screen-and-world-coordinates) | Hit-point placement, captured-ray intersection with mathematical planes, tracked HTML labels, and manual world-to-pixel projection |
 | [Common Mistakes](#common-mistakes) | Drag-versus-click thresholds, raycast propagation and pointer-capture semantics, move throttling and proxy colliders, stale hover, DOM-overlay event sources, control conflicts, keyboard polling, missed clicks, scroll HTML placement, and the current pointer field |
-| [See Also](#see-also) | Related references and supporting guidance |
+| [See Also](#see-also) | Canvas event configuration, root hooks, drei interaction helpers, event-driven performance, stack setup, and upstream event, control, and gesture APIs |
 
 ## Event Catalog
 

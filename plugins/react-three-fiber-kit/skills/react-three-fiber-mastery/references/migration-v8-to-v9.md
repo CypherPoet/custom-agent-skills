@@ -19,7 +19,7 @@ The complete `@react-three/fiber` v8 → v9 migration: version and peer-dependen
 | [Ecosystem Moves That Bite During Migration](#ecosystem-moves-that-bite-during-migration) | Second-UV channels and naming, addon import paths, Zustand shallow selectors and transient subscriptions, and React 19 refs as ordinary props |
 | [The v10 Horizon](#the-v10-horizon) | Alpha-only WebGPU-first rendering, the `state.gl` to `state.renderer` rename, external frame scheduling, and paired drei alphas |
 | [Common Mistakes](#common-mistakes) | React and companion peer versions, constructor-based buffer attributes, explicit shader texture color space, the v9 renderer callback, removed TypeScript types and global JSX augmentation, inherited StrictMode, current UV and addon imports, Zustand 5 selectors, React `act`, and the v10 state rename |
-| [See Also](#see-also) | Related references and supporting guidance |
+| [See Also](#see-also) | Current Canvas setup, JSX and TypeScript migration, shader uniform behavior, asset loading, stack versions, and the official v9 migration guide |
 
 ## Version Requirements
 
