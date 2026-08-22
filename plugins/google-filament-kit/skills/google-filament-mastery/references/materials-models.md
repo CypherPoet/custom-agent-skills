@@ -9,7 +9,7 @@
 |---|---|
 | [Core Concepts](#core-concepts) | Materials, shading models, source definitions, compiled packages and platform variants, parameterized instances, linear colors, premultiplied alpha, and tangent-space directions |
 | [Choosing a Model](#choosing-a-model) | When to choose lit, subsurface, cloth, unlit, or legacy specular-glossiness shading |
-| [Lit Model (Standard)](#lit-model-standard) | Base, metallic, roughness and reflectance roles, specular and sheen layers, costly coat and anisotropy switches, indirect shading, emissive exposure, refraction and absorption, dispersion, and shadows |
+| [Lit Model (Standard)](#lit-model-standard) | Base, metallic, roughness, reflectance, and specular controls; sheen, coat, and anisotropy layers; ambient occlusion and normal inputs; emissive and post-lighting color; IOR, transmission, absorption, thickness, dispersion, shadows, and cost caveats |
 | [Subsurface Model](#subsurface-model) | Translucent-volume use cases, inherited lit inputs, thickness, scattering tint and power, and the source's missing type, range, and default details |
 | [Cloth Model](#cloth-model) | Fabric scattering and fuzz, excluded metallic and reflectance inputs, sheen and subsurface tints, performance and shadow caveats, and cotton, denim, and velvet recipes |
 | [Unlit Model](#unlit-model) | Lighting-free video, camera, UI, and debug use, direct base color, exposure-weighted emissive output, and post-lighting blending |

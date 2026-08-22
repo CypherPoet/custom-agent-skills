@@ -16,7 +16,7 @@ Everything that moves: `useFrame` mutation patterns, damping and lerp idioms, GL
 | [Drei Float and Trail](#drei-float-and-trail) | `Float` hover and tumble plus `Trail` ribbons with child or external targets, width, length, decay, and attenuation controls |
 | [Throttling Expensive Work](#throttling-expensive-work) | Separating per-frame mutations from throttled raycasts, layout, and network work |
 | [Other Animation Libraries](#other-animation-libraries) | `framer-motion-3d` (declarative `motion.mesh` variants/gestures) exists but was built against R3F v8 / React 18 |
-| [Common Mistakes](#common-mistakes) | Frequent mistakes and the changes that correct them |
+| [Common Mistakes](#common-mistakes) | Ref-only delta-scaled updates, allocation-free smoothing, clip lookup and reset-safe playback, loop and reverse settings, post-mixer bone overrides, animated spring wrappers, demand-frame invalidation, and child-mesh morph targets |
 | [See Also](#see-also) | Related references and supporting guidance |
 
 ## The useFrame Mutation Pattern

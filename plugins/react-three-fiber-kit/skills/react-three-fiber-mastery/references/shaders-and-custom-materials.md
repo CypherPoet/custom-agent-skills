@@ -20,7 +20,7 @@ Custom GLSL at the React-reconciler layer: drei's `shaderMaterial` factory, raw 
 | [Instanced Custom Attributes](#instanced-custom-attributes) | v9 constructor-based instance buffers, shader declarations, optional matrix composition, stable capacity, and reconstruction rules |
 | [External GLSL Files](#external-glsl-files) | Raw Vite imports, include-aware plugin configuration, TypeScript declarations, and inline editor highlighting |
 | [GLSL Performance Rules](#glsl-performance-rules) | Branchless selection, packed uniforms, CPU and vertex-stage precomputation, lookup textures, varying limits, and depth costs from discard and transparency |
-| [Common Mistakes](#common-mistakes) | Frequent mistakes and the changes that correct them |
+| [Common Mistakes](#common-mistakes) | HMR keys and material-specific uniform access, pre-v9.6 uniform identity, current custom-element typing, renamed shader chunks, recompilation and program-cache variants, retained lighting and output transforms, custom-texture color space, v9 instance buffers, ref-driven uniforms, and consistent coordinate spaces |
 | [See Also](#see-also) | Related references and supporting guidance |
 
 ## Drei shaderMaterial Workflow

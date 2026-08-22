@@ -20,7 +20,7 @@
 | [Attractors](#attractors) | Optional-package attraction and repulsion, static, linear, and Newtonian falloff, range, strength, and collision-group scope |
 | [Character Controllers](#character-controllers) | Capsule-based kinematic movement, collision-corrected sliding, slopes, autostep, ground snapping, dynamic-body impulses, and the higher-level community controller |
 | [Performance Rules](#performance-rules) | Sleeping, collider choice, rigid-body counts, event costs, and timestep guidance |
-| [Common Mistakes](#common-mistakes) | Frequent mistakes and the changes that correct them |
+| [Common Mistakes](#common-mistakes) | Collider half-extents, type-correct kinematic movement, persistent forces and wake behavior, continuous collision detection, static-only trimeshes, physics-owned transforms, demand-loop pairing, ref timing, collider rescaling, bidirectional filtering, WASM Suspense, motor setup, and high-frequency events |
 | [See Also](#see-also) | Related references and supporting guidance |
 
 ## Setup

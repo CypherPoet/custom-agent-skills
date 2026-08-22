@@ -20,7 +20,7 @@ R3F raycasts DOM pointer input against the scene and delivers React-style synthe
 | [Keyboard Controls](#keyboard-controls) | Key maps and provider placement plus non-rendering polling, reactive selectors, and edge-triggered transient subscriptions |
 | [Scroll and Presentation Controls](#scroll-and-presentation-controls) | Damped horizontal or vertical scroll rigs, progress-window helpers, synchronized 3D and HTML content, and spring-driven product rotation with limits and snapback |
 | [Screen and World Coordinates](#screen-and-world-coordinates) | Hit-point placement, captured-ray intersection with mathematical planes, tracked HTML labels, and manual world-to-pixel projection |
-| [Common Mistakes](#common-mistakes) | Frequent mistakes and the changes that correct them |
+| [Common Mistakes](#common-mistakes) | Drag-versus-click thresholds, raycast propagation and pointer-capture semantics, move throttling and proxy colliders, stale hover, DOM-overlay event sources, control conflicts, keyboard polling, missed clicks, scroll HTML placement, and the current pointer field |
 | [See Also](#see-also) | Related references and supporting guidance |
 
 ## Event Catalog

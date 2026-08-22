@@ -13,7 +13,7 @@ Cameras, Object3D, the scene graph, math utilities, and the building blocks ever
 | [Group](#group) | Transformable empty containers for organizing and moving child objects together |
 | [Mesh](#mesh) | Geometry-material pairing, grouped material arrays, shadow participation, frustum culling, and render order |
 | [Coordinate System](#coordinate-system) | Right-handed: +X right, +Y up, +Z toward viewer |
-| [Math Utilities](#math-utilities) | `Vector3`, `Matrix4`, `Quaternion`, `Euler`, `Color`, and `MathUtils` operations |
+| [Math Utilities](#math-utilities) | Vector arithmetic, products, projection, and transforms; matrix construction, composition, decomposition, and inversion; quaternion interpolation; Euler conversion; color manipulation; and numeric mapping, smoothing, angle conversion, and randomization |
 | [LoadingManager](#loadingmanager) | Shared start, completion, progress, and error coordination across heterogeneous loaders |
 | [LOD (Level of Detail)](#lod-level-of-detail) | Camera-distance thresholds for switching among mesh detail levels |
 | [Merging Static Geometry](#merging-static-geometry) | Draw-call reduction for same-material static meshes and when instancing is the better alternative |

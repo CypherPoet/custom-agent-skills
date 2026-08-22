@@ -11,7 +11,7 @@
 | [§2.2 Beta Testing](#22-beta-testing) | TestFlight-only distribution for beta, demo, trial, preview, and evaluation builds, including prohibited production labels, tester compensation, and beta-only behavior |
 | [§2.3 Accurate Metadata](#23-accurate-metadata) | Hidden or remotely gated behavior, purchase disclosures, authentic screenshots and previews, classification and current age ratings, naming and intellectual property, Apple focus, pre-orders, release notes, and events |
 | [§2.4 Hardware Compatibility](#24-hardware-compatibility) | iPhone operation on iPad, energy and storage efficiency, complete Siri Remote control, restart and unrelated-settings prohibitions, and Mac App Store packaging and behavior |
-| [§2.5 Software Requirements](#25-software-requirements) | Platform boundaries for APIs and executable code, background and network behavior, browsing and native UI, system integrations, consent, documents and extensions, Matter, and advertising |
+| [§2.5 Software Requirements](#25-software-requirements) | Public APIs and self-contained safe code; permitted background execution, IPv6 networking, and WebKit browsing; home-screen and native-control limits; Siri and Shortcuts, CallKit and SMS filtering, Face ID, recording consent, documents, widgets and App Clips, Matter, and advertising |
 
 ---
 

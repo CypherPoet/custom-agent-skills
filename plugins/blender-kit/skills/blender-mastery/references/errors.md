@@ -12,8 +12,8 @@ Common failures when driving Blender via the MCP and writing `bpy` scripts. Orga
 | [Material / node tree gotchas](#material--node-tree-gotchas) | Procedural export loss, non-Principled imports, color-space mismatches, and incorrect normal-map wiring |
 | [Modifier and geometry traps](#modifier-and-geometry-traps) | Export-time geometry expansion, non-manifold booleans, viewport versus render subdivision, and stack ordering |
 | [Texture path issues](#texture-path-issues) | Missing files, relative paths, resource packing, and texture-size problems |
-| [GLTF name mapping](#gltf-name-mapping) | GLTF has stricter name rules than Blender |
-| [GLTF export survival matrix](#gltf-export-survival-matrix) | What survives a Blender → GLTF export and what doesn't |
+| [GLTF name mapping](#gltf-name-mapping) | Whitespace replacement, numeric-suffix normalization, duplicate-name disambiguation, and the requirement to use exported names at runtime |
+| [GLTF export survival matrix](#gltf-export-survival-matrix) | Export support and bake requirements for physical and procedural materials, texture channels, vertex colors, UV sets, armatures, NLA tracks, drivers, constraints, and unapplied or baked modifiers |
 | [Draco re-encoding](#draco-re-encoding) | Corruption and simplification failures caused by unsafe Draco re-encoding |
 | [Render and bake errors](#render-and-bake-errors) | UV, active-image, light, render-engine, and hardware settings that break renders or bakes |
 | [Sources](#sources) | Blender GLTF export and Python operator documentation |

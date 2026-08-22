@@ -9,7 +9,7 @@ How to make an Apple app icon *convert* — the design and tap-through side that
 | [Why the icon is your highest-leverage asset](#why-the-icon-is-your-highest-leverage-asset) | Search, browse, and chart visibility; tap-through leverage; and the icon's role across product and brand surfaces |
 | [Design principles](#design-principles) | Small-scale simplicity, platform consistency, visual depth, contrast, and recognizability |
 | [Apple icon sizes](#apple-icon-sizes) | Master canvases, alpha and mask rules, surface sizes, and `.icon` versus appiconset generation |
-| [Icon audit rubric](#icon-audit-rubric) | Score a current or proposed icon 1–10 per dimension |
+| [Icon audit rubric](#icon-audit-rubric) | Small-size clarity, light and dark contrast, category differentiation, simplicity, and brand alignment scored across five dimensions, with overall and single-dimension redesign thresholds |
 | [A/B-testing icons on iOS](#ab-testing-icons-on-ios) | PPO versus alternate icons, treatment setup, Liquid Glass caveats, conversion evidence, significance, and controlled variables |
 | [Designer brief template](#designer-brief-template) | Concept variants, small-size mockups, dark-background checks, and source deliverables |
 

@@ -12,7 +12,7 @@ Procedural geometry via node graphs. From a script, you build the node tree the 
 | [Setting attributes from script](#setting-attributes-from-script) | Creating mesh attributes, assigning per-element values, and choosing data domains and types |
 | [Reading evaluated geometry](#reading-evaluated-geometry) | Depsgraph access to modified mesh counts and enumeration of individual generated instances |
 | [Node-tree modifier inputs](#node-tree-modifier-inputs) | Identifier-based input and output properties, attribute-driven sockets, Blender 5.1 compatibility, and 5.2 API and identifier changes |
-| [Common patterns and what they're for](#common-patterns-and-what-theyre-for) | Reusable geometry-node patterns and the problems each pattern solves |
+| [Common patterns and what they're for](#common-patterns-and-what-theyre-for) | Surface scattering, curve-to-mesh cables and beams, procedural boolean cuts, noise displacement, path resampling and animation, and per-element material assignment |
 | [When to escalate](#when-to-escalate) | Reusable node groups, one-shot `bmesh` alternatives, and linking prebuilt node trees when scripted graphs become unwieldy |
 | [Sources](#sources) | Blender geometry-node, node-tree, attribute, and 5.2 API documentation |
 
