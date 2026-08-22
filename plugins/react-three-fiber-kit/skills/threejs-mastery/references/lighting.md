@@ -121,6 +121,10 @@ floor.receiveShadow = true;
 floor.castShadow = false;
 ```
 
+`PCFSoftShadowMap` remains valid for r185 and the WebGL path. The r186 migration guide removes it
+from `WebGPURenderer`; use `PCFShadowMap` there, which is soft in that renderer. See
+[migrations.md](./migrations.md) before changing a version-bound shadow configuration.
+
 ### Tuning DirectionalLight Shadows
 
 The shadow camera is orthographic — its frustum needs to tightly cover the area you actually want shadowed:

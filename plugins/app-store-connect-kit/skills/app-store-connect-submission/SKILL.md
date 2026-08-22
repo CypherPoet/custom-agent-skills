@@ -1,6 +1,6 @@
 ---
 name: app-store-connect-submission
-description: 'Step-by-step playbook for submitting an Apple-platform app through App Store Connect — the console mechanics from "built" to "Submitted for Review": app records, agreements/tax/banking, App Information vs version pages, App Privacy, pricing, attaching in-app purchases, archive delivery via Xcode or Xcode Cloud, and sandbox testing. Also use to debug submission errors ("Invalid bundle", greyed-out Xcode Cloud workflows, sandbox tester or empty-paywall traps). Trigger on "submit/ship my app to the App Store" even when App Store Connect is never named. For review-guideline compliance and ASO use apple-app-store-best-practices; for screenshot specs, apple-app-store-screenshots.'
+description: 'Step-by-step playbook for submitting an Apple-platform app through App Store Connect — the console mechanics from "built" to "Submitted for Review": app records, agreements/tax/banking, App Information vs version pages, App Privacy, Accessibility Nutrition Labels, pricing, attaching in-app purchases, archive delivery via Xcode or Xcode Cloud, and sandbox testing. Also use to debug submission errors ("Invalid bundle", greyed-out Xcode Cloud workflows, sandbox tester or empty-paywall traps). Trigger on "submit/ship my app to the App Store" even when App Store Connect is never named. For review-guideline compliance and ASO use apple-app-store-best-practices; for screenshot specs, apple-app-store-screenshots.'
 ---
 
 # App Store Connect Submission
@@ -51,7 +51,8 @@ Work top to bottom. Each step has detail in a reference file (see the table at t
    verify trader details or it's pulled from the EU App Store.
 4. **App Privacy** (left sidebar → Trust & Safety): answer the data-collection question, set the
    **Privacy Policy URL** (Apple moved this field here from App Information), then **Publish** —
-   it stays a draft until you do.
+   it stays a draft until you do. Then review the app's **Accessibility Nutrition Labels**. They
+   are voluntary today, but Apple says they will become required over time for new apps and updates.
 5. **Pricing & availability**: price + tax category + territories. Decide the **iPhone & iPad
    Apps on Apple-Silicon Macs** toggle (and Vision Pro) — it defaults *on*; uncheck for v1 if
    the app is untested there.
@@ -155,7 +156,7 @@ Load the one you need; don't read all of them upfront.
 
 | File | Load when |
 |------|-----------|
-| `references/walkthrough.md` | Doing the field-by-field ASC flow (prerequisites → app record → App Information → App Privacy → pricing → IAP → version page → review info → submit) |
+| `references/walkthrough.md` | Doing the field-by-field ASC flow (prerequisites → app record → App Information → App Privacy → Accessibility Nutrition Labels → pricing → IAP → version page → review info → submit) |
 | `references/build-and-delivery.md` | Building and delivering the archive — local Xcode archive **or** Xcode Cloud workflow setup, signing, and delivery |
 | `references/testing-purchases.md` | Testing in-app purchases — the local `.storekit` simulator path and the real **Sandbox** path (testers, scheme config, purchase-time sign-in) |
 | `references/api-automation.md` | Driving submission from the CLI / CI / an agent **without fastlane** — the App Store Connect **API key** + `.env` pattern, `xcrun altool` uploads, and JWT + REST for build status / metadata / submit |

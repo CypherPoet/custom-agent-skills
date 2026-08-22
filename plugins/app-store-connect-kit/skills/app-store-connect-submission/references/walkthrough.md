@@ -3,7 +3,7 @@
 The end-to-end App Store Connect flow, in order. *As of 2026-06; trust the screen when it
 disagrees.* Examples use placeholders like `com.you.YourApp` — substitute the real values.
 
-**Contents:** [0. Before you open App Store Connect](#0-before-you-open-app-store-connect) · [1. Create the app record](#1-create-the-app-record) · [2. App Information (app-level)](#2-app-information-app-level) · [3. App Privacy](#3-app-privacy) · [4. Pricing & availability](#4-pricing--availability) · [5. In-app purchases](#5-in-app-purchases) · [6. Version page metadata](#6-version-page-metadata) · [7. App Review Information](#7-app-review-information) · [8. Attach the IAP, pick a release option, submit](#8-attach-the-iap-pick-a-release-option-submit)
+**Contents:** [0. Before You Open App Store Connect](#0-before-you-open-app-store-connect) · [1. Create the App Record](#1-create-the-app-record) · [2. App Information (App-Level)](#2-app-information-app-level) · [3. App Privacy](#3-app-privacy) · [3A. Accessibility Nutrition Labels](#3a-accessibility-nutrition-labels) · [4. Pricing & Availability](#4-pricing--availability) · [5. In-App Purchases](#5-in-app-purchases) · [6. Version Page Metadata](#6-version-page-metadata) · [7. App Review Information](#7-app-review-information) · [8. Attach the IAP, Pick a Release Option, Submit](#8-attach-the-iap-pick-a-release-option-submit)
 
 ---
 
@@ -98,6 +98,25 @@ Left sidebar → **Trust & Safety → App Privacy**.
 
 The in-bundle `PrivacyInfo.xcprivacy` and this questionnaire must **agree**; the manifest does not
 auto-fill the questionnaire.
+
+---
+
+## 3A. Accessibility Nutrition Labels
+
+Open the app's **App Accessibility** section in App Store Connect. These labels are **voluntary for
+now**, but Apple says they will become required over time for new apps and app updates.
+
+- Report support separately for each device type. A feature can be supported on one device type
+  and unsupported on another.
+- Claim a feature only when people can use it for **all common tasks** in the app, not just one
+  screen or flow.
+- Add an accessibility URL when you have a page that explains the app's support in more detail;
+  the URL is optional.
+
+Treat the form as a product audit, not a marketing checklist. If a feature only works for part of
+the app, leave that claim off until the common-task requirement is met.
+
+*Accessibility Nutrition Label guidance checked against Apple Help on 2026-08-21.*
 
 ---
 

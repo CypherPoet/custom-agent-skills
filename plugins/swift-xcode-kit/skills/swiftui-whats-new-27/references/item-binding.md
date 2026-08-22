@@ -1,11 +1,11 @@
-# Confirmation Dialog and Alert Item Binding
+# Dialogs and Alerts from Items or Errors
 **SDK Version:** 27.0 and later
 
-The APIs in this reference (the `confirmationDialog(_:item:…)` and `alert(_:item:…)` overloads) are new in SDK 27 but **back-deployed**: Apple's documentation marks them available on iOS 15 / macOS 12 / watchOS 8 / tvOS 15 / visionOS 1 (Mac Catalyst 15). Compiling them requires the SDK 27 toolchain, but they run on those earlier OS versions — no `#available(iOS 27)` runtime gate is needed. See "No availability gating needed" below.
+The item-binding APIs in this reference (the `confirmationDialog(_:item:…)` and `alert(_:item:…)` overloads) are new in SDK 27 but **back-deployed**: Apple's documentation marks them available on iOS 15 / macOS 12 / watchOS 8 / tvOS 15 / visionOS 1 (Mac Catalyst 15). Compiling them requires the SDK 27 toolchain, but they run on those earlier OS versions — no `#available(iOS 27)` runtime gate is needed. See "No Availability Gating Needed" below.
 
 `confirmationDialog` and `alert` gain overloads that take an `item: Binding<T?>` in place of an `isPresented: Binding<Bool>`. The dialog or alert presents while the binding holds a value, the unwrapped value is passed to the `actions` (and optional `message`) closures, and SwiftUI resets the binding to `nil` when it is dismissed. This is the presentation shape of `sheet(item:)` applied to dialogs and alerts; the earlier forms drove presentation from a separate `Bool` and read the data from a stored optional or a `presenting:` argument. `T` has no `Identifiable` requirement. When a dialog or alert acts on a specific value, such as the row a person tapped or the item pending deletion, prefer this `item:` overload over a separate `isPresented` Bool, a `presenting:` argument, or the older `Alert`-returning `alert(item:)`: one optional drives presentation and hands the value to the `actions`/`message` builders.
 
-## Confirmation dialog from an item binding
+## Confirmation Dialog from an Item Binding
 
 `confirmationDialog(_:item:titleVisibility:actions:)` presents while `item` is non-nil and passes the unwrapped value to `actions`; the overload with a trailing `message:` closure receives the value as well. The title is a `LocalizedStringKey`, `Text`, or `StringProtocol`, and `titleVisibility` defaults to `.automatic`.
 
@@ -28,7 +28,7 @@ struct PhotoGrid: View {
 
 **Availability:** iOS 15, macOS 12, watchOS 8, tvOS 15, visionOS 1 (back-deployed; the SDK 27 toolchain is required to compile).
 
-## Alert from an item binding
+## Alert from an Item Binding
 
 `alert(_:item:actions:)` presents while `item` is non-nil and passes the unwrapped value to `actions`; the overload with a trailing `message:` closure receives the value as well. Like `confirmationDialog(_:item:)`, it takes a title plus `actions` (and optional `message`) builders. For a per-item alert, this is the form to use; do not synthesize a `Binding<Bool>` and pair it with `presenting:`, and do not reach for the `Alert`-returning `alert(item:) { _ in Alert(...) }` overload.
 
@@ -50,11 +50,19 @@ struct FolderView: View {
 
 **Availability:** iOS 15, macOS 12, watchOS 8, tvOS 15, visionOS 1 (back-deployed; the SDK 27 toolchain is required to compile).
 
-## No availability gating needed
+## Alert from an Error
+
+SwiftUI also adds `alert(error:actions:)` and `alert(error:actions:message:)` overloads. Use these
+when presentation is driven by an error object instead of maintaining a separate optional item and
+title. The SwiftUI updates page names these overloads but does not state their availability or the
+error constraints. Check the linked symbol documentation in the target Xcode SDK before choosing
+an availability gate or writing a generic helper around them.
+
+## No Availability Gating Needed
 
 The `item:` overloads are back-deployed to iOS 15 / macOS 12 / watchOS 8 / tvOS 15 / visionOS 1 — at or below the floor of every fallback you could gate to (`confirmationDialog(_:isPresented:titleVisibility:presenting:actions:)` and `alert(_:isPresented:presenting:actions:)` require iOS 16 / macOS 13). There is no OS version where an `isPresented:`/`presenting:` fallback compiles but the `item:` overload doesn't run, so do **not** wrap calls in `#available(iOS 27, *)` and do not emit a fallback branch for their sake — the gate compiles but wrongly withholds the API from users on iOS 15–26. The only requirement is building with the SDK 27 toolchain, which declares the overloads.
 
-## Availability summary
+## Availability Summary
 
 | API | iOS | macOS | watchOS | tvOS | visionOS |
 |---|---|---|---|---|---|
@@ -62,3 +70,6 @@ The `item:` overloads are back-deployed to iOS 15 / macOS 12 / watchOS 8 / tvOS 
 | `alert(_:item:actions:)` / `…actions:message:)` | 15 | 12 | 8 | 15 | 1 |
 
 All rows are back-deployed SDK 27 APIs: they need the SDK 27 toolchain to compile but run on the OS versions listed.
+
+The `alert(error:actions:)` overloads are intentionally absent from this table because the SwiftUI
+updates page does not publish their availability.

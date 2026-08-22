@@ -28,7 +28,7 @@ platform** and the requirement is met:
 | Mac | 2880×1800 (any 16:10 size) | Mac |
 | Apple TV | 3840×2160 | Apple TV |
 | Apple Vision Pro | 3840×2160 | Vision Pro |
-| Apple Watch | size of your newest target (e.g. 416×496) | that Watch tier only |
+| Apple Watch | size of your newest target (e.g. 422×514 for Ultra 3) | that Watch tier only |
 
 Two exceptions worth holding in your head: the iPhone requirement is satisfied by **6.9" or 6.5"**,
 and **Apple Watch is the only platform that won't auto-scale** — it needs its own screenshots, and
