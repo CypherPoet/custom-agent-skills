@@ -4,12 +4,12 @@
 
 | Section | Covers |
 |---|---|
-| [Overview](#overview) | UIKit apps must adopt scene-based lifecycle (`UISceneDelegate`) to function correctly on modern iOS |
-| [Detection](#detection) | Migration needed (proceed with all steps) |
-| [Scope & Automation Level](#scope--automation-level) | Out of scope: Multiple window support (`UIApplicationSupportsMultipleScenes` set to `false`), external display support |
-| [Step 1: Add Scene Manifest to Info.plist](#step-1-add-scene-manifest-to-infoplist) | This step must complete before Step 2 |
-| [Step 2: Create SceneDelegate](#step-2-create-scenedelegate) | Creating `SceneDelegate` and registering it in the app's scene configuration |
-| [Step 3: Relocate Lifecycle Methods](#step-3-relocate-lifecycle-methods) | Moving foreground, background, URL, restoration, and quick-action handlers to scene lifecycle |
+| [Overview](#overview) | Per-scene lifecycle requirements, iOS 27 launch impact, the three-step migration, and window-creation follow-through |
+| [Detection](#detection) | Search evidence that distinguishes required, complete, and partial migrations and determines whether to proceed, stop, or ask |
+| [Scope & Automation Level](#scope--automation-level) | Automatic versus decision-gated work, deferred handler migrations, explicit window limits, and protection against unrelated screen edits |
+| [Step 1: Add Scene Manifest to Info.plist](#step-1-add-scene-manifest-to-infoplist) | Static and dynamic configuration, storyboard differences, single-window declaration, and role-based alternatives |
+| [Step 2: Create SceneDelegate](#step-2-create-scenedelegate) | Storyboard-owned versus programmatic windows, scene-bound initialization, and Xcode build-phase enrollment |
+| [Step 3: Relocate Lifecycle Methods](#step-3-relocate-lifecycle-methods) | All-or-none state-event migration, launch-setup decisions, helper ownership, and removal of app-delegate window access |
 | [API Reference](#api-reference) | UIKit scene APIs and the minimum iOS versions that support them |
 
 ## Overview

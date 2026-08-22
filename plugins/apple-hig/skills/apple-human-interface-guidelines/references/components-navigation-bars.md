@@ -9,13 +9,13 @@ Distilled from Apple's HIG Components pages: Tab bars, Sidebars, Tab views, Tool
 
 | Section | Covers |
 |---|---|
-| [Tab bars](#tab-bars) | A tab bar lets people navigate between the top-level sections of an app while preserving each section's navigation state |
-| [Sidebars](#sidebars) | Leading-edge navigation among app areas and top-level content collections |
-| [Tab views](#tab-views) | A tab view presents multiple mutually exclusive panes of content in the same area, switched via a tabbed control on the top edge |
-| [Toolbars](#toolbars) | A toolbar provides convenient access to frequently used commands |
-| [Segmented controls](#segmented-controls) | A segmented control is a linear set of two or more equal-width segments |
-| [Path controls](#path-controls) | A path control (macOS only) shows the file system path of a selected file or folder |
-| [Page controls](#page-controls) | Indicator dots for navigating a flat, ordered set of pages and showing the current page |
+| [Tab bars](#tab-bars) | Top-level navigation, persistent state, tab count, labels, icons, badges, search, customization, minimization, and platform layouts |
+| [Sidebars](#sidebars) | Complex top-level navigation, customization and grouping, visibility, depth limits, coloring, and adaptive platform behavior |
+| [Tab views](#tab-views) | Related-pane switching, labels, tab count, borders and margins, alternative controls, and platform support |
+| [Toolbars](#toolbars) | Frequent actions, navigation, search, overflow, customization, titles, item grouping and placement, and platform layouts |
+| [Segmented controls](#segmented-controls) | Related choices and actions, selection state, segment limits and consistency, labels, and platform alternatives |
+| [Path controls](#path-controls) | macOS file paths, standard and pop-up styles, window-body placement, truncation, and drag selection |
+| [Page controls](#page-controls) | Ordered-page navigation, dot count and appearance, tapping and scrubbing, background styles, and platform behavior |
 
 ## Tab bars
 *Last changed: 2026-06*

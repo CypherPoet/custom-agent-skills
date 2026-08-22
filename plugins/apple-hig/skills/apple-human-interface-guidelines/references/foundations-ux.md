@@ -9,13 +9,13 @@ Distilled from Apple's HIG Foundations pages: Design principles, Accessibility, 
 
 | Section | Covers |
 |---|---|
-| [Design principles](#design-principles) | Eight foundational principles that guide design across every Apple platform |
-| [Accessibility](#accessibility) | Make interfaces intuitive, perceivable, and adaptable so everyone can use your app or game regardless of capability |
-| [Inclusion](#inclusion) | Design respectful experiences that welcome everyone by examining your assumptions about language |
-| [Layout](#layout) | Build a consistent, adaptive layout that grounds people in content |
-| [Motion](#motion) | Use motion to convey status, give feedback, and enrich the experience without distracting or causing discomfort |
-| [Pointing devices](#pointing-devices) | Support trackpad and mouse input consistently with the system |
-| [Writing](#writing) | Treat interface text as core UX — establish a voice, adapt tone to context |
+| [Design principles](#design-principles) | Purpose, agency, responsibility, familiarity, flexibility, simplicity, craft, and delight as non-rigid decision tools |
+| [Accessibility](#accessibility) | Vision, hearing, mobility, speech, and cognitive support; testing and App Store declarations; sizing and contrast; and visionOS comfort |
+| [Inclusion](#inclusion) | Respectful language, imagery, gender and disability representation, cultural assumptions, accessibility, internationalization, and localization |
+| [Layout](#layout) | Content hierarchy and grouping, adaptive context changes, safe areas and type scaling, device dimensions, and platform-specific layout rules |
+| [Motion](#motion) | Purposeful and optional feedback, multimodal alternatives, cancellation, game frame rates, and visionOS and watchOS comfort constraints |
+| [Pointing devices](#pointing-devices) | System gestures and unified input, pointer effects and hit regions, custom pointers, modifier behavior, and iPadOS, macOS, and visionOS patterns |
+| [Writing](#writing) | Voice and tone, plain inclusive language, action labels, multi-step flows, platform terms, empty states, errors, settings, and text-field guidance |
 
 ## Design principles
 *Last changed: 2026-06*

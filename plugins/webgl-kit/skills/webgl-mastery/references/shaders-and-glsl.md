@@ -4,16 +4,16 @@
 
 | Section | Covers |
 |---|---|
-| [The Compile + Link Lifecycle](#the-compile--link-lifecycle) | A WebGL program is a vertex shader and a fragment shader compiled separately, then linked together |
-| [GLSL ES 3.00 (WebGL2)](#glsl-es-300-webgl2) | A WebGL2 shader must start with `#version 300 es` on the first line — no leading whitespace, no comments before it |
-| [Types You'll Actually Use](#types-youll-actually-use) | Scalar, vector, matrix, sampler, array, and struct types used in GLSL |
-| [Swizzling](#swizzling) | Vector components have multiple names that all map to the same slots: `.xyzw`, `.rgba`, `.stpq` |
-| [Qualifiers](#qualifiers) | Where each GLSL qualifier is valid and what it means |
-| [Built-In Variables](#built-in-variables) | In the vertex shader, you write to `gl_Position` (a `vec4` in clip space) and optionally `gl_PointSize` |
-| [Uniforms from JS](#uniforms-from-js) | A few rules that confuse newcomers |
-| [Precision](#precision) | In WebGL1, vertex shaders defaulted to `highp` for `float` and fragment shaders had no default |
-| [Control Flow Caveats](#control-flow-caveats) | Old WebGL1 advice was "no `for` loops, no early `return`, no `if`" — this is mostly obsolete on modern GPUs |
-| [Common Mistakes](#common-mistakes) | Frequent mistakes and the changes that correct them |
+| [The Compile + Link Lifecycle](#the-compile--link-lifecycle) | Separate stage compilation, source-rich diagnostics, exact cross-stage interface matching, and safe shader deletion after linking |
+| [GLSL ES 3.00 (WebGL2)](#glsl-es-300-webgl2) | First-line versioning, fragment precision, modern stage qualifiers and outputs, unified texture calls, and added numeric or sampler types |
+| [Types You'll Actually Use](#types-youll-actually-use) | Strict scalar, vector, matrix, and sampler types with valid literal and constructor conversions |
+| [Swizzling](#swizzling) | Selecting, repeating, reordering, and assigning components without mixing naming families |
+| [Qualifiers](#qualifiers) | Stage inputs and outputs, uniforms, noninterpolated and centroid varyings, and compile-time constants |
+| [Built-In Variables](#built-in-variables) | Vertex position, point size and IDs; fragment coordinates, facing and point coordinates; optional explicit depth |
+| [Uniforms from JS](#uniforms-from-js) | Program binding, matrix and vector upload, texture-unit samplers, optimized-out locations, caching, and mandatory nontransposed matrices |
+| [Precision](#precision) | Stage defaults, required fragment declarations, mobile mediump artifacts, and sampler precision guidance |
+| [Control Flow Caveats](#control-flow-caveats) | WebGL1 loop bounds, dynamic WebGL2 loops, coherent versus divergent branches, branchless alternatives, and discard costs |
+| [Common Mistakes](#common-mistakes) | Misplaced versions, mixed GLSL generations, transposed matrices, optimized uniforms, unset samplers, NaNs, strict types, and mismatched varyings |
 
 ## The Compile + Link Lifecycle
 

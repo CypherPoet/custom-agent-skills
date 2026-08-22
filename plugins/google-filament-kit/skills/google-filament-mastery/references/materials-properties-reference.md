@@ -11,17 +11,17 @@ The five material models are: **Lit** (standard), **Subsurface**, **Cloth**, **U
 
 | Section | Covers |
 |---|---|
-| [Standard (Lit) Model — Base & Common](#standard-lit-model--base--common) | Types, ranges, and notes are reproduced from Materials.md `[standardPropertiesTypes]` |
-| [Standard (Lit) Model — Clear Coat](#standard-lit-model--clear-coat) | The clear coat layer is always isotropic and dielectric, with a fixed index of refraction of 1.5 |
-| [Standard (Lit) Model — Anisotropy](#standard-lit-model--anisotropy) | Anisotropy amount and tangent-space direction properties |
-| [Standard (Lit) Model — Sheen](#standard-lit-model--sheen) | Sheen color and roughness for cloth-like material response |
-| [Standard (Lit) Model — Refraction / Transmission](#standard-lit-model--refraction--transmission) | Refractive properties apply when `refractionMode` is set to `cubemap` or `screenspace` |
-| [Standard (Lit) Model — Other](#standard-lit-model--other) | Emissive and post-lighting color properties shared across material models |
-| [Subsurface Model](#subsurface-model) | Subsurface thickness, color, and power properties and source-data limits |
-| [Cloth Model](#cloth-model) | The cloth model encompasses all standard (Lit) model parameters except `metallic` and `reflectance` |
-| [Unlit Model](#unlit-model) | Turns off all lighting computations |
-| [Specular Glossiness Model (legacy)](#specular-glossiness-model-legacy) | Legacy, non-physically-based model |
-| [Reference Value Tables](#reference-value-tables) | Concrete sample values for tuning common materials |
+| [Standard (Lit) Model — Base & Common](#standard-lit-model--base--common) | Types, ranges, defaults, model applicability, and meanings for base, metal, roughness, reflectance, specular, occlusion, emission, normals, post-lighting, and shadows |
+| [Standard (Lit) Model — Clear Coat](#standard-lit-model--clear-coat) | Fixed-IOR isotropic coat strength, roughness, and tangent-space normal properties layered above sheen |
+| [Standard (Lit) Model — Anisotropy](#standard-lit-model--anisotropy) | Signed tangent-versus-bitangent anisotropy and encoded tangent-space direction |
+| [Standard (Lit) Model — Sheen](#standard-lit-model--sheen) | Below-coat cloth tint and roughness, including the cloth model's derived default |
+| [Standard (Lit) Model — Refraction / Transmission](#standard-lit-model--refraction--transmission) | IOR and transmission, absorption, solid and thin thickness, dispersion, applicable modes, ranges, and cross-property constraints |
+| [Standard (Lit) Model — Other](#standard-lit-model--other) | Cross-model nits and exposure-weighted emissive output plus premultiplied post-lighting color and additive shortcut |
+| [Subsurface Model](#subsurface-model) | Inherited lit properties, thickness, scatter tint and power, and explicitly absent source types, ranges, and defaults |
+| [Cloth Model](#cloth-model) | Lit-model exclusions and cloth-specific sheen and subsurface colors with types, ranges, default, and meaning |
+| [Unlit Model](#unlit-model) | Lighting-free base, emissive, and post-lighting properties with color-space, alpha, range, and blending semantics |
+| [Specular Glossiness Model (legacy)](#specular-glossiness-model-legacy) | Legacy model exclusions and diffuse base, specular tint, and inverse-roughness glossiness properties |
+| [Reference Value Tables](#reference-value-tables) | Dielectric and metal base colors, reflectance and IOR references, and Abbe-derived dispersion values |
 
 ---
 

@@ -6,10 +6,10 @@ The official linter encodes most review feedback as rules; what it can't see, hu
 
 | Section | Covers |
 |---|---|
-| [Setup](#setup) | The npm package is `eslint-plugin-obsidianmd` (repo: obsidianmd/eslint-plugin); the fetched 2026-07-23 corpus used v0.4.1 |
+| [Setup](#setup) | Package and peer dependencies, flat and legacy ESLint configuration, locale-aware rules, lint commands, and JSON support for manifest checks |
 | [Rule Catalog (v0.4.1)](#rule-catalog-v041) | Command registration, lifecycle cleanup, type and API correctness, DOM and styling, settings tabs, UI text, manifest hygiene, and recommended severities |
-| [Linter-Invisible Pitfalls](#linter-invisible-pitfalls) | Static analysis can't catch these — check them by reading the code |
-| [Human Review Checklist](#human-review-checklist) | Manifest, commands, settings, cleanup, accessibility, compatibility, and release-readiness checks |
+| [Linter-Invisible Pitfalls](#linter-invisible-pitfalls) | Window-reference drift, expensive startup, race-prone vault writes, problematic CSS selectors and overrides, and missing policy disclosures |
+| [Human Review Checklist](#human-review-checklist) | Zero-finding validation, sample and logging cleanup, Obsidian API conventions, accessible and mobile behavior, theme-safe styling, lifecycle cleanup, and README disclosures |
 
 ## Setup
 

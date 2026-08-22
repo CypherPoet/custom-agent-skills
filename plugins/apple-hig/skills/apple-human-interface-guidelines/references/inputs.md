@@ -9,19 +9,19 @@ Distilled from Apple's HIG Inputs pages: Gestures, Focus and selection, Keyboard
 
 | Section | Covers |
 |---|---|
-| [Gestures](#gestures) | A gesture is a physical motion a person uses to directly affect an object in an app or game |
-| [Focus and selection](#focus-and-selection) | Focus visually confirms which object an interaction targets, supporting component-based navigation via remote |
-| [Keyboards](#keyboards) | A physical keyboard is an essential input device for text entry |
-| [Virtual keyboards](#virtual-keyboards) | On devices without physical keyboards, the system offers virtual keyboards with task-optimized key sets |
-| [Playing haptics](#playing-haptics) | Haptics engage the sense of touch to complement visual and auditory feedback |
-| [Digital Crown](#digital-crown) | The Digital Crown is a key hardware input for Apple Vision Pro and Apple Watch |
-| [Apple Pencil and Scribble](#apple-pencil-and-scribble) | Apple Pencil enables precise drawing, handwriting, and markup on iPad and works as a pointer |
-| [Camera Control](#camera-control) | Hardware camera access, interaction states, and the Camera Control overlay |
-| [Action button](#action-button) | The Action button (supported iPhone and Apple Watch models) gives quick access to a favorite feature |
-| [Game controls](#game-controls) | Physical controllers, touch, keyboard, remote, and spatial game input |
-| [Remotes](#remotes) | The Siri Remote is the primary input for Apple TV, combining a clickpad and touch surface with dedicated buttons to navigate |
-| [Eyes](#eyes) | Gaze targeting, hover feedback, and privacy boundaries in visionOS |
-| [Gyroscope and accelerometer](#gyroscope-and-accelerometer) | Motion-based interactions driven by gyroscope and accelerometer data |
+| [Gestures](#gestures) | Standard and custom gestures, accessible alternatives, responsiveness and feedback, system conflicts, platform gesture sets, and visionOS direct and indirect input |
+| [Focus and selection](#focus-and-selection) | Focus versus activation, system effects and recovery, keyboard focus groups, tvOS directional states, and visionOS connected-input behavior |
+| [Keyboards](#keyboards) | Full Keyboard Access, standard and custom shortcuts, modifier conventions, localization and mirroring, and visionOS shortcut presentation |
+| [Virtual keyboards](#virtual-keyboards) | Task-specific keyboards, app input views versus system extensions, semantic keys and Return actions, switching, layout coordination, and platform behavior |
+| [Playing haptics](#playing-haptics) | System pattern meanings, consistent multimodal feedback, intensity and duration, user control, hardware interference, custom events, and platform pattern sets |
+| [Digital Crown](#digital-crown) | watchOS navigation and inspection, feedback and update rates, haptic detents, and system-controlled visionOS functions |
+| [Apple Pencil and Scribble](#apple-pencil-and-scribble) | Immediate marking and sensor input, handedness, hover, double tap, squeeze, barrel roll, Scribble behavior, and custom drawing |
+| [Camera Control](#camera-control) | Symbols and labels, slider values, overlay layout, mode availability and ordering, locked capture, press and slide interactions, and standard controls |
+| [Action button](#action-button) | Useful App Shortcuts, concise action labels and system setup, iOS Live Activity and snippet behavior, and watchOS primary and secondary actions |
+| [Game controls](#game-controls) | Default-input fallbacks, touch layout and feedback, controller requirements and detection, keyboard bindings, standard button mappings, and spatial controllers |
+| [Remotes](#remotes) | Siri Remote gestures and focus, press versus tap, Back and Play behavior, game mappings, and live-TV guide and channel controls |
+| [Eyes](#eyes) | visionOS gaze targeting, viewing comfort and distance, spacing and visual cues, rounded targets, custom hover states, delay, and privacy boundaries |
+| [Gyroscope and accelerometer](#gyroscope-and-accelerometer) | Beneficial motion experiences, direct-interface and battery cautions, Core Motion, and platform availability |
 
 ## Gestures
 *Last changed: 2024-09*

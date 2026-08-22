@@ -6,14 +6,14 @@ Sculpting is more interactive than scriptable — most of the actual sculpting h
 
 | Section | Covers |
 |---|---|
-| [The sculpt mode lifecycle](#the-sculpt-mode-lifecycle) | Topology preparation, sculpting, optional retopology, and finishing |
-| [Multires vs Dyntopo](#multires-vs-dyntopo) | Levels go up exponentially — level 4 is 16× the polys of level 0 |
-| [Switching brushes from script](#switching-brushes-from-script) | Brush settings (radius, strength) are then on the brush itself: `brush.size`, `brush.strength` |
+| [The sculpt mode lifecycle](#the-sculpt-mode-lifecycle) | Topology choice, interactive sculpting, retopology, detail baking, texturing, and the final deliverable boundary |
+| [Multires vs Dyntopo](#multires-vs-dyntopo) | Fixed versus adaptive topology, UV and rig-data survival, memory and baking tradeoffs, scripted subdivision, and exponential density |
+| [Switching brushes from script](#switching-brushes-from-script) | Modern asset-based brush activation, identifier discovery, and radius or strength settings for later interactive strokes |
 | [Common brush use cases](#common-brush-use-cases) | Sculpting brushes and the mesh changes each one is best suited to create |
-| [Retopology workflow](#retopology-workflow) | The high-poly sculpt is rarely the final asset |
-| [Baking sculpt detail to normals](#baking-sculpt-detail-to-normals) | After retopology, bake the sculpt's surface detail into a normal map on the low-poly |
+| [Retopology workflow](#retopology-workflow) | Voxel-remesh limits, manual face-project snapping, and shrinkwrap projection from low-poly geometry onto a sculpt |
+| [Baking sculpt detail to normals](#baking-sculpt-detail-to-normals) | Cycles selected-to-active setup, high- and low-poly selection order, target UV output, and normal-map baking |
 | [Common pitfalls](#common-pitfalls) | Mesh mutation, multiresolution ownership, and topology changes that break sculpt workflows |
-| [Sources](#sources) | Authoritative references that ground this guidance |
+| [Sources](#sources) | Blender sculpting, multiresolution, remesh, and brush API documentation |
 
 ## The sculpt mode lifecycle
 

@@ -8,16 +8,16 @@ The complete `@react-three/fiber` v8 → v9 migration: version and peer-dependen
 
 | Section | Covers |
 |---|---|
-| [Version Requirements](#version-requirements) | React, React DOM, TypeScript, and ecosystem versions required by React Three Fiber v9 |
+| [Version Requirements](#version-requirements) | React 19 peer limits, reconciler compatibility across React minors, the frozen React 18 line, and the current three release pairing |
 | [Ecosystem Pairing](#ecosystem-pairing) | Compatibility matrix and peer ranges for React, Fiber, Drei, postprocessing, Rapier, XR, Zustand, Leva, and three.js |
 | [Migration Checklist](#migration-checklist) | Coordinated package upgrades followed by sweeps for removed types, buffer attributes, Canvas callbacks, StrictMode, color space, tests, and ecosystem changes |
 | [Breaking and Behavioral Changes](#breaking-and-behavioral-changes) | `gl` constructor props, inherited StrictMode, removed automatic sRGB conversion, one-time Suspense side effects, `args` and `primitive` swap ordering, and React's `act` |
-| [TypeScript Migration](#typescript-migration) | Every removed type has a direct replacement |
-| [bufferAttribute Requires Constructor Args](#bufferattribute-requires-constructor-args) | v8 code set `count`/`array`/`itemSize` as props after construction |
-| [New v9 Features](#new-v9-features) | useLoader Accepts Loader Instances, Factory extend, and Async gl and WebGPU |
-| [v9.6: Stable Uniform References](#v96-stable-uniform-references) | Stable shader-uniform references introduced in React Three Fiber v9.6 |
-| [Ecosystem Moves That Bite During Migration](#ecosystem-moves-that-bite-during-migration) | These are not fiber changes, but they land in the same upgrade window and produce the most confusing symptoms |
-| [The v10 Horizon](#the-v10-horizon) | v10 exists only as alphas on npm (10.0.0-alpha.x; alpha.1 released 2026-01-17) |
+| [TypeScript Migration](#typescript-migration) | Canvas, intrinsic-element, and custom-element type replacements, React 19 module augmentation, and factory extension without global JSX declarations |
+| [bufferAttribute Requires Constructor Args](#bufferattribute-requires-constructor-args) | Constructor-based arrays and item sizes, derived counts, and memoization to avoid reconstruction on each render |
+| [New v9 Features](#new-v9-features) | Pooled loader instances, component-returning `extend`, asynchronous renderer factories, WebGPU registration and initialization, and the retained `state.gl` name |
+| [v9.6: Stable Uniform References](#v96-stable-uniform-references) | Copy-in uniform semantics, stable material identities for hot reload and React Compiler, pierced value props, and fixed-shape per-frame updates |
+| [Ecosystem Moves That Bite During Migration](#ecosystem-moves-that-bite-during-migration) | Second-UV channels and naming, addon import paths, Zustand shallow selectors and transient subscriptions, and React 19 refs as ordinary props |
+| [The v10 Horizon](#the-v10-horizon) | Alpha-only WebGPU-first rendering, the `state.gl` to `state.renderer` rename, external frame scheduling, and paired drei alphas |
 | [Common Mistakes](#common-mistakes) | Frequent mistakes and the changes that correct them |
 | [See Also](#see-also) | Related references and supporting guidance |
 

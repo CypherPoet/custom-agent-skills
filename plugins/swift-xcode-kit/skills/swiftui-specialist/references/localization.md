@@ -13,17 +13,17 @@ Text("Explore", tableName: "Navigation",
 
 | Section | Covers |
 |---|---|
-| [Bundle for Swift Packages and Frameworks](#bundle-for-swift-packages-and-frameworks) | Apps, app extensions, and XPC services are their own main bundle, so the `bundle` parameter can be omitted |
-| [SwiftUI Views Localize String Literals Automatically](#swiftui-views-localize-string-literals-automatically) | SwiftUI initializers that accept `LocalizedStringKey` automatically treat string literals as localization keys |
-| [Localizing Variables and Custom Types](#localizing-variables-and-custom-types) | When a `String` variable is passed to `Text`, the `StringProtocol` overload runs and the string is NOT localized |
-| [String Interpolation vs Concatenation](#string-interpolation-vs-concatenation) | String interpolation preserves `LocalizedStringKey` and produces a format string in the catalog |
-| [Casing](#casing) | Bake the desired case into the string itself rather than transforming case at runtime via `.textCase(_:)` |
-| [Formatting Dates, Numbers, and Currencies](#formatting-dates-numbers-and-currencies) | Use `Text`'s `format` parameter or `.formatted()` instead of `DateFormatter` or `NumberFormatter` with hardcoded format strings |
-| [Layout for Localization](#layout-for-localization) | Use `.leading` and `.trailing` instead of `.left` and `.right` — they flip for right-to-left locales; `.left` and `.right` don't |
-| [Reading the Current Locale](#reading-the-current-locale) | Use `@Environment(\.locale)` instead of `Locale.current` for locale-dependent logic in views |
-| [String(localized:) Outside SwiftUI Views](#stringlocalized-outside-swiftui-views) | When you need a localized `String` outside of SwiftUI views, use `String(localized:)`, not `NSLocalizedString` |
-| [LocalizedStringResource for Non-View Types](#localizedstringresource-for-non-view-types) | Use `LocalizedStringResource` for user-facing strings carried by models or other non-view types so localization resolves at display time |
-| [Comments for Translators](#comments-for-translators) | Add a `comment` describing the UI element and its purpose, especially for ambiguous strings |
+| [Bundle for Swift Packages and Frameworks](#bundle-for-swift-packages-and-frameworks) | Main-bundle targets, explicit framework and package lookup with `#bundle`, and older bundle-resolution alternatives |
+| [SwiftUI Views Localize String Literals Automatically](#swiftui-views-localize-string-literals-automatically) | Direct literal localization, opaque versus natural keys, opting out with `verbatim`, and already-unlocalized `String` values |
+| [Localizing Variables and Custom Types](#localizing-variables-and-custom-types) | Why runtime strings cannot be extracted, modeling finite choices as resources, and preserving localization context in text properties |
+| [String Interpolation vs Concatenation](#string-interpolation-vs-concatenation) | Extractable interpolation and translator-controlled sentence structure instead of unlocalized or separately translated fragments |
+| [Casing](#casing) | Translator-controlled casing, preserving user-entered text, and locale-aware transforms only when unavoidable |
+| [Formatting Dates, Numbers, and Currencies](#formatting-dates-numbers-and-currencies) | Locale-aware format styles for dates, numbers, currencies, and lists, plus localized templates when legacy formatters are unavoidable |
+| [Layout for Localization](#layout-for-localization) | Right-to-left alignment, flexible text dimensions, adaptive layout alternatives, and script-aware text styles |
+| [Reading the Current Locale](#reading-the-current-locale) | Environment locale for previewable and per-view locale-dependent behavior |
+| [String(localized:) Outside SwiftUI Views](#stringlocalized-outside-swiftui-views) | Modern non-view localization, extractable interpolation, and locale-correct output instead of legacy string and format APIs |
+| [LocalizedStringResource for Non-View Types](#localizedstringresource-for-non-view-types) | Display-time localization across models, modules, notifications, and view boundaries without unrelated property migrations |
+| [Comments for Translators](#comments-for-translators) | UI-purpose and positional-placeholder guidance, with one source of truth in code or the catalog |
 
 ## Bundle for Swift Packages and Frameworks
 

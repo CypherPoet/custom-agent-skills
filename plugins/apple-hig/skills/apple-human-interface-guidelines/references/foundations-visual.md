@@ -9,14 +9,14 @@ Distilled from Apple's HIG Foundations pages: Branding, Color, Dark Mode, Icons,
 
 | Section | Covers |
 |---|---|
-| [Branding](#branding) | Express a unique brand identity in ways that feel at home on the platform while always deferring to content |
-| [Color](#color) | Use color to enhance communication, evoke your brand, communicate status and feedback, and convey information hierarchy |
-| [Dark Mode](#dark-mode) | A systemwide dark color palette for comfortable low-light viewing that people expect every app to respect |
-| [Icons](#icons) | Interface icons (glyphs) express a single concept with streamlined shapes so people instantly understand items, actions, and modes |
-| [Images](#images) | Deliver artwork at the right formats and scale factors so it looks sharp on every device you support |
-| [Materials](#materials) | Visual effects (Liquid Glass and standard materials) that create depth |
-| [SF Symbols](#sf-symbols) | Thousands of configurable symbols that integrate with the San Francisco system font |
-| [Typography](#typography) | Typographic choices that keep text legible, convey information hierarchy, and express your brand or style |
+| [Branding](#branding) | Voice and tone, accent colors and custom fonts, unobtrusive identity, standard patterns, logo restraint, launch screens, and trademarks |
+| [Color](#color) | System and custom variants, semantic consistency and noncolor cues, testing and profiles, Liquid Glass tinting, system palettes, and platform constraints |
+| [Dark Mode](#dark-mode) | Light and dark support, semantic adaptive colors, contrast and transparency testing, image and icon treatment, depth cues, and platform availability |
+| [Icons](#icons) | SF Symbols and custom vectors, simplicity and consistency, optical balance, localization and accessibility, standard action symbols, and macOS document icons |
+| [Images](#images) | Scale factors, raster and vector formats, color profiles and device testing, tvOS layers, visionOS spatial images, and watchOS transparency and autoscaling |
+| [Materials](#materials) | Liquid Glass versus content-layer materials, regular and clear variants, dimming and vibrancy, semantic thickness, and platform-specific material systems |
+| [SF Symbols](#sf-symbols) | License boundaries, rendering modes, gradients and variable color, weights and variants, localization, animations, custom-symbol construction, and accessibility |
+| [Typography](#typography) | System and custom fonts, Dynamic Type, sizes and weights, hierarchy and leading, font families and styles, tracking data, and platform-specific type systems |
 
 ## Branding
 

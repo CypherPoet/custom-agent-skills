@@ -9,13 +9,13 @@ The pitfalls doctrine from the official R3F docs plus the scaling toolbox: on-de
 | Section | Covers |
 |---|---|
 | [The Eight Pitfalls](#the-eight-pitfalls) | Expensive object creation and per-frame work multiplied by refresh rate, with rules for sharing, state, deltas, mounting, allocation, and loader caching |
-| [On-Demand Rendering](#on-demand-rendering) | Scenes that only change on interaction should not render 60 times per second |
-| [Instancing and the Draw-Call Budget](#instancing-and-the-draw-call-budget) | Budget heuristic: ~1000 draw calls is where most scenes start sagging — well before triangle count matters on modern GPUs |
-| [Level of Detail](#level-of-detail) | Swap geometry complexity by camera distance with drei `<Detailed>` (wraps `THREE.LOD`) |
-| [Adaptive Quality and Movement Regression](#adaptive-quality-and-movement-regression) | Performance envelopes, movement regression, and adaptive device quality |
-| [Expensive State Updates: startTransition](#expensive-state-updates-starttransition) | When a setState will trigger expensive work — mounting a model |
-| [React State Discipline](#react-state-discipline) | The organizing principle for games and state-heavy apps: the render loop must never depend on React re-renders |
-| [Profiling](#profiling) | `r3f-perf` is the standard in-canvas profiler — FPS, CPU/GPU frame time, draw calls, triangles, and geometry/texture memory |
+| [On-Demand Rendering](#on-demand-rendering) | Automatic React invalidation, coalesced requests after imperative changes, raw and drei control wiring, sustaining continuous animation, and externally advanced loops |
+| [Instancing and the Draw-Call Budget](#instancing-and-the-draw-call-budget) | Draw-call limits, raw matrix updates and culling, declarative instances with fixed capacity and events, and merged instancing for repeated multi-mesh assets |
+| [Level of Detail](#level-of-detail) | Camera-distance detail thresholds, required child ordering, and progressive low-resolution fallbacks while higher-detail assets load |
+| [Adaptive Quality and Movement Regression](#adaptive-quality-and-movement-regression) | Opt-in quality envelopes, movement-triggered regression and recovery, adaptive pixel ratio and events, sustained-device monitoring, and mobile pixel-ratio clamping |
+| [Expensive State Updates: startTransition](#expensive-state-updates-starttransition) | Scheduling unavoidable model mounts, level swaps, and suspending updates without blocking input or the frame loop |
+| [React State Discipline](#react-state-discipline) | Isolated animated and display components, narrow root selectors, imperative frame reads, non-rendering Zustand subscriptions, and shallow multi-value selectors |
+| [Profiling](#profiling) | In-canvas CPU, GPU, draw, triangle, and memory metrics, lightweight renderer counters, and diagnoses for draw-call, allocation, mount, and fill-rate bottlenecks |
 | [Common Mistakes](#common-mistakes) | Frequent mistakes and the changes that correct them |
 | [See Also](#see-also) | Related references and supporting guidance |
 

@@ -8,18 +8,18 @@ Custom GLSL at the React-reconciler layer: drei's `shaderMaterial` factory, raw 
 
 | Section | Covers |
 |---|---|
-| [Drei shaderMaterial Workflow](#drei-shadermaterial-workflow) | Defining, extending, and rendering reusable Drei shader materials |
-| [Shader HMR](#shader-hmr) | `WaveMaterial.key` is a UUID generated each time `shaderMaterial(...)` executes |
-| [v9.6 Uniform Semantics](#v96-uniform-semantics) | How React Three Fiber v9.6 applies uniform props without replacing stable objects |
-| [TypeScript for Custom Elements](#typescript-for-custom-elements) | v9 types custom elements by augmenting `ThreeElements` on the `@react-three/fiber` module |
-| [Raw THREE.ShaderMaterial](#raw-threeshadermaterial) | The escape hatch when you want vanilla three.js semantics |
-| [Uniform Type Mapping](#uniform-type-mapping) | The GLSL declaration decides the upload path; the JS value must match its shape |
-| [Varyings and Shader Built-Ins](#varyings-and-shader-built-ins) | ShaderMaterial built-ins versus RawShaderMaterial, cross-stage varyings, coordinate-space consistency, tone mapping, and color-space output |
-| [Effect Cookbook](#effect-cookbook) | Fresnel rims, value-noise and FBM, dissolve effects, and dissolve overdraw costs |
-| [Patching Built-In Materials](#patching-built-in-materials) | `onBeforeCompile` injects GLSL into a built-in material's shader while keeping its lighting, shadows, and fog |
-| [Instanced Custom Attributes](#instanced-custom-attributes) | Feed per-instance data to a custom shader with `<instancedBufferAttribute>` |
-| [External GLSL Files](#external-glsl-files) | Vite, zero-config — the `?raw` suffix imports any file as a string |
-| [GLSL Performance Rules](#glsl-performance-rules) | Branch avoidance, uniform packing, loop bounds, precision, and shader recompilation costs |
+| [Drei shaderMaterial Workflow](#drei-shadermaterial-workflow) | Factory definition and catalog registration, flat uniform props and frame updates, ordinary material properties, and per-instance setup callbacks |
+| [Shader HMR](#shader-hmr) | Generated class keys that force shader recompilation after hot-module replacement without production cost |
+| [v9.6 Uniform Semantics](#v96-uniform-semantics) | Stable copy-in uniform objects, hot-reload and compiler benefits, pierced values, and the memoization requirement on earlier releases |
+| [TypeScript for Custom Elements](#typescript-for-custom-elements) | React 19 module augmentation, explicit uniform props, typed factory extension without global registration, and removed v8 types |
+| [Raw THREE.ShaderMaterial](#raw-threeshadermaterial) | Memoized vanilla material construction, nested uniform updates, manual disposal, HMR differences, and the catalog-element alternative |
+| [Uniform Type Mapping](#uniform-type-mapping) | JavaScript-to-GLSL scalar, vector, matrix, texture, and array shapes plus explicit sRGB color-texture and linear data-texture handling |
+| [Varyings and Shader Built-Ins](#varyings-and-shader-built-ins) | Automatic versus raw declarations, cross-stage data, coordinate-space consistency, non-uniform normal transforms, and matching built-in tone and color output |
+| [Effect Cookbook](#effect-cookbook) | World-space Fresnel rims, reusable value noise and fractal Brownian motion, threshold dissolves with glowing edges, interior faces, and overdraw costs |
+| [Patching Built-In Materials](#patching-built-in-materials) | Shader-chunk injection while retaining lighting, current patch points, stable uniforms, program-cache variants, forced recompilation, and escalation beyond string surgery |
+| [Instanced Custom Attributes](#instanced-custom-attributes) | v9 constructor-based instance buffers, shader declarations, optional matrix composition, stable capacity, and reconstruction rules |
+| [External GLSL Files](#external-glsl-files) | Raw Vite imports, include-aware plugin configuration, TypeScript declarations, and inline editor highlighting |
+| [GLSL Performance Rules](#glsl-performance-rules) | Branchless selection, packed uniforms, CPU and vertex-stage precomputation, lookup textures, varying limits, and depth costs from discard and transparency |
 | [Common Mistakes](#common-mistakes) | Frequent mistakes and the changes that correct them |
 | [See Also](#see-also) | Related references and supporting guidance |
 

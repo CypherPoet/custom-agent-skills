@@ -11,10 +11,10 @@ runtime / on-device. This file covers both, plus how colors must be fed to mater
 
 | Section | Covers |
 |---|---|
-| [The `matc` CLI](#the-matc-cli) | Simplest invocation — give it an input `.mat` and an output `.filamat` |
-| [Material Packages, Variants & Platforms](#material-packages-variants--platforms) | Compiled shader platforms, APIs, variants, and material package contents |
-| [Runtime Compilation — the `filamat` Library](#runtime-compilation--the-filamat-library) | `filamat` generates materials programmatically on the device instead of via `matc` on the host |
-| [Handling Colors](#handling-colors) | Filament works in linear color space |
+| [The `matc` CLI](#the-matc-cli) | Source validation, output, platform and API targeting, size optimization, JSON parameter reflection, variant filtering, automatic filters, and runtime-crash risks |
+| [Material Packages, Variants & Platforms](#material-packages-variants--platforms) | Runtime-selected scene variants, package-size levers, feature-level sampler budgets, screen-space reductions, and external-sampler cost |
+| [Runtime Compilation — the `filamat` Library](#runtime-compilation--the-filamat-library) | Builder initialization and shutdown, package handoff, native and Java link dependencies, platform makefiles, Windows runtime variants, and `filamat_lite` restrictions |
+| [Handling Colors](#handling-colors) | Hardware and parameter sRGB-to-linear conversion, accuracy and cost options, premultiplied alpha preparation, and Android bitmap behavior |
 
 ## The `matc` CLI
 

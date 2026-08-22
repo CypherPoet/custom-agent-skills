@@ -9,19 +9,19 @@ Distilled from Apple's HIG Components pages: Entering data, Text fields, Text vi
 
 | Section | Covers |
 |---|---|
-| [Entering data](#entering-data) | Patterns for collecting information from people easily and without mistakes, across all input methods |
-| [Text fields](#text-fields) | A rectangular area for entering or editing small, specific pieces of text such as a name or email address |
-| [Text views](#text-views) | Displays multiline, styled text content that can optionally be editable and can scroll when content overflows |
-| [Combo boxes](#combo-boxes) | Combines a text field with a pull-down button in one control; people enter a custom value or pick from a predefined list |
-| [Token fields](#token-fields) | A text field that converts entered text into tokens that are easy to select and manipulate |
-| [Pickers](#pickers) | Displays one or more scrollable lists of distinct values to choose single or multipart values |
-| [Digit entry views](#digit-entry-views) | A full-screen view that prompts for a series of digits (like a PIN) using a digit-specific keyboard |
-| [Sliders](#sliders) | A horizontal track with an adjustable thumb that sets a value between a minimum and maximum |
-| [Steppers](#steppers) | A two-segment control to increase or decrease an incremental value |
-| [Toggles](#toggles) | Lets people choose between a pair of opposing states, using a different appearance per state |
-| [Disclosure controls](#disclosure-controls) | Reveal and hide information/functionality related to specific controls or views |
-| [Color wells](#color-wells) | Lets people adjust the color of text, shapes, guides, and other onscreen elements |
-| [Image wells](#image-wells) | An editable version of an image view; people can copy/paste or delete its image, or drag a new image in without selecting first |
+| [Entering data](#entering-data) | System-supplied data, clear prompts and defaults, secure entry, choice controls, paste and drag support, validation, and required-field gating |
+| [Text fields](#text-fields) | Small-text entry, labels and placeholders, security, sizing and layout, validation and formatting, truncation, keyboards, and platform alternatives |
+| [Text views](#text-views) | Long, multiline, styled, editable or selectable text; legibility and accessibility; keyboard behavior; and platform limits |
+| [Combo boxes](#combo-boxes) | macOS custom-or-listed values, meaningful defaults, introductory labels, choice width, and platform support |
+| [Token fields](#token-fields) | macOS token creation, selection and reordering, suggestions, context menus, delimiters, and suggestion timing |
+| [Pickers](#pickers) | Medium and multipart choices, ordering and placement, date and time intervals, styles and modes, and platform interactions |
+| [Digit entry views](#digit-entry-views) | tvOS full-screen PIN-style input, secure digits, explanatory title and prompt, and platform support |
+| [Sliders](#sliders) | Continuous ranges, direction and appearance, exact-value companions, specialized platform styles, feedback, and unsupported uses |
+| [Steppers](#steppers) | Incremental changes, visible current values, text-field pairing, accelerated macOS input, and platform support |
+| [Toggles](#toggles) | Opposing states, visible state differences, button and switch behavior, and platform rules for switches, checkboxes, and radio buttons |
+| [Disclosure controls](#disclosure-controls) | Progressive disclosure, priority ordering, triangle and button behavior, labels and placement, and platform support |
+| [Color wells](#color-wells) | System color picking, saved colors, active-state feedback, drag and drop, and platform support |
+| [Image wells](#image-wells) | macOS editable images, drag, copy, paste and deletion, required-image defaults, and command availability |
 
 ## Entering data
 *Last changed: 2023-06*

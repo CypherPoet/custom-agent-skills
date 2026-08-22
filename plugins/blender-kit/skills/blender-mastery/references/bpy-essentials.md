@@ -7,15 +7,15 @@ Cross-cutting Python patterns for working with `bpy` through the MCP. The themes
 | Section | Covers |
 |---|---|
 | [Data API vs operators](#data-api-vs-operators) | Direct, context-independent `bpy.data` access versus context-sensitive `bpy.ops` actions, with selection rules and task examples |
-| [Context: where operators get tripped up](#context-where-operators-get-tripped-up) | Operators read `bpy.context` to know what to act on |
-| [The select-active-edit triad](#the-select-active-edit-triad) | Three closely-related but distinct concepts that scripts routinely confuse |
-| [Modes](#modes) | `bpy.context.mode` is one of `OBJECT`, `EDIT_MESH`, `EDIT_CURVE`, `SCULPT`, `POSE`, `WEIGHT_PAINT`, `TEXTURE_PAINT`, etc |
-| [Depsgraph: when "current state" lies](#depsgraph-when-current-state-lies) | `bpy.data.objects[X].matrix_world` reflects the un-evaluated transform |
-| [Undo behavior under scripts](#undo-behavior-under-scripts) | Undo in `bpy` is unreliable when called from `execute_blender_code` |
-| [Naming and uniqueness](#naming-and-uniqueness) | Blender enforces unique names within each data block type |
-| [Modifier budgeting (don't bake what you don't have to)](#modifier-budgeting-dont-bake-what-you-dont-have-to) | Keeping reusable modifiers live instead of baking geometry unnecessarily |
-| [Common helper snippets](#common-helper-snippets) | Find every Principled BSDF in the scene, Iterate every mesh and report poly count |
-| [Sources](#sources) | Authoritative references that ground this guidance |
+| [Context: where operators get tripped up](#context-where-operators-get-tripped-up) | Operator poll and wrong-target failures, data-API alternatives, explicit active selection, modern context overrides, and obsolete override syntax |
+| [The select-active-edit triad](#the-select-active-edit-triad) | Selected, active, and edit-mode objects, explicit activation, and how operators choose their targets |
+| [Modes](#modes) | Mode inspection and switching, active-object type requirements, and the mode/data relationship |
+| [Depsgraph: when "current state" lies](#depsgraph-when-current-state-lies) | Source versus evaluated transforms and meshes for animation, constraints, drivers, geometry nodes, and instances |
+| [Undo behavior under scripts](#undo-behavior-under-scripts) | Script undo limitations and safer read-first, save-before-mutation, and duplicate-first workflows |
+| [Naming and uniqueness](#naming-and-uniqueness) | Automatic numeric suffixes, rerun and duplication hazards, stable returned references, and idempotent object creation |
+| [Modifier budgeting (don't bake what you don't have to)](#modifier-budgeting-dont-bake-what-you-dont-have-to) | Array, subdivision, and boolean expansion risks, nondestructive modifier retention, and application or export boundaries |
+| [Common helper snippets](#common-helper-snippets) | Principled-material discovery, mesh polygon reporting, and selection reset with a single active object |
+| [Sources](#sources) | Blender data-access, context, operator, and temporary-override API documentation |
 
 ## Data API vs operators
 

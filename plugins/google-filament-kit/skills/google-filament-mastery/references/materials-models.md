@@ -7,13 +7,13 @@
 
 | Section | Covers |
 |---|---|
-| [Core Concepts](#core-concepts) | Material — defines the visual appearance of a surface |
+| [Core Concepts](#core-concepts) | Materials, shading models, source definitions, compiled packages and platform variants, parameterized instances, linear colors, premultiplied alpha, and tangent-space directions |
 | [Choosing a Model](#choosing-a-model) | When to choose lit, subsurface, cloth, unlit, or legacy specular-glossiness shading |
-| [Lit Model (Standard)](#lit-model-standard) | Base color, metallic, roughness, reflectance, sheen, clear coat, anisotropy, ambient occlusion, normals, emissive output, IOR, transmission, absorption, thickness, dispersion, and shadow strength |
-| [Subsurface Model](#subsurface-model) | Selected with `shadingModel : subsurface` |
-| [Cloth Model](#cloth-model) | Selected with `shadingModel : cloth` |
-| [Unlit Model](#unlit-model) | Selected with `shadingModel : unlit` |
-| [Specular Glossiness (Legacy)](#specular-glossiness-legacy) | Selected with `shadingModel : specularGlossiness` |
+| [Lit Model (Standard)](#lit-model-standard) | Base, metallic, roughness and reflectance roles, specular and sheen layers, costly coat and anisotropy switches, indirect shading, emissive exposure, refraction and absorption, dispersion, and shadows |
+| [Subsurface Model](#subsurface-model) | Translucent-volume use cases, inherited lit inputs, thickness, scattering tint and power, and the source's missing type, range, and default details |
+| [Cloth Model](#cloth-model) | Fabric scattering and fuzz, excluded metallic and reflectance inputs, sheen and subsurface tints, performance and shadow caveats, and cotton, denim, and velvet recipes |
+| [Unlit Model](#unlit-model) | Lighting-free video, camera, UI, and debug use, direct base color, exposure-weighted emissive output, and post-lighting blending |
+| [Specular Glossiness (Legacy)](#specular-glossiness-legacy) | Legacy glTF compatibility, nonphysical limitations, omitted metallic-roughness inputs, and replacement diffuse, specular-color, and glossiness controls |
 
 ---
 

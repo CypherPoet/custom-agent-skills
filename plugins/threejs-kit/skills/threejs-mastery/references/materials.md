@@ -8,24 +8,24 @@ PBR, classic phong/lambert/basic, toon, point/line, and how to customize materia
 
 | Section | Covers |
 |---|---|
-| [Material Types](#material-types) | If you don't know which to pick, start with `MeshStandardMaterial` (or `MeshStandardNodeMaterial` if you plan to customize) |
-| [MeshBasicMaterial](#meshbasicmaterial) | Unlit. Always visible regardless of lighting |
-| [MeshLambertMaterial](#meshlambertmaterial) | Diffuse lighting only. Fast — use when you don't need specular highlights |
-| [MeshPhongMaterial](#meshphongmaterial) | Specular highlights. Useful for shiny plastic-style surfaces |
-| [MeshStandardMaterial (PBR)](#meshstandardmaterial-pbr) | The recommended default. Drives realistic results via roughness/metalness and an environment map |
-| [MeshPhysicalMaterial](#meshphysicalmaterial) | Extends `MeshStandardMaterial` with clearcoat, transmission, sheen, iridescence, anisotropy, and explicit specular controls |
-| [MeshToonMaterial](#meshtoonmaterial) | Cel-shading. Provide a tiny stepped gradient texture for the toon ramp |
-| [Debug Materials](#debug-materials) | Normal and depth materials for inspecting geometry and rendering |
-| [PointsMaterial / LineBasicMaterial / LineDashedMaterial](#pointsmaterial--linebasicmaterial--linedashedmaterial) | Material settings for points, basic lines, and dashed lines |
-| [Node Materials (TSL — Modern Customization)](#node-materials-tsl--modern-customization) | Modern custom material behavior built with Three Shading Language nodes |
-| [ShaderMaterial (GLSL — Legacy / WebGL)](#shadermaterial-glsl--legacy--webgl) | `ShaderMaterial` is still supported and useful when you're targeting `WebGLRenderer` exclusively or porting older code |
-| [Patching Built-in Shaders (`onBeforeCompile`)](#patching-built-in-shaders-onbeforecompile) | Pre-TSL, the way to inject custom GLSL into a standard material was `onBeforeCompile` |
-| [Common Material Properties](#common-material-properties) | Visibility, transparency, depth, blending, polygon offset, clipping, and precision settings |
+| [Material Types](#material-types) | Lighting models, intended looks, renderer paths, and default choices for standard or customized PBR |
+| [MeshBasicMaterial](#meshbasicmaterial) | Light-independent color, texture, alpha, environment reflection, side, wireframe, and fog controls |
+| [MeshLambertMaterial](#meshlambertmaterial) | Low-cost diffuse and emissive surfaces with optional maps and environment reflection |
+| [MeshPhongMaterial](#meshphongmaterial) | Classic specular shading with shininess, emissive, normal, bump, and displacement maps |
+| [MeshStandardMaterial (PBR)](#meshstandardmaterial-pbr) | Roughness-metalness PBR maps, color-space-aware albedo, configurable AO channels, displacement, emission, and environment intensity |
+| [MeshPhysicalMaterial](#meshphysicalmaterial) | Advanced clearcoat, transmission, volume, sheen, iridescence, anisotropy, and specular layers with glass and paint recipes |
+| [MeshToonMaterial](#meshtoonmaterial) | Cel shading driven by a nearest-filtered stepped gradient ramp |
+| [Debug Materials](#debug-materials) | Normal visualization and packed depth output for geometry and rendering inspection |
+| [PointsMaterial / LineBasicMaterial / LineDashedMaterial](#pointsmaterial--linebasicmaterial--linedashedmaterial) | Textured and attenuated points, platform-limited line width, and distance-prepared dash patterns |
+| [Node Materials (TSL — Modern Customization)](#node-materials-tsl--modern-customization) | Lighting-integrated color and position nodes, skinned-vertex caveats, live uniforms, texture sampling, direct output, and reusable flow logic |
+| [ShaderMaterial (GLSL — Legacy / WebGL)](#shadermaterial-glsl--legacy--webgl) | WebGL-oriented custom uniforms and stages, provided shader symbols, and fully explicit raw shaders |
+| [Patching Built-in Shaders (`onBeforeCompile`)](#patching-built-in-shaders-onbeforecompile) | Legacy WebGL source injection, custom uniform retention, and TSL node overrides as the preferred replacement |
+| [Common Material Properties](#common-material-properties) | Visibility and alpha, face selection, depth and color writes, blend modes, polygon offset, dithering, and tone mapping |
 | [Multi-Material Meshes](#multi-material-meshes) | Assign different materials to geometry groups |
-| [Environment Maps](#environment-maps) | Drive reflections / IBL on a per-material basis, or globally via `scene.environment` |
-| [Cloning, Modifying, and Disposing](#cloning-modifying-and-disposing) | Cloning and mutating materials, triggering recompilation, and disposing resources |
-| [Performance Tips](#performance-tips) | Material reuse, shader variants, transparency, cloning, and disposal |
-| [Common Mistakes](#common-mistakes) | Frequent mistakes and the changes that correct them |
+| [Environment Maps](#environment-maps) | Per-material cube reflections and global equirectangular HDR lighting or backgrounds |
+| [Cloning, Modifying, and Disposing](#cloning-modifying-and-disposing) | Independent clones, immediate numeric changes, shader-affecting recompilation flags, and GPU cleanup |
+| [Performance Tips](#performance-tips) | Shared and pooled materials, alpha testing over transparency, appropriately cheap shading, and restrained light counts |
+| [Common Mistakes](#common-mistakes) | Incorrect map color spaces and UV channels, missing recompiles, mixed shader pipelines, wrong PBR class, leaked materials, and duplicate tone mapping |
 | [See Also](#see-also) | Related references and supporting guidance |
 
 ## Material Types

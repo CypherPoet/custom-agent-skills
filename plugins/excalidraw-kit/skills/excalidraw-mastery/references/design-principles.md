@@ -8,15 +8,15 @@ process that applies it is [`authoring-workflow.md`](authoring-workflow.md).
 
 | Section | Covers |
 |---|---|
-| [Core Philosophy](#core-philosophy) | A diagram should ARGUE, not DISPLAY |
-| [Depth Assessment](#depth-assessment) | Decide this first — it changes everything downstream |
-| [Evidence Artifacts](#evidence-artifacts) | Concrete proof embedded in a technical diagram — they make it teach and show it's correct |
-| [Visual Pattern Library](#visual-pattern-library) | Match each concept to the pattern that mirrors its behavior |
-| [Multi-Zoom Architecture](#multi-zoom-architecture) | Comprehensive diagrams work at three zoom levels at once, like a map showing both country borders and street names |
-| [Container Discipline](#container-discipline) | When labels need containers, which shapes to use, and how to avoid diagram clutter |
-| [Shape Meaning](#shape-meaning) | Diagram concepts and the Excalidraw shapes that represent them |
+| [Core Philosophy](#core-philosophy) | Structural argument, label-independent meaning, and concrete educational value |
+| [Depth Assessment](#depth-assessment) | Conceptual versus comprehensive depth, explanation scope, and research for real formats, events, APIs, and endpoints |
+| [Evidence Artifacts](#evidence-artifacts) | Code, JSON, event timelines, UI mockups, and real inputs rendered as concrete proof rather than labels |
+| [Visual Pattern Library](#visual-pattern-library) | Fan-out, convergence, trees, timelines, cycles, clouds, transformations, comparisons, phase breaks, and line-first structure |
+| [Multi-Zoom Architecture](#multi-zoom-architecture) | Summary flow, responsibility or phase boundaries, and evidence-rich detail in one technical diagram |
+| [Container Discipline](#container-discipline) | Focal, connectable, semantic, and distinct elements that merit shapes versus labels and metadata that rely on typography |
+| [Shape Meaning](#shape-meaning) | Free text, markers, endpoints, decisions, processes, abstract states, and hierarchies mapped to distinct visual forms |
 | [Layout](#layout) | Element scale, whitespace, flow direction, required connections, and spacing rules for readable diagrams |
-| [Color & Aesthetics](#color--aesthetics) | Color encodes meaning, it isn't decoration |
+| [Color & Aesthetics](#color--aesthetics) | Semantic fill and stroke pairs, text hierarchy, palette reuse, roughness, valid stroke widths, opacity, and marker sizing |
 
 ## Core Philosophy
 

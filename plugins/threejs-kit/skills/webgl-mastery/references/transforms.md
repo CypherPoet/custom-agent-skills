@@ -4,15 +4,15 @@
 
 | Section | Covers |
 |---|---|
-| [Clip Space](#clip-space) | The vertex shader's job is to output a `vec4` in clip space — a coordinate system |
-| [The MVP Chain](#the-mvp-chain) | The classical chain is Model × View × Projection (read right-to-left when applied to a position) |
-| [Use a Matrix Library](#use-a-matrix-library) | Don't roll your own. The two standard choices for WebGL |
-| [Perspective Projection](#perspective-projection) | Perspective-matrix parameters, field of view, aspect ratio, and near/far clipping |
-| [Orthographic Projection](#orthographic-projection) | For 2D rendering, UI layers, or technical visualizations |
-| [A Basic Camera](#a-basic-camera) | `lookAt` is the standard "where am I and what am I pointing at" |
-| [Normals — The Subtle Matrix](#normals--the-subtle-matrix) | When you transform positions by a matrix, you can't transform normals by the same matrix if it includes non-uniform scale |
-| [2D Math Without 3D Overhead](#2d-math-without-3d-overhead) | For pure 2D work (sprites, UI, charts) you can stick to `mat3` and `vec2` |
-| [Common Mistakes](#common-mistakes) | Frequent mistakes and the changes that correct them |
+| [Clip Space](#clip-space) | Visible clip-space bounds, perspective division, direct fullscreen positions, and matrix-based spatial positioning |
+| [The MVP Chain](#the-mvp-chain) | Model, view, and projection responsibilities, multiplication order, and combined per-frame or per-object uniforms |
+| [Use a Matrix Library](#use-a-matrix-library) | WebGL-oriented matrix-library choices, an MVP construction example, column-major storage, and transpose handling |
+| [Perspective Projection](#perspective-projection) | Vertical field of view, aspect-ratio updates, clipping distances, and near-plane effects on depth precision |
+| [Orthographic Projection](#orthographic-projection) | Non-perspective projection for 2D and technical views, including pixel coordinates and Y-axis orientation |
+| [A Basic Camera](#a-basic-camera) | `lookAt` parameters plus orbit and first-person camera positioning |
+| [Normals — The Subtle Matrix](#normals--the-subtle-matrix) | Inverse-transpose normal transformation under non-uniform scale and the safe shortcut for simpler transforms |
+| [2D Math Without 3D Overhead](#2d-math-without-3d-overhead) | Lightweight `mat3` and `vec2` transforms plus matrix-free fragment coordinates for fullscreen effects |
+| [Common Mistakes](#common-mistakes) | Diagnosis of matrix-order, resize, depth, normal, pivot, transpose, field-of-view, and 2D projection errors |
 
 ## Clip Space
 

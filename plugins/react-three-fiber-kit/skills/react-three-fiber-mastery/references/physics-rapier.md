@@ -8,17 +8,17 @@
 
 | Section | Covers |
 |---|---|
-| [Setup](#setup) | `<Physics>` creates the world and steps it |
-| [RigidBody](#rigidbody) | `<RigidBody>` registers its mesh children with the simulation and drives their transform |
-| [Colliders](#colliders) | Auto-Collider Strategy, Explicit Colliders — Args Are Half-Extents, and MeshCollider |
-| [Imperative Body API](#imperative-body-api) | Grab the body with a ref — the type is `RapierRigidBody` |
-| [Collision Events and Sensors](#collision-events-and-sensors) | Handlers go on `<RigidBody>` (fires for any of its colliders) or on individual collider components (fires for that shape only) |
-| [Collision Filtering](#collision-filtering) | `interactionGroups(memberships, filters?)` packs group data into the number the engine expects |
-| [Joints](#joints) | Fixed, spherical, revolute, prismatic, rope, and spring joints between rigid bodies |
-| [Instanced Physics](#instanced-physics) | `<InstancedRigidBodies>` pairs one `instancedMesh` with one rigid body per instance |
-| [World Access, Stepping, and Snapshots](#world-access-stepping-and-snapshots) | Accessing the Rapier world, manual stepping, and snapshot-based state restoration |
-| [Attractors](#attractors) | `Attractor` lives in the separate `@react-three/rapier-addons` package |
-| [Character Controllers](#character-controllers) | Kinematic character movement, collision correction, slopes, and autostep |
+| [Setup](#setup) | Suspended WASM loading, world gravity and debug display, fixed or variable stepping, interpolation, collider defaults, pause control, and independent updates for demand rendering |
+| [RigidBody](#rigidbody) | Physics-owned transforms, dynamic, fixed, and two kinematic movement models, material and damping properties, axis locks, sleeping, and selective continuous collision detection |
+| [Colliders](#colliders) | Cost-aware automatic shapes, static-only trimeshes, half-extent primitive arguments, fixed standalone and compound colliders, and simplified mesh proxies |
+| [Imperative Body API](#imperative-body-api) | One-time impulses versus persistent forces and resets, wake behavior, transform and velocity access, Rapier-to-three conversions, and type-correct kinematic driving |
+| [Collision Events and Sensors](#collision-events-and-sensors) | Body-wide and collider-specific contact events, object identification and manifold data, high-frequency force handling, sleep events, and nonphysical overlap sensors |
+| [Collision Filtering](#collision-filtering) | Sixteen membership and filter groups, bidirectional acceptance, body-wide application, and broad-phase pruning |
+| [Joints](#joints) | Local anchors and constraints for fixed, hinge, ball-socket, slider, spring, and rope joints plus one-time motor configuration |
+| [Instanced Physics](#instanced-physics) | One rigid body per rendered instance, unique keys and overrides, indexed body refs, stable instance arrays, and matching draw capacity |
+| [World Access, Stepping, and Snapshots](#world-access-stepping-and-snapshots) | Raw world and WASM access, direct gravity and ray operations, deterministic paused stepping, and complete serialized restore points |
+| [Attractors](#attractors) | Optional-package attraction and repulsion, static, linear, and Newtonian falloff, range, strength, and collision-group scope |
+| [Character Controllers](#character-controllers) | Capsule-based kinematic movement, collision-corrected sliding, slopes, autostep, ground snapping, dynamic-body impulses, and the higher-level community controller |
 | [Performance Rules](#performance-rules) | Sleeping, collider choice, rigid-body counts, event costs, and timestep guidance |
 | [Common Mistakes](#common-mistakes) | Frequent mistakes and the changes that correct them |
 | [See Also](#see-also) | Related references and supporting guidance |

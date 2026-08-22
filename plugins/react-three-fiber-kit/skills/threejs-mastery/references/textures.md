@@ -8,21 +8,21 @@ Image, data, canvas, video, and HDR textures; color space; filtering; render tar
 
 | Section | Covers |
 |---|---|
-| [Loading](#loading) | TextureLoader and Promise Wrapper |
-| [Color Space — the #1 Gotcha](#color-space--the-1-gotcha) | Color/albedo textures must be tagged `SRGBColorSpace` |
+| [Loading](#loading) | Callback and immediately returned textures, promise wrapping, and parallel map loading |
+| [Color Space — the #1 Gotcha](#color-space--the-1-gotcha) | sRGB tags for visible color and emission, linear data maps, and loader-specific defaults |
 | [Wrapping, Repeat, Offset, Rotation](#wrapping-repeat-offset-rotation) | Wrapping modes plus texture repeat, offset, rotation, and pivot controls |
 | [Filtering and Mipmaps](#filtering-and-mipmaps) | Minification, magnification, mipmap, and anisotropic filtering settings |
-| [Texture Sources](#texture-sources) | Image, `DataTexture`, `CanvasTexture`, `VideoTexture`, and KTX2/Basis compressed textures |
+| [Texture Sources](#texture-sources) | Image update flags, generated data, redrawn canvases, self-updating video, and GPU-compressed KTX2/Basis delivery |
 | [Cube Textures and HDR Environments](#cube-textures-and-hdr-environments) | `CubeTextureLoader`, PMREM-filtered equirectangular environments, RGBE and EXR loading, and scene-background tuning |
-| [Render Targets](#render-targets) | Render the scene (or a custom pass) into a texture |
-| [CubeCamera — Dynamic Environment Maps](#cubecamera--dynamic-environment-maps) | Cube-camera updates are expensive — every frame is six camera renders |
-| [UV Mapping](#uv-mapping) | Reading and Writing UVs, Second UV Channel, and UV Transform in a Shader |
+| [Render Targets](#render-targets) | Offscreen scene output, sampled color, depth attachments, multisampling, and renderer-specific target classes |
+| [CubeCamera — Dynamic Environment Maps](#cubecamera--dynamic-environment-maps) | Feedback-safe local reflection capture and update throttling for six-render cube maps |
+| [UV Mapping](#uv-mapping) | Attribute edits and uploads, selectable secondary channels, and uniform-driven transforms in GLSL or TSL |
 | [Texture Atlases](#texture-atlases) | Selecting sprites by changing a shared atlas texture's offset and repeat |
-| [PBR Texture Set](#pbr-texture-set) | Color, normal, roughness, metalness, occlusion, emissive, displacement, and alpha maps |
-| [Procedural Textures](#procedural-textures) | Generating noise data textures and canvas-based color gradients |
+| [PBR Texture Set](#pbr-texture-set) | Complete material-map wiring, color-space assignments, AO channel selection, and tangent- versus object-space normals |
+| [Procedural Textures](#procedural-textures) | Random pixel data and canvas-rendered color-gradient generation |
 | [Memory Management](#memory-management) | Disposing texture-backed materials and pooling shared texture loads |
-| [Performance Tips](#performance-tips) | Power-of-two sizing, compression, dimensions, channel packing, and disposal |
-| [Common Mistakes](#common-mistakes) | Frequent mistakes and the changes that correct them |
+| [Performance Tips](#performance-tips) | Power-of-two sizing, GPU compression, atlases, bounded anisotropy, shared instances, memory counts, and device-aware dimensions |
+| [Common Mistakes](#common-mistakes) | Wrong color space, normal orientation, AO channels, data mipmaps, stale canvases, leaked targets, unfiltered HDR, and late anisotropy changes |
 | [See Also](#see-also) | Related references and supporting guidance |
 
 ## Loading

@@ -13,12 +13,12 @@ These asset-provider integrations are **not** part of the official Blender Lab M
 
 | Section | Covers |
 |---|---|
-| [PolyHaven: HDRIs, textures, models](#polyhaven-hdris-textures-models) | PolyHaven is the first-call source for environment lighting and surface materials |
-| [Sketchfab: marketplace models](#sketchfab-marketplace-models) | Sketchfab requires an API token, configured in the third-party `blender-mcp` addon's settings |
-| [Hyper3D Rodin: cloud AI generation](#hyper3d-rodin-cloud-ai-generation) | Generates from a text prompt and/or reference images |
-| [Hunyuan3D: local AI generation](#hunyuan3d-local-ai-generation) | Local text-to-3D and image-to-3D generation with the Hunyuan3D Blender addon |
-| [Picking the right integration](#picking-the-right-integration) | Blender asset-integration approaches matched to project needs |
-| [Sources](#sources) | Authoritative references that ground this guidance |
+| [PolyHaven: HDRIs, textures, models](#polyhaven-hdris-textures-models) | CC0 environment setup, PBR filename and color-space mapping, OpenGL normals, resolution choices, and displacement export limits |
+| [Sketchfab: marketplace models](#sketchfab-marketplace-models) | Third-party token setup, imported-mesh auditing, scale and material correction, and missing-texture inspection |
+| [Hyper3D Rodin: cloud AI generation](#hyper3d-rodin-cloud-ai-generation) | Text- and image-generated PBR meshes, transform checks, nondestructive decimation, and GLTF cleanup choices |
+| [Hunyuan3D: local AI generation](#hunyuan3d-local-ai-generation) | Local hardware and privacy tradeoffs, dense textured-atlas output, runtime decimation, and material-atlas inspection |
+| [Picking the right integration](#picking-the-right-integration) | Asset sources matched to environments, generic materials, specific objects, rapid concepts, private generation, and existing files |
+| [Sources](#sources) | PolyHaven licensing and Blender image-texture and color-management documentation |
 
 ## PolyHaven: HDRIs, textures, models
 

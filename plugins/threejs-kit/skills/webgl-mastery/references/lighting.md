@@ -4,13 +4,13 @@
 
 | Section | Covers |
 |---|---|
-| [The Three Ingredients](#the-three-ingredients) | Real-time shading boils down to three terms added together per fragment |
-| [Per-Vertex vs Per-Fragment](#per-vertex-vs-per-fragment) | Quality and performance tradeoffs between vertex and fragment lighting |
-| [Surface Normals](#surface-normals) | Lighting math needs the surface normal |
-| [Light Types](#light-types) | Directional, point, and spot-light equations, ranges, and attenuation |
-| [Multiple Lights](#multiple-lights) | For raw WebGL projects, almost always: one directional ("sun") + a handful of points |
-| [Tone Mapping and Gamma](#tone-mapping-and-gamma) | After computing lighting in linear space, output to an sRGB display |
-| [Common Mistakes](#common-mistakes) | Frequent mistakes and the changes that correct them |
+| [The Three Ingredients](#the-three-ingredients) | Ambient baseline, Lambertian diffuse response, Blinn-Phong specular highlights, and when raw shading should yield to framework PBR |
+| [Per-Vertex vs Per-Fragment](#per-vertex-vs-per-fragment) | Gouraud cost savings versus density-dependent highlights and smoother per-pixel Phong shading |
+| [Surface Normals](#surface-normals) | Normal attributes, inverse-transpose transforms, post-interpolation normalization, and complete world-space Blinn-Phong inputs |
+| [Light Types](#light-types) | Infinite directional rays, distance-attenuated point sources, and smooth inner-to-outer spotlight cones |
+| [Multiple Lights](#multiple-lights) | Small uniform-array loops versus culled, forward-plus, or deferred techniques for larger light sets |
+| [Tone Mapping and Gamma](#tone-mapping-and-gamma) | Reinhard compression and approximate sRGB output, with framebuffer conversion as a WebGL2 alternative |
+| [Common Mistakes](#common-mistakes) | Negative diffuse and attenuation, vertex-blocky specular, wrong normal transforms, bad half vectors, absent gamma, stale normal length, and hard spot edges |
 
 ## The Three Ingredients
 

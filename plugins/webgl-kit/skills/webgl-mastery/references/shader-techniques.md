@@ -6,18 +6,18 @@ The GLSL patterns that power procedural visuals — shaped curves, soft edges, n
 
 | Section | Covers |
 |---|---|
-| [The Fullscreen Quad Setup](#the-fullscreen-quad-setup) | Most of these techniques run in a fragment shader on a fullscreen quad |
-| [`step` and `smoothstep` — The Building Blocks](#step-and-smoothstep--the-building-blocks) | `smoothstep` is the single most-used function in shader art |
-| [`mix` — Linear Interpolation](#mix--linear-interpolation) | Combine with `smoothstep` to mix two values based on a soft threshold |
-| [Mouse-Following Soft Circle](#mouse-following-soft-circle) | The "hello world" of interactive shaders |
-| [Hash and Value Noise](#hash-and-value-noise) | Random in a shader uses a deterministic hash, not a real RNG |
-| [Simplex / Perlin Noise](#simplex--perlin-noise) | Smooth procedural noise for organic shader patterns |
-| [Fractal Brownian Motion (fBM)](#fractal-brownian-motion-fbm) | Layer multiple octaves of noise to get clouds, terrain, fire |
-| [Signed Distance Fields (SDFs)](#signed-distance-fields-sdfs) | A signed distance function returns the distance from a point to a shape — negative inside, positive outside, zero on the boundary |
-| [Polar Coordinates](#polar-coordinates) | Convert Cartesian to polar for radial patterns |
-| [Color](#color) | HSV conversion, hue rotation, color ramps, and palette mapping |
-| [Composing — A Cheap Lava Lamp](#composing--a-cheap-lava-lamp) | Two functions, one palette, and you have something to look at |
-| [Common Mistakes](#common-mistakes) | Frequent mistakes and the changes that correct them |
+| [The Fullscreen Quad Setup](#the-fullscreen-quad-setup) | Pass-through geometry, 0-to-1 UVs, aspect-correct coordinates, and the ready-made shader sandbox |
+| [`step` and `smoothstep` — The Building Blocks](#step-and-smoothstep--the-building-blocks) | Hard thresholds and Hermite transition bands for antialiased procedural edges |
+| [`mix` — Linear Interpolation](#mix--linear-interpolation) | Scalar-controlled color or value blending and soft-threshold composition |
+| [Mouse-Following Soft Circle](#mouse-following-soft-circle) | Canvas-relative device-pixel input, DOM-to-fragment Y conversion, and distance-based feathered masks |
+| [Hash and Value Noise](#hash-and-value-noise) | Deterministic pseudo-random hashes and smoothly interpolated grid noise with known high-frequency limits |
+| [Simplex / Perlin Noise](#simplex--perlin-noise) | Reusing established GLSL implementations for smoother organic noise instead of deriving them ad hoc |
+| [Fractal Brownian Motion (fBM)](#fractal-brownian-motion-fbm) | Frequency- and amplitude-scaled noise octaves, useful ranges, and quality-cost tradeoffs |
+| [Signed Distance Fields (SDFs)](#signed-distance-fields-sdfs) | Circle and box distances, union, subtraction, intersection, soft rendering, and catalogs of additional primitives |
+| [Polar Coordinates](#polar-coordinates) | Radius-angle conversion for spirals, sunbursts, kaleidoscopes, and repeated radial symmetry |
+| [Color](#color) | HSV spectrum animation and cosine palette functions backed by reusable gradient presets |
+| [Composing — A Cheap Lava Lamp](#composing--a-cheap-lava-lamp) | Combining time-shifted fBM turbulence with palette mapping into a complete animated fragment effect |
+| [Common Mistakes](#common-mistakes) | Aspect distortion, flipped input, low-quality hashes, aligned fBM, aliased SDF edges, unstable palettes, and frame-dependent animation |
 
 ## The Fullscreen Quad Setup
 

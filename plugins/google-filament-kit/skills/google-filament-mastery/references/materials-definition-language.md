@@ -9,16 +9,16 @@ A `.mat` material definition is a text file describing everything a material nee
 
 | Section | Covers |
 |---|---|
-| [File structure (the three blocks)](#file-structure-the-three-blocks) | A material definition is composed of up to 3 top-level blocks using JSON object notation |
-| [JSONish format rules](#jsonish-format-rules) | The format is loosely based on JSON, called JSONish |
-| [Material block keys](#material-block-keys) | The `material` block is mandatory and contains a list of property pairs describing all non-shader data |
-| [Parameter types](#parameter-types) | Each `parameters` entry is an object with `name` (valid GLSL identifier) and `type` |
-| [Constant types](#constant-types) | Each `constants` entry has `name` (valid GLSL identifier) and `type`, with an optional `default` |
-| [Vertex block](#vertex-block) | Optional; controls the vertex shading stage |
-| [Fragment block](#fragment-block) | Mandatory; controls the fragment shading stage |
-| [Shader public APIs](#shader-public-apis) | Available in vertex and/or fragment blocks |
+| [File structure (the three blocks)](#file-structure-the-three-blocks) | Mandatory material and fragment blocks, optional vertex code, ESSL stage entry points, and nonshader versus shader responsibilities |
+| [JSONish format rules](#jsonish-format-rules) | Optional and space-required quoting, raw shader blocks, line comments, case-sensitive keys, and case-insensitive values |
+| [Material block keys](#material-block-keys) | Models and feature levels, parameters and constants, attributes and varyings, domains, blending and refraction, raster state, lighting, shadows, anti-aliasing, and custom shading |
+| [Parameter types](#parameter-types) | Scalar, vector, matrix and sampler declarations, precision, sampler format and filtering, fixed arrays, and external-texture transforms |
+| [Constant types](#constant-types) | Signed integer, floating-point, and Boolean specialization constants with optional runtime fallbacks |
+| [Vertex block](#vertex-block) | Required entry point, vertex inputs and precision-shifted world position, UV flipping, custom attributes, variables, and bufferless procedural rendering |
+| [Fragment block](#fragment-block) | Required material preparation order, per-model inputs, normal-map timing, refraction fields, and lit-only per-light custom surface shading |
+| [Shader public APIs](#shader-public-apis) | Type aliases and math, coordinate matrices, viewport, camera, time and exposure constants, material globals, vertex attributes and indices, and fragment geometry, UV, color, tone, and render-target helpers |
 | [Sampler usage by feature level](#sampler-usage-by-feature-level) | The number of usable sampler parameters depends on material properties, shading model, feature level, and variant filter |
-| [Complete example: textured lit material](#complete-example-textured-lit-material) | A standard `lit` material sampling an sRGB base-color texture and a normal map |
+| [Complete example: textured lit material](#complete-example-textured-lit-material) | Lit PBR declarations, required UV and tangent attributes, normal unpacking before preparation, tiled base-color sampling, and scalar metallic and roughness parameters |
 
 ---
 

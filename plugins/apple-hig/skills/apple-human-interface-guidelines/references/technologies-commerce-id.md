@@ -9,12 +9,12 @@ Distilled from Apple's HIG Technologies pages: Apple Pay, In-app purchase, Walle
 
 | Section | Covers |
 |---|---|
-| [Apple Pay](#apple-pay) | Physical-goods and services payments, donations, subscriptions, browser checkout, payment sheets, and biometric or Apple Watch authorization |
-| [In-app purchase](#in-app-purchase) | Lets people securely pay within your app for virtual goods — premium content, digital goods, and subscriptions — via StoreKit |
-| [Wallet](#wallet) | Cards, IDs, transit, tickets, keys, passes, order tracking, and identity verification in Wallet |
-| [Sign in with Apple](#sign-in-with-apple) | A fast, private way to sign in or sign up using an existing Apple Account |
-| [Tap to Pay on iPhone](#tap-to-pay-on-iphone) | Lets merchants accept contactless payments using an iOS app on iPhone |
-| [ID Verifier](#id-verifier) | Lets an iPhone app read ISO18013-5 compliant mobile IDs in person (no external hardware) for in-person ID verification |
+| [Apple Pay](#apple-pay) | Eligibility and primary placement, checkout and payment-sheet data, validation and results, subscriptions and donations, button and mark rules, sizing, and platform support |
+| [In-app purchase](#in-app-purchase) | Product types, trials and storefront design, pricing and family sharing, refunds, subscription signup and codes, management, and tvOS and watchOS flows |
+| [Wallet](#wallet) | Pass creation, updates and deletion, surfacing and design, semantic fields and images, order tracking, identity verification, dimensions, and watchOS layout |
+| [Sign in with Apple](#sign-in-with-apple) | When to offer and delay sign-in, account linking and private relay, required versus optional data, system and custom button rules, sizes, and platform support |
+| [Tap to Pay on iPhone](#tap-to-pay-on-iphone) | Provider and entitlement setup, terms and merchant education, foreground preparation, checkout and result flows, button labels, failure recovery, and nonpayment reads |
+| [ID Verifier](#id-verifier) | Display Only versus Data Transfer requests, data minimization, business identity, verification buttons and feedback, and iPhone-only support |
 
 ## Apple Pay
 *Last changed: 2026-06*

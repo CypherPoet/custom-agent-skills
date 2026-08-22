@@ -9,10 +9,10 @@ Distilled from Apple's HIG Patterns pages: Searching, Search fields, Settings, M
 
 | Section | Covers |
 |---|---|
-| [Searching](#searching) | Lets people find content on their device, within an app, and within a document or file, typically through a search field |
-| [Search fields](#search-fields) | An editable text field with a Search icon, Clear button, and placeholder text |
-| [Settings](#settings) | Lets people customize an app or game experience, through a custom in-app settings area |
-| [Managing accounts](#managing-accounts) | When accounts help, how to minimize sign-up friction, and required deletion support |
+| [Searching](#searching) | Search prominence and scope, suggestions and private history, Spotlight indexing and file metadata, system file search, and Quick Look previews |
+| [Search fields](#search-fields) | Scope prompts, immediate and suggested results, relevance and filters, search tokens, and platform-specific entry points and placement |
+| [Settings](#settings) | Choosing in-context, in-app, or system settings; useful defaults and restraint; standard shortcuts; system-setting respect; and platform layouts |
+| [Managing accounts](#managing-accounts) | Account necessity and delayed sign-in, trusted authentication and contextual biometrics, complete deletion, purchase implications, and platform-specific entry |
 
 ## Searching
 *Last changed: 2026-06*

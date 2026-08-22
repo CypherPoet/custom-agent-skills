@@ -7,16 +7,16 @@
 
 | Section | Covers |
 |---|---|
-| [Notation](#notation) | Perceptual roughness notation and the BRDF value derived from it |
-| [The standard surface model](#the-standard-surface-model) | A material is described by a BSDF (Bidirectional Scattering Distribution Function) = BRDF (reflectance) + BTDF (transmittance) |
-| [Microfacet theory](#microfacet-theory) | Real surfaces aren't flat at the micro level — they're a large number of randomly aligned planar fragments (microfacets) |
-| [Dielectrics vs conductors](#dielectrics-vs-conductors) | How dielectric and conductor surfaces divide specular and diffuse reflection |
-| [Energy conservation](#energy-conservation) | A good PBR BRDF is energy conservative: total reflected (specular + diffuse) energy is ≤ incident energy |
-| [Specular BRDF (Cook-Torrance)](#specular-brdf-cook-torrance) | The specular term is the Cook-Torrance approximation of the microfacet integral |
-| [Diffuse BRDF (Lambert vs Disney)](#diffuse-brdf-lambert-vs-disney) | Filament uses a simple Lambertian diffuse BRDF (uniform diffuse response over the microfacet hemisphere) |
-| [Energy compensation (multiscattering)](#energy-compensation-multiscattering) | The single-bounce Cook-Torrance model loses energy at high roughness |
+| [Notation](#notation) | Surface, view, light, and half vectors, clamped dot products, Fresnel terms, IOR, diffuse reflectance, and perceptual-to-analytic roughness |
+| [The standard surface model](#the-standard-surface-model) | Reflective BRDF versus approximated transmission, diffuse and specular composition, and Filament's Lambert plus Cook-Torrance model |
+| [Microfacet theory](#microfacet-theory) | Half-vector reflection, roughness-driven facet alignment, distribution, masking, shadowing, and why runtime BRDF terms approximate the full integral |
+| [Dielectrics vs conductors](#dielectrics-vs-conductors) | Achromatic interface plus diffuse response for dielectrics versus chromatic all-specular metals and the resulting base-color role |
+| [Energy conservation](#energy-conservation) | Reflected-energy limits, artist-safe light balance, and the high-roughness single-scattering loss handled by compensation |
+| [Specular BRDF (Cook-Torrance)](#specular-brdf-cook-torrance) | GGX distribution, fp16-safe evaluation, correlated Smith visibility and mobile approximation, and Schlick Fresnel for dielectric and metallic grazing response |
+| [Diffuse BRDF (Lambert vs Disney)](#diffuse-brdf-lambert-vs-disney) | Filament's efficient Lambert choice, Disney retroreflection and energy drawback, and complete standard-model vector and roughness evaluation |
+| [Energy compensation (multiscattering)](#energy-compensation-multiscattering) | White-furnace diagnosis of rough-metal darkening and negligible-cost multibounce recovery using the existing DFG lookup |
 | [Parameterization & remapping](#parameterization--remapping) | Standard parameter ranges, base-color and dielectric `f0` derivation, reflectance conversion, perceptual-roughness remapping, and the authoring cheat sheet |
-| [Extended models](#extended-models) | In Filament's implementation the standard, clear-coat, and anisotropic models combine into one flexible model |
+| [Extended models](#extended-models) | Clear-coat layering and energy loss, anisotropic tangent response, the unspecified subsurface placeholder, and cloth sheen, wrapped diffuse, parameters, and authoring guidance |
 
 ## Notation
 

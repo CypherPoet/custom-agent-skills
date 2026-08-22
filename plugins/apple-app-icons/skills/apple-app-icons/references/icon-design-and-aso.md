@@ -6,11 +6,11 @@ How to make an Apple app icon *convert* — the design and tap-through side that
 
 | Section | Covers |
 |---|---|
-| [Why the icon is your highest-leverage asset](#why-the-icon-is-your-highest-leverage-asset) | The icon is the first thing users see in search results — before the title, rating, or screenshots |
+| [Why the icon is your highest-leverage asset](#why-the-icon-is-your-highest-leverage-asset) | Search, browse, and chart visibility; tap-through leverage; and the icon's role across product and brand surfaces |
 | [Design principles](#design-principles) | Small-scale simplicity, platform consistency, visual depth, contrast, and recognizability |
-| [Apple icon sizes](#apple-icon-sizes) | Author a 1024×1024 px master for iPhone, iPad, and Mac — Apple Watch uses a 1088×1088 px canvas |
+| [Apple icon sizes](#apple-icon-sizes) | Master canvases, alpha and mask rules, surface sizes, and `.icon` versus appiconset generation |
 | [Icon audit rubric](#icon-audit-rubric) | Score a current or proposed icon 1–10 per dimension |
-| [A/B-testing icons on iOS](#ab-testing-icons-on-ios) | Apple's Product Page Optimization (PPO) in App Store Connect tests icon variants against your live listing with real traffic |
+| [A/B-testing icons on iOS](#ab-testing-icons-on-ios) | PPO versus alternate icons, treatment setup, Liquid Glass caveats, conversion evidence, significance, and controlled variables |
 | [Designer brief template](#designer-brief-template) | Concept variants, small-size mockups, dark-background checks, and source deliverables |
 
 ## Why the icon is your highest-leverage asset

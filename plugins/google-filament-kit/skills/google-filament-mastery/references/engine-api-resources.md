@@ -8,17 +8,17 @@
 | Section | Covers |
 |---|---|
 | [Mental Model & Lifetime](#mental-model--lifetime) | Build engine-owned resources, upload separately, destroy through the engine, and free CPU data only after the descriptor callback |
-| [VertexBuffer](#vertexbuffer) | Holds a set of buffers defining a Renderable's geometry (position, color, normals/tangents, UVs, etc.) |
-| [IndexBuffer](#indexbuffer) | Vertex indices into a `VertexBuffer` |
-| [BufferObject](#bufferobject) | A generic GPU buffer. Optional — for simple use you don't need it |
-| [Texture](#texture) | Supports 2D, 3D, cube maps, 2D arrays, and mip mapping |
-| [TextureSampler](#texturesampler) | A non-engine-owned value type that controls texture filtering, wrapping, and comparison |
-| [Material](#material) | A `Material` is built from a compiled `.filamat` package (binary blob produced by `matc` or `libfilamat`) |
-| [MaterialInstance](#materialinstance) | Holds the concrete parameter values for a `Material`, plus per-instance render-state overrides |
-| [Skybox](#skybox) | Fills untouched pixels of a Scene |
-| [IndirectLight](#indirectlight) | Environment lighting (global illumination): an irradiance component + a reflections (specular) component |
-| [BufferDescriptor & PixelBufferDescriptor (the upload+free contract)](#bufferdescriptor--pixelbufferdescriptor-the-uploadfree-contract) | Upload methods take ownership of a descriptor by rvalue (`&&` + `std::move`) |
-| [End-to-End Resource Flow](#end-to-end-resource-flow) | Putting the pieces together (composed from `hellotriangle.cpp` and `suzanne.cpp`) |
+| [VertexBuffer](#vertexbuffer) | Interleaved and separate attributes, tangent encoding, data types and normalization, direct or shared-buffer uploads, async creation, and upload alignment |
+| [IndexBuffer](#indexbuffer) | 16- and 32-bit index interpretation, count and type construction, initialized and async uploads, byte-offset alignment, and constant-buffer sharing |
+| [BufferObject](#bufferobject) | Optional shared and swappable vertex backing storage, builder capacity and binding, upload alignment, and `VertexBuffer` opt-in |
+| [Texture](#texture) | 2D, array, 3D, cube, external and imported textures, formats and usage capabilities, pixel uploads, generated mips, cubemap layering, and async creation |
+| [TextureSampler](#texturesampler) | Non-owned minification, magnification, mip, wrap, anisotropy, and depth-comparison state plus depth-filter restrictions |
+| [Material](#material) | Compiled package and constants, SH and shadow options, default and dedicated instances, parameter and capability introspection, and asynchronous shader compilation |
+| [MaterialInstance](#materialinstance) | Typed, array, texture, color, and specialization parameters, name validation, duplication, scissor and depth state, culling and transparency, stencil operations, and manual commits |
+| [Skybox](#skybox) | Cubemap or constant backgrounds, sun display, indirect-light intensity precedence, priority and layer masks, and environment preprocessing |
+| [IndirectLight](#indirectlight) | Single-scene prefiltered reflections, derived or explicit irradiance and radiance SH, intensity and rotation, dominant-light estimates, and `cmgen` inputs |
+| [BufferDescriptor & PixelBufferDescriptor (the upload+free contract)](#bufferdescriptor--pixelbufferdescriptor-the-uploadfree-contract) | Moved CPU-buffer ownership, source pixel metadata, static-lifetime uploads, completion callbacks, and safe deferred deallocation |
+| [End-to-End Resource Flow](#end-to-end-resource-flow) | Vertex and index construction, texture upload and mips, material binding, renderable handoff, and dependency-ordered engine destruction |
 
 ---
 

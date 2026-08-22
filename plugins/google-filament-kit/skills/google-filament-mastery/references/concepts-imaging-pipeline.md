@@ -7,13 +7,13 @@
 
 | Section | Covers |
 |---|---|
-| [The Imaging Pipeline](#the-imaging-pipeline) | Filament's lighting equations compute scene luminance in physically based photometric units |
-| [Physically Based Camera & Exposure](#physically-based-camera--exposure) | The first step is using a physically based camera to properly expose the scene's outgoing luminance |
-| [Post-Processing & `View` Options](#post-processing--view-options) | `View` controls for tone mapping, color grading, bloom, lens flare, chromatic aberration, depth of field, vignette, anti-aliasing, dithering, and other post-process effects |
-| [Color Management](#color-management) | Linear vs sRGB, Color Conversion API, and ColorSpace API |
-| [Renderer Pipeline: Clustered Forward Rendering](#renderer-pipeline-clustered-forward-rendering) | Filament uses clustered forward rendering |
+| [The Imaging Pipeline](#the-imaging-pipeline) | Photometric HDR luminance normalization, white balance, grading, tone mapping, display transfer, and the separate post-effect boundary |
+| [Physically Based Camera & Exposure](#physically-based-camera--exposure) | Aperture, shutter, ISO and EV math, photometric normalization, camera and conversion APIs, metering and adaptation, and exposure-relative emissive bloom |
+| [Post-Processing & `View` Options](#post-processing--view-options) | Master enablement, tone-mapper choices and validation modes, ordered color grading and LUT controls, bloom and lens effects, depth of field, vignette, fog, antialiasing, and quality options |
+| [Color Management](#color-management) | Linear scene processing and sRGB output, accurate versus fast conversions, premultiplied alpha, color-temperature and absorption utilities, and RGB color-space construction |
+| [Renderer Pipeline: Clustered Forward Rendering](#renderer-pipeline-clustered-forward-rendering) | Deferred and classic-forward tradeoffs, froxel generation and light assignment, depth slicing, CPU and GPU paths, light-range tuning, limits, and visualization |
 | [Coordinate Systems & Conventions](#coordinate-systems--conventions) | Filament handedness, axes, units, camera orientation, clipping and NDC, winding, picking, and cubemap conventions |
-| [Validation & Debug](#validation--debug) | Reference rendering, debug views, and checks for the imaging pipeline |
+| [Validation & Debug](#validation--debug) | Mitsuba reference exposure matching and display-range visualization of luminance stops around middle gray |
 
 ---
 

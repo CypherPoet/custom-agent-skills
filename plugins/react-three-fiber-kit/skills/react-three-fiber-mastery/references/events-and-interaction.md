@@ -8,18 +8,18 @@ R3F raycasts DOM pointer input against the scene and delivers React-style synthe
 
 | Section | Covers |
 |---|---|
-| [Event Catalog](#event-catalog) | Attach handlers directly to any object with a `raycast` method (mesh, line, points, sprite) |
-| [Event Data](#event-data) | Every handler receives a `ThreeEvent`: the native DOM event spread together with the `THREE.Intersection` for this hit |
-| [Occlusion and Propagation](#occlusion-and-propagation) | The raycaster returns all intersected objects sorted nearest-first |
-| [Pointer Capture](#pointer-capture) | Standard DOM API, R3F-routed: capture on pointerdown, release on pointerup |
-| [Raycast Tuning](#raycast-tuning) | Override hit-testing per object with the `raycast` prop |
-| [Hover and Cursor](#hover-and-cursor) | Hover boundaries are discrete events — setState here is fine (unlike per-frame updates) |
-| [Custom Event Manager and Event Source](#custom-event-manager-and-event-source) | Replace or extend the event system through the Canvas `events` prop — a factory `(state) => EventManager` |
-| [Camera Controls](#camera-controls) | Orbit, Map, Trackball, Fly, PointerLock, and Transform controls from Drei |
-| [Transform and Drag Controls](#transform-and-drag-controls) | TransformControls, PivotControls, and DragControls with controlled matrices, snapping, axis locks, and camera-control coordination |
-| [Keyboard Controls](#keyboard-controls) | `KeyboardControls` wraps the app (outside `<Canvas>` is fine) with a key map; `useKeyboardControls` reads it two ways |
-| [Scroll and Presentation Controls](#scroll-and-presentation-controls) | ScrollControls creates a scrollable HTML zone over the canvas and exposes progress to the scene — the scrollytelling primitive |
-| [Screen and World Coordinates](#screen-and-world-coordinates) | Screen → world, the easy case: if the pointer hit a mesh, `e.point` already is the world-space position |
+| [Event Catalog](#event-catalog) | Pointer, click, context, wheel, and missed handlers on raycastable objects, bubbling to groups, enter and leave caveats, and the non-pointer `onUpdate` callback |
+| [Event Data](#event-data) | Native and intersection fields, all ray hits, actual versus handler-owning objects, world and normalized coordinates, pointer rays, and click-versus-drag distance |
+| [Occlusion and Propagation](#occlusion-and-propagation) | Nearest-first delivery through ancestors and objects behind, dual-path propagation stopping, hover invalidation, and event-only occluders |
+| [Pointer Capture](#pointer-capture) | Captured drag move and release events, capture lifecycle, additive rather than exclusive hit delivery, and the single-active-pointer limitation |
+| [Raycast Tuning](#raycast-tuning) | Disabling precision tests, bounds-only picking, invisible proxy colliders, frame-coalesced pointer movement, and throttled expensive work |
+| [Hover and Cursor](#hover-and-cursor) | Discrete hover state, cleaned-up cursor changes, propagation for overlapping targets, and the manual cursor alternative |
+| [Custom Event Manager and Event Source](#custom-event-manager-and-event-source) | Intersection filtering and ray computation, shared DOM-overlay sources and coordinate prefixes, runtime reconnection, and hover refresh after camera movement |
+| [Camera Controls](#camera-controls) | Orbit, map, animated, pointer-lock, flight, first-person, trackball, and arcball controls, demand rendering, default-control cooperation, focus transitions, and gesture-gated locking |
+| [Transform and Drag Controls](#transform-and-drag-controls) | Transform, pivot, and planar drag gizmos, controlled matrices, snapping and axis locks, camera-control coordination, and pixel-to-world spring gestures |
+| [Keyboard Controls](#keyboard-controls) | Key maps and provider placement plus non-rendering polling, reactive selectors, and edge-triggered transient subscriptions |
+| [Scroll and Presentation Controls](#scroll-and-presentation-controls) | Damped horizontal or vertical scroll rigs, progress-window helpers, synchronized 3D and HTML content, and spring-driven product rotation with limits and snapback |
+| [Screen and World Coordinates](#screen-and-world-coordinates) | Hit-point placement, captured-ray intersection with mathematical planes, tracked HTML labels, and manual world-to-pixel projection |
 | [Common Mistakes](#common-mistakes) | Frequent mistakes and the changes that correct them |
 | [See Also](#see-also) | Related references and supporting guidance |
 

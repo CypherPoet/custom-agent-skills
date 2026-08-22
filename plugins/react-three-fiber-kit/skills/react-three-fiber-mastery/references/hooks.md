@@ -8,11 +8,11 @@ The four core R3F hooks — `useThree` (state access), `useFrame` (render loop),
 
 | Section | Covers |
 |---|---|
-| [Hook Rules](#hook-rules) | R3F hooks read the root store from context, and that context exists only inside `<Canvas>` |
-| [useThree](#usethree) | Reading root state, selecting reactive values, changing renderer state, and accessing non-reactive state |
-| [useFrame](#useframe) | Subscribes a callback to the render loop; it runs every frame, just before R3F renders |
-| [useLoader](#useloader) | Suspense-based wrapper around any three.js loader class (anything with a `.load` method) |
-| [useGraph](#usegraph) | Builds the same memoized `{ nodes, materials }` collection from any `Object3D` |
+| [Hook Rules](#hook-rules) | Canvas-context placement, the component split required around a root, and automatic cleanup of frame, state, and loader consumers on unmount |
+| [useThree](#usethree) | Selective root-state subscriptions, renderer and viewport fields, event and performance controls, non-reactive reads, mutable-object boundaries, projection updates, and replacing defaults |
+| [useFrame](#useframe) | Live state, delta, and XR callbacks, allocation-free ref mutation, external-store reads, negative ordering, and positive-priority render takeover for multiple passes |
+| [useLoader](#useloader) | Suspense and error boundaries, parallel assets, URL-keyed sharing, preload and eviction, cached-resource ownership and cloning, loader configuration and progress, v9 instances, and named graphs |
+| [useGraph](#usegraph) | Memoized node and material lookup after ordinary or skeleton-safe cloning plus the non-hook `buildGraph` equivalent |
 | [Global and Additional Exports](#global-and-additional-exports) | Portal rendering, imperative prop application, global frame effects, manual loop control, graph building, roots, and advanced or test utilities |
 | [Common Mistakes](#common-mistakes) | Frequent mistakes and the changes that correct them |
 | [See Also](#see-also) | Related references and supporting guidance |

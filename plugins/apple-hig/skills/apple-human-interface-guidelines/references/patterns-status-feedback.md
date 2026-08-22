@@ -9,12 +9,12 @@ Distilled from Apple's HIG Patterns pages: Feedback, Notifications, Managing not
 
 | Section | Covers |
 |---|---|
-| [Feedback](#feedback) | Status communication that explains what is happening, what comes next, and what people can do |
-| [Notifications](#notifications) | A notification gives people timely, high-value information they can understand at a glance |
-| [Managing notifications](#managing-notifications) | Lets people manage how they receive notifications through delivery scheduling |
-| [Live Activities](#live-activities) | A Live Activity lets people track the progress of an activity |
-| [Privacy](#privacy) | Be transparent about the privacy-related data and resources you require |
-| [Ratings and reviews](#ratings-and-reviews) | Choose the right moment to ask people for an App Store rating or review, using the system-provided prompt |
+| [Feedback](#feedback) | Passive versus interrupting status, accessible multimodal and in-context delivery, irreversible-action warnings, meaningful completion, and failure explanations |
+| [Notifications](#notifications) | Timely and private content, foreground handling, titles and hidden previews, sounds and actions, badge semantics, and watchOS short and long looks |
+| [Managing notifications](#managing-notifications) | Communication types, interruption levels and urgency, Time Sensitive limits, marketing consent, in-app choices, and watchOS controls |
+| [Live Activities](#live-activities) | Bounded event tracking, privacy and visual design, interactions and updates, lifecycle and dismissal, system presentations and dimensions, and platform layouts |
+| [Privacy](#privacy) | Data minimization and on-device processing, permission timing and purpose strings, pre-alert and tracking rules, one-time location, authentication and storage, and platform constraints |
+| [Ratings and reviews](#ratings-and-reviews) | Engagement-based timing, noninterruptive cadence, system prompt behavior and annual limits, and summary-rating reset tradeoffs |
 
 ## Feedback
 

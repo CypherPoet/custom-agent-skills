@@ -6,18 +6,18 @@ How to get a React Three Fiber project running and configure the `<Canvas>` root
 
 | Section | Covers |
 |---|---|
-| [Install & Version Pairing](#install--version-pairing) | Version rules that decide whether an install works at all |
-| [Minimal App](#minimal-app) | `<Canvas>` creates the WebGL renderer, a default scene, and a default camera, then renders its children into that scene |
-| [Canvas Props](#canvas-props) | Renderer construction, v9 callback behavior, and supported Canvas properties |
-| [Render Defaults](#render-defaults) | What `<Canvas>` installs when you pass nothing |
-| [Camera Setup](#camera-setup) | Default camera construction, custom cameras, and runtime camera replacement |
-| [Shadows](#shadows) | The `shadows` prop enables `gl.shadowMap` and picks the algorithm |
-| [Frameloop](#frameloop) | `invalidate()` requests a frame; it does not render synchronously |
-| [Color Management Flags](#color-management-flags) | Three flags, three distinct switches — they are not synonyms |
+| [Install & Version Pairing](#install--version-pairing) | Fiber, React, drei, and three compatibility ranges, the frozen React 18 line, and the verified current stack |
+| [Minimal App](#minimal-app) | Canvas-owned renderer, scene, and camera creation, three.js JSX mapping, ref-driven animation, wrapper props, and required parent sizing |
+| [Canvas Props](#canvas-props) | Renderer, camera, scene, shadow, raycast, frame, resize, color, event, lifecycle, and fallback configuration plus the v9 asynchronous renderer callback |
+| [Render Defaults](#render-defaults) | Renderer settings, modern color and tone-mapping pipeline, camera, scene, raycaster, shadow type, and clamped pixel ratio installed by Canvas |
+| [Camera Setup](#camera-setup) | Perspective, orthographic, and supplied cameras, constructor-time props, automatic projection updates, manual sizing, and runtime default-camera replacement |
+| [Shadows](#shadows) | Shadow-map algorithm selection, required light and mesh flags, custom map properties, and the boundary with drei’s soft-shadow helpers |
+| [Frameloop](#frameloop) | Continuous, demand, and manually advanced rendering, coalesced invalidation requests, and control integration |
+| [Color Management Flags](#color-management-flags) | Independent legacy input, linear output, and tone-mapping switches, practical recipes, and v9 custom-texture color-space handling |
 | [Event Wiring](#event-wiring) | Canvas-level event configuration (per-object handlers and the raycast/propagation model live in events-and-interaction.md) |
 | [onCreated & Fallback](#oncreated--fallback) | `onCreated` root-state access and graceful handling when WebGL initialization fails |
-| [Bundler Setup](#bundler-setup) | Vite — zero config. `npm create vite@latest my-app -- --template react-ts`, install the packages, done |
-| [WebGPU](#webgpu) | v9 supports `THREE.WebGPURenderer` through the async `gl` callback |
+| [Bundler Setup](#bundler-setup) | Zero-config Vite, Next.js three transpilation and client-only rendering, and React Native’s Expo GL entry point and Metro asset extensions |
+| [WebGPU](#webgpu) | Async WebGPU renderer initialization and JSX registration, WebGL fallback and backend detection, TSL shading, swallowed failures, duplicate factories, manual disposal, and the v10 state rename |
 | [Custom Tree-Shakable Roots](#custom-tree-shakable-roots) | Selective `extend`, async `createRoot` configuration, manual event and resize wiring, rendering, and unmount disposal |
 | [StrictMode in v9](#strictmode-in-v9) | v9 inherits `<StrictMode>` from the parent React tree across the renderer boundary |
 | [Common Mistakes](#common-mistakes) | Frequent mistakes and the changes that correct them |

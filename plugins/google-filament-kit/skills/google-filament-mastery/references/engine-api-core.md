@@ -9,14 +9,14 @@
 
 | Section | Covers |
 |---|---|
-| [Mental Model & Ownership](#mental-model--ownership) | `Engine` is Filament's main entry point and the factory + owner of every other object |
-| [Minimal Setup + Render Loop](#minimal-setup--render-loop) | The Engine header's own doc-comment gives the canonical full lifecycle (this is verbatim from `Engine.h`) |
+| [Mental Model & Ownership](#mental-model--ownership) | Engine factories, surfaces, renderers, views, flat scenes, entity cameras, explicit destruction, and non-reference-counted associations |
+| [Minimal Setup + Render Loop](#minimal-setup--render-loop) | Core object creation, scene and camera binding, renderable setup, projection updates, guarded frame sequencing, and ordered component cleanup |
 | [Engine](#engine) | Engine creation and configuration, factory methods, explicit resource destruction and tracking, feature levels, threading constraints, and frame pumping |
-| [SwapChain](#swapchain) | A `SwapChain` represents an OS native renderable surface |
-| [Renderer](#renderer) | A `Renderer` represents one OS window and generates the drawing commands |
-| [View](#view) | A `View` is everything needed to render a Scene — effectively one render pass |
-| [Scene](#scene) | A `Scene` is a flat container of renderable and light entities |
-| [Camera](#camera) | A `Camera` is a component on an entity, not a free object |
+| [SwapChain](#swapchain) | Platform-specific native windows, headless surfaces, transparency, readback, color, stencil, protection and MSAA flags, capability checks, frame-rate requests, and callbacks |
+| [Renderer](#renderer) | Frame admission and pacing, ordered shadow, depth, color, and post passes, multi-view rendering, timing, copies and readback, standalone views, and telemetry |
+| [View](#view) | Scene, camera, viewport, and render-target bindings, effect and quality options, visibility layers, picking, culling and froxel debug, and temporal-history resets |
+| [Scene](#scene) | Flat renderable and light membership, one skybox and indirect light, bulk insertion and removal, counts, iteration limits, and transform ownership elsewhere |
+| [Camera](#camera) | Entity-component lifecycle, right-handed pose, perspective, orthographic, lens and custom projections, infinite render far plane, transform vectors, exposure, and focus |
 | [Common Pitfalls](#common-pitfalls) | Frame guards, swap-chain lifecycle, resource destruction, and engine-thread mistakes |
 
 ---

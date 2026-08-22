@@ -8,15 +8,15 @@ Scene staging at the React layer — light JSX, the shadow pipeline, drei enviro
 
 | Section | Covers |
 |---|---|
-| [Lights & Shadows](#lights--shadows) | All three.js lights are lowercase JSX: `<ambientLight>`, `<hemisphereLight>` |
-| [Debug Helpers](#debug-helpers) | `useHelper` (drei) mounts any three.js helper class against a ref object |
-| [Environment & Sky](#environment--sky) | `<Environment>` (drei) loads an HDR, PMREM-filters it, and sets `scene.environment` |
-| [Drei Shadow Helpers](#drei-shadow-helpers) | When to use each Drei shadow helper and which properties control it |
-| [Stage](#stage) | Product staging with environment lighting, shadows, and automatic camera fitting |
+| [Lights & Shadows](#lights--shadows) | Light types and relative costs, the three required shadow switches, map variants, bias and frustum tuning, mounted aiming targets, and area-light initialization limits |
+| [Debug Helpers](#debug-helpers) | Ref-based light and shadow-camera helpers, declarative attached cameras, conditional diagnostics, orientation gizmos that cooperate with default controls, and configurable infinite grids |
+| [Environment & Sky](#environment--sky) | Preset and self-hosted image-based lighting, background and ground projection, animated studio lightformers, and sky, star, and batched cloud visuals that do not themselves light a scene |
+| [Drei Shadow Helpers](#drei-shadow-helpers) | Light-free contact projections, accumulated static area shadows, global PCSS softening, frozen real shadow maps, their update lifecycles, and key cost controls |
+| [Stage](#stage) | One-component product lighting, environment presets, contact or accumulated shadows, automatic Bounds camera fitting, and when to replace it with explicit staging |
 | [Geometry & Layout Helpers](#geometry--layout-helpers) | Instances and Merged, lines and edges, Center and Bounds camera fitting, Detailed LOD, Float, Trail, Sparkles, and Billboard |
-| [Text & Html](#text--html) | `<Text>` (SDF, troika-based) — the default for any readable text: crisp at every zoom level |
-| [Drei Specialty Materials](#drei-specialty-materials) | Drop-in `<mesh>` children, uppercase imports from `@react-three/drei` |
-| [Adaptive Quality](#adaptive-quality) | FPS-based quality changes for resolution, effects, and expensive scene details |
+| [Text & Html](#text--html) | Crisp signed-distance text, centered beveled geometry text, and DOM labels or in-world interfaces with perspective sizing, transforms, and selective or depth-aware occlusion |
+| [Drei Specialty Materials](#drei-specialty-materials) | Reflective floors, premium transmission, wobble and distortion, invisible shadow and raycast surfaces, render-cost constraints, and built-in physical-material recipes |
+| [Adaptive Quality](#adaptive-quality) | Sustained-FPS quality decisions and temporary movement regression for pixel ratio, effects, and expensive scene details |
 | [Common Mistakes](#common-mistakes) | Frequent mistakes and the changes that correct them |
 | [See Also](#see-also) | Related references and supporting guidance |
 

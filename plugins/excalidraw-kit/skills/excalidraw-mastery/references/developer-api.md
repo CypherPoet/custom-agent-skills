@@ -9,15 +9,15 @@ static `.excalidraw` file you don't need any of this — see
 
 | Section | Covers |
 |---|---|
-| [Install](#install) | `react` and `react-dom` are peer dependencies |
+| [Install](#install) | Package and React peer dependencies, stylesheet import, browser-only execution, and dynamic loading for server-rendered frameworks |
 | [The Component & Props](#the-component--props) | Component initialization, imperative API capture, change hooks, view modes, UI options, and custom element metadata |
-| [initialData](#initialdata) | The scene the component loads with — an object (or a promise resolving to one) |
-| [The Imperative API (`excalidrawAPI`)](#the-imperative-api-excalidrawapi) | Capture the API object to drive the editor after mount |
-| [`convertToExcalidrawElements` (Skeleton API)](#converttoexcalidrawelements-skeleton-api) | Creating complete Excalidraw elements from concise JavaScript skeletons |
-| [`restore` / `restoreElements`](#restore--restoreelements) | Normalizers that fill missing fields with defaults, repair bindings, and normalize z-index — the same pass the editor runs on load |
-| [Export Utilities](#export-utilities) | All take the scene and return an image/string |
-| [Constants](#constants) | Excalidraw font-family, theme, and MIME-type constants |
-| [Mermaid → Excalidraw](#mermaid--excalidraw) | Convert Mermaid text into editable Excalidraw elements with the companion package `@excalidraw/mermaid-to-excalidraw` |
+| [initialData](#initialdata) | Synchronous or promised elements, app state, viewport centering, libraries, files, and explicit scroll positioning |
+| [The Imperative API (`excalidrawAPI`)](#the-imperative-api-excalidrawapi) | Post-mount scene replacement, library updates, live element access, and fit-to-content scrolling |
+| [`convertToExcalidrawElements` (Skeleton API)](#converttoexcalidrawelements-skeleton-api) | Default-complete elements from concise skeletons, bound or spawned arrow endpoints, labels, contained text, and scene delivery |
+| [`restore` / `restoreElements`](#restore--restoreelements) | Partial and legacy data normalization, default fields, binding repair, z-order normalization, and the geometry it cannot infer |
+| [Export Utilities](#export-utilities) | SVG, blob, clipboard, JSON, blob restoration, scene-version, and library-merge APIs plus export defaults |
+| [Constants](#constants) | Font-family, light and dark theme, scene, library, and image MIME constants |
+| [Mermaid → Excalidraw](#mermaid--excalidraw) | Supported Mermaid diagrams, parsing and configuration, skeleton finalization, file transfer, and editable scene updates |
 
 ## Install
 

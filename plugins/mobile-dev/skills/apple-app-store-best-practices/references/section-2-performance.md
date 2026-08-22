@@ -7,11 +7,11 @@
 
 | Section | Covers |
 |---|---|
-| [§2.1 App Completeness](#21-app-completeness) | §2.1(a) Final Versions Only and §2.1(b) In-App Purchases Complete |
-| [§2.2 Beta Testing](#22-beta-testing) | Requirement: Betas, demos, trial versions, and pre-release builds must be distributed through TestFlight, not the App Store |
-| [§2.3 Accurate Metadata](#23-accurate-metadata) | Hidden features and behavior, IAP metadata, screenshots and previews, category and age rating, names and keywords, all-ages metadata, IP rights, Apple-platform focus, pre-orders, What's New text, and in-app events |
-| [§2.4 Hardware Compatibility](#24-hardware-compatibility) | iPhone-on-iPad support, power efficiency, Apple TV remotes, restart and settings restrictions, and Mac App Store sandboxing, packaging, updates, privileges, compatibility, and localization |
-| [§2.5 Software Requirements](#25-software-requirements) | Public APIs, self-contained bundles, malicious-code limits, background services, IPv6 and WebKit, desktop and native-UI restrictions, SiriKit and Shortcuts, CallKit and SMS blocking, facial recognition, recording consent, Files and iCloud documents, widgets and extensions, App Clips, Matter, and display advertising |
+| [§2.1 App Completeness](#21-app-completeness) | Final and fully populated builds, reliable services and review access, disclosed testing conditions, and complete registered purchases with working content delivery |
+| [§2.2 Beta Testing](#22-beta-testing) | TestFlight-only distribution for beta, demo, trial, preview, and evaluation builds, including prohibited production labels, tester compensation, and beta-only behavior |
+| [§2.3 Accurate Metadata](#23-accurate-metadata) | Hidden or remotely gated behavior, purchase disclosures, authentic screenshots and previews, classification and current age ratings, naming and intellectual property, Apple focus, pre-orders, release notes, and events |
+| [§2.4 Hardware Compatibility](#24-hardware-compatibility) | iPhone operation on iPad, energy and storage efficiency, complete Siri Remote control, restart and unrelated-settings prohibitions, and Mac App Store packaging and behavior |
+| [§2.5 Software Requirements](#25-software-requirements) | Platform boundaries for APIs and executable code, background and network behavior, browsing and native UI, system integrations, consent, documents and extensions, Matter, and advertising |
 
 ---
 

@@ -7,11 +7,11 @@ Many of SwiftUI's result builders (most notably `@ViewBuilder`) have been unifie
 
 | Section | Covers |
 |---|---|
-| [Ambiguous ShapeStyle Modifiers in `overlay` or `background`](#ambiguous-shapestyle-modifiers-in-overlay-or-background) | Resolving ambiguous shape-style modifiers in overlay and background builders |
-| [Ambiguous Type References When Another Module Shadows SwiftUI Types](#ambiguous-type-references-when-another-module-shadows-swiftui-types) | Module-shadowed SwiftUI type names cause ambiguous member errors; qualify the intended type or rename the collision |
-| [`TupleContent` vs `TupleView` Type Mismatch](#tuplecontent-vs-tupleview-type-mismatch) | `ContentBuilder` returns `TupleContent`, causing explicit nested `TupleView` constraints to mismatch; prefer opaque types or update the concrete type |
-| [Empty Builder Body with MapKit](#empty-builder-body-with-mapkit) | Avoiding empty result-builder bodies when SwiftUI and MapKit are imported together |
-| [Type-Check Timeout in Swift Charts with Deeply Branching Content (Back-Deployment Only)](#type-check-timeout-in-swift-charts-with-deeply-branching-content-back-deployment-only) | Back-deployed Charts with deeply branching content can time out during type checking; extract branches into an `@ChartContentBuilder` function |
+| [Ambiguous ShapeStyle Modifiers in `overlay` or `background`](#ambiguous-shapestyle-modifiers-in-overlay-or-background) | Overload ambiguity after builder unification and explicit trailing-closure selection of view content |
+| [Ambiguous Type References When Another Module Shadows SwiftUI Types](#ambiguous-type-references-when-another-module-shadows-swiftui-types) | Lost view-conformance disambiguation for colliding type members, resolved through module qualification or renaming |
+| [`TupleContent` vs `TupleView` Type Mismatch](#tuplecontent-vs-tupleview-type-mismatch) | New multi-expression concrete types, preferred opaque constraints, and explicit `TupleView` construction for back-deployment |
+| [Empty Builder Body with MapKit](#empty-builder-body-with-mapkit) | MapKit builder ambiguity in empty or conditionally empty blocks, including transitive imports, fixed with explicit empty content |
+| [Type-Check Timeout in Swift Charts with Deeply Branching Content (Back-Deployment Only)](#type-check-timeout-in-swift-charts-with-deeply-branching-content-back-deployment-only) | Back-deployment-only overload growth in deeply branched charts and isolation in an `@ChartContentBuilder` function |
 
 ## Ambiguous ShapeStyle Modifiers in `overlay` or `background`
 **Issue:**

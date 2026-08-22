@@ -11,12 +11,12 @@ Two pipelines exist:
 
 | Section | Covers |
 |---|---|
-| [TSL Post-Processing (Modern)](#tsl-post-processing-modern) | Composer setup and resize, built-in passes, bloom and selective bloom, depth of field, FXAA, FSR1 and TAAU upscaling, custom output transforms, and custom TSL effects |
-| [EffectComposer (Legacy WebGL Pipeline)](#effectcomposer-legacy-webgl-pipeline) | Use this with `WebGLRenderer` when porting existing code or when you need a pass that hasn't migrated to TSL yet |
-| [Multi-Scene Compositing](#multi-scene-compositing) | Render multiple scenes into one output |
-| [Render to Texture (Both Pipelines)](#render-to-texture-both-pipelines) | Rendering a scene into a texture and reusing the result on another material |
-| [Performance Tips](#performance-tips) | Pass count, resolution scaling, device tiers, antialiasing, and upscaling |
-| [Common Mistakes](#common-mistakes) | Frequent mistakes and the changes that correct them |
+| [TSL Post-Processing (Modern)](#tsl-post-processing-modern) | Pipeline setup and resizing, built-in and selective effects, depth-aware processing, antialiasing, spatial and temporal upscaling, explicit output transforms, and custom nodes |
+| [EffectComposer (Legacy WebGL Pipeline)](#effectcomposer-legacy-webgl-pipeline) | WebGL pass chains, resizing, bloom selection, antialiasing, ambient occlusion, depth of field, stylization, outlines, and custom GLSL passes |
+| [Multi-Scene Compositing](#multi-scene-compositing) | Layering independently processed background and foreground scenes with controlled color and depth clearing |
+| [Render to Texture (Both Pipelines)](#render-to-texture-both-pipelines) | Capturing a scene in a render target and sampling that result from another material |
+| [Performance Tips](#performance-tips) | Full-screen pass budgeting, lower-resolution blur, device-tier toggles, disabled passes, cheap antialiasing, and upscaling |
+| [Common Mistakes](#common-mistakes) | Bypassed pipelines, stale sizes, duplicate output transforms, misplaced FXAA, renderer mixing, indiscriminate bloom, wrong resolutions, and stale outline selections |
 | [See Also](#see-also) | Related references and supporting guidance |
 
 ## TSL Post-Processing (Modern)

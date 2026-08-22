@@ -8,21 +8,21 @@ Screen-space effects in R3F via `@react-three/postprocessing` (v3), the React wr
 
 | Section | Covers |
 |---|---|
-| [Install and Versions](#install-and-versions) | v3 declares `postprocessing` — plus `n8ao` and `maath` — as regular dependencies |
-| [EffectComposer](#effectcomposer) | Place `<EffectComposer>` inside `<Canvas>`, after scene content |
-| [Effect Ordering](#effect-ordering) | How composer child order controls post-processing pass order |
-| [Bloom and Emissive Glow](#bloom-and-emissive-glow) | (Defaults from `postprocessing` 6.39.x — set the ones you rely on explicitly.) |
-| [Selective Effects: Selection and Select](#selective-effects-selection-and-select) | Selecting scene subtrees for targeted post-processing effects |
-| [Depth of Field](#depth-of-field) | `target` is a position, not an object ref — the v8-era `target={meshRef}` idiom does not exist in v3 |
-| [Ambient Occlusion: N8AO and SSAO](#ambient-occlusion-n8ao-and-ssao) | Prefer `N8AO`. It is exported directly from `@react-three/postprocessing` (backed by the bundled `n8ao` package's `N8AOPostPass`) |
-| [Outline](#outline) | Selection contexts, selected objects, layers, and props for targeted outlines |
-| [God Rays](#god-rays) | `<GodRays sun={...}>` accepts a `Mesh`/`Points` instance or a ref to one |
-| [Tone Mapping and Color Grading](#tone-mapping-and-color-grading) | The composer disables renderer tone mapping (see EffectComposer), so grade inside the chain — late, before AA |
-| [Anti-Aliasing](#anti-aliasing) | SMAA, FXAA, and multisampling tradeoffs and configuration |
-| [Custom Effects](#custom-effects) | `Effect` subclasses with shader entry points, uniform maps, an `update()` lifecycle, and `<primitive>` or `wrapEffect` mounting |
-| [Animating Effect Parameters](#animating-effect-parameters) | Mutate the effect instance through a ref inside `useFrame` — never `setState` per frame |
-| [Performance and Mobile Scaling](#performance-and-mobile-scaling) | The low-end branch: `multisampling={0}` (+ cheap FXAA), drop ambient occlusion first, then shrink bloom (`levels`/`radius`) |
-| [Native three.js Post-Processing](#native-threejs-post-processing) | Three.js `EffectComposer`, passes, output transforms, and multisampling |
+| [Install and Versions](#install-and-versions) | React 19 and Fiber 9 package lines, legacy incompatibility, transitive effect dependencies, and when strict package layouts require a direct `postprocessing` dependency |
+| [EffectComposer](#effectcomposer) | Canvas placement, framebuffer and render-priority options, HDR and tone-mapping takeover, demand rendering, pass merging, effect isolation, and the one-composer rule |
+| [Effect Ordering](#effect-ordering) | Depth and normal effects before blurs, HDR compositing before color grading and overlays, anti-aliasing last, and adjacency for pass merging |
+| [Bloom and Emissive Glow](#bloom-and-emissive-glow) | Threshold, smoothing, mip blur, radius, levels, and blend controls plus the HDR emissive and tone-mapping conditions for cheap object-like selection |
+| [Selective Effects: Selection and Select](#selective-effects-selection-and-select) | Context and direct selection, selectable subtrees, supported consumers, required lights for selective bloom, inversion, and context precedence |
+| [Depth of Field](#depth-of-field) | Normalized and world-space focus controls, position rather than ref targets, and damped GPU depth-picking for moving objects, pointer focus, or screen center |
+| [Ambient Occlusion: N8AO and SSAO](#ambient-occlusion-n8ao-and-ssao) | Preferred self-normaling N8AO quality and half-resolution controls versus classic SSAO’s mandatory composer normal pass |
+| [Outline](#outline) | Context or direct multi-selection, `autoClear` coordination, visible and hidden edges, x-ray and pulse behavior, and blur controls |
+| [God Rays](#god-rays) | Sun object availability, state-backed callback refs, unlit HDR source materials, shaft appearance controls, and sample-count cost |
+| [Tone Mapping and Color Grading](#tone-mapping-and-color-grading) | Restoring tone mapping inside the chain, available operators and mode-specific controls, vignette, grain, aberration, color adjustments, glitch, pixelation, and LUT loading |
+| [Anti-Aliasing](#anti-aliasing) | Exclusive MSAA, SMAA, or FXAA choices, required final ordering, framebuffer cost, and disabling redundant multisampling |
+| [Custom Effects](#custom-effects) | Exact shader entry points, collision-safe uniforms, per-frame updates, memoized primitive and wrapped mounting, reconstruction behavior, and composer-context access |
+| [Animating Effect Parameters](#animating-effect-parameters) | Ref access to underlying effects and frame-loop mutation of properties, vectors, and uniforms without React updates or reconstruction |
+| [Performance and Mobile Scaling](#performance-and-mobile-scaling) | Effect and blur-pass budgets, pass adjacency, persistent toggles, demand rendering, GPU-tier branches, low-end anti-aliasing and bloom reductions, and Canvas-level resolution scaling |
+| [Native three.js Post-Processing](#native-threejs-post-processing) | The separate imperative composer and pass hierarchy, manual frame rendering, incompatibility with React effect passes, and the correct R3F boundary |
 | [Common Mistakes](#common-mistakes) | Frequent mistakes and the changes that correct them |
 | [See Also](#see-also) | Related references and supporting guidance |
 

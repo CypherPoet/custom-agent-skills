@@ -6,12 +6,12 @@ Generated from: iOS 27.0, macOS 27.0, tvOS 27.0, watchOS 27.0, visionOS 27.0
 
 | Section | Covers |
 |---|---|
-| [Types](#types) | Soft-deprecated SwiftUI types and their modern replacements |
-| [Protocols](#protocols) | Soft-deprecated SwiftUI protocols and their modern replacements |
-| [Initializers](#initializers) | Soft-deprecated SwiftUI initializers and their modern replacements |
-| [Functions and Methods](#functions-and-methods) | Soft-deprecated SwiftUI functions and methods and their modern replacements |
-| [Properties](#properties) | Soft-deprecated SwiftUI properties and their modern replacements |
-| [Subscripts](#subscripts) | Soft-deprecated SwiftUI subscripts and their modern replacements |
+| [Types](#types) | Modern navigation, menu, dialog, gesture, presentation, dynamic type, and active-state replacements |
+| [Protocols](#protocols) | Replacements for navigation and menu styling protocols plus direct `Animatable` adoption |
+| [Initializers](#initializers) | Updated forms for text input, controls, navigation, sections, styles, colors, paste handling, and coordinate spaces |
+| [Functions and Methods](#functions-and-methods) | Current accessibility, navigation, toolbar, search, transfer, gesture, styling, layout, and safe-area APIs |
+| [Properties](#properties) | Updated navigation styles, toolbar placements, environment values, color resolution, and surroundings effects |
+| [Subscripts](#subscripts) | Tab customization access for section order and sidebar visibility |
 
 ## Types
 

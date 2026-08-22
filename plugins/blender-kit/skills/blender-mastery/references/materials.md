@@ -6,15 +6,15 @@ Materials in Blender are node trees attached to a `Material` data-block. The Pri
 
 | Section | Covers |
 |---|---|
-| [The minimum viable Principled BSDF](#the-minimum-viable-principled-bsdf) | Enabling nodes and creating a minimal Principled BSDF material graph |
-| [Defensive node access on existing materials](#defensive-node-access-on-existing-materials) | Imported and user-authored materials may not be Principled |
-| [Color space for image textures](#color-space-for-image-textures) | Color textures (base color, emission) need `sRGB` |
-| [A complete PBR setup with image textures](#a-complete-pbr-setup-with-image-textures) | Loading base-color, roughness, metallic, and normal textures into a Principled material |
-| [Material slots (objects can have many)](#material-slots-objects-can-have-many) | A mesh has a list of material slots; each face has a `material_index` pointing into that list |
-| [Converting Diffuse BSDF imports to Principled](#converting-diffuse-bsdf-imports-to-principled) | Imported models (especially from Sketchfab) often use Diffuse BSDF |
-| [Things that don't export](#things-that-dont-export) | These work in Blender but get lost on GLTF/USD export |
-| [World shader (HDRI environment)](#world-shader-hdri-environment) | The `World` data-block has its own node tree and is shared across the scene |
-| [Sources](#sources) | Authoritative references that ground this guidance |
+| [The minimum viable Principled BSDF](#the-minimum-viable-principled-bsdf) | Node enablement and clearing, Principled-to-output wiring, PBR defaults, and version-stable named sockets |
+| [Defensive node access on existing materials](#defensive-node-access-on-existing-materials) | Safe node-tree checks and type-based Principled discovery for imported and user-authored materials |
+| [Color space for image textures](#color-space-for-image-textures) | sRGB color maps versus Non-Color roughness, metallic, normal, displacement, and packed data maps |
+| [A complete PBR setup with image textures](#a-complete-pbr-setup-with-image-textures) | Optional texture loading, color-space assignment, tangent-space normal wiring, grayscale channels, and packed ORM separation |
+| [Material slots (objects can have many)](#material-slots-objects-can-have-many) | Material-slot creation, per-face assignment, and per-object slots versus shared mesh-data material lists |
+| [Converting Diffuse BSDF imports to Principled](#converting-diffuse-bsdf-imports-to-principled) | Type-based Diffuse discovery and transfer of color, normal, and output links into exportable Principled shaders |
+| [Things that don't export](#things-that-dont-export) | Procedural textures, value remapping, procedural bump, mixed shaders, and non-Principled materials that require baking or validation |
+| [World shader (HDRI environment)](#world-shader-hdri-environment) | Scene-shared World creation and node setup for environment textures, background strength, and surface output |
+| [Sources](#sources) | Blender Principled shader, shader-node-tree, and material API documentation |
 
 ## The minimum viable Principled BSDF
 

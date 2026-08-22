@@ -6,11 +6,12 @@ How data flows through a SwiftUI app determines which views invalidate and when.
 
 | Section | Covers |
 |---|---|
-| [Passing data into views](#passing-data-into-views) | A view's input shape determines its invalidation surface for value-type inputs |
-| [View-local state with @State](#view-local-state-with-state) | `@State` ownership, privacy, initialization, and mutation rules |
-| [Model objects with @Observable](#model-objects-with-observable) | Use `@Observable` (not `ObservableObject`) for classes that provide data to views |
-| [Side effects in views](#side-effects-in-views) | Isolating onChange(of:) side-effect invalidation |
-| [Bindings](#bindings) | Use KeyPath bindings, not closure bindings |
+| [Passing data into views](#passing-data-into-views) | Value- versus reference-type invalidation, narrow inputs, large-value comparison costs, and per-view or observable payload models |
+| [View-local state with @State](#view-local-state-with-state) | Private `@State` declarations and review guidance that avoids unrequested access-control changes |
+| [Model objects with @Observable](#model-objects-with-observable) | Main-actor models, equality-based update suppression, property-level dependency limits, cached derived values, and isolated collection or struct data |
+| [Side effects in views](#side-effects-in-views) | Isolating non-rendering `onChange(of:)` dependencies in modifiers and when that extra boundary is unnecessary |
+| [Bindings](#bindings) | Key-path and subscript binding projections that avoid closure allocations and spurious invalidation |
+| [`@Entry` macro](#entry-macro) | Stable defaults for custom value stores, optional focused values, and replacing manual key boilerplate in reviews |
 
 ## Passing data into views
 

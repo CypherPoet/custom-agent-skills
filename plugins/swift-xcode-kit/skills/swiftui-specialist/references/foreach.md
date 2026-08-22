@@ -14,14 +14,14 @@ The rule of thumb: the identity of a `ForEach` element must be **stable** (the s
 
 | Section | Covers |
 |---|---|
-| [Applies to other data-driven initializers](#applies-to-other-data-driven-initializers) | Identity requirements shared by other collection-driven SwiftUI initializers |
-| [Avoid collection indices as identity](#avoid-collection-indices-as-identity) | Using a collection's indices, or `.self` on an index, as the identifier is the most common anti-pattern |
-| [Don't create a new id on every body evaluation](#dont-create-a-new-id-on-every-body-evaluation) | Regenerated IDs make SwiftUI replace the collection on every `body` evaluation, resetting state and animations; store durable model identity |
-| [Prefer `Identifiable` conformance](#prefer-identifiable-conformance) | When element-level `Identifiable` conformance is preferable to an explicit `id` key path |
-| [Keep the id cheap to hash](#keep-the-id-cheap-to-hash) | `ForEach` hashes and compares element ids frequently - on every diff |
-| [Identity must outlive the view that renders the `ForEach`](#identity-must-outlive-the-view-that-renders-the-foreach) | `ForEach` assumes that an element's identity is stable for at least as long as the view rendering the `ForEach` is on screen |
-| [Don't sort or filter inline in `ForEach`](#dont-sort-or-filter-inline-in-foreach) | The collection passed to `ForEach` is evaluated every time the enclosing view's `body` runs |
-| [Prefer unary row views in `List`](#prefer-unary-row-views-in-list) | `List` needs the identity of every row up front: it has to materialize the full id set to diff against the previous update |
+| [Applies to other data-driven initializers](#applies-to-other-data-driven-initializers) | Stable, unique, content-independent identity across collection-driven lists, tables, outlines, pickers, and disclosure content |
+| [Avoid collection indices as identity](#avoid-collection-indices-as-identity) | Element identity instead of position, safe enumerated rows, and direct enumerated collections on Swift 6.2 and later |
+| [Don't create a new id on every body evaluation](#dont-create-a-new-id-on-every-body-evaluation) | Why reconstructed identifiers replace every row and how natural keys or model-owned synthetic IDs persist |
+| [Prefer `Identifiable` conformance](#prefer-identifiable-conformance) | Type-level natural identity, explicit key paths for external or contextual identity, and avoiding meaningless conformance |
+| [Keep the id cheap to hash](#keep-the-id-cheap-to-hash) | Avoiding whole-value IDs, choosing compact natural or stored keys, and preserving unrelated `Hashable` conformance |
+| [Identity must outlive the view that renders the `ForEach`](#identity-must-outlive-the-view-that-renders-the-foreach) | Keeping IDs independent of editable content so row state, focus, selection, and animations survive updates |
+| [Don't sort or filter inline in `ForEach`](#dont-sort-or-filter-inline-in-foreach) | Caching scalable collection transformations in models or state while leaving genuinely cheap preparation inline |
+| [Prefer unary row views in `List`](#prefer-unary-row-views-in-list) | Single-root structural identity, branching and zero-row traps, `Group` and `AnyView` limitations, and slow-path diagnostics |
 
 ## Applies to other data-driven initializers
 

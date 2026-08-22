@@ -9,13 +9,13 @@ Distilled from Apple's HIG Patterns pages: Right to left, Drag and drop, Undo an
 
 | Section | Covers |
 |---|---|
-| [Right to left](#right-to-left) | Layout mirroring, directional assets, text alignment, and exceptions for right-to-left languages |
-| [Drag and drop](#drag-and-drop) | Let people move or duplicate selected content by dragging a selection from a source location to a destination |
-| [Undo and redo](#undo-and-redo) | Reversible actions, undo affordances, grouping, and confirmation boundaries |
-| [Loading](#loading) | Design content loading so it doesn't disrupt or negatively impact the experience |
-| [Offering help](#offering-help) | Provide contextual help when necessary, directly related to the precise action or task people are doing right now |
-| [Collaboration and sharing](#collaboration-and-sharing) | Content sharing, participant roles, presence, permissions, and collaboration feedback |
-| [File management](#file-management) | Let document-based apps support documents and files that people expect to create |
+| [Right to left](#right-to-left) | Layout and text alignment, numbers and progress, navigation direction, artwork and icon exceptions, script balance, and localized symbols |
+| [Drag and drop](#drag-and-drop) | Move-versus-copy semantics, accessible alternatives, multi-item and reversible operations, data representations, visual feedback, scrolling, keyboard modifiers, and platform behavior |
+| [Undo and redo](#undo-and-redo) | Predictable action labels and visible results, multi-level and grouped reversal, system affordances and shortcuts, and platform support |
+| [Loading](#loading) | Immediate placeholders, background work, long-wait content, post-install assets, determinate and indeterminate progress, and watchOS constraints |
+| [Offering help](#offering-help) | Contextual help and tutorials, platform-appropriate language, TipKit styles and eligibility, concise tip content, and macOS and visionOS tooltips |
+| [Collaboration and sharing](#collaboration-and-sharing) | Cloud and custom infrastructure, system sharing interfaces, access and edit permissions, collaboration controls, Messages events, and spatial sharing |
+| [File management](#file-management) | System browsing, document creation and opening, autosave and extensions, Quick Look, document launchers and file providers, Finder integration, and manual-save states |
 
 ## Right to left
 

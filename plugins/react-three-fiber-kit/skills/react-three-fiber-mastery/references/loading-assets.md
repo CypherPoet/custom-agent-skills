@@ -8,19 +8,19 @@ Models, textures, video, and render targets at the React layer: `useLoader` and 
 
 | Section | Covers |
 |---|---|
-| [Quick Start](#quick-start) | Every loader hook in this file suspends — a `<Suspense>` boundary above the loading component is mandatory |
-| [useGLTF](#usegltf) | The recommended way to load GLTF/GLB (drei) |
-| [The gltfjsx Workflow](#the-gltfjsx-workflow) | gltfjsx turns a GLTF/GLB into a typed React component — the preferred way to consume models you control |
-| [useLoader](#useloader) | Fiber's core loading hook, for any three.js loader: `useLoader(LoaderClassOrInstance, urlOrUrls, extensions?, onProgress?)` |
-| [Primitive and Clone](#primitive-and-clone) | `<primitive object={...}>` mounts a pre-existing three.js object into the JSX tree; extra props are applied to it |
-| [Other Model Formats](#other-model-formats) | Supported non-glTF model formats, their loader APIs, and returned objects |
-| [useTexture](#usetexture) | drei's texture hook (suspends, caches by URL, uploads to the GPU on load — call it inside `<Canvas>`) |
-| [Texture Configuration](#texture-configuration) | Quick reference for the `THREE.Texture` properties you set in loader callbacks |
-| [Color Spaces](#color-spaces) | v9 change: R3F v8 automatically converted every texture prop to sRGB — which corrupted data textures (normal, displacement) |
-| [Environment, Cube, and Video Textures](#environment-cube-and-video-textures) | For scene-wide environment lighting/background prefer the declarative `<Environment>` component — see staging-and-drei.md |
-| [Render Targets and Procedural Textures](#render-targets-and-procedural-textures) | useFBO (drei) creates a `THREE.WebGLRenderTarget` (defaults to canvas size; accepts `useFBO(width, height, { samples, depth })`) |
-| [Suspense and Loading UI](#suspense-and-loading-ui) | Suspense boundaries, fallback progress, error handling, and grouped loading |
-| [Caching and Preloading](#caching-and-preloading) | `useLoader` (and every drei hook built on it) caches by loader + URL: same URL → same instance, across all components |
+| [Quick Start](#quick-start) | Canvas-contained Suspense placement and the minimal cached GLTF loading and rendering flow |
+| [useGLTF](#usegltf) | Scene, node, material, and animation access, selective rendering, automatic Draco and Meshopt decoding, custom decoder and loader setup, preload and eviction, and shared-graph mutation |
+| [The gltfjsx Workflow](#the-gltfjsx-workflow) | Model-to-component generation and transformation, typed v9 node and material contracts, fresh mesh instances over cached resources, disposal protection, shadows, and eager preload |
+| [useLoader](#useloader) | Loader classes or pooled v9 instances, single or parallel URLs, Draco, KTX2, and Meshopt configuration, progress callbacks, named graphs, preload, and eviction |
+| [Primitive and Clone](#primitive-and-clone) | Mounting an existing object with one-parent semantics, deep graph clones that share resources, per-node overrides, and when to use instancing instead |
+| [Other Model Formats](#other-model-formats) | GLTF, FBX, paired OBJ and MTL, and STL hooks, loader wiring, returned object types, and rendering patterns |
+| [useTexture](#usetexture) | Single, positional, and material-keyed texture loading, cached configuration callbacks, preload, and cloning for per-consumer settings |
+| [Texture Configuration](#texture-configuration) | Wrapping, transforms, filtering, anisotropy, mipmaps, orientation, color space, and second-UV-channel setup for ambient-occlusion and light maps |
+| [Color Spaces](#color-spaces) | v9’s removal of blanket conversion, explicit sRGB annotation for hand-loaded color maps, linear data maps, GLTF defaults, custom-shader responsibility, and diagnostic symptoms |
+| [Environment, Cube, and Video Textures](#environment-cube-and-video-textures) | Preset and local environments, cubemap files, scene-wide Environment use, autoplay-safe video and media streams, and tone-mapping opt-out for display content |
+| [Render Targets and Procedural Textures](#render-targets-and-procedural-textures) | FBO rendering and target restoration, portal and declarative render textures, and update requirements for canvas-drawn and raw-data textures |
+| [Suspense and Loading UI](#suspense-and-loading-ui) | In-canvas fallback types, nested progressive assets, global progress and full-page overlays, error boundaries, cached-failure eviction, and v9 side-effect timing |
+| [Caching and Preloading](#caching-and-preloading) | Shared loader-and-URL instances, mutation and disposal consequences, module-scope fetches, scene-wide GPU preparation, and conditional mounting for lazy loads |
 | [Common Mistakes](#common-mistakes) | Frequent mistakes and the changes that correct them |
 | [See Also](#see-also) | Related references and supporting guidance |
 

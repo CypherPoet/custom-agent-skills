@@ -8,14 +8,14 @@ WebGL2 ships in every modern browser (including Safari since 15). WebGL1 is stil
 
 | Section | Covers |
 |---|---|
-| [Context Detection](#context-detection) | Branch on `isWebGL2` for shader version selection, VAO API selection, and instancing path |
-| [Shader Source](#shader-source) | A pattern for dual-version shaders: ship one source as a string |
-| [Vertex Array Objects](#vertex-array-objects) | `OES_vertex_array_object` is universally available on WebGL1 in practice — assume it's there, but check |
-| [Instancing](#instancing) | A compatibility wrapper for WebGL 2 instancing and the WebGL 1 extension |
-| [NPOT Textures](#npot-textures) | WebGL1 imposes restrictions on non-power-of-two textures: only `CLAMP_TO_EDGE` wrap, only non-mipmap filters, no `generateMipmap` |
-| [Features That Are WebGL2-Only](#features-that-are-webgl2-only) | These have no WebGL1 equivalent (or only painful extension paths) |
-| [Recommended Strategy](#recommended-strategy) | WebGL2 has been the global baseline for years |
-| [Common Mistakes](#common-mistakes) | Frequent mistakes and the changes that correct them |
+| [Context Detection](#context-detection) | WebGL2-first context fallback and a version flag for shaders, vertex arrays, and instancing |
+| [Shader Source](#shader-source) | GLSL syntax and capability differences plus macro-prefix and separate-file strategies for dual-version shaders |
+| [Vertex Array Objects](#vertex-array-objects) | One interface over WebGL2 vertex arrays and the checked WebGL1 `OES_vertex_array_object` extension |
+| [Instancing](#instancing) | Compatibility wrappers for core WebGL2 instancing and checked WebGL1 extension methods |
+| [NPOT Textures](#npot-textures) | WebGL1 wrap, filter, and mipmap limits; unrestricted WebGL2 behavior; and resize or constraint fallbacks |
+| [Features That Are WebGL2-Only](#features-that-are-webgl2-only) | Modern texture, render-target, buffer, feedback, integer, sRGB, and sampling features that justify dropping WebGL1 |
+| [Recommended Strategy](#recommended-strategy) | WebGL2-first applications with graceful failure and isolated compatibility layers for products that require broader reach |
+| [Common Mistakes](#common-mistakes) | Diagnosis of shader-version, NPOT, missing-extension, cube-sampling, and multiple-render-target failures |
 
 ## Context Detection
 

@@ -9,19 +9,19 @@ Distilled from Apple's HIG Technologies pages: Playing audio, Playing video, Air
 
 | Section | Covers |
 |---|---|
-| [Playing audio](#playing-audio) | Deliver rich audio that automatically adjusts as device context, volume, and output routes change |
-| [Playing video](#playing-video) | Provide rich, consistent video playback by embedding the system player (and optionally integrating with the TV app) across iOS |
-| [AirPlay](#airplay) | Let people stream media wirelessly from iOS, iPadOS, macOS, and tvOS devices to Apple TV |
-| [SharePlay](#shareplay) | Synchronized watching, listening, gaming, and sketching during FaceTime calls or Messages conversations |
-| [Live Photos](#live-photos) | Present sound- and motion-rich Live Photos that spring to life on press |
-| [Photo editing](#photo-editing) | Let photo-editing extensions modify photos and videos inside the Photos app via filters or other changes |
-| [ShazamKit](#shazamkit) | Audio recognition through Shazam's catalog or app-defined custom catalogs |
-| [HealthKit](#healthkit) | Read and write health and fitness data through the central HealthKit repository on iOS |
-| [CareKit](#carekit) | Build care-plan apps (chronic-illness management, recovery, wellness goals) using CareKit UI's prebuilt task |
-| [ResearchKit](#researchkit) | Build medical-research apps with predesigned onboarding, consent, survey, and active-task screens |
-| [Workouts](#workouts) | Create workout/fitness experiences (primarily Apple Watch, also iPhone/iPad) |
-| [HomeKit](#homekit) | Let people securely control connected home accessories via Siri or the Apple Home app on iPhone |
-| [Augmented reality](#augmented-reality) | Immersive ARKit experiences, including convincing presentation, object placement, interaction, comfort and safety, multiuser sessions, and interruption recovery |
+| [Playing audio](#playing-audio) | Session categories and mixing, volume and route controls, external commands, interruption recovery, spatial sound, and platform-specific playback behavior |
+| [Playing video](#playing-video) | System versus custom players, aspect ratios and metadata, input and audio behavior, TV app loading and exit flows, media encoding, and platform-specific playback |
+| [AirPlay](#airplay) | System-player and HLS support, expected streaming and mirroring, remote and background behavior, custom-player controls, icon use, and editorial rules |
+| [SharePlay](#shareplay) | Activity discovery and preparation, access and Picture in Picture, naming, and visionOS spatial templates, shared state, private content, and personalization |
+| [Live Photos](#live-photos) | Content-preserving edits, sharing and still-image fallbacks, download and playback states, visual distinction, badges, and platform support |
+| [Photo editing](#photo-editing) | Nondestructive Photos extensions, cancellation confirmation, edit previews, toolbar and extension-icon rules, and supported platforms |
+| [ShazamKit](#shazamkit) | Shazam and custom-catalog matching, contextual microphone permission, minimal recording, iCloud-library consent, and platform support |
+| [HealthKit](#healthkit) | Contextual permissions and privacy, Settings-managed data sharing, Activity ring constraints, Apple Health icon and editorial rules, and platform support |
+| [CareKit](#carekit) | Sensitive-data handling and framework integrations, task, chart, and contact design, notifications, symbols, branding, and platform support |
+| [ResearchKit](#researchkit) | Ordered onboarding, eligibility, informed consent and permissions, survey and active-task design, participant profiles and dashboards, and platform support |
+| [Workouts](#workouts) | Watch workout layouts, live metrics and controls, unavailable sensor data, completion and short-session handling, legibility, Activity rings, and platform support |
+| [HomeKit](#homekit) | Home object hierarchy, system setup, service naming and Siri education, custom-data conflicts and cameras, icon and editorial rules, and platform support |
+| [Augmented reality](#augmented-reality) | Device support, convincing and comfortable scenes, coaching and placement, manipulation, multiuser mapping, object detection, interruption recovery, and AR marks |
 
 ## Playing audio
 *Last changed: 2023-06*

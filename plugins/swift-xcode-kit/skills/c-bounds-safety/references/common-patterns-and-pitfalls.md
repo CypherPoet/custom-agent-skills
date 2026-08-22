@@ -6,8 +6,8 @@ This document covers common patterns for working with `-fbounds-safety` and pitf
 
 | Section | Covers |
 |---|---|
-| [Common Patterns](#common-patterns) | Using Local Variables to Avoid Assignment Restrictions, Data Organization: Prefer Rows Over Columns |
-| [Common Pitfalls](#common-pitfalls) | These are common issues encountered during real-world adoption, along with recommended solutions |
+| [Common Patterns](#common-patterns) | Bounds-synchronization and data-layout techniques, internal API rewrites, source-compatible pointer annotations, ABI-safe wrappers, non-adopted library and terminated-string handling, and indexable-kind selection |
+| [Common Pitfalls](#common-pitfalls) | Struct-cast and pointer-widening hazards, desynchronized counts and slices, allocator, parameter, and array annotation errors, misleading forges, and unnecessary compatibility guards |
 
 ## Common Patterns
 

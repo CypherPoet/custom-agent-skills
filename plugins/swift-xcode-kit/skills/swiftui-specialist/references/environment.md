@@ -4,11 +4,11 @@
 
 | Section | Covers |
 |---|---|
-| [How environment comparison works](#how-environment-comparison-works) | When an environment value propagates, SwiftUI compares the old and new value to decide whether each reader needs to re-evaluate |
-| [Closures in the Environment](#closures-in-the-environment) | This section is about custom environment and focus-value keys that you define |
-| [Rapidly Updating Environment Values](#rapidly-updating-environment-values) | Every update to an environment key incurs a cost for EVERY VIEW |
-| [Unstable Environment Default Values](#unstable-environment-default-values) | An environment key's `defaultValue` is re-evaluated on every read |
-| [Unused @Environment Reads](#unused-environment-reads) | Declaring `@Environment(\.someKey)` on a view subscribes that view to changes in `\.someKey` |
+| [How environment comparison works](#how-environment-comparison-works) | Field, identity, and closure comparison behavior; subtree write propagation; default re-evaluation; parity with focused values |
+| [Closures in the Environment](#closures-in-the-environment) | Why custom closure keys invalidate readers, framework-action exceptions, ineffective wrappers, and data- or model-based replacement patterns |
+| [Rapidly Updating Environment Values](#rapidly-updating-environment-values) | High-frequency propagation costs, observable threshold coarsening, per-item isolation, and renderer-driven visual alternatives |
+| [Unstable Environment Default Values](#unstable-environment-default-values) | Computed-default re-evaluation, live versus latent impact, stable and misleading shapes, durable default options, and optional replacement of sentinels |
+| [Unused @Environment Reads](#unused-environment-reads) | Removing unused key-path subscriptions, recognizing transitive reads, and distinguishing type-based observable declarations |
 
 ## How environment comparison works
 

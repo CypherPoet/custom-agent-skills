@@ -8,14 +8,14 @@ Raycasting, camera controls, pointer/touch input, drag/transform gizmos, selecti
 
 | Section | Covers |
 |---|---|
-| [Raycaster](#raycaster) | Basic picking, Raycaster APIs, full-window and canvas coordinates, touch picking, and lower-cost raycasting strategies |
-| [Camera Controls](#camera-controls) | Orbit, Fly, FirstPerson, PointerLock, Trackball, Map, Transform, and Drag controls |
-| [Selection Patterns](#selection-patterns) | Click to Select with Highlight, Hover Effects, and Box (Marquee) Selection |
-| [Keyboard Input](#keyboard-input) | Track held keys in a map; read each frame |
-| [Screen ↔ World Conversion](#screen--world-conversion) | World → Screen, Screen → World (at a target Z), and Ray → Plane Intersection |
-| [Interaction Manager Pattern](#interaction-manager-pattern) | For larger apps, encapsulate event wiring |
-| [Performance Tips](#performance-tips) | Raycast throttling, target filtering, layer masks, object reuse, and event delegation |
-| [Common Mistakes](#common-mistakes) | Frequent mistakes and the changes that correct them |
+| [Raycaster](#raycaster) | Mouse and touch picking, hit metadata, canvas-relative coordinates, range and layer filtering, throttling, and proxy collision meshes |
+| [Camera Controls](#camera-controls) | Orbit, flight, first-person, pointer-lock, trackball, map, transform-gizmo, and direct-drag setup with their frame-update and coordination rules |
+| [Selection Patterns](#selection-patterns) | Click and hover highlighting plus box-drag selection across scene content |
+| [Keyboard Input](#keyboard-input) | Held-key state tracked by event code and consumed continuously during updates |
+| [Screen ↔ World Conversion](#screen--world-conversion) | Projected HTML placement, unprojection at a target depth, and ray-plane placement |
+| [Interaction Manager Pattern](#interaction-manager-pattern) | Centralized pointer and touch wiring, normalized coordinates, reusable raycasting, and object-specific callbacks |
+| [Performance Tips](#performance-tips) | Hover throttling, layer filtering, proxy meshes, disabled controls, and nonrecursive intersections |
+| [Common Mistakes](#common-mistakes) | Missing control updates, wrong canvas coordinates, instance picking, unthrottled hover, competing controls, user-gesture locks, delta omissions, and touch handling |
 | [See Also](#see-also) | Related references and supporting guidance |
 
 ## Raycaster

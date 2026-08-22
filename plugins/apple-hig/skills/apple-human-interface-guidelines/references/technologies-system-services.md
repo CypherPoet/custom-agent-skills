@@ -9,20 +9,20 @@ Distilled from Apple's HIG Technologies pages: Siri, App Shortcuts, Snippets, Ge
 
 | Section | Covers |
 |---|---|
-| [Siri](#siri) | Lets people find information and perform quick actions throughout the system and your app by voice |
-| [App Shortcuts](#app-shortcuts) | System-wide access to app functions through Siri, Spotlight, and Shortcuts |
-| [Snippets](#snippets) | Compact views that appear in response to a Siri, Spotlight, or Shortcuts action to show a result or ask for confirmation |
-| [Generative AI](#generative-ai) | Creating and transforming text, images, and other content with responsible controls for privacy, transparency, safety, and user agency |
-| [Machine learning](#machine-learning) | On-device models, recommendations, personalization, and responsible ML experiences |
-| [Maps](#maps) | Displays outdoor or indoor geographical data in your app or website |
-| [Nearby interactions](#nearby-interactions) | Supports on-device experiences that integrate the presence of nearby people and objects using Ultra Wideband (UWB) |
-| [NFC](#nfc) | Reading real-world NFC tags and presenting scan state and results |
-| [CarPlay](#carplay) | Shows compatible iPhone apps on the car's built-in display so drivers can get directions |
-| [Game Center](#game-center) | Apple's social gaming network — lets players track progress, connect with friends across Apple platforms |
-| [Designing for games](#designing-for-games) | Platform-wide guidance for integrating Apple platform characteristics and patterns so a game feels at home across Apple devices |
-| [iCloud](#icloud) | Cross-device content storage, synchronization, conflict handling, and privacy |
-| [Printing](#printing) | Lets an iOS, iPadOS, macOS, or visionOS app integrate system-provided print functionality |
-| [VoiceOver](#voiceover) | Screen-reader labels, navigation order, custom actions, and accessible content |
+| [Siri](#siri) | App intents, entities and schemas, contextual donations, action and content selection, spoken and visual responses, errors, inclusivity, and editorial rules |
+| [App Shortcuts](#app-shortcuts) | Schema boundaries, shortcut limits and parameters, clarification and discovery, dialogue and activity responses, activation phrases, and platform behavior |
+| [Snippets](#snippets) | Result versus confirmation flows, dialogue, views and system buttons, height and contrast constraints, concise content, action labels, Dynamic Type, and platform support |
+| [Generative AI](#generative-ai) | User agency, inclusion and fallbacks, transparency and privacy, model and dataset choices, safe inputs and reversible outputs, latency, feedback, and model evolution |
+| [Machine learning](#machine-learning) | Feature-risk classification, explicit and implicit feedback, calibration, mistakes and corrections, option design, confidence, attribution, and limitations |
+| [Maps](#maps) | Interaction and emphasis, search and selection, clustering and attribution, annotations and overlays, place cards, indoor maps, dimensions, and watchOS snapshots |
+| [Nearby interactions](#nearby-interactions) | Permission and ephemeral identity, distance- and direction-based feedback, multimodal cues and alternatives, device orientation and field of view, and platform limits |
+| [NFC](#nfc) | In-app versus background reading and availability constraints, proximity language, scanning-sheet instructions, fallback scanning paths, and platform support |
+| [CarPlay](#carplay) | System templates and driving constraints, locked-iPhone and audio behavior, scannable layout and color, image specifications, in-car errors, and platform support |
+| [Game Center](#game-center) | Sign-in and access-point placement, official UI and terminology, achievement and leaderboard design, challenges, multiplayer activities, image specifications, and platform behavior |
+| [Designing for games](#designing-for-games) | Installation and onboarding, contextual permissions, adaptive visuals and controls, inclusive customization, Apple technology integrations, and platform size and input specifications |
+| [iCloud](#icloud) | Automatic cross-device access, download and storage management, unavailable-service behavior, synchronized state, deletion warnings, conflict resolution, search, and game saves |
+| [Printing](#printing) | Standard print locations and availability states, system print options, macOS custom categories and page setup, advanced settings, previews, and document persistence |
+| [VoiceOver](#voiceover) | Labels and meaningful image descriptions, accessible charts and decorative exclusions, titles and reading order, grouping, change notifications, rotors, and visionOS gestures |
 
 ## Siri
 *Last changed: 2026-06*

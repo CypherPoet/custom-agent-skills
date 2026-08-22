@@ -8,16 +8,16 @@ The single biggest mistake under MCP is treating it like a stateless REPL. Blend
 
 | Section | Covers |
 |---|---|
-| [The loop, in detail](#the-loop-in-detail) | Read, propose, execute, verify, and iterate after Blender mutations |
+| [The loop, in detail](#the-loop-in-detail) | Targeted inspection, scoped mutation, visual or data verification, screenshot fallbacks, and recovery from partial or destructive changes |
 | [Look it up: bundled docs search](#look-it-up-bundled-docs-search) | Searching Blender's bundled manual and Python API documentation |
 | [Idempotent-edit patterns](#idempotent-edit-patterns) | Scripts that can re-run safely save you from half-completed-state hell |
-| [Persistent helpers module](#persistent-helpers-module) | Sharing reusable Blender helper modules across `execute_blender_code` calls |
-| [Fresh files without read_homefile](#fresh-files-without-read_homefile) | In-session file reloads are the one reliable way to lose the MCP mid-session |
-| [Chunking large operations](#chunking-large-operations) | If an operation might exceed the MCP timeout (~15–30 seconds), split it |
-| [The headless CLI escape hatch](#the-headless-cli-escape-hatch) | For long-running ops, drop out of the MCP and run Blender directly |
-| [Handling large output](#handling-large-output) | `execute_blender_code` returns printed output in a `stdout` field |
+| [Persistent helpers module](#persistent-helpers-module) | Registering reusable in-memory modules across execution calls and their reload and restart lifetime |
+| [Fresh files without read_homefile](#fresh-files-without-read_homefile) | Reload crashes and server-state loss, headless default-scene cleanup, save-as creation, and GUI relaunch |
+| [Chunking large operations](#chunking-large-operations) | Batching large scenes, separating construction phases, emitting progress, and routing bake, export, and render work headlessly |
+| [The headless CLI escape hatch](#the-headless-cli-escape-hatch) | Background scripts and expressions for long operations, post-run inspection, common task routing, and headless context limitations |
+| [Handling large output](#handling-large-output) | Standard output versus structured `result` data, pre-print slicing and aggregation, and file-backed inspection |
 | [When the MCP misbehaves](#when-the-mcp-misbehaves) | Timeout, connection, traceback, and dependency-graph checks for failed MCP operations |
-| [Sources](#sources) | Authoritative references that ground this guidance |
+| [Sources](#sources) | Blender Python API and official MCP server documentation |
 
 ## The loop, in detail
 

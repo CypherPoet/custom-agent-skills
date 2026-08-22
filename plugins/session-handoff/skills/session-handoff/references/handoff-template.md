@@ -6,16 +6,17 @@ This file is the canonical layout for handoff documents. `scripts/create_handoff
 
 | Section | Covers |
 |---|---|
-| [Why this structure](#why-this-structure) | Reading order and source-artifact placement for an agent resuming the work |
-| [Placeholders](#placeholders) | Template boundaries and the tokens replaced when a handoff is scaffolded |
-| [🧾 Session Metadata](#-session-metadata) | Next action, timestamp, working directory, branch, repository, and recent commits |
+| [Why this structure](#why-this-structure) | Resume-first reading order, early canonical artifacts, low-priority completion history, and the companion read strategy that must stay synchronized |
+| [Placeholders](#placeholders) | Runtime metadata, branch and repository fallbacks, pull-request and commit context, optional chain and plan blocks, modified-file output, and the template-body boundary |
+| [🧾 Session Metadata](#-session-metadata) | Creation time, branch, repository and source pull request when detected, recent commits, and optional handoff-chain and active-plan blocks |
+| [📚 Source Artifacts](#-source-artifacts) | Canonical specifications, plans, decisions, tickets, pull requests, and other material to open instead of restating them in the handoff |
 | [📍 Current State Summary](#-current-state-summary) | Active work, current status, and the point where the previous session stopped |
 | [💡 Important Context](#-important-context) | Decisions, failed approaches, and insights not captured in source artifacts |
 | [🚧 Pending Work](#-pending-work) | Immediate next steps, blockers, open questions, and deferred items |
-| [⚠ Constraints for Resuming Agent](#-constraints-for-resuming-agent) | Non-obvious restrictions, known gotchas, and skills needed to resume safely |
+| [⚠ Constraints for Resuming Agent](#-constraints-for-resuming-agent) | Non-obvious restrictions and failure modes plus forward-looking skill choices, trigger conditions, and reasons |
 | [🧠 Codebase Understanding](#-codebase-understanding) | Architecture, critical files, and implementation patterns discovered during the session |
 | [🏁 Work Completed](#-work-completed) | Finished tasks, modified files, and decisions made |
-| [🌐 Environment State](#-environment-state) | Tools, services, running processes, environment variables, and verification commands |
+| [🌐 Environment State](#-environment-state) | Relevant tools and service configuration, active processes, and environment-variable names without secret values |
 
 ## Why this structure
 

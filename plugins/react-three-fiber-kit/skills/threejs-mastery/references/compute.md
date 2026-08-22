@@ -10,11 +10,11 @@ GPU compute in Three.js runs through TSL: you allocate storage buffers, write a 
 
 | Section | Covers |
 |---|---|
-| [Storage Buffers](#storage-buffers) | Compute reads and writes storage buffers — GPU-resident arrays the shader can mutate in place |
-| [Writing and Dispatching a Compute Node](#writing-and-dispatching-a-compute-node) | A compute pass is an `Fn()` with no return value, turned into a compute node with `.compute(count)` and handed to the renderer |
-| [Mutating Values Inside a Compute Node](#mutating-values-inside-a-compute-node) | The one rule that trips everyone: mutation must flow through a shader node |
-| [Worked Example: GPU Particles](#worked-example-gpu-particles) | Two passes: a one-time seed, then a per-frame update that integrates gravity |
-| [Common Mistakes](#common-mistakes) | Frequent mistakes and the changes that correct them |
+| [Storage Buffers](#storage-buffers) | Renderable instance arrays versus general working arrays, element types, backing attributes, and indexed access |
+| [Writing and Dispatching a Compute Node](#writing-and-dispatching-a-compute-node) | Invocation indexing, dispatch and workgroup sizing, backend initialization, and asynchronous one-off versus synchronous frame-loop execution |
+| [Mutating Values Inside a Compute Node](#mutating-values-inside-a-compute-node) | Assignable shader variables and storage nodes, ineffective JavaScript rebinding, and value-returning conditional selection |
+| [Worked Example: GPU Particles](#worked-example-gpu-particles) | GPU-only seeding and gravity integration, delta uniforms, synchronous updates, and correct instance-attribute rendering |
+| [Common Mistakes](#common-mistakes) | Uninitialized dispatch, non-node mutation, WebGL fallback, collapsed rendering, element stride mismatch, and storage-buffer limits |
 | [See Also](#see-also) | Related references and supporting guidance |
 
 ## Storage Buffers

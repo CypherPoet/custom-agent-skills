@@ -8,16 +8,16 @@ Built-in shapes, custom `BufferGeometry`, instancing, and the math you need to b
 
 | Section | Covers |
 |---|---|
-| [Built-in Geometries](#built-in-geometries) | Basic Shapes, Polyhedra and Capsule, Path-Based Shapes, and Text Geometry |
+| [Built-in Geometries](#built-in-geometries) | Primitive and partial shapes, polyhedra, lathed and swept paths, extrusion, and addon-based text |
 | [BufferGeometry](#buffergeometry) | Building geometry from scratch, defining and mutating attributes, and configuring interleaved buffers |
 | [EdgesGeometry and WireframeGeometry](#edgesgeometry-and-wireframegeometry) | Generating thresholded edges and complete triangle wireframes |
 | [Points](#points) | Building point clouds with `BufferGeometry` and `PointsMaterial` |
 | [Lines](#lines) | Creating connected lines, loops, and line segments from point data |
-| [Instancing](#instancing) | InstancedMesh, Updating an Instance, Picking Instances, and InstancedBufferGeometry |
-| [Geometry Utilities](#geometry-utilities) | Merging geometries, computing tangents, interleaving attributes, and estimating memory |
-| [Common Manipulations](#common-manipulations) | Centering, normalization, cloning, transforms, morph targets, groups, and bounding volumes |
-| [Performance Tips](#performance-tips) | Segment counts, geometry reuse, instancing, index buffers, and update strategies |
-| [Common Mistakes](#common-mistakes) | Frequent mistakes and the changes that correct them |
+| [Instancing](#instancing) | Shared geometry and material draws, per-instance transforms and colors, update flags, picking, and custom shader attributes |
+| [Geometry Utilities](#geometry-utilities) | Attribute-compatible merging, optional material groups, tangent generation, and interleaved attribute construction |
+| [Common Manipulations](#common-manipulations) | Bounding-box centering and normalization, cloned transforms, and position-based morph targets |
+| [Performance Tips](#performance-tips) | Intentional segmentation, indexed vertices, static merging, repeated-object instancing, and GPU disposal |
+| [Common Mistakes](#common-mistakes) | Missing update flags, stale normals and bounds, excessive draw calls, index-width overflow, leaked buffers, missing tangents, addon imports, and stale instances |
 | [See Also](#see-also) | Related references and supporting guidance |
 
 ## Built-in Geometries

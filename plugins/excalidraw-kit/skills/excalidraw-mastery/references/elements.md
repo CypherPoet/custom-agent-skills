@@ -9,12 +9,12 @@ see [`design-principles.md`](design-principles.md).
 | Section | Covers |
 |---|---|
 | [Shared Properties](#shared-properties) | Identifiers, geometry, style, grouping, binding, locking, and other properties shared by every element |
-| [Verified Constants](#verified-constants) | These are the exact values from `@excalidraw/excalidraw` (`packages/common/src/constants.ts`) |
-| [Shapes: `rectangle`, `ellipse`, `diamond`](#shapes-rectangle-ellipse-diamond) | Geometry and use cases for rectangle, ellipse, and diamond container shapes |
-| [Text](#text) | Two modes. Free-floating text (a label/title) has `containerId: null` |
-| [Arrows](#arrows) | Arrow points, bindings, heads, elbows, labels, and connector geometry |
-| [Lines](#lines) | Same as an arrow but non-directional (no arrowheads by default) — use for dividers, timelines, tree trunks, and flow spines |
-| [Binding Arrows to Shapes](#binding-arrows-to-shapes) | Binding is what makes a connector stick to a shape |
+| [Verified Constants](#verified-constants) | Current and legacy font identifiers, roundness types, valid stroke widths, roughness levels, fill styles, and default font size |
+| [Shapes: `rectangle`, `ellipse`, `diamond`](#shapes-rectangle-ellipse-diamond) | Shared container schema, rounded rectangles, two-sided text binding, and contrasting semantic palette pairs |
+| [Text](#text) | Free-floating versus contained labels, two-sided containment, readable text fields, typography and alignment, and approximate authored geometry |
+| [Arrows](#arrows) | Relative connector points, straight and curved geometry, shape bindings, gaps and focus, and standard or extended arrowheads |
+| [Lines](#lines) | Nondirectional dividers, timelines, tree trunks, and spines plus closed polygons from relative point arrays |
+| [Binding Arrows to Shapes](#binding-arrows-to-shapes) | Arrow-side endpoints, edge focus and clearance, shape-side back-references, movement behavior, and multiple bound elements |
 | [Frames & Images](#frames--images) | Frame containers for grouping regions and image elements that reference embedded files with explicit geometry |
 | [Gotchas](#gotchas) | Unique IDs, relative points, two-sided bindings, valid constants, canvas coordinates, and reference validation |
 

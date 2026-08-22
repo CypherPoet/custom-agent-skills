@@ -9,18 +9,18 @@ Loading models (GLTF/GLB primary, plus OBJ/FBX/STL/PLY), textures (`TextureLoade
 | Section | Covers |
 |---|---|
 | [LoadingManager — Coordinate Progress](#loadingmanager--coordinate-progress) | Coordinating progress and ready state across multiple asset loaders |
-| [TextureLoader](#textureloader) | Texture configuration (wrap, repeat, filtering, anisotropy) is covered in textures.md |
+| [TextureLoader](#textureloader) | Callback and immediately returned textures, color-space setup, material refresh, image progress limits, and routing to advanced configuration |
 | [CubeTextureLoader](#cubetextureloader) | Loading six-face cube textures for backgrounds, environments, and material maps |
-| [HDR / EXR Environments](#hdr--exr-environments) | PMREMGenerator — Prefilter for PBR |
+| [HDR / EXR Environments](#hdr--exr-environments) | Equirectangular HDR and EXR lighting, optional backgrounds, PMREM reflection filtering, and temporary-resource disposal |
 | [GLTFLoader (Primary 3D Format)](#gltfloader-primary-3d-format) | Loading GLB/GLTF scenes and animations, enabling shadows, finding meshes, tuning materials, centering and normalizing models, and configuring Draco, Meshopt, and KTX2 decoders |
-| [Other Model Formats](#other-model-formats) | OBJ and MTL, FBX, STL, and PLY loaders and their returned scene data |
-| [Async / Promise Patterns](#async--promise-patterns) | Promisify Any Loader and Parallel Loads with Promise.all |
-| [Cache](#cache) | Three.js has a global request cache shared across loaders that go through the file loader (most do) |
-| [Asset Manager Pattern](#asset-manager-pattern) | For larger apps, a small cache layer pays off |
-| [Loading From Other Sources](#loading-from-other-sources) | Data URL / Base64, Blob URL, ArrayBuffer / parse, and Base Paths and URL Rewriting |
+| [Other Model Formats](#other-model-formats) | Material-backed OBJ, version-aware FBX axes and scale, geometry-only STL, and normal-aware PLY loading |
+| [Async / Promise Patterns](#async--promise-patterns) | Wrapping callback loaders for `await` and coordinating heterogeneous parallel asset loads |
+| [Cache](#cache) | Enabling and managing the global request cache shared by file-backed loaders |
+| [Asset Manager Pattern](#asset-manager-pattern) | Named texture and model deduplication, cloned model delivery, and centralized texture disposal |
+| [Loading From Other Sources](#loading-from-other-sources) | Data and blob URLs, revoked temporary resources, direct buffer parsing, base paths, resource paths, and URL rewriting |
 | [Error Handling](#error-handling) | Fallback and retry patterns for asynchronous asset loading |
-| [Performance Tips](#performance-tips) | Geometry and texture compression, caching, concurrency, and disposal |
-| [Common Mistakes](#common-mistakes) | Frequent mistakes and the changes that correct them |
+| [Performance Tips](#performance-tips) | Geometry and texture compression, lazy fetching, CDN delivery, early caching, and placeholder swaps |
+| [Common Mistakes](#common-mistakes) | Missing shadows and decoders, oversized assets, replacement texture color space, asset pivots, stale mixers, FBX scale, and duplicate requests |
 | [See Also](#see-also) | Related references and supporting guidance |
 
 ## LoadingManager — Coordinate Progress

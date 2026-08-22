@@ -4,13 +4,13 @@
 
 | Section | Covers |
 |---|---|
-| [The Mental Model](#the-mental-model) | WebGL is a rasterization engine, not a "3D engine." It runs two programs you write |
-| [Creating the Context](#creating-the-context) | WebGL 2 context creation, WebGL 1 fallback, and required context options |
-| [HiDPI and Resize](#hidpi-and-resize) | Synchronizing canvas display size and drawing-buffer resolution on HiDPI screens |
-| [State Machine Hygiene](#state-machine-hygiene) | WebGL has one current value for almost every kind of setting |
-| [Clearing](#clearing) | A frame typically starts with a clear |
-| [Context Loss](#context-loss) | The browser can drop your WebGL context at any time — GPU reset |
-| [Common Mistakes](#common-mistakes) | Frequent mistakes and the changes that correct them |
+| [The Mental Model](#the-mental-model) | Vertex processing, primitive assembly, rasterization, fragment shading and tests, plus the state mutations that precede a draw |
+| [Creating the Context](#creating-the-context) | WebGL2 creation options, WebGL1 fallback detection, and capability routing for modern versus extension APIs |
+| [HiDPI and Resize](#hidpi-and-resize) | CSS versus drawing-buffer dimensions, device-pixel-ratio scaling, synchronized viewport changes, and correct interpretation of requested canvas sizes |
+| [State Machine Hygiene](#state-machine-hygiene) | Current program, VAO, buffers, texture units, framebuffer, viewport, and capability state with JavaScript-side caching over hot-loop queries |
+| [Clearing](#clearing) | Color and depth initialization plus the limited cases where either clear can be omitted |
+| [Context Loss](#context-loss) | Stopping work, preserving restoration, rebuilding every GPU resource, resuming animation, and testing forced loss |
+| [Common Mistakes](#common-mistakes) | Blurry or partially rendered canvases, unnecessary preserved buffers, absent loss recovery, state-query stalls, and depth testing without an attachment |
 
 ## The Mental Model
 

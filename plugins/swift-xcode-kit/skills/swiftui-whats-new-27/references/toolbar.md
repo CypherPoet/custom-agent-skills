@@ -9,14 +9,14 @@ When a toolbar has more items than fit the available width (a narrow window, a r
 
 | Section | Covers |
 |---|---|
-| [Visibility priority](#visibility-priority) | Controlling which toolbar items overflow first when space becomes constrained |
-| [Overflow menu](#overflow-menu) | `ToolbarOverflowMenu` holds content that always lives in the overflow menu instead of the bar |
-| [Pinned trailing item](#pinned-trailing-item) | A `ToolbarItem` placed with `.topBarPinnedTrailing` stays in the trailing position and never moves to the overflow menu |
-| [Minimize on scroll](#minimize-on-scroll) | `toolbarMinimizationBehavior(_:for:)` minimizes a bar as the person scrolls |
-| [Toolbar content margins](#toolbar-content-margins) | `contentMarginsRemoved(_:)` removes the default margins around a piece of toolbar content |
-| [Status bar visibility](#status-bar-visibility) | The status bar is now a `ToolbarPlacement`, so you control its visibility with `toolbarVisibility(_:for:)` |
-| [Dynamic content](#dynamic-content) | `ForEach` now conforms to `ToolbarContent`, so a `toolbar` builder can generate items from a collection just as a view body does |
-| [Deployment target below SDK 27](#deployment-target-below-sdk-27) | Gate the complete `.toolbar { … }` body in one `if #available` block and provide an older-OS fallback |
+| [Visibility priority](#visibility-priority) | Automatic, absolute, and relative overflow order with platform-specific priority support |
+| [Overflow menu](#overflow-menu) | Always-overflow content inside toolbar builders or through the equivalent view modifier |
+| [Pinned trailing item](#pinned-trailing-item) | A trailing placement that remains visible regardless of constrained bar width |
+| [Minimize on scroll](#minimize-on-scroll) | Scroll-direction minimization policies, companion safe-area adjustment, and platform-specific choices |
+| [Toolbar content margins](#toolbar-content-margins) | Removing default spacing around selected toolbar content |
+| [Status bar visibility](#status-bar-visibility) | iOS status-bar control through toolbar placement and visibility |
+| [Dynamic content](#dynamic-content) | Collection-generated toolbar items, explicit empty branches, and their distinct back-deployment behavior |
+| [Deployment target below SDK 27](#deployment-target-below-sdk-27) | Whole-builder availability gates, older-system fallbacks, and declaration-level gating as an alternative |
 | [Availability summary](#availability-summary) | Platform availability for toolbar priority, overflow, placement, and minimization APIs |
 
 ## Visibility priority

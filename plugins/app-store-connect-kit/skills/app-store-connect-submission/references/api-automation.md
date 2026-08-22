@@ -8,13 +8,13 @@ You can drive it from the CLI (or an agent / CI) without fastlane. *As of 2026-0
 
 | Section | Covers |
 |---|---|
-| [The key, and the `.env` pattern](#the-key-and-the-env-pattern) | Generate the key once: App Store Connect → Users and Access → Integrations → App Store Connect API |
-| [Uploads — Apple-native `altool` (no JWT, no fastlane)](#uploads--apple-native-altool-no-jwt-no-fastlane) | `xcrun altool` reads the API key straight from env + the key dir — no JWT plumbing |
-| [Everything else — a JWT + REST call](#everything-else--a-jwt--rest-call) | Build-status polling, metadata, screenshots, and submitting for review hit the REST API directly |
-| [Uploading screenshots & previews (reserve → upload → commit)](#uploading-screenshots--previews-reserve--upload--commit) | Media uploads are a 3-phase flow (plus an ordering step), same shape for both (only the asset endpoint differs) |
-| [Useful endpoints](#useful-endpoints) | Full schema: Apple's App Store Connect API reference |
+| [The key, and the `.env` pattern](#the-key-and-the-env-pattern) | Team-key creation and App Manager permissions, `.p8` handling, environment variables, app reach, and agent credential boundaries |
+| [Uploads — Apple-native `altool` (no JWT, no fastlane)](#uploads--apple-native-altool-no-jwt-no-fastlane) | `altool` upload and validation commands, private-key discovery, and IPA export sources |
+| [Everything else — a JWT + REST call](#everything-else--a-jwt--rest-call) | ES256 JWT construction, REST authentication, build polling states, and bundled Swift clients |
+| [Uploading screenshots & previews (reserve → upload → commit)](#uploading-screenshots--previews-reserve--upload--commit) | Media-set creation, reserve/upload/commit/order workflow, validation traps, poster frames, and icon limitations |
+| [Useful endpoints](#useful-endpoints) | Builds, versions, listing copy, build attachment, media, review submissions, state queries, and review notes |
 | [Verify the submission landed](#verify-the-submission-landed) | Confirm the review submission is queued through `reviewSubmissions` and verify that a first in-app purchase changed state and is attached |
-| [Scope — what stays console-bound](#scope--what-stays-console-bound) | The API covers builds, metadata, screenshots, pricing, IAP, TestFlight, and version submission |
+| [Scope — what stays console-bound](#scope--what-stays-console-bound) | Automatable delivery operations and the age rating, trader status, privacy, agreement, and banking steps that remain console-bound |
 
 ## The key, and the `.env` pattern
 

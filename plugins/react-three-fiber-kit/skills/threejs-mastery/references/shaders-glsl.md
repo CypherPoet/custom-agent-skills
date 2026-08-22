@@ -11,16 +11,16 @@ The classic raw-GLSL path: `ShaderMaterial` and `RawShaderMaterial`. Still fully
 | Section | Covers |
 |---|---|
 | [Minimum Viable ShaderMaterial](#minimum-viable-shadermaterial) | A complete `ShaderMaterial` with uniforms plus vertex and fragment shaders |
-| [Built-in Uniforms and Attributes](#built-in-uniforms-and-attributes) | `ShaderMaterial` provides these for free (`RawShaderMaterial` does not) |
-| [Uniform Types](#uniform-types) | JavaScript values for scalar, vector, matrix, texture, array, and structured uniforms |
-| [RawShaderMaterial](#rawshadermaterial) | No built-ins — provide every matrix and attribute yourself |
-| [Varyings](#varyings) | Pass interpolated values from vertex to fragment |
-| [Common GLSL Recipes](#common-glsl-recipes) | Texture sampling, vertex displacement, Fresnel, rim lighting, noise, and grid shaders |
-| [Extending Built-ins (`onBeforeCompile`)](#extending-built-ins-onbeforecompile) | Modify the shader source Three.js generates for a standard material |
-| [GLSL Built-in Function Reference](#glsl-built-in-function-reference) | Math, vector, texture, derivative, and control functions built into GLSL |
+| [Built-in Uniforms and Attributes](#built-in-uniforms-and-attributes) | Automatically supplied transform and camera uniforms plus position, normal, and UV attributes |
+| [Uniform Types](#uniform-types) | JavaScript mappings for scalar, vector, color, matrix, texture, cube texture, and array uniforms |
+| [RawShaderMaterial](#rawshadermaterial) | Explicit precision, attributes, and transform uniforms without Three.js shader declarations |
+| [Varyings](#varyings) | Declaring, writing, interpolating, and reading vertex-to-fragment values |
+| [Common GLSL Recipes](#common-glsl-recipes) | Texture sampling, animated displacement, Fresnel, rim light, value noise, and edge-colored dissolve |
+| [Extending Built-ins (`onBeforeCompile`)](#extending-built-ins-onbeforecompile) | Injected uniforms and source replacements at common vertex and fragment chunks, with node materials preferred for new work |
+| [GLSL Built-in Function Reference](#glsl-built-in-function-reference) | Scalar math, vector operations, comparisons, and GLSL-version-specific texture access and fragment output |
 | [Common Material Options (ShaderMaterial)](#common-material-options-shadermaterial) | Transparency, sidedness, depth, blending, extensions, wireframe, and GLSL version options |
-| [Shader Chunks](#shader-chunks) | Three.js exposes its internal shader fragments through `ShaderChunk` — handy for depth math, packing, fog, lighting |
-| [Common Mistakes](#common-mistakes) | Frequent mistakes and the changes that correct them |
+| [Shader Chunks](#shader-chunks) | Reusing internal depth, packing, fog, and lighting fragments and importing external shader source files |
+| [Common Mistakes](#common-mistakes) | Unwritten varyings, mobile precision artifacts, mixed GLSL-version syntax, and brittle source-patch matching |
 | [See Also](#see-also) | Related references and supporting guidance |
 
 ## Minimum Viable ShaderMaterial

@@ -9,11 +9,11 @@ Distilled from Apple's HIG Components pages: Sheets, Popovers, Alerts, Panels, W
 
 | Section | Covers |
 |---|---|
-| [Sheets](#sheets) | A sheet presents a scoped task closely related to the current context |
-| [Popovers](#popovers) | A popover is a transient view that appears above other content when people click or tap a control or interactive area |
-| [Alerts](#alerts) | An alert is a modal view that gives people critical information they need right away |
-| [Panels](#panels) | In a macOS app, a panel floats above other open windows providing supplementary controls |
-| [Windows](#windows) | A window presents UI views and components in your app or game |
+| [Sheets](#sheets) | Scoped modal tasks, presentation alternatives, dismissal and navigation buttons, detents, resizing, and platform behavior |
+| [Popovers](#popovers) | Temporary contextual content, warnings and compact-view alternatives, source anchoring, dismissal and saving, sizing, and platform support |
+| [Alerts](#alerts) | Appropriate interruptions, concise critical copy, action labels and ordering, destructive confirmation, available elements, and platform behavior |
+| [Panels](#panels) | macOS supplementary controls and inspectors, window alternatives, titles and lifecycle, HUD limits, and unsupported platforms |
+| [Windows](#windows) | Primary and auxiliary roles, adaptive multiwindow behavior, system chrome, iPadOS states, macOS window states, and visionOS windows and volumes |
 
 ## Sheets
 *Last changed: 2026-03*

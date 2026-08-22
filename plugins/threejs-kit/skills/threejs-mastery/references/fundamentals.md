@@ -6,18 +6,18 @@ Cameras, Object3D, the scene graph, math utilities, and the building blocks ever
 
 | Section | Covers |
 |---|---|
-| [Scene](#scene) | Top-level container for objects, lights, and cameras |
-| [Cameras](#cameras) | PerspectiveCamera, OrthographicCamera, ArrayCamera, and CubeCamera |
-| [Renderer Configuration](#renderer-configuration) | `WebGPURenderer` (modern) and `WebGLRenderer` (compatibility) share most configuration |
+| [Scene](#scene) | Top-level graph container with solid or textured backgrounds, image-based lighting environments, and linear or exponential fog |
+| [Cameras](#cameras) | Perspective and orthographic projection, multi-viewport arrays, dynamic cube reflections, and required projection updates |
+| [Renderer Configuration](#renderer-configuration) | Shared WebGPU and WebGL sizing, pixel ratio, color, tone mapping, shadows, clearing, screenshots, and backend initialization with version-bound differences |
 | [Object3D](#object3d) | Local and world transforms, parent-child hierarchy behavior, visibility layers, and manual matrix updates |
-| [Group](#group) | Empty container for organizing objects |
-| [Mesh](#mesh) | Pairs a geometry with a material (or array of materials, one per geometry group) |
+| [Group](#group) | Transformable empty containers for organizing and moving child objects together |
+| [Mesh](#mesh) | Geometry-material pairing, grouped material arrays, shadow participation, frustum culling, and render order |
 | [Coordinate System](#coordinate-system) | Right-handed: +X right, +Y up, +Z toward viewer |
 | [Math Utilities](#math-utilities) | `Vector3`, `Matrix4`, `Quaternion`, `Euler`, `Color`, and `MathUtils` operations |
-| [LoadingManager](#loadingmanager) | Track or coordinate progress across multiple loaders |
-| [LOD (Level of Detail)](#lod-level-of-detail) | Switch meshes by camera distance |
-| [Merging Static Geometry](#merging-static-geometry) | Combine multiple geometries into one to reduce draw calls |
-| [Common Mistakes](#common-mistakes) | Frequent mistakes and the changes that correct them |
+| [LoadingManager](#loadingmanager) | Shared start, completion, progress, and error coordination across heterogeneous loaders |
+| [LOD (Level of Detail)](#lod-level-of-detail) | Camera-distance thresholds for switching among mesh detail levels |
+| [Merging Static Geometry](#merging-static-geometry) | Draw-call reduction for same-material static meshes and when instancing is the better alternative |
+| [Common Mistakes](#common-mistakes) | Projection and resize omissions, removed geometry APIs, stale matrices, disabled auto-updates, Euler interpolation, and unattached light targets |
 | [See Also](#see-also) | Related references and supporting guidance |
 
 ## Scene

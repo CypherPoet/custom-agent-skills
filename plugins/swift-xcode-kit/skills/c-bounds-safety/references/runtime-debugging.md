@@ -6,14 +6,14 @@ This guide covers debugging programs built with `-fbounds-safety`, including tra
 
 | Section | Covers |
 |---|---|
-| [Optimized vs Unoptimized Builds](#optimized-vs-unoptimized-builds) | Debug unoptimized code when possible |
-| [What Happens When a Bounds Violation Occurs](#what-happens-when-a-bounds-violation-occurs) | When `-fbounds-safety` detects an issue at runtime, it executes a trap instruction |
-| [Trap Reasons](#trap-reasons) | Human-readable bounds-safety trap descriptions encoded as artificial inline frames |
-| [Working with Wide Pointers](#working-with-wide-pointers) | Examining Wide Pointers and Known Limitations |
-| [Working with Externally Counted Pointers](#working-with-externally-counted-pointers) | LLDB shows the count expression (unevaluated) for externally counted pointers |
+| [Optimized vs Unoptimized Builds](#optimized-vs-unoptimized-builds) | Optimization effects on trap diagnostics and pointer state, selective `optnone`, and unique traps in optimized builds |
+| [What Happens When a Bounds Violation Occurs](#what-happens-when-a-bounds-violation-occurs) | LLDB and Xcode trap reporting, architecture-specific optimized traps, crash-log evidence, and interactive crash-log analysis |
+| [Trap Reasons](#trap-reasons) | Debug-info requirements, artificial inline frames, common failure messages, and cases without specific detail |
+| [Working with Wide Pointers](#working-with-wide-pointers) | Inspecting pointer values and bounds, recognizing out-of-bounds state, and debugger limitations under optimization or partial execution |
+| [Working with Externally Counted Pointers](#working-with-externally-counted-pointers) | LLDB displays for counted, sized, and ended pointers, manual expression evaluation, and omitted type annotations |
 | [Types Without Special Debugger Support](#types-without-special-debugger-support) | These annotations currently have no special LLDB display — the unannotated pointer type is shown |
-| [Expression Parsing Limitations](#expression-parsing-limitations) | The `-fbounds-safety` language mode is mostly off in LLDB's expression evaluator |
-| [Soft Traps in LLDB](#soft-traps-in-lldb) | Soft trap mode must be enabled at build time — see build-settings.md for the compiler flag and Xcode build setting |
+| [Expression Parsing Limitations](#expression-parsing-limitations) | Unsupported bounds-safe type parsing and builtins, plus failed expressions that would trap |
+| [Soft Traps in LLDB](#soft-traps-in-lldb) | Build-time enablement, runtime symbol availability and fallback, LLDB stop frames and continuation, and plugin disabling |
 
 ## Optimized vs Unoptimized Builds
 

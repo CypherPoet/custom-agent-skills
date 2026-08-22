@@ -7,14 +7,14 @@
 
 | Section | Covers |
 |---|---|
-| [Mental Model: Entity-Component](#mental-model-entity-component) | A Filament entity (`utils::Entity`) is just an opaque id |
-| [Entities: utils::Entity & utils::EntityManager](#entities-utilsentity--utilsentitymanager) | Entities are created and destroyed through the singleton `utils::EntityManager` (not the engine) |
-| [Common Manager Surface (Instance pattern)](#common-manager-surface-instance-pattern) | All three managers expose the same lookup pattern |
-| [RenderableManager](#renderablemanager) | A renderable is a bundle of primitives; each primitive has its own geometry and material |
-| [LightManager](#lightmanager) | A light is a component on an entity; build it with `LightManager::Builder(Type)` |
-| [TransformManager](#transformmanager) | Gives an entity a position/orientation relative to its parent transform, and computes the world transform (relative to the root) |
-| [Box & Aabb (bounding boxes)](#box--aabb-bounding-boxes) | `filament::Box` is the AABB type a renderable's `boundingBox()` expects |
-| [End-to-End Flow (grounded in hellopbr.cpp)](#end-to-end-flow-grounded-in-hellopbrcpp) | The complete create-entity → attach-component → add-to-scene flow |
+| [Mental Model: Entity-Component](#mental-model-entity-component) | Opaque entity identities, renderable, light, transform, and optional name components, engine-owned managers, and component attachment and removal |
+| [Entities: utils::Entity & utils::EntityManager](#entities-utilsentity--utilsentitymanager) | Singleton allocation and batch creation, component-first teardown, engine-wide component destruction, and storing entities rather than transient instances |
+| [Common Manager Surface (Instance pattern)](#common-manager-surface-instance-pattern) | Component presence, transient instance lookup and validation, counts, entity enumeration, reverse lookup, and component removal |
+| [RenderableManager](#renderablemanager) | Primitive and material bundles, indexed and nonindexed geometry, bounds and visibility, shadows and fog, skinning and morphing, instancing, live mutation, and computed AABBs |
+| [LightManager](#lightmanager) | Sun, directional, point, and spot semantics, engine limits, builder and runtime controls, photometric units, cone and falloff limits, efficiencies, and shadow configuration |
+| [TransformManager](#transformmanager) | Local and world transforms, parent hierarchy and orphaning, child traversal, accurate translations, cycle prevention, and batched hierarchy updates |
+| [Box & Aabb (bounding boxes)](#box--aabb-bounding-boxes) | Center-and-half-extent `Box` semantics, min/max construction and conversion, computed bounds, transforms, unions, spheres, and the distinct min/max `Aabb` type |
+| [End-to-End Flow (grounded in hellopbr.cpp)](#end-to-end-flow-grounded-in-hellopbrcpp) | Material and geometry setup, renderable transforms and mutation, physical sun creation, scene insertion, per-frame animation, and entity cleanup |
 
 ---
 

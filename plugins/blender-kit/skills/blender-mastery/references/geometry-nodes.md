@@ -7,14 +7,14 @@ Procedural geometry via node graphs. From a script, you build the node tree the 
 | Section | Covers |
 |---|---|
 | [Mental model](#mental-model) | Geometry-node data blocks, socket flow, fields, modifiers, and evaluation |
-| [Attaching a Geometry Nodes modifier](#attaching-a-geometry-nodes-modifier) | `nt.interface.new_socket(...)` is the 4.x+ API for declaring tree inputs/outputs |
-| [Pattern: scatter instances on a surface](#pattern-scatter-instances-on-a-surface) | Distribute points on a surface, instance source geometry, randomize rotation, and join the instances with the input mesh |
+| [Attaching a Geometry Nodes modifier](#attaching-a-geometry-nodes-modifier) | Creating a node-tree data block and modifier, declaring modern geometry interfaces, and wiring group passthrough |
+| [Pattern: scatter instances on a surface](#pattern-scatter-instances-on-a-surface) | Surface distribution, object instancing, axis-isolated random rotation, source joining, and version-sensitive socket access |
 | [Setting attributes from script](#setting-attributes-from-script) | Creating mesh attributes, assigning per-element values, and choosing data domains and types |
-| [Reading evaluated geometry](#reading-evaluated-geometry) | Geometry-nodes-modified meshes show their evaluated state through the depsgraph (see `bpy-essentials.md`) |
-| [Node-tree modifier inputs](#node-tree-modifier-inputs) | A geometry-node group can expose user-facing inputs |
+| [Reading evaluated geometry](#reading-evaluated-geometry) | Depsgraph access to modified mesh counts and enumeration of individual generated instances |
+| [Node-tree modifier inputs](#node-tree-modifier-inputs) | Identifier-based input and output properties, attribute-driven sockets, Blender 5.1 compatibility, and 5.2 API and identifier changes |
 | [Common patterns and what they're for](#common-patterns-and-what-theyre-for) | Reusable geometry-node patterns and the problems each pattern solves |
-| [When to escalate](#when-to-escalate) | Geometry node trees built from script can get long (hundreds of nodes for complex graphs) |
-| [Sources](#sources) | Authoritative references that ground this guidance |
+| [When to escalate](#when-to-escalate) | Reusable node groups, one-shot `bmesh` alternatives, and linking prebuilt node trees when scripted graphs become unwieldy |
+| [Sources](#sources) | Blender geometry-node, node-tree, attribute, and 5.2 API documentation |
 
 ## Mental model
 

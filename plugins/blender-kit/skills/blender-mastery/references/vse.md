@@ -6,16 +6,16 @@ The VSE is Blender's non-linear video editor. From script: build sequences, add 
 
 | Section | Covers |
 |---|---|
-| [Mental model](#mental-model) | A scene in Blender has one VSE timeline (`scene.sequence_editor`) |
-| [Adding strips](#adding-strips) | Creating video, image, audio, scene, color, and text strips with `bpy` |
-| [Transitions](#transitions) | Effect strips placed between video or image strips to blend from one source to another |
-| [Audio sync](#audio-sync) | The most common pain point: video frame rate vs audio sample rate |
-| [Speed / time remapping](#speed--time-remapping) | For slow motion or speed-up of a video clip |
-| [Render output settings (VSE)](#render-output-settings-vse) | The VSE renders the scene timeline; output settings come from `scene.render` |
-| [Render the timeline](#render-the-timeline) | VSE rendering goes through the same render pipeline |
-| [Inspecting a timeline](#inspecting-a-timeline) | `strips_all` is recursive (includes meta-strip contents) |
-| [When the VSE isn't the right tool](#when-the-vse-isnt-the-right-tool) | For programmatic video assembly that doesn't need Blender-specific effects, `ffmpeg` directly is usually faster |
-| [Sources](#sources) | Authoritative references that ground this guidance |
+| [Mental model](#mental-model) | Per-scene timeline creation, numbered channels, and movie, image, sound, color, transition, and effect strips |
+| [Adding strips](#adding-strips) | Movie, still-image, and sound strip creation with channel, start-frame, name, and duration control |
+| [Transitions](#transitions) | Source overlap, two-input effect strips, crossfade construction, and supported transition and processing effects |
+| [Audio sync](#audio-sync) | Scene frame-rate setup, interactive waveform limits, strip trimming, duration, and seconds-to-frame alignment |
+| [Speed / time remapping](#speed--time-remapping) | Speed effect creation and the required multiply mode for slow-motion or accelerated factors |
+| [Render output settings (VSE)](#render-output-settings-vse) | MPEG-4, H.264, AAC, quality, output path, and timeline frame-range configuration |
+| [Render the timeline](#render-the-timeline) | Standard animation rendering and required headless execution for nontrivial timelines |
+| [Inspecting a timeline](#inspecting-a-timeline) | Recursive versus top-level strip enumeration and the Blender 5 removal of legacy sequence collection names |
+| [When the VSE isn't the right tool](#when-the-vse-isnt-the-right-tool) | Blender pipeline, editable transition, grading, and mixed-media use cases versus direct FFmpeg concatenation or trimming |
+| [Sources](#sources) | Blender Video Sequencer, strip, and sequence-editor documentation |
 
 ## Mental model
 

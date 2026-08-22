@@ -11,10 +11,10 @@ If the user's deployment target is below iOS 27 / macOS 27 / watchOS 27 / vision
 
 | Section | Covers |
 |---|---|
-| [Basic usage](#basic-usage) | `Sticker` must be `Identifiable` for the `for:` overload (it keys on `\.id`) |
-| [Applying the difference](#applying-the-difference) | Your `move` closure receives a `ReorderDifference<ItemID, CollectionID>` |
-| [Sections and multiple collections](#sections-and-multiple-collections) | Tagging and registering multiple reorderable collections in one container |
-| [Drag-and-drop integration](#drag-and-drop-integration) | `.reorderContainer(for:)` already acts as a drag container and a drop destination, so dragging to reorder works on its own |
+| [Basic usage](#basic-usage) | Child and container modifier placement, `Identifiable` defaults, and custom item key paths |
+| [Applying the difference](#applying-the-difference) | Moved item identifiers, before-or-end destinations, and reusable single-collection application logic |
+| [Sections and multiple collections](#sections-and-multiple-collections) | Collection identifiers, cross-section routing, correct identifier types, and the single-collection sentinel |
+| [Drag-and-drop integration](#drag-and-drop-integration) | Built-in reorder dragging, payload customization, combine versus placement destinations, enablement, and platform limits |
 | [Availability summary](#availability-summary) | Platform availability for reorderable, drag-container, and drop-session APIs |
 
 ## Basic usage

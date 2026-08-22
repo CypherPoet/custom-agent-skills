@@ -8,17 +8,17 @@ Three.js animation has three building blocks: `AnimationClip` (keyframe data), `
 
 | Section | Covers |
 |---|---|
-| [Building an AnimationClip](#building-an-animationclip) | KeyframeTrack Types and Interpolation Modes |
-| [AnimationMixer](#animationmixer) | A mixer plays animations on an `Object3D` and everything below it |
-| [AnimationAction](#animationaction) | Controls how a clip plays through a mixer |
-| [Loading GLTF Animations](#loading-gltf-animations) | GLTF/GLB is the most common source of skeletal animation |
-| [Skeletal Animation](#skeletal-animation) | Skeleton and Bones, Programmatic Bone Animation, and Attaching Objects to Bones |
+| [Building an AnimationClip](#building-an-animationclip) | Property-bound scalar, vector, quaternion, color, boolean, and string tracks with linear, smooth, or stepped interpolation |
+| [AnimationMixer](#animationmixer) | Root-scoped clip playback, delta-driven updates, and finished or loop event handling |
+| [AnimationAction](#animationaction) | Playback state, timing, reverse and paused motion, loops, weights, blend modes, fades, and crossfades |
+| [Loading GLTF Animations](#loading-gltf-animations) | Discovering imported clips, selecting them by index or exported name, and retaining mixers for frame updates |
+| [Skeletal Animation](#skeletal-animation) | Inspecting and manipulating bones, procedural joint motion, skeleton visualization, and bone-attached objects |
 | [Morph Targets](#morph-targets) | Blend-shape influence arrays, clip tracks, and per-frame morph control |
-| [Animation Blending](#animation-blending) | Weighting, crossfading, synchronization, and additive clip blending |
+| [Animation Blending](#animation-blending) | Continuous weight-based state blending and additive motion layered over a base pose |
 | [Animation Utilities](#animation-utilities) | Clip lookup, subclipping, additive conversion, cloning, optimization, and duration operations |
-| [Procedural Patterns](#procedural-patterns) | When you don't need (or don't have) keyframe data, drive transforms in the loop directly |
+| [Procedural Patterns](#procedural-patterns) | Direct transform animation with smooth damping, spring integration, and common oscillation paths |
 | [Performance Tips](#performance-tips) | Clip reuse, mixer counts, track pruning, and efficient procedural animation |
-| [Common Mistakes](#common-mistakes) | Frequent mistakes and the changes that correct them |
+| [Common Mistakes](#common-mistakes) | Missing or incorrect mixer updates, inactive crossfades, one-shot resets, cleanup leaks, bone conflicts, displaced skinned vertices, and renamed clips |
 | [See Also](#see-also) | Related references and supporting guidance |
 
 ## Building an AnimationClip

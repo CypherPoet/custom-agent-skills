@@ -10,16 +10,16 @@ SDK 27.0 introduces two new protocols for document-based apps: `ReadableDocument
 
 | Section | Covers |
 |---|---|
-| [Mental model](#mental-model) | Document lifecycle from file opening through snapshotting, writing, and autosave |
-| [Set up the app: `DocumentGroup`](#set-up-the-app-documentgroup) | Editor or viewer UI closure versus async document-creation closure, including protocol requirements, configuration, and creation context |
-| [`FileWrapperDocumentReader` / `FileWrapperDocumentWriter` (recommended)](#filewrapperdocumentreader--filewrapperdocumentwriter-recommended) | These convenience types handle file reading and writing: you supply closures |
-| [Register undo actions (required for autosave)](#register-undo-actions-required-for-autosave) | SwiftUI tracks unsaved changes through undo actions |
-| [Custom readers and writers](#custom-readers-and-writers) | Use a custom `DocumentReader` / `DocumentWriter` only when the `FileWrapper` convenience types can't do what you need |
-| [Report progress with `Subprogress`](#report-progress-with-subprogress) | `read` and `write` receive `consuming Subprogress` |
-| [Coordinated disk access outside read/write](#coordinated-disk-access-outside-readwrite) | SwiftUI coordinates file access for `read` and `write` automatically |
-| [iOS launch scene and multiple creation sources](#ios-launch-scene-and-multiple-creation-sources) | Read `context.creationSource` in your initializer to set the document up accordingly |
+| [Mental model](#mental-model) | Observable reference documents, value snapshots, independent readers and writers, actor boundaries, and open-save sequencing |
+| [Set up the app: `DocumentGroup`](#set-up-the-app-documentgroup) | Read-write editors versus read-only viewers, asynchronous creation, URL configuration, creation sources, and bundle roles |
+| [`FileWrapperDocumentReader` / `FileWrapperDocumentWriter` (recommended)](#filewrapperdocumentreader--filewrapperdocumentwriter-recommended) | Flat-file conversion, incremental package reads and writes, previous-wrapper reuse, dirty tracking, and on-demand file failures |
+| [Register undo actions (required for autosave)](#register-undo-actions-required-for-autosave) | Undo-backed change tracking that enables autosave and naturally registers redo |
+| [Custom readers and writers](#custom-readers-and-writers) | Streaming or URL-dependent I/O, very large packages, background execution, and previous-snapshot comparison |
+| [Report progress with `Subprogress`](#report-progress-with-subprogress) | Single-consumption progress managers, coarse completion units, byte and file display metrics, and custom-reader-only support |
+| [Coordinated disk access outside read/write](#coordinated-disk-access-outside-readwrite) | Automatic operation coordination and fresh file coordinators for later access through main-actor configuration |
+| [iOS launch scene and multiple creation sources](#ios-launch-scene-and-multiple-creation-sources) | Branded launch scenes, multiple new-document actions, and source-specific initialization |
 | [Export to a new location or format](#export-to-a-new-location-or-format) | Use `fileExporter` with a `WritableDocument` |
-| [Concurrency contract (common agent pitfalls)](#concurrency-contract-common-agent-pitfalls) | Reader and writer isolation, snapshot boundaries, progress, cancellation, and coordinated disk access |
+| [Concurrency contract (common agent pitfalls)](#concurrency-contract-common-agent-pitfalls) | Synchronous factories, background I/O, main-actor snapshots and configuration, sending values, access levels, and asynchronous creation |
 | [Quick API reference](#quick-api-reference) | Document-based app symbols and the role each one plays |
 
 ## Mental model

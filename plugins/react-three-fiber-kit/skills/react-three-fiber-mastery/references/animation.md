@@ -6,13 +6,13 @@ Everything that moves: `useFrame` mutation patterns, damping and lerp idioms, GL
 
 | Section | Covers |
 |---|---|
-| [The useFrame Mutation Pattern](#the-useframe-mutation-pattern) | `useFrame((state, delta, xrFrame) => {...}, renderPriority?)` runs every frame just before render |
-| [Smooth Follow and Lerp](#smooth-follow-and-lerp) | Move toward targets instead of snapping |
-| [Damping with maath](#damping-with-maath) | `maath` (a pmndrs package; last published 2024-07 but stable and widely used) ships `easing.damp*` helpers |
-| [GLTF Clips with useAnimations](#gltf-clips-with-useanimations) | drei's `useAnimations(clips, root?)` binds `AnimationClip`s to a scene graph and returns `{ ref, actions, names, clips, mixer }` |
-| [Morph Targets](#morph-targets) | Morph-target dictionaries, influence arrays, and blend-shape animation |
-| [Skeletal Animation](#skeletal-animation) | Finding bones, mutating transforms, and combining direct control with animation |
-| [React Spring](#react-spring) | `@react-spring/three` animates values with spring physics outside the React render loop — no re-render per frame |
+| [The useFrame Mutation Pattern](#the-useframe-mutation-pattern) | Delta-scaled ref mutation, current pointer and store access, component isolation, callback priorities, on-demand invalidation, and pausing without unmounting |
+| [Smooth Follow and Lerp](#smooth-follow-and-lerp) | Scalar lerp versus frame-rate-independent damping, delta-correct vector interpolation, and reuse of temporary vectors, quaternions, and colors |
+| [Damping with maath](#damping-with-maath) | Allocation-free numeric, vector, Euler, quaternion, color, and spherical damping, target forms, convergence reporting, and camera-rig use |
+| [GLTF Clips with useAnimations](#gltf-clips-with-useanimations) | Clip and root binding, action and mixer controls, reset-safe crossfades, continuous locomotion blends, playback direction and looping, and cleaned-up mixer events |
+| [Morph Targets](#morph-targets) | Locating blend-shape dictionaries and influence arrays, driving weights from live data, and playing clip-authored morph animation |
+| [Skeletal Animation](#skeletal-animation) | Bone lookup and frame mutation, ordering manual overrides after the animation mixer, and attaching and removing props in bone space |
+| [React Spring](#react-spring) | Animated element wrappers, preset and custom physics, interruptible lists, chained sequences, and choosing event-driven springs versus continuous frame damping |
 | [Drei Float and Trail](#drei-float-and-trail) | `Float` hover and tumble plus `Trail` ribbons with child or external targets, width, length, decay, and attenuation controls |
 | [Throttling Expensive Work](#throttling-expensive-work) | Separating per-frame mutations from throttled raycasts, layout, and network work |
 | [Other Animation Libraries](#other-animation-libraries) | `framer-motion-3d` (declarative `motion.mesh` variants/gestures) exists but was built against R3F v8 / React 18 |

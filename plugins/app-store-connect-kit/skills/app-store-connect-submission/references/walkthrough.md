@@ -7,14 +7,15 @@ disagrees.* Examples use placeholders like `com.you.YourApp` — substitute the 
 
 | Section | Covers |
 |---|---|
-| [0. Before you open App Store Connect](#0-before-you-open-app-store-connect) | Developer enrollment, agreements, banking, tax, and App ID prerequisites |
-| [1. Create the app record](#1-create-the-app-record) | App name, primary language, bundle ID, SKU, and user-access settings |
-| [2. App Information (app-level)](#2-app-information-app-level) | App-level category, age-rating, licensing, and privacy-policy settings |
-| [3. App Privacy](#3-app-privacy) | Privacy-policy URL, data-collection declarations, tracking, and questionnaire workflow |
-| [4. Pricing & availability](#4-pricing--availability) | Price, tax category, territories, preorder availability, and distribution controls |
-| [5. In-app purchases](#5-in-app-purchases) | Product identifiers, review screenshots, pricing, localization, and first-purchase submission |
+| [0. Before you open App Store Connect](#0-before-you-open-app-store-connect) | Agreements, banking, tax, App ID setup, capabilities, signing, encryption, privacy-manifest, and orientation prerequisites |
+| [1. Create the app record](#1-create-the-app-record) | Record fields, permanent identifiers, Apple ID assignment, and app-level versus version-level scope |
+| [2. App Information (app-level)](#2-app-information-app-level) | Subtitle, categories, content rights, age rating, licensing, EU trader status, encryption, and server settings |
+| [3. App Privacy](#3-app-privacy) | Data-collection declaration, required privacy-policy URL, publication, and privacy-manifest consistency |
+| [3A. Accessibility Nutrition Labels](#3a-accessibility-nutrition-labels) | Per-device accessibility claims, common-task support threshold, and optional detail URL |
+| [4. Pricing & availability](#4-pricing--availability) | App pricing and taxes, storefront availability, regional pricing, and Mac and Vision Pro distribution toggles |
+| [5. In-app purchases](#5-in-app-purchases) | IAP types and identifiers, pricing, availability, family sharing, localization, review materials, readiness, and first-item submission |
 | [6. Version page metadata](#6-version-page-metadata) | Build selection, screenshots, descriptions, keywords, URLs, and version metadata |
-| [7. App Review Information](#7-app-review-information) | Reviewer contact details, demo credentials, review notes, and supporting attachments |
+| [7. App Review Information](#7-app-review-information) | Sign-in requirements, demo credentials, reviewer contact and notes, and export compliance |
 | [8. Attach the IAP, pick a release option, submit](#8-attach-the-iap-pick-a-release-option-submit) | Build and IAP attachment, release timing, and final review submission |
 
 ---

@@ -13,14 +13,14 @@ Pick one per surface; you can mix in the same scene but the mental model is clea
 
 | Section | Covers |
 |---|---|
-| [TSL (Modern)](#tsl-modern) | Imports, minimum materials, uniforms, varyings and attributes, function nodes, swizzling and math, and conditional flow |
-| [TSL Recipes](#tsl-recipes) | Texture sampling, vertex displacement, Fresnel, rim lighting, gradients, dissolve effects, instanced TSL, extending built-in node materials, and output-node overrides |
-| [Recent TSL Additions (r184–r185)](#recent-tsl-additions-r184r185) | Render-pipeline, storage, batching, texture, and shader-node APIs added in r184 and r185 |
-| [WGSL Interop](#wgsl-interop) | When you need hand-written WGSL under `WebGPURenderer` — porting an existing shader |
+| [TSL (Modern)](#tsl-modern) | Imports and version drift, node-material setup, live uniforms, custom attributes and varyings, reusable functions, swizzled math, and assignable conditional flow |
+| [TSL Recipes](#tsl-recipes) | Sampling, static versus skinned displacement, Fresnel and rim light, gradients, dissolve, instancing, lighting-preserving overrides, and direct output |
+| [Recent TSL Additions (r184–r185)](#recent-tsl-additions-r184r185) | Per-frame node callbacks and four-sample texture gather, including depth comparison |
+| [WGSL Interop](#wgsl-interop) | WebGPU-only handwritten functions, named parameters, type mappings, and included helper functions |
 | [GLSL (Legacy)](#glsl-legacy) | Raw-GLSL `ShaderMaterial` / `RawShaderMaterial` — the compatibility path for WebGL-only targets |
-| [Debugging](#debugging) | Inspect the Compiled Shader and Visualize Intermediate Values |
-| [Performance Tips](#performance-tips) | Uniform counts, branching, precision, loop bounds, and recompilation |
-| [Common Mistakes](#common-mistakes) | Legacy raw-GLSL pitfalls live in shaders-glsl.md |
+| [Debugging](#debugging) | Logging compiled stages, surfacing shader errors, and visualizing UV, normal, or position data in GLSL and TSL |
+| [Performance Tips](#performance-tips) | Packed uniforms, branchless selection, CPU-precomputed constants, texture lookups, and overdraw control |
+| [Common Mistakes](#common-mistakes) | Stale node assignments, illegal mutation, skinned displacement inputs, material-lighting differences, and mismatched attribute kinds |
 | [See Also](#see-also) | Related references and supporting guidance |
 
 ## TSL (Modern)

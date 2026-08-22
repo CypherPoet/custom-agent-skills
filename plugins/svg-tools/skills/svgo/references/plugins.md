@@ -10,8 +10,8 @@ Tables include the one-line behavior and a "when to flip" note. Plugins flagged 
 |---|---|
 | [Plugins in `preset-default` (on by default)](#plugins-in-preset-default-on-by-default) | `preset-default` plugins, what they do, and when to disable them |
 | [Plugins NOT in `preset-default` (opt-in)](#plugins-not-in-preset-default-opt-in) | Opt-in plugins, what they do, and when to enable them |
-| [Configuring plugins](#configuring-plugins) | Object, name-plus-params, and preset plugin configuration shapes |
-| [Notes](#notes) | Version drift in default plugin bundles and the need to pin explicit configurations |
+| [Configuring plugins](#configuring-plugins) | Default plugin names, parameter objects, disabling or tuning members through preset overrides, and additional opt-in plugins |
+| [Notes](#notes) | Version and naming drift, execution order inside and after the default preset, and placement of authored plugins |
 
 ## Plugins in `preset-default` (on by default)
 

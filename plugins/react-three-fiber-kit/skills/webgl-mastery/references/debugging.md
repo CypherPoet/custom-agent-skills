@@ -4,13 +4,13 @@
 
 | Section | Covers |
 |---|---|
-| [The Black Canvas Checklist](#the-black-canvas-checklist) | By far the most common WebGL question: "my canvas is black, no errors logged, what's wrong?" Walk this checklist top to bottom |
-| [Reading Info Logs](#reading-info-logs) | Shader logs typically look like `ERROR: 0:5: 'foo' : undeclared identifier` |
-| [`gl.getError()`](#glgeterror) | `getError` is cumulative and slow |
-| [Spector.js — The Tool to Reach For](#spectorjs--the-tool-to-reach-for) | Spector.js is a browser extension that captures every WebGL call in a frame and lets you click through them |
-| [Print-Debugging Inside Shaders](#print-debugging-inside-shaders) | There's no `console.log` in GLSL |
-| [When the Shader Compiles Differently in Production](#when-the-shader-compiles-differently-in-production) | Driver bugs and shader compiler differences are real |
-| [Common Mistakes](#common-mistakes) | Frequent mistakes and the changes that correct them |
+| [The Black Canvas Checklist](#the-black-canvas-checklist) | Compile and link state, bound programs and VAOs, viewport and clearing, clip and depth behavior, culling, uniforms, attributes, fragment output, and GL errors |
+| [Reading Info Logs](#reading-info-logs) | Shader line-number interpretation against uploaded source and cross-stage program-link diagnostics |
+| [`gl.getError()`](#glgeterror) | Error-category decoding, cumulative state, synchronization cost, and development-only checking patterns |
+| [Spector.js — The Tool to Reach For](#spectorjs--the-tool-to-reach-for) | Frame capture with draw state, uniform bindings, framebuffer previews, and active shader source |
+| [Print-Debugging Inside Shaders](#print-debugging-inside-shaders) | Rendering values, coordinates, normals, depth, branch sentinels, and numeric bands as color |
+| [When the Shader Compiles Differently in Production](#when-the-shader-compiles-differently-in-production) | Cross-driver precision, undefined math, loop limits, and testing on real browser and mobile GPU combinations |
+| [Common Mistakes](#common-mistakes) | Ignored link logs, skipped state checks, per-frame error stalls, ineffective shader comments, single-platform assumptions, shifted source lines, and empty frame captures |
 
 ## The Black Canvas Checklist
 

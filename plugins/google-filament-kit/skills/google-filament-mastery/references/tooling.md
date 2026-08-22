@@ -7,9 +7,9 @@
 
 | Section | Covers |
 |---|---|
-| [Asset & Material CLI Tools](#asset--material-cli-tools) | matc — material compiler (cross-ref), cmgen — IBL / cubemap & SH generation |
-| [Inspect & Debug Libraries](#inspect--debug-libraries) | matdbg — in-app material debugger web UI, viewer — model viewer / gltfviewer |
-| [Performance & Backend Debugging](#performance--backend-debugging) | FrameGraph, Performance analysis (Android / AGI), Metal debugging, and Vulkan debugging |
+| [Asset & Material CLI Tools](#asset--material-cli-tools) | Compiling and inspecting materials, generating environments and mipmaps, converting meshes, calculating spectral dispersion, blending normals, and prefiltering roughness |
+| [Inspect & Debug Libraries](#inspect--debug-libraries) | Live cross-backend shader editing and inspection, desktop and Android debugger setup and APIs, viewer configuration and automation, and full or lightweight runtime material compilation |
+| [Performance & Backend Debugging](#performance--backend-debugging) | FrameGraph dependencies and resource lifetimes, repeatable Android GPU Inspector profiling, Metal validation and frame capture, and Vulkan SDK validation layers |
 
 ---
 

@@ -11,13 +11,13 @@ created from a native window.
 
 | Section | Covers |
 |---|---|
-| [Supported platforms & backends](#supported-platforms--backends) | Filament is a real-time physically based rendering engine for Android, iOS, Linux, macOS, Windows, and WASM |
+| [Supported platforms & backends](#supported-platforms--backends) | Native and web platform coverage, OpenGL, OpenGL ES, Metal, Vulkan, WebGPU, and WebGL minimums, and the iOS support floor and preferred backend |
 | [Toolchain prerequisites](#toolchain-prerequisites) | Minimum CMake, Clang, and Ninja versions; when prebuilt or CocoaPods consumers can skip them; and Android-only extras |
 | [Getting the SDK: prebuilt vs build from source](#getting-the-sdk-prebuilt-vs-build-from-source) | Prebuilt releases, `build.sh` on macOS and Linux, raw CMake and Ninja builds, Filament-specific CMake options, and per-OS build notes |
-| [What you link against (libraries & include dirs)](#what-you-link-against-libraries--include-dirs) | Filament is split into the core engine plus supporting libraries (from the repo directory structure) |
-| [Engine + SwapChain from a native window (desktop)](#engine--swapchain-from-a-native-window-desktop) | The platform-specific glue is: create an `Engine`, then create a `SwapChain` from a native window pointer passed as a `void*` |
-| [iOS specifics](#ios-specifics) | CocoaPods installation, Objective-C++ setup, Metal engine creation, `CAMetalLayer` swap chains, and reverse-order teardown |
-| [Compiled assets at build time (matc / cmgen / filamesh / resgen)](#compiled-assets-at-build-time-matc--cmgen--filamesh--resgen) | Filament consumes pre-compiled binary assets, not raw source assets, at runtime |
+| [What you link against (libraries & include dirs)](#what-you-link-against-libraries--include-dirs) | Core and backend dependencies, optional material, glTF, IBL, mesh, viewer, and sample-harness libraries, installed header layout, and release-archive verification |
+| [Engine + SwapChain from a native window (desktop)](#engine--swapchain-from-a-native-window-desktop) | Native Cocoa, Win32, or Linux window handles, engine and surface creation, sample include dependencies, `filamentapp` ownership versus production glue, and embedded material data |
+| [iOS specifics](#ios-specifics) | CocoaPods workspace setup, Objective-C++ compilation, explicit Metal selection, `MTKView` and `CAMetalLayer` bridge casts, framework-provided linking, and reverse teardown |
+| [Compiled assets at build time (matc / cmgen / filamesh / resgen)](#compiled-assets-at-build-time-matc--cmgen--filamesh--resgen) | Version-matched material, environment, mesh, and resource tools, embedded headers, production offline compilation, runtime `filamat` alternative, and preprocessing commands |
 
 ## Supported platforms & backends
 

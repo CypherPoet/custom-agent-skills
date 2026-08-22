@@ -8,14 +8,14 @@ How the @react-three/fiber reconciler turns JSX into live three.js objects: cons
 
 | Section | Covers |
 |---|---|
-| [How the Reconciler Maps JSX to three.js](#how-the-reconciler-maps-jsx-to-threejs) | Every three.js class is available as a camelCase intrinsic element: `<mesh>` ≡ `new THREE.Mesh()` |
-| [Constructor Arguments: `args`](#constructor-arguments-args) | `args` is an array matching the class constructor signature |
-| [Prop Shorthands and Piercing](#prop-shorthands-and-piercing) | .set() and setScalar Shorthands and Piercing (Dash Props) |
-| [The `attach` Prop](#the-attach-prop) | `attach` binds a non-`Object3D` child to a named property of its parent instead of `parent.add()` |
-| [`<primitive>`: Mounting Existing Objects](#primitive-mounting-existing-objects) | `<primitive object={...}>` places a pre-existing three.js object into the JSX graph |
-| [`extend`: Registering Custom Elements](#extend-registering-custom-elements) | Classes outside the `THREE` namespace (addons, your own subclasses) must be registered before use as JSX |
-| [Disposal and `dispose={null}`](#disposal-and-disposenull) | When a JSX subtree unmounts, R3F automatically calls `.dispose()` on the objects beneath it — geometries, materials, textures |
-| [The `onUpdate` Prop](#the-onupdate-prop) | `onUpdate` is a callback — not a pointer event — invoked with the instance after fresh props are applied to it |
+| [How the Reconciler Maps JSX to three.js](#how-the-reconciler-maps-jsx-to-threejs) | Camel-case class construction, prop-driven mutation, Object3D parenting versus property attachment, frame-loop boundaries, and imperative `applyProps` parity |
+| [Constructor Arguments: `args`](#constructor-arguments-args) | Constructor signatures, default construction, object replacement and GPU costs when arguments change, stable inputs, and properties that should mutate instead |
+| [Prop Shorthands and Piercing](#prop-shorthands-and-piercing) | `.set()` and scalar copying, stable object references, v9.6 uniform behavior, and dashed access to nested transforms, materials, uniforms, shadows, and textures |
+| [The `attach` Prop](#the-attach-prop) | Automatic geometry and material binding, explicit and nested property paths, v9 buffer attributes, indexed array slots, and functional binding with cleanup |
+| [`<primitive>`: Mounting Existing Objects](#primitive-mounting-existing-objects) | Existing-object props and events, one-parent reparenting behavior, ordinary and skeleton-safe cloning, object swaps, cached sharing, and disposal protection |
+| [`extend`: Registering Custom Elements](#extend-registering-custom-elements) | Global catalog and typed component factory forms, current addon imports, drei alternatives, and full versus selective registration in custom roots |
+| [Disposal and `dispose={null}`](#disposal-and-disposenull) | Automatic subtree resource cleanup, opt-out for loader-cached and shared assets, ownership of manually created resources, and visibility as a cheaper toggle |
+| [The `onUpdate` Prop](#the-onupdate-prop) | Post-prop imperative follow-up, especially rebuilding camera projection matrices after focal or clipping changes |
 | [TypeScript](#typescript) | Refs, `ThreeElements['mesh']` component props, `ThreeElement` module augmentation for `extend`, exported utility types, and legacy v8 types to replace |
 | [Common Mistakes](#common-mistakes) | Frequent mistakes and the changes that correct them |
 | [See Also](#see-also) | Related references and supporting guidance |

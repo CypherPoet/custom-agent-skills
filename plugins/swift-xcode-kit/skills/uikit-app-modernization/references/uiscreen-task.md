@@ -4,18 +4,18 @@
 
 | Section | Covers |
 |---|---|
-| [Overview](#overview) | `UIScreen.main` reflects a single-window assumption and is now deprecated for window-relative use |
-| [Pattern 1: UIScreen.main.scale → traitCollection.displayScale](#pattern-1-uiscreenmainscale--traitcollectiondisplayscale) | Intent: Get display scale for pixel-perfect rendering (2x, 3x) |
-| [Invalidation Analysis (mandatory for every displayScale replacement)](#invalidation-analysis-mandatory-for-every-displayscale-replacement) | When display-scale replacements require invalidation or task-scoped trait access |
-| [Pattern 2: UIScreen.main.bounds → view.bounds](#pattern-2-uiscreenmainbounds--viewbounds) | Intent: Get available space for layout or dimensions |
-| [Pattern 3: UIScreen.main.nativeScale — NO trait-collection equivalent](#pattern-3-uiscreenmainnativescale--no-trait-collection-equivalent) | `nativeScale` is the physical pixel density of the hardware display; `displayScale`/`scale` is the logical scale factor (2x, 3x) |
-| [Pattern 4: Keyboard Notification Coordinate Space](#pattern-4-keyboard-notification-coordinate-space) | Intent: Convert keyboard frame from notification using a coordinate space |
-| [Special Cases](#special-cases) | Free functions and cached helpers, notification observers, fallback paths, window initialization, SwiftUI, `UIGraphicsImageRendererFormat`, and call-chain propagation |
-| [Analysis](#analysis) | In addition to the generic context read described in `SKILL.md` Phase 2 |
-| [Implementation Gates](#implementation-gates) | Before editing any line, answer these five gate questions |
-| [Implementation Rules](#implementation-rules) | Compatibility, warnings, deployment targets, and verification requirements |
-| [Post-file Checklist](#post-file-checklist) | Verify before moving to the next file |
-| [Final Verification](#final-verification) | In addition to the generic file-coverage audit in `SKILL.md` Phase 5 |
+| [Overview](#overview) | Direct, fallback, helper, cached, argument, and notification uses that encode a single-display assumption, including when a TODO is the correct result |
+| [Pattern 1: UIScreen.main.scale → traitCollection.displayScale](#pattern-1-uiscreenmainscale--traitcollectiondisplayscale) | Context-specific scale sources, forbidden shared state, local-helper signature edits, compatible deprecate-and-forward APIs, and exact user-selected paths |
+| [Invalidation Analysis (mandatory for every displayScale replacement)](#invalidation-analysis-mandatory-for-every-displayscale-replacement) | Cached versus transient scale use, required trait registration, direct recomputation, and reuse of existing update methods |
+| [Pattern 2: UIScreen.main.bounds → view.bounds](#pattern-2-uiscreenmainbounds--viewbounds) | Lifecycle-safe view and superview bounds, zero-frame initialization limits, deferred layout, and caller-supplied non-view dimensions |
+| [Pattern 3: UIScreen.main.nativeScale — NO trait-collection equivalent](#pattern-3-uiscreenmainnativescale--no-trait-collection-equivalent) | Physical screen properties resolved through `windowScene.screen` rather than logical traits or a window shortcut |
+| [Pattern 4: Keyboard Notification Coordinate Space](#pattern-4-keyboard-notification-coordinate-space) | Converting keyboard frames through the posting screen supplied by the notification |
+| [Special Cases](#special-cases) | Helper and observer TODOs, fallback preservation, scene-bound windows, SwiftUI sources, renderer formats, and trait propagation through call chains |
+| [Analysis](#analysis) | Mandatory cached-versus-on-demand classification in addition to the general context audit |
+| [Implementation Gates](#implementation-gates) | SwiftUI context, cache invalidation, view ownership, dead-code exclusion, and target-deprecation confirmation |
+| [Implementation Rules](#implementation-rules) | Narrow UIScreen-only scope, exact local sources, compatible API forwarding, complete occurrence coverage, control-flow preservation, and trait-update correctness |
+| [Post-file Checklist](#post-file-checklist) | Per-file audit of invalidation, lifecycle context, API compatibility, fallback behavior, forwarding chains, and diff scope |
+| [Final Verification](#final-verification) | Atomic replacement-plus-registration checks and passed-trait use across every forwarding branch |
 | [API Reference](#api-reference) | UIKit scene, screen, trait, orientation, and coordinate-space APIs plus Apple guidance |
 
 ## Overview

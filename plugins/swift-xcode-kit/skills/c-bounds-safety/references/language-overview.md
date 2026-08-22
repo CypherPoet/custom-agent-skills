@@ -12,18 +12,18 @@ This header should be included unconditionally, even in code that builds without
 | Section | Covers |
 |---|---|
 | [Quick Reference: Pointer Kinds and Bounds Annotations](#quick-reference-pointer-kinds-and-bounds-annotations) | Pointer kinds, bounds annotations, ABI compatibility, and default behavior |
-| [ABI Compatibility and ABI Visibility](#abi-compatibility-and-abi-visibility) | By establishing conventions for tying a pointer with its length, bounds-safe code remains ABI-compatible with bounds-unsafe code |
-| [Attribute Placement on Multi-Level Pointers](#attribute-placement-on-multi-level-pointers) | Every pointer/bounds attribute — `__single`, `__bidi_indexable` |
+| [ABI Compatibility and ABI Visibility](#abi-compatibility-and-abi-visibility) | ABI-visible versus local pointers, default single and wide representations, check timing, and safe use of local copies |
+| [Attribute Placement on Multi-Level Pointers](#attribute-placement-on-multi-level-pointers) | Binding pointer attributes to the preceding `*`, interpreting nested pointer declarations, and distinguishing out parameters from pointer arrays |
 | [Indexability Kinds](#indexability-kinds) | Four pointer kinds, pointer-bound access, conversions between indexable pointers, and default pointer attributes |
-| [External Bounds Annotations](#external-bounds-annotations) | For C APIs that pass a pointer and a length, `-fbounds-safety` supports annotations |
-| [Out and In-Out Parameters with `__counted_by`](#out-and-in-out-parameters-with-__counted_by) | Pointer-count parameter pairs that callees return, fill, or resize |
-| [Flexible Array Members](#flexible-array-members) | Structures with flexible array members must indicate the count with `__counted_by` inside the empty array brackets |
-| [Value-Terminated Arrays](#value-terminated-arrays) | `-fbounds-safety` supports value-terminated arrays with `__terminated_by(TR)` |
+| [External Bounds Annotations](#external-bounds-annotations) | Counted, sized, ended, and nullable pointer ranges; array decay; internal conversion checks; grouped assignments; count-expression grammar |
+| [Out and In-Out Parameters with `__counted_by`](#out-and-in-out-parameters-with-__counted_by) | Allocating, resizing, and fill-in-place pointer-count parameters; by-value capacities; caller pairing rules; corresponding SDK signatures |
+| [Flexible Array Members](#flexible-array-members) | Counted flexible arrays, count-mutation bounds, external object bounds, and prohibited pointer arithmetic |
+| [Value-Terminated Arrays](#value-terminated-arrays) | Sentinel-terminated pointer arithmetic, terminator traps, explicit indexable conversions, and null-terminated convenience APIs |
 | [Comprehensive Pointer Conversion Table](#comprehensive-pointer-conversion-table) | The table below summarizes the allowed implicit and explicit conversions across all pointer kinds |
-| [Deriving Bounds from Objects](#deriving-bounds-from-objects) | Rules for which bounds you get with regular C operations |
-| [Escape Hatches](#escape-hatches) | `__unsafe_forge_bidi_indexable`, `__unsafe_forge_single`, when and when not to forge, and the distinct `__unsafe_indexable` boundary |
-| [Principled Bounds Checks](#principled-bounds-checks) | All bounds checks verify that a range of memory is within another range |
-| [Performance Implications](#performance-implications) | `-fbounds-safety` may impact performance by adding bounds checks and increasing pointer size |
+| [Deriving Bounds from Objects](#deriving-bounds-from-objects) | Array decay, pointer arithmetic, tightly bounded object and field addresses, and allocator-derived bounds |
+| [Escape Hatches](#escape-hatches) | Forging safe views from genuinely unbounded sources, avoiding redundant forges, and choosing honest ABI-visible pointer annotations |
+| [Principled Bounds Checks](#principled-bounds-checks) | Inclusive-exclusive range checks for memory access and bounds-stripping conversions |
+| [Performance Implications](#performance-implications) | Check elimination, pointer representation tradeoffs, optimization guidance, and measured code-size and runtime overhead |
 | [Detecting `-fbounds-safety`](#detecting--fbounds-safety) | Conditionally compiling code when bounds safety is enabled |
 | [LibC Annotation Macros](#libc-annotation-macros) | Apple's LibC headers use wrapper macros (prefixed `_LIBC_`) instead of the raw `-fbounds-safety` annotations |
 | [`alloc_size` implies `__sized_by_or_null`](#alloc_size-implies-__sized_by_or_null) | The `alloc_size` attribute automatically implies `__sized_by_or_null` on the return type |

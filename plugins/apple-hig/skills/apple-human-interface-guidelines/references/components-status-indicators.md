@@ -9,11 +9,11 @@ Distilled from Apple's HIG Components pages: Progress indicators, Gauges, Activi
 
 | Section | Covers |
 |---|---|
-| [Progress indicators](#progress-indicators) | Show that the app isn't stalled while loading content or running lengthy operations; some also let people estimate wait time |
-| [Gauges](#gauges) | Display a specific numerical value within a range of values, optionally giving context about the range itself |
-| [Activity rings](#activity-rings) | Show an individual's daily progress toward Move, Exercise, and Stand goals, matching the colors and meanings of the Activity app |
-| [Rating indicators](#rating-indicators) | Use a series of horizontally arranged graphical symbols — by default, stars — to communicate a ranking level |
-| [Labels](#labels) | A static piece of text people can read and often copy, but not edit |
+| [Progress indicators](#progress-indicators) | Determinate and indeterminate progress, accuracy and motion, contextual labels, cancellation, refresh controls, and platform styles |
+| [Gauges](#gauges) | Values within ranges, labels and gradients, standard and capacity styles, accessory variants, macOS level indicators, and platform support |
+| [Activity rings](#activity-rings) | Move, Exercise, and Stand progress, strict visual identity and ownership rules, notifications and branding limits, colors, and platform support |
+| [Rating indicators](#rating-indicators) | Whole-symbol macOS ratings, inline editing, custom-symbol clarity, fixed spacing, and platform support |
+| [Labels](#labels) | Small noneditable text, component alternatives, legibility and Dynamic Type, semantic label colors, copyability, and watchOS date and timer text |
 
 ## Progress indicators
 *Last changed: 2023-09*

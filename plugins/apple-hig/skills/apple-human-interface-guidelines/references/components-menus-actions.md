@@ -9,14 +9,14 @@ Distilled from Apple's HIG Components pages: Buttons, Menus, Context menus, Pull
 
 | Section | Covers |
 |---|---|
-| [Buttons](#buttons) | A button initiates an instantaneous action, combining a style, content (symbol and/or text label), and a system-defined role |
-| [Menus](#menus) | A menu reveals commands, options, or states on interaction — a space-efficient way to present commands |
-| [Context menus](#context-menus) | A context menu provides hidden-by-default access to functionality directly related to an item |
-| [Pull-down buttons](#pull-down-buttons) | A pull-down button displays a menu of items or actions directly related to the button's purpose |
-| [Pop-up buttons](#pop-up-buttons) | A pop-up button displays a menu of mutually exclusive options |
-| [Edit menus](#edit-menus) | Editing actions for selected text, images, files, charts, and other content |
-| [Action sheets](#action-sheets) | An action sheet is a modal view presenting choices related to an action people intentionally initiate |
-| [Activity views](#activity-views) | Share-sheet activities, context-specific actions, frequently used apps, extension behavior, and background completion |
+| [Buttons](#buttons) | Roles, labels, hit targets, prominence, feedback, sizing, and platform-specific styles and placement |
+| [Menus](#menus) | Command labels and icons, grouping, availability, submenus, toggled states, game use, and platform layouts |
+| [Context menus](#context-menus) | Item-specific commands, discoverability, grouping and ordering, availability, previews, destructive actions, and platform behavior |
+| [Pull-down buttons](#pull-down-buttons) | Action-menu use cases, alternatives, item count, labels and icons, destructive confirmation, and platform support |
+| [Pop-up buttons](#pop-up-buttons) | Mutually exclusive choices, defaults, predictable labels, custom options, alternatives, and platform support |
+| [Edit menus](#edit-menus) | System selection actions, reveal interactions, contextual commands, custom actions, undo support, and platform presentations |
+| [Action sheets](#action-sheets) | Action clarification versus alerts and menus, interruption limits, cancel and destructive choices, and platform constraints |
+| [Activity views](#activity-views) | Share-sheet entry points, contextual system and custom actions, extension design, platform availability, and background completion |
 
 ## Buttons
 *Last changed: 2025-12*

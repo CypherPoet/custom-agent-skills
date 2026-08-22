@@ -8,9 +8,9 @@ When building a new view with distinct sections — a header, a list, a footer, 
 
 | Section | Covers |
 |---|---|
-| [Always use separate `View` types for sections, not computed properties](#always-use-separate-view-types-for-sections-not-computed-properties) | Why computed properties share the parent's invalidation boundary and separate `View` types narrow invalidation through explicit inputs |
-| [Keep view `init` cheap](#keep-view-init-cheap) | A view's `init` runs every time the parent re-evaluates its body |
-| [Single Child `Group`](#single-child-group) | `Group { SomeView() }`, which is a `Group` with only one child, isn't free |
+| [Always use separate `View` types for sections, not computed properties](#always-use-separate-view-types-for-sections-not-computed-properties) | Narrow invalidation boundaries and inputs for named layout regions, with tiny same-boundary helpers as the exception |
+| [Keep view `init` cheap](#keep-view-init-cheap) | Repeated initializer cost, prohibited data and formatting work, and durable model or task-based computation |
+| [Single Child `Group`](#single-child-group) | Removing needless concrete-child wrappers while retaining groups for siblings, loops, and conditional content |
 
 ## Always use separate `View` types for sections, not computed properties
 

@@ -9,8 +9,8 @@ If the business model is not obvious, it must be explained in metadata and App R
 
 | Section | Covers |
 |---|---|
-| [3.1 Payments](#31-payments) | In-App Purchase and external purchase links, subscriptions, IAP-exempt purchase methods, hardware-specific content, and cryptocurrency wallets, mining, exchanges, offerings, and rewards |
-| [3.2 Other Business Model Issues](#32-other-business-model-issues) | 3.2.1 Acceptable and 3.2.2 Unacceptable |
+| [3.1 Payments](#31-payments) | Digital-goods purchase and restoration rules, regional external links, subscription value and transitions, qualified payment exemptions, hardware unlocks, and cryptocurrency business restrictions |
+| [3.2 Other Business Model Issues](#32-other-business-model-issues) | Allowed promotional, rental, Wallet, insurance, donation, gift, and licensed-finance models versus prohibited store, manipulation, high-risk finance, and forced-action schemes |
 
 ---
 

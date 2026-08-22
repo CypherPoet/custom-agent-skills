@@ -9,11 +9,11 @@ Distilled from Apple's HIG Patterns pages: Launching, Onboarding, Modality, Mult
 
 | Section | Covers |
 |---|---|
-| [Launching](#launching) | Deliver a streamlined launch — from app open through initial download to first screen ready |
-| [Onboarding](#onboarding) | When onboarding is necessary, give people a fast, fun, optional flow |
-| [Modality](#modality) | Focused modes that block parent interaction until completion or dismissal |
-| [Multitasking](#multitasking) | Let people switch quickly between apps and perform tasks in each |
-| [Going full screen](#going-full-screen) | On iPhone, iPad, and Mac, let people expand a window to fill the screen, hiding system controls for a distraction-free environment |
+| [Launching](#launching) | Launch speed and state restoration, launch screens versus splash screens, orientation and branding limits, live-tv startup, and visionOS context |
+| [Onboarding](#onboarding) | Interactive and optional learning, contextual tips, download and setup deferral, permission timing, and delayed rating and purchase prompts |
+| [Modality](#modality) | Appropriate focused tasks, full-screen alternatives, scope and hierarchy limits, dismissal and unsaved work, titles, and modal stacking |
+| [Multitasking](#multitasking) | Pause and resume, audio interruptions, background completion and notifications, Picture in Picture, multiwindow states, and platform behavior |
+| [Going full screen](#going-full-screen) | Suitable immersive tasks, adaptive layouts and persistent controls, system gesture and Dock behavior, state restoration, user-controlled exit, and platform support |
 
 ## Launching
 *Last changed: 2024-06*

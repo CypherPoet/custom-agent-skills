@@ -9,18 +9,18 @@ Distilled from Apple's HIG Components pages: Lists and tables, Collections, Spli
 
 | Section | Covers |
 |---|---|
-| [Lists and tables](#lists-and-tables) | Row-based data presentation with grouped or hierarchical content and selection, insertion, deletion, and reordering interactions |
-| [Collections](#collections) | Manage an ordered set of content in a customizable, highly visual layout (default horizontal row or grid) |
-| [Split views](#split-views) | Adjacent panes for navigating and presenting multiple hierarchy levels |
-| [Scroll views](#scroll-views) | Let people view content larger than the view's boundaries by moving it vertically or horizontally |
-| [Outline views](#outline-views) | Present hierarchical data in a scrolling list of cells organized into columns and rows |
-| [Column views](#column-views) | Also called a browser — view and navigate a data hierarchy using a series of vertical columns |
-| [Boxes](#boxes) | Create a visually distinct group of logically related information and components |
-| [Image views](#image-views) | Display a single image — or an animated sequence of images — on a transparent or opaque background; typically not interactive |
-| [Web views](#web-views) | Load and display rich web content (embedded HTML, websites) directly within your app |
-| [Lockups](#lockups) | Combine multiple separate views (content view, header, footer) into a single interactive unit |
-| [Charts](#charts) | Organize data in a chart to communicate information with clarity and visual appeal |
-| [Charting data](#charting-data) | Chart-design guidance for presenting complex data clearly |
+| [Lists and tables](#lists-and-tables) | Text-first row data, hierarchy and selection, editing and sorting, column design, styles, and platform behavior |
+| [Collections](#collections) | Image-first rows and grids, item interaction, layout and spacing, change animations, and platform limits |
+| [Split views](#split-views) | Multi-pane hierarchy, selection state, drag and drop, responsive layouts, resizing, and platform-specific navigation |
+| [Scroll views](#scroll-views) | Scrolling, paging, automatic movement, zoom, edge effects, Look to Scroll, and platform behaviors |
+| [Outline views](#outline-views) | macOS hierarchical tables with disclosure, sorting, resizing, editing, persisted expansion, truncation, and search |
+| [Column views](#column-views) | macOS hierarchy navigation with one column per level, root access, leaf previews, and resizable columns |
+| [Boxes](#boxes) | Related-content grouping, sizing and nesting limits, accessible titles, and platform styling |
+| [Image views](#image-views) | Static and animated image display, interaction alternatives, text contrast, performance, formats, and platform capabilities |
+| [Web views](#web-views) | Brief in-app web access, browser boundaries, navigation controls, and platform availability |
+| [Lockups](#lockups) | tvOS focusable cards, caption buttons, monograms, and posters with spacing and sizing rules |
+| [Charts](#charts) | Mark and axis selection, hierarchy and interaction, descriptive context, color, accessibility, Audio Graphs, and watchOS limits |
+| [Charting data](#charting-data) | Choosing charts versus tables, progressive detail, familiar forms, multi-level analysis, descriptive text, sizing, and continuity |
 
 ## Lists and tables
 *Last changed: 2023-06*

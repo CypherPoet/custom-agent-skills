@@ -6,13 +6,13 @@ The phase-by-phase compliance audit for the [apple-app-store-best-practices](../
 
 | Section | Covers |
 |---|---|
-| [Phase 1: App Reconnaissance](#phase-1-app-reconnaissance) | Platform targets, user flows, monetization, authentication, data, content, and audience |
-| [Phase 2: Technical Compliance](#phase-2-technical-compliance) | Crashes, completeness, hardware use, software requirements, and beta or test behavior |
-| [Phase 3: Business Model Compliance](#phase-3-business-model-compliance) | Payments, subscriptions, purchase methods, ads, and platform-specific monetization rules |
-| [Phase 4: Safety and Content](#phase-4-safety-and-content) | Objectionable content, user-generated content, children, physical harm, and developer conduct |
-| [Phase 5: Design and Metadata](#phase-5-design-and-metadata) | Minimum functionality, copied apps, login services, extensions, and truthful store metadata |
-| [Phase 6: Legal Compliance](#phase-6-legal-compliance) | Privacy, intellectual property, gambling, financial services, VPN, and regulatory compliance |
-| [Post-Rejection Workflow](#post-rejection-workflow) | Evidence collection, root-cause classification, remediation, and appeal decisions after rejection |
+| [Phase 1: App Reconnaissance](#phase-1-app-reconnaissance) | Platform targets, primary flows, monetization, authentication, collected data, user content, audience, sensitive domains, and reference-file selection |
+| [Phase 2: Technical Compliance](#phase-2-technical-compliance) | Property-list keys, entitlements, privacy manifests, public APIs, networking, web views, background execution, unsigned code, and platform-specific requirements |
+| [Phase 3: Business Model Compliance](#phase-3-business-model-compliance) | In-app purchase enforcement and restoration, loot boxes and trials, subscription terms, payment exemptions, and regional external-purchase links |
+| [Phase 4: Safety and Content](#phase-4-safety-and-content) | Required moderation controls for user content, parental gates and children’s privacy, objectionable material, medical claims, and data security |
+| [Phase 5: Design and Metadata](#phase-5-design-and-metadata) | Submission completeness, field limits and truthful metadata, Sign in with Apple and its exceptions, minimum native value, and notification restrictions |
+| [Phase 6: Legal Compliance](#phase-6-legal-compliance) | Privacy-policy coverage, permission and tracking consent, account deletion, data minimization, and health and children’s data restrictions |
+| [Post-Rejection Workflow](#post-rejection-workflow) | Parsing cited rules, locating code evidence, checking related root-cause risks, and preparing a targeted remediation plan |
 
 ## Phase 1: App Reconnaissance
 

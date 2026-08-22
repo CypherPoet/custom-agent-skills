@@ -7,12 +7,12 @@
 
 | Section | Covers |
 |---|---|
-| [Physical light units (the trap)](#physical-light-units-the-trap) | Filament uses physical light units so lighting is correct by default and lighting rigs are reusable |
-| [Direct lighting](#direct-lighting) | All light evaluation computes the outgoing luminance (radiance) `L_out = f(v,l) · E` |
-| [Image-based lighting (IBL)](#image-based-lighting-ibl) | Diffuse spherical harmonics, prefiltered specular mip chains, why raw HDR cannot feed `IndirectLight`, HDR preprocessing with `cmgen` or GPU `iblprefilter`, and skybox setup |
-| [Occlusion](#occlusion) | Contact, ambient, and screen-space darkening at different spatial scales |
-| [Normal mapping](#normal-mapping) | Two use cases: replacing high-poly with low-poly meshes (base map) and adding surface detail (detail map) |
-| [Runtime API reference (verbatim signatures)](#runtime-api-reference-verbatim-signatures) | LightManager::Builder (from LightManager.h), IndirectLight::Builder (from IndirectLight.h), and Skybox::Builder (from Skybox.h) |
+| [Physical light units (the trap)](#physical-light-units-the-trap) | Per-light lux, lumen, candela, and luminance units, real-world intensity checks, watts-to-lumens conversion, efficiency constants, and shader-side intensity normalization |
+| [Direct lighting](#direct-lighting) | Sun and directional limits, point and focused or uncoupled spot equations, smooth falloff and performance, IES profiles, area-light gaps, color temperature, and pre-exposure |
+| [Image-based lighting (IBL)](#image-based-lighting-ibl) | Single distant probes, diffuse spherical harmonics, prefiltered specular and DFG terms, raw-HDR limits, offline and GPU preprocessing, calibration, and skybox interaction |
+| [Occlusion](#occlusion) | Micro, baked, and screen-space scales, safe combination, indirect-only diffuse AO, specular micro and horizon terms, and reflection-leak suppression |
+| [Normal mapping](#normal-mapping) | High-to-low and detail-map roles, tangent-space blending failures, offline reoriented normals, and cheaper runtime UDN blending |
+| [Runtime API reference (verbatim signatures)](#runtime-api-reference-verbatim-signatures) | Light creation and mutation, prefiltered reflection and irradiance inputs, SH estimates, environment rotation and intensity, and textured or constant skyboxes |
 
 ---
 

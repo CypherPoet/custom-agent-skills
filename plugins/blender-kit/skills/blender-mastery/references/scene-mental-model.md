@@ -6,15 +6,15 @@ The conceptual structure that makes `bpy` make sense. Most scripting bugs trace 
 
 | Section | Covers |
 |---|---|
-| [Data-blocks](#data-blocks) | Everything addressable by name lives in a `bpy.data.*` collection |
-| [Object vs mesh data](#object-vs-mesh-data) | The most-confused pair. They share names by default, which makes the confusion easy |
-| [Modes](#modes) | The mode determines which APIs work and what selection means |
-| [Units and coordinate system](#units-and-coordinate-system) | Blender coordinates, metric defaults, and Euler-versus-quaternion rotation storage |
-| [Parent/child and collections](#parentchild-and-collections) | Two organizational hierarchies, which behave differently |
-| [Scenes and view layers](#scenes-and-view-layers) | A `.blend` file can have multiple scenes (rare) |
+| [Data-blocks](#data-blocks) | Named object, mesh, material, image, rig, animation, camera, light, collection, scene, and world collections |
+| [Object vs mesh data](#object-vs-mesh-data) | Transform containers versus shared geometry data and the same object/data split for cameras, lights, and other types |
+| [Modes](#modes) | Object, mesh-edit, armature-edit, pose, sculpt, weight-paint, and texture-paint API surfaces plus active-object requirements |
+| [Units and coordinate system](#units-and-coordinate-system) | Right-handed Z-up coordinates, meter defaults, export conversion, Euler versus quaternion storage, and scene unit scaling |
+| [Parent/child and collections](#parentchild-and-collections) | Transform inheritance and inverse matrices versus multi-collection organization and independent visibility |
+| [Scenes and view layers](#scenes-and-view-layers) | Current scene and view-layer context, per-layer active objects, scene-linked enumeration, and orphaned file-wide data |
 | [Linked vs appended data](#linked-vs-appended-data) | Append creates an independent local copy; Link retains a read-only source-file reference; `.library` distinguishes them |
 | [Depsgraph in one paragraph](#depsgraph-in-one-paragraph) | Source data in `bpy.data` versus evaluated animation, constraint, driver, and modifier state from the dependency graph |
-| [Sources](#sources) | Authoritative references that ground this guidance |
+| [Sources](#sources) | Blender data-system, collection, mode, and dependency-graph documentation |
 
 ## Data-blocks
 

@@ -9,14 +9,14 @@ Distilled from Apple's HIG Components pages: App icons, Widgets, Controls, Compl
 
 | Section | Covers |
 |---|---|
-| [App icons](#app-icons) | Memorable visual identity across Home Screen, search, settings, and system surfaces |
-| [Widgets](#widgets) | Glanceable information and focused interactions across system surfaces |
-| [Controls](#controls) | A button or toggle that provides quick access to an app feature from Control Center, the Lock Screen, or the Action button |
-| [Complications](#complications) | Display timely, relevant, glanceable information on the watch face that people see each time they raise their wrist |
-| [Watch faces](#watch-faces) | A view people choose as their primary watchOS view and customize with their favorite complications |
-| [Home Screen quick actions](#home-screen-quick-actions) | Let people perform app-specific actions directly from the Home Screen by touching and holding an app icon |
-| [App Clips](#app-clips) | A lightweight, instantly available version of your app or game |
-| [iMessage apps and stickers](#imessage-apps-and-stickers) | An iMessage app helps people share content, collaborate, and play games within a Messages conversation |
+| [App icons](#app-icons) | Layered artwork, formats and masks, Liquid Glass effects, appearances, simplicity, platform consistency, sizes, and platform-specific constraints |
+| [Widgets](#widgets) | Glanceable content and actions, deep links and refreshes, sizing and density, typography and color, previews, rendering modes, dimensions, and platform contexts |
+| [Controls](#controls) | Control Center, Lock Screen, and Action button actions; symbols, values, state updates, animation, configuration, privacy, authentication, and locked-camera access |
+| [Complications](#complications) | Dynamic watch-face content, family coverage and deep links, timelines and privacy, gauge styles, tinted images, placeholders, dimensions, and Smart Stack layouts |
+| [Watch faces](#watch-faces) | Shareable complication configurations, face previews, device compatibility, and graceful alternatives for older watches |
+| [Home Screen quick actions](#home-screen-quick-actions) | High-value app-icon actions, four-item limits, dynamic relevance, concise localized text, symbols, and platform support |
+| [App Clips](#app-clips) | Focused instant tasks and demos, size and navigation limits, payments and identity, privacy and transition to the app, notifications, cards, codes, and print specifications |
+| [iMessage apps and stickers](#imessage-apps-and-stickers) | Focused Messages experiences, compact and expanded views, accessible sticker design, consistent sizing, icon dimensions, and supported formats |
 
 ## App icons
 *Last changed: 2026-06*
