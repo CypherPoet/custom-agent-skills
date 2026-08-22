@@ -3,9 +3,21 @@
 > Source: https://developer.apple.com/app-store/review/guidelines/
 > Last synced: 2026-06-01
 
----
+## Table of Contents
 
-**Contents:** [4.1 Copycats](#41-copycats) · [4.2 Minimum Functionality](#42-minimum-functionality) · [4.3 Spam](#43-spam) · [4.4 Extensions](#44-extensions-asr--nr) · [4.5 Apple Sites and Services](#45-apple-sites-and-services-asr--nr) · [4.7 Mini Apps, Mini Games, Streaming Games, Chatbots, Plug-ins, Game Emulators](#47-mini-apps-mini-games-streaming-games-chatbots-plug-ins-game-emulators-asr--nr) · [4.8 Login Services](#48-login-services-asr--nr) · [4.9 Apple Pay](#49-apple-pay-asr--nr) · [4.10 Monetizing Built-In Capabilities](#410-monetizing-built-in-capabilities-asr--nr)
+| Section | Covers |
+|---|---|
+| [4.1 Copycats](#41-copycats) | Original product and interface design, distinct app and developer identity, and authorization for third-party names, brands, imagery, and other intellectual property |
+| [4.2 Minimum Functionality](#42-minimum-functionality) | Meaningful native value beyond web or marketing wrappers, substantial AR, disclosed post-install downloads, template-app ownership and uniqueness, and remote-desktop host and account constraints |
+| [4.3 Spam](#43-spam) | Duplicate bundles, white-label variants, resubmissions intended to reset reputation, and portfolios that should consolidate similar category or regional content |
+| [4.4 Extensions (ASR & NR)](#44-extensions-asr--nr) | Functional and disclosed extensions without ads or purchases, offline-capable and privacy-limited keyboards, and current, nonintrusive Safari extensions with least-privilege website access |
+| [4.5 Apple Sites and Services (ASR & NR)](#45-apple-sites-and-services-asr--nr) | Approved Apple data sources, MusicKit playback and privacy, anti-spam rules, optional and consented notifications, protected Game Center identifiers, and permitted emoji rendering |
+| [4.7 Mini Apps, Mini Games, Streaming Games, Chatbots, Plug-ins, Game Emulators (ASR & NR)](#47-mini-apps-mini-games-streaming-games-chatbots-plug-ins-game-emulators-asr--nr) | Host responsibility for embedded software, privacy and purchase compliance, authorized native access, isolated data and permissions, a universal-link index, and enforced age restrictions |
+| [4.8 Login Services (ASR & NR)](#48-login-services-asr--nr) | Equivalent and equally prominent Sign in with Apple, limited identity data and private-relay support, advertising restrictions, and first-party, institutional, marketplace, and service-specific exceptions |
+| [4.9 Apple Pay (ASR & NR)](#49-apple-pay-asr--nr) | Complete pre-transaction pricing and terms, approved branding and controls, recurring-payment disclosures, and the boundary between Apple Pay and StoreKit purchases |
+| [4.10 Monetizing Built-In Capabilities (ASR & NR)](#410-monetizing-built-in-capabilities-asr--nr) | Prohibitions on charging for raw hardware, operating-system, and Apple-service capabilities and the substantial app-created value needed for paid enhancements |
+
+---
 
 ## 4.1 Copycats
 

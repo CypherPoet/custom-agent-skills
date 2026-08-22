@@ -3,9 +3,21 @@
 > Source: Filament C++ headers (Engine/SwapChain/Renderer/View/Scene/Camera) + repo README, Filament v1.75.0
 > Last synced: 2026-08-14
 
-**Contents:** [Mental Model & Ownership](#mental-model--ownership) · [Minimal Setup + Render Loop](#minimal-setup--render-loop) · [Engine](#engine) · [Creating an Engine](#creating-an-engine) · [Engine::Config](#engineconfig) · [Factory Methods](#factory-methods) · [Destruction & Resource Tracking](#destruction--resource-tracking) · [Feature Levels](#feature-levels) · [Threading & Frame Pumping](#threading--frame-pumping) · [SwapChain](#swapchain) · [Renderer](#renderer) · [View](#view) · [Scene](#scene) · [Camera](#camera) · [Common Pitfalls](#common-pitfalls)
-
 > Build, linking, SDK install, and native-window creation (SDL2 / NSView / HWND / ANativeWindow) live in the platform reference, not here. Exposure / tone-mapping / post-processing depth lives in `concepts-imaging-pipeline.md`.
+
+## Table of Contents
+
+| Section | Covers |
+|---|---|
+| [Mental Model & Ownership](#mental-model--ownership) | Engine factories, surfaces, renderers, views, flat scenes, entity cameras, explicit destruction, and non-reference-counted associations |
+| [Minimal Setup + Render Loop](#minimal-setup--render-loop) | Core object creation, scene and camera binding, renderable setup, projection updates, guarded frame sequencing, and ordered component cleanup |
+| [Engine](#engine) | Engine creation and configuration, factory methods, explicit resource destruction and tracking, feature levels, threading constraints, and frame pumping |
+| [SwapChain](#swapchain) | Platform-specific native windows, headless surfaces, transparency, readback, color, stencil, protection and MSAA flags, capability checks, frame-rate requests, and callbacks |
+| [Renderer](#renderer) | Frame admission and pacing, ordered shadow, depth, color, and post passes, multi-view rendering, timing, copies and readback, standalone views, and telemetry |
+| [View](#view) | Scene, camera, viewport, and render-target bindings, effect and quality options, visibility layers, picking, culling and froxel debug, and temporal-history resets |
+| [Scene](#scene) | Flat renderable and light membership, one skybox and indirect light, bulk insertion and removal, counts, iteration limits, and transform ownership elsewhere |
+| [Camera](#camera) | Entity-component lifecycle, right-handed pose, perspective, orthographic, lens and custom projections, infinite render far plane, transform vectors, exposure, and focus |
+| [Common Pitfalls](#common-pitfalls) | Frame guards, swap-chain lifecycle, resource destruction, and engine-thread mistakes |
 
 ---
 

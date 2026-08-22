@@ -3,7 +3,19 @@
 > Source: Filament gltfio library (public headers) + web suzanne tutorial + C++ sample, Filament v1.75.0
 > Last synced: 2026-08-14
 
-**Contents:** [The short version](#the-short-version) · [gltfio is a separate library, not core Filament](#gltfio-is-a-separate-library-not-core-filament) · [The gltfio object model](#the-gltfio-object-model) · [AssetLoader](#assetloader) · [ResourceLoader](#resourceloader) · [FilamentAsset](#filamentasset) · [FilamentInstance](#filamentinstance) · [Animator](#animator) · [MaterialProvider (ubershader vs JIT)](#materialprovider-ubershader-vs-jit) · [TextureProvider (PNG/JPEG vs KTX2 vs WebP)](#textureprovider-pngjpeg-vs-ktx2-vs-webp) · [The canonical end-to-end C++ load flow](#the-canonical-end-to-end-c-load-flow) · [The ubershader archive (.uberz) toolchain](#the-ubershader-archive-uberz-toolchain) · [Texture compression & mesh compression](#texture-compression--mesh-compression) · [IMPORTANT: filamesh is NOT glTF](#important-filamesh-is-not-gltf) · [What the Filament v1.75.0 samples actually load](#what-the-filament-v1750-samples-actually-load) · [C++ sample (samples/suzanne.cpp) — filamesh + KTX2](#c-sample-samplessuzannecpp--filamesh--ktx2) · [Web tutorial (web/suzanne) — filamesh + KTX2](#web-tutorial-websuzanne--filamesh--ktx2) · [What is verified vs not in this file](#what-is-verified-vs-not-in-this-file)
+## Table of Contents
+
+| Section | Covers |
+|---|---|
+| [The short version](#the-short-version) | glTF provider composition, parse and resource loading, scene insertion, source-data release, animation, teardown, and the separate filamesh path |
+| [gltfio is a separate library, not core Filament](#gltfio-is-a-separate-library-not-core-filament) | Core engine loading limits and the additional hierarchy, material, texture, skinning, and animation support supplied by `gltfio` |
+| [The gltfio object model](#the-gltfio-object-model) | Asset and resource loading, asset and instance ownership, animation and skinning, material strategies, texture decoders, async progress, and thread-sensitive cleanup |
+| [The canonical end-to-end C++ load flow](#the-canonical-end-to-end-c-load-flow) | Provider creation, parsing, synchronous or asynchronous resource upload, scene reveal, memory release, per-frame animation, and ordered teardown |
+| [The ubershader archive (.uberz) toolchain](#the-ubershader-archive-uberz-toolchain) | `.spec` and compiled `.filamat` inputs, `uberz` archive generation, and runtime ubershader-provider loading |
+| [Texture compression & mesh compression](#texture-compression--mesh-compression) | PNG, JPEG, WebP, KTX1, and Basis-backed KTX2 paths plus the unconfirmed Draco and meshopt boundary |
+| [IMPORTANT: filamesh is NOT glTF](#important-filamesh-is-not-gltf) | Simple caller-material filamesh loading versus full glTF scene loading through distinct C++ and web APIs |
+| [What the Filament v1.75.0 samples actually load](#what-the-filament-v1750-samples-actually-load) | C++ and web filamesh loading, KTX texture handling, materials and cleanup, progressive web streaming, format selection, and gltfio mapping limits |
+| [What is verified vs not in this file](#what-is-verified-vs-not-in-this-file) | Confirmed C++ loader, provider, animation, archive, and texture APIs versus unconfirmed JavaScript, Draco, and meshopt support |
 
 ---
 

@@ -2,8 +2,6 @@
 
 Beyond-compliance best practices for the App Store listing — metadata/ASO, screenshots, reviews, and localization. Referenced by the [apple-app-store-best-practices](../SKILL.md) skill.
 
-**Contents:** [Metadata Optimization](#metadata-optimization-best-practices) · [Screenshot Strategy](#screenshot--app-preview-strategy) · [Review & Rating Management](#review--rating-management) · [Localization](#localization-guidance)
-
 ## Metadata Optimization Best Practices
 
 Beyond compliance, well-optimized metadata improves discoverability and conversion. Apply these when reviewing or drafting App Store listings.

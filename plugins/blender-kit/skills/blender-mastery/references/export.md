@@ -2,6 +2,19 @@
 
 GLTF, FBX, OBJ, USD pipelines. Export is almost always a headless-CLI job — the MCP times out on real exports.
 
+## Table of Contents
+
+| Section | Covers |
+|---|---|
+| [The export workflow (in order)](#the-export-workflow-in-order) | Inspect, verify, export, optimize, and validate in order |
+| [GLTF — the web standard](#gltf--the-web-standard) | GLB versus separate assets, headless options, modifier loss and expansion, GPU instancing, morph constraints, and named multi-object animation clips |
+| [FBX — game engines, legacy DCC tools](#fbx--game-engines-legacy-dcc-tools) | Headless FBX settings, coordinate conversion, leaf-bone removal, all-action baking, and material-fidelity limits |
+| [OBJ — geometry only](#obj--geometry-only) | Geometry-only headless export, axis, modifier, UV, normal, and material options, plus modern operator detection |
+| [USD — film and pro pipelines](#usd--film-and-pro-pipelines) | Headless USD visibility, animation, geometry, and material settings, including broadly compatible preview surfaces |
+| [Pre-export sanity script](#pre-export-sanity-script) | UV and scale checks, discarded or expanding modifiers, instancing candidates, and non-Principled material warnings |
+| [Validation after export](#validation-after-export) | Format-specific validation with `gltf-transform inspect` and runtime viewers for glTF, FBX, and USD exports |
+| [Sources](#sources) | Blender GLTF, FBX, OBJ, and USD export documentation and the glTF 2.0 specification |
+
 ## The export workflow (in order)
 
 A reliable export looks like this:

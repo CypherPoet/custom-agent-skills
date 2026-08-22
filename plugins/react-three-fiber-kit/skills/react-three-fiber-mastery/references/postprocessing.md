@@ -4,7 +4,27 @@ Screen-space effects in R3F via `@react-three/postprocessing` (v3), the React wr
 
 > Scene/Canvas setup: see [../SKILL.md](../SKILL.md). Custom *materials* (shaders on objects, not on the screen): see [shaders-and-custom-materials.md](./shaders-and-custom-materials.md).
 
-**Contents:** [Install and Versions](#install-and-versions) · [EffectComposer](#effectcomposer) · [Effect Ordering](#effect-ordering) · [Bloom and Emissive Glow](#bloom-and-emissive-glow) · [Selective Effects: Selection and Select](#selective-effects-selection-and-select) · [Depth of Field](#depth-of-field) · [Ambient Occlusion: N8AO and SSAO](#ambient-occlusion-n8ao-and-ssao) · [Outline](#outline) · [God Rays](#god-rays) · [Tone Mapping and Color Grading](#tone-mapping-and-color-grading) · [Anti-Aliasing](#anti-aliasing) · [Custom Effects](#custom-effects) · [Animating Effect Parameters](#animating-effect-parameters) · [Performance and Mobile Scaling](#performance-and-mobile-scaling) · [Native three.js Post-Processing](#native-threejs-post-processing) · [Common Mistakes](#common-mistakes) · [See Also](#see-also)
+## Table of Contents
+
+| Section | Covers |
+|---|---|
+| [Install and Versions](#install-and-versions) | React 19 and Fiber 9 package lines, legacy incompatibility, transitive effect dependencies, and when strict package layouts require a direct `postprocessing` dependency |
+| [EffectComposer](#effectcomposer) | Canvas placement, framebuffer and render-priority options, HDR and tone-mapping takeover, demand rendering, pass merging, effect isolation, and the one-composer rule |
+| [Effect Ordering](#effect-ordering) | Depth and normal effects before blurs, HDR compositing before color grading and overlays, anti-aliasing last, and adjacency for pass merging |
+| [Bloom and Emissive Glow](#bloom-and-emissive-glow) | Threshold, smoothing, mip blur, radius, levels, and blend controls plus the HDR emissive and tone-mapping conditions for cheap object-like selection |
+| [Selective Effects: Selection and Select](#selective-effects-selection-and-select) | Context and direct selection, selectable subtrees, supported consumers, required lights for selective bloom, inversion, and context precedence |
+| [Depth of Field](#depth-of-field) | Normalized and world-space focus controls, position rather than ref targets, and damped GPU depth-picking for moving objects, pointer focus, or screen center |
+| [Ambient Occlusion: N8AO and SSAO](#ambient-occlusion-n8ao-and-ssao) | Preferred self-normaling N8AO quality and half-resolution controls versus classic SSAO’s mandatory composer normal pass |
+| [Outline](#outline) | Context or direct multi-selection, `autoClear` coordination, visible and hidden edges, x-ray and pulse behavior, and blur controls |
+| [God Rays](#god-rays) | Sun object availability, state-backed callback refs, unlit HDR source materials, shaft appearance controls, and sample-count cost |
+| [Tone Mapping and Color Grading](#tone-mapping-and-color-grading) | Restoring tone mapping inside the chain, available operators and mode-specific controls, vignette, grain, aberration, color adjustments, glitch, pixelation, and LUT loading |
+| [Anti-Aliasing](#anti-aliasing) | Exclusive MSAA, SMAA, or FXAA choices, required final ordering, framebuffer cost, and disabling redundant multisampling |
+| [Custom Effects](#custom-effects) | Exact shader entry points, collision-safe uniforms, per-frame updates, memoized primitive and wrapped mounting, reconstruction behavior, and composer-context access |
+| [Animating Effect Parameters](#animating-effect-parameters) | Ref access to underlying effects and frame-loop mutation of properties, vectors, and uniforms without React updates or reconstruction |
+| [Performance and Mobile Scaling](#performance-and-mobile-scaling) | Effect and blur-pass budgets, pass adjacency, persistent toggles, demand rendering, GPU-tier branches, low-end anti-aliasing and bloom reductions, and Canvas-level resolution scaling |
+| [Native three.js Post-Processing](#native-threejs-post-processing) | The separate imperative composer and pass hierarchy, manual frame rendering, incompatibility with React effect passes, and the correct R3F boundary |
+| [Common Mistakes](#common-mistakes) | HDR bloom and restored tone mapping, selection-aware effects, state-backed God Rays sources, SSAO normal passes, exclusive anti-aliasing, Outline context and clearing, ref-driven effect animation, world-space depth-of-field targets, memoized custom effects, compatible pipeline imports, and the one-composer rule |
+| [See Also](#see-also) | Object-level shaders, scene and mobile performance, HDR staging, Canvas color defaults, stack setup, and upstream effect or pass guidance |
 
 ## Install and Versions
 

@@ -5,8 +5,6 @@
 
 Distilled from Apple's HIG platform pages: Designing for iOS, Designing for iPadOS, Status bars.
 
-**Contents:** [Designing for iOS](#designing-for-ios) · [Designing for iPadOS](#designing-for-ipados) · [Status bars](#status-bars)
-
 ### Designing for iOS
 
 **Purpose:** Conventions for iPhone — a medium-size, high-resolution display held in the hand and used on the go.

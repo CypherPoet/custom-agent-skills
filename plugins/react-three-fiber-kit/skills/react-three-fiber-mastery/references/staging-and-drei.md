@@ -4,7 +4,21 @@ Scene staging at the React layer — light JSX, the shadow pipeline, drei enviro
 
 > Canvas setup and renderer defaults: see [canvas-and-project-setup.md](./canvas-and-project-setup.md). Shared conventions: [../SKILL.md](../SKILL.md).
 
-**Contents:** [Lights & Shadows](#lights--shadows) · [Debug Helpers](#debug-helpers) · [Environment & Sky](#environment--sky) · [Drei Shadow Helpers](#drei-shadow-helpers) · [Stage](#stage) · [Geometry & Layout Helpers](#geometry--layout-helpers) · [Text & Html](#text--html) · [Drei Specialty Materials](#drei-specialty-materials) · [Adaptive Quality](#adaptive-quality) · [Common Mistakes](#common-mistakes) · [See Also](#see-also)
+## Table of Contents
+
+| Section | Covers |
+|---|---|
+| [Lights & Shadows](#lights--shadows) | Light types and relative costs, the three required shadow switches, map variants, bias and frustum tuning, mounted aiming targets, and area-light initialization limits |
+| [Debug Helpers](#debug-helpers) | Ref-based light and shadow-camera helpers, declarative attached cameras, conditional diagnostics, orientation gizmos that cooperate with default controls, and configurable infinite grids |
+| [Environment & Sky](#environment--sky) | Preset and self-hosted image-based lighting, background and ground projection, animated studio lightformers, and sky, star, and batched cloud visuals that do not themselves light a scene |
+| [Drei Shadow Helpers](#drei-shadow-helpers) | Light-free contact projections, accumulated static area shadows, global PCSS softening, frozen real shadow maps, their update lifecycles, and key cost controls |
+| [Stage](#stage) | One-component product lighting, environment presets, contact or accumulated shadows, automatic Bounds camera fitting, and when to replace it with explicit staging |
+| [Geometry & Layout Helpers](#geometry--layout-helpers) | Instances and Merged, lines and edges, Center and Bounds camera fitting, Detailed LOD, Float, Trail, Sparkles, and Billboard |
+| [Text & Html](#text--html) | Crisp signed-distance text, centered beveled geometry text, and DOM labels or in-world interfaces with perspective sizing, transforms, and selective or depth-aware occlusion |
+| [Drei Specialty Materials](#drei-specialty-materials) | Reflective floors, premium transmission, wobble and distortion, invisible shadow and raycast surfaces, render-cost constraints, and built-in physical-material recipes |
+| [Adaptive Quality](#adaptive-quality) | Sustained-FPS quality decisions and temporary movement regression for pixel ratio, effects, and expensive scene details |
+| [Common Mistakes](#common-mistakes) | Required shadow switches, frustum and bias tuning, helper refs and mounted light targets, area-light initialization, self-hosted environments, shadow-helper update lifecycles, Html anchoring, default controls for gizmos, Text3D centering, instance capacity, and portable wide lines |
+| [See Also](#see-also) | Performance and adaptive quality, JSX attachment, model and HDR loading, custom materials, stack setup, and the official drei and R3F catalogs |
 
 ## Lights & Shadows
 

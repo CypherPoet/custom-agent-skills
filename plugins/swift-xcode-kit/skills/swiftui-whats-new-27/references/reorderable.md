@@ -7,6 +7,16 @@ SwiftUI now supports drag-to-reorder in *any* container (`List`, `LazyVStack`, `
 
 If the user's deployment target is below iOS 27 / macOS 27 / watchOS 27 / visionOS 27, do not use these APIs unconditionally.
 
+## Table of Contents
+
+| Section | Covers |
+|---|---|
+| [Basic usage](#basic-usage) | Child and container modifier placement, `Identifiable` defaults, and custom item key paths |
+| [Applying the difference](#applying-the-difference) | Moved item identifiers, before-or-end destinations, and reusable single-collection application logic |
+| [Sections and multiple collections](#sections-and-multiple-collections) | Collection identifiers, cross-section routing, correct identifier types, and the single-collection sentinel |
+| [Drag-and-drop integration](#drag-and-drop-integration) | Built-in reorder dragging, payload customization, combine versus placement destinations, enablement, and platform limits |
+| [Availability summary](#availability-summary) | Platform availability for reorderable, drag-container, and drop-session APIs |
+
 ## Basic usage
 
 ```swift

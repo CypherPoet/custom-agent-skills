@@ -3,7 +3,15 @@
 
 Many of SwiftUI's result builders (most notably `@ViewBuilder`) have been unified under `@ContentBuilder`. This changes the type-checking model: result builders no longer constrain their block contents to conform to `View`. As a result, you may encounter source incompatibilities in existing code. Here are the issues and how to fix them:
 
-**Contents:** [Ambiguous ShapeStyle Modifiers in `overlay` or `background`](#ambiguous-shapestyle-modifiers-in-overlay-or-background) · [Ambiguous Type References When Another Module Shadows SwiftUI Types](#ambiguous-type-references-when-another-module-shadows-swiftui-types) · [`TupleContent` vs `TupleView` Type Mismatch](#tuplecontent-vs-tupleview-type-mismatch) · [Empty Builder Body with MapKit](#empty-builder-body-with-mapkit) · [Type-Check Timeout in Swift Charts with Deeply Branching Content (Back-Deployment Only)](#type-check-timeout-in-swift-charts-with-deeply-branching-content-back-deployment-only)
+## Table of Contents
+
+| Section | Covers |
+|---|---|
+| [Ambiguous ShapeStyle Modifiers in `overlay` or `background`](#ambiguous-shapestyle-modifiers-in-overlay-or-background) | Overload ambiguity after builder unification and explicit trailing-closure selection of view content |
+| [Ambiguous Type References When Another Module Shadows SwiftUI Types](#ambiguous-type-references-when-another-module-shadows-swiftui-types) | Lost view-conformance disambiguation for colliding type members, resolved through module qualification or renaming |
+| [`TupleContent` vs `TupleView` Type Mismatch](#tuplecontent-vs-tupleview-type-mismatch) | New multi-expression concrete types, preferred opaque constraints, and explicit `TupleView` construction for back-deployment |
+| [Empty Builder Body with MapKit](#empty-builder-body-with-mapkit) | MapKit builder ambiguity in empty or conditionally empty blocks, including transitive imports, fixed with explicit empty content |
+| [Type-Check Timeout in Swift Charts with Deeply Branching Content (Back-Deployment Only)](#type-check-timeout-in-swift-charts-with-deeply-branching-content-back-deployment-only) | Back-deployment-only overload growth in deeply branched charts and isolation in an `@ChartContentBuilder` function |
 
 ## Ambiguous ShapeStyle Modifiers in `overlay` or `background`
 **Issue:**

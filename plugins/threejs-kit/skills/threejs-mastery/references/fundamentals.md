@@ -2,7 +2,23 @@
 
 Cameras, Object3D, the scene graph, math utilities, and the building blocks every Three.js project leans on. Scene/renderer bootstrapping is covered once in [../SKILL.md#setup](../SKILL.md#setup); this file goes deeper on the parts the setup glosses over.
 
-**Contents:** [Scene](#scene) · [Cameras](#cameras) · [Renderer Configuration](#renderer-configuration) · [Object3D](#object3d) · [Group](#group) · [Mesh](#mesh) · [Coordinate System](#coordinate-system) · [Math Utilities](#math-utilities) · [LoadingManager](#loadingmanager) · [LOD](#lod-level-of-detail) · [Merging Static Geometry](#merging-static-geometry) · [Common Mistakes](#common-mistakes)
+## Table of Contents
+
+| Section | Covers |
+|---|---|
+| [Scene](#scene) | Top-level graph container with solid or textured backgrounds, image-based lighting environments, and linear or exponential fog |
+| [Cameras](#cameras) | Perspective and orthographic projection, multi-viewport arrays, dynamic cube reflections, and required projection updates |
+| [Renderer Configuration](#renderer-configuration) | Shared WebGPU and WebGL sizing, pixel ratio, color, tone mapping, shadows, clearing, screenshots, and backend initialization with version-bound differences |
+| [Object3D](#object3d) | Local and world transforms, parent-child hierarchy behavior, visibility layers, and manual matrix updates |
+| [Group](#group) | Transformable empty containers for organizing and moving child objects together |
+| [Mesh](#mesh) | Geometry-material pairing, grouped material arrays, shadow participation, frustum culling, and render order |
+| [Coordinate System](#coordinate-system) | Right-handed: +X right, +Y up, +Z toward viewer |
+| [Math Utilities](#math-utilities) | Vector arithmetic, products, projection, and transforms; matrix construction, composition, decomposition, and inversion; quaternion interpolation; Euler conversion; color manipulation; and numeric mapping, smoothing, angle conversion, and randomization |
+| [LoadingManager](#loadingmanager) | Shared start, completion, progress, and error coordination across heterogeneous loaders |
+| [LOD (Level of Detail)](#lod-level-of-detail) | Camera-distance thresholds for switching among mesh detail levels |
+| [Merging Static Geometry](#merging-static-geometry) | Draw-call reduction for same-material static meshes and when instancing is the better alternative |
+| [Common Mistakes](#common-mistakes) | Projection and resize omissions, removed geometry APIs, stale matrices, disabled auto-updates, Euler interpolation, and unattached light targets |
+| [See Also](#see-also) | Geometry and instancing, PBR and node materials, lighting and image-based environments, and raycasting or camera controls |
 
 ## Scene
 

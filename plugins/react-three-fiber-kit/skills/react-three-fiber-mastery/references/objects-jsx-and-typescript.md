@@ -4,7 +4,21 @@ How the @react-three/fiber reconciler turns JSX into live three.js objects: cons
 
 > Canvas/project setup: see [../SKILL.md](../SKILL.md) and [canvas-and-project-setup.md](./canvas-and-project-setup.md).
 
-**Contents:** [How the Reconciler Maps JSX to three.js](#how-the-reconciler-maps-jsx-to-threejs) · [Constructor Arguments: args](#constructor-arguments-args) · [Prop Shorthands and Piercing](#prop-shorthands-and-piercing) · [The attach Prop](#the-attach-prop) · [primitive: Mounting Existing Objects](#primitive-mounting-existing-objects) · [extend: Registering Custom Elements](#extend-registering-custom-elements) · [Disposal and dispose=null](#disposal-and-disposenull) · [The onUpdate Prop](#the-onupdate-prop) · [TypeScript](#typescript) · [Common Mistakes](#common-mistakes)
+## Table of Contents
+
+| Section | Covers |
+|---|---|
+| [How the Reconciler Maps JSX to three.js](#how-the-reconciler-maps-jsx-to-threejs) | Camel-case class construction, prop-driven mutation, Object3D parenting versus property attachment, frame-loop boundaries, and imperative `applyProps` parity |
+| [Constructor Arguments: `args`](#constructor-arguments-args) | Constructor signatures, default construction, object replacement and GPU costs when arguments change, stable inputs, and properties that should mutate instead |
+| [Prop Shorthands and Piercing](#prop-shorthands-and-piercing) | `.set()` and scalar copying, stable object references, v9.6 uniform behavior, and dashed access to nested transforms, materials, uniforms, shadows, and textures |
+| [The `attach` Prop](#the-attach-prop) | Automatic geometry and material binding, explicit and nested property paths, v9 buffer attributes, indexed array slots, and functional binding with cleanup |
+| [`<primitive>`: Mounting Existing Objects](#primitive-mounting-existing-objects) | Existing-object props and events, one-parent reparenting behavior, ordinary and skeleton-safe cloning, object swaps, cached sharing, and disposal protection |
+| [`extend`: Registering Custom Elements](#extend-registering-custom-elements) | Global catalog and typed component factory forms, current addon imports, drei alternatives, and full versus selective registration in custom roots |
+| [Disposal and `dispose={null}`](#disposal-and-disposenull) | Automatic subtree resource cleanup, opt-out for loader-cached and shared assets, ownership of manually created resources, and visibility as a cheaper toggle |
+| [The `onUpdate` Prop](#the-onupdate-prop) | Post-prop imperative follow-up, especially rebuilding camera projection matrices after focal or clipping changes |
+| [TypeScript](#typescript) | Refs, `ThreeElements['mesh']` component props, `ThreeElement` module augmentation for `extend`, exported utility types, and legacy v8 types to replace |
+| [Common Mistakes](#common-mistakes) | Stable constructor arguments and v9 buffer attributes, one-parent primitives and cached-resource disposal, custom-element registration and current types, camera projection updates, custom-shader color space, material-slot order, explicit attachment, and avoidable object allocation |
+| [See Also](#see-also) | Stack setup, core hooks, model loading and caching, custom shader materials, v9 migration, and official object or TypeScript guidance |
 
 ## How the Reconciler Maps JSX to three.js
 

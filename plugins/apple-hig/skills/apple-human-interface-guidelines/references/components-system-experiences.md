@@ -5,9 +5,20 @@
 
 Distilled from Apple's HIG Components pages: App icons, Widgets, Controls, Complications, Watch faces, Home Screen quick actions, App Clips, iMessage apps and stickers.
 
-**Contents:** [App icons](#app-icons) · [Widgets](#widgets) · [Controls](#controls) · [Complications](#complications) · [Watch faces](#watch-faces) · [Home Screen quick actions](#home-screen-quick-actions) · [App Clips](#app-clips) · [iMessage apps and stickers](#imessage-apps-and-stickers)
+## Table of Contents
 
-### App icons
+| Section | Covers |
+|---|---|
+| [App icons](#app-icons) | Layered artwork, formats and masks, Liquid Glass effects, appearances, simplicity, platform consistency, sizes, and platform-specific constraints |
+| [Widgets](#widgets) | Glanceable content and actions, deep links and refreshes, sizing and density, typography and color, previews, rendering modes, dimensions, and platform contexts |
+| [Controls](#controls) | Control Center, Lock Screen, and Action button actions; symbols, values, state updates, animation, configuration, privacy, authentication, and locked-camera access |
+| [Complications](#complications) | Dynamic watch-face content, family coverage and deep links, timelines and privacy, gauge styles, tinted images, placeholders, dimensions, and Smart Stack layouts |
+| [Watch faces](#watch-faces) | Shareable complication configurations, face previews, device compatibility, and graceful alternatives for older watches |
+| [Home Screen quick actions](#home-screen-quick-actions) | High-value app-icon actions, four-item limits, dynamic relevance, concise localized text, symbols, and platform support |
+| [App Clips](#app-clips) | Focused instant tasks and demos, size and navigation limits, payments and identity, privacy and transition to the app, notifications, cards, codes, and print specifications |
+| [iMessage apps and stickers](#imessage-apps-and-stickers) | Focused Messages experiences, compact and expanded views, accessible sticker design, consistent sizing, icon dimensions, and supported formats |
+
+## App icons
 *Last changed: 2026-06*
 
 **Purpose:** A unique, memorable icon that expresses your app's or game's purpose and personality and helps people recognize it at a glance across the Home Screen, search, notifications, settings, and share sheets.
@@ -53,7 +64,7 @@ Color spaces: sRGB (color); Gray Gamma 2.2 (grayscale); Display P3 (wide-gamut c
 - visionOS: Avoid a shape meant to look like a hole or concave area in the background layer — system shadow and specular highlights make it stand out instead of recede.
 - watchOS: Avoid black backgrounds; lighten so the icon doesn't blend into the display.
 
-### Widgets
+## Widgets
 *Last changed: 2025-12*
 
 **Purpose:** Quick access to essential, glanceable information and focused interactions from your app in additional contexts (Home Screen, Lock Screen, Today View, StandBy, CarPlay, Notification Center, Mac desktop, Smart Stack, visionOS surfaces).
@@ -167,7 +178,7 @@ watchOS Smart Stack widget dimensions (pt):
 - watchOS: Smart Stack widgets default to a black background; consider a custom background color that conveys meaning. Use RelevanceKit relevance (location- or activity-based) to elevate the widget in the Smart Stack.
 - tvOS: Not supported.
 
-### Controls
+## Controls
 *Last changed: 2024-06*
 
 **Purpose:** A button or toggle that provides quick access to an app feature from Control Center, the Lock Screen, or the Action button.
@@ -195,7 +206,7 @@ Canonical implementations: WidgetKit; SwiftUI `ControlWidgetConfiguration`; `Sym
 - iOS/iPadOS/macOS: No additional considerations.
 - watchOS, tvOS, visionOS: Not supported.
 
-### Complications
+## Complications
 *Last changed: 2023-10*
 
 **Purpose:** Display timely, relevant, glanceable information on the watch face that people see each time they raise their wrist.
@@ -301,7 +312,7 @@ Extra large:
 **Platform deltas:**
 - watchOS only. Not supported in iOS, iPadOS, macOS, tvOS, or visionOS.
 
-### Watch faces
+## Watch faces
 
 **Purpose:** A view people choose as their primary watchOS view and customize with their favorite complications; shareable in watchOS 7 and later.
 
@@ -316,7 +327,7 @@ Canonical implementations: ClockKit (Sharing an Apple Watch face).
 **Platform deltas:**
 - watchOS only. Not supported in iOS, iPadOS, macOS, tvOS, or visionOS.
 
-### Home Screen quick actions
+## Home Screen quick actions
 
 **Purpose:** Let people perform app-specific actions directly from the Home Screen by touching and holding an app icon.
 
@@ -334,7 +345,7 @@ Canonical implementations: UIKit (Add Home Screen quick actions).
 - iOS/iPadOS: No additional considerations.
 - macOS, tvOS, visionOS, watchOS: Not supported.
 
-### App Clips
+## App Clips
 *Last changed: 2025-06*
 
 **Purpose:** A lightweight, instantly available version of your app or game that delivers an on-the-go task experience or a demo without requiring a full App Store download.
@@ -384,7 +395,7 @@ Printing: matte finishes, non-textured; avoid shine/gloss/reflective/holographic
 - iOS/iPadOS: No additional considerations.
 - macOS, tvOS, visionOS, watchOS: Not supported.
 
-### iMessage apps and stickers
+## iMessage apps and stickers
 *Last changed: 2023-05*
 
 **Purpose:** An iMessage app helps people share content, collaborate, and play games within a Messages conversation; stickers are images people use to decorate a conversation (and both appear in Messages and FaceTime effects).

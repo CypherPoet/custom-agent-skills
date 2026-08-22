@@ -6,6 +6,16 @@ Complete catalog of security build settings and entitlements managed by this ski
 
 **Filtering recipe.** `scripts/filter_build_settings.py` filters `GetTargetBuildSettings` output to catalog entries; it derives its filter regex from this file at runtime by extracting backtick-quoted macro names. Adding a new setting to this catalog automatically extends the filter. See `references/reading-build-settings.md` for usage.
 
+## Table of Contents
+
+| Section | Covers |
+|---|---|
+| [Basic Clang Safety Warnings — Always Enable](#basic-clang-safety-warnings--always-enable) | Clang warning and analyzer settings that are safe to enable by default |
+| [Enhanced Security — Capability](#enhanced-security--capability) | Capability and arm64e settings, cascaded compiler and allocator hardening, required and default-on entitlements, manual memory-tagging options, and deprecated entitlement removal |
+| [Additional Settings — Potentially More False Positives](#additional-settings--potentially-more-false-positives) | Noisier conversions, overflow, branch, enum, and sign checks plus language-gated DriverKit, Blocks, and Objective-C diagnostics |
+| [Not Auto-Enabled (Mentioned in Report)](#not-auto-enabled-mentioned-in-report) | Manual-only C and C++ bounds migrations and hardware memory tagging with their semantic, rewrite, or platform costs |
+| [Default-ON Security Checkers — Audit Only](#default-on-security-checkers--audit-only) | Keychain, unchecked security returns, insecure legacy APIs, temporary files, process creation, and format-string checks to flag only when explicitly disabled |
+
 ## Basic Clang Safety Warnings — Always Enable
 
 | Build Setting | Value | CLI Flag | Scope | Why Safe |

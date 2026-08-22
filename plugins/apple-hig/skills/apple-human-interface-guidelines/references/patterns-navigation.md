@@ -5,9 +5,17 @@
 
 Distilled from Apple's HIG Patterns pages: Launching, Onboarding, Modality, Multitasking, Going full screen.
 
-**Contents:** [Launching](#launching) · [Onboarding](#onboarding) · [Modality](#modality) · [Multitasking](#multitasking) · [Going full screen](#going-full-screen)
+## Table of Contents
 
-### Launching
+| Section | Covers |
+|---|---|
+| [Launching](#launching) | Launch speed and state restoration, launch screens versus splash screens, orientation and branding limits, live-tv startup, and visionOS context |
+| [Onboarding](#onboarding) | Interactive and optional learning, contextual tips, download and setup deferral, permission timing, and delayed rating and purchase prompts |
+| [Modality](#modality) | Appropriate focused tasks, full-screen alternatives, scope and hierarchy limits, dismissal and unsaved work, titles, and modal stacking |
+| [Multitasking](#multitasking) | Pause and resume, audio interruptions, background completion and notifications, Picture in Picture, multiwindow states, and platform behavior |
+| [Going full screen](#going-full-screen) | Suitable immersive tasks, adaptive layouts and persistent controls, system gesture and Dock behavior, state restoration, user-controlled exit, and platform support |
+
+## Launching
 *Last changed: 2024-06*
 
 **Purpose:** Deliver a streamlined launch — from app open through initial download to first screen ready — so people can start using the app immediately.
@@ -31,7 +39,7 @@ Distilled from Apple's HIG Patterns pages: Launching, Onboarding, Modality, Mult
 - tvOS: In a live-viewing app, consider auto-starting playback of new or recently viewed live content after a few seconds of inactivity.
 - visionOS: Consider launching in the Shared Space even if the app is fully immersive — open a window to provide context while loading and offer a control to enter the fully immersive experience. Let people choose when to transition to a Full Space.
 
-### Onboarding
+## Onboarding
 *Last changed: 2024-06*
 
 **Purpose:** When onboarding is necessary, give people a fast, fun, optional flow that helps them get a quick start; it occurs after launching completes, not as part of it.
@@ -52,7 +60,7 @@ Distilled from Apple's HIG Patterns pages: Launching, Onboarding, Modality, Mult
 **Platform deltas:**
 - No additional considerations for iOS, iPadOS, macOS, tvOS, visionOS, or watchOS.
 
-### Modality
+## Modality
 *Last changed: 2023-12*
 
 **Purpose:** Present content in a separate, dedicated mode that prevents interaction with the parent view and requires an explicit action to dismiss — to deliver critical info, confirm/modify an action, support a narrowly scoped task, or give an immersive/focused experience.
@@ -77,7 +85,7 @@ Canonical implementations: SwiftUI presentation modifiers (`View-Presentation`),
 - No additional considerations for iOS, iPadOS, macOS, tvOS, visionOS, or watchOS.
 - visionOS (noted in guidance): a full-screen modal fills a window in the Shared Space; transitioning the app to a Full Space can make it a more immersive experience.
 
-### Multitasking
+## Multitasking
 *Last changed: 2025-06*
 
 **Purpose:** Let people switch quickly between apps and perform tasks in each; with rare exceptions (some games, Apple Vision Pro Full Space apps), every app needs to work well with multitasking and always be ready to save and restore context.
@@ -96,7 +104,7 @@ Canonical implementations: SwiftUI presentation modifiers (`View-Presentation`),
 - visionOS: People can run multiple apps in the Shared Space, switching between windows and volumes. Only one window is active at a time; looking from one window to another activates it while the previous recedes along the z-axis and becomes more translucent. Closing a window in the Shared Space backgrounds the app without quitting it. Avoid interfering with system multitasking behavior — don't change a window's edge appearance (the system applies a feathered mask to the window you look away from). Don't pause a window's video playback when people look away. Be prepared for audio to duck when people look away unless the app is the Now Playing app.
 - watchOS: Not supported in watchOS.
 
-### Going full screen
+## Going full screen
 *Last changed: 2025-06*
 
 **Purpose:** On iPhone, iPad, and Mac, let people expand a window to fill the screen, hiding system controls for a distraction-free environment. Apple TV, Apple Watch, and Apple Vision Pro don't offer full-screen modes (tvOS/watchOS already fill the screen; visionOS uses window expansion or the Digital Crown for immersion).

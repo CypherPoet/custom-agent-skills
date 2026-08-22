@@ -4,6 +4,15 @@ Every plugin SVGO ships with, grouped by whether it's part of `preset-default`. 
 
 Tables include the one-line behavior and a "when to flip" note. Plugins flagged with ⚠ have safety tradeoffs worth understanding before enabling/disabling.
 
+## Table of Contents
+
+| Section | Covers |
+|---|---|
+| [Plugins in `preset-default` (on by default)](#plugins-in-preset-default-on-by-default) | Attribute, numeric, color, transform, path, and CSS normalization; group and path merging; removal of comments, metadata, hidden or empty content, unused definitions, namespaces, and XML boilerplate; and safety exceptions for IDs, runtime styling and structure, licenses, and accessibility |
+| [Plugins NOT in `preset-default` (opt-in)](#plugins-not-in-preset-default-opt-in) | ID collision prevention, responsive sizing, SVG 2 cleanup, script and raster removal, off-canvas and targeted element or attribute cleanup, accessible title and role choices, runtime class and style shaping, and repeated-path reuse |
+| [Configuring plugins](#configuring-plugins) | Default plugin names, parameter objects, disabling or tuning members through preset overrides, and additional opt-in plugins |
+| [Notes](#notes) | Version and naming drift, execution order inside and after the default preset, and placement of authored plugins |
+
 ## Plugins in `preset-default` (on by default)
 
 | Plugin | What it does | When to disable |

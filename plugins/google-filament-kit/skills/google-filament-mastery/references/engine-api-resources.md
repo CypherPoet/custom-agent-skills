@@ -3,7 +3,22 @@
 > Source: Filament C++ headers (VertexBuffer/IndexBuffer/BufferObject/Texture/TextureSampler/Material/MaterialInstance/Skybox/IndirectLight), Filament v1.75.0
 > Last synced: 2026-08-14
 
-**Contents:** [Mental Model & Lifetime](#mental-model--lifetime) · [VertexBuffer](#vertexbuffer) · [Builder method set (verbatim)](#vertexbuffer-builder-method-set-verbatim) · [VertexAttribute enum (verbatim)](#vertexattribute-enum-verbatim) · [AttributeType / ElementType enum (verbatim)](#attributetype--elementtype-enum-verbatim) · [Uploading data (setBufferAt + BufferDescriptor)](#vertexbuffer-uploading-data-setbufferat--bufferdescriptor) · [IndexBuffer](#indexbuffer) · [BufferObject](#bufferobject) · [Texture](#texture) · [Builder method set (verbatim)](#texture-builder-method-set-verbatim) · [Sampler / SamplerType enum (verbatim)](#sampler--samplertype-enum-verbatim) · [InternalFormat / TextureFormat enum (representative, verbatim)](#internalformat--textureformat-enum-representative-verbatim) · [Usage / TextureUsage enum (verbatim)](#usage--textureusage-enum-verbatim) · [Format / PixelDataFormat & Type / PixelDataType (verbatim)](#format--pixeldataformat--type--pixeldatatype-verbatim) · [Uploading texels (setImage + PixelBufferDescriptor)](#texture-uploading-texels-setimage--pixelbufferdescriptor) · [Mipmaps & cubemaps](#mipmaps--cubemaps) · [TextureSampler](#texturesampler) · [Filter / Wrap / Compare enums (verbatim)](#filter--wrap--compare-enums-verbatim) · [Material](#material) · [MaterialInstance](#materialinstance) · [setParameter overloads](#setparameter-overloads) · [Render-state overrides](#render-state-overrides) · [Enums for render state (verbatim)](#enums-for-render-state-verbatim) · [Skybox](#skybox) · [IndirectLight](#indirectlight) · [BufferDescriptor & PixelBufferDescriptor (the upload+free contract)](#bufferdescriptor--pixelbufferdescriptor-the-uploadfree-contract) · [End-to-End Resource Flow](#end-to-end-resource-flow)
+## Table of Contents
+
+| Section | Covers |
+|---|---|
+| [Mental Model & Lifetime](#mental-model--lifetime) | Build engine-owned resources, upload separately, destroy through the engine, and free CPU data only after the descriptor callback |
+| [VertexBuffer](#vertexbuffer) | Interleaved and separate attributes, tangent encoding, data types and normalization, direct or shared-buffer uploads, async creation, and upload alignment |
+| [IndexBuffer](#indexbuffer) | 16- and 32-bit index interpretation, count and type construction, initialized and async uploads, byte-offset alignment, and constant-buffer sharing |
+| [BufferObject](#bufferobject) | Optional shared and swappable vertex backing storage, builder capacity and binding, upload alignment, and `VertexBuffer` opt-in |
+| [Texture](#texture) | 2D, array, 3D, cube, external and imported textures, formats and usage capabilities, pixel uploads, generated mips, cubemap layering, and async creation |
+| [TextureSampler](#texturesampler) | Non-owned minification, magnification, mip, wrap, anisotropy, and depth-comparison state plus depth-filter restrictions |
+| [Material](#material) | Compiled package and constants, SH and shadow options, default and dedicated instances, parameter and capability introspection, and asynchronous shader compilation |
+| [MaterialInstance](#materialinstance) | Typed, array, texture, color, and specialization parameters, name validation, duplication, scissor and depth state, culling and transparency, stencil operations, and manual commits |
+| [Skybox](#skybox) | Cubemap or constant backgrounds, sun display, indirect-light intensity precedence, priority and layer masks, and environment preprocessing |
+| [IndirectLight](#indirectlight) | Single-scene prefiltered reflections, derived or explicit irradiance and radiance SH, intensity and rotation, dominant-light estimates, and `cmgen` inputs |
+| [BufferDescriptor & PixelBufferDescriptor (the upload+free contract)](#bufferdescriptor--pixelbufferdescriptor-the-uploadfree-contract) | Moved CPU-buffer ownership, source pixel metadata, static-lifetime uploads, completion callbacks, and safe deferred deallocation |
+| [End-to-End Resource Flow](#end-to-end-resource-flow) | Vertex and index construction, texture upload and mips, material binding, renderable handoff, and dependency-ordered engine destruction |
 
 ---
 

@@ -4,6 +4,19 @@ How to produce pixel-correct, store-ready screenshots — by hand for a quick se
 when you have several locales and device classes to keep in sync. Dimensions and the
 upload-the-largest rule are in [device-specifications.md](device-specifications.md).
 
+## Table of Contents
+
+| Section | Covers |
+|---|---|
+| [What "store-ready" means](#what-store-ready-means) | Native-resolution captures at accepted sizes, with clean status bars and representative in-app content |
+| [Manual route (a few screenshots, one language)](#manual-route-a-few-screenshots-one-language) | Simulator setup, status-bar normalization, native-resolution capture, and canonical iPhone and iPad sizes |
+| [Automated route — `fastlane snapshot` (many locales × classes)](#automated-route--fastlane-snapshot-many-locales--classes) | Automated native-size capture across device and locale matrices with XCUITest and `snapshot` |
+| [Add device frames & captions — `frameit`](#add-device-frames--captions--frameit) | Adding Apple device frames and localized caption bands with `frameit` |
+| [Render your own marketing screenshots (without fastlane)](#render-your-own-marketing-screenshots-without-fastlane) | Rendering custom framed and captioned marketing compositions without fastlane |
+| [Upload — `fastlane deliver`](#upload--fastlane-deliver) | Uploading localized screenshots and metadata with `deliver` |
+| [Localization workflow](#localization-workflow) | Per-locale screenshot folders, localized captions, App Store mapping, and the Apple Watch size constraint |
+| [Common rejection / quality traps](#common-rejection--quality-traps) | Wrong dimensions, upscaling, blurry captures, stale status bars, marketing-heavy art, and unshipped content |
+
 ## What "store-ready" means
 
 - **Native resolution, never upscaled.** Capture on a device/simulator whose screen matches an

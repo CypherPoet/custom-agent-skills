@@ -2,6 +2,20 @@
 
 Procedural geometry via node graphs. From a script, you build the node tree the same way you'd build a shader tree — create nodes, set inputs, link sockets — then attach the tree to an object as a `NODES` modifier.
 
+## Table of Contents
+
+| Section | Covers |
+|---|---|
+| [Mental model](#mental-model) | Geometry-node data blocks, socket flow, fields, modifiers, and evaluation |
+| [Attaching a Geometry Nodes modifier](#attaching-a-geometry-nodes-modifier) | Creating a node-tree data block and modifier, declaring modern geometry interfaces, and wiring group passthrough |
+| [Pattern: scatter instances on a surface](#pattern-scatter-instances-on-a-surface) | Surface distribution, object instancing, axis-isolated random rotation, source joining, and version-sensitive socket access |
+| [Setting attributes from script](#setting-attributes-from-script) | Creating mesh attributes, assigning per-element values, and choosing data domains and types |
+| [Reading evaluated geometry](#reading-evaluated-geometry) | Depsgraph access to modified mesh counts and enumeration of individual generated instances |
+| [Node-tree modifier inputs](#node-tree-modifier-inputs) | Identifier-based input and output properties, attribute-driven sockets, Blender 5.1 compatibility, and 5.2 API and identifier changes |
+| [Common patterns and what they're for](#common-patterns-and-what-theyre-for) | Surface scattering, curve-to-mesh cables and beams, procedural boolean cuts, noise displacement, path resampling and animation, and per-element material assignment |
+| [When to escalate](#when-to-escalate) | Reusable node groups, one-shot `bmesh` alternatives, and linking prebuilt node trees when scripted graphs become unwieldy |
+| [Sources](#sources) | Blender geometry-node, node-tree, attribute, and 5.2 API documentation |
+
 ## Mental model
 
 - A **Geometry Node Tree** is a `bpy.types.GeometryNodeTree` data-block.

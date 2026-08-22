@@ -3,7 +3,18 @@
 > Source: Filament android samples (Kotlin) + repo README + Maven guide, Filament v1.75.0
 > Last synced: 2026-08-14
 
-**Contents:** [Dependencies](#dependencies) · [Initialize Filament (`Filament.init()`)](#initialize-filament-filamentinit) · [Canonical Render Setup](#canonical-render-setup) · [Field declarations](#field-declarations) · [`onCreate` wiring](#oncreate-wiring) · [`UiHelper` + `SurfaceView`](#uihelper--surfaceview) · [Engine / Renderer / View / Scene / Camera](#engine--renderer--view--scene--camera) · [Configuring the View](#configuring-the-view) · [The `UiHelper.RendererCallback` (swap chain lifecycle)](#the-uihelperrenderercallback-swap-chain-lifecycle) · [The Frame Loop (`ChoreographerHelper` + `Renderer`)](#the-frame-loop-choreographerhelper--renderer) · [Loading Assets from the APK](#loading-assets-from-the-apk) · [Reading a raw asset into a `ByteBuffer`](#reading-a-raw-asset-into-a-bytebuffer) · [Materials (`.filamat`) and material instances](#materials-filamat-and-material-instances) · [Image-based lighting (IBL / KTX)](#image-based-lighting-ibl--ktx) · [Meshes (`.filamesh`)](#meshes-filamesh) · [JNI / Lifetime: explicit destruction](#jni--lifetime-explicit-destruction) · [Kotlin vs Java](#kotlin-vs-java)
+## Table of Contents
+
+| Section | Covers |
+|---|---|
+| [Dependencies](#dependencies) | Engine, debug, glTF, utility, and runtime-material artifacts, transitive dependencies, optional compiler cost, same-release host tools, and loader ownership |
+| [Initialize Filament (`Filament.init()`)](#initialize-filament-filamentinit) | One-time JNI library initialization before every other API, including class-load initialization patterns |
+| [Canonical Render Setup](#canonical-render-setup) | Surface and helper fields, Activity wiring, `UiHelper` attachment and desired size, engine feature levels, single-thread ownership, camera and scene creation, and view, skybox, AO, and IBL setup |
+| [The `UiHelper.RendererCallback` (swap chain lifecycle)](#the-uihelperrenderercallback-swap-chain-lifecycle) | Native-window replacement, display attachment, flushed surface teardown, resize projection and synchronization, perspective versus orthographic setup, and feature-level-0 sRGB flags |
+| [The Frame Loop (`ChoreographerHelper` + `Renderer`)](#the-frame-loop-choreographerhelper--renderer) | Ready-surface and `beginFrame` guards, choreographer timestamps and pacing, lifecycle posting and removal, and main-thread animation updates |
+| [Loading Assets from the APK](#loading-assets-from-the-apk) | Uncompressed `ByteBuffer` reads and packaging, precompiled material loading and compilation, instances, KTX IBL and skyboxes, filamesh helpers, glTF boundary, and manual geometry |
+| [JNI / Lifetime: explicit destruction](#jni--lifetime-explicit-destruction) | Surface detachment, native resource destruction order, separate Filament-component and entity-id teardown, camera and swap-chain rules, final engine cleanup, and leak consequences |
+| [Kotlin vs Java](#kotlin-vs-java) | One-to-one Java/JNI mapping, property-to-setter syntax, entity-manager access, shared builders and lifecycle calls, and Kotlin-only math conveniences |
 
 ---
 

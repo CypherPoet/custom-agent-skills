@@ -4,7 +4,22 @@ Three.js animation has three building blocks: `AnimationClip` (keyframe data), `
 
 > Render loop and `delta`: see [../SKILL.md#setup](../SKILL.md#setup).
 
-**Contents:** [Building an AnimationClip](#building-an-animationclip) · [AnimationMixer](#animationmixer) · [AnimationAction](#animationaction) · [Loading GLTF Animations](#loading-gltf-animations) · [Skeletal Animation](#skeletal-animation) · [Morph Targets](#morph-targets) · [Animation Blending](#animation-blending) · [Animation Utilities](#animation-utilities) · [Procedural Patterns](#procedural-patterns) · [Performance Tips](#performance-tips) · [Common Mistakes](#common-mistakes)
+## Table of Contents
+
+| Section | Covers |
+|---|---|
+| [Building an AnimationClip](#building-an-animationclip) | Property-bound scalar, vector, quaternion, color, boolean, and string tracks with linear, smooth, or stepped interpolation |
+| [AnimationMixer](#animationmixer) | Root-scoped clip playback, delta-driven updates, and finished or loop event handling |
+| [AnimationAction](#animationaction) | Playback state, timing, reverse and paused motion, loops, weights, blend modes, fades, and crossfades |
+| [Loading GLTF Animations](#loading-gltf-animations) | Discovering imported clips, selecting them by index or exported name, and retaining mixers for frame updates |
+| [Skeletal Animation](#skeletal-animation) | Inspecting and manipulating bones, procedural joint motion, skeleton visualization, and bone-attached objects |
+| [Morph Targets](#morph-targets) | Blend-shape influence arrays, clip tracks, and per-frame morph control |
+| [Animation Blending](#animation-blending) | Continuous weight-based state blending and additive motion layered over a base pose |
+| [Animation Utilities](#animation-utilities) | Clip lookup, subclipping, additive conversion, cloning, optimization, and duration operations |
+| [Procedural Patterns](#procedural-patterns) | Direct transform animation with smooth damping, spring integration, and common oscillation paths |
+| [Performance Tips](#performance-tips) | Clip reuse, mixer counts, track pruning, and efficient procedural animation |
+| [Common Mistakes](#common-mistakes) | Missing or incorrect mixer updates, inactive crossfades, one-shot resets, cleanup leaks, bone conflicts, displaced skinned vertices, and renamed clips |
+| [See Also](#see-also) | Animated-asset loading, clocks and render loops, and TSL or GLSL vertex and material animation |
 
 ## Building an AnimationClip
 

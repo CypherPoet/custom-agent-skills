@@ -3,7 +3,13 @@
 > Source: Filament tool READMEs + library notes (cmgen/filamesh/mipgen/matinfo/specgen/matdbg/viewer/framegraph/debugging), Filament v1.75.0
 > Last synced: 2026-08-14
 
-**Contents:** [Asset & Material CLI Tools](#asset--material-cli-tools) · [matc — material compiler (cross-ref)](#matc--material-compiler-cross-ref) · [cmgen — IBL / cubemap & SH generation](#cmgen--ibl--cubemap--sh-generation) · [filamesh — mesh → .filamesh binary](#filamesh--mesh--filamesh-binary) · [mipgen — mipmap chains](#mipgen--mipmap-chains) · [matinfo — inspect a compiled .filamat](#matinfo--inspect-a-compiled-filamat) · [specgen — spectral integration matrices (dispersion)](#specgen--spectral-integration-matrices-dispersion) · [normal_blending — combine two normal maps](#normal_blending--combine-two-normal-maps) · [roughness_prefilter — prefilter a roughness map](#roughness_prefilter--prefilter-a-roughness-map) · [Inspect & Debug Libraries](#inspect--debug-libraries) · [matdbg — in-app material debugger web UI](#matdbg--in-app-material-debugger-web-ui) · [viewer — model viewer / gltf_viewer](#viewer--model-viewer--gltf_viewer) · [filamat — runtime material compilation (cross-ref)](#filamat--runtime-material-compilation-cross-ref) · [Performance & Backend Debugging](#performance--backend-debugging) · [FrameGraph](#framegraph) · [Performance analysis (Android / AGI)](#performance-analysis-android--agi) · [Metal debugging](#metal-debugging) · [Vulkan debugging](#vulkan-debugging)
+## Table of Contents
+
+| Section | Covers |
+|---|---|
+| [Asset & Material CLI Tools](#asset--material-cli-tools) | Compiling and inspecting materials, generating environments and mipmaps, converting meshes, calculating spectral dispersion, blending normals, and prefiltering roughness |
+| [Inspect & Debug Libraries](#inspect--debug-libraries) | Live cross-backend shader editing and inspection, desktop and Android debugger setup and APIs, viewer configuration and automation, and full or lightweight runtime material compilation |
+| [Performance & Backend Debugging](#performance--backend-debugging) | FrameGraph dependencies and resource lifetimes, repeatable Android GPU Inspector profiling, Metal validation and frame capture, and Vulkan SDK validation layers |
 
 ---
 

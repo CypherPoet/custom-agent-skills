@@ -4,7 +4,19 @@ Light types, shadows, and image-based environment lighting. The light classes th
 
 > Scene/renderer setup: see [../SKILL.md#setup](../SKILL.md#setup).
 
-**Contents:** [Light Types](#light-types) · [Shadows](#shadows) · [Light Helpers](#light-helpers) · [Environment Lighting](#environment-lighting-ibl) · [Common Setups](#common-setups) · [Many Dynamic Lights](#many-dynamic-lights-webgpu) · [Performance Tips](#performance-tips) · [Common Mistakes](#common-mistakes)
+## Table of Contents
+
+| Section | Covers |
+|---|---|
+| [Light Types](#light-types) | Ambient, hemisphere, directional, point, spot, and rectangular area lights compared by behavior, shadow support, and cost |
+| [Shadows](#shadows) | Renderer-light-mesh enablement, renderer-version differences, directional and perspective tuning, map sizing, bias, and plain-Three contact techniques |
+| [Light Helpers](#light-helpers) | Visual helpers for every positional light shape and explicit gizmo updates after movement |
+| [Environment Lighting (IBL)](#environment-lighting-ibl) | HDR and cube environments, optional backgrounds, PMREM reflection filtering, source disposal, and sampled light probes |
+| [Common Setups](#common-setups) | Three-point portraits, sun-and-sky daylight, and rectangular-area studio rigs |
+| [Many Dynamic Lights (WebGPU)](#many-dynamic-lights-webgpu) | Uniform-packed runtime light sets that avoid material recompilation under WebGPU |
+| [Performance Tips](#performance-tips) | Light-count control, baked maps, restrained shadow resolution and coverage, selective casting, and light layers |
+| [Common Mistakes](#common-mistakes) | Incomplete shadow enablement, loose or biased maps, area-light initialization, unfiltered HDR, tone mapping, and stale helpers |
+| [See Also](#see-also) | PBR material response, lightmaps and environment-map encoding, and bloom or other lighting-driven post-processing |
 
 ## Light Types
 

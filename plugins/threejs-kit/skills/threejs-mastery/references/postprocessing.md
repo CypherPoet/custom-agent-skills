@@ -7,7 +7,17 @@ Two pipelines exist:
 
 > Scene/renderer setup: see [../SKILL.md#setup](../SKILL.md#setup).
 
-**Contents:** [TSL Post-Processing](#tsl-post-processing-modern) · [EffectComposer](#effectcomposer-legacy-webgl-pipeline) · [Multi-Scene Compositing](#multi-scene-compositing) · [Render to Texture](#render-to-texture-both-pipelines) · [Performance Tips](#performance-tips) · [Common Mistakes](#common-mistakes)
+## Table of Contents
+
+| Section | Covers |
+|---|---|
+| [TSL Post-Processing (Modern)](#tsl-post-processing-modern) | Pipeline setup and resizing, built-in and selective effects, depth-aware processing, antialiasing, spatial and temporal upscaling, explicit output transforms, and custom nodes |
+| [EffectComposer (Legacy WebGL Pipeline)](#effectcomposer-legacy-webgl-pipeline) | WebGL pass chains, resizing, bloom selection, antialiasing, ambient occlusion, depth of field, stylization, outlines, and custom GLSL passes |
+| [Multi-Scene Compositing](#multi-scene-compositing) | Layering independently processed background and foreground scenes with controlled color and depth clearing |
+| [Render to Texture (Both Pipelines)](#render-to-texture-both-pipelines) | Capturing a scene in a render target and sampling that result from another material |
+| [Performance Tips](#performance-tips) | Full-screen pass budgeting, lower-resolution blur, device-tier toggles, disabled passes, cheap antialiasing, and upscaling |
+| [Common Mistakes](#common-mistakes) | Bypassed pipelines, stale sizes, duplicate output transforms, misplaced FXAA, renderer mixing, indiscriminate bloom, wrong resolutions, and stale outline selections |
+| [See Also](#see-also) | Custom TSL or GLSL effects, render targets and depth textures, and tone-mapping interactions with bloom or HDR lighting |
 
 ## TSL Post-Processing (Modern)
 

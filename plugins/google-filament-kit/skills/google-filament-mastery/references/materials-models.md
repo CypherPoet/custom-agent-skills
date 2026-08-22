@@ -3,7 +3,17 @@
 > Source: Filament Materials — "Material models" (Materials.md), Filament v1.75.0
 > Last synced: 2026-08-14
 
-**Contents:** [Core Concepts](#core-concepts) · [Choosing a Model](#choosing-a-model) · [Lit Model (Standard)](#lit-model-standard) · [Base Color](#base-color) · [Metallic](#metallic) · [Roughness](#roughness) · [Reflectance](#reflectance) · [Specular Factor And Specular Color Factor](#specular-factor-and-specular-color-factor) · [Sheen Color And Sheen Roughness](#sheen-color-and-sheen-roughness) · [Clear Coat, Clear Coat Roughness, Clear Coat Normal](#clear-coat-clear-coat-roughness-clear-coat-normal) · [Anisotropy And Anisotropy Direction](#anisotropy-and-anisotropy-direction) · [Ambient Occlusion](#ambient-occlusion) · [Normal And Bent Normal](#normal-and-bent-normal) · [Emissive](#emissive) · [Post-Lighting Color](#post-lighting-color) · [Index Of Refraction (ior)](#index-of-refraction-ior) · [Transmission](#transmission) · [Absorption](#absorption) · [Thickness And Micro-Thickness](#thickness-and-micro-thickness) · [Dispersion](#dispersion) · [Shadow Strength](#shadow-strength) · [Subsurface Model](#subsurface-model) · [Cloth Model](#cloth-model) · [Unlit Model](#unlit-model) · [Specular Glossiness (Legacy)](#specular-glossiness-legacy)
+## Table of Contents
+
+| Section | Covers |
+|---|---|
+| [Core Concepts](#core-concepts) | Materials, shading models, source definitions, compiled packages and platform variants, parameterized instances, linear colors, premultiplied alpha, and tangent-space directions |
+| [Choosing a Model](#choosing-a-model) | When to choose lit, subsurface, cloth, unlit, or legacy specular-glossiness shading |
+| [Lit Model (Standard)](#lit-model-standard) | Base, metallic, roughness, reflectance, and specular controls; sheen, coat, and anisotropy layers; ambient occlusion and normal inputs; emissive and post-lighting color; IOR, transmission, absorption, thickness, dispersion, shadows, and cost caveats |
+| [Subsurface Model](#subsurface-model) | Translucent-volume use cases, inherited lit inputs, thickness, scattering tint and power, and the source's missing type, range, and default details |
+| [Cloth Model](#cloth-model) | Fabric scattering and fuzz, excluded metallic and reflectance inputs, sheen and subsurface tints, performance and shadow caveats, and cotton, denim, and velvet recipes |
+| [Unlit Model](#unlit-model) | Lighting-free video, camera, UI, and debug use, direct base color, exposure-weighted emissive output, and post-lighting blending |
+| [Specular Glossiness (Legacy)](#specular-glossiness-legacy) | Legacy glTF compatibility, nonphysical limitations, omitted metallic-roughness inputs, and replacement diffuse, specular-color, and glossiness controls |
 
 ---
 

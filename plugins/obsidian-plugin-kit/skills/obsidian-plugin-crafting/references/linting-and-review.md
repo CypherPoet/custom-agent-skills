@@ -2,7 +2,14 @@
 
 The official linter encodes most review feedback as rules; what it can't see, human reviewers check. Work in that order: lint clean first, then walk the checklist.
 
-**Contents:** [Setup](#setup) · [Rule catalog](#rule-catalog-v041) · [Linter-invisible pitfalls](#linter-invisible-pitfalls) · [Review checklist](#human-review-checklist)
+## Table of Contents
+
+| Section | Covers |
+|---|---|
+| [Setup](#setup) | Package and peer dependencies, flat and legacy ESLint configuration, locale-aware rules, lint commands, and JSON support for manifest checks |
+| [Rule Catalog (v0.4.1)](#rule-catalog-v041) | Command registration, lifecycle cleanup, type and API correctness, DOM and styling, settings tabs, UI text, manifest hygiene, and recommended severities |
+| [Linter-Invisible Pitfalls](#linter-invisible-pitfalls) | Window-reference drift, expensive startup, race-prone vault writes, problematic CSS selectors and overrides, and missing policy disclosures |
+| [Human Review Checklist](#human-review-checklist) | Zero-finding validation, sample and logging cleanup, Obsidian API conventions, accessible and mobile behavior, theme-safe styling, lifecycle cleanup, and README disclosures |
 
 ## Setup
 

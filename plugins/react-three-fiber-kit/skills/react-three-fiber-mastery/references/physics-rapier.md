@@ -4,7 +4,24 @@
 
 > Scene/Canvas setup: see [../SKILL.md](../SKILL.md). Frame-loop mechanics: [hooks.md](./hooks.md).
 
-**Contents:** [Setup](#setup) · [RigidBody](#rigidbody) · [Colliders](#colliders) · [Imperative Body API](#imperative-body-api) · [Collision Events and Sensors](#collision-events-and-sensors) · [Collision Filtering](#collision-filtering) · [Joints](#joints) · [Instanced Physics](#instanced-physics) · [World Access, Stepping, and Snapshots](#world-access-stepping-and-snapshots) · [Attractors](#attractors) · [Character Controllers](#character-controllers) · [Performance Rules](#performance-rules) · [Common Mistakes](#common-mistakes) · [See Also](#see-also)
+## Table of Contents
+
+| Section | Covers |
+|---|---|
+| [Setup](#setup) | Suspended WASM loading, world gravity and debug display, fixed or variable stepping, interpolation, collider defaults, pause control, and independent updates for demand rendering |
+| [RigidBody](#rigidbody) | Physics-owned transforms, dynamic, fixed, and two kinematic movement models, material and damping properties, axis locks, sleeping, and selective continuous collision detection |
+| [Colliders](#colliders) | Cost-aware automatic shapes, static-only trimeshes, half-extent primitive arguments, fixed standalone and compound colliders, and simplified mesh proxies |
+| [Imperative Body API](#imperative-body-api) | One-time impulses versus persistent forces and resets, wake behavior, transform and velocity access, Rapier-to-three conversions, and type-correct kinematic driving |
+| [Collision Events and Sensors](#collision-events-and-sensors) | Body-wide and collider-specific contact events, object identification and manifold data, high-frequency force handling, sleep events, and nonphysical overlap sensors |
+| [Collision Filtering](#collision-filtering) | Sixteen membership and filter groups, bidirectional acceptance, body-wide application, and broad-phase pruning |
+| [Joints](#joints) | Local anchors and constraints for fixed, hinge, ball-socket, slider, spring, and rope joints plus one-time motor configuration |
+| [Instanced Physics](#instanced-physics) | One rigid body per rendered instance, unique keys and overrides, indexed body refs, stable instance arrays, and matching draw capacity |
+| [World Access, Stepping, and Snapshots](#world-access-stepping-and-snapshots) | Raw world and WASM access, direct gravity and ray operations, deterministic paused stepping, and complete serialized restore points |
+| [Attractors](#attractors) | Optional-package attraction and repulsion, static, linear, and Newtonian falloff, range, strength, and collision-group scope |
+| [Character Controllers](#character-controllers) | Capsule-based kinematic movement, collision-corrected sliding, slopes, autostep, ground snapping, dynamic-body impulses, and the higher-level community controller |
+| [Performance Rules](#performance-rules) | Sleeping, collider choice, rigid-body counts, event costs, and timestep guidance |
+| [Common Mistakes](#common-mistakes) | Collider half-extents, type-correct kinematic movement, persistent forces and wake behavior, continuous collision detection, static-only trimeshes, physics-owned transforms, demand-loop pairing, ref timing, collider rescaling, bidirectional filtering, WASM Suspense, motor setup, and high-frequency events |
+| [See Also](#see-also) | Frame-loop performance, root hooks, pointer-driven impulses, kinematic animation, stack setup, and upstream Rapier or character-controller guidance |
 
 ## Setup
 

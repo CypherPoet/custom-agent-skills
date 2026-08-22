@@ -5,7 +5,19 @@ elements ergonomically, exporting, and converting Mermaid. For hand-authoring a
 static `.excalidraw` file you don't need any of this — see
 [`file-format.md`](file-format.md). Current package: **v0.18.1**.
 
-**Contents:** [Install](#install) · [The Component & Props](#the-component--props) · [initialData](#initialdata) · [The imperative API](#the-imperative-api-excalidrawapi) · [convertToExcalidrawElements](#converttoexcalidrawelements-skeleton-api) · [restore](#restore--restoreelements) · [Export utilities](#export-utilities) · [Constants](#constants) · [Mermaid → Excalidraw](#mermaid--excalidraw)
+## Table of Contents
+
+| Section | Covers |
+|---|---|
+| [Install](#install) | Package and React peer dependencies, stylesheet import, browser-only execution, and dynamic loading for server-rendered frameworks |
+| [The Component & Props](#the-component--props) | Component initialization, imperative API capture, change hooks, view modes, UI options, and custom element metadata |
+| [initialData](#initialdata) | Synchronous or promised elements, app state, viewport centering, libraries, files, and explicit scroll positioning |
+| [The Imperative API (`excalidrawAPI`)](#the-imperative-api-excalidrawapi) | Post-mount scene replacement, library updates, live element access, and fit-to-content scrolling |
+| [`convertToExcalidrawElements` (Skeleton API)](#converttoexcalidrawelements-skeleton-api) | Default-complete elements from concise skeletons, bound or spawned arrow endpoints, labels, contained text, and scene delivery |
+| [`restore` / `restoreElements`](#restore--restoreelements) | Partial and legacy data normalization, default fields, binding repair, z-order normalization, and the geometry it cannot infer |
+| [Export Utilities](#export-utilities) | SVG, blob, clipboard, JSON, blob restoration, scene-version, and library-merge APIs plus export defaults |
+| [Constants](#constants) | Font-family, light and dark theme, scene, library, and image MIME constants |
+| [Mermaid → Excalidraw](#mermaid--excalidraw) | Supported Mermaid diagrams, parsing and configuration, skeleton finalization, file transfer, and editable scene updates |
 
 ## Install
 

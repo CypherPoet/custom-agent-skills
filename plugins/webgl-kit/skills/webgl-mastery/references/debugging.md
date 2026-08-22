@@ -1,6 +1,16 @@
 # Debugging
 
-**Contents:** [The Black Canvas Checklist](#the-black-canvas-checklist) · [Reading Info Logs](#reading-info-logs) · [`gl.getError()`](#glgeterror) · [Spector.js](#spectorjs--the-tool-to-reach-for) · [Print-Debugging Inside Shaders](#print-debugging-inside-shaders) · [When the Shader Compiles Differently in Production](#when-the-shader-compiles-differently-in-production) · [Common Mistakes](#common-mistakes)
+## Table of Contents
+
+| Section | Covers |
+|---|---|
+| [The Black Canvas Checklist](#the-black-canvas-checklist) | Compile and link state, bound programs and VAOs, viewport and clearing, clip and depth behavior, culling, uniforms, attributes, fragment output, and GL errors |
+| [Reading Info Logs](#reading-info-logs) | Shader line-number interpretation against uploaded source and cross-stage program-link diagnostics |
+| [`gl.getError()`](#glgeterror) | Error-category decoding, cumulative state, synchronization cost, and development-only checking patterns |
+| [Spector.js — The Tool to Reach For](#spectorjs--the-tool-to-reach-for) | Frame capture with draw state, uniform bindings, framebuffer previews, and active shader source |
+| [Print-Debugging Inside Shaders](#print-debugging-inside-shaders) | Rendering values, coordinates, normals, depth, branch sentinels, and numeric bands as color |
+| [When the Shader Compiles Differently in Production](#when-the-shader-compiles-differently-in-production) | Cross-driver precision, undefined math, loop limits, and testing on real browser and mobile GPU combinations |
+| [Common Mistakes](#common-mistakes) | Ignored link logs, skipped state checks, per-frame error stalls, ineffective shader comments, single-platform assumptions, shifted source lines, and empty frame captures |
 
 ## The Black Canvas Checklist
 

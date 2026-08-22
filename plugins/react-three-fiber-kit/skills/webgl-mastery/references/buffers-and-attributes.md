@@ -1,6 +1,18 @@
 # Buffers and Attributes
 
-**Contents:** [The Pieces](#the-pieces) · [Uploading Data](#uploading-data) · [VAOs Are Mandatory in Practice](#vaos-are-mandatory-in-practice) · [`vertexAttribPointer`](#vertexattribpointer--the-most-misread-api) · [Interleaved vs Separate Buffers](#interleaved-vs-separate-buffers) · [Indexed Draws](#indexed-draws) · [Per-Instance Attributes (Instancing)](#per-instance-attributes-instancing) · [Cleanup](#cleanup) · [Common Mistakes](#common-mistakes)
+## Table of Contents
+
+| Section | Covers |
+|---|---|
+| [The Pieces](#the-pieces) | Vertex, index, and attribute buffers plus vertex-array objects and draw calls |
+| [Uploading Data](#uploading-data) | Typed-array allocation, static, dynamic, and streaming usage hints, and partial in-place updates |
+| [VAOs Are Mandatory in Practice](#vaos-are-mandatory-in-practice) | Recording attribute-buffer layouts once, minimal per-frame binding, and the WebGL1 extension path |
+| [`vertexAttribPointer` — The Most Misread API](#vertexattribpointer--the-most-misread-api) | Component interpretation, integer normalization, byte stride and offsets, implicit buffer capture, and attribute enablement |
+| [Interleaved vs Separate Buffers](#interleaved-vs-separate-buffers) | Separate and interleaved attribute layouts, pointer configuration, and cache-locality versus update-frequency tradeoffs |
+| [Indexed Draws](#indexed-draws) | VAO-captured element buffers, shared-vertex draws, 16- versus 32-bit index limits, and WebGL1 extension requirements |
+| [Per-Instance Attributes (Instancing)](#per-instance-attributes-instancing) | Divisor-controlled attribute advancement, instanced draw calls, and persistent divisor state in VAOs |
+| [Cleanup](#cleanup) | Explicit buffer and vertex-array deletion in long-running geometry-swapping apps |
+| [Common Mistakes](#common-mistakes) | Disabled attributes, wrong implicit buffers, polluted VAOs, uncaptured indices, unsupported index widths, unnormalized colors, byte-layout errors, and missing divisors |
 
 ## The Pieces
 

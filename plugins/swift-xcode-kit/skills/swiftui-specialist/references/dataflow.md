@@ -2,7 +2,16 @@
 
 How data flows through a SwiftUI app determines which views invalidate and when. `@State` owns view-local state. `@Observable` model objects carry data that's shared across a subtree, with per-property tracking that scopes invalidation to the exact views that read what changed. `Binding` lets a child edit state owned by a parent. The sections below cover what shape of data to hand each view, when to use each ownership tool, how to set up models so views invalidate as narrowly as possible, and how to handle side effects and two-way edits.
 
-**Contents:** [Passing data into views](#passing-data-into-views) · [View-local state with @State](#view-local-state-with-state) · [Model objects with @Observable](#model-objects-with-observable) · [Side effects in views](#side-effects-in-views) · [Bindings](#bindings)
+## Table of Contents
+
+| Section | Covers |
+|---|---|
+| [Passing data into views](#passing-data-into-views) | Value- versus reference-type invalidation, narrow inputs, large-value comparison costs, and per-view or observable payload models |
+| [View-local state with @State](#view-local-state-with-state) | Private `@State` declarations and review guidance that avoids unrequested access-control changes |
+| [Model objects with @Observable](#model-objects-with-observable) | Main-actor models, equality-based update suppression, property-level dependency limits, cached derived values, and isolated collection or struct data |
+| [Side effects in views](#side-effects-in-views) | Isolating non-rendering `onChange(of:)` dependencies in modifiers and when that extra boundary is unnecessary |
+| [Bindings](#bindings) | Key-path and subscript binding projections that avoid closure allocations and spurious invalidation |
+| [`@Entry` macro](#entry-macro) | Stable defaults for custom environment, transaction, container, and focused values; optional focused entries; Xcode 16+ compilation with iOS 13 and macOS 10.15 availability; and top-line review findings for manual key boilerplate without unprompted rewrites |
 
 ## Passing data into views
 

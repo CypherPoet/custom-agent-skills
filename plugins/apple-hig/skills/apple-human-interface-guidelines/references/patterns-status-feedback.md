@@ -5,9 +5,18 @@
 
 Distilled from Apple's HIG Patterns pages: Feedback, Notifications, Managing notifications, Live Activities, Privacy, Ratings and reviews.
 
-**Contents:** [Feedback](#feedback) · [Notifications](#notifications) · [Managing notifications](#managing-notifications) · [Live Activities](#live-activities) · [Privacy](#privacy) · [Ratings and reviews](#ratings-and-reviews)
+## Table of Contents
 
-### Feedback
+| Section | Covers |
+|---|---|
+| [Feedback](#feedback) | Passive versus interrupting status, accessible multimodal and in-context delivery, irreversible-action warnings, meaningful completion, and failure explanations |
+| [Notifications](#notifications) | Timely and private content, foreground handling, titles and hidden previews, sounds and actions, badge semantics, and watchOS short and long looks |
+| [Managing notifications](#managing-notifications) | Communication types, interruption levels and urgency, Time Sensitive limits, marketing consent, in-app choices, and watchOS controls |
+| [Live Activities](#live-activities) | Bounded event tracking, privacy and visual design, interactions and updates, lifecycle and dismissal, system presentations and dimensions, and platform layouts |
+| [Privacy](#privacy) | Data minimization and on-device processing, permission timing and purpose strings, pre-alert and tracking rules, one-time location, authentication and storage, and platform constraints |
+| [Ratings and reviews](#ratings-and-reviews) | Engagement-based timing, noninterruptive cadence, system prompt behavior and annual limits, and summary-rating reset tradeoffs |
+
+## Feedback
 
 **Purpose:** Feedback tells people what's happening, what they can do next, and the result of an action, matching the significance of the information to how it's delivered.
 
@@ -27,7 +36,7 @@ Distilled from Apple's HIG Patterns pages: Feedback, Notifications, Managing not
 - iOS/iPadOS/macOS/tvOS/visionOS: No additional considerations.
 - watchOS: Avoid an indeterminate progress indicator (like a loading spinner) — it makes people think they must keep watching. Instead reassure them they'll get a notification when the process completes.
 
-### Notifications
+## Notifications
 
 *Last changed: 2023-10*
 
@@ -63,7 +72,7 @@ Canonical implementations: User Notifications (`UNNotificationCategory.hiddenPre
 - iOS/iPadOS/macOS/tvOS/visionOS: No additional considerations.
 - watchOS: Notifications occur in two stages — *short look* and *long look* — plus Notification Center; supported devices can double-tap to respond. A short look appears on wrist-raise and disappears on wrist-lower — don't use it as the only way to convey important info, and keep its title free of sensitive info. Long looks add detail (scrollable via swipe or Digital Crown); a custom long-look interface can be static or dynamic — at minimum ship a static interface (the system falls back to it with no network or unreachable iPhone companion), preferably a dynamic one too. The system-defined structure includes a sash at top (app icon + name; customize color or use a blurred appearance) and a Dismiss button at bottom below all custom buttons. Content-area background defaults to transparent; to match system notifications use white at 18% opacity. Provide up to four custom actions below the content area. Double-tap runs the first nondestructive action, so order most-used first.
 
-### Managing notifications
+## Managing notifications
 
 **Purpose:** Lets people manage how they receive notifications through delivery scheduling, Focus, and per-notification interruption levels — built on permission you must get before sending anything.
 
@@ -93,7 +102,7 @@ The four noncommunication interruption levels:
 - iOS/iPadOS/macOS/tvOS/visionOS: No additional considerations.
 - watchOS: By default iPhone notification settings apply to the same apps on Apple Watch; people manage them in the Apple Watch app on iPhone, or access per-notification options (Mute 1 Hour, Turn off Time Sensitive) by swiping left on a notification.
 
-### Live Activities
+## Live Activities
 
 *Last changed: 2025-12*
 
@@ -161,7 +170,7 @@ watchOS Smart Stack sizes (pt): 40mm 152x69.5, 41mm 165x72.5, 44mm 173x76.5, 45m
 - watchOS: A Live Activity that begins on iPhone appears at the top of the paired Apple Watch's Smart Stack, combining the compact presentation's leading and trailing elements by default. With a watchOS app, tapping opens it; without one, tapping opens a full-screen view with a button to open the iPhone app. Consider a custom watchOS layout for more info and interactivity, but the custom layout also applies in CarPlay where interactive elements are deactivated — don't include buttons or toggles if people may start or observe it while driving.
 - CarPlay: The system combines the compact presentation's leading and trailing elements into a single CarPlay Dashboard layout; interactive elements are deactivated. Consider a custom layout via the `ActivityFamily.small` supplemental activity family; prefer timely content over buttons and toggles.
 
-### Privacy
+## Privacy
 
 *Last changed: 2023-06*
 
@@ -197,7 +206,7 @@ Purpose string examples:
 - macOS: Sign your app with a valid Developer ID if distributing outside the store. Protect data with app sandboxing (required for the Mac App Store). Avoid assuming who is signed in — fast user switching means multiple people may be active.
 - visionOS: ARKit algorithms (persistence, world mapping, segmentation, matting, environment lighting) always run, but ARKit sends no data to apps in the Shared Space — accessing ARKit APIs requires a Full Space. Plane Estimation, Scene Reconstruction, Image Anchoring, and Hand Tracking require permission. User input is private by design: the system shows hover effects on SwiftUI/RealityKit interactive components without exposing where people look before they tap. The back camera provides blank input (compatibility only); the front camera provides input for spatial Personas only after permission — for an iOS/iPadOS app coming to visionOS, remove camera-dependent features or replace them with content import.
 
-### Ratings and reviews
+## Ratings and reviews
 
 *Last changed: 2023-09*
 

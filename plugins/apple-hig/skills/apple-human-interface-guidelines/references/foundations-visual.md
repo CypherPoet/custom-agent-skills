@@ -5,9 +5,20 @@
 
 Distilled from Apple's HIG Foundations pages: Branding, Color, Dark Mode, Icons, Images, Materials, SF Symbols, Typography.
 
-**Contents:** [Branding](#branding) · [Color](#color) · [Dark Mode](#dark-mode) · [Icons](#icons) · [Images](#images) · [Materials](#materials) · [SF Symbols](#sf-symbols) · [Typography](#typography)
+## Table of Contents
 
-### Branding
+| Section | Covers |
+|---|---|
+| [Branding](#branding) | Voice and tone, accent colors and custom fonts, unobtrusive identity, standard patterns, logo restraint, launch screens, and trademarks |
+| [Color](#color) | System and custom variants, semantic consistency and noncolor cues, testing and profiles, Liquid Glass tinting, system palettes, and platform constraints |
+| [Dark Mode](#dark-mode) | Light and dark support, semantic adaptive colors, contrast and transparency testing, image and icon treatment, depth cues, and platform availability |
+| [Icons](#icons) | SF Symbols and custom vectors, simplicity and consistency, optical balance, localization and accessibility, standard action symbols, and macOS document icons |
+| [Images](#images) | Scale factors, raster and vector formats, color profiles and device testing, tvOS layers, visionOS spatial images, and watchOS transparency and autoscaling |
+| [Materials](#materials) | Liquid Glass versus content-layer materials, regular and clear variants, dimming and vibrancy, semantic thickness, and platform-specific material systems |
+| [SF Symbols](#sf-symbols) | License boundaries, rendering modes, gradients and variable color, weights and variants, localization, animations, custom-symbol construction, and accessibility |
+| [Typography](#typography) | System and custom fonts, Dynamic Type, sizes and weights, hierarchy and leading, font families and styles, tracking data, and platform-specific type systems |
+
+## Branding
 
 **Purpose:** Express a unique brand identity in ways that feel at home on the platform while always deferring to content.
 
@@ -24,7 +35,7 @@ Distilled from Apple's HIG Foundations pages: Branding, Color, Dark Mode, Icons,
 **Platform deltas:**
 - All platforms: no additional considerations.
 
-### Color
+## Color
 *Last changed: 2025-12*
 
 **Purpose:** Use color to enhance communication, evoke your brand, communicate status and feedback, and convey information hierarchy.
@@ -86,7 +97,7 @@ iOS/iPadOS system grays (UIKit; SwiftUI equivalent of `systemGray` is `gray`):
 - visionOS: Use color sparingly, especially on glass — surroundings show through and affect legibility. Prefer color in bold text and large areas, not lightweight text or small areas. In fully immersive experiences, keep brightness balanced; avoid bright objects on very dark backgrounds, especially flashing or moving ones.
 - watchOS: Use background color to communicate (e.g., Activity matches ring colors), not as flourish; avoid full-screen background color in long-lived views (workouts, audio). Graphic complications may render in tinted mode using a single wearer-selected color.
 
-### Dark Mode
+## Dark Mode
 *Last changed: 2024-08*
 
 **Purpose:** A systemwide dark color palette for comfortable low-light viewing that people expect every app to respect.
@@ -112,7 +123,7 @@ iOS/iPadOS system grays (UIKit; SwiftUI equivalent of `systemGray` is `gray`):
 - tvOS: no additional considerations.
 - visionOS, watchOS: Dark Mode isn't supported.
 
-### Icons
+## Icons
 *Last changed: 2025-06*
 
 **Purpose:** Interface icons (glyphs) express a single concept with streamlined shapes so people instantly understand items, actions, and modes.
@@ -183,7 +194,7 @@ Standard SF Symbols for common actions:
 - iOS/iPadOS, tvOS, visionOS, watchOS: no additional considerations.
 - macOS (document icons): If you don't supply one, macOS composites your app icon + file extension onto the folded-corner shape. Custom document icons combine any of background fill, center image, and text. Design simple shapes with a reduced palette — icons display as small as 16x16 px; reduce detail in small versions (fewer/thicker lines at 32x32 px, drop fine detail at 16x16 px). Avoid important content in the top-right corner (folded corner is drawn over it). Background fill sizes: 512x512 @1x / 1024x1024 @2x; 256x256 @1x / 512x512 @2x; 128x128 @1x / 256x256 @2x; 32x32 @1x / 64x64 @2x; 16x16 @1x / 32x32 @2x. Center image sizes: 256x256 @1x / 512x512 @2x; 128x128 @1x / 256x256 @2x; 32x32 @1x / 64x64 @2x; 16x16 @1x / 32x32 @2x. The center image measures half the icon canvas; keep a margin of ~10% of the canvas, with the image occupying ~80% (e.g., 205x205 px in a 256x256 px canvas). Optionally replace an unfamiliar extension with a short descriptive term (e.g., "scene" not "scn"); the system scales and capitalizes the text.
 
-### Images
+## Images
 *Last changed: 2025-12*
 
 **Purpose:** Deliver artwork at the right formats and scale factors so it looks sharp on every device you support.
@@ -230,7 +241,7 @@ watchOS autoscaling PDF image scale (design for 40mm/42mm at 2x):
 - visionOS: Create a layered app icon (2–3 layers). Prefer vector art for 2D images; the system dynamically scales image resolution. Rasterized images above @2x trade file size and runtime performance for close-up sharpness — performance suffers especially over @6x; apply high-quality image filtering. Spatial photos require stereo HEIC with spatial metadata; use the feathered glass background effect for text over them; show spatial photos/scenes in standalone views (sheet/window), not inline; spatial scenes take seconds to generate, so use explicit actions/pagination rather than many at once; prefer larger, centered spatial scenes; keep immersive UI minimal.
 - watchOS: Avoid transparency to keep files small (composite the background in), except in template images (complications, menu icons) where transparency determines where color applies. Use autoscaling PDFs for one asset across all screen sizes.
 
-### Materials
+## Materials
 *Last changed: 2025-09*
 
 **Purpose:** Visual effects (Liquid Glass and standard materials) that create depth, layering, and hierarchy between foreground and background elements.
@@ -255,7 +266,7 @@ watchOS autoscaling PDF image scale (design for 40mm/42mm at 2x):
 - visionOS: Windows use the system glass material (unmodifiable) that lets surroundings show through; prefer translucency over opaque colors. For custom components: `thin` highlights interactive elements (buttons, selection), `regular` separates sections (sidebar, grouped table), `thick` creates a dark element atop `regular`. Vibrancy: `label` for standard text, `secondaryLabel` for footnotes/subtitles, `tertiaryLabel` only for inactive elements where legibility isn't critical.
 - watchOS: Use materials for context in full-screen modal views; don't remove or replace the default material backgrounds of modal sheets.
 
-### SF Symbols
+## SF Symbols
 *Last changed: 2025-07*
 
 **Purpose:** Thousands of configurable symbols that integrate with the San Francisco system font, auto-aligning with text across all weights and sizes.
@@ -276,7 +287,7 @@ watchOS autoscaling PDF image scale (design for 40mm/42mm at 2x):
 **Platform deltas:**
 - All platforms: no additional considerations.
 
-### Typography
+## Typography
 *Last changed: 2025-12*
 
 **Purpose:** Typographic choices that keep text legible, convey information hierarchy, and express your brand or style.

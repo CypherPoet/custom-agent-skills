@@ -2,6 +2,21 @@
 
 Engine selection, baking workflows, render passes, and light setup. Most of this lives in `bpy.context.scene.render` and `bpy.context.scene.cycles` / `scene.eevee`.
 
+## Table of Contents
+
+| Section | Covers |
+|---|---|
+| [Cycles vs Eevee](#cycles-vs-eevee) | Engine choices for photorealism, previews, baking, GPU path tracing, stylized work, and effects, including the Blender 5 Eevee identifier |
+| [GPU acceleration in Cycles](#gpu-acceleration-in-cycles) | Compute backend and device enablement, scene GPU selection, and headless preference reuse |
+| [Baking workflow (the order matters)](#baking-workflow-the-order-matters) | Ordered selection, Cycles, UV, target-image, active-node, bake, and save steps |
+| [Common bake types](#common-bake-types) | Combined, ambient-occlusion, normal, material, emission, and shadow outputs plus contribution-controlled lightmaps |
+| [Render passes (separating contributions)](#render-passes-separating-contributions) | View-layer depth, normal, occlusion, and direct or indirect passes, compositor access, and multilayer EXR output |
+| [Light setups](#light-setups) | Scripted key, fill, and rim placement with tracking targets versus HDRI-only studio lighting |
+| [Camera placement](#camera-placement) | Camera creation, focal length, scene assignment, and a tracking target that preserves aim during movement |
+| [Output settings](#output-settings) | Resolution and scale, destination, PNG channels and bit depth, and animation frame range |
+| [When to escape to headless](#when-to-escape-to-headless) | Background still and animation commands plus headless routing for longer baking workflows |
+| [Sources](#sources) | Blender Cycles, Eevee, baking, and render-settings documentation |
+
 ## Cycles vs Eevee
 
 Pick by the requirement, not the default:

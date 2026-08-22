@@ -4,7 +4,29 @@ PBR, classic phong/lambert/basic, toon, point/line, and how to customize materia
 
 > Scene/renderer setup: see [../SKILL.md#setup](../SKILL.md#setup).
 
-**Contents:** [Material Types](#material-types) · [MeshBasicMaterial](#meshbasicmaterial) · [MeshLambertMaterial](#meshlambertmaterial) · [MeshPhongMaterial](#meshphongmaterial) · [MeshStandardMaterial](#meshstandardmaterial-pbr) · [MeshPhysicalMaterial](#meshphysicalmaterial) · [MeshToonMaterial](#meshtoonmaterial) · [Debug Materials](#debug-materials) · [Points / Line Materials](#pointsmaterial--linebasicmaterial--linedashedmaterial) · [Node Materials](#node-materials-tsl--modern-customization) · [ShaderMaterial](#shadermaterial-glsl--legacy--webgl) · [Patching Built-in Shaders](#patching-built-in-shaders-onbeforecompile) · [Common Material Properties](#common-material-properties) · [Multi-Material Meshes](#multi-material-meshes) · [Environment Maps](#environment-maps) · [Cloning, Modifying, and Disposing](#cloning-modifying-and-disposing) · [Performance Tips](#performance-tips) · [Common Mistakes](#common-mistakes)
+## Table of Contents
+
+| Section | Covers |
+|---|---|
+| [Material Types](#material-types) | Lighting models, intended looks, renderer paths, and default choices for standard or customized PBR |
+| [MeshBasicMaterial](#meshbasicmaterial) | Light-independent color, texture, alpha, environment reflection, side, wireframe, and fog controls |
+| [MeshLambertMaterial](#meshlambertmaterial) | Low-cost diffuse and emissive surfaces with optional maps and environment reflection |
+| [MeshPhongMaterial](#meshphongmaterial) | Classic specular shading with shininess, emissive, normal, bump, and displacement maps |
+| [MeshStandardMaterial (PBR)](#meshstandardmaterial-pbr) | Roughness-metalness PBR maps, color-space-aware albedo, configurable AO channels, displacement, emission, and environment intensity |
+| [MeshPhysicalMaterial](#meshphysicalmaterial) | Advanced clearcoat, transmission, volume, sheen, iridescence, anisotropy, and specular layers with glass and paint recipes |
+| [MeshToonMaterial](#meshtoonmaterial) | Cel shading driven by a nearest-filtered stepped gradient ramp |
+| [Debug Materials](#debug-materials) | Normal visualization and packed depth output for geometry and rendering inspection |
+| [PointsMaterial / LineBasicMaterial / LineDashedMaterial](#pointsmaterial--linebasicmaterial--linedashedmaterial) | Textured and attenuated points, platform-limited line width, and distance-prepared dash patterns |
+| [Node Materials (TSL — Modern Customization)](#node-materials-tsl--modern-customization) | Lighting-integrated color and position nodes, skinned-vertex caveats, live uniforms, texture sampling, direct output, and reusable flow logic |
+| [ShaderMaterial (GLSL — Legacy / WebGL)](#shadermaterial-glsl--legacy--webgl) | WebGL-oriented custom uniforms and stages, provided shader symbols, and fully explicit raw shaders |
+| [Patching Built-in Shaders (`onBeforeCompile`)](#patching-built-in-shaders-onbeforecompile) | Legacy WebGL source injection, custom uniform retention, and TSL node overrides as the preferred replacement |
+| [Common Material Properties](#common-material-properties) | Visibility and alpha, face selection, depth and color writes, blend modes, polygon offset, dithering, and tone mapping |
+| [Multi-Material Meshes](#multi-material-meshes) | Assign different materials to geometry groups |
+| [Environment Maps](#environment-maps) | Per-material cube reflections and global equirectangular HDR lighting or backgrounds |
+| [Cloning, Modifying, and Disposing](#cloning-modifying-and-disposing) | Independent clones, immediate numeric changes, shader-affecting recompilation flags, and GPU cleanup |
+| [Performance Tips](#performance-tips) | Shared and pooled materials, alpha testing over transparency, appropriately cheap shading, and restrained light counts |
+| [Common Mistakes](#common-mistakes) | Incorrect map color spaces and UV channels, missing recompiles, mixed shader pipelines, wrong PBR class, leaked materials, and duplicate tone mapping |
+| [See Also](#see-also) | Texture color spaces and maps, TSL or GLSL shader customization, PBR lighting and environments, and node-based screen-space effects |
 
 ## Material Types
 

@@ -4,7 +4,21 @@ Built-in shapes, custom `BufferGeometry`, instancing, and the math you need to b
 
 > Scene/renderer setup: see [../SKILL.md#setup](../SKILL.md#setup).
 
-**Contents:** [Built-in Geometries](#built-in-geometries) · [BufferGeometry](#buffergeometry) · [Edges & Wireframe](#edgesgeometry-and-wireframegeometry) · [Points](#points) · [Lines](#lines) · [Instancing](#instancing) · [Geometry Utilities](#geometry-utilities) · [Common Manipulations](#common-manipulations) · [Performance Tips](#performance-tips) · [Common Mistakes](#common-mistakes)
+## Table of Contents
+
+| Section | Covers |
+|---|---|
+| [Built-in Geometries](#built-in-geometries) | Primitive and partial shapes, polyhedra, lathed and swept paths, extrusion, and addon-based text |
+| [BufferGeometry](#buffergeometry) | Building geometry from scratch, defining and mutating attributes, and configuring interleaved buffers |
+| [EdgesGeometry and WireframeGeometry](#edgesgeometry-and-wireframegeometry) | Generating thresholded edges and complete triangle wireframes |
+| [Points](#points) | Building point clouds with `BufferGeometry` and `PointsMaterial` |
+| [Lines](#lines) | Creating connected lines, loops, and line segments from point data |
+| [Instancing](#instancing) | Shared geometry and material draws, per-instance transforms and colors, update flags, picking, and custom shader attributes |
+| [Geometry Utilities](#geometry-utilities) | Attribute-compatible merging, optional material groups, tangent generation, and interleaved attribute construction |
+| [Common Manipulations](#common-manipulations) | Bounding-box centering and normalization, cloned transforms, and position-based morph targets |
+| [Performance Tips](#performance-tips) | Intentional segmentation, indexed vertices, static merging, repeated-object instancing, and GPU disposal |
+| [Common Mistakes](#common-mistakes) | Missing update flags, stale normals and bounds, excessive draw calls, index-width overflow, leaked buffers, missing tangents, addon imports, and stale instances |
+| [See Also](#see-also) | Object transforms and math, material attribute requirements, and TSL or GLSL attributes and instancing |
 
 ## Built-in Geometries
 

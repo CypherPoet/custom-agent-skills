@@ -4,7 +4,25 @@ Models, textures, video, and render targets at the React layer: `useLoader` and 
 
 > Canvas/project setup: see [canvas-and-project-setup.md](./canvas-and-project-setup.md); shared conventions: [../SKILL.md](../SKILL.md).
 
-**Contents:** [Quick Start](#quick-start) · [useGLTF](#usegltf) · [The gltfjsx Workflow](#the-gltfjsx-workflow) · [useLoader](#useloader) · [Primitive and Clone](#primitive-and-clone) · [Other Model Formats](#other-model-formats) · [useTexture](#usetexture) · [Texture Configuration](#texture-configuration) · [Color Spaces](#color-spaces) · [Environment, Cube, and Video Textures](#environment-cube-and-video-textures) · [Render Targets and Procedural Textures](#render-targets-and-procedural-textures) · [Suspense and Loading UI](#suspense-and-loading-ui) · [Caching and Preloading](#caching-and-preloading) · [Common Mistakes](#common-mistakes)
+## Table of Contents
+
+| Section | Covers |
+|---|---|
+| [Quick Start](#quick-start) | Canvas-contained Suspense placement and the minimal cached GLTF loading and rendering flow |
+| [useGLTF](#usegltf) | Scene, node, material, and animation access, selective rendering, automatic Draco and Meshopt decoding, custom decoder and loader setup, preload and eviction, and shared-graph mutation |
+| [The gltfjsx Workflow](#the-gltfjsx-workflow) | Model-to-component generation and transformation, typed v9 node and material contracts, fresh mesh instances over cached resources, disposal protection, shadows, and eager preload |
+| [useLoader](#useloader) | Loader classes or pooled v9 instances, single or parallel URLs, Draco, KTX2, and Meshopt configuration, progress callbacks, named graphs, preload, and eviction |
+| [Primitive and Clone](#primitive-and-clone) | Mounting an existing object with one-parent semantics, deep graph clones that share resources, per-node overrides, and when to use instancing instead |
+| [Other Model Formats](#other-model-formats) | GLTF, FBX, paired OBJ and MTL, and STL hooks, loader wiring, returned object types, and rendering patterns |
+| [useTexture](#usetexture) | Single, positional, and material-keyed texture loading, cached configuration callbacks, preload, and cloning for per-consumer settings |
+| [Texture Configuration](#texture-configuration) | Wrapping, transforms, filtering, anisotropy, mipmaps, orientation, color space, and second-UV-channel setup for ambient-occlusion and light maps |
+| [Color Spaces](#color-spaces) | v9’s removal of blanket conversion, explicit sRGB annotation for hand-loaded color maps, linear data maps, GLTF defaults, custom-shader responsibility, and diagnostic symptoms |
+| [Environment, Cube, and Video Textures](#environment-cube-and-video-textures) | Preset and local environments, cubemap files, scene-wide Environment use, autoplay-safe video and media streams, and tone-mapping opt-out for display content |
+| [Render Targets and Procedural Textures](#render-targets-and-procedural-textures) | FBO rendering and target restoration, portal and declarative render textures, and update requirements for canvas-drawn and raw-data textures |
+| [Suspense and Loading UI](#suspense-and-loading-ui) | In-canvas fallback types, nested progressive assets, global progress and full-page overlays, error boundaries, cached-failure eviction, and v9 side-effect timing |
+| [Caching and Preloading](#caching-and-preloading) | Shared loader-and-URL instances, mutation and disposal consequences, module-scope fetches, scene-wide GPU preparation, and conditional mounting for lazy loads |
+| [Common Mistakes](#common-mistakes) | Suspense placement, one-parent primitives and cloning, decoder wiring, v9 color and data texture spaces, AO UV channels and orientation, shared-cache mutation and disposal, conditional loading, video autoplay, texture uploads, loading-UI placement, cached failures, and gltfjsx types |
+| [See Also](#see-also) | Environment staging, clip animation, asset and instance performance, v9 migration, stack setup, and upstream loading, gltfjsx, and drei guidance |
 
 ## Quick Start
 

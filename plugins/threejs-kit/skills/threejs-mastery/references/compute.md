@@ -6,7 +6,16 @@ GPU compute in Three.js runs through TSL: you allocate storage buffers, write a 
 
 > Scene/renderer setup: see [../SKILL.md#setup](../SKILL.md#setup).
 
-**Contents:** [Storage Buffers](#storage-buffers) · [Writing and Dispatching a Compute Node](#writing-and-dispatching-a-compute-node) · [Mutating Values Inside a Compute Node](#mutating-values-inside-a-compute-node) · [Worked Example: GPU Particles](#worked-example-gpu-particles) · [Common Mistakes](#common-mistakes)
+## Table of Contents
+
+| Section | Covers |
+|---|---|
+| [Storage Buffers](#storage-buffers) | Renderable instance arrays versus general working arrays, element types, backing attributes, and indexed access |
+| [Writing and Dispatching a Compute Node](#writing-and-dispatching-a-compute-node) | Invocation indexing, dispatch and workgroup sizing, backend initialization, and asynchronous one-off versus synchronous frame-loop execution |
+| [Mutating Values Inside a Compute Node](#mutating-values-inside-a-compute-node) | Assignable shader variables and storage nodes, ineffective JavaScript rebinding, and value-returning conditional selection |
+| [Worked Example: GPU Particles](#worked-example-gpu-particles) | GPU-only seeding and gravity integration, delta uniforms, synchronous updates, and correct instance-attribute rendering |
+| [Common Mistakes](#common-mistakes) | Uninitialized dispatch, non-node mutation, WebGL fallback, collapsed rendering, element stride mismatch, and storage-buffer limits |
+| [See Also](#see-also) | TSL node fundamentals, WebGPU device-limit configuration, and instanced rendering for compute-driven transforms |
 
 ## Storage Buffers
 

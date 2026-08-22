@@ -4,7 +4,19 @@ Every entry in a scene's `elements` array. For the file wrapper see
 [`file-format.md`](file-format.md); for style *meaning* (which color, when a box)
 see [`design-principles.md`](design-principles.md).
 
-**Contents:** [Shared Properties](#shared-properties) · [Verified Constants](#verified-constants) · [Shapes](#shapes-rectangle-ellipse-diamond) · [Text](#text) · [Arrows](#arrows) · [Lines](#lines) · [Binding Arrows to Shapes](#binding-arrows-to-shapes) · [Frames & Images](#frames--images) · [Gotchas](#gotchas)
+## Table of Contents
+
+| Section | Covers |
+|---|---|
+| [Shared Properties](#shared-properties) | Identifiers, geometry, style, grouping, binding, locking, and other properties shared by every element |
+| [Verified Constants](#verified-constants) | Current and legacy font identifiers, roundness types, valid stroke widths, roughness levels, fill styles, and default font size |
+| [Shapes: `rectangle`, `ellipse`, `diamond`](#shapes-rectangle-ellipse-diamond) | Shared container schema, rounded rectangles, two-sided text binding, and contrasting semantic palette pairs |
+| [Text](#text) | Free-floating versus contained labels, two-sided containment, readable text fields, typography and alignment, and approximate authored geometry |
+| [Arrows](#arrows) | Relative connector points, straight and curved geometry, shape bindings, gaps and focus, and standard or extended arrowheads |
+| [Lines](#lines) | Nondirectional dividers, timelines, tree trunks, and spines plus closed polygons from relative point arrays |
+| [Binding Arrows to Shapes](#binding-arrows-to-shapes) | Arrow-side endpoints, edge focus and clearance, shape-side back-references, movement behavior, and multiple bound elements |
+| [Frames & Images](#frames--images) | Frame containers for grouping regions and image elements that reference embedded files with explicit geometry |
+| [Gotchas](#gotchas) | Unique IDs, relative points, two-sided bindings, valid constants, canvas coordinates, and reference validation |
 
 ## Shared Properties
 

@@ -2,6 +2,20 @@
 
 Materials in Blender are node trees attached to a `Material` data-block. The Principled BSDF is the standard PBR shader and the only one that exports cleanly to GLTF / USD / most game engines.
 
+## Table of Contents
+
+| Section | Covers |
+|---|---|
+| [The minimum viable Principled BSDF](#the-minimum-viable-principled-bsdf) | Node enablement and clearing, Principled-to-output wiring, PBR defaults, and version-stable named sockets |
+| [Defensive node access on existing materials](#defensive-node-access-on-existing-materials) | Safe node-tree checks and type-based Principled discovery for imported and user-authored materials |
+| [Color space for image textures](#color-space-for-image-textures) | sRGB color maps versus Non-Color roughness, metallic, normal, displacement, and packed data maps |
+| [A complete PBR setup with image textures](#a-complete-pbr-setup-with-image-textures) | Optional texture loading, color-space assignment, tangent-space normal wiring, grayscale channels, and packed ORM separation |
+| [Material slots (objects can have many)](#material-slots-objects-can-have-many) | Material-slot creation, per-face assignment, and per-object slots versus shared mesh-data material lists |
+| [Converting Diffuse BSDF imports to Principled](#converting-diffuse-bsdf-imports-to-principled) | Type-based Diffuse discovery and transfer of color, normal, and output links into exportable Principled shaders |
+| [Things that don't export](#things-that-dont-export) | Procedural textures, value remapping, procedural bump, mixed shaders, and non-Principled materials that require baking or validation |
+| [World shader (HDRI environment)](#world-shader-hdri-environment) | Scene-shared World creation and node setup for environment textures, background strength, and surface output |
+| [Sources](#sources) | Blender Principled shader, shader-node-tree, and material API documentation |
+
 ## The minimum viable Principled BSDF
 
 ```python

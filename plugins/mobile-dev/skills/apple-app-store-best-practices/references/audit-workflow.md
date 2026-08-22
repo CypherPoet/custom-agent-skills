@@ -2,7 +2,17 @@
 
 The phase-by-phase compliance audit for the [apple-app-store-best-practices](../SKILL.md) skill. Load this when running a standard or deep audit; Phase 1 (reconnaissance) decides which `section-*.md` references to pull in.
 
-**Contents:** [Phase 1: Reconnaissance](#phase-1-app-reconnaissance) · [Phase 2: Technical](#phase-2-technical-compliance) · [Phase 3: Business](#phase-3-business-model-compliance) · [Phase 4: Safety](#phase-4-safety-and-content) · [Phase 5: Design & Metadata](#phase-5-design-and-metadata) · [Phase 6: Legal](#phase-6-legal-compliance) · [Post-Rejection](#post-rejection-workflow)
+## Table of Contents
+
+| Section | Covers |
+|---|---|
+| [Phase 1: App Reconnaissance](#phase-1-app-reconnaissance) | Platform targets, primary flows, monetization, authentication, collected data, user content, audience, sensitive domains, and reference-file selection |
+| [Phase 2: Technical Compliance](#phase-2-technical-compliance) | Property-list keys, entitlements, privacy manifests, public APIs, networking, web views, background execution, unsigned code, and platform-specific requirements |
+| [Phase 3: Business Model Compliance](#phase-3-business-model-compliance) | In-app purchase enforcement and restoration, loot boxes and trials, subscription terms, payment exemptions, and regional external-purchase links |
+| [Phase 4: Safety and Content](#phase-4-safety-and-content) | Required moderation controls for user content, parental gates and children’s privacy, objectionable material, medical claims, and data security |
+| [Phase 5: Design and Metadata](#phase-5-design-and-metadata) | Submission completeness, field limits and truthful metadata, Sign in with Apple and its exceptions, minimum native value, and notification restrictions |
+| [Phase 6: Legal Compliance](#phase-6-legal-compliance) | Privacy-policy coverage, permission and tracking consent, account deletion, data minimization, and health and children’s data restrictions |
+| [Post-Rejection Workflow](#post-rejection-workflow) | Parsing cited rules, locating code evidence, checking related root-cause risks, and preparing a targeted remediation plan |
 
 ## Phase 1: App Reconnaissance
 
@@ -199,7 +209,6 @@ If the app tracks users across apps/websites:
 **Kids privacy (§5.1.4):**
 - COPPA and GDPR compliance for children's data
 - No third-party analytics or advertising in kids apps
-
 
 ## Post-Rejection Workflow
 

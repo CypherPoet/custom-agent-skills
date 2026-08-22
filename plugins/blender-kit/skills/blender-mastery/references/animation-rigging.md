@@ -2,6 +2,21 @@
 
 Armatures (the bones), pose mode (the deformations), drivers (logic), and fcurves (the keyframes). Rigging is where Blender's mode discipline (`bpy-essentials.md` P3) matters most — almost every script bug here traces to being in the wrong mode.
 
+## Table of Contents
+
+| Section | Covers |
+|---|---|
+| [Object vs armature data](#object-vs-armature-data) | Armature object transforms and pose data versus rest-bone hierarchy in armature data, including modifier and `PoseBone` ownership |
+| [Building an armature from script](#building-an-armature-from-script) | Creating, parenting, connecting, and positioning edit bones with safe edit-to-object mode transitions |
+| [Pose mode: posing and constraining](#pose-mode-posing-and-constraining) | Pose-bone location, rotation, and scale deltas, rotation modes, and armature-space versus world-space matrices |
+| [Bone constraints](#bone-constraints) | IK targets and chains, copy and limit transforms, tracking, stretching, runtime parenting, and direct constraint creation |
+| [Building a basic IK leg setup](#building-a-basic-ik-leg-setup) | Lower-bone IK targets, chain length, optional pole controls, FK fallback, and driver-controlled FK/IK influence |
+| [Drivers](#drivers) | Property-driven fcurves, variables and expressions, driver removal, and animator-facing custom-property ranges and metadata |
+| [Keyframes and fcurves](#keyframes-and-fcurves) | Property keyframing, action and scalar-channel inspection, and version-safe traversal of legacy and Blender 5 slotted actions |
+| [NLA strips](#nla-strips) | Action sequencing, timing, influence and blend modes, evaluated animation, and the active-action inspection boundary |
+| [Weight painting from script](#weight-painting-from-script) | Mesh vertex groups, bone-name binding, armature modifiers, and unweighted or excessive-weight QA |
+| [Sources](#sources) | Blender documentation for armatures, constraints, drivers, pose bones, and NLA strips |
+
 ## Object vs armature data
 
 Same split as object/mesh (see `scene-mental-model.md`):

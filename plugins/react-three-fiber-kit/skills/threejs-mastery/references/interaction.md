@@ -4,7 +4,19 @@ Raycasting, camera controls, pointer/touch input, drag/transform gizmos, selecti
 
 > Scene/renderer setup: see [../SKILL.md#setup](../SKILL.md#setup).
 
-**Contents:** [Raycaster](#raycaster) · [Camera Controls](#camera-controls) · [Selection Patterns](#selection-patterns) · [Keyboard Input](#keyboard-input) · [Screen ↔ World Conversion](#screen--world-conversion) · [Interaction Manager Pattern](#interaction-manager-pattern) · [Performance Tips](#performance-tips) · [Common Mistakes](#common-mistakes)
+## Table of Contents
+
+| Section | Covers |
+|---|---|
+| [Raycaster](#raycaster) | Mouse and touch picking, hit metadata, canvas-relative coordinates, range and layer filtering, throttling, and proxy collision meshes |
+| [Camera Controls](#camera-controls) | Orbit, flight, first-person, pointer-lock, trackball, map, transform-gizmo, and direct-drag setup with their frame-update and coordination rules |
+| [Selection Patterns](#selection-patterns) | Click and hover highlighting plus box-drag selection across scene content |
+| [Keyboard Input](#keyboard-input) | Held-key state tracked by event code and consumed continuously during updates |
+| [Screen ↔ World Conversion](#screen--world-conversion) | Projected HTML placement, unprojection at a target depth, and ray-plane placement |
+| [Interaction Manager Pattern](#interaction-manager-pattern) | Centralized pointer and touch wiring, normalized coordinates, reusable raycasting, and object-specific callbacks |
+| [Performance Tips](#performance-tips) | Hover throttling, layer filtering, proxy meshes, disabled controls, and nonrecursive intersections |
+| [Common Mistakes](#common-mistakes) | Missing control updates, wrong canvas coordinates, instance picking, unthrottled hover, competing controls, user-gesture locks, delta omissions, and touch handling |
+| [See Also](#see-also) | Object and camera layers, animated selection responses, and outline or highlight shaders |
 
 ## Raycaster
 

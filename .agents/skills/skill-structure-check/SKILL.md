@@ -26,7 +26,9 @@ it before opening a PR that adds or edits a skill.
 | ERROR | a relative link that escapes its plugin — in **any** `.md` under that plugin, at any depth | A standalone installation contains only that plugin, so links leaving it must use absolute GitHub URLs. The check walks the whole plugin rather than listing known locations, so it cannot drift from the rule. |
 | WARN | `SKILL.md` 450–500 lines | The router is approaching the hard limit; plan the split. |
 
-The skill-level routing table in `SKILL.md` is a soft convention — not machine-checked here.
+The skill-level routing table in `SKILL.md` and the reference-file
+[Table of Contents format](../../../docs/PLUGIN-CONVENTIONS.md#reference-navigation)
+are soft conventions — not machine-checked here.
 
 ## Acting on Findings
 

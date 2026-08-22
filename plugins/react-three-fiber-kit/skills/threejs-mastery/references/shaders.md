@@ -9,7 +9,19 @@ Pick one per surface; you can mix in the same scene but the mental model is clea
 
 > Scene/renderer setup: see [../SKILL.md#setup](../SKILL.md#setup).
 
-**Contents:** [TSL](#tsl-modern) · [TSL Recipes](#tsl-recipes) · [Recent TSL Additions](#recent-tsl-additions-r184r185) · [WGSL Interop](#wgsl-interop) · [GLSL (Legacy)](#glsl-legacy) · [Debugging](#debugging) · [Performance Tips](#performance-tips) · [Common Mistakes](#common-mistakes)
+## Table of Contents
+
+| Section | Covers |
+|---|---|
+| [TSL (Modern)](#tsl-modern) | Imports and version drift, node-material setup, live uniforms, custom attributes and varyings, reusable functions, swizzled math, and assignable conditional flow |
+| [TSL Recipes](#tsl-recipes) | Sampling, static versus skinned displacement, Fresnel and rim light, gradients, dissolve, instancing, lighting-preserving overrides, and direct output |
+| [Recent TSL Additions (r184–r185)](#recent-tsl-additions-r184r185) | Per-frame node callbacks and four-sample texture gather, including depth comparison |
+| [WGSL Interop](#wgsl-interop) | WebGPU-only handwritten functions, named parameters, type mappings, and included helper functions |
+| [GLSL (Legacy)](#glsl-legacy) | Raw-GLSL `ShaderMaterial` / `RawShaderMaterial` — the compatibility path for WebGL-only targets |
+| [Debugging](#debugging) | Logging compiled stages, surfacing shader errors, and visualizing UV, normal, or position data in GLSL and TSL |
+| [Performance Tips](#performance-tips) | Packed uniforms, branchless selection, CPU-precomputed constants, texture lookups, and overdraw control |
+| [Common Mistakes](#common-mistakes) | Stale node assignments, illegal mutation, skinned displacement inputs, material-lighting differences, and mismatched attribute kinds |
+| [See Also](#see-also) | Legacy raw GLSL, material integration and patching, TSL screen-space effects, texture sampling and render targets, and instanced attributes |
 
 ## TSL (Modern)
 

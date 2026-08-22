@@ -1,6 +1,19 @@
 # Shaders and GLSL
 
-**Contents:** [The Compile + Link Lifecycle](#the-compile--link-lifecycle) · [GLSL ES 3.00 (WebGL2)](#glsl-es-300-webgl2) · [Types You'll Actually Use](#types-youll-actually-use) · [Swizzling](#swizzling) · [Qualifiers](#qualifiers) · [Built-In Variables](#built-in-variables) · [Uniforms from JS](#uniforms-from-js) · [Precision](#precision) · [Control Flow Caveats](#control-flow-caveats) · [Common Mistakes](#common-mistakes)
+## Table of Contents
+
+| Section | Covers |
+|---|---|
+| [The Compile + Link Lifecycle](#the-compile--link-lifecycle) | Separate stage compilation, source-rich diagnostics, exact cross-stage interface matching, and safe shader deletion after linking |
+| [GLSL ES 3.00 (WebGL2)](#glsl-es-300-webgl2) | First-line versioning, fragment precision, modern stage qualifiers and outputs, unified texture calls, and added numeric or sampler types |
+| [Types You'll Actually Use](#types-youll-actually-use) | Strict scalar, vector, matrix, and sampler types with valid literal and constructor conversions |
+| [Swizzling](#swizzling) | Selecting, repeating, reordering, and assigning components without mixing naming families |
+| [Qualifiers](#qualifiers) | Stage inputs and outputs, uniforms, noninterpolated and centroid varyings, and compile-time constants |
+| [Built-In Variables](#built-in-variables) | Vertex position, point size and IDs; fragment coordinates, facing and point coordinates; optional explicit depth |
+| [Uniforms from JS](#uniforms-from-js) | Program binding, matrix and vector upload, texture-unit samplers, optimized-out locations, caching, and mandatory nontransposed matrices |
+| [Precision](#precision) | Stage defaults, required fragment declarations, mobile mediump artifacts, and sampler precision guidance |
+| [Control Flow Caveats](#control-flow-caveats) | WebGL1 loop bounds, dynamic WebGL2 loops, coherent versus divergent branches, branchless alternatives, and discard costs |
+| [Common Mistakes](#common-mistakes) | Misplaced versions, mixed GLSL generations, transposed matrices, optimized uniforms, unset samplers, NaNs, strict types, and mismatched varyings |
 
 ## The Compile + Link Lifecycle
 

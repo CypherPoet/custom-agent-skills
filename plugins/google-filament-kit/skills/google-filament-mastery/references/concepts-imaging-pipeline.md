@@ -3,7 +3,17 @@
 > Source: Filament Core Concepts — "Imaging pipeline" + Annex (Filament.md), Filament v1.75.0
 > Last synced: 2026-08-14
 
-**Contents:** [The Imaging Pipeline](#the-imaging-pipeline) · [Physically Based Camera & Exposure](#physically-based-camera--exposure) · [The Exposure Triangle](#the-exposure-triangle) · [Exposure Value (EV)](#exposure-value-ev) · [Photometric Exposure & Normalization](#photometric-exposure--normalization) · [`Camera` Exposure API](#camera-exposure-api) · [`Exposure` Utility Namespace](#exposure-utility-namespace) · [Automatic Exposure & Metering](#automatic-exposure--metering) · [EV as a Light Unit & Emissive Bloom](#ev-as-a-light-unit--emissive-bloom) · [Post-Processing & `View` Options](#post-processing--view-options) · [Tone Mapping (`ToneMapper`)](#tone-mapping-tonemapper) · [Color Grading (`ColorGrading::Builder`)](#color-grading-colorgradingbuilder) · [Bloom, Lens Flare & Chromatic Aberration (`BloomOptions`)](#bloom-lens-flare--chromatic-aberration-bloomoptions) · [Depth of Field (`DepthOfFieldOptions`)](#depth-of-field-depthoffieldoptions) · [Vignette (`VignetteOptions`)](#vignette-vignetteoptions) · [Other `View` Post-Process Options](#other-view-post-process-options) · [Color Management](#color-management) · [Linear vs sRGB](#linear-vs-srgb) · [`Color` Conversion API](#color-conversion-api) · [`ColorSpace` API](#colorspace-api) · [Renderer Pipeline: Clustered Forward Rendering](#renderer-pipeline-clustered-forward-rendering) · [Coordinate Systems & Conventions](#coordinate-systems--conventions) · [Validation & Debug](#validation--debug)
+## Table of Contents
+
+| Section | Covers |
+|---|---|
+| [The Imaging Pipeline](#the-imaging-pipeline) | Photometric HDR luminance normalization, white balance, grading, tone mapping, display transfer, and the separate post-effect boundary |
+| [Physically Based Camera & Exposure](#physically-based-camera--exposure) | Aperture, shutter, ISO and EV math, photometric normalization, camera and conversion APIs, metering and adaptation, and exposure-relative emissive bloom |
+| [Post-Processing & `View` Options](#post-processing--view-options) | Master enablement, tone-mapper choices and validation modes, ordered color grading and LUT controls, bloom and lens effects, depth of field, vignette, fog, antialiasing, and quality options |
+| [Color Management](#color-management) | Linear scene processing and sRGB output, accurate versus fast conversions, premultiplied alpha, color-temperature and absorption utilities, and RGB color-space construction |
+| [Renderer Pipeline: Clustered Forward Rendering](#renderer-pipeline-clustered-forward-rendering) | Deferred and classic-forward tradeoffs, froxel generation and light assignment, depth slicing, CPU and GPU paths, light-range tuning, limits, and visualization |
+| [Coordinate Systems & Conventions](#coordinate-systems--conventions) | Filament handedness, axes, units, camera orientation, clipping and NDC, winding, picking, and cubemap conventions |
+| [Validation & Debug](#validation--debug) | Mitsuba reference exposure matching and display-range visualization of luminance stops around middle gray |
 
 ---
 

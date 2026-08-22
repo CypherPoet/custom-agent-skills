@@ -7,8 +7,27 @@ This document describes the `-fbounds-safety` language model — a C language ex
 The bounds annotations and builtin functions described in this document become available after including the `ptrcheck.h` toolchain header.
 This header should be included unconditionally, even in code that builds without `-fbounds-safety` because we can assume AppleClang. `ptrcheck.h` provides flag-off fallback definitions for **both** the bounds annotations (`__counted_by`, `__sized_by`, `__null_terminated`, `__single`, etc.) **and** the forge/conversion intrinsics (`__unsafe_forge_*`, `__null_terminated_to_indexable`, `__unsafe_null_terminated_from_indexable`, etc.). When the flag is off, annotations expand to empty and intrinsics expand to plain C casts or pointer pass-throughs, so source using them compiles unchanged. The **only** exceptions are the ABI-breaking attributes `__bidi_indexable` and `__indexable` (and their `__ptrcheck_abi_assume_*` cousins), which are deliberately left undefined so that misuse in a header produces a compile error rather than a silent ABI break. Consequently, the only code that needs `#if __has_ptrcheck` guarding (or a per-`.c`-file fallback `#define`) is code that names those two attributes by token — see [Using `__bidi_indexable` / `__indexable` in a Source File That Must Compile Without `-fbounds-safety`](common-patterns-and-pitfalls.md#using-__bidi_indexable--__indexable-in-a-source-file-that-must-compile-without--fbounds-safety) for the pattern.
 
-**Contents:** [Quick Reference: Pointer Kinds and Bounds Annotations](#quick-reference-pointer-kinds-and-bounds-annotations) · [ABI Compatibility and ABI Visibility](#abi-compatibility-and-abi-visibility) · [Attribute Placement on Multi-Level Pointers](#attribute-placement-on-multi-level-pointers) · [Indexability Kinds](#indexability-kinds) · [External Bounds Annotations](#external-bounds-annotations) · [Out and In-Out Parameters with `__counted_by`](#out-and-in-out-parameters-with-__counted_by) · [Flexible Array Members](#flexible-array-members) · [Value-Terminated Arrays](#value-terminated-arrays) · [Comprehensive Pointer Conversion Table](#comprehensive-pointer-conversion-table) · [Deriving Bounds from Objects](#deriving-bounds-from-objects) · [Escape Hatches](#escape-hatches) · [Principled Bounds Checks](#principled-bounds-checks) · [Performance Implications](#performance-implications) · [Detecting `-fbounds-safety`](#detecting--fbounds-safety) · [LibC Annotation Macros](#libc-annotation-macros) · [`alloc_size` implies `__sized_by_or_null`](#alloc_size-implies-__sized_by_or_null) · [Glossary](#glossary)
+## Table of Contents
 
+| Section | Covers |
+|---|---|
+| [Quick Reference: Pointer Kinds and Bounds Annotations](#quick-reference-pointer-kinds-and-bounds-annotations) | Pointer kinds, bounds annotations, ABI compatibility, and default behavior |
+| [ABI Compatibility and ABI Visibility](#abi-compatibility-and-abi-visibility) | ABI-visible versus local pointers, default single and wide representations, check timing, and safe use of local copies |
+| [Attribute Placement on Multi-Level Pointers](#attribute-placement-on-multi-level-pointers) | Binding pointer attributes to the preceding `*`, interpreting nested pointer declarations, and distinguishing out parameters from pointer arrays |
+| [Indexability Kinds](#indexability-kinds) | Four pointer kinds, pointer-bound access, conversions between indexable pointers, and default pointer attributes |
+| [External Bounds Annotations](#external-bounds-annotations) | Counted, sized, ended, and nullable pointer ranges; array decay; internal conversion checks; grouped assignments; count-expression grammar |
+| [Out and In-Out Parameters with `__counted_by`](#out-and-in-out-parameters-with-__counted_by) | Allocating, resizing, and fill-in-place pointer-count parameters; by-value capacities; caller pairing rules; corresponding SDK signatures |
+| [Flexible Array Members](#flexible-array-members) | Counted flexible arrays, count-mutation bounds, external object bounds, and prohibited pointer arithmetic |
+| [Value-Terminated Arrays](#value-terminated-arrays) | Sentinel-terminated pointer arithmetic, terminator traps, explicit indexable conversions, and null-terminated convenience APIs |
+| [Comprehensive Pointer Conversion Table](#comprehensive-pointer-conversion-table) | The table below summarizes the allowed implicit and explicit conversions across all pointer kinds |
+| [Deriving Bounds from Objects](#deriving-bounds-from-objects) | Array decay, pointer arithmetic, tightly bounded object and field addresses, and allocator-derived bounds |
+| [Escape Hatches](#escape-hatches) | Forging safe views from genuinely unbounded sources, avoiding redundant forges, and choosing honest ABI-visible pointer annotations |
+| [Principled Bounds Checks](#principled-bounds-checks) | Inclusive-exclusive range checks for memory access and bounds-stripping conversions |
+| [Performance Implications](#performance-implications) | Check elimination, pointer representation tradeoffs, optimization guidance, and measured code-size and runtime overhead |
+| [Detecting `-fbounds-safety`](#detecting--fbounds-safety) | Conditionally compiling code when bounds safety is enabled |
+| [LibC Annotation Macros](#libc-annotation-macros) | Apple's LibC headers use wrapper macros (prefixed `_LIBC_`) instead of the raw `-fbounds-safety` annotations |
+| [`alloc_size` implies `__sized_by_or_null`](#alloc_size-implies-__sized_by_or_null) | The `alloc_size` attribute automatically implies `__sized_by_or_null` on the return type |
+| [Glossary](#glossary) | Terms used in this reference and their definitions |
 
 ## Quick Reference: Pointer Kinds and Bounds Annotations
 

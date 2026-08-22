@@ -1,6 +1,16 @@
 # Pipeline and Setup
 
-**Contents:** [The Mental Model](#the-mental-model) · [Creating the Context](#creating-the-context) · [HiDPI and Resize](#hidpi-and-resize) · [State Machine Hygiene](#state-machine-hygiene) · [Clearing](#clearing) · [Context Loss](#context-loss) · [Common Mistakes](#common-mistakes)
+## Table of Contents
+
+| Section | Covers |
+|---|---|
+| [The Mental Model](#the-mental-model) | Vertex processing, primitive assembly, rasterization, fragment shading and tests, plus the state mutations that precede a draw |
+| [Creating the Context](#creating-the-context) | WebGL2 creation options, WebGL1 fallback detection, and capability routing for modern versus extension APIs |
+| [HiDPI and Resize](#hidpi-and-resize) | CSS versus drawing-buffer dimensions, device-pixel-ratio scaling, synchronized viewport changes, and correct interpretation of requested canvas sizes |
+| [State Machine Hygiene](#state-machine-hygiene) | Current program, VAO, buffers, texture units, framebuffer, viewport, and capability state with JavaScript-side caching over hot-loop queries |
+| [Clearing](#clearing) | Color and depth initialization plus the limited cases where either clear can be omitted |
+| [Context Loss](#context-loss) | Stopping work, preserving restoration, rebuilding every GPU resource, resuming animation, and testing forced loss |
+| [Common Mistakes](#common-mistakes) | Blurry or partially rendered canvases, unnecessary preserved buffers, absent loss recovery, state-query stalls, and depth testing without an attachment |
 
 ## The Mental Model
 

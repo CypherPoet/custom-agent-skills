@@ -3,9 +3,19 @@
 > Source: https://developer.apple.com/app-store/review/guidelines/
 > Last synced: 2026-06-01
 
----
+## Table of Contents
 
-**Contents:** [§1.1 Objectionable Content](#11-objectionable-content) · [§1.2 User-Generated Content](#12-user-generated-content) · [§1.3 Kids Category](#13-kids-category) · [§1.4 Physical Harm](#14-physical-harm-asr--nr) · [§1.5 Developer Information](#15-developer-information-asr--nr) · [§1.6 Data Security](#16-data-security-asr--nr) · [§1.7 Reporting Criminal Activity](#17-reporting-criminal-activity)
+| Section | Covers |
+|---|---|
+| [§1.1 Objectionable Content](#11-objectionable-content) | Discrimination, realistic violence, dangerous weapons, sexual exploitation, inflammatory religion, deceptive or prank features, anonymous communications, and profiteering from crises |
+| [§1.2 User-Generated Content](#12-user-generated-content) | Required filtering, reporting, blocking, and contact controls, prohibited social experiences, creator-content moderation and purchases, and age identification and restriction |
+| [§1.3 Kids Category](#13-kids-category) | Parental gates for links and purchases, children’s privacy laws, limits on identifiers, analytics, tracking, and advertising, and continuing obligations after leaving the category |
+| [§1.4 Physical Harm (ASR & NR)](#14-physical-harm-asr--nr) | Medical accuracy and regulatory evidence, authorized dosage calculators, substance promotion and sales, official DUI-checkpoint sources, and dangerous challenges or device use |
+| [§1.5 Developer Information (ASR & NR)](#15-developer-information-asr--nr) | Reachable in-app and support-site contact details plus valid issuer contacts and brand-owned signing certificates for Wallet passes |
+| [§1.6 Data Security (ASR & NR)](#16-data-security-asr--nr) | Encryption, secure credential and local-data storage, access controls, privacy declarations, dependency risks, and secrets exposed in app binaries |
+| [§1.7 Reporting Criminal Activity](#17-reporting-criminal-activity) | Official law-enforcement participation, supported regional availability, report routing, and safeguards against vigilante reporting |
+
+---
 
 ## §1.1 Objectionable Content
 

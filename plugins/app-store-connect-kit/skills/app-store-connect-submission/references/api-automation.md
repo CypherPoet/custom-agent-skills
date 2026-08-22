@@ -4,6 +4,18 @@ The App Store Connect **API** is a REST API over almost everything in the consol
 metadata, screenshots, pricing, in-app purchases, TestFlight, and **submitting a version for review**.
 You can drive it from the CLI (or an agent / CI) without fastlane. *As of 2026-06; trust the current docs.*
 
+## Table of Contents
+
+| Section | Covers |
+|---|---|
+| [The key, and the `.env` pattern](#the-key-and-the-env-pattern) | Team-key creation and App Manager permissions, `.p8` handling, environment variables, app reach, and agent credential boundaries |
+| [Uploads — Apple-native `altool` (no JWT, no fastlane)](#uploads--apple-native-altool-no-jwt-no-fastlane) | `altool` upload and validation commands, private-key discovery, and IPA export sources |
+| [Everything else — a JWT + REST call](#everything-else--a-jwt--rest-call) | ES256 JWT construction, REST authentication, build polling states, and bundled Swift clients |
+| [Uploading screenshots & previews (reserve → upload → commit)](#uploading-screenshots--previews-reserve--upload--commit) | Media-set creation, reserve/upload/commit/order workflow, validation traps, poster frames, and icon limitations |
+| [Useful endpoints](#useful-endpoints) | Builds, versions, listing copy, build attachment, media, review submissions, state queries, and review notes |
+| [Verify the submission landed](#verify-the-submission-landed) | Confirm the review submission is queued through `reviewSubmissions` and verify that a first in-app purchase changed state and is attached |
+| [Scope — what stays console-bound](#scope--what-stays-console-bound) | Automatable delivery operations and the age rating, trader status, privacy, agreement, and banking steps that remain console-bound |
+
 ## The key, and the `.env` pattern
 
 Generate the key once: **App Store Connect → Users and Access → Integrations → App Store Connect API**.

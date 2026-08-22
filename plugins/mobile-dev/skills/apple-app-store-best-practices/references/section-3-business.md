@@ -5,9 +5,14 @@
 
 If the business model is not obvious, it must be explained in metadata and App Review notes. Expensive apps with irrationally high prices will be rejected. Manipulation of reviews, chart rankings, or use of paid/incentivized/fake feedback may result in expulsion from the Apple Developer Program.
 
----
+## Table of Contents
 
-**Contents:** [3.1 Payments](#31-payments) · [3.2 Other Business Model Issues](#32-other-business-model-issues)
+| Section | Covers |
+|---|---|
+| [3.1 Payments](#31-payments) | Digital-goods purchase and restoration rules, regional external links, subscription value and transitions, reader, multiplatform, enterprise, person-to-person, physical-goods, free standalone, and ad-management exemptions, hardware unlocks, and crypto wallet, mining, exchange, ICO, and task-reward restrictions |
+| [3.2 Other Business Model Issues](#32-other-business-model-issues) | Allowed promotional, rental, Wallet, insurance, donation, gift, and licensed-finance models versus prohibited store, manipulation, high-risk finance, and forced-action schemes |
+
+---
 
 ## 3.1 Payments
 

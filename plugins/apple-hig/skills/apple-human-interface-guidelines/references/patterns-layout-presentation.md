@@ -5,9 +5,19 @@
 
 Distilled from Apple's HIG Patterns pages: Right to left, Drag and drop, Undo and redo, Loading, Offering help, Collaboration and sharing, File management.
 
-**Contents:** [Right to left](#right-to-left) · [Drag and drop](#drag-and-drop) · [Undo and redo](#undo-and-redo) · [Loading](#loading) · [Offering help](#offering-help) · [Collaboration and sharing](#collaboration-and-sharing) · [File management](#file-management)
+## Table of Contents
 
-### Right to left
+| Section | Covers |
+|---|---|
+| [Right to left](#right-to-left) | Layout and text alignment, numbers and progress, navigation direction, artwork and icon exceptions, script balance, and localized symbols |
+| [Drag and drop](#drag-and-drop) | Move-versus-copy semantics, accessible alternatives, multi-item and reversible operations, data representations, visual feedback, scrolling, keyboard modifiers, and platform behavior |
+| [Undo and redo](#undo-and-redo) | Predictable action labels and visible results, multi-level and grouped reversal, system affordances and shortcuts, and platform support |
+| [Loading](#loading) | Immediate placeholders, background work, long-wait content, post-install assets, determinate and indeterminate progress, and watchOS constraints |
+| [Offering help](#offering-help) | Contextual help and tutorials, platform-appropriate language, TipKit styles and eligibility, concise tip content, and macOS and visionOS tooltips |
+| [Collaboration and sharing](#collaboration-and-sharing) | Cloud and custom infrastructure, system sharing interfaces, access and edit permissions, collaboration controls, Messages events, and spatial sharing |
+| [File management](#file-management) | System browsing, document creation and opening, autosave and extensions, Quick Look, document launchers and file providers, Finder integration, and manual-save states |
+
+## Right to left
 
 **Purpose:** Support right-to-left languages like Arabic and Hebrew by reversing your interface as needed to match the reading direction of the related scripts.
 
@@ -36,7 +46,7 @@ Canonical implementations: SF Symbols (RTL variants and localized symbols; speci
 **Platform deltas:**
 - iOS/iPadOS, macOS, tvOS, visionOS, watchOS: No additional considerations.
 
-### Drag and drop
+## Drag and drop
 
 *Last changed: 2023-10*
 
@@ -75,7 +85,7 @@ Canonical implementations: UIKit `Drag and drop`, AppKit `Drag and Drop`, `File 
 - visionOS: When possible, launch your app to handle content dropped into empty space (dropping a URL launches Safari; Quick Look–supported content launches Quick Look).
 - Not supported in tvOS or watchOS.
 
-### Undo and redo
+## Undo and redo
 
 **Purpose:** Give people easy ways to reverse many types of actions, helping them explore and experiment safely while learning an interface or task.
 
@@ -94,7 +104,7 @@ Canonical implementations: Foundation `UndoManager`.
 - visionOS: No additional considerations.
 - Not supported in tvOS or watchOS.
 
-### Loading
+## Loading
 
 *Last changed: 2025-06*
 
@@ -112,7 +122,7 @@ Canonical implementations: Foundation `UndoManager`.
 - iOS, iPadOS, macOS, tvOS, visionOS: No additional considerations.
 - watchOS: Avoid showing a loading indicator as much as possible — aim to display content immediately. When content needs a second or two, a loading indicator is better than a blank screen.
 
-### Offering help
+## Offering help
 
 *Last changed: 2023-12*
 
@@ -137,7 +147,7 @@ Canonical implementations: `TipKit` (tips). macOS/visionOS tooltips: SwiftUI `he
 - iOS, iPadOS, tvOS, watchOS: No additional considerations.
 - macOS, visionOS: A *tooltip* (a *help tag* in user docs) is a small transient view describing how to use a component. On Mac (including iPhone/iPad apps) it appears on pointer hover; in visionOS it appears on look or hover. Describe only the control the person indicates interest in. Explain the action or task the control initiates, often beginning with a verb ("Restore default settings"). Avoid repeating the control's name. Be brief — limit to roughly 60–75 characters (localization changes length); use sentence fragments and omit articles. Use sentence case and omit ending punctuation unless your app's style requires it. Consider context-sensitive tooltips (different text per control state).
 
-### Collaboration and sharing
+## Collaboration and sharing
 
 *Last changed: 2023-12*
 
@@ -162,7 +172,7 @@ Canonical implementations: SwiftUI `ShareLink`, `Shared with You` / `SWHighlight
 - watchOS: In a SwiftUI app, use `ShareLink` to present the system share sheet.
 - Not available in tvOS.
 
-### File management
+## File management
 
 *Last changed: 2024-06*
 

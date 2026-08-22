@@ -2,6 +2,21 @@
 
 The VSE is Blender's non-linear video editor. From script: build sequences, add strips, set transitions, and render. Most editing work is interactive (cuts, fades), but the structure can be assembled programmatically.
 
+## Table of Contents
+
+| Section | Covers |
+|---|---|
+| [Mental model](#mental-model) | Per-scene timeline creation, numbered channels, and movie, image, sound, color, transition, and effect strips |
+| [Adding strips](#adding-strips) | Movie, still-image, and sound strip creation with channel, start-frame, name, and duration control |
+| [Transitions](#transitions) | Source overlap, two-input effect strips, crossfade construction, and supported transition and processing effects |
+| [Audio sync](#audio-sync) | Scene frame-rate setup, interactive waveform limits, strip trimming, duration, and seconds-to-frame alignment |
+| [Speed / time remapping](#speed--time-remapping) | Speed effect creation and the required multiply mode for slow-motion or accelerated factors |
+| [Render output settings (VSE)](#render-output-settings-vse) | MPEG-4, H.264, AAC, quality, output path, and timeline frame-range configuration |
+| [Render the timeline](#render-the-timeline) | Standard animation rendering and required headless execution for nontrivial timelines |
+| [Inspecting a timeline](#inspecting-a-timeline) | Recursive versus top-level strip enumeration and the Blender 5 removal of legacy sequence collection names |
+| [When the VSE isn't the right tool](#when-the-vse-isnt-the-right-tool) | Blender pipeline, editable transition, grading, and mixed-media use cases versus direct FFmpeg concatenation or trimming |
+| [Sources](#sources) | Blender Video Sequencer, strip, and sequence-editor documentation |
+
 ## Mental model
 
 A *scene* in Blender has one VSE timeline (`scene.sequence_editor`). The timeline holds *strips* arranged on *channels* (numbered tracks, 1 to 128). Strips can be video, image, sound, color, transition, or effect.

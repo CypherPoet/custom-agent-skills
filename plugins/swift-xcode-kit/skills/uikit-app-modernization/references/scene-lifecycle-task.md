@@ -1,5 +1,17 @@
 # Task: Scene Lifecycle Migration
 
+## Table of Contents
+
+| Section | Covers |
+|---|---|
+| [Overview](#overview) | Per-scene lifecycle requirements, iOS 27 launch impact, the three-step migration, and window-creation follow-through |
+| [Detection](#detection) | Search evidence that distinguishes required, complete, and partial migrations and determines whether to proceed, stop, or ask |
+| [Scope & Automation Level](#scope--automation-level) | Automatic versus decision-gated work, deferred handler migrations, explicit window limits, and protection against unrelated screen edits |
+| [Step 1: Add Scene Manifest to Info.plist](#step-1-add-scene-manifest-to-infoplist) | Static and dynamic configuration, storyboard differences, single-window declaration, and role-based alternatives |
+| [Step 2: Create SceneDelegate](#step-2-create-scenedelegate) | Storyboard-owned versus programmatic windows, scene-bound initialization, and Xcode build-phase enrollment |
+| [Step 3: Relocate Lifecycle Methods](#step-3-relocate-lifecycle-methods) | All-or-none state-event migration, launch-setup decisions, helper ownership, and removal of app-delegate window access |
+| [API Reference](#api-reference) | UIKit scene APIs and the minimum iOS versions that support them |
+
 ## Overview
 
 UIKit apps must adopt scene-based lifecycle (`UISceneDelegate`) to function correctly on modern iOS. The system dispatches foreground/background transitions per-scene, not per-app — apps that only implement `UIApplicationDelegate` lifecycle methods miss these events in multi-window scenarios.

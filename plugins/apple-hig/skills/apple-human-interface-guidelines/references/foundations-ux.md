@@ -5,9 +5,19 @@
 
 Distilled from Apple's HIG Foundations pages: Design principles, Accessibility, Inclusion, Layout, Motion, Pointing devices, Writing.
 
-**Contents:** [Design principles](#design-principles) · [Accessibility](#accessibility) · [Inclusion](#inclusion) · [Layout](#layout) · [Motion](#motion) · [Pointing devices](#pointing-devices) · [Writing](#writing)
+## Table of Contents
 
-### Design principles
+| Section | Covers |
+|---|---|
+| [Design principles](#design-principles) | Purpose, agency, responsibility, familiarity, flexibility, simplicity, craft, and delight as non-rigid decision tools |
+| [Accessibility](#accessibility) | Vision, hearing, mobility, speech, and cognitive support; testing and App Store declarations; sizing and contrast; and visionOS comfort |
+| [Inclusion](#inclusion) | Respectful language, imagery, gender and disability representation, cultural assumptions, accessibility, internationalization, and localization |
+| [Layout](#layout) | Content hierarchy and grouping, adaptive context changes, safe areas and type scaling, device dimensions, and platform-specific layout rules |
+| [Motion](#motion) | Purposeful and optional feedback, multimodal alternatives, cancellation, game frame rates, and visionOS and watchOS comfort constraints |
+| [Pointing devices](#pointing-devices) | System gestures and unified input, pointer effects and hit regions, custom pointers, modifier behavior, and iPadOS, macOS, and visionOS patterns |
+| [Writing](#writing) | Voice and tone, plain inclusive language, action labels, multi-step flows, platform terms, empty states, errors, settings, and text-field guidance |
+
+## Design principles
 *Last changed: 2026-06*
 
 **Purpose:** Eight foundational principles that guide design across every Apple platform — tools for weighing competing priorities and making key decisions, not rigid rules. Apple reintroduced this page in June 2026; there's no single right way to apply the principles.
@@ -25,7 +35,7 @@ Distilled from Apple's HIG Foundations pages: Design principles, Accessibility, 
 **Platform deltas:**
 - All platforms: the principles apply universally; they're decision-making tools rather than platform-specific rules.
 
-### Accessibility
+## Accessibility
 *Last changed: 2025-06*
 
 **Purpose:** Make interfaces intuitive, perceivable, and adaptable so everyone can use your app or game regardless of capability — covering vision, hearing, mobility, speech, and cognitive needs. Audit with Accessibility Inspector; declare support via Accessibility Nutrition Labels in App Store Connect.
@@ -100,7 +110,7 @@ Control sizes:
 - iOS/iPadOS/macOS/tvOS/watchOS: no additional considerations.
 - visionOS: prioritize comfort — keep elements within the field of view; prefer horizontal layouts over neck-straining vertical ones; don't demand attention in different locations in quick succession; reduce speed/intensity of animated objects in peripheral vision; be gentle with camera and video motion; never anchor content to the wearer's head (feels confining and blocks Pointer Control); minimize large, repetitive gestures.
 
-### Inclusion
+## Inclusion
 
 **Purpose:** Design respectful experiences that welcome everyone by examining your assumptions about language, imagery, gender, ability, and culture — an inoffensive app isn't automatically an inclusive one.
 
@@ -124,7 +134,7 @@ Control sizes:
 **Platform deltas:**
 - All platforms: no additional considerations.
 
-### Layout
+## Layout
 *Last changed: 2025-09*
 
 **Purpose:** Build a consistent, adaptive layout that grounds people in content, respects each platform's safe areas and system features, and survives context changes like rotation, resizing, and text-size shifts.
@@ -215,7 +225,7 @@ watchOS screen dimensions (pixels):
 - visionOS: consider centering the most important content and controls. Keep content within window bounds — system window controls sit just outside in the XY plane. Use ornaments for controls that don't belong in the window. Space interactive components so button centers are at least 60 pt apart, leaving room for the hover effect.
 - watchOS: extend content edge-to-edge (the bezel supplies padding); minimize padding between elements. Show at most three glyph buttons or two text buttons per row; prefer full-width text buttons. Support autorotation in views people might show others (e.g., QR codes).
 
-### Motion
+## Motion
 *Last changed: 2025-09*
 
 **Purpose:** Use motion to convey status, give feedback, and enrich the experience without distracting or causing discomfort — system components animate automatically (Liquid Glass responds more emphatically to touch, more subdued to trackpad), so these rules govern custom motion.
@@ -235,7 +245,7 @@ watchOS screen dimensions (pixels):
 - visionOS: avoid motion at the edges of the field of view — peripheral motion distracts and can make people feel they're moving; if needed, match the object's brightness to surrounding content. For large objects that occlude passthrough, increase translucency or lower contrast so movement doesn't read as self-motion. Fade objects out/in instead of animating relocation when the movement carries no meaning. Avoid rotating a virtual world — use instantaneous directional changes during a quick fade. Give people a stationary frame of reference. Avoid sustained oscillation, especially near 0.2 Hz; keep amplitude low and content translucent if oscillation is required.
 - watchOS: prefer SwiftUI for motion; use `WKInterfaceImage` for WatchKit animations and image sequences.
 
-### Pointing devices
+## Pointing devices
 *Last changed: 2023-06*
 
 **Purpose:** Support trackpad and mouse input consistently with the system — on Mac as the primary input alongside a keyboard, on iPad and Apple Vision Pro as an addition to (not replacement for) touch, eyes, and gestures.
@@ -263,7 +273,7 @@ watchOS screen dimensions (pixels):
   - Use standard pointer styles to communicate state: arrow (standard); horizontal/vertical I-beam (text selection/insertion); pointing hand (link); open/closed hand (content drag possible/in progress); crosshair (precise rectangular selection); contextual menu (Control key held); drag copy (Option-drag duplicates); drag link (Option-Command-drag creates alias); disappearing item (drop removes the dragged item); operation not allowed (can't drop here); resize up/down/left/right/left-right/up-down.
 - visionOS: where the person looks determines pointer context — the system focuses the element under the pointer and transitions between windows automatically; no app work needed. The pointer hides while people gesture on a trackpad/mouse and reappears where they're looking when moved.
 
-### Writing
+## Writing
 *Last changed: 2025-12*
 
 **Purpose:** Treat interface text as core UX — establish a voice, adapt tone to context, and write copy that is clear, action-oriented, and inclusive.

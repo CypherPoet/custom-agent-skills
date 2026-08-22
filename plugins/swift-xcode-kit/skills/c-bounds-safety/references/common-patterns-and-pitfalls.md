@@ -2,7 +2,12 @@
 
 This document covers common patterns for working with `-fbounds-safety` and pitfalls encountered during real-world adoption.
 
-**Contents:** [Common Patterns](#common-patterns) · [Common Pitfalls](#common-pitfalls)
+## Table of Contents
+
+| Section | Covers |
+|---|---|
+| [Common Patterns](#common-patterns) | Bounds-synchronization and data-layout techniques, internal API rewrites, source-compatible pointer annotations, ABI-safe wrappers, non-adopted library and terminated-string handling, and indexable-kind selection |
+| [Common Pitfalls](#common-pitfalls) | Struct-cast and pointer-widening hazards, desynchronized counts and slices, allocator, parameter, and array annotation errors, misleading forges, and unnecessary compatibility guards |
 
 ## Common Patterns
 

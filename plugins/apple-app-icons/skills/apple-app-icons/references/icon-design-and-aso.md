@@ -2,7 +2,16 @@
 
 How to make an Apple app icon *convert* — the design and tap-through side that complements the build-and-ship engineering in [`../SKILL.md`](../SKILL.md). This is Apple-focused; Android adaptive icons and Play Store experiments are a separate concern.
 
-**Contents:** [Why the icon is your highest-leverage asset](#why-the-icon-is-your-highest-leverage-asset) · [Design principles](#design-principles) · [Apple icon sizes](#apple-icon-sizes) · [Icon audit rubric](#icon-audit-rubric) · [A/B-testing icons on iOS](#ab-testing-icons-on-ios) · [Designer brief template](#designer-brief-template)
+## Table of Contents
+
+| Section | Covers |
+|---|---|
+| [Why the icon is your highest-leverage asset](#why-the-icon-is-your-highest-leverage-asset) | Search, browse, and chart visibility; tap-through leverage; and the icon's role across product and brand surfaces |
+| [Design principles](#design-principles) | Small-scale simplicity, platform consistency, visual depth, contrast, and recognizability |
+| [Apple icon sizes](#apple-icon-sizes) | Master canvases, alpha and mask rules, surface sizes, and `.icon` versus appiconset generation |
+| [Icon audit rubric](#icon-audit-rubric) | Small-size clarity, light and dark contrast, category differentiation, simplicity, and brand alignment scored across five dimensions, with overall and single-dimension redesign thresholds |
+| [A/B-testing icons on iOS](#ab-testing-icons-on-ios) | PPO versus alternate icons, treatment setup, Liquid Glass caveats, conversion evidence, significance, and controlled variables |
+| [Designer brief template](#designer-brief-template) | Concept variants, small-size mockups, dark-background checks, and source deliverables |
 
 ## Why the icon is your highest-leverage asset
 

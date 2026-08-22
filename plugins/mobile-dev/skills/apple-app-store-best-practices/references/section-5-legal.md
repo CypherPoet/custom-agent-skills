@@ -3,9 +3,17 @@
 > Source: https://developer.apple.com/app-store/review/guidelines/
 > Last synced: 2026-06-01
 
----
+## Table of Contents
 
-**Contents:** [5.1 Privacy](#51-privacy) · [5.2 Intellectual Property](#52-intellectual-property) · [§5.3 Gaming, Gambling, and Lotteries](#53-gaming-gambling-and-lotteries) · [§5.4 VPN Apps](#54-vpn-apps-asr--nr) · [§5.5 Mobile Device Management](#55-mobile-device-management-asr--nr)
+| Section | Covers |
+|---|---|
+| [5.1 Privacy](#51-privacy) | Policies and manifests, consent and data minimization, permission fallback, account and deletion rules, regulated publishers, tracking and third-party or AI sharing, sensitive frameworks, health research, children, and location |
+| [5.2 Intellectual Property](#52-intellectual-property) | Asset and software licensing, user-content takedowns, authorized service APIs, piracy and DRM, false Apple endorsement or editorial claims, and confusing similarity to Apple products |
+| [§5.3 Gaming, Gambling, and Lotteries](#53-gaming-gambling-and-lotteries) | Developer-sponsored promotions, in-app official rules and Apple disclaimers, the ban on in-app-purchase wagering credits, and licensing, active geofencing, free distribution, and lottery elements |
+| [§5.4 VPN Apps (ASR & NR)](#54-vpn-apps-asr--nr) | Approved VPN APIs and organizational publishers, disclosure before purchase or activation, prohibitions on third-party data use or sale, and jurisdiction-specific licensing |
+| [§5.5 Mobile Device Management (ASR & NR)](#55-mobile-device-management-asr--nr) | Apple capability approval, qualifying enterprise, education, or government publishers, managed distribution, and enrollment and entitlement checks |
+
+---
 
 ## 5.1 Privacy
 

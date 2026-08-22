@@ -3,7 +3,16 @@
 > Source: Filament Core Concepts — "Lighting" (Filament.md) + cmgen/iblprefilter docs, Filament v1.75.0
 > Last synced: 2026-08-14
 
-**Contents:** [Physical light units (the trap)](#physical-light-units-the-trap) · [Direct lighting](#direct-lighting) · [Directional lights (sun)](#directional-lights-sun) · [Point lights](#point-lights) · [Spot lights](#spot-lights) · [Falloff / influence radius](#falloff--influence-radius) · [Photometric (IES) lights](#photometric-ies-lights) · [Area lights](#area-lights) · [Light color & color temperature](#light-color--color-temperature) · [Pre-exposed lights](#pre-exposed-lights) · [Image-based lighting (IBL)](#image-based-lighting-ibl) · [What an IBL is](#what-an-ibl-is) · [Diffuse: spherical harmonics](#diffuse-spherical-harmonics-irradiance) · [Specular: prefiltered roughness mip chain](#specular-prefiltered-roughness-mip-chain) · [Why you cannot use a raw HDR directly](#why-you-cannot-use-a-raw-hdr-directly) · [Processing with cmgen (CLI)](#processing-with-cmgen-cli) · [Processing with iblprefilter (runtime GPU)](#processing-with-iblprefilter-runtime-gpu) · [Skybox](#skybox) · [Occlusion](#occlusion) · [Normal mapping](#normal-mapping) · [Runtime API reference (verbatim signatures)](#runtime-api-reference-verbatim-signatures)
+## Table of Contents
+
+| Section | Covers |
+|---|---|
+| [Physical light units (the trap)](#physical-light-units-the-trap) | Per-light lux, lumen, candela, and luminance units, real-world intensity checks, watts-to-lumens conversion, efficiency constants, and shader-side intensity normalization |
+| [Direct lighting](#direct-lighting) | Sun and directional limits, point and focused or uncoupled spot equations, smooth falloff and performance, IES profiles, area-light gaps, color temperature, and pre-exposure |
+| [Image-based lighting (IBL)](#image-based-lighting-ibl) | Single distant probes, diffuse spherical harmonics, prefiltered specular and DFG terms, raw-HDR limits, offline and GPU preprocessing, calibration, and skybox interaction |
+| [Occlusion](#occlusion) | Micro, baked, and screen-space scales, safe combination, indirect-only diffuse AO, specular micro and horizon terms, and reflection-leak suppression |
+| [Normal mapping](#normal-mapping) | High-to-low and detail-map roles, tangent-space blending failures, offline reoriented normals, and cheaper runtime UDN blending |
+| [Runtime API reference (verbatim signatures)](#runtime-api-reference-verbatim-signatures) | Light creation and mutation, prefiltered reflection and irradiance inputs, SH estimates, environment rotation and intensity, and textured or constant skyboxes |
 
 ---
 

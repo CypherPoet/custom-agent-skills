@@ -5,9 +5,19 @@
 
 Distilled from Apple's HIG Components pages: Tab bars, Sidebars, Tab views, Toolbars, Segmented controls, Path controls, Page controls.
 
-**Contents:** [Tab bars](#tab-bars) · [Sidebars](#sidebars) · [Tab views](#tab-views) · [Toolbars](#toolbars) · [Segmented controls](#segmented-controls) · [Path controls](#path-controls) · [Page controls](#page-controls)
+## Table of Contents
 
-### Tab bars
+| Section | Covers |
+|---|---|
+| [Tab bars](#tab-bars) | Top-level navigation, persistent state, tab count, labels, icons, badges, search, customization, minimization, and platform layouts |
+| [Sidebars](#sidebars) | Complex top-level navigation, customization and grouping, visibility, depth limits, coloring, and adaptive platform behavior |
+| [Tab views](#tab-views) | Related-pane switching, labels, tab count, borders and margins, alternative controls, and platform support |
+| [Toolbars](#toolbars) | Frequent actions, navigation, search, overflow, customization, titles, item grouping and placement, and platform layouts |
+| [Segmented controls](#segmented-controls) | Related choices and actions, selection state, segment limits and consistency, labels, and platform alternatives |
+| [Path controls](#path-controls) | macOS file paths, standard and pop-up styles, window-body placement, truncation, and drag selection |
+| [Page controls](#page-controls) | Ordered-page navigation, dot count and appearance, tapping and scrubbing, background styles, and platform behavior |
+
+## Tab bars
 *Last changed: 2026-06*
 
 **Purpose:** A tab bar lets people navigate between the top-level sections of an app while preserving each section's navigation state.
@@ -38,7 +48,7 @@ Canonical implementations: SwiftUI `TabView`, `TabViewStyle.tabBarOnly`, `TabVie
 - tvOS: Highly customizable (background tint/color/image, per-item fonts including selected, selected/unselected tints, button icons like settings and search). Translucent by default with only the selected tab opaque; focused selected tab gains a drop shadow. Height is 68 points; top edge is 46 points from the top of the screen — neither is changeable. Overflow items truncate with a fade from the right (and from the left when scrolling). Tab bar can scroll offscreen when a tab is a single main view, but stays pinned for split views; Menu returns focus to the tab bar. In live-viewing apps order tabs: live content, then DVR/recorded, then other.
 - watchOS: Not supported.
 
-### Sidebars
+## Sidebars
 *Last changed: 2026-06*
 
 **Purpose:** A sidebar appears on the leading side of a view and lets people navigate between app areas or top-level content collections like folders and playlists.
@@ -66,7 +76,7 @@ Canonical implementations: SwiftUI `TabViewStyle.sidebarAdaptable`, `NavigationS
 - tvOS: No additional considerations.
 - watchOS: Not supported.
 
-### Tab views
+## Tab views
 *Last changed: 2023-06*
 
 **Purpose:** A tab view presents multiple mutually exclusive panes of content in the same area, switched via a tabbed control on the top edge.
@@ -92,7 +102,7 @@ Canonical implementations: SwiftUI `TabView`; AppKit `NSTabView`.
 - watchOS: Displayed as page controls (`TabView`).
 - tvOS, visionOS: Not supported.
 
-### Toolbars
+## Toolbars
 *Last changed: 2025-12*
 
 **Purpose:** A toolbar provides convenient access to frequently used commands, controls, navigation, and search, arranged horizontally along the top or bottom edge of a view.
@@ -126,7 +136,7 @@ Canonical implementations: SwiftUI `Toolbars`, `ScrollEdgeEffectStyle`, `Toolbar
 - watchOS: Place toolbar buttons in the top corners (`topBarLeading`, `topBarTrailing`) or along the bottom (`bottomBar`); they stay visible as content scrolls under them. A scrolling toolbar button (`primaryAction`) stays hidden until people scroll up — use it for an important action that isn't a primary app function.
 - tvOS: No additional considerations.
 
-### Segmented controls
+## Segmented controls
 *Last changed: 2023-06*
 
 **Purpose:** A segmented control is a linear set of two or more equal-width segments, each functioning as a button, offering a single choice (or, in macOS, single or multiple choices) or acting as a set of momentary action buttons.
@@ -161,7 +171,7 @@ Canonical implementations: SwiftUI `PickerStyle.segmented`; UIKit `UISegmentedCo
 - visionOS: Looking at an icon segment shows a tooltip with the descriptive text you supply.
 - watchOS: Not supported.
 
-### Path controls
+## Path controls
 
 **Purpose:** A path control (macOS only) shows the file system path of a selected file or folder.
 
@@ -175,7 +185,7 @@ Canonical implementations: AppKit `NSPathControl`.
 **Platform deltas:**
 - Not supported in iOS, iPadOS, tvOS, visionOS, or watchOS.
 
-### Page controls
+## Page controls
 *Last changed: 2023-06*
 
 **Purpose:** A page control displays a row of indicator dots (a solid dot marks the current page) representing pages in a flat, ordered list, helping people navigate to a page.

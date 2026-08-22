@@ -4,7 +4,18 @@ A concise diff for the cases where you need to support both: legacy code, fallba
 
 WebGL2 ships in every modern browser (including Safari since 15). WebGL1 is still useful for very old browsers and some embedded contexts. New code should default to WebGL2 with a WebGL1 fallback only if you have a concrete reason to support it.
 
-**Contents:** [Context Detection](#context-detection) · [Shader Source](#shader-source) · [Vertex Array Objects](#vertex-array-objects) · [Instancing](#instancing) · [NPOT Textures](#npot-textures) · [Features That Are WebGL2-Only](#features-that-are-webgl2-only) · [Recommended Strategy](#recommended-strategy) · [Common Mistakes](#common-mistakes)
+## Table of Contents
+
+| Section | Covers |
+|---|---|
+| [Context Detection](#context-detection) | WebGL2-first context fallback and a version flag for shaders, vertex arrays, and instancing |
+| [Shader Source](#shader-source) | GLSL syntax and capability differences plus macro-prefix and separate-file strategies for dual-version shaders |
+| [Vertex Array Objects](#vertex-array-objects) | One interface over WebGL2 vertex arrays and the checked WebGL1 `OES_vertex_array_object` extension |
+| [Instancing](#instancing) | Compatibility wrappers for core WebGL2 instancing and checked WebGL1 extension methods |
+| [NPOT Textures](#npot-textures) | WebGL1 wrap, filter, and mipmap limits; unrestricted WebGL2 behavior; and resize or constraint fallbacks |
+| [Features That Are WebGL2-Only](#features-that-are-webgl2-only) | Modern texture, render-target, buffer, feedback, integer, sRGB, and sampling features that justify dropping WebGL1 |
+| [Recommended Strategy](#recommended-strategy) | WebGL2-first applications with graceful failure and isolated compatibility layers for products that require broader reach |
+| [Common Mistakes](#common-mistakes) | Diagnosis of shader-version, NPOT, missing-extension, cube-sampling, and multiple-render-target failures |
 
 ## Context Detection
 

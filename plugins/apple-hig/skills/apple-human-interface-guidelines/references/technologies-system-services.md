@@ -5,9 +5,26 @@
 
 Distilled from Apple's HIG Technologies pages: Siri, App Shortcuts, Snippets, Generative AI, Machine learning, Maps, Nearby interactions, NFC, CarPlay, Game Center, Designing for games, iCloud, Printing, VoiceOver.
 
-**Contents:** [Siri](#siri) · [App Shortcuts](#app-shortcuts) · [Snippets](#snippets) · [Generative AI](#generative-ai) · [Machine learning](#machine-learning) · [Maps](#maps) · [Nearby interactions](#nearby-interactions) · [NFC](#nfc) · [CarPlay](#carplay) · [Game Center](#game-center) · [Designing for games](#designing-for-games) · [iCloud](#icloud) · [Printing](#printing) · [VoiceOver](#voiceover)
+## Table of Contents
 
-### Siri
+| Section | Covers |
+|---|---|
+| [Siri](#siri) | App intents, entities and schemas, contextual donations, action and content selection, spoken and visual responses, errors, inclusivity, and editorial rules |
+| [App Shortcuts](#app-shortcuts) | Schema boundaries, shortcut limits and parameters, clarification and discovery, dialogue and activity responses, activation phrases, and platform behavior |
+| [Snippets](#snippets) | Result versus confirmation flows, dialogue, views and system buttons, height and contrast constraints, concise content, action labels, Dynamic Type, and platform support |
+| [Generative AI](#generative-ai) | User agency, inclusion and fallbacks, transparency and privacy, model and dataset choices, safe inputs and reversible outputs, latency, feedback, and model evolution |
+| [Machine learning](#machine-learning) | Feature-risk classification, explicit and implicit feedback, calibration, mistakes and corrections, option design, confidence, attribution, and limitations |
+| [Maps](#maps) | Interaction and emphasis, search and selection, clustering and attribution, annotations and overlays, place cards, indoor maps, dimensions, and watchOS snapshots |
+| [Nearby interactions](#nearby-interactions) | Permission and ephemeral identity, distance- and direction-based feedback, multimodal cues and alternatives, device orientation and field of view, and platform limits |
+| [NFC](#nfc) | In-app versus background reading and availability constraints, proximity language, scanning-sheet instructions, fallback scanning paths, and platform support |
+| [CarPlay](#carplay) | System templates and driving constraints, locked-iPhone and audio behavior, scannable layout and color, image specifications, in-car errors, and platform support |
+| [Game Center](#game-center) | Sign-in and access-point placement, official UI and terminology, achievement and leaderboard design, challenges, multiplayer activities, image specifications, and platform behavior |
+| [Designing for games](#designing-for-games) | Installation and onboarding, contextual permissions, adaptive visuals and controls, inclusive customization, Apple technology integrations, and platform size and input specifications |
+| [iCloud](#icloud) | Automatic cross-device access, download and storage management, unavailable-service behavior, synchronized state, deletion warnings, conflict resolution, search, and game saves |
+| [Printing](#printing) | Standard print locations and availability states, system print options, macOS custom categories and page setup, advanced settings, previews, and document persistence |
+| [VoiceOver](#voiceover) | Labels and meaningful image descriptions, accessible charts and decorative exclusions, titles and reading order, grouping, change notifications, rotors, and visionOS gestures |
+
+## Siri
 *Last changed: 2026-06*
 
 **Purpose:** Lets people find information and perform quick actions throughout the system and your app by voice, the Dynamic Island, or the Siri app — powered by Apple Intelligence on supported devices.
@@ -37,7 +54,7 @@ Canonical implementations: App Intents framework (intents + entities), app schem
 **Platform deltas:**
 - No platform-specific section beyond the cross-device behavior noted above.
 
-### App Shortcuts
+## App Shortcuts
 *Last changed: 2026-06*
 
 **Purpose:** Gives people access to your app's key functions or content throughout the system (Siri, Spotlight, Shortcuts app, Action button, Apple Pencil squeeze), available immediately on install.
@@ -65,7 +82,7 @@ Canonical implementations: App Intents (`AppShortcutPhrase`, `LiveActivityIntent
 - macOS: App Shortcuts aren't supported, but App Intents actions are — people build custom shortcuts in the Shortcuts app on Mac.
 - visionOS/watchOS: No additional considerations. Not supported in tvOS.
 
-### Snippets
+## Snippets
 *Last changed: 2026-06*
 
 **Purpose:** Compact views that appear in response to a Siri, Spotlight, or Shortcuts action to show a result or ask for confirmation.
@@ -88,7 +105,7 @@ Canonical implementations: App Intents (`ConfirmationActionName`, displaying sta
 **Platform deltas:**
 - No additional considerations for iOS, iPadOS, or macOS. Not supported in tvOS, visionOS, or watchOS.
 
-### Generative AI
+## Generative AI
 *Last changed: 2026-06*
 
 **Purpose:** Uses machine learning models to create and transform text, images, and other content, enabling features for creative expression, communication, and productivity.
@@ -124,7 +141,7 @@ Canonical implementations: Foundation Models framework, Core AI.
 **Platform deltas:**
 - No additional considerations for iOS, iPadOS, macOS, tvOS, visionOS, or watchOS.
 
-### Machine learning
+## Machine learning
 *Last changed: 2026-06*
 
 **Purpose:** Lets apps and games learn from data and usage patterns to improve existing experiences and create new ones (recommendations, recognition, personalization).
@@ -151,7 +168,7 @@ Canonical implementations: Core ML, Create ML.
 **Platform deltas:**
 - No additional considerations for iOS, iPadOS, macOS, tvOS, visionOS, or watchOS.
 
-### Maps
+## Maps
 *Last changed: 2024-12*
 
 **Purpose:** Displays outdoor or indoor geographical data in your app or website, supporting zoom, pan, rotation, annotations, overlays, routing, and standard/satellite/hybrid views.
@@ -185,7 +202,7 @@ Canonical implementations: MapKit, MapKit JS; Indoor Mapping Data Format (IMDF).
 - No additional considerations for iOS, iPadOS, macOS, tvOS, or visionOS.
 - watchOS: Maps are static, non-interactive snapshots; tapping opens the Maps app. Add up to 5 annotations. Fit the entire map element onscreen without scrolling and show the smallest region encompassing all points of interest (`WKInterfaceMap`).
 
-### Nearby interactions
+## Nearby interactions
 *Last changed: 2023-06*
 
 **Purpose:** Supports on-device experiences that integrate the presence of nearby people and objects using Ultra Wideband (UWB), via the Nearby Interaction framework.
@@ -207,7 +224,7 @@ Canonical implementations: Nearby Interaction framework.
 - watchOS: APIs provide a peer device's distance only; all participating watchOS apps must be in the foreground.
 - No additional considerations for iPadOS. Not supported in macOS, tvOS, or visionOS.
 
-### NFC
+## NFC
 
 **Purpose:** Lets iOS apps on supported devices read data from electronic tags attached to real-world objects via near-field communication scanning.
 
@@ -226,7 +243,7 @@ Canonical implementations: Core NFC.
 **Platform deltas:**
 - No additional considerations for iOS or iPadOS. Not supported in macOS, tvOS, visionOS, or watchOS.
 
-### CarPlay
+## CarPlay
 *Last changed: 2023-05*
 
 **Purpose:** Shows compatible iPhone apps on the car's built-in display so drivers can get directions, call, message, and listen to audio while staying focused on the road.
@@ -260,7 +277,7 @@ Canonical implementations: CarPlay templates (see CarPlay App Programming Guide)
 **Platform deltas:**
 - No additional considerations for iOS. Not supported in iPadOS, macOS, tvOS, visionOS, or watchOS.
 
-### Game Center
+## Game Center
 *Last changed: 2025-06*
 
 **Purpose:** Apple's social gaming network — lets players track progress, connect with friends across Apple platforms, and boosts discovery of your game, via the GameKit framework.
@@ -324,7 +341,7 @@ Challenge / multiplayer activity image:
 - tvOS: optionally add a dashboard image (600x180 pt / 1200x360 px @2x; PNG/TIF/JPG, sRGB or P3, 72 DPI min) — simple and recognizable; use a logo or word mark, not the app icon.
 - watchOS: GameKit features and API are available, but there's no system Game Center UI to invoke — content appears on a connected iPhone.
 
-### Designing for games
+## Designing for games
 *Last changed: 2025-06*
 
 **Purpose:** Platform-wide guidance for integrating Apple platform characteristics and patterns so a game feels at home across Apple devices.
@@ -377,7 +394,7 @@ Interaction methods by platform:
 **Platform deltas:**
 - Every platform except watchOS supports physical game controllers. See per-platform interaction-method table above.
 
-### iCloud
+## iCloud
 *Last changed: 2025-06*
 
 **Purpose:** A service that lets people seamlessly access their content (photos, videos, documents, and more) from any device without explicit synchronization — built on transparency, so people always assume they're accessing the latest version.
@@ -399,7 +416,7 @@ Canonical implementations: CloudKit, GameSave.
 **Platform deltas:**
 - No additional considerations for iOS, iPadOS, macOS, tvOS, visionOS, or watchOS.
 
-### Printing
+## Printing
 
 **Purpose:** Lets an iOS, iPadOS, macOS, or visionOS app integrate system-provided print functionality, with custom printer- and document-specific options when needed.
 
@@ -414,7 +431,7 @@ Canonical implementations: `UIPrintInteractionController` (UIKit), `NSDocument` 
 - No additional considerations for iOS, iPadOS, or visionOS. Not supported in tvOS or watchOS.
 - macOS: for app-specific options, create a custom print-panel category with a unique name (e.g., your app name) — Keynote adds presenter notes, slide backgrounds, skipped slides; for document page settings, consider a page setup dialog but don't reimplement what the system provides (orientation, reverse order); make option interdependencies clear; separate advanced features behind a disclosure control labeled "Advanced Options"; consider letting people preview a setting's effect; consider storing modified settings with the document (at least until it's closed).
 
-### VoiceOver
+## VoiceOver
 *Last changed: 2025-03*
 
 **Purpose:** A screen reader that lets people who are blind or have low vision experience your app's interface and content without seeing the display.

@@ -4,7 +4,24 @@ Loading models (GLTF/GLB primary, plus OBJ/FBX/STL/PLY), textures (`TextureLoade
 
 > Scene/renderer setup: see [../SKILL.md#setup](../SKILL.md#setup).
 
-**Contents:** [LoadingManager](#loadingmanager--coordinate-progress) · [TextureLoader](#textureloader) · [CubeTextureLoader](#cubetextureloader) · [HDR / EXR Environments](#hdr--exr-environments) · [GLTFLoader](#gltfloader-primary-3d-format) · [Other Model Formats](#other-model-formats) · [Async / Promise Patterns](#async--promise-patterns) · [Cache](#cache) · [Asset Manager Pattern](#asset-manager-pattern) · [Loading From Other Sources](#loading-from-other-sources) · [Error Handling](#error-handling) · [Performance Tips](#performance-tips) · [Common Mistakes](#common-mistakes)
+## Table of Contents
+
+| Section | Covers |
+|---|---|
+| [LoadingManager — Coordinate Progress](#loadingmanager--coordinate-progress) | Coordinating progress and ready state across multiple asset loaders |
+| [TextureLoader](#textureloader) | Callback and immediately returned textures, color-space setup, material refresh, image progress limits, and routing to advanced configuration |
+| [CubeTextureLoader](#cubetextureloader) | Loading six-face cube textures for backgrounds, environments, and material maps |
+| [HDR / EXR Environments](#hdr--exr-environments) | Equirectangular HDR and EXR lighting, optional backgrounds, PMREM reflection filtering, and temporary-resource disposal |
+| [GLTFLoader (Primary 3D Format)](#gltfloader-primary-3d-format) | Loading GLB/GLTF scenes and animations, enabling shadows, finding meshes, tuning materials, centering and normalizing models, and configuring Draco, Meshopt, and KTX2 decoders |
+| [Other Model Formats](#other-model-formats) | Material-backed OBJ, version-aware FBX axes and scale, geometry-only STL, and normal-aware PLY loading |
+| [Async / Promise Patterns](#async--promise-patterns) | Wrapping callback loaders for `await` and coordinating heterogeneous parallel asset loads |
+| [Cache](#cache) | Enabling and managing the global request cache shared by file-backed loaders |
+| [Asset Manager Pattern](#asset-manager-pattern) | Named texture and model deduplication, cloned model delivery, and centralized texture disposal |
+| [Loading From Other Sources](#loading-from-other-sources) | Data and blob URLs, revoked temporary resources, direct buffer parsing, base paths, resource paths, and URL rewriting |
+| [Error Handling](#error-handling) | Fallback and retry patterns for asynchronous asset loading |
+| [Performance Tips](#performance-tips) | Geometry and texture compression, lazy fetching, CDN delivery, early caching, and placeholder swaps |
+| [Common Mistakes](#common-mistakes) | Missing shadows and decoders, oversized assets, replacement texture color space, asset pivots, stale mixers, FBX scale, and duplicate requests |
+| [See Also](#see-also) | Texture configuration, GLTF animation playback, loaded-model material tuning, and HDR environment lighting |
 
 ## LoadingManager — Coordinate Progress
 

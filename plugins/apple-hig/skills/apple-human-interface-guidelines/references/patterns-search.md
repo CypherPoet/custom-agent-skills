@@ -5,9 +5,16 @@
 
 Distilled from Apple's HIG Patterns pages: Searching, Search fields, Settings, Managing accounts.
 
-**Contents:** [Searching](#searching) · [Search fields](#search-fields) · [Settings](#settings) · [Managing accounts](#managing-accounts)
+## Table of Contents
 
-### Searching
+| Section | Covers |
+|---|---|
+| [Searching](#searching) | Search prominence and scope, suggestions and private history, Spotlight indexing and file metadata, system file search, and Quick Look previews |
+| [Search fields](#search-fields) | Scope prompts, immediate and suggested results, relevance and filters, search tokens, and platform-specific entry points and placement |
+| [Settings](#settings) | Choosing in-context, in-app, or system settings; useful defaults and restraint; standard shortcuts; system-setting respect; and platform layouts |
+| [Managing accounts](#managing-accounts) | Account necessity and delayed sign-in, trusted authentication and contextual biometrics, complete deletion, purchase implications, and platform-specific entry |
+
+## Searching
 *Last changed: 2026-06*
 
 **Purpose:** Lets people find content on their device, within an app, and within a document or file, typically through a search field.
@@ -29,7 +36,7 @@ Canonical implementations: SwiftUI `searchSuggestions(_:)`; Core Spotlight `CSIm
 **Platform deltas:**
 - iOS/iPadOS/macOS/tvOS/visionOS/watchOS: No additional considerations.
 
-### Search fields
+## Search fields
 *Last changed: 2026-06*
 
 **Purpose:** An editable text field with a Search icon, Clear button, and placeholder text that lets people search a collection of content for specific terms.
@@ -54,7 +61,7 @@ Canonical implementations: SwiftUI `searchable(text:placement:prompt:)`, Adding 
 - watchOS: Tapping the search field displays a full-screen text-input control; the app returns to the field only after the person taps Cancel or Search.
 - visionOS: No additional considerations.
 
-### Settings
+## Settings
 *Last changed: 2024-06*
 
 **Purpose:** Lets people customize an app or game experience, through a custom in-app settings area, in-context task options, or the system-provided Settings app.
@@ -78,7 +85,7 @@ Canonical implementations: SwiftUI `Settings`; Foundation `UserDefaults`; Prefer
 - macOS: The Settings item in the App menu opens a custom settings window, typically with a toolbar of buttons that switch between panes of related settings. Include a Settings item in the App menu (avoid settings buttons in a window toolbar; put document-level options in the File menu). Dim the settings window's minimize and maximize buttons. Use a noncustomizable toolbar that stays visible and always indicates the active button. Update the window title to reflect the visible pane; if there's only one pane, title it _App Name_ Settings. Restore the most recently viewed pane on open.
 - watchOS: Apps and games don't add custom settings to the system-provided Settings app. Instead, make a small number of essential options available at the bottom of the main view, or let people use a More menu to reconfigure objects.
 
-### Managing accounts
+## Managing accounts
 
 **Purpose:** Guidance for offering accounts as a convenient way to access content and personal details without creating an unnecessary barrier to the experience.
 

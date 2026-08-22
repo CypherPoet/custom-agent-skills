@@ -4,7 +4,24 @@ Custom GLSL at the React-reconciler layer: drei's `shaderMaterial` factory, raw 
 
 > Canvas/scene setup: see [canvas-and-project-setup.md](./canvas-and-project-setup.md) and [../SKILL.md](../SKILL.md).
 
-**Contents:** [Drei shaderMaterial Workflow](#drei-shadermaterial-workflow) · [Shader HMR](#shader-hmr) · [v9.6 Uniform Semantics](#v96-uniform-semantics) · [TypeScript for Custom Elements](#typescript-for-custom-elements) · [Raw THREE.ShaderMaterial](#raw-threeshadermaterial) · [Uniform Type Mapping](#uniform-type-mapping) · [Varyings and Shader Built-Ins](#varyings-and-shader-built-ins) · [Effect Cookbook](#effect-cookbook) · [Patching Built-In Materials](#patching-built-in-materials) · [Instanced Custom Attributes](#instanced-custom-attributes) · [External GLSL Files](#external-glsl-files) · [GLSL Performance Rules](#glsl-performance-rules) · [Common Mistakes](#common-mistakes) · [See Also](#see-also)
+## Table of Contents
+
+| Section | Covers |
+|---|---|
+| [Drei shaderMaterial Workflow](#drei-shadermaterial-workflow) | Factory definition and catalog registration, flat uniform props and frame updates, ordinary material properties, and per-instance setup callbacks |
+| [Shader HMR](#shader-hmr) | Generated class keys that force shader recompilation after hot-module replacement without production cost |
+| [v9.6 Uniform Semantics](#v96-uniform-semantics) | Stable copy-in uniform objects, hot-reload and compiler benefits, pierced values, and the memoization requirement on earlier releases |
+| [TypeScript for Custom Elements](#typescript-for-custom-elements) | React 19 module augmentation, explicit uniform props, typed factory extension without global registration, and removed v8 types |
+| [Raw THREE.ShaderMaterial](#raw-threeshadermaterial) | Memoized vanilla material construction, nested uniform updates, manual disposal, HMR differences, and the catalog-element alternative |
+| [Uniform Type Mapping](#uniform-type-mapping) | JavaScript-to-GLSL scalar, vector, matrix, texture, and array shapes plus explicit sRGB color-texture and linear data-texture handling |
+| [Varyings and Shader Built-Ins](#varyings-and-shader-built-ins) | Automatic versus raw declarations, cross-stage data, coordinate-space consistency, non-uniform normal transforms, and matching built-in tone and color output |
+| [Effect Cookbook](#effect-cookbook) | World-space Fresnel rims, reusable value noise and fractal Brownian motion, threshold dissolves with glowing edges, interior faces, and overdraw costs |
+| [Patching Built-In Materials](#patching-built-in-materials) | Shader-chunk injection while retaining lighting, current patch points, stable uniforms, program-cache variants, forced recompilation, and escalation beyond string surgery |
+| [Instanced Custom Attributes](#instanced-custom-attributes) | v9 constructor-based instance buffers, shader declarations, optional matrix composition, stable capacity, and reconstruction rules |
+| [External GLSL Files](#external-glsl-files) | Raw Vite imports, include-aware plugin configuration, TypeScript declarations, and inline editor highlighting |
+| [GLSL Performance Rules](#glsl-performance-rules) | Branchless selection, packed uniforms, CPU and vertex-stage precomputation, lookup textures, varying limits, and depth costs from discard and transparency |
+| [Common Mistakes](#common-mistakes) | HMR keys and material-specific uniform access, pre-v9.6 uniform identity, current custom-element typing, renamed shader chunks, recompilation and program-cache variants, retained lighting and output transforms, custom-texture color space, v9 instance buffers, ref-driven uniforms, and consistent coordinate spaces |
+| [See Also](#see-also) | JSX registration and typing, frame-driven uniforms, instancing performance, screen-space effects, stack setup, and upstream shader APIs or GLSL learning |
 
 ## Drei shaderMaterial Workflow
 

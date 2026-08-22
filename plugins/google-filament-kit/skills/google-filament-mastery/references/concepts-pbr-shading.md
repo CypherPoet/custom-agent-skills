@@ -3,7 +3,20 @@
 > Source: Filament Core Concepts — "Material system" (Filament.md), Filament v1.75.0
 > Last synced: 2026-08-14
 
-**Contents:** [Notation](#notation) · [The standard surface model](#the-standard-surface-model) · [Microfacet theory](#microfacet-theory) · [Dielectrics vs conductors](#dielectrics-vs-conductors) · [Energy conservation](#energy-conservation) · [Specular BRDF (Cook-Torrance)](#specular-brdf-cook-torrance) · [D — Normal distribution (GGX)](#d--normal-distribution-ggx) · [G / V — Geometric shadowing (Smith-GGX)](#g--v--geometric-shadowing-smith-ggx) · [F — Fresnel (Schlick)](#f--fresnel-schlick) · [Diffuse BRDF (Lambert vs Disney)](#diffuse-brdf-lambert-vs-disney) · [Energy compensation (multiscattering)](#energy-compensation-multiscattering) · [Parameterization & remapping](#parameterization--remapping) · [Standard parameters and ranges](#standard-parameters-and-ranges) · [baseColor → diffuse / f0](#basecolor--diffuse--f0) · [reflectance → f0 (dielectrics)](#reflectance--f0-dielectrics) · [perceptualRoughness → roughness](#perceptualroughness--roughness) · [Authoring cheat sheet](#authoring-cheat-sheet) · [Extended models](#extended-models) · [Clear coat](#clear-coat) · [Anisotropic](#anisotropic) · [Subsurface](#subsurface) · [Cloth (sheen)](#cloth-sheen)
+## Table of Contents
+
+| Section | Covers |
+|---|---|
+| [Notation](#notation) | Surface, view, light, and half vectors, clamped dot products, Fresnel terms, IOR, diffuse reflectance, and perceptual-to-analytic roughness |
+| [The standard surface model](#the-standard-surface-model) | Reflective BRDF versus approximated transmission, diffuse and specular composition, and Filament's Lambert plus Cook-Torrance model |
+| [Microfacet theory](#microfacet-theory) | Half-vector reflection, roughness-driven facet alignment, distribution, masking, shadowing, and why runtime BRDF terms approximate the full integral |
+| [Dielectrics vs conductors](#dielectrics-vs-conductors) | Achromatic interface plus diffuse response for dielectrics versus chromatic all-specular metals and the resulting base-color role |
+| [Energy conservation](#energy-conservation) | Reflected-energy limits, artist-safe light balance, and the high-roughness single-scattering loss handled by compensation |
+| [Specular BRDF (Cook-Torrance)](#specular-brdf-cook-torrance) | GGX distribution, fp16-safe evaluation, correlated Smith visibility and mobile approximation, and Schlick Fresnel for dielectric and metallic grazing response |
+| [Diffuse BRDF (Lambert vs Disney)](#diffuse-brdf-lambert-vs-disney) | Filament's efficient Lambert choice, Disney retroreflection and energy drawback, and complete standard-model vector and roughness evaluation |
+| [Energy compensation (multiscattering)](#energy-compensation-multiscattering) | White-furnace diagnosis of rough-metal darkening and negligible-cost multibounce recovery using the existing DFG lookup |
+| [Parameterization & remapping](#parameterization--remapping) | Standard parameter ranges, base-color and dielectric `f0` derivation, reflectance conversion, perceptual-roughness remapping, and the authoring cheat sheet |
+| [Extended models](#extended-models) | Clear-coat layering and energy loss, anisotropic tangent response, the unspecified subsurface placeholder, and cloth sheen, wrapped diffuse, parameters, and authoring guidance |
 
 ## Notation
 

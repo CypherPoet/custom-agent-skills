@@ -4,7 +4,19 @@ How to make a diagram *say something*, not just label boxes. This is the judgmen
 layer on top of the mechanical [`elements.md`](elements.md); the step-by-step
 process that applies it is [`authoring-workflow.md`](authoring-workflow.md).
 
-**Contents:** [Core Philosophy](#core-philosophy) · [Depth Assessment](#depth-assessment) · [Evidence Artifacts](#evidence-artifacts) · [Visual Pattern Library](#visual-pattern-library) · [Multi-Zoom Architecture](#multi-zoom-architecture) · [Container Discipline](#container-discipline) · [Shape Meaning](#shape-meaning) · [Layout](#layout) · [Color & Aesthetics](#color--aesthetics)
+## Table of Contents
+
+| Section | Covers |
+|---|---|
+| [Core Philosophy](#core-philosophy) | Structural argument, label-independent meaning, and concrete educational value |
+| [Depth Assessment](#depth-assessment) | Conceptual versus comprehensive depth, explanation scope, and research for real formats, events, APIs, and endpoints |
+| [Evidence Artifacts](#evidence-artifacts) | Code, JSON, event timelines, UI mockups, and real inputs rendered as concrete proof rather than labels |
+| [Visual Pattern Library](#visual-pattern-library) | Fan-out, convergence, trees, timelines, cycles, clouds, transformations, comparisons, phase breaks, and line-first structure |
+| [Multi-Zoom Architecture](#multi-zoom-architecture) | Summary flow, responsibility or phase boundaries, and evidence-rich detail in one technical diagram |
+| [Container Discipline](#container-discipline) | Focal, connectable, semantic, and distinct elements that merit shapes versus labels and metadata that rely on typography |
+| [Shape Meaning](#shape-meaning) | Free text, markers, endpoints, decisions, processes, abstract states, and hierarchies mapped to distinct visual forms |
+| [Layout](#layout) | Element scale, whitespace, flow direction, required connections, and spacing rules for readable diagrams |
+| [Color & Aesthetics](#color--aesthetics) | Semantic fill and stroke pairs, text hierarchy, palette reuse, roughness, valid stroke widths, opacity, and marker sizing |
 
 ## Core Philosophy
 

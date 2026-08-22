@@ -6,8 +6,6 @@ These are WebGPU concerns. WebGL surfaces device trouble as a `webglcontextlost`
 
 > Scene/renderer setup: see [../SKILL.md#setup](../SKILL.md#setup).
 
-**Contents:** [Accessing the GPUDevice](#accessing-the-gpudevice) · [Device Loss](#device-loss) · [Requesting Limits and Features](#requesting-limits-and-features) · [Common Mistakes](#common-mistakes)
-
 ## Accessing the GPUDevice
 
 The underlying `GPUDevice` lives on the renderer's backend:

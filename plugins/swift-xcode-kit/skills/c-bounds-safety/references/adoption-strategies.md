@@ -15,7 +15,13 @@ This guide walks through the process of adopting `-fbounds-safety` in an existin
 > **Before advising on adoption, ask the user whether they want full adoption or header-only adoption, then provide guidance for the chosen approach.**
 > **Always make a plan when applying this skill because changes are rarely trivial and the developer needs to understand the process**
 
-**Contents:** [Choosing an Adoption Approach](#choosing-an-adoption-approach) · [Full Adoption](#full-adoption) · [Header-Only Adoption](#header-only-adoption)
+## Table of Contents
+
+| Section | Covers |
+|---|---|
+| [Choosing an Adoption Approach](#choosing-an-adoption-approach) | Full implementation enforcement versus ABI-compatible header annotations for clients, including when header-only is unavailable and which costs each approach avoids |
+| [Full Adoption](#full-adoption) | Dependency-ordered migration from annotated headers through per-file and target-wide enforcement, diagnostic and runtime repair, compiler-crash recovery, explicit file skipping, review checkpoints, safe-wrapper hardening, soft-trap debugging, and performance optimization |
+| [Header-Only Adoption](#header-only-adoption) | ABI-compatible public annotations and validation that protect adopting clients without checking implementation code, with optional safe-wrapper shims, cross-language import benefits, and explicit limits |
 
 ## Choosing an Adoption Approach
 

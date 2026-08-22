@@ -5,6 +5,20 @@
 
 Availability of components, inputs, and technologies across the six Apple platforms, derived from each entry's stated platform support. Legend: **Yes** = explicitly supported / has guidance; **No** = the reference states "Not supported"; **—** = the reference doesn't state support either way (check the component reference). When in doubt, open the linked reference.
 
+## Table of Contents
+
+| Section | Covers |
+|---|---|
+| [Components — Navigation & Bars](#components--navigation--bars) | Platform support for tab bars, sidebars, tab views, toolbars, segmented controls, path controls, and page controls |
+| [Components — Content Views](#components--content-views) | Platform support for lists, collections, split and scroll views, macOS-only views, boxes, images, web views, lockups, and charts |
+| [Components — Selection & Input](#components--selection--input) | Platform support for text entry, pickers, sliders, steppers, toggles, disclosure controls, color wells, and platform-specific fields |
+| [Components — Presentation](#components--presentation) | Platform support for sheets, popovers, alerts, panels, and windows |
+| [Components — Status & Indicators](#components--status--indicators) | Platform support for progress indicators, gauges, activity rings, rating indicators, and labels |
+| [Components — Menus & Actions](#components--menus--actions) | Platform support for buttons, menus, contextual actions, action sheets, and activity views |
+| [Components — System Experiences](#components--system-experiences) | Platform support for app icons, widgets, controls, complications, watch faces, quick actions, App Clips, and iMessage extensions |
+| [Inputs](#inputs) | Cross-platform support for focus, keyboards, gestures, haptics, hardware controls, and sensors |
+| [Technologies](#technologies) | Platform support for commerce and identity, Siri and AI, system services, games, accessibility, media, health, home, and augmented reality |
+
 ## Components — Navigation & Bars
 
 Source: [components-navigation-bars.md](components-navigation-bars.md)

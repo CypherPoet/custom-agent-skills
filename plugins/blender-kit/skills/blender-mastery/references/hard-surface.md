@@ -2,6 +2,20 @@
 
 Doctrine and executable patterns for hard-surface work: non-destructive modifier stacks, boolean workflows, normal management, and topology remediation. Each topic states its decision rule once, then the `bpy` route (primary) and — where it earns its place — a keyboard route for agents driving Blender's UI (see [Driving the UI as an agent](#driving-the-ui-as-an-agent)). API claims here are verified against Blender 5.2; workflow defaults are professional doctrine, labeled as such. Operator/context traps: `bpy-essentials.md`.
 
+## Table of Contents
+
+| Section | Covers |
+|---|---|
+| [The non-destructive spine](#the-non-destructive-spine) | Mirror, Solidify, Bevel, and Subdivision ordering, transform prerequisites, off-origin symmetry, seam bisection, and editable handoff |
+| [Primitives & topology standards](#primitives--topology-standards) | Cylinder density, safe n-gons, exact coplanarity, pivot-aware flattening, and topology-preserving edge movement |
+| [Booleans: cut fast, clean deliberately](#booleans-cut-fast-clean-deliberately) | Blender 5 solver selection, cutter density, stashed originals and shrinkwrap restoration, distance merging, and interactive auto-merge |
+| [Normals & shading on 4.1+/5.x](#normals--shading-on-415x) | Modern smooth-by-angle APIs, Harden and Weighted Normals, donor-normal transfer, and Cycles shadow-terminator limits and offsets |
+| [Edge control](#edge-control) | Attribute-based bevel weights, per-edge fillet widths, topology-change resilience, procedural tagging, and subdivision control loops |
+| [The hand-off audit](#the-hand-off-audit) | Headless checks and repairs for non-manifold edges, curved n-gons, transforms, and viewport-to-render modifier parity |
+| [Driving the UI as an agent](#driving-the-ui-as-an-agent) | Editor focus, typed transforms, axis semantics, screenshot verification, keyboard routes, and mouse-fragile operations to script |
+| [Third-party ecosystem (if installed)](#third-party-ecosystem-if-installed) | Add-on detection, licensing and compatibility caveats, specialized hard-surface capabilities, and native fallbacks |
+| [Sources](#sources) | Blender modifier, shading, attribute, mesh-editing, transform, and Cycles documentation and release notes |
+
 ## The non-destructive spine
 
 Stay parametric until hand-off. A live modifier stack keeps wall thickness, fillet radii, and silhouette editable in seconds; applied ("baked") geometry makes every revision a rebuild. The doctrine default for a mirrored, solid, filleted, smoothed part:

@@ -4,7 +4,13 @@ A view is SwiftUI's unit of invalidation. When something changes, SwiftUI re-run
 
 When building a new view with distinct sections — a header, a list, a footer, sidebar + main, content + counter, or any multi-region layout — declare each section as its own `struct` conforming to `View`. Do **not** factor sections as `private var` computed properties or `@ViewBuilder` helper methods on the parent. The sections below explain why and show the AVOID/PREFER patterns.
 
-**Contents:** [Always use separate `View` types for sections, not computed properties](#always-use-separate-view-types-for-sections-not-computed-properties) · [Keep view `init` cheap](#keep-view-init-cheap) · [Single Child `Group`](#single-child-group)
+## Table of Contents
+
+| Section | Covers |
+|---|---|
+| [Always use separate `View` types for sections, not computed properties](#always-use-separate-view-types-for-sections-not-computed-properties) | Narrow invalidation boundaries and inputs for named layout regions, with tiny same-boundary helpers as the exception |
+| [Keep view `init` cheap](#keep-view-init-cheap) | Repeated initializer cost, prohibited data and formatting work, and durable model or task-based computation |
+| [Single Child `Group`](#single-child-group) | Removing needless concrete-child wrappers while retaining groups for siblings, loops, and conditional content |
 
 ## Always use separate `View` types for sections, not computed properties
 

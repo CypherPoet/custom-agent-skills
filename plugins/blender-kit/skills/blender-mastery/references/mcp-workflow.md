@@ -4,6 +4,21 @@ How to drive Blender productively through the official MCP server (the lab exten
 
 The single biggest mistake under MCP is treating it like a stateless REPL. Blender has no preview-of-pending-edits, no cheap rollback, no protection against context drift between calls. The patterns below exist to compensate.
 
+## Table of Contents
+
+| Section | Covers |
+|---|---|
+| [The loop, in detail](#the-loop-in-detail) | Targeted inspection, scoped mutation, visual or data verification, screenshot fallbacks, and recovery from partial or destructive changes |
+| [Look it up: bundled docs search](#look-it-up-bundled-docs-search) | Searching Blender's bundled manual and Python API documentation |
+| [Idempotent-edit patterns](#idempotent-edit-patterns) | Scripts that can re-run safely save you from half-completed-state hell |
+| [Persistent helpers module](#persistent-helpers-module) | Registering reusable in-memory modules across execution calls and their reload and restart lifetime |
+| [Fresh files without read_homefile](#fresh-files-without-read_homefile) | Reload crashes and server-state loss, headless default-scene cleanup, save-as creation, and GUI relaunch |
+| [Chunking large operations](#chunking-large-operations) | Batching large scenes, separating construction phases, emitting progress, and routing bake, export, and render work headlessly |
+| [The headless CLI escape hatch](#the-headless-cli-escape-hatch) | Background scripts and expressions for long operations, post-run inspection, common task routing, and headless context limitations |
+| [Handling large output](#handling-large-output) | Standard output versus structured `result` data, pre-print slicing and aggregation, and file-backed inspection |
+| [When the MCP misbehaves](#when-the-mcp-misbehaves) | Timeout, connection, traceback, and dependency-graph checks for failed MCP operations |
+| [Sources](#sources) | Blender Python API and official MCP server documentation |
+
 ## The loop, in detail
 
 ### 1. Read

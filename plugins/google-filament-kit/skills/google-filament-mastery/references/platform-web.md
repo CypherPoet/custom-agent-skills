@@ -10,7 +10,28 @@ JS API is a thin binding over the C++ API: same objects (`Engine`, `Scene`, `Vie
 demand it (e.g. `createIblFromKtx1`, `setColor3Parameter`). All API names below are copied verbatim
 from the tutorials — do not substitute guessed names.
 
-**Contents:** [Page Skeleton (HTML)](#page-skeleton-html) · [Bootstrapping: `Filament.init` and Engine Creation](#bootstrapping-filamentinit-and-engine-creation) · [WebGL2 / WebGPU Backend](#webgl2--webgpu-backend) · [Serving Over HTTP (CORS / MIME)](#serving-over-http-cors--mime) · [Core Object Graph](#core-object-graph) · [Entities, Components, Managers](#entities-components-managers) · [The Builder Pattern in JS](#the-builder-pattern-in-js) · [Vertex & Index Buffers](#vertex--index-buffers) · [Materials & Material Instances](#materials--material-instances) · [Lighting (Directional / Sun / IBL)](#lighting-directional--sun--ibl) · [Skybox & IBL from KTX](#skybox--ibl-from-ktx) · [Textures (KTX2, Compressed, Async)](#textures-ktx2-compressed-async) · [Meshes: filamesh](#meshes-filamesh) · [The Render & Resize Loop](#the-render--resize-loop) · [Resize / DPR Handling](#resize--dpr-handling) · [Asset-Production Toolchain (matc / cmgen / filamesh / mipgen)](#asset-production-toolchain-matc--cmgen--filamesh--mipgen) · [Asset Type Reference](#asset-type-reference) · [Gotchas](#gotchas)
+## Table of Contents
+
+| Section | Covers |
+|---|---|
+| [Page Skeleton (HTML)](#page-skeleton-html) | Full-screen mobile canvas setup, required script order, optional trackball input, and matching the npm module to the CLI release |
+| [Bootstrapping: `Filament.init` and Engine Creation](#bootstrapping-filamentinit-and-engine-creation) | Asset preloading and callback timing, common enum aliases, canvas-based engine creation, backend options, and direct cache access |
+| [WebGL2 / WebGPU Backend](#webgl2--webgpu-backend) | Default WebGL 2 operation and the asynchronous WebGPU initialization, feature selection, and engine option |
+| [Serving Over HTTP (CORS / MIME)](#serving-over-http-cors--mime) | Local HTTP server choices for fetched assets, the `file://` restriction, and correct production WebAssembly MIME handling |
+| [Core Object Graph](#core-object-graph) | Swap chain, renderer, camera entity, view, and scene wiring plus renderer clear-color configuration |
+| [Entities, Components, Managers](#entities-components-managers) | Entity creation, renderable, light, and transform components, manager responsibilities, and temporary transform-handle cleanup |
+| [The Builder Pattern in JS](#the-builder-pattern-in-js) | Chained object and component configuration with engine-only or entity-targeted build calls |
+| [Vertex & Index Buffers](#vertex--index-buffers) | Nested-enum names, buffer builders and uploads, typed arrays, slot layouts, index constraints, and built-in icosphere data |
+| [Materials & Material Instances](#materials--material-instances) | Loading compiled materials, using default or custom instances, setting color, scalar, and texture parameters, and binding geometry to renderables |
+| [Lighting (Directional / Sun / IBL)](#lighting-directional--sun--ibl) | Entity-backed sun and directional lights, their enum names, physical intensity and direction settings, and sun-disk controls |
+| [Skybox & IBL from KTX](#skybox--ibl-from-ktx) | High-level KTX1 skybox and image-based-light helpers, low-level cubemap and spherical-harmonics construction, and safe skybox replacement |
+| [Textures (KTX2, Compressed, Async)](#textures-ktx2-compressed-async) | KTX2 color and data textures, sampler binding, client-specific compression suffixes, and progressive loading and replacement with `Filament.fetch` |
+| [Meshes: filamesh](#meshes-filamesh) | Loading binary filamesh geometry and its renderable entity, with glTF reserved for the larger loader samples |
+| [The Render & Resize Loop](#the-render--resize-loop) | Frame scheduling, manager updates, temporary-handle deletion, `renderer.render(swapChain, view)`, callback binding, and resize handling |
+| [Resize / DPR Handling](#resize--dpr-handling) | Device-pixel-ratio drawing buffers, viewport updates, orthographic and perspective projections, aspect-sensitive field of view, and initial sizing |
+| [Asset-Production Toolchain (matc / cmgen / filamesh / mipgen)](#asset-production-toolchain-matc--cmgen--filamesh--mipgen) | Version-matched material, environment, mesh, and texture CLIs, their web-oriented commands and outputs, compression variants, and build-script integration |
+| [Asset Type Reference](#asset-type-reference) | Material, image-based-light, skybox, texture, and mesh extensions, producers, JavaScript loaders, and prefetch requirements |
+| [Gotchas](#gotchas) | Nested-enum names, native-handle deletion, asset prefetch, sRGB flags, camera entities, KTX helper versions, mesh-loader limits, and WASM MIME handling |
 
 ---
 

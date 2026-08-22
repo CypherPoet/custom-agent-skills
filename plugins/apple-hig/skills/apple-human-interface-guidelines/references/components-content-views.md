@@ -5,9 +5,24 @@
 
 Distilled from Apple's HIG Components pages: Lists and tables, Collections, Split views, Scroll views, Outline views, Column views, Boxes, Image views, Web views, Lockups, Charts, Charting data.
 
-**Contents:** [Lists and tables](#lists-and-tables) · [Collections](#collections) · [Split views](#split-views) · [Scroll views](#scroll-views) · [Outline views](#outline-views) · [Column views](#column-views) · [Boxes](#boxes) · [Image views](#image-views) · [Web views](#web-views) · [Lockups](#lockups) · [Charts](#charts) · [Charting data](#charting-data)
+## Table of Contents
 
-### Lists and tables
+| Section | Covers |
+|---|---|
+| [Lists and tables](#lists-and-tables) | Text-first row data, hierarchy and selection, editing and sorting, column design, styles, and platform behavior |
+| [Collections](#collections) | Image-first rows and grids, item interaction, layout and spacing, change animations, and platform limits |
+| [Split views](#split-views) | Multi-pane hierarchy, selection state, drag and drop, responsive layouts, resizing, and platform-specific navigation |
+| [Scroll views](#scroll-views) | Scrolling, paging, automatic movement, zoom, edge effects, Look to Scroll, and platform behaviors |
+| [Outline views](#outline-views) | macOS hierarchical tables with disclosure, sorting, resizing, editing, persisted expansion, truncation, and search |
+| [Column views](#column-views) | macOS hierarchy navigation with one column per level, root access, leaf previews, and resizable columns |
+| [Boxes](#boxes) | Related-content grouping, sizing and nesting limits, accessible titles, and platform styling |
+| [Image views](#image-views) | Static and animated image display, interaction alternatives, text contrast, performance, formats, and platform capabilities |
+| [Web views](#web-views) | Brief in-app web access, browser boundaries, navigation controls, and platform availability |
+| [Lockups](#lockups) | tvOS focusable cards, caption buttons, monograms, and posters with spacing and sizing rules |
+| [Charts](#charts) | Mark and axis selection, hierarchy and interaction, descriptive context, color, accessibility, Audio Graphs, and watchOS limits |
+| [Charting data](#charting-data) | Choosing charts versus tables, progressive detail, familiar forms, multi-level analysis, descriptive text, sizing, and continuity |
+
+## Lists and tables
 *Last changed: 2023-06*
 
 **Purpose:** Present data in one or more columns of rows, supporting grouped/hierarchical content and interactions like selecting, adding, deleting, and reordering.
@@ -34,7 +49,7 @@ Canonical implementations: SwiftUI `List`, `Tables`, `ListStyle`; UIKit `UITable
 - tvOS: Confirm images near a table still look good as each focused row highlights and slightly increases in size with rounded corners; don't add your own corner masks.
 - watchOS: When possible, limit the number of rows (list most relevant + a way to see more). Constrain detail-view length to support vertical page-based navigation (it works only when detail views don't scroll).
 
-### Collections
+## Collections
 
 **Purpose:** Manage an ordered set of content in a customizable, highly visual layout (default horizontal row or grid).
 
@@ -55,7 +70,7 @@ Canonical implementations: UIKit `UICollectionView`; AppKit `NSCollectionView`.
 - macOS/tvOS/visionOS: No additional considerations.
 - watchOS: Not supported.
 
-### Split views
+## Split views
 *Last changed: 2025-06*
 
 **Purpose:** Manage multiple adjacent panes of content (tables, collections, images, custom views), typically showing multiple hierarchy levels at once with navigation between them.
@@ -74,7 +89,7 @@ Canonical implementations: SwiftUI `NavigationSplitView`, `VSplitView`, `HSplitV
 - visionOS: Prefer a split view over a new window to display supplementary information; use a sheet for a small request or a simple blocking task.
 - watchOS: Displays either the list view or a detail view as a full-screen view. Automatically display the most relevant detail view at launch. For multiple detail pages, place detail views in a vertical tab view so people scroll between tabs with the Digital Crown (a page indicator appears next to the Crown).
 
-### Scroll views
+## Scroll views
 *Last changed: 2026-06*
 
 **Purpose:** Let people view content larger than the view's boundaries by moving it vertically or horizontally; the view itself has no appearance but can show a translucent scroll indicator.
@@ -101,7 +116,7 @@ Canonical implementations: SwiftUI `ScrollView`, `PagingScrollTargetBehavior`, `
 - visionOS: The scroll indicator has a small fixed size, appearing vertically centered at the trailing edge during vertical scrolling and horizontally centered at the bottom edge during horizontal scrolling; it's slightly thicker than in iOS, so increase tight margins to avoid overlap. Looking at the indicator and dragging enables a jog-bar experience controlling scroll speed via tick marks. **Look to Scroll:** off by default — add support per scroll view. Support it for reading/browsing views; avoid it for secondary content with UI controls or dense info needing precise scrolling. Maintain consistency across similar views. Prefer making the view full-width or full-height with clear edges. Remove custom scroll effects/animations (parallax, etc.) before supporting it. Developer guidance: `look`, `ScrollInputKind`.
 - watchOS: Prefer vertically scrolling content navigated with the Digital Crown. Use tab views for page-by-page scrolling (displayed as pages); a vertical stack of tab views lets the Crown move through full-screen pages with a page indicator. Consider limiting an individual page to a single screen height; use variable-height pages judiciously and place them after fixed-height pages.
 
-### Outline views
+## Outline views
 
 **Purpose:** Present hierarchical data in a scrolling list of cells organized into columns and rows, with at least one column of primary hierarchical data and disclosure triangles that expand parents to reveal children (e.g., Finder).
 
@@ -126,7 +141,7 @@ Canonical implementations: SwiftUI `OutlineGroup`; AppKit `NSOutlineView`.
 **Platform deltas:**
 - Not supported in iOS, iPadOS, tvOS, visionOS, or watchOS.
 
-### Column views
+## Column views
 
 **Purpose:** Also called a browser — view and navigate a data hierarchy using a series of vertical columns, where each column is one hierarchy level and selecting a parent shows its children in the next column (e.g., Finder column view).
 
@@ -143,7 +158,7 @@ Canonical implementations: AppKit `NSBrowser`.
 **Platform deltas:**
 - Not supported in iOS, iPadOS, tvOS, visionOS, or watchOS.
 
-### Boxes
+## Boxes
 
 **Purpose:** Create a visually distinct group of logically related information and components, using a visible border or background color (and optionally a title) to separate contents from the rest of the interface.
 
@@ -161,7 +176,7 @@ Canonical implementations: SwiftUI `GroupBox`; AppKit `NSBox`.
 - visionOS: No additional considerations.
 - tvOS/watchOS: Not supported.
 
-### Image views
+## Image views
 *Last changed: 2023-06*
 
 **Purpose:** Display a single image — or an animated sequence of images — on a transparent or opaque background; typically not interactive.
@@ -185,7 +200,7 @@ Canonical implementations: SwiftUI `Image`; UIKit `UIImageView`; AppKit `NSImage
 - visionOS: Windows can use image views for 2D, stereoscopic, and spatial photos; with RealityKit, display images of any type outside image views next to 3D content or generate a spatial scene from a 2D image (`ImagePresentationComponent`).
 - watchOS: Use SwiftUI for animations when possible; alternatively use WatchKit (`WKImageAnimatable`).
 
-### Web views
+## Web views
 
 **Purpose:** Load and display rich web content (embedded HTML, websites) directly within your app (e.g., Mail showing HTML messages).
 
@@ -202,7 +217,7 @@ Canonical implementations: WebKit `WKWebView`.
 - iOS/iPadOS/macOS/visionOS: No additional considerations.
 - tvOS/watchOS: Not supported.
 
-### Lockups
+## Lockups
 
 **Purpose:** Combine multiple separate views (content view, header, footer) into a single interactive unit that expands and contracts together as the lockup gets focus; four types — cards, caption buttons, monograms, and posters.
 
@@ -219,7 +234,7 @@ Canonical implementations: TVUIKit `TVLockupView`, `TVLockupHeaderFooterView`.
 **Platform deltas:**
 - Not supported in iOS, iPadOS, macOS, visionOS, or watchOS. (tvOS component.)
 
-### Charts
+## Charts
 *Last changed: 2022-09*
 
 **Purpose:** Organize data in a chart to communicate information with clarity and visual appeal, highlighting a few key pieces of a dataset to help people gain insights and make decisions.
@@ -272,7 +287,7 @@ Canonical implementations: SwiftUI Swift Charts.
 - iOS/iPadOS/macOS/tvOS/visionOS: No additional considerations.
 - watchOS: Avoid requiring complex chart interactions; prefer glanceable info and simple interactions; defer detailed/interactive versions to another platform (e.g., Heart Rate on watchOS shows the current day; Health on iPhone shows multiple periods and individual marks).
 
-### Charting data
+## Charting data
 *Last changed: 2022-09*
 
 **Purpose:** Design-guidance page for presenting data in a chart to communicate complex information with clarity and appeal (the companion to the Charts component page).

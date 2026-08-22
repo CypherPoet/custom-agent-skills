@@ -4,7 +4,24 @@ R3F raycasts DOM pointer input against the scene and delivers React-style synthe
 
 > Canvas-level event props (`events`, `eventSource`, `eventPrefix`, `onPointerMissed`) and general setup: see [canvas-and-project-setup.md](./canvas-and-project-setup.md) and [../SKILL.md](../SKILL.md).
 
-**Contents:** [Event Catalog](#event-catalog) · [Event Data](#event-data) · [Occlusion and Propagation](#occlusion-and-propagation) · [Pointer Capture](#pointer-capture) · [Raycast Tuning](#raycast-tuning) · [Hover and Cursor](#hover-and-cursor) · [Custom Event Manager and Event Source](#custom-event-manager-and-event-source) · [Camera Controls](#camera-controls) · [Transform and Drag Controls](#transform-and-drag-controls) · [Keyboard Controls](#keyboard-controls) · [Scroll and Presentation Controls](#scroll-and-presentation-controls) · [Screen and World Coordinates](#screen-and-world-coordinates) · [Common Mistakes](#common-mistakes) · [See Also](#see-also)
+## Table of Contents
+
+| Section | Covers |
+|---|---|
+| [Event Catalog](#event-catalog) | Pointer, click, context, wheel, and missed handlers on raycastable objects, bubbling to groups, enter and leave caveats, and the non-pointer `onUpdate` callback |
+| [Event Data](#event-data) | Native and intersection fields, all ray hits, actual versus handler-owning objects, world and normalized coordinates, pointer rays, and click-versus-drag distance |
+| [Occlusion and Propagation](#occlusion-and-propagation) | Nearest-first delivery through ancestors and objects behind, dual-path propagation stopping, hover invalidation, and event-only occluders |
+| [Pointer Capture](#pointer-capture) | Captured drag move and release events, capture lifecycle, additive rather than exclusive hit delivery, and the single-active-pointer limitation |
+| [Raycast Tuning](#raycast-tuning) | Disabling precision tests, bounds-only picking, invisible proxy colliders, frame-coalesced pointer movement, and throttled expensive work |
+| [Hover and Cursor](#hover-and-cursor) | Discrete hover state, cleaned-up cursor changes, propagation for overlapping targets, and the manual cursor alternative |
+| [Custom Event Manager and Event Source](#custom-event-manager-and-event-source) | Intersection filtering and ray computation, shared DOM-overlay sources and coordinate prefixes, runtime reconnection, and hover refresh after camera movement |
+| [Camera Controls](#camera-controls) | Orbit, map, animated, pointer-lock, flight, first-person, trackball, and arcball controls, demand rendering, default-control cooperation, focus transitions, and gesture-gated locking |
+| [Transform and Drag Controls](#transform-and-drag-controls) | Transform, pivot, and planar drag gizmos, controlled matrices, snapping and axis locks, camera-control coordination, and pixel-to-world spring gestures |
+| [Keyboard Controls](#keyboard-controls) | Key maps and provider placement plus non-rendering polling, reactive selectors, and edge-triggered transient subscriptions |
+| [Scroll and Presentation Controls](#scroll-and-presentation-controls) | Damped horizontal or vertical scroll rigs, progress-window helpers, synchronized 3D and HTML content, and spring-driven product rotation with limits and snapback |
+| [Screen and World Coordinates](#screen-and-world-coordinates) | Hit-point placement, captured-ray intersection with mathematical planes, tracked HTML labels, and manual world-to-pixel projection |
+| [Common Mistakes](#common-mistakes) | Drag-versus-click thresholds, raycast propagation and pointer-capture semantics, move throttling and proxy colliders, stale hover, DOM-overlay event sources, control conflicts, keyboard polling, missed clicks, scroll HTML placement, and the current pointer field |
+| [See Also](#see-also) | Canvas event configuration, root hooks, drei interaction helpers, event-driven performance, stack setup, and upstream event, control, and gesture APIs |
 
 ## Event Catalog
 

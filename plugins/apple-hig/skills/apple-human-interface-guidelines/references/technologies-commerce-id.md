@@ -5,9 +5,18 @@
 
 Distilled from Apple's HIG Technologies pages: Apple Pay, In-app purchase, Wallet, Sign in with Apple, Tap to Pay on iPhone, ID Verifier.
 
-**Contents:** [Apple Pay](#apple-pay) · [In-app purchase](#in-app-purchase) · [Wallet](#wallet) · [Sign in with Apple](#sign-in-with-apple) · [Tap to Pay on iPhone](#tap-to-pay-on-iphone) · [ID Verifier](#id-verifier)
+## Table of Contents
 
-### Apple Pay
+| Section | Covers |
+|---|---|
+| [Apple Pay](#apple-pay) | Eligibility and primary placement, checkout and payment-sheet data, validation and results, subscriptions and donations, button and mark rules, sizing, and platform support |
+| [In-app purchase](#in-app-purchase) | Product types, trials and storefront design, pricing and family sharing, refunds, subscription signup and codes, management, and tvOS and watchOS flows |
+| [Wallet](#wallet) | Pass creation, updates and deletion, surfacing and design, semantic fields and images, order tracking, identity verification, dimensions, and watchOS layout |
+| [Sign in with Apple](#sign-in-with-apple) | When to offer and delay sign-in, account linking and private relay, required versus optional data, system and custom button rules, sizes, and platform support |
+| [Tap to Pay on iPhone](#tap-to-pay-on-iphone) | Provider and entitlement setup, terms and merchant education, foreground preparation, checkout and result flows, button labels, failure recovery, and nonpayment reads |
+| [ID Verifier](#id-verifier) | Display Only versus Data Transfer requests, data minimization, business identity, verification buttons and feedback, and iPhone-only support |
+
+## Apple Pay
 *Last changed: 2026-06*
 
 **Purpose:** A secure, easy way to pay for physical goods and services, donations, and subscriptions in apps and any browser, bringing up a payment sheet authorized with Face ID, Touch ID, Optic ID, or Apple Watch.
@@ -69,7 +78,7 @@ Button styles: *automatic* (matches system appearance); *Black* (light backgroun
 - iOS/iPadOS/macOS/visionOS/watchOS: No additional considerations.
 - tvOS: Not supported.
 
-### In-app purchase
+## In-app purchase
 *Last changed: 2023-09*
 
 **Purpose:** Lets people securely pay within your app for virtual goods — premium content, digital goods, and subscriptions — via StoreKit.
@@ -106,7 +115,7 @@ Canonical implementations: StoreKit `AppStore.canMakePayments`, `Transaction.beg
 - tvOS: Help people sign up / authenticate using another device — send a code to another device rather than asking for input on Apple TV.
 - watchOS: The sign-up screen must display the same required subscription info as other versions. Clearly describe differences from other devices without implying parity. Consider a modal sheet (with its default Close button) to present all required items in one view. Make options easy to compare on a small screen — either one option per button (lock up each button with its description) or a list of options followed by a button whose title updates to the chosen option.
 
-### Wallet
+## Wallet
 *Last changed: 2026-06*
 
 **Purpose:** Securely stores credit/debit cards, IDs, transit cards, tickets, keys, and passes on iPhone and Apple Watch, and supports order tracking and identity verification.
@@ -157,7 +166,7 @@ Order-tracking images: logo and product images are PNG/JPEG, 300x300 px, nontran
 - tvOS: Not supported.
 - watchOS: Wallet shows passes in a scrolling carousel; tapping reveals a scrolling details screen. Each style maps fields/images into a logo + essential-field row, a primary-field row, and a secondary/auxiliary-field row; overflow goes to the details screen. People can add a pass to Apple Watch even without a watch-specific app.
 
-### Sign in with Apple
+## Sign in with Apple
 *Last changed: 2022-09*
 
 **Purpose:** A fast, private way to sign in or sign up using an existing Apple Account — with Face ID/Touch ID/Optic ID and built-in two-factor authentication — skipping forms, email verification, and passwords; available on every platform, including non-Apple ones.
@@ -199,7 +208,7 @@ System button (and custom logo+text button) minimum size and margin (iOS/macOS/w
 **Platform deltas:**
 - iOS/iPadOS/macOS/tvOS/visionOS/watchOS: No additional considerations.
 
-### Tap to Pay on iPhone
+## Tap to Pay on iPhone
 *Last changed: 2024-05*
 
 **Purpose:** Lets merchants accept contactless payments using an iOS app on iPhone — no external hardware — via a supported payment service provider (PSP) and ProximityReader APIs.
@@ -227,7 +236,7 @@ Canonical implementations: ProximityReader `PaymentCardReader.prepare(using:)`, 
 - iOS: No additional considerations.
 - iPadOS/macOS/tvOS/visionOS/watchOS: Not supported.
 
-### ID Verifier
+## ID Verifier
 *Last changed: 2023-09*
 
 **Purpose:** Lets an iPhone app read ISO18013-5 compliant mobile IDs in person (no external hardware) for in-person ID verification, beginning in iOS 17.

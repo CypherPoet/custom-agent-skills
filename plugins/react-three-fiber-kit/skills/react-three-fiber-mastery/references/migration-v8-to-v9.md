@@ -4,7 +4,22 @@ The complete `@react-three/fiber` v8 → v9 migration: version and peer-dependen
 
 > New-project setup on the current stack: see [../SKILL.md](../SKILL.md) and [canvas-and-project-setup.md](./canvas-and-project-setup.md).
 
-**Contents:** [Version Requirements](#version-requirements) · [Ecosystem Pairing](#ecosystem-pairing) · [Migration Checklist](#migration-checklist) · [Breaking and Behavioral Changes](#breaking-and-behavioral-changes) · [TypeScript Migration](#typescript-migration) · [bufferAttribute Requires Constructor Args](#bufferattribute-requires-constructor-args) · [New v9 Features](#new-v9-features) · [v9.6: Stable Uniform References](#v96-stable-uniform-references) · [Ecosystem Moves That Bite During Migration](#ecosystem-moves-that-bite-during-migration) · [The v10 Horizon](#the-v10-horizon) · [Common Mistakes](#common-mistakes) · [See Also](#see-also)
+## Table of Contents
+
+| Section | Covers |
+|---|---|
+| [Version Requirements](#version-requirements) | React 19 peer limits, reconciler compatibility across React minors, the frozen React 18 line, and the current three release pairing |
+| [Ecosystem Pairing](#ecosystem-pairing) | Compatibility matrix and peer ranges for React, Fiber, Drei, postprocessing, Rapier, XR, Zustand, Leva, and three.js |
+| [Migration Checklist](#migration-checklist) | Coordinated package upgrades followed by sweeps for removed types, buffer attributes, Canvas callbacks, StrictMode, color space, tests, and ecosystem changes |
+| [Breaking and Behavioral Changes](#breaking-and-behavioral-changes) | `gl` constructor props, inherited StrictMode, removed automatic sRGB conversion, one-time Suspense side effects, `args` and `primitive` swap ordering, and React's `act` |
+| [TypeScript Migration](#typescript-migration) | Canvas, intrinsic-element, and custom-element type replacements, React 19 module augmentation, and factory extension without global JSX declarations |
+| [bufferAttribute Requires Constructor Args](#bufferattribute-requires-constructor-args) | Constructor-based arrays and item sizes, derived counts, and memoization to avoid reconstruction on each render |
+| [New v9 Features](#new-v9-features) | Pooled loader instances, component-returning `extend`, asynchronous renderer factories, WebGPU registration and initialization, and the retained `state.gl` name |
+| [v9.6: Stable Uniform References](#v96-stable-uniform-references) | Copy-in uniform semantics, stable material identities for hot reload and React Compiler, pierced value props, and fixed-shape per-frame updates |
+| [Ecosystem Moves That Bite During Migration](#ecosystem-moves-that-bite-during-migration) | Second-UV channels and naming, addon import paths, Zustand shallow selectors and transient subscriptions, and React 19 refs as ordinary props |
+| [The v10 Horizon](#the-v10-horizon) | Alpha-only WebGPU-first rendering, the `state.gl` to `state.renderer` rename, external frame scheduling, and paired drei alphas |
+| [Common Mistakes](#common-mistakes) | React and companion peer versions, constructor-based buffer attributes, explicit shader texture color space, the v9 renderer callback, removed TypeScript types and global JSX augmentation, inherited StrictMode, current UV and addon imports, Zustand 5 selectors, React `act`, and the v10 state rename |
+| [See Also](#see-also) | Current Canvas setup, JSX and TypeScript migration, shader uniform behavior, asset loading, stack versions, and the official v9 migration guide |
 
 ## Version Requirements
 

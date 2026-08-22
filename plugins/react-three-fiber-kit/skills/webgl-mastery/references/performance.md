@@ -2,7 +2,20 @@
 
 WebGL bottlenecks fall into three families: too many draw calls, too much GPU state churn, and CPU↔GPU sync stalls. Frame budget is ~16ms at 60fps; on mobile, often half that. Measure with the browser's performance profiler before you optimize — guesses are usually wrong.
 
-**Contents:** [Instancing](#instancing--one-draw-many-copies) · [Uniform Buffer Objects (UBOs)](#uniform-buffer-objects-ubos) · [Draw Call Batching](#draw-call-batching) · [State Change Minimization](#state-change-minimization) · [Avoid CPU↔GPU Sync Points](#avoid-cpugpu-sync-points) · [Buffer Update Strategies](#buffer-update-strategies) · [Texture Atlasing](#texture-atlasing) · [Mobile-Specific Pitfalls](#mobile-specific-pitfalls) · [Measuring](#measuring) · [Common Mistakes](#common-mistakes)
+## Table of Contents
+
+| Section | Covers |
+|---|---|
+| [Instancing — One Draw, Many Copies](#instancing--one-draw-many-copies) | Per-instance attributes and matrices, divisor setup, native WebGL2 calls, and the WebGL1 extension equivalents |
+| [Uniform Buffer Objects (UBOs)](#uniform-buffer-objects-ubos) | Shared cross-program uploads, binding points, partial updates, strict `std140` padding, and when reuse pays off |
+| [Draw Call Batching](#draw-call-batching) | Static geometry merging and draw sorting by program, vertex state, and texture to reduce fixed CPU overhead |
+| [State Change Minimization](#state-change-minimization) | JavaScript-side caching of programs and capabilities to skip redundant driver calls |
+| [Avoid CPU↔GPU Sync Points](#avoid-cpugpu-sync-points) | Readback and query stalls, diagnostic-only finishing, and delayed pixel-buffer reads for continuous GPU results |
+| [Buffer Update Strategies](#buffer-update-strategies) | Full versus sliced uploads, streaming hints, and allocation orphaning to avoid update stalls |
+| [Texture Atlasing](#texture-atlasing) | Shared UV atlases and same-sized texture arrays that reduce sampler switches and atlas bleeding |
+| [Mobile-Specific Pitfalls](#mobile-specific-pitfalls) | Tile flushes, upload timing, discard and early-Z, real mediump limits, and sustainable frame-rate targets |
+| [Measuring](#measuring) | CPU profiling, GPU timer queries, captured draw state, and phase-level render-loop instrumentation |
+| [Common Mistakes](#common-mistakes) | Excess draw calls, missing divisors, mobile FBO churn, synchronous readback, uncached programs, misaligned UBOs, guesswork, and thermal throttling |
 
 ## Instancing — One Draw, Many Copies
 

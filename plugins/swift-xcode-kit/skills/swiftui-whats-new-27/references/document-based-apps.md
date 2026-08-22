@@ -6,7 +6,21 @@ If the user's deployment target is below iOS 27 / macOS 27 / visionOS 27, do not
 
 SDK 27.0 introduces two new protocols for document-based apps: `ReadableDocument` (read-only) and `WritableDocument` (adds saving). They give the document model **direct access to the file URL**, run reading and writing in the background, support progress reporting, and support coordinated disk access at any time. For new code, always prefer them over `ReferenceFileDocument` and `FileDocument`.
 
-**Contents:** [Mental model](#mental-model) · [Set up the app: `DocumentGroup`](#set-up-the-app-documentgroup) · [`FileWrapperDocumentReader` / `FileWrapperDocumentWriter` (recommended)](#filewrapperdocumentreader--filewrapperdocumentwriter-recommended) · [Register undo actions (required for autosave)](#register-undo-actions-required-for-autosave) · [Custom readers and writers](#custom-readers-and-writers) · [Report progress with `Subprogress`](#report-progress-with-subprogress) · [Coordinated disk access outside read/write](#coordinated-disk-access-outside-readwrite) · [iOS launch scene and multiple creation sources](#ios-launch-scene-and-multiple-creation-sources) · [Export to a new location or format](#export-to-a-new-location-or-format) · [Concurrency contract (common agent pitfalls)](#concurrency-contract-common-agent-pitfalls) · [Quick API reference](#quick-api-reference)
+## Table of Contents
+
+| Section | Covers |
+|---|---|
+| [Mental model](#mental-model) | Observable reference documents, value snapshots, independent readers and writers, actor boundaries, and open-save sequencing |
+| [Set up the app: `DocumentGroup`](#set-up-the-app-documentgroup) | Read-write editors versus read-only viewers, asynchronous creation, URL configuration, creation sources, and bundle roles |
+| [`FileWrapperDocumentReader` / `FileWrapperDocumentWriter` (recommended)](#filewrapperdocumentreader--filewrapperdocumentwriter-recommended) | Flat-file conversion, incremental package reads and writes, previous-wrapper reuse, dirty tracking, and on-demand file failures |
+| [Register undo actions (required for autosave)](#register-undo-actions-required-for-autosave) | Undo-backed change tracking that enables autosave and naturally registers redo |
+| [Custom readers and writers](#custom-readers-and-writers) | Streaming or URL-dependent I/O, very large packages, background execution, and previous-snapshot comparison |
+| [Report progress with `Subprogress`](#report-progress-with-subprogress) | Single-consumption progress managers, coarse completion units, byte and file display metrics, and custom-reader-only support |
+| [Coordinated disk access outside read/write](#coordinated-disk-access-outside-readwrite) | Automatic operation coordination and fresh file coordinators for later access through main-actor configuration |
+| [iOS launch scene and multiple creation sources](#ios-launch-scene-and-multiple-creation-sources) | Branded launch scenes, multiple new-document actions, and source-specific initialization |
+| [Export to a new location or format](#export-to-a-new-location-or-format) | Use `fileExporter` with a `WritableDocument` |
+| [Concurrency contract (common agent pitfalls)](#concurrency-contract-common-agent-pitfalls) | Synchronous factories, background I/O, main-actor snapshots and configuration, sending values, access levels, and asynchronous creation |
+| [Quick API reference](#quick-api-reference) | Document-based app symbols and the role each one plays |
 
 ## Mental model
 

@@ -1,6 +1,18 @@
 # Textures and Framebuffers
 
-**Contents:** [Loading a Texture from an Image](#loading-a-texture-from-an-image) · [Binding to a Sampler](#binding-to-a-sampler) · [Filtering and Wrap Modes](#filtering-and-wrap-modes) · [NPOT (Non-Power-of-Two) Textures](#npot-non-power-of-two-textures) · [Sampling in the Shader](#sampling-in-the-shader) · [Render-to-Texture: Framebuffer Objects](#render-to-texture-framebuffer-objects) · [Ping-Pong for Multi-Pass Effects](#ping-pong-for-multi-pass-effects) · [Reading Pixels Back](#reading-pixels-back) · [Common Mistakes](#common-mistakes)
+## Table of Contents
+
+| Section | Covers |
+|---|---|
+| [Loading a Texture from an Image](#loading-a-texture-from-an-image) | Asynchronous image upload with placeholder pixels, cross-origin access, Y-axis handling, and mipmap generation |
+| [Binding to a Sampler](#binding-to-a-sampler) | Texture-unit activation and sampler assignment by unit index for one or more maps |
+| [Filtering and Wrap Modes](#filtering-and-wrap-modes) | Minification, magnification, and out-of-range UV behavior plus mipmap completeness requirements |
+| [NPOT (Non-Power-of-Two) Textures](#npot-non-power-of-two-textures) | WebGL1 restrictions that make invalid NPOT textures sample black and the unrestricted WebGL2 behavior |
+| [Sampling in the Shader](#sampling-in-the-shader) | GLSL ES 3.00 sampler calls, explicit level-of-detail and gradient sampling, and renamed WebGL1 functions |
+| [Render-to-Texture: Framebuffer Objects](#render-to-texture-framebuffer-objects) | Color-texture and optional depth attachments, completeness checks, render-target switching, viewport sizing, and read-write hazards |
+| [Ping-Pong for Multi-Pass Effects](#ping-pong-for-multi-pass-effects) | Swapping paired framebuffer inputs and outputs across iterative rendering passes |
+| [Reading Pixels Back](#reading-pixels-back) | Synchronous pixel readback costs, suitable one-off uses, and staggered WebGL2 pixel-buffer reads |
+| [Common Mistakes](#common-mistakes) | Diagnosis of black, placeholder, inverted, and cross-origin textures plus framebuffer, sampler, readback, and NPOT failures |
 
 ## Loading a Texture from an Image
 

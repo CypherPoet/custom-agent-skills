@@ -4,7 +4,18 @@ The four core R3F hooks — `useThree` (state access), `useFrame` (render loop),
 
 > Canvas props, render defaults, and the color-management flags mirrored in state: see [canvas-and-project-setup.md](./canvas-and-project-setup.md). Shared stack setup: [../SKILL.md](../SKILL.md).
 
-**Contents:** [Hook Rules](#hook-rules) · [useThree](#usethree) · [useFrame](#useframe) · [useLoader](#useloader) · [useGraph](#usegraph) · [Global and Additional Exports](#global-and-additional-exports) · [Common Mistakes](#common-mistakes) · [See Also](#see-also)
+## Table of Contents
+
+| Section | Covers |
+|---|---|
+| [Hook Rules](#hook-rules) | Canvas-context placement, the component split required around a root, and automatic cleanup of frame, state, and loader consumers on unmount |
+| [useThree](#usethree) | Selective root-state subscriptions, renderer and viewport fields, event and performance controls, non-reactive reads, mutable-object boundaries, projection updates, and replacing defaults |
+| [useFrame](#useframe) | Live state, delta, and XR callbacks, allocation-free ref mutation, external-store reads, negative ordering, and positive-priority render takeover for multiple passes |
+| [useLoader](#useloader) | Suspense and error boundaries, parallel assets, URL-keyed sharing, preload and eviction, cached-resource ownership and cloning, loader configuration and progress, v9 instances, and named graphs |
+| [useGraph](#usegraph) | Memoized node and material lookup after ordinary or skeleton-safe cloning plus the non-hook `buildGraph` equivalent |
+| [Global and Additional Exports](#global-and-additional-exports) | Portal rendering, imperative prop application, global frame effects, manual loop control, graph building, roots, and advanced or test utilities |
+| [Common Mistakes](#common-mistakes) | Canvas hook scope, narrow selectors and fresh reads, mutable camera state, delta-scaled frame work and render priorities, Suspense and error boundaries, shared-loader cloning and disposal, loop-specific invalidation, deprecated pointer naming, and v9 loader instances |
+| [See Also](#see-also) | Canvas state setup, asset loading, animation, render-loop performance, stack setup, and the official hooks API |
 
 ## Hook Rules
 

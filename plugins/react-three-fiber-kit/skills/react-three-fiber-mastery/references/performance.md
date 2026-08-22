@@ -4,7 +4,20 @@ The pitfalls doctrine from the official R3F docs plus the scaling toolbox: on-de
 
 > Canvas props (`frameloop`, `dpr`, `performance`): see [canvas-and-project-setup.md](./canvas-and-project-setup.md). Shared setup: see [../SKILL.md](../SKILL.md).
 
-**Contents:** [The Eight Pitfalls](#the-eight-pitfalls) · [On-Demand Rendering](#on-demand-rendering) · [Instancing and the Draw-Call Budget](#instancing-and-the-draw-call-budget) · [Level of Detail](#level-of-detail) · [Adaptive Quality and Movement Regression](#adaptive-quality-and-movement-regression) · [Expensive State Updates: startTransition](#expensive-state-updates-starttransition) · [React State Discipline](#react-state-discipline) · [Profiling](#profiling) · [Common Mistakes](#common-mistakes) · [See Also](#see-also)
+## Table of Contents
+
+| Section | Covers |
+|---|---|
+| [The Eight Pitfalls](#the-eight-pitfalls) | Expensive object creation and per-frame work multiplied by refresh rate, with rules for sharing, state, deltas, mounting, allocation, and loader caching |
+| [On-Demand Rendering](#on-demand-rendering) | Automatic React invalidation, coalesced requests after imperative changes, raw and drei control wiring, sustaining continuous animation, and externally advanced loops |
+| [Instancing and the Draw-Call Budget](#instancing-and-the-draw-call-budget) | Draw-call limits, raw matrix updates and culling, declarative instances with fixed capacity and events, and merged instancing for repeated multi-mesh assets |
+| [Level of Detail](#level-of-detail) | Camera-distance detail thresholds, required child ordering, and progressive low-resolution fallbacks while higher-detail assets load |
+| [Adaptive Quality and Movement Regression](#adaptive-quality-and-movement-regression) | Opt-in quality envelopes, movement-triggered regression and recovery, adaptive pixel ratio and events, sustained-device monitoring, and mobile pixel-ratio clamping |
+| [Expensive State Updates: startTransition](#expensive-state-updates-starttransition) | Scheduling unavoidable model mounts, level swaps, and suspending updates without blocking input or the frame loop |
+| [React State Discipline](#react-state-discipline) | Isolated animated and display components, narrow root selectors, imperative frame reads, non-rendering Zustand subscriptions, and shallow multi-value selectors |
+| [Profiling](#profiling) | In-canvas CPU, GPU, draw, triangle, and memory metrics, lightweight renderer counters, and diagnoses for draw-call, allocation, mount, and fill-rate bottlenecks |
+| [Common Mistakes](#common-mistakes) | Per-frame allocation, fixed increments, React updates, and reactive store binding; demand invalidation; mount churn and shared-resource disposal; Zustand 5 subscriptions; instancing and culling; loader caching; and mobile pixel-ratio caps |
+| [See Also](#see-also) | Frame and state hooks, animation smoothing, cached asset loading, JSX reconstruction and disposal, stack setup, and official performance guidance |
 
 ## The Eight Pitfalls
 

@@ -1,6 +1,6 @@
 {
   "name": "session-handoff",
-  "version": "0.7.1",
+  "version": "0.7.2",
   "description": "Write a structured handoff document so a fresh agent can resume long-running work without losing context.",
   "author": {
     "name": "CypherPoet"

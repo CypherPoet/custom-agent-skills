@@ -2,6 +2,21 @@
 
 This file is the canonical layout for handoff documents. `scripts/create_handoff.py` reads everything below the `# 🤝 Handoff:` line as the template body and substitutes the `{{placeholder}}` tokens at scaffold time. Edit the body to change the structure that gets emitted — there is no separate copy of this template inside the script.
 
+## Table of Contents
+
+| Section | Covers |
+|---|---|
+| [Why this structure](#why-this-structure) | Resume-first reading order, early canonical artifacts, low-priority completion history, and the companion read strategy that must stay synchronized |
+| [Placeholders](#placeholders) | Runtime metadata, branch and repository fallbacks, pull-request and commit context, optional chain and plan blocks, modified-file output, and the template-body boundary |
+| [🧾 Session Metadata](#-session-metadata) | Creation time, branch, repository and source pull request when detected, recent commits, and optional handoff-chain and active-plan blocks |
+| [📍 Current State Summary](#-current-state-summary) | Active work, current status, and the point where the previous session stopped |
+| [💡 Important Context](#-important-context) | Decisions, failed approaches, and insights not captured in source artifacts |
+| [🚧 Pending Work](#-pending-work) | Immediate next steps, blockers, open questions, and deferred items |
+| [⚠ Constraints for Resuming Agent](#-constraints-for-resuming-agent) | Non-obvious restrictions and failure modes plus forward-looking skill choices, trigger conditions, and reasons |
+| [🧠 Codebase Understanding](#-codebase-understanding) | Architecture, critical files, and implementation patterns discovered during the session |
+| [🏁 Work Completed](#-work-completed) | Finished tasks, modified files, and decisions made |
+| [🌐 Environment State](#-environment-state) | Relevant tools and service configuration, active processes, and environment-variable names without secret values |
+
 ## Why this structure
 
 The document is ordered for the **resuming agent**, not the author. The agent's reading priority is: (1) what to do right now, (2) what canonical artifacts to open, (3) what constrains how, (4) what already shipped. So the top of the document is `Next Action` → metadata → source artifacts → state summary → important context → pending work → constraints. "What was completed" lives near the bottom because it's reference data once a session is over, not first-read material.
@@ -78,7 +93,7 @@ The canonical record for this work. Link by path or URL; do not restate their co
 
 > If this handoff *exists to track* items deferred from a previous task — i.e., those items are the primary effort, not adjacent to it — write `none` here and put the canonical list in **Immediate Next Steps**.
 
-## ⚠️ Constraints for Resuming Agent
+## ⚠ Constraints for Resuming Agent
 
 ### Potential Gotchas
 

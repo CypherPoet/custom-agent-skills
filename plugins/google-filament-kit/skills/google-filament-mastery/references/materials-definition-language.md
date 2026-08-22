@@ -5,7 +5,20 @@
 
 A `.mat` material definition is a text file describing everything a material needs: name, user parameters, material model, required attributes, interpolants (called _variables_), raster state (blending mode, etc.), and shader code (fragment shader, optionally vertex shader). It is compiled into a `.filamat` package by the `matc` command-line tool.
 
-**Contents:** [File structure (the three blocks)](#file-structure-the-three-blocks) · [JSONish format rules](#jsonish-format-rules) · [Material block keys](#material-block-keys) · [General](#general) · [Vertex and attributes](#vertex-and-attributes) · [Blending and transparency](#blending-and-transparency) · [Rasterization](#rasterization) · [Lighting](#lighting) · [Anti-aliasing](#anti-aliasing) · [Shading](#shading) · [Parameter types](#parameter-types) · [Constant types](#constant-types) · [Vertex block](#vertex-block) · [MaterialVertexInputs struct](#materialvertexinputs-struct) · [Custom vertex attributes](#custom-vertex-attributes) · [Procedural / attribute-less rendering](#procedural--attribute-less-rendering) · [Fragment block](#fragment-block) · [prepareMaterial requirement](#preparematerial-requirement) · [MaterialInputs struct (fields per shading model)](#materialinputs-struct-fields-per-shading-model) · [Custom surface shading](#custom-surface-shading) · [Shader public APIs](#shader-public-apis) · [Type aliases](#type-aliases) · [Math](#math) · [Matrices](#matrices) · [Frame constants](#frame-constants) · [Material globals](#material-globals) · [Vertex-only APIs](#vertex-only-apis) · [Fragment-only APIs](#fragment-only-apis) · [Sampler usage by feature level](#sampler-usage-by-feature-level) · [Complete example: textured lit material](#complete-example-textured-lit-material)
+## Table of Contents
+
+| Section | Covers |
+|---|---|
+| [File structure (the three blocks)](#file-structure-the-three-blocks) | Mandatory material and fragment blocks, optional vertex code, ESSL stage entry points, and nonshader versus shader responsibilities |
+| [JSONish format rules](#jsonish-format-rules) | Optional and space-required quoting, raw shader blocks, line comments, case-sensitive keys, and case-insensitive values |
+| [Material block keys](#material-block-keys) | Models and feature levels, parameters and constants, attributes and varyings, domains, blending and refraction, raster state, lighting, shadows, anti-aliasing, and custom shading |
+| [Parameter types](#parameter-types) | Scalar, vector, matrix and sampler declarations, precision, sampler format and filtering, fixed arrays, and external-texture transforms |
+| [Constant types](#constant-types) | Signed integer, floating-point, and Boolean specialization constants with optional runtime fallbacks |
+| [Vertex block](#vertex-block) | Required entry point, vertex inputs and precision-shifted world position, UV flipping, custom attributes, variables, and bufferless procedural rendering |
+| [Fragment block](#fragment-block) | Required material preparation order, per-model inputs, normal-map timing, refraction fields, and lit-only per-light custom surface shading |
+| [Shader public APIs](#shader-public-apis) | Type aliases and math, coordinate matrices, viewport, camera, time and exposure constants, material globals, vertex attributes and indices, and fragment geometry, UV, color, tone, and render-target helpers |
+| [Sampler usage by feature level](#sampler-usage-by-feature-level) | The number of usable sampler parameters depends on material properties, shading model, feature level, and variant filter |
+| [Complete example: textured lit material](#complete-example-textured-lit-material) | Lit PBR declarations, required UV and tangent attributes, normal unpacking before preparation, tiled base-color sampling, and scalar metallic and roughness parameters |
 
 ---
 

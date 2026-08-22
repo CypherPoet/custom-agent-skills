@@ -6,7 +6,22 @@ The classic raw-GLSL path: `ShaderMaterial` and `RawShaderMaterial`. Still fully
 
 > For raw WebGL pipeline mechanics and deep GLSL technique *beneath* Three.js — custom `WebGLRenderingContext` work, advanced shader patterns, framework-limit drop-downs — see the sibling **`webgl-mastery`** skill (`webgl-kit` dependency).
 
-**Contents:** [Minimum Viable ShaderMaterial](#minimum-viable-shadermaterial) · [Built-in Uniforms and Attributes](#built-in-uniforms-and-attributes) · [Uniform Types](#uniform-types) · [RawShaderMaterial](#rawshadermaterial) · [Varyings](#varyings) · [Common GLSL Recipes](#common-glsl-recipes) · [Extending Built-ins](#extending-built-ins-onbeforecompile) · [GLSL Function Reference](#glsl-built-in-function-reference) · [Common Material Options](#common-material-options-shadermaterial) · [Shader Chunks](#shader-chunks) · [Common Mistakes](#common-mistakes)
+## Table of Contents
+
+| Section | Covers |
+|---|---|
+| [Minimum Viable ShaderMaterial](#minimum-viable-shadermaterial) | A complete `ShaderMaterial` with uniforms plus vertex and fragment shaders |
+| [Built-in Uniforms and Attributes](#built-in-uniforms-and-attributes) | Automatically supplied transform and camera uniforms plus position, normal, and UV attributes |
+| [Uniform Types](#uniform-types) | JavaScript mappings for scalar, vector, color, matrix, texture, cube texture, and array uniforms |
+| [RawShaderMaterial](#rawshadermaterial) | Explicit precision, attributes, and transform uniforms without Three.js shader declarations |
+| [Varyings](#varyings) | Declaring, writing, interpolating, and reading vertex-to-fragment values |
+| [Common GLSL Recipes](#common-glsl-recipes) | Texture sampling, animated displacement, Fresnel, rim light, value noise, and edge-colored dissolve |
+| [Extending Built-ins (`onBeforeCompile`)](#extending-built-ins-onbeforecompile) | Injected uniforms and source replacements at common vertex and fragment chunks, with node materials preferred for new work |
+| [GLSL Built-in Function Reference](#glsl-built-in-function-reference) | Scalar math, vector operations, comparisons, and GLSL-version-specific texture access and fragment output |
+| [Common Material Options (ShaderMaterial)](#common-material-options-shadermaterial) | Transparency, sidedness, depth, blending, extensions, wireframe, and GLSL version options |
+| [Shader Chunks](#shader-chunks) | Reusing internal depth, packing, fog, and lighting fragments and importing external shader source files |
+| [Common Mistakes](#common-mistakes) | Unwritten varyings, mobile precision artifacts, mixed GLSL-version syntax, and brittle source-patch matching |
+| [See Also](#see-also) | Modern TSL, shared shader debugging and performance, material integration and patching, and texture sampling, color spaces, or render targets |
 
 ## Minimum Viable ShaderMaterial
 
