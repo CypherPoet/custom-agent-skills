@@ -5,7 +5,7 @@ description: Audit Apple-platform apps against the official App Store Review Gui
 
 # Apple App Store Best Practices
 
-*Last synced with Apple guidelines: 2026-07-17*
+*Last synced with Apple guidelines: 2026-08-22*
 
 Comprehensive guide for Apple App Store success: compliance auditing against all 5 sections of the [Apple App Store Review Guidelines](https://developer.apple.com/app-store/review/guidelines/) with exact section citations and actionable remediation, plus metadata optimization, screenshot strategy, review management, and localization best practices.
 
