@@ -1,187 +1,135 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion": 2,
   "skills": {
     "app-store-connect-submission": {
-      "lastAttemptedReview": "2026-08-23T00:10:08.319Z",
-      "lastAttemptStatus": "completed",
-      "lastAttemptFingerprint": "sha256:ec6802e7bde0c95d54c6af601d3766e9590311a9d91cd7f0de8459b5e4f91e80",
-      "lastCompletedReview": "2026-08-23T00:10:08.319Z",
-      "completedFingerprint": "sha256:ec6802e7bde0c95d54c6af601d3766e9590311a9d91cd7f0de8459b5e4f91e80"
+      "lastAttemptedAt": "2026-08-23T00:10:08.319Z",
+      "lastAttemptOutcome": "completed",
+      "lastCompletedAt": "2026-08-23T00:10:08.319Z"
     },
     "apple-app-icons": {
-      "lastAttemptedReview": "2026-08-23T00:10:08.319Z",
-      "lastAttemptStatus": "completed",
-      "lastAttemptFingerprint": "sha256:491778e31dfe7c19e5b5b27fa86da47bf119f1ae47ca011367a34b1fe261d033",
-      "lastCompletedReview": "2026-08-23T00:10:08.319Z",
-      "completedFingerprint": "sha256:491778e31dfe7c19e5b5b27fa86da47bf119f1ae47ca011367a34b1fe261d033"
+      "lastAttemptedAt": "2026-08-23T00:10:08.319Z",
+      "lastAttemptOutcome": "completed",
+      "lastCompletedAt": "2026-08-23T00:10:08.319Z"
     },
     "apple-app-store-best-practices": {
-      "lastAttemptedReview": "2026-08-23T00:10:08.319Z",
-      "lastAttemptStatus": "completed",
-      "lastAttemptFingerprint": "sha256:65992bbd04a40d149095360578785512a2d509dab3aaffbf6a66303bee3aa8b1",
-      "lastCompletedReview": "2026-08-23T00:10:08.319Z",
-      "completedFingerprint": "sha256:65992bbd04a40d149095360578785512a2d509dab3aaffbf6a66303bee3aa8b1"
+      "lastAttemptedAt": "2026-08-23T00:10:08.319Z",
+      "lastAttemptOutcome": "completed",
+      "lastCompletedAt": "2026-08-23T00:10:08.319Z"
     },
     "apple-app-store-screenshots": {
-      "lastAttemptedReview": "2026-08-23T00:10:08.319Z",
-      "lastAttemptStatus": "completed",
-      "lastAttemptFingerprint": "sha256:a8877621dbe0a1746cca63890c83cd797d883b51074b7cee1ee7932358a14ae8",
-      "lastCompletedReview": "2026-08-23T00:10:08.319Z",
-      "completedFingerprint": "sha256:a8877621dbe0a1746cca63890c83cd797d883b51074b7cee1ee7932358a14ae8"
+      "lastAttemptedAt": "2026-08-23T00:10:08.319Z",
+      "lastAttemptOutcome": "completed",
+      "lastCompletedAt": "2026-08-23T00:10:08.319Z"
     },
     "apple-human-interface-guidelines": {
-      "lastAttemptedReview": "2026-08-23T00:10:08.319Z",
-      "lastAttemptStatus": "completed",
-      "lastAttemptFingerprint": "sha256:69d1943c702b3f5b428ce7b00192deb8469a4642c78a33f89da286206a799a64",
-      "lastCompletedReview": "2026-08-23T00:10:08.319Z",
-      "completedFingerprint": "sha256:69d1943c702b3f5b428ce7b00192deb8469a4642c78a33f89da286206a799a64"
+      "lastAttemptedAt": "2026-08-23T00:10:08.319Z",
+      "lastAttemptOutcome": "completed",
+      "lastCompletedAt": "2026-08-23T00:10:08.319Z"
     },
     "audit-xcode-security-settings": {
-      "lastAttemptedReview": "2026-08-23T00:10:08.319Z",
-      "lastAttemptStatus": "completed",
-      "lastAttemptFingerprint": "sha256:acc999ceb9abe7130d3b0c8bf4c383b566e3cb5e951b6f02b6938d01f9a314f9",
-      "lastCompletedReview": "2026-08-23T00:10:08.319Z",
-      "completedFingerprint": "sha256:acc999ceb9abe7130d3b0c8bf4c383b566e3cb5e951b6f02b6938d01f9a314f9"
+      "lastAttemptedAt": "2026-08-23T00:10:08.319Z",
+      "lastAttemptOutcome": "completed",
+      "lastCompletedAt": "2026-08-23T00:10:08.319Z"
     },
     "blender-mastery": {
-      "lastAttemptedReview": "2026-08-23T00:10:08.319Z",
-      "lastAttemptStatus": "completed",
-      "lastAttemptFingerprint": "sha256:db373a7b31ebb8f015fe00e1b1351d6e739120ccdf90b7a7fb43a044031ac894",
-      "lastCompletedReview": "2026-08-23T00:10:08.319Z",
-      "completedFingerprint": "sha256:db373a7b31ebb8f015fe00e1b1351d6e739120ccdf90b7a7fb43a044031ac894"
+      "lastAttemptedAt": "2026-08-23T00:10:08.319Z",
+      "lastAttemptOutcome": "completed",
+      "lastCompletedAt": "2026-08-23T00:10:08.319Z"
     },
     "c-bounds-safety": {
-      "lastAttemptedReview": "2026-08-23T00:10:08.319Z",
-      "lastAttemptStatus": "incomplete",
-      "lastAttemptFingerprint": "sha256:b6ab48f598e069c2f795a4200032b32132b201f4e69119d8e47243da48ca6ede",
-      "lastCompletedReview": "2026-08-14T16:11:04Z",
-      "completedFingerprint": "sha256:02527203369450ca5f1dbfcb3f99fcbb8a6e6cd66eab4199d381c6dfdbb8def2"
+      "lastAttemptedAt": "2026-08-23T00:10:08.319Z",
+      "lastAttemptOutcome": "incomplete",
+      "lastCompletedAt": "2026-08-14T16:11:04Z"
     },
     "claude-docs-search": {
-      "lastAttemptedReview": "2026-08-14T16:11:04Z",
-      "lastAttemptStatus": "completed",
-      "lastAttemptFingerprint": "sha256:cb0e105cde87f9d7e01aabdc28f7c22bf228e9e9e79b93f130899302f2ba46af",
-      "lastCompletedReview": "2026-08-14T16:11:04Z",
-      "completedFingerprint": "sha256:cb0e105cde87f9d7e01aabdc28f7c22bf228e9e9e79b93f130899302f2ba46af"
+      "lastAttemptedAt": "2026-08-14T16:11:04Z",
+      "lastAttemptOutcome": "completed",
+      "lastCompletedAt": "2026-08-14T16:11:04Z"
     },
     "claude-memory-consolidation": {
-      "lastAttemptedReview": "2026-08-14T16:11:04Z",
-      "lastAttemptStatus": "completed",
-      "lastAttemptFingerprint": "sha256:8d0c504c370611ce96a7189f48f0894ea6c0021770a36e18673b8cfa9d06ad09",
-      "lastCompletedReview": "2026-08-14T16:11:04Z",
-      "completedFingerprint": "sha256:8d0c504c370611ce96a7189f48f0894ea6c0021770a36e18673b8cfa9d06ad09"
+      "lastAttemptedAt": "2026-08-14T16:11:04Z",
+      "lastAttemptOutcome": "completed",
+      "lastCompletedAt": "2026-08-14T16:11:04Z"
     },
     "excalidraw-mastery": {
-      "lastAttemptedReview": "2026-08-23T00:10:08.319Z",
-      "lastAttemptStatus": "completed",
-      "lastAttemptFingerprint": "sha256:8398b08846a7b615d3fb333bb75a2c12fae6eeb4a56fde25270ae2b7f0d5c86a",
-      "lastCompletedReview": "2026-08-23T00:10:08.319Z",
-      "completedFingerprint": "sha256:8398b08846a7b615d3fb333bb75a2c12fae6eeb4a56fde25270ae2b7f0d5c86a"
+      "lastAttemptedAt": "2026-08-23T00:10:08.319Z",
+      "lastAttemptOutcome": "completed",
+      "lastCompletedAt": "2026-08-23T00:10:08.319Z"
     },
     "expo-snack-prototyper": {
-      "lastAttemptedReview": "2026-08-14T16:11:04Z",
-      "lastAttemptStatus": "completed",
-      "lastAttemptFingerprint": "sha256:074a1f9d85f1985caa5e946013fc32a93c5e14c4fd96ce1a6edc690c74d7bf76",
-      "lastCompletedReview": "2026-08-14T16:11:04Z",
-      "completedFingerprint": "sha256:074a1f9d85f1985caa5e946013fc32a93c5e14c4fd96ce1a6edc690c74d7bf76"
+      "lastAttemptedAt": "2026-08-14T16:11:04Z",
+      "lastAttemptOutcome": "completed",
+      "lastCompletedAt": "2026-08-14T16:11:04Z"
     },
     "google-filament-mastery": {
-      "lastAttemptedReview": "2026-08-23T00:10:08.319Z",
-      "lastAttemptStatus": "completed",
-      "lastAttemptFingerprint": "sha256:88a83cbcd69b4cf5fe438e46d962e02e0bbc42b50dfe49aff831468604f3fb4d",
-      "lastCompletedReview": "2026-08-23T00:10:08.319Z",
-      "completedFingerprint": "sha256:88a83cbcd69b4cf5fe438e46d962e02e0bbc42b50dfe49aff831468604f3fb4d"
+      "lastAttemptedAt": "2026-08-23T00:10:08.319Z",
+      "lastAttemptOutcome": "completed",
+      "lastCompletedAt": "2026-08-23T00:10:08.319Z"
     },
     "marketplace-publish": {
-      "lastAttemptedReview": "2026-08-14T16:11:04Z",
-      "lastAttemptStatus": "completed",
-      "lastAttemptFingerprint": "sha256:9798d31fc9dabeb70fc36873d131d0e6c7853e876d50eb2a297ac6f8fd63b7ed",
-      "lastCompletedReview": "2026-08-14T16:11:04Z",
-      "completedFingerprint": "sha256:9798d31fc9dabeb70fc36873d131d0e6c7853e876d50eb2a297ac6f8fd63b7ed"
+      "lastAttemptedAt": "2026-08-14T16:11:04Z",
+      "lastAttemptOutcome": "completed",
+      "lastCompletedAt": "2026-08-14T16:11:04Z"
     },
     "marketplace-publish-check": {
-      "lastAttemptedReview": "2026-08-14T16:11:04Z",
-      "lastAttemptStatus": "completed",
-      "lastAttemptFingerprint": "sha256:2aed67c5a64a1e1fbfe40341d044852692921af154b804fba52420fe09525eb9",
-      "lastCompletedReview": "2026-08-14T16:11:04Z",
-      "completedFingerprint": "sha256:2aed67c5a64a1e1fbfe40341d044852692921af154b804fba52420fe09525eb9"
+      "lastAttemptedAt": "2026-08-14T16:11:04Z",
+      "lastAttemptOutcome": "completed",
+      "lastCompletedAt": "2026-08-14T16:11:04Z"
     },
     "marketplace-sync-check": {
-      "lastAttemptedReview": "2026-08-14T16:11:04Z",
-      "lastAttemptStatus": "completed",
-      "lastAttemptFingerprint": "sha256:cbaad9a4b4767732cb9591034d46ed92acc1e478f3cc70c37776262002b251e6",
-      "lastCompletedReview": "2026-08-14T16:11:04Z",
-      "completedFingerprint": "sha256:cbaad9a4b4767732cb9591034d46ed92acc1e478f3cc70c37776262002b251e6"
+      "lastAttemptedAt": "2026-08-14T16:11:04Z",
+      "lastAttemptOutcome": "completed",
+      "lastCompletedAt": "2026-08-14T16:11:04Z"
     },
     "obsidian-plugin-crafting": {
-      "lastAttemptedReview": "2026-08-23T00:10:08.319Z",
-      "lastAttemptStatus": "completed",
-      "lastAttemptFingerprint": "sha256:83d1358826ba385edf278514904cffd0ee0f9248c8c3d61dcc0aa50b30ac8ce6",
-      "lastCompletedReview": "2026-08-23T00:10:08.319Z",
-      "completedFingerprint": "sha256:83d1358826ba385edf278514904cffd0ee0f9248c8c3d61dcc0aa50b30ac8ce6"
+      "lastAttemptedAt": "2026-08-23T00:10:08.319Z",
+      "lastAttemptOutcome": "completed",
+      "lastCompletedAt": "2026-08-23T00:10:08.319Z"
     },
     "react-three-fiber-mastery": {
-      "lastAttemptedReview": "2026-08-23T00:10:08.319Z",
-      "lastAttemptStatus": "completed",
-      "lastAttemptFingerprint": "sha256:0babd27ec88a36dcb2807c2bf08cdef98c9cfcc0f2a886c19dd962a72ad20557",
-      "lastCompletedReview": "2026-08-23T00:10:08.319Z",
-      "completedFingerprint": "sha256:0babd27ec88a36dcb2807c2bf08cdef98c9cfcc0f2a886c19dd962a72ad20557"
+      "lastAttemptedAt": "2026-08-23T00:10:08.319Z",
+      "lastAttemptOutcome": "completed",
+      "lastCompletedAt": "2026-08-23T00:10:08.319Z"
     },
     "sf-symbols": {
-      "lastAttemptedReview": "2026-08-22T00:25:08.207Z",
-      "lastAttemptStatus": "completed",
-      "lastAttemptFingerprint": "sha256:366b7f1425e150f609ec06b3abfd1dc23f59846a55dca8a1f37a5e4aea3312df",
-      "lastCompletedReview": "2026-08-22T00:25:08.207Z",
-      "completedFingerprint": "sha256:366b7f1425e150f609ec06b3abfd1dc23f59846a55dca8a1f37a5e4aea3312df"
+      "lastAttemptedAt": "2026-08-22T00:25:08.207Z",
+      "lastAttemptOutcome": "completed",
+      "lastCompletedAt": "2026-08-22T00:25:08.207Z"
     },
     "svgo": {
-      "lastAttemptedReview": "2026-08-23T00:10:08.319Z",
-      "lastAttemptStatus": "completed",
-      "lastAttemptFingerprint": "sha256:e7e13ffd4df9cee16c305d43eee68f55741732e498ea1364631ab011e92f0656",
-      "lastCompletedReview": "2026-08-23T00:10:08.319Z",
-      "completedFingerprint": "sha256:e7e13ffd4df9cee16c305d43eee68f55741732e498ea1364631ab011e92f0656"
+      "lastAttemptedAt": "2026-08-23T00:10:08.319Z",
+      "lastAttemptOutcome": "completed",
+      "lastCompletedAt": "2026-08-23T00:10:08.319Z"
     },
     "swiftui-specialist": {
-      "lastAttemptedReview": "2026-08-23T00:10:08.319Z",
-      "lastAttemptStatus": "completed",
-      "lastAttemptFingerprint": "sha256:c58daa87a1e65f3a745e13d58a1ffe1ce0187242706fca16a444d09695bd857b",
-      "lastCompletedReview": "2026-08-23T00:10:08.319Z",
-      "completedFingerprint": "sha256:c58daa87a1e65f3a745e13d58a1ffe1ce0187242706fca16a444d09695bd857b"
+      "lastAttemptedAt": "2026-08-23T00:10:08.319Z",
+      "lastAttemptOutcome": "completed",
+      "lastCompletedAt": "2026-08-23T00:10:08.319Z"
     },
     "swiftui-whats-new-27": {
-      "lastAttemptedReview": "2026-08-23T00:10:08.319Z",
-      "lastAttemptStatus": "completed",
-      "lastAttemptFingerprint": "sha256:0a85e24bf76d5cd21cba6f17444428ae55692b778f637ed1f77e34f719fbee07",
-      "lastCompletedReview": "2026-08-23T00:10:08.319Z",
-      "completedFingerprint": "sha256:0a85e24bf76d5cd21cba6f17444428ae55692b778f637ed1f77e34f719fbee07"
+      "lastAttemptedAt": "2026-08-23T00:10:08.319Z",
+      "lastAttemptOutcome": "completed",
+      "lastCompletedAt": "2026-08-23T00:10:08.319Z"
     },
     "test-modernizer": {
-      "lastAttemptedReview": "2026-08-14T16:11:04Z",
-      "lastAttemptStatus": "completed",
-      "lastAttemptFingerprint": "sha256:a8803fa0727d39f0c9d1913766fe510081e060d26a8b00a36bd39a7926ff6457",
-      "lastCompletedReview": "2026-08-14T16:11:04Z",
-      "completedFingerprint": "sha256:a8803fa0727d39f0c9d1913766fe510081e060d26a8b00a36bd39a7926ff6457"
+      "lastAttemptedAt": "2026-08-14T16:11:04Z",
+      "lastAttemptOutcome": "completed",
+      "lastCompletedAt": "2026-08-14T16:11:04Z"
     },
     "threejs-mastery": {
-      "lastAttemptedReview": "2026-08-23T00:10:08.319Z",
-      "lastAttemptStatus": "completed",
-      "lastAttemptFingerprint": "sha256:a3949fea9db15ccdce8d9822dbb083992bdb01581191db494df6eed8d4590d88",
-      "lastCompletedReview": "2026-08-23T00:10:08.319Z",
-      "completedFingerprint": "sha256:a3949fea9db15ccdce8d9822dbb083992bdb01581191db494df6eed8d4590d88"
+      "lastAttemptedAt": "2026-08-23T00:10:08.319Z",
+      "lastAttemptOutcome": "completed",
+      "lastCompletedAt": "2026-08-23T00:10:08.319Z"
     },
     "uikit-app-modernization": {
-      "lastAttemptedReview": "2026-08-23T00:10:08.319Z",
-      "lastAttemptStatus": "completed",
-      "lastAttemptFingerprint": "sha256:0a469028d8a3c88e346a33a0e3e8d169f9fe2c51203ab512d424d25b7bb90578",
-      "lastCompletedReview": "2026-08-23T00:10:08.319Z",
-      "completedFingerprint": "sha256:0a469028d8a3c88e346a33a0e3e8d169f9fe2c51203ab512d424d25b7bb90578"
+      "lastAttemptedAt": "2026-08-23T00:10:08.319Z",
+      "lastAttemptOutcome": "completed",
+      "lastCompletedAt": "2026-08-23T00:10:08.319Z"
     },
     "webgl-mastery": {
-      "lastAttemptedReview": "2026-08-23T00:10:08.319Z",
-      "lastAttemptStatus": "completed",
-      "lastAttemptFingerprint": "sha256:ff9e3761b063838fc3255d32d9fb437cf8c8c58bff4d7b96fcfd505fcc7f1eb6",
-      "lastCompletedReview": "2026-08-23T00:10:08.319Z",
-      "completedFingerprint": "sha256:ff9e3761b063838fc3255d32d9fb437cf8c8c58bff4d7b96fcfd505fcc7f1eb6"
+      "lastAttemptedAt": "2026-08-23T00:10:08.319Z",
+      "lastAttemptOutcome": "completed",
+      "lastCompletedAt": "2026-08-23T00:10:08.319Z"
     }
   }
 }
