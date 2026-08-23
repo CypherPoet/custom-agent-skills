@@ -1,7 +1,7 @@
 # Section 2: Performance
 
 > Source: https://developer.apple.com/app-store/review/guidelines/
-> Last synced: 2026-07-17
+> Last synced: 2026-08-22
 
 ## Table of Contents
 
@@ -11,7 +11,7 @@
 | [§2.2 Beta Testing](#22-beta-testing) | TestFlight-only distribution for beta, demo, trial, preview, and evaluation builds, including prohibited production labels, tester compensation, and beta-only behavior |
 | [§2.3 Accurate Metadata](#23-accurate-metadata) | Hidden or remotely gated behavior, purchase disclosures, authentic screenshots and previews, classification and current age ratings, naming and intellectual property, Apple focus, pre-orders, release notes, and events |
 | [§2.4 Hardware Compatibility](#24-hardware-compatibility) | iPhone operation on iPad, energy and storage efficiency, Siri Remote control, restart and settings limits, and Mac App Store sandboxing, Xcode packaging, auto-launch, standalone-download, privilege-escalation, license-screen, self-update, current-macOS, and localization rules |
-| [§2.5 Software Requirements](#25-software-requirements) | Public APIs and self-contained safe code; permitted background execution, IPv6 networking, and WebKit browsing; home-screen and native-control limits; Siri and Shortcuts, CallKit and SMS filtering, Face ID, recording consent, documents, widgets and App Clips, Matter, and advertising |
+| [§2.5 Software Requirements](#25-software-requirements) | Public APIs, current-OS operation, and upload-SDK requirements; self-contained safe code; permitted background execution, IPv6 networking, and WebKit browsing; home-screen and native-control limits; Siri and Shortcuts, CallKit and SMS filtering, Face ID, recording consent, documents, widgets and App Clips, Matter, and advertising |
 
 ---
 
@@ -588,16 +588,18 @@
 
 ### §2.5.1 Public APIs Only
 
-**Requirement:** Apps must use only public, documented Apple APIs. Apps must be built with the current version of Xcode and target the current OS. *(ASR & NR)*
+**Requirement:** Apps may use only public, documented Apple APIs and must run on the currently shipping OS. Separately, App Store Connect enforces a minimum Xcode and SDK version for uploads. Since April 28, 2026, uploads for iOS, iPadOS, tvOS, visionOS, and watchOS must use Xcode 26 or later and the corresponding version 26 SDK. Recheck Apple's [upcoming requirements](https://developer.apple.com/news/upcoming-requirements/) before each submission because this upload floor changes over time. *(ASR & NR)*
 
 **Triggers rejection if:**
 - App uses private/undocumented Apple APIs
-- App is built with an outdated Xcode or targets an unsupported iOS/macOS version
+- App is built with an Xcode or SDK version below App Store Connect's current upload minimum
+- App fails to run on the currently shipping OS
 - App uses deprecated APIs that have been removed
 
 **What to check:**
 - Search for known private API patterns: selectors starting with `_` on system classes, direct calls to `objc_msgSend` with private selectors, `dlopen`/`dlsym` loading private frameworks
-- Check `IPHONEOS_DEPLOYMENT_TARGET` or `MACOSX_DEPLOYMENT_TARGET` build settings for outdated targets
+- Verify the Xcode version selected by local and CI builds (`xcodebuild -version`, `DEVELOPER_DIR`, CI setup actions, and fastlane configuration) meets Apple's current upload minimum
+- Inspect the archive's SDK and Xcode metadata rather than inferring submission eligibility from `IPHONEOS_DEPLOYMENT_TARGET` or `MACOSX_DEPLOYMENT_TARGET`
 - Search for `@objc` methods that might be calling private APIs via string selectors (`perform(Selector("_privateMethod"))`)
 - Look for imports of private frameworks (e.g., `UIKit` internal headers, `GraphicsServices`, `BackBoardServices`)
 - Check `Podfile`, `Package.swift`, or `Cartfile` for dependencies known to use private APIs
@@ -605,7 +607,8 @@
 **Key details:**
 - Apple runs automated scans for private API usage during review
 - Apps using private APIs may work during testing but be rejected upon submission
-- The "current OS" requirement typically means within the last two major versions
+- The deployment target controls the oldest OS an app supports; it is independent of the SDK version used to build the upload
+- A lower deployment target is not by itself evidence that an app violates the current SDK upload minimum
 
 ---
 

@@ -2,7 +2,7 @@
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "mobile-dev",
   "displayName": "Mobile Development",
-  "version": "0.12.1",
+  "version": "0.12.2",
   "description": "iOS App Store publishing best practices.",
   "author": { "name": "CypherPoet" },
   "homepage": "https://github.com/CypherPoet/custom-agent-skills/tree/main/plugins/mobile-dev",
