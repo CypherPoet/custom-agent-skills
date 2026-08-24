@@ -733,7 +733,7 @@ struct ScoreboardView: View {
 }
 ```
 
-# `@Entry` macro
+## `@Entry` macro
 
 When defining custom environment, transaction, container, or focused values, always prefer to use `@Entry` to reduce boilerplate code and avoid mistakes.
 
