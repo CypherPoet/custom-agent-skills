@@ -9,6 +9,7 @@ This file is the canonical layout for handoff documents. `scripts/create_handoff
 | [Why this structure](#why-this-structure) | Resume-first reading order, early canonical artifacts, low-priority completion history, and the companion read strategy that must stay synchronized |
 | [Placeholders](#placeholders) | Runtime metadata, branch and repository fallbacks, pull-request and commit context, optional chain and plan blocks, modified-file output, and the template-body boundary |
 | [🧾 Session Metadata](#-session-metadata) | Creation time, branch, repository and source pull request when detected, recent commits, and optional handoff-chain and active-plan blocks |
+| [📚 Source Artifacts](#-source-artifacts) | Canonical specifications, plans, decisions, tickets, pull requests, and other material to open instead of restating them in the handoff |
 | [📍 Current State Summary](#-current-state-summary) | Active work, current status, and the point where the previous session stopped |
 | [💡 Important Context](#-important-context) | Decisions, failed approaches, and insights not captured in source artifacts |
 | [🚧 Pending Work](#-pending-work) | Immediate next steps, blockers, open questions, and deferred items |
@@ -53,7 +54,8 @@ Everything below the next `# 🤝 Handoff:` line is the template body.
 ### Recent Commits (for context)
 {{commits_section}}
 
-{{chain_section}}{{plan_section}}## 📚 Source Artifacts
+{{chain_section}}{{plan_section}}
+## 📚 Source Artifacts
 
 The canonical record for this work. Link by path or URL; do not restate their content elsewhere in this handoff. Write `none` for any line that genuinely has no artifact.
 
