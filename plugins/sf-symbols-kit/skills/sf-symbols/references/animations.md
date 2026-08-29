@@ -30,6 +30,19 @@ Open vs closed loop: layer arrangements that form a complete ring (circular
 progress) are annotated *closed loop* and play variable-color animations
 seamlessly; linear arrangements are *open loop*.
 
+## Variable Draw (SF Symbols 8 Beta)
+
+Variable Draw uses a numeric value with Draw annotations to represent changing
+progress at finer resolution than layer-by-layer Variable Color. It is distinct
+from the Draw On / Draw Off presets: those animate a symbol into or out of the
+interface, while Variable Draw communicates the current value of an ongoing
+quantity.
+
+For a custom symbol, add guide points in the SF Symbols app to define the path
+direction. The app carries guide-point placement across weights, while still
+letting you refine Ultralight, Regular, and Black. Draw attachments, optional
+bidirectionality, and adaptive end caps provide additional control.
+
 ## HIG Guidance
 
 - Apply animations **judiciously** — too many overwhelm and distract.

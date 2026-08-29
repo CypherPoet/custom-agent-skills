@@ -41,9 +41,13 @@ but expand the user's phrasing into synonyms yourself before giving up:
    `cup.and.saucer`, `cup.and.heat.waves` (with matched-on reasons per hit).
 2. No good hit? Re-run with synonyms and related concepts ("trash" → "delete
    bin garbage", "settings" → "gear preferences"). Try `--limit 40`.
-3. Still unsure which fits? Offer a visual pass:
+3. If the installed SF Symbols app exposes Enhanced Search (introduced in the
+   SF Symbols 8 beta), mention it as a semantic fallback: the user can describe
+   the intended symbol in ordinary language. The bundled CLI remains a lexical,
+   metadata-based search, so continue expanding synonyms when using it.
+4. Still unsure which fits? Offer a visual pass:
    `gallery --search "<query>" --out /tmp/symbols.html` and open it.
-4. Present the top candidates with one-line descriptions, then offer to export
+5. Present the top candidates with one-line descriptions, then offer to export
    (`svg`) or show `info` for the chosen one.
 
 Name conventions help searching: style suffixes like `.fill`, `.circle`,
@@ -111,10 +115,10 @@ answering design questions; don't guess from general knowledge:
 | Reference | Read when… |
 |---|---|
 | [naming-conventions.md](references/naming-conventions.md) | predicting/explaining a symbol name, or naming a custom symbol and its output file |
-| [rendering-modes.md](references/rendering-modes.md) | choosing monochrome/hierarchical/palette/multicolor, gradients, or variable color; pre-annotation advice |
+| [rendering-modes.md](references/rendering-modes.md) | choosing monochrome/hierarchical/palette/multicolor, gradients, or variable rendering; pre-annotation advice |
 | [weights-scales-variants.md](references/weights-scales-variants.md) | picking a weight/scale, or outline vs fill vs slash vs enclosed for a UI context |
 | [custom-symbol-design.md](references/custom-symbol-design.md) | any custom-symbol work beyond mechanically running `custom` — design rules, template anatomy, version targeting, import/validation failures |
-| [animations.md](references/animations.md) | recommending how a symbol should animate (status, feedback, progress) |
+| [animations.md](references/animations.md) | recommending how a symbol should animate or use Variable Draw for status, feedback, or progress |
 
 ## Licensing Note
 

@@ -1,8 +1,8 @@
-# Rendering Modes, Gradients, and Variable Color
+# Rendering Modes, Gradients, and Variable Rendering
 
-Distilled from the SF Symbols HIG
+Distilled from the SF Symbols HIG and SF Symbols download page
 (<https://developer.apple.com/design/human-interface-guidelines/sf-symbols>,
-Rendering modes / Gradients / Variable color sections). Use this when helping
+<https://developer.apple.com/sf-symbols/>). Use this when helping
 someone choose how a symbol takes color, or when annotating a custom symbol.
 
 ## Layers Are the Foundation
@@ -34,12 +34,19 @@ Gradient rendering generates a smooth linear gradient from a single source
 color. Works in all rendering modes, with system or custom colors, and on
 custom symbols. Renders at any size but looks best large.
 
-## Variable Color
+## Variable Rendering
 
-Represents a changing quantity — capacity, signal, progress — by coloring
-layers as a value crosses thresholds between 0–100% (e.g. `speaker.wave.3`
-lights one wave per loudness range; the speaker layer opts out since it never
-changes). Any number of layers can participate. Works in every rendering mode.
+Variable rendering represents a changing quantity such as capacity, signal, or
+progress. Variable Color colors layers as a value crosses thresholds between
+0–100% (for example, `speaker.wave.3` lights one wave per loudness range; the
+speaker layer opts out because it never changes). Any number of layers can
+participate, and Variable Color works in every rendering mode.
+
+SF Symbols 8 beta also provides Variable Draw. It uses Draw annotations to
+communicate value changes with finer resolution than layer-by-layer color
+thresholds. Configure Draw guide points and related options in the SF Symbols
+app; the current CLI emits monochrome v3.0 templates and does not author those
+annotations.
 
 The HIG's sharp line: **variable color communicates change; hierarchy
 communicates depth.** Don't use variable color to fake visual hierarchy.
