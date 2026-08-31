@@ -2,14 +2,14 @@
   "schemaVersion": 2,
   "skills": {
     "app-store-connect-submission": {
-      "lastAttemptedAt": "2026-08-23T00:10:08.319Z",
+      "lastAttemptedAt": "2026-08-31T00:03:56.815Z",
       "lastAttemptOutcome": "completed",
-      "lastCompletedAt": "2026-08-23T00:10:08.319Z"
+      "lastCompletedAt": "2026-08-31T00:03:56.815Z"
     },
     "apple-app-icons": {
-      "lastAttemptedAt": "2026-08-23T00:10:08.319Z",
+      "lastAttemptedAt": "2026-08-31T00:03:56.815Z",
       "lastAttemptOutcome": "completed",
-      "lastCompletedAt": "2026-08-23T00:10:08.319Z"
+      "lastCompletedAt": "2026-08-31T00:03:56.815Z"
     },
     "apple-app-store-best-practices": {
       "lastAttemptedAt": "2026-08-23T00:10:08.319Z",
@@ -17,9 +17,9 @@
       "lastCompletedAt": "2026-08-23T00:10:08.319Z"
     },
     "apple-app-store-screenshots": {
-      "lastAttemptedAt": "2026-08-23T00:10:08.319Z",
+      "lastAttemptedAt": "2026-08-31T00:03:56.815Z",
       "lastAttemptOutcome": "completed",
-      "lastCompletedAt": "2026-08-23T00:10:08.319Z"
+      "lastCompletedAt": "2026-08-31T00:03:56.815Z"
     },
     "apple-human-interface-guidelines": {
       "lastAttemptedAt": "2026-08-23T00:10:08.319Z",
@@ -32,9 +32,9 @@
       "lastCompletedAt": "2026-08-23T00:10:08.319Z"
     },
     "blender-mastery": {
-      "lastAttemptedAt": "2026-08-23T00:10:08.319Z",
+      "lastAttemptedAt": "2026-08-31T00:03:56.815Z",
       "lastAttemptOutcome": "completed",
-      "lastCompletedAt": "2026-08-23T00:10:08.319Z"
+      "lastCompletedAt": "2026-08-31T00:03:56.815Z"
     },
     "c-bounds-safety": {
       "lastAttemptedAt": "2026-08-23T00:10:08.319Z",
@@ -107,9 +107,9 @@
       "lastCompletedAt": "2026-08-23T00:10:08.319Z"
     },
     "swiftui-whats-new-27": {
-      "lastAttemptedAt": "2026-08-23T00:10:08.319Z",
+      "lastAttemptedAt": "2026-08-31T00:03:56.815Z",
       "lastAttemptOutcome": "completed",
-      "lastCompletedAt": "2026-08-23T00:10:08.319Z"
+      "lastCompletedAt": "2026-08-31T00:03:56.815Z"
     },
     "test-modernizer": {
       "lastAttemptedAt": "2026-08-14T16:11:04Z",
@@ -117,9 +117,9 @@
       "lastCompletedAt": "2026-08-14T16:11:04Z"
     },
     "threejs-mastery": {
-      "lastAttemptedAt": "2026-08-23T00:10:08.319Z",
+      "lastAttemptedAt": "2026-08-31T00:03:56.815Z",
       "lastAttemptOutcome": "completed",
-      "lastCompletedAt": "2026-08-23T00:10:08.319Z"
+      "lastCompletedAt": "2026-08-31T00:03:56.815Z"
     },
     "uikit-app-modernization": {
       "lastAttemptedAt": "2026-08-23T00:10:08.319Z",

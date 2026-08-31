@@ -5,7 +5,7 @@ do not apply a future migration to code that still targets an earlier release.
 
 ## r185 to r186 — Ahead of the Release Feed
 
-As of 2026-08-21, the configured Three.js release feed ends at r185 while the migration guide
+As of 2026-08-30, the configured Three.js release feed ends at r185 while the migration guide
 already contains an r185-to-r186 section. Treat these entries as preview migration guidance until
 r186 appears in the release feed:
 
@@ -22,6 +22,7 @@ r186 appears in the release feed:
 - `SimplifyModifier.modify()` uses a new `meshoptimizer` implementation, produces different
   simplified output, and is asynchronous.
 - `Source` becomes `TextureSource`.
+- The `up` uniform is removed from `Sky` and `SkyMesh`; both now always assume a +Y up axis.
 
 **Sources:** [Three.js migration guide](https://github.com/mrdoob/three.js/wiki/Migration-Guide) ·
 [Three.js releases](https://github.com/mrdoob/three.js/releases)
