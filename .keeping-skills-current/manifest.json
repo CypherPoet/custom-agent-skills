@@ -644,6 +644,21 @@
         }
       }
     },
+    "teach": {
+      "path": "plugins/teach/skills/teach",
+      "schedule": {
+        "recurrence": "interval",
+        "intervalDays": 28
+      },
+      "sources": {
+        "mattpocock-teach-skill": {
+          "url": "https://api.github.com/repos/mattpocock/skills/contents/skills/productivity/teach?ref=main",
+          "retrieval": {
+            "strategy": "page"
+          }
+        }
+      }
+    },
     "test-modernizer": {
       "path": "plugins/swift-xcode-kit/skills/test-modernizer",
       "schedule": {

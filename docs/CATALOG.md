@@ -27,6 +27,7 @@ This repo publishes the following plugins via the [`cypherpoet-toolchest`](https
 | [sf-symbols-kit](../plugins/sf-symbols-kit/README.md) | Apple SF Symbols end to end: find the right symbol with natural language, export clean recolorable SVGs at any of the 9 weights, browse an HTML gallery, build full icon sets, and convert your own SVG art into importable custom SF Symbol templates. | 1 skill |
 | [svg-tools](../plugins/svg-tools/README.md) | SVG optimization and cleanup. | 1 skill |
 | [swift-xcode-kit](../plugins/swift-xcode-kit/README.md) | Swift and Xcode development kit: SwiftUI best practices and 2027 SDK migration, UIKit multi-window modernization, XCTest-to-Swift-Testing migration, security-hardening audits of Xcode build settings, C -fbounds-safety guidance, and on-device/simulator UI verification. | 7 skills |
+| [teach](../plugins/teach/README.md) | Build a stateful, mission-driven learning workspace with short interactive lessons, trusted resources, and durable learning records. | 1 skill |
 | [threejs-kit](../plugins/threejs-kit/README.md) | Three.js / WebGPU / WebGL tooling. | 2 skills |
 | [webgl-kit](../plugins/webgl-kit/README.md) | Raw WebGL2 + GLSL shader tooling. | 1 skill |
 

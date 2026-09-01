@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
+  "name": "teach",
+  "displayName": "Teach",
+  "version": "0.1.0",
+  "description": "Build a stateful, mission-driven learning workspace with short interactive lessons, trusted resources, and durable learning records.",
+  "author": {
+    "name": "CypherPoet"
+  },
+  "homepage": "https://github.com/CypherPoet/custom-agent-skills/tree/main/plugins/teach",
+  "repository": "https://github.com/CypherPoet/custom-agent-skills.git",
+  "license": "MIT",
+  "keywords": [
+    "claude-code",
+    "learning",
+    "teaching",
+    "education",
+    "productivity"
+  ]
+}
+
