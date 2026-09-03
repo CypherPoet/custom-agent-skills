@@ -1,0 +1,6 @@
+interface:
+  display_name: "iCloud Mail"
+  short_description: "Compose and send mail through iCloud.com"
+  default_prompt: "Use $icloud-mail to send an iCloud email from my instructions."
+policy:
+  allow_implicit_invocation: true
