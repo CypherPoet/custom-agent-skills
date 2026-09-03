@@ -1,0 +1,37 @@
+{
+  "name": "icloud-mail",
+  "version": "0.1.0",
+  "description": "Compose and send email through iCloud Mail in a controlled browser session.",
+  "author": {
+    "name": "CypherPoet"
+  },
+  "homepage": "https://github.com/CypherPoet/custom-agent-skills/tree/main/plugins/icloud-mail",
+  "repository": "https://github.com/CypherPoet/custom-agent-skills.git",
+  "license": "MIT",
+  "keywords": [
+    "icloud",
+    "mail",
+    "email",
+    "browser-automation",
+    "productivity"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "iCloud Mail",
+    "shortDescription": "Compose and send iCloud email",
+    "longDescription": "Compose and send email through iCloud Mail in a controlled browser session.",
+    "developerName": "CypherPoet",
+    "category": "Productivity",
+    "capabilities": [
+      "Interactive",
+      "Read",
+      "Write"
+    ],
+    "websiteURL": "https://github.com/CypherPoet/custom-agent-skills/tree/main/plugins/icloud-mail",
+    "defaultPrompt": [
+      "Send an iCloud email to a recipient about a topic.",
+      "Draft an iCloud email from these notes."
+    ],
+    "brandColor": "#007AFF"
+  }
+}
