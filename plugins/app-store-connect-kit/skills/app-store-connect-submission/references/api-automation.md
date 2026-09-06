@@ -154,7 +154,7 @@ listing isn't possible either without making the dark art the build's default ap
 | Attach the selected build | `PATCH /v1/appStoreVersions/<id>/relationships/build` |
 | Upload screenshots / previews | `appScreenshotSets`/`appPreviewSets` + `appScreenshots`/`appPreviews` (reserve → `PUT` → commit; see above) |
 | Order a media set | `PATCH /v1/appScreenshotSets/<id>/relationships/appScreenshots` (or `appPreviewSets/.../appPreviews`) with the ordered id list |
-| Submit for review | `POST /v1/reviewSubmissions` + `reviewSubmissionItems` (a new app's first IAP rides along as its own item), then mark it submitted |
+| Submit for review | `POST /v1/reviewSubmissions` + `reviewSubmissionItems` (the first IAP of each product type rides with a new app version as its own item), then mark it submitted |
 | Read a submission's state | `GET /v1/reviewSubmissions?filter[app]=<id>&include=items` — `reviewSubmissionItems` blocks `GET_INSTANCE`, so read items via the `include`, not by id |
 | Set App Review notes | `PATCH /v1/appStoreReviewDetails/<id>` `{attributes:{notes}}` — the record pre-exists once the review contact is set (`asc-set-review-notes.swift`) |
 
@@ -170,9 +170,10 @@ console can lag, and a first IAP can silently fail to attach:
   `reviewSubmissionItems` does **not** allow `GET_INSTANCE` — fetching one by id returns
   `403 FORBIDDEN_ERROR` ("Allowed operations are: CREATE, DELETE, UPDATE"), so read items through the
   submission's `items` relationship / `include`, never by id.
-- **Confirm the IAP rode along** — a new app's first in-app purchase reviews *with* the app, but the
-  version↔IAP selection isn't exposed by the API and only materializes in the submission. The reliable
-  signal is the IAP's own state: `GET /v2/inAppPurchases/<id>` flips `READY_TO_SUBMIT` →
+- **Confirm the IAP rode along** — the first in-app purchase of each product type reviews *with* a
+  new app version, but the version↔IAP selection isn't exposed by the API and only materializes in
+  the submission. The reliable signal is the IAP's own state: `GET /v2/inAppPurchases/<id>` flips
+  `READY_TO_SUBMIT` →
   `WAITING_FOR_REVIEW` (→ `APPROVED`) once it's attached. If it's still `READY_TO_SUBMIT` after you
   submit, it did **not** ride along — re-check the version's *In-App Purchases* selection and resubmit.
 
