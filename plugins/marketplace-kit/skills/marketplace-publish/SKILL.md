@@ -30,7 +30,7 @@ If the user is only editing an already-listed plugin's instructions, tell them n
 ## Before you start
 
 - `gh` is authenticated (`gh auth status`) with write access to the marketplace repo.
-- Each plugin to publish has `.claude-plugin/plugin.json`, `.codex-plugin/plugin.json`, or both. Validate each present manifest with its platform tooling. A deleted platform manifest means remove only that platform's catalog entry; deleting the whole plugin removes both.
+- Each plugin to publish has `.claude-plugin/plugin.json`, `.codex-plugin/plugin.json`, or both. Validate each present manifest with its platform tooling. A deleted platform manifest means remove only that platform's catalog entry; deleting the whole plugin removes both. Preserve Claude rename and removal history as described below.
 - Run `npm run sync:check` in the source repo to verify vendored skills before publication.
 
 ## Which marketplace
@@ -88,6 +88,8 @@ The goal: **one PR on the marketplace repo** that reconciles the chosen plugins 
      ```
    If only one platform manifest was removed, run only that platform's removal command; the other catalog entry remains published.
    - If `.agents/plugins/marketplace.json` doesn't exist (a marketplace that has never published Codex entries), skip the Codex removal command — don't create the file just to delete from it.
+
+   **Claude renames and removals.** A Claude plugin's `name` is its stable installed identity. When it changes, add an append-only top-level `renames` mapping from the old name to the new name. When a Claude catalog entry is removed without a replacement, map its old name to `null`. Preserve every earlier mapping so users on older names can still follow the full chain. This history belongs only in `.claude-plugin/marketplace.json`; the Codex catalog has no corresponding field. Run strict Claude validation after updating it so broken or cyclic chains fail before publication.
 
    Confirm both files still parse (`jq empty`).
 
