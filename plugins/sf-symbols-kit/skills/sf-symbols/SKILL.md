@@ -41,10 +41,10 @@ but expand the user's phrasing into synonyms yourself before giving up:
    `cup.and.saucer`, `cup.and.heat.waves` (with matched-on reasons per hit).
 2. No good hit? Re-run with synonyms and related concepts ("trash" → "delete
    bin garbage", "settings" → "gear preferences"). Try `--limit 40`.
-3. If the installed SF Symbols app exposes Enhanced Search (introduced in the
-   SF Symbols 8 beta), mention it as a semantic fallback: the user can describe
-   the intended symbol in ordinary language. The bundled CLI remains a lexical,
-   metadata-based search, so continue expanding synonyms when using it.
+3. If the installed SF Symbols app exposes Enhanced Search, mention it as a
+   semantic fallback: the user can describe the intended symbol in ordinary
+   language. The bundled CLI remains a lexical, metadata-based search, so
+   continue expanding synonyms when using it.
 4. Still unsure which fits? Offer a visual pass:
    `gallery --search "<query>" --out /tmp/symbols.html` and open it.
 5. Present the top candidates with one-line descriptions, then offer to export

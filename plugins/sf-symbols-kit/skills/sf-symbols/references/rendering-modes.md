@@ -42,11 +42,10 @@ progress. Variable Color colors layers as a value crosses thresholds between
 speaker layer opts out because it never changes). Any number of layers can
 participate, and Variable Color works in every rendering mode.
 
-SF Symbols 8 beta also provides Variable Draw. It uses Draw annotations to
-communicate value changes with finer resolution than layer-by-layer color
-thresholds. Configure Draw guide points and related options in the SF Symbols
-app; the current CLI emits monochrome v3.0 templates and does not author those
-annotations.
+Variable Draw uses Draw annotations to communicate value changes with finer
+resolution than layer-by-layer color thresholds. Configure Draw guide points
+and related options in the SF Symbols app; the current CLI emits monochrome
+v3.0 templates and does not author those annotations.
 
 The HIG's sharp line: **variable color communicates change; hierarchy
 communicates depth.** Don't use variable color to fake visual hierarchy.

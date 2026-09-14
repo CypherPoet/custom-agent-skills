@@ -30,7 +30,7 @@ Open vs closed loop: layer arrangements that form a complete ring (circular
 progress) are annotated *closed loop* and play variable-color animations
 seamlessly; linear arrangements are *open loop*.
 
-## Variable Draw (SF Symbols 8 Beta)
+## Variable Draw
 
 Variable Draw uses a numeric value with Draw annotations to represent changing
 progress at finer resolution than layer-by-layer Variable Color. It is distinct
