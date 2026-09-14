@@ -30,8 +30,10 @@ The two surfaces drift independently and are *not* reconciled the same way:
    - **NEW** — exists in `plugins/`, not in the catalog.
    - **CHANGED** — listed, but the catalog `description` or `homepage` differs from the local manifest.
    - **REMOVED** — listed (sourced from this repo) but no longer in `plugins/`.
-   - **RENAMED** — a local manifest and an existing entry point at the same plugin source but use different names.
+   - **RENAMED** — repository history, the existing top-level `renames` map, or explicit user confirmation establishes that an existing catalog entry became a differently named local plugin.
    - **invalid** — a local `plugin.json` that doesn't parse.
+
+   Don't infer a rename from source equality alone. A conforming directory rename changes the `git-subdir` path, while comparing only the repository URL falsely pairs unrelated plugins from the same repository. For unmatched `NEW` and `REMOVED` entries, inspect Git history for the directory and manifest-name change and check the existing `renames` map. If neither establishes continuity, report a **possible rename — needs confirmation** and ask whether the new plugin replaces the old one; don't recommend a replacement or removal mapping yet.
 
    When comparing `homepage`, mirror `marketplace-publish`'s fallback rule: if the local manifest has no `homepage` (or it's empty), derive the expected fallback `https://github.com/<owner>/<this-repo>/tree/<default-branch>/plugins/<name>` (resolving the source repo's default branch, as `marketplace-publish` does) and compare against *that* instead of treating the field as a mismatch. This keeps the two skills symmetric — a plugin published with the fallback URL stays in sync until the manifest itself changes.
 
@@ -61,7 +63,7 @@ The manifest is the source of truth for `description` (the row should match it v
 
 Present both surfaces plainly, each clearly labelled, and stop. Then hand off — don't fix anything yourself:
 
-- **Marketplace** (either catalog) `NEW`/`CHANGED` → `marketplace-publish <name>`. `RENAMED` → `marketplace-publish <new-name>`; for Claude, preserve an append-only `renames` mapping from the old name to the new name. `REMOVED` → remove the entry only from the platform whose manifest disappeared; for Claude, map the old name to `null`. Deleting the whole plugin removes both platform entries. `NEW` is expected for anything not yet deliberately published, so do not frame it as a mistake.
+- **Marketplace** (either catalog) `NEW`/`CHANGED` → `marketplace-publish <name>`. An established `RENAMED` → `marketplace-publish <new-name>`; for Claude, preserve an append-only `renames` mapping from the old name to the new name. A confirmed `REMOVED` → remove the entry only from the platform whose manifest disappeared; for Claude, map the old name to `null`. Keep an unconfirmed `NEW` + `REMOVED` pair undecided until the user confirms rename versus independent addition and removal. Deleting the whole plugin removes both platform entries. `NEW` is expected for anything not yet deliberately published, so do not frame it as a mistake.
 - **`docs/CATALOG.md`** missing / stale / orphan rows → regenerate the table with the `catalog-refresh` skill (or fix by hand) and commit it — a normal docs change. **Not** `marketplace-publish`; the local catalog isn't the marketplace.
 
 **Do not modify anything** unless the user explicitly asks.
