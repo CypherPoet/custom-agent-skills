@@ -11,6 +11,10 @@ Do not apply when: user asks to write new tests from scratch (without existing X
 test results or test running, user is asking to update tests to cover new functionality rather than updating the tests themselves,
 user is debugging test failures without mentioning migration, user has UI automation tests using XCUI* APIs (these cannot be migrated to Swift Testing).
 
+## Toolchain Prerequisite
+
+Swift Testing requires Swift 6.0 or newer and Xcode 16.0 or newer on Apple platforms. Verify the project's supported toolchain before migrating. If the project cannot use that toolchain, keep its XCTest coverage rather than producing tests it cannot build. XCTest and Swift Testing can run side by side, so an eligible project can migrate incrementally.
+
 ## Migration Reference
 
 ### Imports

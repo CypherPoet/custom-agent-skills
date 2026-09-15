@@ -69,7 +69,7 @@ on OS version; iOS 15+ needs only v3+.
 | Convert arbitrary art to a template | `custom art.svg --out name.svg` |
 | Validate | `validate-template` (lint) → SF Symbols app File > Validate Templates or Xcode import (authoritative) |
 | Import into the app | `import name.svg` or `custom … --import` |
-| Annotate layers/colors, add variants via components | SF Symbols app GUI |
+| Annotate layers/colors or Draw guide points, add variants via components | SF Symbols app GUI |
 | Distribute | app File > Export Symbol (choose version per deployment target) |
 | Use it in your app | add to an asset-catalog Symbol Image Set; load by asset name with the *named* initializer (not `systemName`) |
 

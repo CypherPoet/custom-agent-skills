@@ -1,6 +1,6 @@
 ---
 name: claude-memory-consolidation
-description: Audit and consolidate Claude's per-project auto-memory directory. Use when the user says "clean up / consolidate / audit / prune memory" or similar, complains about stale or duplicated memories, hits memory references that no longer resolve, or when MEMORY.md nears the 200-line truncation cap. Produces a severity-tiered audit, waits for per-cluster approval, then applies edits — never modifies memory without explicit confirmation.
+description: Audit and consolidate Claude's auto-memory directory for a repository or configured custom location. Use when the user says "clean up / consolidate / audit / prune memory" or similar, complains about stale or duplicated memories, hits memory references that no longer resolve, or when MEMORY.md nears the 200-line truncation cap. Produces a severity-tiered audit, waits for per-cluster approval, then applies edits — never modifies memory without explicit confirmation.
 ---
 
 # Consolidate Memory
@@ -14,19 +14,21 @@ Surfacing candidates is the point. The skill never edits memory files without th
 
 ## Phase 1: Locate the memory directory
 
-The project's memory directory lives at:
+Claude Code normally stores auto memory at:
 
 ```
-~/.claude/projects/<url-encoded-cwd>/memory/
+~/.claude/projects/<project>/memory/
 ```
 
-The encoding replaces every `/` in the working directory path with `-` and prepends a leading `-`. For example, the directory for a project at `/Users/alice/code/widgets` becomes `~/.claude/projects/-Users-alice-code-widgets/memory/`.
+`<project>` is derived from the Git repository, not the current working directory. Worktrees and subdirectories in the same repository share one auto-memory directory. Outside Git, Claude Code uses the project root.
 
-In practice you don't need to derive this from scratch — the path is usually visible from existing context:
+Do not reconstruct the directory name from `pwd`. The location can also be overridden by `autoMemoryDirectory` in settings or by `CLAUDE_CODE_PROJECT_DIR_NAME` when using a separate `CLAUDE_CONFIG_DIR`.
+
+Resolve the exact directory in this order:
 
 1. **If the user named an explicit path** (e.g., "audit the memory at `/tmp/fixture-memory/`"), use that one. This is the right way to run the skill against a test fixture or another project's memory directory.
 2. Otherwise, the auto-memory system injects the current `MEMORY.md` into the conversation. The header for that injection includes the absolute path. Use it directly.
-3. If that's not visible either, run `pwd` to get the working directory and construct the encoded path.
+3. If the path is still unknown, have the user open `/memory` and select the auto-memory folder to obtain its exact location. Check active settings and environment overrides when relevant. If none of those surfaces reveals the path, ask the user for it rather than guessing.
 
 If the memory directory doesn't exist, or exists but contains only an empty `MEMORY.md`, report that there's nothing to consolidate and stop. This isn't an error — fresh projects start empty.
 

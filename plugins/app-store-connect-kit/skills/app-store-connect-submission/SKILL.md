@@ -62,11 +62,13 @@ Work top to bottom. Each step has detail in a reference file (see the table at t
 8. **Version page** ("1.0 Prepare for Submission" — the *version-level* page, not App Information):
    description, keywords, promo text, support URL, screenshots, copyright; **select the build**
    once it finishes processing.
-9. **App Review Information**: contact, sign-in details (or "not required"), and notes that tell
-   the reviewer how to reach gated features / trigger purchases.
-10. ⚠️ **Attach each first-time IAP to the version.** This is the #1 missed step — a brand-new
-    app's first IAP can't be reviewed standalone; it must ride *with* the version, or you risk a
-    Guideline 2.1 rejection.
+9. **App Review Information**: contact (including a phone number in international format), sign-in
+   details (or "not required"), and notes that tell the reviewer how to reach gated features /
+   trigger purchases.
+10. ⚠️ **Attach the first IAP of each product type to a new app version.** The first consumable,
+    non-consumable, auto-renewable subscription, and non-renewing subscription must each ride
+    *with* a version; after the first item of a type is approved, later items of that type can be
+    submitted separately when the app already has an approved version.
 11. *(Recommended, not required)* **Sandbox-test the purchase + restore** on a real device.
     → `references/testing-purchases.md`
 12. Pick a **release option** (Manual gives you go-live control) → **Add for Review → Submit**.

@@ -11,9 +11,9 @@ upload-the-largest rule are in [device-specifications.md](device-specifications.
 | [What "store-ready" means](#what-store-ready-means) | Native-resolution captures at accepted sizes, with clean status bars and representative in-app content |
 | [Manual route (a few screenshots, one language)](#manual-route-a-few-screenshots-one-language) | Simulator setup, status-bar normalization, native-resolution capture, and canonical iPhone and iPad sizes |
 | [Automated route — `fastlane snapshot` (many locales × classes)](#automated-route--fastlane-snapshot-many-locales--classes) | Automated native-size capture across device and locale matrices with XCUITest and `snapshot` |
-| [Add device frames & captions — `frameit`](#add-device-frames--captions--frameit) | Adding Apple device frames and localized caption bands with `frameit` |
+| [Add device frames & captions — `frameit`](#add-device-frames--captions--frameit) | Adding Apple device frames and localized caption bands while preserving uploadable dimensions |
 | [Render your own marketing screenshots (without fastlane)](#render-your-own-marketing-screenshots-without-fastlane) | Rendering custom framed and captioned marketing compositions without fastlane |
-| [Upload — `fastlane deliver`](#upload--fastlane-deliver) | Uploading localized screenshots and metadata with `deliver` |
+| [Upload — `fastlane deliver`](#upload--fastlane-deliver) | Uploading localized screenshots and routing shared iPad resolutions to the intended display family |
 | [Localization workflow](#localization-workflow) | Per-locale screenshot folders, localized captions, App Store mapping, and the Apple Watch size constraint |
 | [Common rejection / quality traps](#common-rejection--quality-traps) | Wrong dimensions, upscaling, blurry captures, stale status bars, marketing-heavy art, and unshipped content |
 
@@ -74,6 +74,10 @@ matching Apple device bezel and can place a localized title/keyword band above i
 (required for review). Pair the band copy with the design guidance in
 [design-and-conversion.md](design-and-conversion.md).
 
+When `frameit` runs without titles, its output keeps the device frame's full resolution and isn't
+directly uploadable to the App Store. Use its App Store title-and-background workflow, then verify
+the final pixel dimensions against [device-specifications.md](device-specifications.md) before upload.
+
 ## Render your own marketing screenshots (without fastlane)
 
 `frameit` is one route to framed/captioned shots; you can also render a marketing composition
@@ -97,6 +101,12 @@ trap, below).
 [`deliver`](https://docs.fastlane.tools/actions/deliver/) uploads the `screenshots/` tree (it
 infers device class and locale from the folder layout) along with the rest of your metadata to App
 Store Connect, so the generated set ships without hand-uploading each image.
+
+The 2048×2732 screenshot size is shared by the 12.9-inch iPad Pro second and third generations. In
+fastlane 2.230.0 and later, `deliver` assigns that size to the third-generation-or-later slot by
+default. To target the second-generation slot, include either `APP_IPAD_PRO_129` or both `12.9` and
+`2nd generation` in the filename. With earlier fastlane versions, identify the third-generation
+slot using `iPad Pro (12.9-inch) (3rd generation)`, `IPAD_PRO_3GEN_129`, or `ipadPro129`.
 
 ## Localization workflow
 

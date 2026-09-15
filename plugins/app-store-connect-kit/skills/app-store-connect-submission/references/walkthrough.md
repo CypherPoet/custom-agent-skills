@@ -173,11 +173,11 @@ discipline applies to Consumables and Subscriptions, though subscriptions add a 
 Get the IAP to **Ready to Submit** (it sits at *Missing Metadata* until price + availability + localization
 + review screenshot are all present).
 
-> 🔴 **First-launch trap:** a brand-new app's **first IAP must be submitted *with* the app version** — it
-> can't be reviewed standalone. You attach it on the version page (step 8). The rule is **per type**: your first consumable, your first
-> non-consumable, your first auto-renewable subscription, and your first non-renewing subscription each
-> need their own new app version; once the first item of a type is approved, later items of that type
-> ship without one.
+> 🔴 **First-of-type trap:** the **first IAP of each product type must be submitted *with* a new app
+> version** — it can't be reviewed standalone. You attach it on the version page (step 8). Your first
+> consumable, first non-consumable, first auto-renewable subscription, and first non-renewing subscription each
+> need their own new app version; once the first item of a type is approved and the app has an
+> approved version, later items of that type can be submitted without a new version.
 
 ---
 
@@ -204,8 +204,9 @@ Open **"1.0 Prepare for Submission"** (left sidebar, under the app) — the *ver
 ## 7. App Review Information
 
 - **Sign-in required:** ⚠️ ASC **defaults this checked** — for a no-login app you must actively **uncheck** it, or it demands a demo username/password the app doesn't have. Otherwise provide a working demo account.
-- **Contact:** a real, reachable person — name, phone with country code, **monitored** email. This is
-  private (reviewer-only), so it does not need to match any public-facing name.
+- **Contact:** a real, reachable person — name, phone in international format with a leading `+`
+  and country calling code (not a digits-only local number), **monitored** email. This is private
+  (reviewer-only), so it does not need to match any public-facing name.
 - **Notes:** tell the reviewer exactly how to reach gated features and trigger purchases (e.g. "the paywall
   is on the main menu and when advancing past the free tier; Restore is on the paywall and in Settings").
 - **Export Compliance:** auto-skipped when `ITSAppUsesNonExemptEncryption = NO`.
@@ -217,10 +218,11 @@ Open **"1.0 Prepare for Submission"** (left sidebar, under the app) — the *ver
 On the version page:
 
 1. **Select the build** (step 6) once it's done processing.
-2. ⚠️ **Attach the IAP.** The *In-App Purchases and Subscriptions* section is labeled **"(Optional)"** —
-   which it is *not* for a first IAP. Click **Select In-App Purchases or Subscriptions** and add each
-   first-time IAP (status **Ready to Submit**). **This is the #1 missed step** — without it the IAP isn't
-   reviewed and you risk a Guideline 2.1 rejection.
+2. ⚠️ **Attach each first IAP type.** The *In-App Purchases and Subscriptions* section is labeled
+   **"(Optional)"** — which it is *not* for the first item of a product type. Click **Select In-App
+   Purchases or Subscriptions** and add each first consumable, non-consumable, auto-renewable
+   subscription, or non-renewing subscription (status **Ready to Submit**). **This is the #1 missed
+   step** — without it the IAP isn't reviewed and you risk a Guideline 2.1 rejection.
 3. **Version Release** — ASC **defaults to *Automatically release*** (goes live as soon as approved).
    **Manually release** instead gives you go-live control (review timing is unaffected); the third option
    schedules an automatic release "no earlier than" a date you set. (Phased release is updates-only, not
