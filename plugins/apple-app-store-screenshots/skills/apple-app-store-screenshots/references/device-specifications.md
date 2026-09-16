@@ -22,16 +22,26 @@ final without reconciling it.
 
 ## iPhone
 
-The **6.9" display is the canonical size**: upload it and every smaller iPhone class is generated
-for you. Apple's literal requirement reads "6.5" is required if the app runs on iPhone and 6.9"
-screenshots aren't provided" — so you satisfy the iPhone requirement by providing **either 6.9"
-or 6.5"**, and 6.9" is the better choice because everything cascades from it.
+The **6.9" display is the canonical size** for standard iPhones: upload it and every smaller
+standard iPhone class is generated for you. Apple's literal requirement reads "6.5" is required
+if the app runs on iPhone and 6.9" screenshots aren't provided" — so you satisfy the standard
+iPhone requirement by providing **either 6.9" or 6.5"**, and 6.9" is the better choice because
+everything cascades from it.
+
+iPhone Duo has a separate inner/outer set and is not part of that fallback chain. Apple publishes
+the sizes below but says App Store Connect upload support will arrive later in 2026. Until its slot
+ships, do not infer a fallback from the standard iPhone classes; verify the live uploader first.
+
+| iPhone Duo display | Portrait (px) | Landscape (px) |
+|---|---|---|
+| Outer | 1398×2034 | 2034×1398 |
+| Inner | 2007×2853 | 2853×2007 |
 
 | Display class | Accepted portrait sizes (px) | Example devices | If omitted |
 |---|---|---|---|
-| **6.9"** (required\*) | 1290×2796 · 1320×2868 · 1260×2736 | iPhone 17 Pro Max, 16 Pro Max, iPhone Air, 15 Pro Max, 16/15 Plus, 14 Pro Max | — (canonical) |
+| **6.9"** (required\*) | 1290×2796 · 1320×2868 · 1260×2736 | iPhone 18 Pro Max, 17 Pro Max, 16 Pro Max, iPhone Air, 15 Pro Max, 16/15 Plus, 14 Pro Max | — (canonical) |
 | **6.5"** (required\*) | 1284×2778 · 1242×2688 | iPhone 14 Plus, 13/12/11 Pro Max, 11, XS Max, XR | scaled from 6.9" |
-| 6.3" | 1179×2556 · 1206×2622 | iPhone 17, 17 Pro, 16, 16 Pro, 15, 15 Pro, 14 Pro | scaled from 6.5" |
+| 6.3" | 1179×2556 · 1206×2622 | iPhone 18 Pro, 17, 17 Pro, 16, 16 Pro, 15, 15 Pro, 14 Pro | scaled from 6.5" |
 | 6.1" | 1170×2532 · 1125×2436 · 1080×2340 | iPhone 17e, 16e, 14, 13/13 Pro, 13 mini, 12/12 Pro, 12 mini, 11 Pro, XS, X | scaled from 6.5" |
 | 5.5" | 1242×2208 | iPhone 8 Plus, 7 Plus, 6s Plus, 6 Plus | scaled from 6.1" |
 | 4.7" | 750×1334 | iPhone SE (3rd/2nd gen), 8, 7, 6S, 6 | scaled from 5.5" |
@@ -72,9 +82,9 @@ enforces this for Watch).
 
 | Size (px) | Models |
 |---|---|
-| 422×514 | Ultra 3 |
+| 422×514 | Ultra 4, Ultra 3 |
 | 410×502 | Ultra 2, Ultra |
-| 416×496 | Series 11, Series 10 |
+| 416×496 | Series 12, Series 11, Series 10 |
 | 396×484 | Series 9, 8, 7 |
 | 368×448 | Series 6, 5, 4, SE 3, SE 2, SE |
 | 312×390 | Series 3, 2, 1 |
