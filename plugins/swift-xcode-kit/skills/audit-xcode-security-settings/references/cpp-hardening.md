@@ -44,9 +44,15 @@ You can override the mode per-file by defining `_LIBCPP_HARDENING_MODE` **before
 | Macro Value | Mode | Checks |
 |---|---|---|
 | `_LIBCPP_HARDENING_MODE_NONE` | None | No checks |
-| `_LIBCPP_HARDENING_MODE_FAST` | Fast (default) | Constant-time checks only |
+| `_LIBCPP_HARDENING_MODE_FAST` | Fast | Constant-time checks intended for production; recommended for most projects |
 | `_LIBCPP_HARDENING_MODE_EXTENSIVE` | Extensive | Additional non-constant-time checks |
 | `_LIBCPP_HARDENING_MODE_DEBUG` | Debug | All checks including debug-only assertions |
+
+Do not assume Fast is every libc++ distribution's default. The upstream build-time default is None,
+and vendors choose the mode their prebuilt library and users receive. Xcode's bounds-safe-buffer
+setting selects the hardened behavior described above; outside that setting, consult the toolchain
+vendor or pass `_LIBCPP_HARDENING_MODE` explicitly. Fast and Extensive use the `quick-enforce`
+assertion semantic by default; Debug uses `enforce` and is not intended for production.
 
 ```cpp
 // At the very top of the file, before any includes

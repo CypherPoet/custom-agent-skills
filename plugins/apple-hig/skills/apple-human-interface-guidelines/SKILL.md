@@ -5,7 +5,7 @@ description: 'Use whenever the user is designing, building, or reviewing UI for 
 
 # Apple Human Interface Guidelines
 
-*Last synced with Apple HIG: 2026-07-17*
+*Last synced with Apple HIG: 2026-09-17*
 
 Distillation of the complete [Apple Human Interface Guidelines](https://developer.apple.com/design/human-interface-guidelines) — every Foundations, Patterns, Components, Inputs, and Technologies page, across all six platforms — compressed to the load-bearing guidance: what each element is for, when to use it over its alternatives, Apple's best practices as imperatives, the hard numbers, and how behavior differs per platform.
 
@@ -38,7 +38,7 @@ Load only the rows the question touches — usually a single file. Each referenc
 |---|---|
 | Color, Dark Mode, materials / Liquid Glass, typography, icons, images, SF Symbols, branding | `references/foundations-visual.md` |
 | Design principles, accessibility, inclusion, layout / margins / safe areas, motion, writing style, pointing devices | `references/foundations-ux.md` |
-| iOS or iPadOS platform-wide conventions (multitasking, pointer, idioms) | `references/platform-ios-ipados.md` |
+| iOS or iPadOS platform-wide conventions (including iPhone Duo, multitasking, pointer, idioms) | `references/platform-ios-ipados.md` |
 | macOS platform-wide conventions (menu bar, windows, panels) | `references/platform-macos.md` |
 | tvOS platform-wide conventions (focus engine, remote) | `references/platform-tvos.md` |
 | visionOS platform-wide conventions (spatial layout, ornaments, immersion) | `references/platform-visionos.md` |
@@ -55,7 +55,7 @@ Load only the rows the question touches — usually a single file. Each referenc
 | Progress indicators, activity rings, gauges, labels, badges | `references/components-status-indicators.md` |
 | Widgets, controls (Control Center), complications, watch faces, App Clips, app icons, Home Screen quick actions | `references/components-system-experiences.md` |
 | Gestures, keyboards, Digital Crown, Apple Pencil, game controllers, remotes, eyes / spatial input, haptics, focus and selection | `references/inputs.md` |
-| Apple Pay, In-App Purchase design, Sign in with Apple, Wallet, Tap to Pay | `references/technologies-commerce-id.md` |
+| Apple Pay, Apple In-App Purchase design, Sign in with Apple, Wallet, Tap to Pay | `references/technologies-commerce-id.md` |
 | Siri, App Shortcuts, Snippets, Maps, CarPlay, Game Center, designing for games, iCloud, NFC, Nearby Interactions, printing, VoiceOver, machine-learning / generative-AI surfaces | `references/technologies-system-services.md` |
 | HealthKit, CareKit, ResearchKit, Workouts, HomeKit, audio / video playback, AirPlay, SharePlay, Live Photos, photo editing, ShazamKit, augmented reality | `references/technologies-health-media.md` |
 | "Which component should I use?" — comparing confusable components | `references/decision-helpers.md` |

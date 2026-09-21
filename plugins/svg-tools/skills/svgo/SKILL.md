@@ -21,7 +21,15 @@ Before pinning a config, run:
 npx svgo --version
 ```
 
-SVGO 3.x and 4.x are the current majors; 2.x has a notable rename — `cleanupIDs` (uppercase D) became `cleanupIds` in v3. If you see a v2 config in a project that's being upgraded, that one rename is the most common breakage. Don't pin a major version in code you write unless the user asks.
+SVGO 4.x is the supported major. The project has backported the August 2026 `removeScripts`
+security fixes to 3.3.5 and 2.8.4, but explicitly describes both older majors as unsupported. Plan an
+upgrade to v4 instead of treating those backports as continuing support. In older configs,
+`cleanupIDs` (uppercase D) became `cleanupIds` in v3; that rename remains a common migration failure.
+Don't pin a major version in code you write unless the user asks.
+
+SVGO 4.1.0 also made XML parsing stricter. Malformed numeric character references that older
+versions accepted now throw `SvgoParserError` with an `Invalid character entity` reason. Fix the
+invalid XML instead of weakening the optimizer pipeline.
 
 ## Step 2: Invocation
 

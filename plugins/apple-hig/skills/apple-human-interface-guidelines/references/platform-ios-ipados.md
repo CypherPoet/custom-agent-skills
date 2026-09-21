@@ -1,9 +1,9 @@
 # Platform — iOS & iPadOS
 
 > Source: https://developer.apple.com/design/human-interface-guidelines
-> Last synced: 2026-06-16
+> Last synced: 2026-09-09
 
-Distilled from Apple's HIG platform pages: Designing for iOS, Designing for iPadOS, Status bars.
+Distilled from Apple's HIG platform pages: Designing for iOS, Designing for iPhone Duo, Designing for iPadOS, Status bars.
 
 ### Designing for iOS
 
@@ -16,6 +16,13 @@ Distilled from Apple's HIG platform pages: Designing for iOS, Designing for iPad
 - **Focus.** Help people concentrate on primary tasks and content by limiting onscreen controls; keep secondary details and actions discoverable with minimal interaction.
 - **Adaptivity.** Adapt seamlessly to appearance changes — device orientation, Dark Mode, and Dynamic Type — letting people choose the configuration that works for them.
 - **System features.** Integrate the platform features people value: Widgets, Home Screen quick actions, Spotlight, Shortcuts, and Activity views.
+
+### Designing for iPhone Duo
+
+Apple added dedicated iPhone Duo guidance in September 2026. When targeting the device, account for
+its different poses, layouts that adapt across two displays, and system toolbars and tab bars that
+can move to the vertical axis. Verify the live HIG page before committing exact spacing or behavior;
+the configured source currently exposes these design dimensions but not their full specifications.
 
 ### Designing for iPadOS
 

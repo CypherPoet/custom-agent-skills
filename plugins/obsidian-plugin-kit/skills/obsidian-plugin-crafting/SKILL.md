@@ -5,7 +5,7 @@ description: Use whenever work touches an Obsidian plugin — scaffolding one, e
 
 # Obsidian Plugin Crafting
 
-*Grounded in the official [Obsidian developer docs](https://docs.obsidian.md/) (source repo fetched 2026-07-23), the [obsidian-sample-plugin](https://github.com/obsidianmd/obsidian-sample-plugin) template, and [`eslint-plugin-obsidianmd`](https://github.com/obsidianmd/eslint-plugin) v0.4.1. Structure inspired by the community [gapmiss/obsidian-plugin-skill](https://github.com/gapmiss/obsidian-plugin-skill) (MIT).*
+*Grounded in the official [Obsidian developer docs](https://docs.obsidian.md/) (source repo fetched 2026-07-23), the [obsidian-sample-plugin](https://github.com/obsidianmd/obsidian-sample-plugin) template, and [`eslint-plugin-obsidianmd`](https://github.com/obsidianmd/eslint-plugin) v0.4.2. Structure inspired by the community [gapmiss/obsidian-plugin-skill](https://github.com/gapmiss/obsidian-plugin-skill) (MIT).*
 
 Working knowledge for building Obsidian plugins that pass automated and human review the first time. Use it to scaffold correctly, reach for the right API instead of a workaround, and ship through the community directory — grounded in the docs above, not training-data guesses.
 
@@ -15,7 +15,7 @@ Working knowledge for building Obsidian plugins that pass automated and human re
 - **Everything you register must die with the plugin.** Route every listener, interval, and event through `this.registerEvent` / `registerDomEvent` / `registerInterval` so unload cleans up. Never store view references on the plugin; find views via `getLeavesOfType()` + `instanceof`. Don't detach leaves in `onunload`.
 - **`onload` runs before the app is interactive.** Registrations only; put startup work (and `vault.on('create')` handlers, which fire for every file during vault init) inside `this.app.workspace.onLayoutReady(...)`.
 - **The API is `instanceof`-driven, and pop-out windows break `instanceof`.** Narrow `TAbstractFile` with `instanceof TFile` — never cast. For DOM objects that may live in another window, use `el.instanceOf(HTMLElement)`, `activeWindow`, `activeDocument`.
-- **Review is automated and strict.** The linter ships 41 rules at v0.4.1; the directory bot validates your manifest; humans re-review UI text. The recurring rejections: `innerHTML`, `fetch` instead of `requestUrl`, Title Case UI text, default hotkeys, sample code left in, missing mobile gates.
+- **Review is automated and strict.** The linter ships 41 rules at v0.4.2; the directory bot validates your manifest; humans re-review UI text. The recurring rejections: `innerHTML`, `fetch` instead of `requestUrl`, Title Case UI text, default hotkeys, sample code left in, missing mobile gates.
 
 ## Identify the Task First
 
@@ -62,5 +62,5 @@ Create a GitHub release whose **tag exactly matches `manifest.json` `version` (n
 ## Accuracy Notes
 
 - **Obsidian 1.13 is a public release** — its redesigned settings window and new settings API are available to public users. Set `minAppVersion` from the exact APIs a plugin uses, and check the [Obsidian changelog](https://obsidian.md/changelog/) before depending on later additions.
-- **`eslint-plugin-obsidianmd` is v0.4.1 here** (npm, 2026-07-02). The rule catalog grows between minor versions — when a rule id isn't in [`linting-and-review.md`](references/linting-and-review.md), trust the installed package's README over this corpus.
+- **`eslint-plugin-obsidianmd` is v0.4.2 here** (npm, 2026-08-24). The rule catalog grows between minor versions — when a rule id isn't in [`linting-and-review.md`](references/linting-and-review.md), trust the installed package's README over this corpus.
 - **The `obsidian` typings package is 1.13.1** (npm, 2026-06-09); the sample plugin pins `"obsidian": "latest"`.

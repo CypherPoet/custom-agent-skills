@@ -78,3 +78,20 @@ A few things the upstream v1.75.0 docs leave incomplete — don't fill them with
 - The **subsurface** material model and **area lights** are `[TODO]` placeholders in the official docs; their properties are named but not fully specified, and there is no area-light `LightManager::Type`. Say so rather than inventing an API.
 - `matc`'s documented `--api` values are `opengl`, `vulkan`, `all` — the CLI docs don't list `metal` even though the engine renders with Metal (the `filamat` `TargetApi::ALL` covers it).
 - Filament versions move fast; if exact current behavior matters, verify against the installed version's headers.
+
+### Releases After the Pinned Corpus
+
+The detailed references and quoted signatures remain pinned to v1.75.0. The configured release feed
+was reviewed through **v1.77.0** (2026-09-15); apply these newer deltas only when the project uses the
+corresponding release or later:
+
+- **v1.76.0:** asynchronous backend completion callbacks receive
+  `backend::AsyncCallStatus`; cancellation now invokes the callback with `CANCELED`, so chained work
+  must check the status. `Engine::Config::enableMultipleDirectionalLights` opts into as many as four
+  additional directional lights; only the dominant light supplies shadows and the sun disc.
+  `secondRoughness` and `secondRoughnessWeight` add an always-isotropic second specular lobe and
+  require material `apiLevel: 2` or later. Recompile materials because the DYN variant was removed.
+- **v1.77.0:** Lit materials add `iridescence` (`[0..1]`, default `0`), `iridescenceIor`
+  (`>= 1`, default `1.3`), and `iridescenceThickness` (nanometers, default `400`). Iridescence models
+  a thin film, sits below clear coat and above sheen, and isn't available with Cloth. Recompile
+  materials because the DIR variant became a specialization constant.
