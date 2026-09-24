@@ -7,13 +7,13 @@ The official linter encodes most review feedback as rules; what it can't see, hu
 | Section | Covers |
 |---|---|
 | [Setup](#setup) | Package and peer dependencies, flat and legacy ESLint configuration, locale-aware rules, lint commands, and JSON support for manifest checks |
-| [Rule Catalog (v0.4.1)](#rule-catalog-v041) | Command registration, lifecycle cleanup, type and API correctness, DOM and styling, settings tabs, UI text, manifest hygiene, and recommended severities |
+| [Rule Catalog (v0.4.2)](#rule-catalog-v042) | Command registration, lifecycle cleanup, type and API correctness, DOM and styling, settings tabs, UI text, manifest hygiene, and recommended severities |
 | [Linter-Invisible Pitfalls](#linter-invisible-pitfalls) | Window-reference drift, expensive startup, race-prone vault writes, problematic CSS selectors and overrides, and missing policy disclosures |
 | [Human Review Checklist](#human-review-checklist) | Zero-finding validation, sample and logging cleanup, Obsidian API conventions, accessible and mobile behavior, theme-safe styling, lifecycle cleanup, and README disclosures |
 
 ## Setup
 
-The npm package is **`eslint-plugin-obsidianmd`** (repo: [obsidianmd/eslint-plugin](https://github.com/obsidianmd/eslint-plugin)); the fetched 2026-07-23 corpus used v0.4.1. Peer deps: `eslint >= 9.19.0`, `typescript-eslint ^8.35.1`. The sample plugin already wires it up; adding it to an older project (flat config, ESLint 9):
+The npm package is **`eslint-plugin-obsidianmd`** (repo: [obsidianmd/eslint-plugin](https://github.com/obsidianmd/eslint-plugin)); npm v0.4.2 was published 2026-08-24, and its README retains the same 41-rule catalog documented below. The fetched 2026-07-23 corpus recorded peer deps `eslint >= 9.19.0` and `typescript-eslint ^8.35.1`; confirm them from the installed package when upgrading. The sample plugin already wires it up; adding it to an older project (flat config, ESLint 9):
 
 ```js
 // eslint.config.mjs
@@ -27,7 +27,7 @@ export default [
 
 Run with `npx eslint .` (the sample plugin's `npm run lint`). Legacy ESLint ≤8 uses `plugin:obsidianmd/recommended`. Rules that inspect `manifest.json` need `@eslint/json` (a peer dep) so JSON files are lintable.
 
-## Rule Catalog (v0.4.1)
+## Rule Catalog (v0.4.2)
 
 Severity in the `recommended` config: ✅ error, ⚠️ warn, 🚫 off. 🔧 = auto-fixable. When a rule fires, fix the cause — don't disable the rule; reviewers see disables.
 

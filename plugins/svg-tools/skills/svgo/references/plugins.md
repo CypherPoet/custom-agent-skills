@@ -1,6 +1,6 @@
 # SVGO plugin catalog
 
-Every plugin SVGO ships with, grouped by whether it's part of `preset-default`. Verified against SVGO 4.0.1. Run `npx svgo --show-plugins` in the project to see the list at the version installed there — the bundle membership occasionally shifts between majors.
+Every plugin SVGO ships with, grouped by whether it's part of `preset-default`. Verified against SVGO 4.1.0. Run `npx svgo --show-plugins` in the project to see the list at the version installed there — the bundle membership occasionally shifts between majors.
 
 Tables include the one-line behavior and a "when to flip" note. Plugins flagged with ⚠ have safety tradeoffs worth understanding before enabling/disabling.
 
@@ -68,7 +68,7 @@ Tables include the one-line behavior and a "when to flip" note. Plugins flagged 
 | `removeElementsByAttr` | Removes elements by `id` or `className` | Drop guide layers, named scaffolding |
 | `removeOffCanvasPaths` | Removes paths fully outside the `viewBox` | When authoring tools leak off-canvas geometry |
 | `removeRasterImages` | Removes embedded raster (`<image>`) | Vector-only pipelines; ensures no PNG/JPEG slips into the bundle |
-| `removeScripts` | Removes `<script>` | Almost always desirable for static assets; security hygiene for user-uploaded SVGs |
+| `removeScripts` | Removes scripts and executable URL/content paths | Almost always desirable for static assets; v4.1.0 also filters executable data URLs, dangerous content inside `<foreignObject>`, namespace-prefixed links, and whitespace-obfuscated schemes |
 | `removeStyleElement` | Removes `<style>` entirely | When all styling is handled outside the SVG |
 | `removeTitle` | Removes `<title>` | Icons where the title comes from surrounding markup (`<button aria-label>`); keep for standalone SVGs that need accessible names |
 | `removeViewBox` ⚠ | Removes `viewBox` when `width`/`height` are set | Only for fixed-size SVGs that never resize — breaks responsive scaling otherwise |
@@ -116,5 +116,6 @@ plugins: [
 ## Notes
 
 - Bundle membership is not stable across SVGO majors. The shift between v2 and v3 also renamed `cleanupIDs` → `cleanupIds`. Verify with `--show-plugins` in any project you don't recognize.
+- `removeScripts` received security hardening in v4.1.0, backported to v3.3.5 and v2.8.4. The v2 and v3 release lines remain unsupported; upgrade to v4 rather than relying on future backports.
 - Plugin order matters for non-default plugins listed in the `plugins` array. `preset-default` always runs as a single ordered block; plugins listed after it run after the preset.
 - Custom plugins (functions you author) are supported in the same `plugins` array — see the official docs at https://svgo.dev/docs/plugins/.

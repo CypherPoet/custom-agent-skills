@@ -23,16 +23,19 @@ platform** and the requirement is met:
 
 | Platform | Canonical size to produce | Covers |
 |---|---|---|
-| iPhone | **6.9"** — 1290×2796 (also accepts 1320×2868 or 1260×2736) | every smaller iPhone class, auto-scaled |
+| iPhone | **6.9"** — 1290×2796 (also accepts 1320×2868 or 1260×2736) | every smaller standard iPhone class, auto-scaled |
+| iPhone Duo | outer 1398×2034; inner 2007×2853 | Duo only; upload support is not yet available |
 | iPad | **13"** — 2064×2752 (also accepts 2048×2732) | every smaller iPad class, auto-scaled |
 | Mac | 2880×1800 (any 16:10 size) | Mac |
 | Apple TV | 3840×2160 | Apple TV |
 | Apple Vision Pro | 3840×2160 | Vision Pro |
-| Apple Watch | size of your newest target (e.g. 422×514 for Ultra 3) | that Watch tier only |
+| Apple Watch | size of your newest target (e.g. 422×514 for Ultra 4) | that Watch tier only |
 
-Two exceptions worth holding in your head: the iPhone requirement is satisfied by **6.9" or 6.5"**,
-and **Apple Watch is the only platform that won't auto-scale** — it needs its own screenshots, and
-one size must be reused across every localization.
+Three exceptions worth holding in your head: the standard iPhone requirement is satisfied by
+**6.9" or 6.5"**; Apple says iPhone Duo asset uploads will become available later in 2026, so verify
+the live uploader before producing its separate inner/outer set; and **Apple Watch is the only
+platform that won't auto-scale** — it needs its own screenshots, and one size must be reused across
+every localization.
 
 The full per-class tables — alternate accepted sizes, legacy devices, the exact fallback chain — are
 in **[references/device-specifications.md](references/device-specifications.md)**. Read it when you

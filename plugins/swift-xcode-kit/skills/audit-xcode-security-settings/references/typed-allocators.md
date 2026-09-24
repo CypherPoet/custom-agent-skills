@@ -9,7 +9,11 @@ Both are enabled by default when you add the Enhanced Security capability (the e
 
 ## What It Does
 
-When the build settings are enabled, the compiler tracks the intended type of memory allocations. This means that `malloc`, `calloc`, and similar allocator functions produce pointers that carry type information. Combined with the `hardened-heap` entitlement's runtime type-isolation buckets, this makes it harder for an attacker to exploit type confusion vulnerabilities where memory allocated for one type is used as another.
+When the build settings are enabled, the compiler tracks the intended type of memory allocations. It
+automatically rewrites `malloc`, `calloc`, `realloc`, `posix_memalign`, related calls, and C++ `new`
+to their type-aware equivalents when the allocated type is statically known. Combined with the
+`hardened-heap` entitlement's runtime type-isolation buckets, this makes it harder for an attacker to
+exploit type confusion vulnerabilities where memory allocated for one type is used as another.
 
 ## What Vulnerabilities It Mitigates
 
@@ -30,7 +34,16 @@ All are enabled by default when you add the Enhanced Security capability (build 
 
 ## Code Changes Required
 
-If your code uses **custom memory-allocator wrapper functions**, you may need to update them to propagate type information. Standard `malloc`/`free` usage typically requires no changes.
+Standard allocations whose type is statically known typically require no changes. Two cases do:
+
+- **Runtime-selected types:** call the matching `malloc_type_*` function yourself and supply a
+  `malloc_type_descriptor_v0_t` type ID.
+- **Custom allocator wrappers:** remove a wrapper when possible so the compiler sees the original
+  allocation. Otherwise provide a typed variant and annotate the existing wrapper with
+  `_MALLOC_TYPED(typed_variant, size_argument_index)` so the compiler can propagate the descriptor.
+
+Avoid unions that use the same storage location for either a pointer or plain data; typed allocation
+can't isolate that ambiguous storage.
 
 For details on updating custom allocators, see [Adopting type-aware memory allocation](https://developer.apple.com/documentation/xcode/adopting-type-aware-memory-allocation).
 

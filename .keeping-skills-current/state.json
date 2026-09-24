@@ -2,39 +2,39 @@
   "schemaVersion": 2,
   "skills": {
     "app-store-connect-submission": {
-      "lastAttemptedAt": "2026-09-08T00:17:24.998Z",
+      "lastAttemptedAt": "2026-09-24T00:00:11.423Z",
       "lastAttemptOutcome": "completed",
-      "lastCompletedAt": "2026-09-08T00:17:24.998Z"
+      "lastCompletedAt": "2026-09-24T00:00:11.423Z"
     },
     "apple-app-icons": {
-      "lastAttemptedAt": "2026-09-08T00:17:24.998Z",
+      "lastAttemptedAt": "2026-09-24T00:00:11.423Z",
       "lastAttemptOutcome": "completed",
-      "lastCompletedAt": "2026-09-08T00:17:24.998Z"
+      "lastCompletedAt": "2026-09-24T00:00:11.423Z"
     },
     "apple-app-store-best-practices": {
-      "lastAttemptedAt": "2026-08-23T00:10:08.319Z",
+      "lastAttemptedAt": "2026-09-21T00:06:49.369Z",
       "lastAttemptOutcome": "completed",
-      "lastCompletedAt": "2026-08-23T00:10:08.319Z"
+      "lastCompletedAt": "2026-09-21T00:06:49.369Z"
     },
     "apple-app-store-screenshots": {
-      "lastAttemptedAt": "2026-09-08T00:17:24.998Z",
+      "lastAttemptedAt": "2026-09-24T00:00:11.423Z",
       "lastAttemptOutcome": "completed",
-      "lastCompletedAt": "2026-09-08T00:17:24.998Z"
+      "lastCompletedAt": "2026-09-24T00:00:11.423Z"
     },
     "apple-human-interface-guidelines": {
-      "lastAttemptedAt": "2026-08-23T00:10:08.319Z",
+      "lastAttemptedAt": "2026-09-21T00:06:49.369Z",
       "lastAttemptOutcome": "completed",
-      "lastCompletedAt": "2026-08-23T00:10:08.319Z"
+      "lastCompletedAt": "2026-09-21T00:06:49.369Z"
     },
     "audit-xcode-security-settings": {
-      "lastAttemptedAt": "2026-08-23T00:10:08.319Z",
+      "lastAttemptedAt": "2026-09-21T00:06:49.369Z",
       "lastAttemptOutcome": "completed",
-      "lastCompletedAt": "2026-08-23T00:10:08.319Z"
+      "lastCompletedAt": "2026-09-21T00:06:49.369Z"
     },
     "blender-mastery": {
-      "lastAttemptedAt": "2026-09-08T00:17:24.998Z",
+      "lastAttemptedAt": "2026-09-24T00:00:11.423Z",
       "lastAttemptOutcome": "completed",
-      "lastCompletedAt": "2026-09-08T00:17:24.998Z"
+      "lastCompletedAt": "2026-09-24T00:00:11.423Z"
     },
     "c-bounds-safety": {
       "lastAttemptedAt": "2026-08-23T00:10:08.319Z",
@@ -52,9 +52,9 @@
       "lastCompletedAt": "2026-09-12T00:03:50.942Z"
     },
     "excalidraw-mastery": {
-      "lastAttemptedAt": "2026-08-23T00:10:08.319Z",
+      "lastAttemptedAt": "2026-09-21T00:06:49.369Z",
       "lastAttemptOutcome": "completed",
-      "lastCompletedAt": "2026-08-23T00:10:08.319Z"
+      "lastCompletedAt": "2026-09-21T00:06:49.369Z"
     },
     "expo-snack-prototyper": {
       "lastAttemptedAt": "2026-09-12T00:03:50.942Z",
@@ -62,9 +62,9 @@
       "lastCompletedAt": "2026-09-12T00:03:50.942Z"
     },
     "google-filament-mastery": {
-      "lastAttemptedAt": "2026-08-23T00:10:08.319Z",
+      "lastAttemptedAt": "2026-09-21T00:06:49.369Z",
       "lastAttemptOutcome": "completed",
-      "lastCompletedAt": "2026-08-23T00:10:08.319Z"
+      "lastCompletedAt": "2026-09-21T00:06:49.369Z"
     },
     "marketplace-publish": {
       "lastAttemptedAt": "2026-09-12T00:03:50.942Z",
@@ -82,34 +82,34 @@
       "lastCompletedAt": "2026-09-14T23:55:36.668Z"
     },
     "obsidian-plugin-crafting": {
-      "lastAttemptedAt": "2026-08-23T00:10:08.319Z",
+      "lastAttemptedAt": "2026-09-21T00:06:49.369Z",
       "lastAttemptOutcome": "completed",
-      "lastCompletedAt": "2026-08-23T00:10:08.319Z"
+      "lastCompletedAt": "2026-09-21T00:06:49.369Z"
     },
     "react-three-fiber-mastery": {
-      "lastAttemptedAt": "2026-08-23T00:10:08.319Z",
+      "lastAttemptedAt": "2026-09-21T00:06:49.369Z",
       "lastAttemptOutcome": "completed",
-      "lastCompletedAt": "2026-08-23T00:10:08.319Z"
+      "lastCompletedAt": "2026-09-21T00:06:49.369Z"
     },
     "sf-symbols": {
-      "lastAttemptedAt": "2026-09-14T23:51:06.857Z",
+      "lastAttemptedAt": "2026-09-24T00:00:11.423Z",
       "lastAttemptOutcome": "completed",
-      "lastCompletedAt": "2026-09-14T23:51:06.857Z"
+      "lastCompletedAt": "2026-09-24T00:00:11.423Z"
     },
     "svgo": {
-      "lastAttemptedAt": "2026-08-23T00:10:08.319Z",
+      "lastAttemptedAt": "2026-09-21T00:06:49.369Z",
       "lastAttemptOutcome": "completed",
-      "lastCompletedAt": "2026-08-23T00:10:08.319Z"
+      "lastCompletedAt": "2026-09-21T00:06:49.369Z"
     },
     "swiftui-specialist": {
-      "lastAttemptedAt": "2026-08-23T00:10:08.319Z",
+      "lastAttemptedAt": "2026-09-21T00:06:49.369Z",
       "lastAttemptOutcome": "completed",
-      "lastCompletedAt": "2026-08-23T00:10:08.319Z"
+      "lastCompletedAt": "2026-09-21T00:06:49.369Z"
     },
     "swiftui-whats-new-27": {
-      "lastAttemptedAt": "2026-09-08T00:17:24.998Z",
+      "lastAttemptedAt": "2026-09-24T00:00:11.423Z",
       "lastAttemptOutcome": "completed",
-      "lastCompletedAt": "2026-09-08T00:17:24.998Z"
+      "lastCompletedAt": "2026-09-24T00:00:11.423Z"
     },
     "test-modernizer": {
       "lastAttemptedAt": "2026-09-12T00:03:50.942Z",
@@ -117,19 +117,19 @@
       "lastCompletedAt": "2026-09-12T00:03:50.942Z"
     },
     "threejs-mastery": {
-      "lastAttemptedAt": "2026-09-08T00:17:24.998Z",
+      "lastAttemptedAt": "2026-09-24T00:00:11.423Z",
       "lastAttemptOutcome": "completed",
-      "lastCompletedAt": "2026-09-08T00:17:24.998Z"
+      "lastCompletedAt": "2026-09-24T00:00:11.423Z"
     },
     "uikit-app-modernization": {
-      "lastAttemptedAt": "2026-08-23T00:10:08.319Z",
+      "lastAttemptedAt": "2026-09-21T00:06:49.369Z",
       "lastAttemptOutcome": "completed",
-      "lastCompletedAt": "2026-08-23T00:10:08.319Z"
+      "lastCompletedAt": "2026-09-21T00:06:49.369Z"
     },
     "webgl-mastery": {
-      "lastAttemptedAt": "2026-08-23T00:10:08.319Z",
+      "lastAttemptedAt": "2026-09-21T00:06:49.369Z",
       "lastAttemptOutcome": "completed",
-      "lastCompletedAt": "2026-08-23T00:10:08.319Z"
+      "lastCompletedAt": "2026-09-21T00:06:49.369Z"
     }
   }
 }

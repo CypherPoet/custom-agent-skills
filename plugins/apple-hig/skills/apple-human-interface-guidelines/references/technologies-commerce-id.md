@@ -1,16 +1,16 @@
 # Technologies — Commerce & Identity
 
 > Source: https://developer.apple.com/design/human-interface-guidelines
-> Last synced: 2026-06-16
+> Last synced: 2026-09-17
 
-Distilled from Apple's HIG Technologies pages: Apple Pay, In-app purchase, Wallet, Sign in with Apple, Tap to Pay on iPhone, ID Verifier.
+Distilled from Apple's HIG Technologies pages: Apple Pay, Apple In-App Purchase, Wallet, Sign in with Apple, Tap to Pay on iPhone, ID Verifier.
 
 ## Table of Contents
 
 | Section | Covers |
 |---|---|
 | [Apple Pay](#apple-pay) | Eligibility and primary placement, checkout and payment-sheet data, validation and results, subscriptions and donations, button and mark rules, sizing, and platform support |
-| [In-app purchase](#in-app-purchase) | Product types, trials and storefront design, pricing and family sharing, refunds, subscription signup and codes, management, and tvOS and watchOS flows |
+| [Apple In-App Purchase](#apple-in-app-purchase) | Product types, trials and storefront design, pricing and family sharing, refunds, subscription signup and codes, management, and tvOS and watchOS flows |
 | [Wallet](#wallet) | Pass creation, updates and deletion, surfacing and design, semantic fields and images, order tracking, identity verification, dimensions, and watchOS layout |
 | [Sign in with Apple](#sign-in-with-apple) | When to offer and delay sign-in, account linking and private relay, required versus optional data, system and custom button rules, sizes, and platform support |
 | [Tap to Pay on iPhone](#tap-to-pay-on-iphone) | Provider and entitlement setup, terms and merchant education, foreground preparation, checkout and result flows, button labels, failure recovery, and nonpayment reads |
@@ -78,8 +78,8 @@ Button styles: *automatic* (matches system appearance); *Black* (light backgroun
 - iOS/iPadOS/macOS/visionOS/watchOS: No additional considerations.
 - tvOS: Not supported.
 
-## In-app purchase
-*Last changed: 2023-09*
+## Apple In-App Purchase
+*Last changed: 2026-09 (Apple rebrand and guidance refinement)*
 
 **Purpose:** Lets people securely pay within your app for virtual goods — premium content, digital goods, and subscriptions — via StoreKit.
 

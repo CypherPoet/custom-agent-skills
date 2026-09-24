@@ -73,6 +73,12 @@ The current Media Manager exposes only the 6.9" and 6.5" iPhone slots; every sma
 from the 6.9" upload, exactly as with screenshots. Record a 6.9" simulator at its native 1320×2868 and
 upload as-is — no rescaling, and **not** the legacy 886×1920.
 
+Apple also publishes iPhone Duo device resolutions of 2034×1398 (outer) and 2853×2007 (inner),
+with 886×1920 portrait / 1920×886 landscape as the published accepted preview size. However, Apple
+says Duo asset uploads will become available later in 2026. The live-uploader evidence above applies
+only to the existing standard-iPhone slots; verify Duo's actual slot when it ships rather than
+assuming either the published legacy size or the standard-iPhone native-resolution behavior.
+
 ### iPad
 
 | Display class | Accepted upload resolution (portrait) | If omitted |

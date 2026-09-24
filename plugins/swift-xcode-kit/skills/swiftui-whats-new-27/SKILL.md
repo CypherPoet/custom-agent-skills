@@ -1,5 +1,5 @@
 ---
-description: 'New SwiftUI APIs, behaviors, and deprecations in the 2027 OS releases (iOS/macOS/watchOS/tvOS/visionOS 27). Use when the user asks what''s new in SwiftUI; when code breaks after an SDK 27 update — especially @State compile errors like "used before being initialized" or "invalid redeclaration of synthesized property" (@State became a macro; the obvious reordering fix is WRONG — consult the references first); or when adopting SDK 27 features: drag-to-reorder and swipe actions in any container, AsyncImage caching and request control, toolbar overflow/pinning/minimize-on-scroll, cross-fade sheet transitions, prominent tabs, gesture input-source filtering, alerts from items or errors, and DocumentGroup document-based apps.'
+description: 'New SwiftUI APIs, behaviors, and deprecations in the 2027 OS releases (iOS/macOS/watchOS/tvOS/visionOS 27). Use when the user asks what''s new in SwiftUI; when code breaks after an SDK 27 update — especially @State compile errors like "used before being initialized" or "invalid redeclaration of synthesized property" (@State became a macro; the obvious reordering fix is WRONG — consult the references first); or when adopting SDK 27 features: adaptive arrangement views, iPhone Duo reserved-region/hinge/outer-display APIs, vertical-axis toolbars, drag-to-reorder and swipe actions in any container, AsyncImage caching and request control, toolbar overflow/pinning/minimize-on-scroll, cross-fade sheet transitions, prominent tabs, gesture input-source filtering, alerts from items or errors, and DocumentGroup document-based apps.'
 name: swiftui-whats-new-27
 ---
 
@@ -25,3 +25,9 @@ Use these references to understand what changed in SwiftUI for the 2027 OS relea
 - `references/state-macro.md`: `@State` migrated from a property wrapper to a macro. Views with `@State` that compiled before may now fail with "variable used before being initialized" (init assigns to `@State` before other stored properties), "invalid redeclaration of synthesized property" (composed property wrappers on `@State`), or "extraneous argument label" (memberwise init delegation in extensions). The fix is NOT to reorder assignments; consult this reference.
 - `references/content-builder.md`: Unified result builders under `@ContentBuilder`. Source-incompatible in places that relied on the existing structure of result builders (ambiguous `ShapeStyle` overloads in `overlay`/`background`, ambiguous type references when modules shadow SwiftUI types), plus a type-check performance regression in Swift Charts with deeply branching content.
 - `references/deprecations.md`: APIs hard-deprecated in SDK 27.0, such as `statusBarHidden` on visionOS (no effect, remove the call). Soft-deprecated APIs are covered by the `swiftui-specialist` skill.
+
+# September 2026 Additions
+
+- `references/arrangement-views.md`: `ArrangementView` for adaptive primary/secondary layouts, including split and overlay styles, size and ratio preferences, custom styles, and arrangement environment values.
+- `references/reserved-regions-and-iphone-duo.md`: hardware-reserved regions, iPhone Duo hinge observation, and `CameraCaptureAccessory` content on the outer display.
+- `references/vertical-axis-controls.md`: vertical-axis toolbar placement, per-item axis preferences, horizontal fallback, and bar-compression behavior.
