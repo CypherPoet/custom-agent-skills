@@ -1,185 +1,209 @@
-# Automate App Store Connect with an API key (no fastlane)
+# Automate App Store Connect with an API key
 
-The App Store Connect **API** is a REST API over almost everything in the console — builds, app
-metadata, screenshots, pricing, in-app purchases, TestFlight, and **submitting a version for review**.
-You can drive it from the CLI (or an agent / CI) without fastlane. *As of 2026-06; trust the current docs.*
+Use the bundled Swift client for repeatable API operations and Apple's upload tools
+for archive delivery. The client manages authentication, explicit targets, polling,
+and media safety. It does not create credentials, submit apps, or release versions.
 
 ## Table of Contents
 
 | Section | Covers |
 |---|---|
-| [The key, and the `.env` pattern](#the-key-and-the-env-pattern) | Team-key creation and App Manager permissions, `.p8` handling, environment variables, app reach, and agent credential boundaries |
-| [Uploads — Apple-native `altool` (no JWT, no fastlane)](#uploads--apple-native-altool-no-jwt-no-fastlane) | `altool` upload and validation commands, private-key discovery, and IPA export sources |
-| [Everything else — a JWT + REST call](#everything-else--a-jwt--rest-call) | ES256 JWT construction, REST authentication, build polling states, and bundled Swift clients |
-| [Uploading screenshots & previews (reserve → upload → commit)](#uploading-screenshots--previews-reserve--upload--commit) | Media-set creation, reserve/upload/commit/order workflow, validation traps, poster frames, and icon limitations |
-| [Useful endpoints](#useful-endpoints) | Builds, versions, listing copy, build attachment, media, review submissions, state queries, and review notes |
-| [Verify the submission landed](#verify-the-submission-landed) | Confirm the review submission is queued through `reviewSubmissions` and verify that a first in-app purchase changed state and is attached |
-| [Scope — what stays console-bound](#scope--what-stays-console-bound) | Automatable delivery operations and the age rating, trader status, privacy, agreement, and banking steps that remain console-bound |
+| [Credentials and providers](#credentials-and-providers) | Team-key permissions, file and Keychain providers, storage, and authorization boundaries |
+| [Uploads with Apple tools](#uploads-with-apple-tools) | File-based API-key authentication for altool and archive export |
+| [Shared Swift client](#shared-swift-client) | Origin restrictions, redirects, target selection, polling, and exit codes |
+| [Media replacement](#media-replacement) | Preflight validation, staging, capacity limits, cleanup, and recovery |
+| [Useful endpoints](#useful-endpoints) | Discovery, metadata, review, and delivery-state APIs |
+| [Verify submission and release](#verify-submission-and-release) | Checking the exact submission and attached purchases |
+| [API drift and remaining scope](#api-drift-and-remaining-scope) | Current fields, unsupported automation, and console workflows |
 
-## The key, and the `.env` pattern
+## Credentials and providers
 
-Generate the key once: **App Store Connect → Users and Access → Integrations → App Store Connect API**.
-Create a **Team key** and **assign it the App Manager role** (*Which role*, below). Download
-`AuthKey_<KEYID>.p8` **once** — Apple won't let you re-download it. You get three things:
+An App Store Connect team API key consists of a Key ID, Issuer ID, and a `.p8`
+private key. The private key can be downloaded only once. Create keys only when
+credential setup is authorized, through Users and Access → Integrations → App Store
+Connect API. An Account Holder or Admin creates a team key and assigns its role.
 
-- **Key ID** — short, e.g. `ABC123XYZ`. The `.p8` must be named `AuthKey_<KEYID>.p8`.
-- **Issuer ID** — a UUID at the top of the Integrations page.
-- the **`.p8`** private key file — the only real secret.
+App Manager is appropriate for workflows that include submission; use a narrower
+role when the task only needs narrower access. A team key can reach all apps in the
+account; its role limits operations, not app scope. Treat a leaked App Manager key
+as a serious compromise of app metadata and distribution. Verify current permissions
+in Apple's [API-key guidance](https://developer.apple.com/help/app-store-connect/get-started/app-store-connect-api/).
+The bundled signer supports team keys (`iss` authentication), not individual keys.
 
-### Which role: a Team key, assigned App Manager
+### File provider
 
-Two things are easy to conflate — *who may generate the key* vs *what the key may do*:
-
-- **Who generates it.** A **Team key** (the kind you want — it authenticates for the whole account, ideal
-  for CI or an agent) can only be created by an **Account Holder or Admin**. An App Manager can't mint a Team
-  key; they can only generate a personal **Individual key** that inherits their own permissions. This is
-  about who clicks *Generate*, not what the key can do.
-- **What it may do.** At creation you **assign the key a role**, and that role bounds which API calls
-  succeed. Assign **App Manager** — the least-privilege role that still covers the whole ship pipeline: read
-  build processing state, edit listing metadata, select the build, and **submit for review** (Apple's
-  *Submit an app* page: "Required role: Account Holder, Admin, or App Manager" — Developer can't submit).
-  App Manager and Admin are **identical for everything app-delivery**; Admin only adds powers a submission
-  key should never hold (manage users, generate more keys, banking/tax + financial reports, sign
-  certificates). So a leaked App Manager key can't drain payouts, add collaborators, or mint certs.
-
-Caveat: the role bounds the key's *permissions*, not its *app reach* — a Team key can touch **every** app in
-the account regardless of role (Apple won't scope a Team key to one app). Moot for a single-app account.
-
-Keep secrets out of git: the `.p8` stays a gitignored file; an env file holds the IDs and the key-dir
-*path* (never the key contents). Commit a `.env.template`, not `.env`:
+Store the key outside repositories, named `AuthKey_<KEYID>.p8`. Configuration contains
+IDs and paths, never private-key contents:
 
 ```sh
-# .env  (gitignored)
+ASC_KEY_PROVIDER=file
 ASC_KEY_ID=ABC123XYZ
 ASC_ISSUER_ID=xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
-API_PRIVATE_KEYS_DIR=/Users/you/.appstoreconnect/private_keys   # holds AuthKey_ABC123XYZ.p8
-ASC_APP_ID=1234567890                                           # the app's numeric Apple ID
+API_PRIVATE_KEYS_DIR="/Users/you/.appstoreconnect/private_keys" # absolute path
 ```
 
-Gitignore `.env`, `*.p8`, `private_keys/`.
+Use a private directory (0700) and private file (0600), protected by the user's
+chosen disk encryption and backup policy. The tool does not create this directory,
+change permissions, or verify the storage policy. Setting up storage or changing
+permissions needs separate authorization. Keep `.env`, `*.p8`, and `private_keys/`
+out of git; gitignore is not encryption. Save only a placeholder template in a repo.
 
-> **Credential boundary (for agents):** drive the tooling via env; never read, print, or store the raw
-> `.p8`. Same posture as a `gh` token.
+The dotenv parser supports `export`, single/double quotes, trailing comments, and
+common escapes in double quotes. A `#` inside quotes is literal; outside quotes it
+starts a comment at the beginning of a value or after whitespace. Shell expansion,
+command substitution, and multiline values are not supported. Process environment
+values override the file, including empty values. Malformed lines fail without
+printing their contents. App, version, platform, and locale targets are command flags.
 
-## Uploads — Apple-native `altool` (no JWT, no fastlane)
+### Keychain provider
 
-`xcrun altool` reads the API key straight from env + the key dir — no JWT plumbing:
+The Swift client can read an **existing** generic-password item containing the `.p8`
+PEM text. Select it explicitly:
+
+```sh
+ASC_KEY_PROVIDER=keychain
+ASC_KEY_ID=ABC123XYZ
+ASC_ISSUER_ID=xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+ASC_KEYCHAIN_SERVICE=your-existing-service
+ASC_KEYCHAIN_ACCOUNT=your-existing-account
+```
+
+This performs a noninteractive Keychain lookup. A missing, locked, or inaccessible
+item fails; the client does not prompt, import a key, create an item, change access
+controls, or fall back to disk. Creating/importing the item and allowing a particular
+compiled tool to read it are separate, user-authorized setup tasks. Compilation or
+binary identity changes may require revisiting that access outside the script.
+
+There is no general password-manager command hook. Do not place shell commands or
+key contents in configuration. For CI, supply a separately authorized secret-store
+integration; this package does not provision CI secrets. Revoke a compromised key
+in App Store Connect and replace it through the same authorized setup process.
+
+**Agent boundary:** operate through the selected provider; keep raw keys and JWTs
+out of chat, source, logs, and command-line arguments. Configuration/support for a
+provider does not authorize accessing real credentials during a code review or test.
+
+## Uploads with Apple tools
+
+For the file provider, export the IDs/key-directory variables into the shell before
+using `altool`; it does not read this client's `.env` or Keychain provider:
 
 ```sh
 xcrun altool --upload-app -f App.ipa -t ios \
   --apiKey "$ASC_KEY_ID" --apiIssuer "$ASC_ISSUER_ID"
 ```
 
-altool searches `./private_keys`, `~/private_keys`, `~/.private_keys`, `~/.appstoreconnect/private_keys`,
-or `$API_PRIVATE_KEYS_DIR` for `AuthKey_<KEYID>.p8`. (`--validate-app` dry-runs it.) Get the `.ipa` from
-Organizer → **Custom → Export**, or `xcodebuild -exportArchive`.
+Get the IPA from Organizer → Custom → Export or `xcodebuild -exportArchive`.
+`altool` can discover `AuthKey_<KEYID>.p8` in `API_PRIVATE_KEYS_DIR` or its standard
+private-key search directories. `--validate-app` contacts Apple for validation;
+it is not an offline test. Keychain-provider selection does not automatically
+export the key to disk for Apple tools. Use Xcode/Transporter or an independently
+authorized integration for that delivery path.
 
-## Everything else — a JWT + REST call
+## Shared Swift client
 
-Build-status polling, metadata, screenshots, and **submitting for review** hit the REST API directly.
-Auth is a short-lived **ES256 JWT** signed with the `.p8`:
+See the [script README](../scripts/README.md) for executable examples. The package
+requires macOS 13+, Xcode/Swift 5.9+, and no external Swift dependencies.
 
-- Header: `{ "alg": "ES256", "kid": "<KEY_ID>", "typ": "JWT" }`
-- Payload: `{ "iss": "<ISSUER_ID>", "iat": <now>, "exp": <now+1200>, "aud": "appstoreconnect-v1" }`
-- `Authorization: Bearer <jwt>` against `https://api.appstoreconnect.apple.com`.
+- API requests and pagination links require `https://api.appstoreconnect.apple.com`
+  with no credentials in the URL, fragments, or nonstandard port.
+- Every redirect is rejected, including same-origin redirects and signed uploads.
+- Signed-upload operations use their provided HTTPS URL and headers, never the ASC
+  bearer token. Invalid ranges, non-HTTPS URLs, or credential-bearing headers fail.
+- Each API request receives a fresh ES256 JWT with a ten-minute lifetime. Tokens
+  stay in memory; the client does not print request headers or raw error bodies.
+- Writes require explicit app ID, version resource ID, and platform. Media also
+  requires locale and display type. The client verifies ownership and
+  `appVersionState == PREPARE_FOR_SUBMISSION` before writing; it never falls back
+  to the first app/version or the deprecated state field.
+- Build polling requires an explicit build resource ID, app ID, and platform.
+  Media polling uses the exact newly reserved resource IDs.
+- Exit 0 means confirmed success; 1 means failure/unknown/unconfirmed result; 2
+  means still processing. Poll limits are configurable. No automatic write retries.
 
-Sign it with one import — Node `jsonwebtoken`, Python `PyJWT[crypto]`, or Swift CryptoKit. Minimal Node
-poll for "is my latest build processed?":
+## Media replacement
 
-```js
-// node --env-file=.env check-build.mjs   (Node 20.6+ reads .env from the flag; or add: import "dotenv/config")
-import { readFileSync } from "node:fs";
-import jwt from "jsonwebtoken";        // npm i jsonwebtoken
-const { ASC_KEY_ID, ASC_ISSUER_ID, API_PRIVATE_KEYS_DIR, ASC_APP_ID } = process.env;
-const key = readFileSync(`${API_PRIVATE_KEYS_DIR}/AuthKey_${ASC_KEY_ID}.p8`);
-const token = jwt.sign({ aud: "appstoreconnect-v1" }, key, {
-  algorithm: "ES256", keyid: ASC_KEY_ID, issuer: ASC_ISSUER_ID, expiresIn: "20m",
-});
-const r = await fetch(
-  `https://api.appstoreconnect.apple.com/v1/builds?filter[app]=${ASC_APP_ID}` +
-  `&sort=-uploadedDate&limit=1&fields[builds]=version,processingState,uploadedDate`,
-  { headers: { Authorization: `Bearer ${token}` } });
-const b = (await r.json()).data?.[0]?.attributes;
-console.log(b ? `build ${b.version}: ${b.processingState}` : "no builds");
-```
+The command validates **all** local files before reading credentials or contacting
+Apple. Screenshots must decode as PNG/JPEG without alpha. Previews need a readable
+MP4/MOV/M4V container, 15–30 seconds of video, and stereo audio, including silent
+previews. Apple performs the final device-size and encoding validation.
 
-`processingState` is `PROCESSING` → `VALID` (then selectable on the version page) or `FAILED` / `INVALID`.
+Each asset uses reserve → upload the specified byte ranges → commit with its whole
+file MD5 → poll delivery state. Screenshots use `assetDeliveryState`; previews use
+`videoDeliveryState`. A commit response alone is not validation success.
 
-> **Bundled scripts.** This skill ships ready-to-run, zero-dependency Swift versions of all of this in
-> [`scripts/`](../scripts/) (Swift + CryptoKit ship with Xcode, so there's nothing to install):
-> `asc-get` (inspect any endpoint), `asc-build-status` (poll the build), `asc-upload-screenshots` /
-> `asc-upload-previews` (the media flow below), and `asc-set-review-notes`. They read the same `.env`
-> and discover the in-prep version themselves. Reach for them before hand-rolling a request.
+An existing nonempty set requires `--replace`. New assets are staged in that same
+set and must all reach `COMPLETE` before the old assets can be deleted. The client
+rechecks version state and set membership, orders new assets first, removes the
+old IDs, and verifies final ordering. This also sets preview order explicitly.
 
-## Uploading screenshots & previews (reserve → upload → commit)
+Apple's set limits still apply: old plus new must fit within 10 screenshots or 3
+previews. The client refuses replacements that exceed capacity; it never clears a
+set to make space. Use the console for a full-capacity replacement.
 
-Media uploads are a 3-phase flow (plus an ordering step), same shape for both (only the asset endpoint
-differs). First create the set: `POST /v1/appScreenshotSets` (attribute `screenshotDisplayType`, e.g.
-`APP_IPHONE_67`) / `appPreviewSets` (attribute `previewType`, e.g. `IPHONE_67`), related to an
-`appStoreVersionLocalization`. Then per asset:
+There is no atomic multi-asset transaction. A failed/pending upload preserves the
+original IDs but may leave new reservations. A cleanup failure after validation
+may leave both old and new assets. Inspect the reported set/resource IDs before
+retrying; there is no destructive automatic recovery. Avoid concurrent edits.
 
-1. **Reserve** — `POST /v1/appScreenshots` (or `/v1/appPreviews`) with `{fileName, fileSize}` + a
-   relationship to the set. The response returns the asset id and an `uploadOperations` array.
-2. **Upload** — for each operation, `PUT` the byte range `[offset, offset+length)` of the file to its
-   pre-signed `url`, applying every `requestHeaders` entry.
-3. **Commit** — `PATCH …/<id>` with `{uploaded: true, sourceFileChecksum: <md5-hex-of-the-whole-file>}`,
-   then poll `assetDeliveryState` (→ `COMPLETE`, or `FAILED` with a `code`).
-4. **Order** — assets display in insertion order; to set it explicitly (or reorder later), `PATCH
-   /v1/appScreenshotSets/<id>/relationships/appScreenshots` (or `appPreviewSets/<id>/relationships/appPreviews`)
-   with the ordered id list as the `data` array. Returns `204 No Content` (no JSON body).
+The 6.7/6.9-inch iPhone screenshot class uses `APP_IPHONE_67` (preview `IPHONE_67`).
+Use the appropriate API display type for other devices; the scripts no longer
+hardcode `en-US` or select an arbitrary prepared version.
 
-**Gotchas that fail validation:**
+If Apple returns `MOV_RESAVE_STEREO`, check the stereo audio track; for
+`MOV_RESAVE_LONGER`, check the 15-second minimum. A checksum mismatch requires
+rechecking the whole original file rather than individual chunks. Preview poster
+frames can be set through `previewFrameTimeCode` (`HH:MM:SS:FF`) on the preview
+resource; the upload helper does not set that optional field.
 
-- **No `APP_IPHONE_69`.** 6.9" assets (1320×2868) upload under **`APP_IPHONE_67`** — Apple's 6.7"/6.9"
-  class shares one display type (preview `previewType` is `IPHONE_67`, sans `APP_`). Upload the largest
-  class; the smaller iPhone classes auto-scale.
-- **App previews need a stereo audio track even when silent** — no audio fails with `MOV_RESAVE_STEREO`.
-  Mux a silent stereo AAC track.
-- **App previews must be ≥ 15 s** — shorter fails with `MOV_RESAVE_LONGER` (Apple's range is 15–30 s).
-- **`sourceFileChecksum` is the MD5 of the whole original file**, not per-chunk; commit fails on a mismatch.
-- Set a preview poster with `PATCH /v1/appPreviews/<id>` `previewFrameTimeCode` (`"HH:MM:SS:FF"`, e.g.
-  `"00:00:02:00"`); it otherwise defaults to the 5 s mark.
-
-The **marketing app icon is NOT settable via the API** — it's extracted from the uploaded build's asset
-catalog (default appearance); there's no `AppStoreVersion` icon relationship. (Showing a *dark* icon on the
-listing isn't possible either without making the dark art the build's default appearance.)
+The listing's marketing icon comes from the uploaded build's asset catalog. The
+media helper does not replace the icon or choose its appearance.
 
 ## Useful endpoints
 
 | Goal | Endpoint |
-|------|----------|
-| Latest build + processing state | `GET /v1/builds?filter[app]=<id>&sort=-uploadedDate&limit=1` (build `version` is a string — sort by date, not `-version`) |
-| The version being prepared | `GET /v1/apps/<id>/appStoreVersions?filter[appVersionState]=PREPARE_FOR_SUBMISSION` (`appStoreState` is deprecated) |
-| Read / write listing copy | `GET` / `PATCH /v1/appStoreVersionLocalizations/<id>` (description, keywords, promo, URLs) |
-| Attach the selected build | `PATCH /v1/appStoreVersions/<id>/relationships/build` |
-| Upload screenshots / previews | `appScreenshotSets`/`appPreviewSets` + `appScreenshots`/`appPreviews` (reserve → `PUT` → commit; see above) |
-| Order a media set | `PATCH /v1/appScreenshotSets/<id>/relationships/appScreenshots` (or `appPreviewSets/.../appPreviews`) with the ordered id list |
-| Submit for review | `POST /v1/reviewSubmissions` + `reviewSubmissionItems` (the first IAP of each product type rides with a new app version as its own item), then mark it submitted |
-| Read a submission's state | `GET /v1/reviewSubmissions?filter[app]=<id>&include=items` — `reviewSubmissionItems` blocks `GET_INSTANCE`, so read items via the `include`, not by id |
-| Set App Review notes | `PATCH /v1/appStoreReviewDetails/<id>` `{attributes:{notes}}` — the record pre-exists once the review contact is set (`asc-set-review-notes.swift`) |
+|---|---|
+| Discover versions for an app | `GET /v1/apps/<id>/appStoreVersions`; inspect resource IDs, platform, and `appVersionState` |
+| Discover builds | `GET /v1/builds?filter[app]=<id>&sort=-uploadedDate` |
+| Read a selected build | `GET /v1/builds/<id>?include=app,preReleaseVersion` |
+| Read/write listing copy | `GET` / `PATCH /v1/appStoreVersionLocalizations/<id>` |
+| Attach a build | `PATCH /v1/appStoreVersions/<id>/relationships/build` |
+| Media | `appScreenshotSets`/`appPreviewSets` and `appScreenshots`/`appPreviews` |
+| Order assets | `PATCH /v1/<set-type>/<id>/relationships/<asset-type>` with the ordered IDs |
+| Review notes | `PATCH /v1/appStoreReviewDetails/<id>`; set the contact in the console first |
+| Submit for review | `reviewSubmissions` and `reviewSubmissionItems`; consult the current schema for the intended item types |
+| Read submission state | `GET /v1/reviewSubmissions?filter[app]=<id>&include=items` |
 
-Full schema: Apple's [App Store Connect API reference](https://developer.apple.com/documentation/appstoreconnectapi).
+The bundled `get` command is read-only; the table is an API reference, not an
+implemented general-purpose write client. Submission and release require their
+own authorized workflow and checks.
 
-## Verify the submission landed
+## Verify submission and release
 
-After `POST /v1/reviewSubmissions` (+ items) and marking it submitted, confirm it actually queued — the
-console can lag, and a first IAP can silently fail to attach:
+After an authorized submission, inspect the **exact submission ID** returned by
+creation, rather than assuming a `limit=1` list response is the latest submission.
+Confirm its state is `WAITING_FOR_REVIEW` and the intended version/items are present.
+Read items via the submission's `items` relationship/include instead of assuming
+that an individual `reviewSubmissionItems` GET is supported.
 
-- **Submission state** — `GET /v1/reviewSubmissions?filter[app]=<id>&include=items&limit=1`. A queued
-  submission reads `state: WAITING_FOR_REVIEW` with its item(s) `READY_FOR_REVIEW`. Gotcha:
-  `reviewSubmissionItems` does **not** allow `GET_INSTANCE` — fetching one by id returns
-  `403 FORBIDDEN_ERROR` ("Allowed operations are: CREATE, DELETE, UPDATE"), so read items through the
-  submission's `items` relationship / `include`, never by id.
-- **Confirm the IAP rode along** — the first in-app purchase of each product type reviews *with* a
-  new app version, but the version↔IAP selection isn't exposed by the API and only materializes in
-  the submission. The reliable signal is the IAP's own state: `GET /v2/inAppPurchases/<id>` flips
-  `READY_TO_SUBMIT` →
-  `WAITING_FOR_REVIEW` (→ `APPROVED`) once it's attached. If it's still `READY_TO_SUBMIT` after you
-  submit, it did **not** ride along — re-check the version's *In-App Purchases* selection and resubmit.
+For first-of-type IAPs, verify the version's purchase selection in the console and
+the purchase's state after submission. `READY_TO_SUBMIT` is not evidence of being
+queued; inspect why it did not transition before attempting another submission.
+Manual release remains a separate action after approval. The helpers do not carry
+out submission, TestFlight tester management, or release.
 
-## Scope — what stays console-bound
+## API drift and remaining scope
 
-The API covers builds, metadata, screenshots, pricing, IAP, TestFlight, and version submission. A few
-one-time, account-level steps stay in the web console: the **age-rating questionnaire**, **EU DSA trader
-status**, the **App Privacy** questionnaire, and agreements / banking. Do those once in the console;
-script the rest.
+Apple's [API 3.7 release notes](https://developer.apple.com/documentation/appstoreconnectapi/app-store-connect-api-3-7-release-notes)
+deprecate `appStoreState` in favor of `appVersionState`, and preview
+`assetDeliveryState` in favor of `videoDeliveryState`. The shared client uses those
+replacement fields and fails on missing/unknown states instead of guessing.
+Build relationships and version fields were checked against Apple's public API
+reference on 2026-09-30; offline tests do not establish live account compatibility.
+
+Age ratings are not categorically console-only: Apple exposes
+[Modify an age rating declaration](https://developer.apple.com/documentation/appstoreconnectapi/patch-v1-ageratingdeclarations-_id_).
+These helpers do not implement that workflow. The walkthrough uses the console for
+age ratings, App Privacy, DSA declarations, agreements, and banking. Verify current
+schemas and account permissions before extending automation; questionnaires are
+app/version-specific work, not necessarily one-time account setup.
