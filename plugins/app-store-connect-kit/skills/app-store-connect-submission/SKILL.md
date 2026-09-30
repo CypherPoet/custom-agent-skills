@@ -117,9 +117,13 @@ in `references/build-and-delivery.md`.
 
 Prefer to drive uploads and the rest of the flow from the CLI / CI (or an agent) **without fastlane**? An
 App Store Connect **API key** does it: `xcrun altool` for uploads, and a small JWT + REST call for
-build-status polling, metadata, and submission. → `references/api-automation.md`, with ready-to-run,
-zero-dependency Swift scripts in [`scripts/`](scripts/) (poll the build, upload screenshots/previews,
-set review notes, inspect any endpoint).
+build-status polling, metadata, and submission. → `references/api-automation.md`, with a dependency-free
+Swift package and compatibility launchers in
+[`scripts/`](scripts/README.md) (poll an explicitly selected build, upload screenshots/previews,
+set review notes, inspect an API endpoint). Read the script README before use: writes require explicit
+app/version/platform targeting, and media replacement preserves old assets until new assets validate.
+Honor existing authorization for credential setup and Apple-side actions. Approval of local code
+edits alone does not authorize uploads, submission, release, credential import, or permission changes.
 
 ## Testing purchases — with or without the real pipeline
 
