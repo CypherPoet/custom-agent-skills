@@ -1,6 +1,6 @@
 {
   "name": "blender-kit",
-  "version": "0.14.2",
+  "version": "0.14.3",
   "description": "Blender mastery — modeling, materials, rigging, geometry nodes, rendering, and export via bpy, driven through the official Blender MCP server or the headless CLI.",
   "author": {
     "name": "CypherPoet"
@@ -16,7 +16,7 @@
   ],
   "skills": "./skills/",
   "interface": {
-    "displayName": "Blender",
+    "displayName": "Blender Kit",
     "shortDescription": "Model and render with Blender",
     "longDescription": "Blender mastery — modeling, materials, rigging, geometry nodes, rendering, and export via bpy, driven through the official Blender MCP server or the headless CLI.",
     "developerName": "CypherPoet",
